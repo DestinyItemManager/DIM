@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { count } from '../../utils/util';
-import { getCharacterStatsData, getClass } from './character-utils';
+import { getCharacterStatsData } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { t } from 'app/i18next-t';
 import vaultBackground from 'images/vault-background.svg';
@@ -8,6 +8,7 @@ import vaultIcon from 'images/vault.svg';
 import { D1Store, D1Vault, DimVault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {
@@ -209,7 +210,6 @@ export function makeCharacter(
     level: character.characterLevel,
     powerLevel: character.characterBase.powerLevel,
     stats: getCharacterStatsData(defs.Stat, character.characterBase),
-    class: getClass(character.characterBase.classType),
     classType: character.characterBase.classType,
     className,
     gender,
@@ -273,7 +273,7 @@ export function makeVault(
     destinyVersion: 1,
     id: 'vault',
     name: t('Bucket.Vault'),
-    class: 'vault',
+    classType: DestinyClass.Unknown,
     current: false,
     genderName: '',
     className: t('Bucket.Vault'),

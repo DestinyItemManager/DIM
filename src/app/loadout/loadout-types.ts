@@ -1,18 +1,6 @@
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
-export function getLoadoutClassDisplay(loadoutClass: DestinyClass) {
-  switch (loadoutClass) {
-    case DestinyClass.Warlock:
-      return 'warlock';
-    case DestinyClass.Titan:
-      return 'titan';
-    case DestinyClass.Hunter:
-      return 'hunter';
-  }
-  return 'any';
-}
-
 export interface LoadoutItem {
   id?: string;
   hash: number;

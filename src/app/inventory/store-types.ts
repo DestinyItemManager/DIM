@@ -87,9 +87,7 @@ export interface DimStore {
   percentToNextLevel: number;
   /** Power/light level. */
   powerLevel: number;
-  /** String class name. */
-  class: 'titan' | 'warlock' | 'hunter' | 'vault';
-  /** Integer class type. */
+  /** Enum class type. */
   classType: DestinyClass;
   /** Localized class name. */
   className: string;

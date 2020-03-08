@@ -8,7 +8,6 @@ import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
-import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
@@ -201,7 +200,6 @@ export function makeCharacter(
       character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
     powerLevel: character.light,
     stats: getCharacterStatsData(defs.Stat, character.stats),
-    class: getClass(classy.classType),
     classType: classy.classType,
     className,
     gender: genderLocalizedName,
@@ -228,7 +226,6 @@ export function makeVault(
     destinyVersion: 2,
     id: 'vault',
     name: t('Bucket.Vault'),
-    class: 'vault',
     classType: DestinyClass.Unknown,
     current: false,
     className: t('Bucket.Vault'),

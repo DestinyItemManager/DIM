@@ -2,6 +2,7 @@ import intellectIcon from 'images/intellect.png';
 import disciplineIcon from 'images/discipline.png';
 import strengthIcon from 'images/strength.png';
 import { D1CharacterStat } from '../store-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 // Cooldowns
 const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -180,13 +181,13 @@ export function getAbilityCooldown(subclass, ability, tier) {
   }
 }
 
-export function getClass(type: number) {
+export function getClass(type: DestinyClass) {
   switch (type) {
-    case 0:
+    case DestinyClass.Titan:
       return 'titan';
-    case 1:
+    case DestinyClass.Hunter:
       return 'hunter';
-    case 2:
+    case DestinyClass.Warlock:
       return 'warlock';
   }
   return 'unknown';
