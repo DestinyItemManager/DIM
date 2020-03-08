@@ -44,11 +44,13 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
               })}
           <NotificationButton
             onClick={async () => {
-              setItemTagsBulk(
-                previousState.map(({ item, setTag }) => ({
-                  itemId: item.id,
-                  tag: setTag
-                }))
+              dispatch(
+                setItemTagsBulk(
+                  previousState.map(({ item, setTag }) => ({
+                    itemId: item.id,
+                    tag: setTag
+                  }))
+                )
               );
               showNotification({
                 type: 'success',

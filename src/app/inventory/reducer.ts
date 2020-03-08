@@ -46,7 +46,6 @@ export const saveItemInfosOnStateChange = _.once(() =>
       const account = currentAccountSelector(rootState);
       if (account) {
         const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-        console.log('[saveItemInfosOnStateChange] Saving item infos', nextState);
         SyncService.set({ [key]: nextState });
       }
     }
