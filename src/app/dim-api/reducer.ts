@@ -41,9 +41,14 @@ export interface DimApiState {
   // Store profile data per account. The key is `${platformMembershipId}-d${destinyVersion}`.
   profiles: {
     [accountKey: string]: {
-      // TODO: maybe reformat these to be indexed?
-      loadouts: Loadout[];
-      tags: ItemAnnotation[];
+      /** Loadouts stored by loadout ID */
+      loadouts: {
+        [id: string]: Loadout;
+      };
+      /** Tags/notes stored by inventory item ID */
+      tags: {
+        [itemId: string]: ItemAnnotation;
+      };
     };
   };
 
@@ -146,8 +151,8 @@ export const dimApi = (
               // Overwrite just this account's profile
               // TODO: if there's an update queue, replay it on top!
               [makeProfileKeyFromAccount(account)]: {
-                loadouts: profileResponse.loadouts || [],
-                tags: profileResponse.tags || []
+                loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
+                tags: _.keyBy(profileResponse.tags || [], (t) => t.id)
               }
             }
           : state.profiles
@@ -210,12 +215,7 @@ export const dimApi = (
       });
 
     case getType(inventoryActions.tagCleanup):
-      return produce(state, (draft) => {
-        const itemIdsToRemove = new Set(action.payload);
-        const profileKey = makeProfileKeyFromAccount(account!);
-        const profile = ensureProfile(draft, profileKey);
-        profile.tags = profile.tags.filter((t) => !itemIdsToRemove.has(t.id));
-      });
+      return tagCleanup(state, action.payload, account!);
 
     default:
       return state;
@@ -291,11 +291,11 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
     let loadout: Loadout | undefined;
     for (const profile in draft.profiles) {
       const loadouts = draft.profiles[profile]?.loadouts;
-      const loadoutIndex = loadouts?.findIndex((l) => l.id === loadoutId);
-      if (loadoutIndex !== undefined) {
+
+      if (loadouts[loadoutId]) {
         profileWithLoadout = profile;
-        loadout = loadouts?.[loadoutIndex];
-        loadouts?.splice(loadoutIndex, 1);
+        loadout = loadouts[loadoutId];
+        delete loadouts[loadoutId];
         break;
       }
     }
@@ -335,13 +335,12 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
       destinyVersion: loadout.destinyVersion || 2
     };
 
-    const existingLoadoutIndex = loadouts.findIndex((l) => l.id === loadout.id);
-    if (existingLoadoutIndex !== undefined) {
-      updateAction.before = loadouts[existingLoadoutIndex];
-      loadouts[existingLoadoutIndex] = newLoadout;
+    if (loadouts[loadout.id]) {
+      updateAction.before = loadouts[loadout.id];
+      loadouts[loadout.id] = newLoadout;
       draft.updateQueue.push(updateAction);
     } else {
-      loadouts.push(newLoadout);
+      loadouts[loadout.id] = newLoadout;
       draft.updateQueue.push(updateAction);
     }
   });
@@ -355,7 +354,8 @@ function setTag(
 ) {
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
-  const existingTag = profile.tags.find((t) => t.id === itemId);
+  const tags = profile.tags;
+  const existingTag = tags[itemId];
 
   const updateAction: ProfileUpdateWithRollback = {
     updateId: updateCounter++,
@@ -376,15 +376,15 @@ function setTag(
     if (existingTag) {
       existingTag.tag = tag;
     } else {
-      profile.tags.push({
+      tags[itemId] = {
         id: itemId,
         tag
-      });
+      };
     }
   } else {
     delete existingTag?.tag;
     if (!existingTag?.tag && !existingTag?.notes) {
-      profile.tags = profile.tags.filter((t) => t.id === itemId);
+      delete tags[itemId];
     }
   }
 
@@ -399,7 +399,8 @@ function setNote(
 ) {
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
-  const existingTag = profile.tags.find((t) => t.id === itemId);
+  const tags = profile.tags;
+  const existingTag = tags[itemId];
 
   const updateAction: ProfileUpdateWithRollback = {
     updateId: updateCounter++,
@@ -420,19 +421,37 @@ function setNote(
     if (existingTag) {
       existingTag.notes = notes;
     } else {
-      profile.tags.push({
+      tags[itemId] = {
         id: itemId,
         notes
-      });
+      };
     }
   } else {
     delete existingTag?.notes;
     if (!existingTag?.tag && !existingTag?.notes) {
-      profile.tags = profile.tags.filter((t) => t.id === itemId);
+      delete profile.tags[itemId];
     }
   }
 
   draft.updateQueue.push(updateAction);
+}
+
+function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: DestinyAccount) {
+  return produce(state, (draft) => {
+    const profileKey = makeProfileKeyFromAccount(account);
+    const profile = ensureProfile(draft, profileKey);
+    for (const itemId of itemIdsToRemove) {
+      delete profile.tags[itemId];
+    }
+
+    draft.updateQueue.push({
+      updateId: updateCounter++,
+      action: 'tag_cleanup',
+      payload: itemIdsToRemove,
+      platformMembershipId: account.membershipId,
+      destinyVersion: account.destinyVersion
+    });
+  });
 }
 
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
@@ -493,8 +512,8 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
 function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {
   if (!draft.profiles[profileKey]) {
     draft.profiles[profileKey] = {
-      loadouts: [],
-      tags: []
+      loadouts: {},
+      tags: {}
     };
   }
   return draft.profiles[profileKey];

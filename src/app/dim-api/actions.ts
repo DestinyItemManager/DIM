@@ -30,6 +30,7 @@ const saveProfileToIndexedDB = _.once(() =>
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       // Avoid writing back what we just loaded from IDB
       // TODO: don't save to IDB while a save is in progress?
+      // TODO: should we save different profiles to different places?
       if (currentState && currentState.profileLoadedFromIndexedDb) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;

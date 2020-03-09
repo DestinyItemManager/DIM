@@ -19,17 +19,16 @@ const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Member
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = $featureFlags.dimApi
-  ? createSelector(
-      currentAccountSelector,
-      currentProfileSelector,
-      (currentAccount, profile) =>
-        profile?.loadouts?.map((loadout) =>
-          convertDimApiLoadoutToLoadout(
-            currentAccount!.membershipId,
-            currentAccount!.destinyVersion,
-            loadout
+  ? createSelector(currentAccountSelector, currentProfileSelector, (currentAccount, profile) =>
+      profile
+        ? Object.values(profile?.loadouts).map((loadout) =>
+            convertDimApiLoadoutToLoadout(
+              currentAccount!.membershipId,
+              currentAccount!.destinyVersion,
+              loadout
+            )
           )
-        ) || EMPTY_ARRAY
+        : EMPTY_ARRAY
     )
   : createSelector(
       (state: RootState) => state.loadouts.loadouts,
