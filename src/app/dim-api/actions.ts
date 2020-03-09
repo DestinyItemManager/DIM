@@ -50,8 +50,7 @@ const saveProfileToIndexedDB = _.once(() =>
 const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) =>
   observeStore(
     (state) => state.dimApi.updateQueue,
-    _.debounce((queue: ProfileUpdateWithRollback[]) => {
-      // Avoid writing back what we just loaded from IDB
+    _.debounce((_, queue: ProfileUpdateWithRollback[]) => {
       if (queue.length) {
         dispatch(flushUpdates());
       }

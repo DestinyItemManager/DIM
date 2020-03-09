@@ -1,4 +1,3 @@
-import { Reducer } from 'redux';
 import * as actions from './basic-actions';
 import * as settingsActions from '../settings/actions';
 import * as loadoutActions from '../loadout/actions';
@@ -18,14 +17,9 @@ import {
   LoadoutItem,
   ItemAnnotation
 } from '@destinyitemmanager/dim-api-types';
-import {
-  Loadout as DimLoadout,
-  LoadoutItem as DimLoadoutItem,
-  loadoutClassToClassType
-} from '../loadout/loadout-types';
+import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { DimItemInfo } from 'app/inventory/dim-item-info';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -62,7 +56,7 @@ export interface DimApiState {
 /**
  * Global DIM platform settings from the DIM API.
  */
-const initialState: DimApiState = {
+export const initialState: DimApiState = {
   globalSettingsLoaded: false,
   globalSettings: {
     ...defaultGlobalSettings,
@@ -94,10 +88,12 @@ type DimApiAction =
   | ActionType<typeof loadoutActions>
   | ActionType<typeof inventoryActions>;
 
-export const dimApi: Reducer<DimApiState, DimApiAction> = (
+export const dimApi = (
   state: DimApiState = initialState,
-  action: DimApiAction
-) => {
+  action: DimApiAction,
+  // This is a specially-handled reducer (see reducers.ts) which gets the current account (based on incoming state) passed along
+  account?: DestinyAccount
+): DimApiState => {
   switch (action.type) {
     case getType(actions.globalSettingsLoaded):
       return {
@@ -196,13 +192,30 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
 
     // *** Tags/Notes ***
 
-    case getType(inventoryActions.setTagsAndNotesForItem):
-      return setTagAndNotes(
-        state,
-        action.payload.accountKey,
-        action.payload.id,
-        action.payload.info
-      );
+    case getType(inventoryActions.setItemTag):
+      return produce(state, (draft) => {
+        setTag(draft, action.payload.itemId, action.payload.tag as TagValue, account!);
+      });
+
+    case getType(inventoryActions.setItemTagsBulk):
+      return produce(state, (draft) => {
+        for (const info of action.payload) {
+          setTag(draft, info.itemId, info.tag as TagValue, account!);
+        }
+      });
+
+    case getType(inventoryActions.setItemNote):
+      return produce(state, (draft) => {
+        setNote(draft, action.payload.itemId, action.payload.note, account!);
+      });
+
+    case getType(inventoryActions.tagCleanup):
+      return produce(state, (draft) => {
+        const itemIdsToRemove = new Set(action.payload);
+        const profileKey = makeProfileKeyFromAccount(account!);
+        const profile = ensureProfile(draft, profileKey);
+        profile.tags = profile.tags.filter((t) => !itemIdsToRemove.has(t.id));
+      });
 
     default:
       return state;
@@ -269,6 +282,9 @@ function applyFinishedUpdatesToQueue(
   });
 }
 
+/**
+ * Delete a loadout by ID, from any profile it may be in.
+ */
 function deleteLoadout(state: DimApiState, loadoutId: string) {
   return produce(state, (draft) => {
     let profileWithLoadout: string | undefined;
@@ -307,7 +323,7 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
     if (!loadout.membershipId) {
       throw new Error('Invalid old loadout missing membership ID');
     }
-    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion || 2);
+    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion);
     const profile = ensureProfile(draft, profileKey);
     const loadouts = profile.loadouts;
     const newLoadout = convertDimLoadoutToApiLoadout(loadout);
@@ -331,39 +347,92 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
   });
 }
 
-function setTagAndNotes(state: DimApiState, accountKey: string, id: string, info: DimItemInfo) {
-  return produce(state, (draft) => {
-    // item infos are stored with an account key like `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`
-    // and our profile keys are the same thing without the prefix
-    // TODO: remove all this stuff
-    const profileKey = accountKey.replace('dimItemInfo-m', '');
-    const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
-    const profile = ensureProfile(draft, profileKey);
-    const tags = profile.tags;
+function setTag(
+  draft: Draft<DimApiState>,
+  itemId: string,
+  tag: TagValue | undefined,
+  account: DestinyAccount
+) {
+  const profileKey = makeProfileKeyFromAccount(account);
+  const profile = ensureProfile(draft, profileKey);
+  const existingTag = profile.tags.find((t) => t.id === itemId);
 
-    const newItemAnnotation: ItemAnnotation = {
-      id,
-      tag: info.tag === 'clear' || info.tag === undefined ? null : (info.tag as TagValue),
-      notes: info.notes === undefined ? null : info.notes
-    };
-    const updateAction: ProfileUpdateWithRollback = {
-      updateId: updateCounter++,
-      action: 'tag',
-      payload: newItemAnnotation,
-      platformMembershipId,
-      destinyVersion
-    };
+  const updateAction: ProfileUpdateWithRollback = {
+    updateId: updateCounter++,
+    action: 'tag',
+    payload: {
+      id: itemId,
+      tag: tag ?? null
+    },
+    before: {
+      id: itemId,
+      tag: existingTag?.tag
+    },
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion
+  };
 
-    const existingTagIndex = tags.findIndex((l) => l.id === id);
-    if (existingTagIndex !== undefined) {
-      updateAction.before = tags[existingTagIndex];
-      tags[existingTagIndex] = newItemAnnotation;
-      draft.updateQueue.push(updateAction);
+  if (tag) {
+    if (existingTag) {
+      existingTag.tag = tag;
     } else {
-      tags.push(newItemAnnotation);
-      draft.updateQueue.push(updateAction);
+      profile.tags.push({
+        id: itemId,
+        tag
+      });
     }
-  });
+  } else {
+    delete existingTag?.tag;
+    if (!existingTag?.tag && !existingTag?.notes) {
+      profile.tags = profile.tags.filter((t) => t.id === itemId);
+    }
+  }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function setNote(
+  draft: Draft<DimApiState>,
+  itemId: string,
+  notes: string | undefined,
+  account: DestinyAccount
+) {
+  const profileKey = makeProfileKeyFromAccount(account);
+  const profile = ensureProfile(draft, profileKey);
+  const existingTag = profile.tags.find((t) => t.id === itemId);
+
+  const updateAction: ProfileUpdateWithRollback = {
+    updateId: updateCounter++,
+    action: 'tag',
+    payload: {
+      id: itemId,
+      notes: notes && notes.length > 0 ? notes : null
+    },
+    before: {
+      id: itemId,
+      notes: existingTag?.notes
+    },
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion
+  };
+
+  if (notes && notes.length > 0) {
+    if (existingTag) {
+      existingTag.notes = notes;
+    } else {
+      profile.tags.push({
+        id: itemId,
+        notes
+      });
+    }
+  } else {
+    delete existingTag?.notes;
+    if (!existingTag?.tag && !existingTag?.notes) {
+      profile.tags = profile.tags.filter((t) => t.id === itemId);
+    }
+  }
+
+  draft.updateQueue.push(updateAction);
 }
 
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
@@ -391,13 +460,16 @@ function parseProfileKey(profileKey: string): [string, DestinyVersion] {
  * back and forth.
  */
 function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const allItems = _.flatten(Object.values(dimLoadout.items));
-  const equipped = allItems.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
-  const unequipped = allItems.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+  const equipped = dimLoadout.items
+    .filter((i) => i.equipped)
+    .map(convertDimLoadoutItemToLoadoutItem);
+  const unequipped = dimLoadout.items
+    .filter((i) => !i.equipped)
+    .map(convertDimLoadoutItemToLoadoutItem);
 
   return {
     id: dimLoadout.id,
-    classType: loadoutClassToClassType[dimLoadout.classType],
+    classType: dimLoadout.classType,
     name: dimLoadout.name,
     clearSpace: dimLoadout.clearSpace || false,
     equipped,
