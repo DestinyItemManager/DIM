@@ -37,6 +37,20 @@ export const PLATFORM_LABELS = {
   [BungieMembershipType.BungieNext]: 'Bungie.net'
 };
 
+export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
+  Xbox: BungieMembershipType.TigerXbox,
+  // t('Accounts.PlayStation')
+  PlayStation: BungieMembershipType.TigerPsn,
+  // t('Accounts.Blizzard')
+  Blizzard: BungieMembershipType.TigerBlizzard,
+  Demon: BungieMembershipType.TigerDemon,
+  // t('Accounts.Steam')
+  Steam: BungieMembershipType.TigerSteam,
+  // t('Accounts.Stadia')
+  Stadia: BungieMembershipType.TigerStadia,
+  'Bungie.net': BungieMembershipType.BungieNext
+};
+
 export const PLATFORM_ICONS = {
   [BungieMembershipType.TigerXbox]: faXbox,
   [BungieMembershipType.TigerPsn]: faPlaystation,

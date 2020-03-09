@@ -279,7 +279,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
     loadout.items = loadout.items || {};
     loadout.destinyVersion = account.destinyVersion;
-    loadout.platform = account.platformLabel;
     loadout.membershipId = account.membershipId;
 
     this.setState({

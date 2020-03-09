@@ -16,7 +16,7 @@ export interface Loadout {
   items: LoadoutItem[];
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;
-  destinyVersion?: DestinyVersion;
+  destinyVersion: DestinyVersion;
   // TODO: deprecate this
   platform?: string;
   /** Whether to move other items not in the loadout off the character when applying the loadout. */
