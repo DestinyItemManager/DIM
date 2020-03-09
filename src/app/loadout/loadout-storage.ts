@@ -7,6 +7,8 @@ import { ThunkResult } from 'app/store/reducers';
 import { loadoutsSelector } from './reducer';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { accountsSelector } from 'app/accounts/reducer';
+import { DestinyAccount, PLATFORM_LABEL_TO_MEMBERSHIP_TYPE } from 'app/accounts/destiny-account';
 
 /** This is the enum loadouts have been stored with - it does not align with DestinyClass */
 enum LoadoutClass {
@@ -61,7 +63,8 @@ export function saveLoadout(loadout: Loadout): ThunkResult<Loadout | undefined> 
 
     if (!clashingLoadout) {
       dispatch(actions.updateLoadout(loadout));
-      await saveLoadouts(getState().loadouts.loadouts);
+      // By this point we should have accounts!
+      await saveLoadouts(getState().loadouts.loadouts, accountsSelector(getState()));
     }
 
     return clashingLoadout;
@@ -80,8 +83,12 @@ export function deleteLoadout(loadout: Loadout): ThunkResult<void> {
   };
 }
 
-async function saveLoadouts(loadouts: Loadout[]): Promise<Loadout[]> {
-  const loadoutPrimitives = loadouts.map(dehydrate);
+async function saveLoadouts(
+  loadouts: Loadout[],
+  accounts: readonly DestinyAccount[]
+): Promise<Loadout[]> {
+  // This re-serializes every loadout. It doesn't have to... but it does
+  const loadoutPrimitives = loadouts.map((loadout) => convertToStorageFormat(loadout, accounts));
 
   const data = {
     'loadouts-v3.0': loadoutPrimitives.map((l) => l.id),
@@ -109,7 +116,7 @@ function processLoadout(data: DimData): Loadout[] {
 
   const ids = data['loadouts-v3.0'];
   const loadouts: Loadout[] = ids
-    ? ids.filter((id) => data[id]).map((id) => hydrate(data[id]))
+    ? ids.filter((id) => data[id]).map((id) => convertToInMemoryFormat(data[id]))
     : [];
 
   const objectTest = (item) => _.isObject(item) && !(Array.isArray(item) || _.isFunction(item));
@@ -129,7 +136,7 @@ function processLoadout(data: DimData): Loadout[] {
 }
 
 /** Read the storage format of a loadout into the in-memory format. */
-function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
+function convertToInMemoryFormat(loadoutPrimitive: DehydratedLoadout): Loadout {
   const result: Loadout = {
     id: loadoutPrimitive.id,
     name: loadoutPrimitive.name,
@@ -158,13 +165,27 @@ function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
 }
 
 /** Transform the loadout into its storage format. */
-function dehydrate(loadout: Loadout): DehydratedLoadout {
+function convertToStorageFormat(
+  loadout: Loadout,
+  accounts: readonly DestinyAccount[]
+): DehydratedLoadout {
   const items = loadout.items.map((item) => ({
     id: item.id,
     hash: item.hash,
     amount: item.amount,
     equipped: item.equipped
   })) as DimItem[];
+
+  // Try to fix up the membership IDs of old accounts.
+  // We do this on save instead of on load because we may load loadouts before loading accounts.
+  if (!loadout.membershipId) {
+    const accountForPlatform = accounts.find((account) =>
+      loadout.platform
+        ? account.platforms.includes(PLATFORM_LABEL_TO_MEMBERSHIP_TYPE[loadout.platform])
+        : account.destinyVersion === loadout.destinyVersion
+    );
+    loadout.membershipId = accountForPlatform?.membershipId;
+  }
 
   return {
     id: loadout.id,

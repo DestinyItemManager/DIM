@@ -46,18 +46,16 @@ export const loadoutsSelector = $featureFlags.dimApi
                 reportOldLoadout();
                 if (
                   loadout.platform === currentAccount.platformLabel &&
-                  (currentAccount.destinyVersion === 2
-                    ? loadout.destinyVersion === 2
-                    : loadout.destinyVersion !== 2)
+                  loadout.destinyVersion === currentAccount.destinyVersion
                 ) {
                   // Take this opportunity to fix up the membership ID
                   loadout.membershipId = currentAccount.membershipId;
-                  loadout.destinyVersion = currentAccount.destinyVersion;
                   return true;
                 } else {
                   return false;
                 }
               } else {
+                // In D1 loadouts could get saved without platform or membership ID
                 return currentAccount.destinyVersion === 1;
               }
             })
