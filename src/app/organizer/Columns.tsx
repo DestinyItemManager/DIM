@@ -14,7 +14,7 @@ import {
 import styles from './ItemTable.m.scss';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import _ from 'lodash';
-import { getTag, getNotes, tagConfig, DimItemInfo } from 'app/inventory/dim-item-info';
+import { getTag, getNotes, tagConfig, ItemInfos } from 'app/inventory/dim-item-info';
 import TagIcon from 'app/inventory/TagIcon';
 import { source } from 'app/inventory/spreadsheets';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -53,7 +53,7 @@ import { StatTotalToggle, GetItemCustomTotal } from 'app/dim-ui/CustomStatTotal'
 export function getColumns(
   items: DimItem[],
   defs: D2ManifestDefinitions,
-  itemInfos: { [key: string]: DimItemInfo },
+  itemInfos: ItemInfos,
   ratings: { [key: string]: DtrRating },
   wishList: {
     [key: string]: InventoryWishListRoll;

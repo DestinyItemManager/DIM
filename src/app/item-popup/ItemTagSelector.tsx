@@ -2,9 +2,11 @@ import React from 'react';
 import { itemTagSelectorList, TagValue, getTag } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
+import { setItemTag } from 'app/inventory/actions';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -15,32 +17,21 @@ interface StoreProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { tag: getTag(props.item, state.inventory.itemInfos) };
+  return { tag: getTag(props.item, itemInfosSelector(state)) };
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function ItemTagSelector(this: void, { item, tag }: Props) {
-  const setTag = (tag?: TagValue | 'none') => {
-    const info = item.dimInfo;
-    if (info) {
-      if (tag && tag !== 'none') {
-        info.tag = tag;
-      } else {
-        delete info.tag;
-      }
-      info.save!();
-    }
-  };
+function ItemTagSelector({ item, tag, dispatch }: Props) {
   const onTagUpdated = (e) => {
     const tag = e.currentTarget.value as TagValue;
-    setTag(tag);
+    dispatch(setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag }));
   };
 
   return (
     <select className="item-tag-selector" onChange={onTagUpdated} value={tag || 'none'}>
       {itemTagSelectorList.map((tagOption) => (
-        <option key={tagOption.type || 'reset'} value={tagOption.type || 'none'}>
+        <option key={tagOption.type || 'clear'} value={tagOption.type || 'clear'}>
           {t(tagOption.label)}
         </option>
       ))}

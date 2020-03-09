@@ -1,18 +1,15 @@
 import _ from 'lodash';
-import { reportException } from '../utils/exceptions';
 import { SyncService, DimData } from '../storage/sync.service';
 
-import { t } from 'app/i18next-t';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
-import store from '../store/store';
-import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
+import { tagCleanup, tagsAndNotesLoaded } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { InventoryState } from './reducer';
-import { showNotification } from '../notifications/notifications';
+import { InventoryState, itemInfosSelector } from './reducer';
 import { BungieMembershipType } from 'bungie-api-ts/user';
+import { ThunkResult } from 'app/store/reducers';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
@@ -107,8 +104,14 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
 export interface DimItemInfo {
   tag?: TagValue;
   notes?: string;
-  save?(): void;
 }
+
+export type ItemInfos = {
+  [key: string]: {
+    tag?: TagValue;
+    notes?: string;
+  };
+};
 
 export interface TagInfo {
   type?: TagValue;
@@ -127,120 +130,61 @@ export const itemTagSelectorList: TagInfo[] = [
   ...Object.values(tagConfig)
 ];
 
-class ItemInfo implements DimItemInfo {
-  constructor(
-    private itemKey: string,
-    private accountKey: string,
-    public tag?: TagValue,
-    public notes?: string
-  ) {}
+/**
+ * Load item infos (tags and notes) into Redux from the sync service
+ */
+export function loadItemInfos(account: DestinyAccount): ThunkResult<void> {
+  return async (dispatch) => {
+    const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
 
-  async save() {
-    let infos = await getInfos(this.accountKey);
-    if (!this.tag && (!this.notes || this.notes.length === 0)) {
-      const { [this.itemKey]: _, ...rest } = infos;
-      infos = rest;
-    } else {
-      infos = {
-        ...infos,
-        [this.itemKey]: { tag: this.tag, notes: this.notes }
-      };
+    const data = await SyncService.get();
+
+    let infos = data[key];
+    if (!infos) {
+      infos = await getOldInfos(account, data);
     }
-    store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
-    try {
-      await setInfos(this.accountKey, infos);
-    } catch (e) {
-      showNotification({
-        type: 'error',
-        title: t('ItemInfoService.SaveInfoErrorTitle'),
-        body: t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
-      });
-      console.error('Error saving item info (tags, notes):', e);
-      reportException('itemInfo', e);
-    }
-  }
+    dispatch(tagsAndNotesLoaded(infos));
+  };
 }
 
 /**
- * An account-specific source of item info objects, keyed off instanceId.
+ * Delete items from the loaded items that don't appear in newly-loaded stores
  */
-export class ItemInfoSource {
-  constructor(
-    readonly key: string,
-    readonly infos: Readonly<{ [itemInstanceId: string]: DimItemInfo }>
-  ) {}
-
-  infoForItem(item: DimItem): DimItemInfo {
-    const info = this.infos[item.id];
-    return new ItemInfo(item.id, this.key, info?.tag, info?.notes);
-  }
-
-  // Remove all item info that isn't in stores' items
-  async cleanInfos(stores: DimStore[]) {
+export function cleanInfos(stores: DimStore[]): ThunkResult<void> {
+  return async (dispatch, getState) => {
     if (!stores.length || stores.some((s) => s.items.length === 0)) {
       // don't accidentally wipe out notes
       return;
     }
 
-    const infos = await getInfos(this.key);
+    const infos = itemInfosSelector(getState());
     if (_.isEmpty(infos)) {
       return;
     }
 
-    const remain = {};
-    stores.forEach((store) => {
-      store.items.forEach((item) => {
+    const cleanupIds = new Set(Object.keys(infos));
+    for (const store of stores) {
+      for (const item of store.items) {
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
-          remain[item.id] = info;
+          cleanupIds.delete(item.id);
         }
-      });
-    });
-
-    if (Object.keys(remain).length !== Object.keys(infos).length) {
-      return setInfos(this.key, remain);
+      }
     }
-  }
 
-  /** bulk save a list of keys directly to storage */
-  async bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
-    let infos = await getInfos(this.key);
-    keys.forEach(({ key, tag, notes }) => {
-      infos = {
-        ...infos,
-        [key]: { ...infos[key], tag, notes }
-      };
-      store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
-    });
-    return setInfos(this.key, infos);
-  }
-}
-
-/**
- * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
- * These info objects have a save method on them that can be used to persist any changes to their properties.
- */
-export async function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
-  const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-
-  const data = await SyncService.get();
-
-  let infos = data[key];
-  if (!infos) {
-    infos = await getOldInfos(key, account, data);
-  }
-  store.dispatch(setTagsAndNotes(infos));
-  return new ItemInfoSource(key, infos);
+    if (cleanupIds.size > 0) {
+      dispatch(tagCleanup(Array.from(cleanupIds)));
+    }
+  };
 }
 
 /**
  * Load infos in the old way we used to save them.
  */
 export async function getOldInfos(
-  newKey: string,
   account: DestinyAccount,
   data: Readonly<DimData>
-): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
+): Promise<Readonly<ItemInfos>> {
   let oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 
   let infos = data[oldKey];
@@ -256,24 +200,11 @@ export async function getOldInfos(
     ga('send', 'event', 'Item Tagging', 'Old Version');
     // Convert to new format
     const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
-    await setInfos(newKey, newInfos);
     await SyncService.remove(oldKey);
     return newInfos;
   }
 
   return {};
-}
-
-async function getInfos(key: string): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
-  const data = await SyncService.get();
-  return data[key] || {};
-}
-
-/**
- * Save infos to the sync service.
- */
-function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
-  return SyncService.set({ [key]: infos });
 }
 
 export function getTag(

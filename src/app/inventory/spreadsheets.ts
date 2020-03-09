@@ -3,7 +3,7 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platforms';
-import { getItemInfoSource, tagConfig, getTag, getNotes, DimItemInfo } from './dim-item-info';
+import { tagConfig, getTag, getNotes, ItemInfos } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -13,6 +13,8 @@ import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
+import { setItemNote, setItemTagsBulk } from './actions';
+import { ThunkResult } from 'app/store/reducers';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -42,7 +44,7 @@ delete D2Sources.raid;
 
 export function downloadCsvFiles(
   stores: DimStore[],
-  itemInfos: { [key: string]: DimItemInfo },
+  itemInfos: ItemInfos,
   type: 'Weapons' | 'Armor' | 'Ghost'
 ) {
   // perhaps we're loading
@@ -98,61 +100,76 @@ interface CSVRow {
   Id: string;
 }
 
-export async function importTagsNotesFromCsv(files: File[]) {
-  const account = getActivePlatform();
-  if (!account) {
-    return;
-  }
-
-  let total = 0;
-
-  const itemInfoService = await getItemInfoSource(account);
-  for (const file of files) {
-    const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
-      Papa.parse(file, {
-        header: true,
-        complete: resolve,
-        error: reject
-      })
-    );
-    if (
-      results.errors &&
-      results.errors.length &&
-      !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
-    ) {
-      throw new Error(results.errors[0].message);
-    }
-    const contents: CSVRow[] = results.data;
-
-    if (!contents || !contents.length) {
-      throw new Error(t('Csv.EmptyFile'));
+export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
+  return async (dispatch) => {
+    const account = getActivePlatform();
+    if (!account) {
+      return;
     }
 
-    const row = contents[0];
-    if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
-      throw new Error(t('Csv.WrongFields'));
-    }
+    let total = 0;
 
-    await itemInfoService.bulkSaveByKeys(
-      _.compact(
-        contents.map((row) => {
-          if ('Id' in row && 'Hash' in row) {
-            row.Tag = row.Tag.toLowerCase();
-            row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
-            return {
-              tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
-              notes: row.Notes,
-              key: row.Id
-            };
-          }
+    for (const file of files) {
+      const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
+        Papa.parse(file, {
+          header: true,
+          complete: resolve,
+          error: reject
         })
-      )
-    );
+      );
+      if (
+        results.errors &&
+        results.errors.length &&
+        !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
+      ) {
+        throw new Error(results.errors[0].message);
+      }
+      const contents: CSVRow[] = results.data;
 
-    total += contents.length;
-  }
+      if (!contents || !contents.length) {
+        throw new Error(t('Csv.EmptyFile'));
+      }
 
-  return total;
+      const row = contents[0];
+      if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
+        throw new Error(t('Csv.WrongFields'));
+      }
+
+      dispatch(
+        setItemTagsBulk(
+          _.compact(
+            contents.map((row) => {
+              if ('Id' in row && 'Hash' in row) {
+                row.Tag = row.Tag.toLowerCase();
+                row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
+                return {
+                  tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
+                  itemId: row.Id
+                };
+              }
+            })
+          )
+        )
+      );
+
+      for (const row of contents) {
+        if ('Id' in row && 'Hash' in row) {
+          row.Tag = row.Tag.toLowerCase();
+          row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
+          dispatch(
+            setItemNote({
+              note: row.Notes,
+              itemId: row.Id
+            })
+          );
+        }
+      }
+
+      total += contents.length;
+    }
+
+    return total;
+  };
 }
 
 function capitalizeFirstLetter(str: string) {
@@ -226,11 +243,7 @@ function addPerks(row: object, item: DimItem, maxPerks: number) {
   });
 }
 
-function downloadGhost(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
-) {
+function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -282,11 +295,7 @@ export const armorStatHashes = {
   Total: -1000
 };
 
-function downloadArmor(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
-) {
+function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -411,7 +420,7 @@ function getDtrRating(item: DimItem): DtrRating | undefined {
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
+  itemInfos: ItemInfos
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
