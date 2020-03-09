@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
-import { itemTagSelectorList, isTagValue } from '../inventory/dim-item-info';
+import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -47,10 +47,12 @@ interface StoreProps {
 
 type DispatchProps = {
   setSearchQuery(query: string): void;
+  bulkTagItems(items: DimItem[], tag: TagValue): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
-  setSearchQuery: (query) => dispatch(setSearchQuery(query, true))
+  setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
+  bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any)
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -120,7 +122,7 @@ class SearchFilter extends React.Component<Props, State> {
           .filter((i) => i.taggable && this.props.searchFilter(i));
 
         if (isTagValue(selectedTag)) {
-          bulkTagItems(this.props.account, tagItems, selectedTag);
+          this.props.bulkTagItems(tagItems, selectedTag);
         }
       }
     }

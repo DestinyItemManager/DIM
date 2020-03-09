@@ -17,9 +17,9 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
-import { sortedStoresSelector } from '../inventory/reducer';
+import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
 import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
+import { itemTagSelectorList, getTag, getNotes, ItemInfos } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -98,7 +98,7 @@ export const searchFiltersConfigSelector = createSelector(
   inventoryWishListsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
-  (state: RootState) => state.inventory.itemInfos,
+  itemInfosSelector,
   searchFilters
 );
 
@@ -425,7 +425,7 @@ function searchFilters(
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
-  itemInfos: { [key: string]: DimItemInfo }
+  itemInfos: ItemInfos
 ): SearchFilters {
   // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash

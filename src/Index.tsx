@@ -25,6 +25,7 @@ import updateCSSVariables from 'app/css-variables';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import store from 'app/store/store';
 import { loadGlobalSettings } from 'app/dim-api/actions';
+import { saveItemInfosOnStateChange } from 'app/inventory/reducer';
 
 polyfill({
   holdToDrag: 300,
@@ -50,6 +51,8 @@ if ($featureFlags.vendorEngrams) {
 }
 updateCSSVariables();
 store.dispatch(loadGlobalSettings());
+
+saveItemInfosOnStateChange();
 
 // Load some stuff at startup
 SyncService.init();

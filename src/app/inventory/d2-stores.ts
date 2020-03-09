@@ -20,7 +20,7 @@ import { getLight } from '../loadout/loadout-utils';
 import { resetIdTracker, processItems } from './store/d2-item-factory';
 import { makeVault, makeCharacter } from './store/d2-store-factory';
 import { NewItemsService } from './store/new-items';
-import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
+import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -191,11 +191,11 @@ function makeD2StoresService(): D2StoreServiceType {
     resetIdTracker();
 
     try {
-      const [defs, buckets, newItems, itemInfoService, profileInfo] = await Promise.all([
+      const [defs, buckets, newItems, , profileInfo] = await Promise.all([
         getDefinitions(),
         getBuckets(),
         NewItemsService.loadNewItems(account),
-        getItemInfoSource(account),
+        store.dispatch(loadItemInfos(account)),
         getStores(account)
       ]);
       console.time('Process inventory');
@@ -228,8 +228,7 @@ function makeD2StoresService(): D2StoreServiceType {
         profileInfo,
         mergedCollectibles,
         previousItems,
-        newItems,
-        itemInfoService
+        newItems
       );
 
       const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
@@ -241,7 +240,6 @@ function makeD2StoresService(): D2StoreServiceType {
           mergedCollectibles,
           previousItems,
           newItems,
-          itemInfoService,
           lastPlayedDate
         )
       );
@@ -259,7 +257,7 @@ function makeD2StoresService(): D2StoreServiceType {
         store.dispatch(fetchRatings(stores));
       }
 
-      itemInfoService.cleanInfos(stores);
+      store.dispatch(cleanInfos(stores));
 
       stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
@@ -300,7 +298,6 @@ function makeD2StoresService(): D2StoreServiceType {
     },
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService: ItemInfoSource,
     lastPlayedDate: Date
   ): D2Store {
     const character = profileInfo.characters.data![characterId];
@@ -337,7 +334,6 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService,
       mergedCollectibles,
       uninstancedItemObjectives
     );
@@ -361,8 +357,7 @@ function makeD2StoresService(): D2StoreServiceType {
       [hash: number]: DestinyCollectibleComponent;
     },
     previousItems: Set<string>,
-    newItems: Set<string>,
-    itemInfoService: ItemInfoSource
+    newItems: Set<string>
   ): D2Vault {
     const profileInventory = profileInfo.profileInventory.data
       ? profileInfo.profileInventory.data.items
@@ -387,7 +382,6 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService,
       mergedCollectibles
     );
     store.items = processedItems;

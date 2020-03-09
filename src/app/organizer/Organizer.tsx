@@ -14,7 +14,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
 import Spreadsheets from '../settings/Spreadsheets';
-import { DimItemInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
 import styles from './Organizer.m.scss';
 import Compare from 'app/compare/Compare';
@@ -27,7 +26,6 @@ interface StoreProps {
   account?: DestinyAccount;
   stores: DimStore[];
   defs: D2ManifestDefinitions;
-  itemInfos: { [key: string]: DimItemInfo };
   isPhonePortrait: boolean;
 }
 
@@ -35,14 +33,13 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest!,
     stores: storesSelector(state),
-    itemInfos: state.inventory.itemInfos,
     isPhonePortrait: state.shell.isPhonePortrait
   });
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function Organizer({ account, defs, itemInfos, stores, isPhonePortrait }: Props) {
+function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   useEffect(() => {
     if (!stores.length) {
       D2StoresService.getStoresStream(account);
@@ -68,7 +65,7 @@ function Organizer({ account, defs, itemInfos, stores, isPhonePortrait }: Props)
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
         <ItemTable selection={selection} />
-        <Spreadsheets stores={stores} itemInfos={itemInfos} />
+        <Spreadsheets />
         <Compare />
       </ErrorBoundary>
     </div>
