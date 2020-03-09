@@ -12,7 +12,6 @@ import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { ConnectableObservable } from 'rxjs';
-import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
@@ -88,9 +87,7 @@ export interface DimStore {
   percentToNextLevel: number;
   /** Power/light level. */
   powerLevel: number;
-  /** String class name. */
-  class: 'titan' | 'warlock' | 'hunter' | 'vault';
-  /** Integer class type. */
+  /** Enum class type. */
   classType: DestinyClass;
   /** Localized class name. */
   className: string;
@@ -119,7 +116,7 @@ export interface DimStore {
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
    */
-  amountOfItem(item: DimItem): number;
+  amountOfItem(item: { hash: number }): number;
   /**
    * How much of items like this item can fit in this store? For
    * stackables, this is in stacks, not individual pieces.
@@ -137,9 +134,6 @@ export interface DimStore {
 
   /** Add an item to the store. */
   addItem(item: DimItem): void;
-
-  /** Create a loadout from this store's equipped items. */
-  loadoutFromCurrentlyEquipped(name: string): Loadout;
 
   /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
   isDestiny1(): this is D1Store;

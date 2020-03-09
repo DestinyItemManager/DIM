@@ -38,9 +38,8 @@ import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
-import { newLoadout } from 'app/loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -268,7 +267,7 @@ function ItemTable({
   const onMoveSelectedItems = (store: DimStore) => {
     if (selectedFlatRows?.length) {
       const items = selectedFlatRows?.map((d) => d.original);
-      const loadoutItems: { [type: string]: DimItem[] } = {};
+      const loadoutItems: DimItem[] = [];
 
       for (const item of items) {
         if (!loadoutItems[item.type]) {
@@ -277,10 +276,10 @@ function ItemTable({
         loadoutItems[item.type].push(item);
       }
 
-      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), loadoutItems);
-      if (store.class !== 'vault') {
-        loadout.classType = LoadoutClass[store.class];
-      }
+      const loadout = newLoadout(
+        t('Organizer.BulkMoveLoadoutName'),
+        items.map((i) => convertToLoadoutItem(i, false))
+      );
 
       applyLoadout(store, loadout, true);
     }

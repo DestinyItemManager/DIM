@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { currentAccountSelector } from '../accounts/reducer';
-import { Loadout, classTypeToLoadoutClass } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -11,11 +11,6 @@ import {
   LoadoutItem as DimApiLoadoutItem,
   DestinyVersion
 } from '@destinyitemmanager/dim-api-types';
-import { StoreServiceType } from 'app/inventory/store-types';
-import copy from 'fast-copy';
-import { DimItem } from 'app/inventory/item-types';
-import { D2StoresService } from 'app/inventory/d2-stores';
-import { D1StoresService } from 'app/inventory/d1-stores';
 import { currentProfileSelector } from 'app/dim-api/selectors';
 
 const EMPTY_ARRAY = [];
@@ -43,18 +38,27 @@ export const loadoutsSelector = $featureFlags.dimApi
         currentAccount
           ? allLoadouts.filter((loadout) => {
               if (loadout.membershipId !== undefined) {
-                return loadout.membershipId === currentAccount.membershipId;
+                return (
+                  loadout.membershipId === currentAccount.membershipId &&
+                  loadout.destinyVersion === currentAccount.destinyVersion
+                );
               } else if (loadout.platform !== undefined) {
                 reportOldLoadout();
-                if (loadout.platform === currentAccount.platformLabel) {
+                if (
+                  loadout.platform === currentAccount.platformLabel &&
+                  (currentAccount.destinyVersion === 2
+                    ? loadout.destinyVersion === 2
+                    : loadout.destinyVersion !== 2)
+                ) {
                   // Take this opportunity to fix up the membership ID
                   loadout.membershipId = currentAccount.membershipId;
+                  loadout.destinyVersion = currentAccount.destinyVersion;
                   return true;
                 } else {
                   return false;
                 }
               } else {
-                return true;
+                return currentAccount.destinyVersion === 1;
               }
             })
           : EMPTY_ARRAY
@@ -137,60 +141,31 @@ function convertDimApiLoadoutToLoadout(
   destinyVersion: DestinyVersion,
   loadout: DimApiLoadout
 ): Loadout {
-  const result: Loadout = {
+  return {
     id: loadout.id,
-    classType: classTypeToLoadoutClass[loadout.classType],
+    classType: loadout.classType,
     name: loadout.name,
     clearSpace: loadout.clearSpace || false,
     membershipId: platformMembershipId,
     destinyVersion,
-    items: {
-      unknown: []
-    }
+    items: [
+      ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
+      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false))
+    ]
   };
-
-  // It'll be great to stop using this stuff
-  const storesService = getStoresService(destinyVersion);
-  convertItemsToLoadoutItems(storesService, result, loadout.equipped, true);
-  convertItemsToLoadoutItems(storesService, result, loadout.unequipped, false);
-  return result;
 }
 
-function convertItemsToLoadoutItems(
-  storesService: StoreServiceType,
-  result: Loadout,
-  items: DimApiLoadoutItem[],
+/**
+ * Converts DimApiLoadoutItem to real loadout items.
+ */
+export function convertDimApiLoadoutItemToLoadoutItem(
+  item: DimApiLoadoutItem,
   equipped: boolean
-) {
-  for (const item of items) {
-    const LoadoutItem = copy(
-      storesService.getItemAcrossStores({
-        id: item.id || '0',
-        hash: item.hash
-      })
-    );
-
-    if (LoadoutItem) {
-      const discriminator = LoadoutItem.type.toLowerCase();
-      LoadoutItem.equipped = equipped;
-      LoadoutItem.amount = item.amount || 1;
-
-      result.items[discriminator] = result.items[discriminator] || [];
-      result.items[discriminator].push(LoadoutItem);
-    } else {
-      const loadoutItem = {
-        id: item.id || '0',
-        hash: item.hash,
-        amount: item.amount,
-        equipped
-      };
-
-      result.items.unknown.push(loadoutItem as DimItem);
-    }
-  }
-}
-
-function getStoresService(destinyVersion) {
-  // TODO: this needs to use account, store, or item version
-  return destinyVersion === 2 ? D2StoresService : D1StoresService;
+): LoadoutItem {
+  return {
+    id: item.id || '0',
+    hash: item.hash,
+    amount: item.amount || 1,
+    equipped
+  };
 }

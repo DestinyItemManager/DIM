@@ -17,9 +17,9 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
-import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
-import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, ItemInfos, getTag, getNotes } from '../inventory/dim-item-info';
+import { sortedStoresSelector } from '../inventory/reducer';
+import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
+import { itemTagSelectorList, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -427,6 +427,7 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: ItemInfos
 ): SearchFilters {
+  // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
@@ -776,11 +777,7 @@ function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerLoadoutItems.push(
-              ...Object.values(maxLightLoadout(store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
-            );
+            _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).map((i) => i.id));
           });
         }
 
@@ -799,9 +796,7 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ...Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
+              ...maxStatLoadout(maxStatHash, store.getStoresService(), store).items.map((i) => i.id)
             );
           });
         }
@@ -1189,12 +1184,10 @@ function searchFilters(
         if (!_loadoutItemIds) {
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
-            if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.forIn(loadout.items, (items) => {
-                for (const item of items) {
-                  _loadoutItemIds!.add(item.id);
-                }
-              });
+            for (const item of loadout.items) {
+              if (item.id && item.id !== '0') {
+                _loadoutItemIds.add(item.id);
+              }
             }
           }
         }

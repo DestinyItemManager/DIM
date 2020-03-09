@@ -1,5 +1,5 @@
 import { DimStore, StoreServiceType } from 'app/inventory/store-types';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { queuedAction } from 'app/inventory/action-queue';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { showNotification, NotificationType } from 'app/notifications/notifications';
@@ -11,6 +11,7 @@ import { dimItemService, MoveReservations } from 'app/inventory/item-move-servic
 import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
 import copy from 'fast-copy';
+import { loadoutFromAllItems } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -100,14 +101,12 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       savePreviousLoadout({
         storeId: store.id,
         loadoutId: loadout.id,
-        previousLoadout: store.loadoutFromCurrentlyEquipped(
-          t('Loadouts.Before', { name: loadout.name })
-        )
+        previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name }))
       })
     );
   }
 
-  let items: DimItem[] = copy(Object.values(loadout.items)).flat();
+  let items: LoadoutItem[] = copy(loadout.items);
 
   const loadoutItemIds = items.map((i) => ({
     id: i.id,
@@ -121,7 +120,15 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
     // provide a more accurate count of total items
     if (!item) {
       totalItems--;
-      return true;
+      return false;
+    }
+
+    // only try to equip subclasses that are equippable, since we allow multiple in a loadout
+    const applicableSubclass =
+      item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+    if (!applicableSubclass) {
+      totalItems--;
+      return false;
     }
 
     const notAlreadyThere =
@@ -131,17 +138,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       // necessarily mean to de-equip it.
       (pseudoItem.equipped && !item.equipped) ||
       pseudoItem.amount > 1;
-
     return notAlreadyThere;
-  });
-
-  // only try to equip subclasses that are equippable, since we allow multiple in a loadout
-  items = items.filter((item) => {
-    const ok = item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
-    if (!ok) {
-      totalItems--;
-    }
-    return ok;
   });
 
   // vault can't equip
@@ -195,7 +192,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 
   await applyLoadoutItems(store, items, loadoutItemIds, scope);
 
-  let equippedItems: DimItem[];
+  let equippedItems: LoadoutItem[];
   if (itemsToEquip.length > 1) {
     // Use the bulk equipAll API to equip all at once.
     itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
@@ -206,7 +203,11 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   }
 
   if (equippedItems.length < itemsToEquip.length) {
-    const failedItems = itemsToEquip.filter((i) => !equippedItems.find((it) => it.id === i.id));
+    const failedItems = _.compact(
+      itemsToEquip
+        .filter((i) => !equippedItems.find((it) => it.id === i.id))
+        .map((i) => getLoadoutItem(i, store))
+    );
     failedItems.forEach((item) => {
       scope.failed++;
       scope.errors.push({
@@ -245,7 +246,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 // Move one loadout item at a time. Called recursively to move items!
 async function applyLoadoutItems(
   store: DimStore,
-  items: DimItem[],
+  items: LoadoutItem[],
   loadoutItemIds: { id: string; hash: number }[],
   scope: {
     failed: number;
@@ -344,7 +345,7 @@ async function applyLoadoutItems(
 
 // A special getItem that takes into account the fact that
 // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
-function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
+function getLoadoutItem(pseudoItem: LoadoutItem, store: DimStore): DimItem | null {
   let item = store.getStoresService().getItemAcrossStores(_.omit(pseudoItem, 'amount'));
   if (!item) {
     return null;

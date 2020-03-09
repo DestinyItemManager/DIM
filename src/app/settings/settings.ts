@@ -57,6 +57,7 @@ export function initSettings() {
 
     const savedSettings = data['settings-v1.0'] || {};
     store.dispatch(loaded(savedSettings));
+    store.dispatch(loadLoadouts(data));
 
     // TODO: After this has been out for a while, make this into a button in settings
     if ($featureFlags.dimApi && !data.importedToDimApi) {

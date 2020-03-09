@@ -1,7 +1,7 @@
 import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { optimalLoadout, newLoadout } from './loadout-utils';
+import { optimalLoadout, newLoadout, convertToLoadoutItem, optimalItemSet } from './loadout-utils';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -59,23 +59,40 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
 /**
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
-export function maxLightLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  const statHashes = new Set([
-    1480404414, // D2 Attack
-    3897883278, // D1 & D2 Defense
-    368428387 // D1 Attack
-  ]);
-
-  const applicableItems = storeService.getAllItems().filter(
-    (i) =>
-      (i.canBeEquippedBy(store) ||
-        (i.location.inPostmaster &&
-          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-          // nothing we are too low-level to equip
-          i.equipRequiredLevel <= store.level)) &&
-      i.primStat?.value && // has a primary stat (sanity check)
-      statHashes.has(i.primStat.statHash) // one of our selected stats
+export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
+  const items = maxLightItemSet(stores, store);
+  return newLoadout(
+    name,
+    items.map((i) => convertToLoadoutItem(i, true))
   );
+}
+
+const powerStatHashes = [
+  1480404414, // D2 Attack
+  3897883278, // D1 & D2 Defense
+  368428387 // D1 Attack
+];
+
+/**
+ * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
+ */
+export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] {
+  const applicableItems: DimItem[] = [];
+  for (const s of stores) {
+    for (const i of s.items) {
+      if (
+        (i.canBeEquippedBy(store) ||
+          (i.location.inPostmaster &&
+            (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
+            // nothing we are too low-level to equip
+            i.equipRequiredLevel <= store.level)) &&
+        i.primStat?.value && // has a primary stat (sanity check)
+        powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
+      ) {
+        applicableItems.push(i);
+      }
+    }
+  }
 
   const bestItemFn = (item) => {
     let value = item.primStat.value;
@@ -98,7 +115,7 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
     return value;
   };
 
-  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.MaximizeLight'));
+  return optimalItemSet(applicableItems, bestItemFn);
 }
 
 /**
@@ -176,13 +193,9 @@ export function gatherEngramsLoadout(
     }
   );
 
-  // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems = {};
-  _.forIn(itemsByType, (items, type) => {
-    if (items) {
-      finalItems[type.toLowerCase()] = items.map((i, ..._args) => copy(i));
-    }
-  });
+  const finalItems = Object.values(itemsByType)
+    .flat()
+    .map((i) => convertToLoadoutItem(i, false));
 
   return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
 }
@@ -207,21 +220,14 @@ export function searchLoadout(
   );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems = {};
-  _.forIn(itemsByType, (items, type) => {
-    if (items) {
-      finalItems[type.toLowerCase()] = items.map((i) => {
-        const copiedItem = copy(i);
-        copiedItem.equipped = false;
-        return copiedItem;
-      });
-    }
-  });
+  const finalItems = Object.values(itemsByType)
+    .flat()
+    .map((i) => convertToLoadoutItem(i, false));
 
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
-function limitToBucketSize(items: DimItem[], isVault) {
+function limitToBucketSize(items: DimItem[], isVault: boolean) {
   if (!items.length) {
     return [];
   }

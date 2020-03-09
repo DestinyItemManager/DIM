@@ -98,9 +98,7 @@
     var(--character-column-width) -
     var(--item-margin)
   );
-  @include phone-portrait {
-    max-width: 230px;
-  }
+  max-width: 230px;
   box-sizing: border-box;
   max-height: calc(100vh - #{77px + $header-height});
   max-height: calc(100vh - #{77px + $header-height} - constant(safe-area-inset-top));

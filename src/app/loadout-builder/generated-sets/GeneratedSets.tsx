@@ -112,7 +112,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
           </span>
           <button
             className={`dim-button ${styles.newLoadout}`}
-            onClick={() => editLoadout(newLoadout('', {}), { showClass: true, isNew: true })}
+            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
           >
             {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>

@@ -1,4 +1,3 @@
-import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -9,16 +8,13 @@ import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
-import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
-import { newLoadout } from '../../loadout/loadout-utils';
 import { armorStats } from './stats';
-import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -37,7 +33,7 @@ const StoreProto = {
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
    */
-  amountOfItem(this: D2Store, item: D2Item) {
+  amountOfItem(this: D2Store, item: { hash: number }) {
     return _.sumBy(this.items, (i) =>
       i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0
     );
@@ -162,18 +158,6 @@ const StoreProto = {
     }
   },
 
-  // Create a loadout from this store's equipped items
-  loadoutFromCurrentlyEquipped(this: D2Store, name: string): Loadout {
-    const allItems = this.items
-      .filter((item) => item.canBeInLoadout())
-      // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => copy(item));
-    return newLoadout(
-      name,
-      _.groupBy(allItems, (i) => i.type.toLowerCase())
-    );
-  },
-
   isDestiny1(this: D2Store) {
     return false;
   },
@@ -216,7 +200,6 @@ export function makeCharacter(
       character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
     powerLevel: character.light,
     stats: getCharacterStatsData(defs.Stat, character.stats),
-    class: getClass(classy.classType),
     classType: classy.classType,
     className,
     gender: genderLocalizedName,
@@ -243,7 +226,6 @@ export function makeVault(
     destinyVersion: 2,
     id: 'vault',
     name: t('Bucket.Vault'),
-    class: 'vault',
     classType: DestinyClass.Unknown,
     current: false,
     className: t('Bucket.Vault'),

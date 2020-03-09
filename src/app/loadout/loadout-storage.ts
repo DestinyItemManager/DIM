@@ -1,13 +1,34 @@
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { SyncService, DimData } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
-import { D2StoresService } from '../inventory/d2-stores';
-import { D1StoresService } from '../inventory/d1-stores';
 import * as actions from './actions';
-import { LoadoutClass, LoadoutItem, Loadout } from './loadout-types';
+import { LoadoutItem, Loadout } from './loadout-types';
 import { ThunkResult } from 'app/store/reducers';
 import { loadoutsSelector } from './reducer';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+
+/** This is the enum loadouts have been stored with - it does not align with DestinyClass */
+enum LoadoutClass {
+  any = -1,
+  warlock = 0,
+  titan = 1,
+  hunter = 2
+}
+
+const loadoutClassToClassType = {
+  [LoadoutClass.warlock]: DestinyClass.Warlock,
+  [LoadoutClass.titan]: DestinyClass.Titan,
+  [LoadoutClass.hunter]: DestinyClass.Hunter,
+  [LoadoutClass.any]: DestinyClass.Unknown
+};
+
+const classTypeToLoadoutClass = {
+  [DestinyClass.Titan]: LoadoutClass.titan,
+  [DestinyClass.Hunter]: LoadoutClass.hunter,
+  [DestinyClass.Warlock]: LoadoutClass.warlock,
+  [DestinyClass.Unknown]: LoadoutClass.any
+};
 
 /** The format loadouts are stored in. */
 interface DehydratedLoadout {
@@ -15,7 +36,7 @@ interface DehydratedLoadout {
   classType: LoadoutClass;
   name: string;
   items: LoadoutItem[];
-  destinyVersion?: 1 | 2;
+  destinyVersion?: DestinyVersion;
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;
   platform?: string;
@@ -27,7 +48,7 @@ interface DehydratedLoadout {
 /** Called when sync service is loaded to populate loadouts in Redux */
 export function loadLoadouts(data: DimData): ThunkResult<void> {
   return async (dispatch) => {
-    const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data, 'v3.0') : [];
+    const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data) : [];
     if (newLoadouts.length) {
       dispatch(actions.loaded(newLoadouts));
     }
@@ -77,25 +98,19 @@ function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout |
     (loadout) =>
       loadout.name === newLoadout.name &&
       loadout.id !== newLoadout.id &&
-      loadout.classType === newLoadout.classType
+      (loadout.classType === newLoadout.classType || loadout.classType === DestinyClass.Unknown)
   );
 }
 
-function getStoresService(destinyVersion) {
-  // TODO: this needs to use account, store, or item version
-  return destinyVersion === 2 ? D2StoresService : D1StoresService;
-}
-
-function processLoadout(data, version): Loadout[] {
+function processLoadout(data: DimData): Loadout[] {
   if (!data) {
     return [];
   }
 
-  let loadouts: Loadout[] = [];
-  if (version === 'v3.0') {
-    const ids = data['loadouts-v3.0'];
-    loadouts = ids.filter((id) => data[id]).map((id) => hydrate(data[id]));
-  }
+  const ids = data['loadouts-v3.0'];
+  const loadouts: Loadout[] = ids
+    ? ids.filter((id) => data[id]).map((id) => hydrate(data[id]))
+    : [];
 
   const objectTest = (item) => _.isObject(item) && !(Array.isArray(item) || _.isFunction(item));
   const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
@@ -113,26 +128,24 @@ function processLoadout(data, version): Loadout[] {
   return loadouts;
 }
 
-function hydrate(loadoutData: DehydratedLoadout): Loadout {
-  const hydration = {
-    'v3.0': hydratev3d0
-  };
-
-  return hydration[loadoutData.version](loadoutData);
-}
-
 /** Read the storage format of a loadout into the in-memory format. */
-function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
+function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
   const result: Loadout = {
     id: loadoutPrimitive.id,
     name: loadoutPrimitive.name,
     platform: loadoutPrimitive.platform,
     membershipId: loadoutPrimitive.membershipId,
-    destinyVersion: loadoutPrimitive.destinyVersion,
-    classType: loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType,
-    items: {
-      unknown: []
-    },
+    destinyVersion: loadoutPrimitive.destinyVersion || 1,
+    classType:
+      loadoutClassToClassType[
+        loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType
+      ],
+    items: loadoutPrimitive.items.map((item) => ({
+      id: item.id || '0',
+      hash: item.hash,
+      amount: item.amount || 1,
+      equipped: Boolean(item.equipped)
+    })),
     clearSpace: loadoutPrimitive.clearSpace
   };
 
@@ -141,42 +154,12 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
     result.platform = 'Steam';
   }
 
-  for (const itemPrimitive of loadoutPrimitive.items) {
-    const item = copy(
-      getStoresService(result.destinyVersion).getItemAcrossStores({
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash
-      })
-    );
-
-    if (item) {
-      const discriminator = item.type.toLowerCase();
-
-      item.equipped = itemPrimitive.equipped;
-
-      item.amount = itemPrimitive.amount;
-
-      result.items[discriminator] = result.items[discriminator] || [];
-      result.items[discriminator].push(item);
-    } else {
-      const loadoutItem = {
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash,
-        amount: itemPrimitive.amount,
-        equipped: itemPrimitive.equipped
-      };
-
-      result.items.unknown.push(loadoutItem as DimItem);
-    }
-  }
-
   return result;
 }
 
 /** Transform the loadout into its storage format. */
 function dehydrate(loadout: Loadout): DehydratedLoadout {
-  const allItems = Object.values(loadout.items).flat();
-  const items = allItems.map((item) => ({
+  const items = loadout.items.map((item) => ({
     id: item.id,
     hash: item.hash,
     amount: item.amount,
@@ -186,7 +169,7 @@ function dehydrate(loadout: Loadout): DehydratedLoadout {
   return {
     id: loadout.id,
     name: loadout.name,
-    classType: loadout.classType,
+    classType: classTypeToLoadoutClass[loadout.classType],
     version: 'v3.0',
     platform: loadout.platform,
     membershipId: loadout.membershipId,
