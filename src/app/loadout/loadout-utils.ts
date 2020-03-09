@@ -1,25 +1,30 @@
-import copy from 'fast-copy';
 import _ from 'lodash';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
 import { DimStore } from 'app/inventory/store-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
-export function newLoadout(name: string, items: Loadout['items']): Loadout {
+/**
+ * Creates a new loadout, with all of the items equipped.
+ */
+export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
   return {
     id: uuidv4(),
-    classType: -1,
+    classType: DestinyClass.Unknown,
+    // This gets overwritten in any path that'd save a real loadout, and apply doesn't care
+    destinyVersion: 2,
     name,
     items
   };
 }
 
 /*
- * Calculates the light level for a full loadout. loadout should have all types of weapon and armor
+ * Calculates the light level for a list of items, one per type of weapon and armor
  * or it won't be accurate. function properly supports guardians w/o artifacts
  * returns to tenth decimal place.
  */
-export function getLight(store: DimStore, loadout: Loadout): number {
+export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   let itemWeight = {
     Weapons: 6,
@@ -41,10 +46,6 @@ export function getLight(store: DimStore, loadout: Loadout): number {
     itemWeightDenominator = 50;
   }
 
-  const items = Object.values(loadout.items)
-    .flat()
-    .filter((i) => i.equipped);
-
   const exactLight =
     items.reduce(
       (memo, item) =>
@@ -57,12 +58,11 @@ export function getLight(store: DimStore, loadout: Loadout): number {
   return Math.floor(exactLight * 10) / 10;
 }
 
-// Generate an optimized loadout based on a filtered set of items and a value function
-export function optimalLoadout(
+// Generate an optimized item set (loadout items) based on a filtered set of items and a value function
+export function optimalItemSet(
   applicableItems: DimItem[],
-  bestItemFn: (item: DimItem) => number,
-  name: string
-): Loadout {
+  bestItemFn: (item: DimItem) => number
+): DimItem[] {
   const itemsByType = _.groupBy(applicableItems, (i) => i.type);
 
   // Pick the best item
@@ -108,13 +108,43 @@ export function optimalLoadout(
     }
   });
 
-  // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems: { [type: string]: DimItem[] } = {};
-  _.forIn(items, (item, type) => {
-    const itemCopy = copy(item);
-    itemCopy.equipped = true;
-    finalItems[type.toLowerCase()] = [itemCopy];
-  });
+  return Object.values(items);
+}
 
-  return newLoadout(name, finalItems);
+export function optimalLoadout(
+  applicableItems: DimItem[],
+  bestItemFn: (item: DimItem) => number,
+  name: string
+): Loadout {
+  const items = optimalItemSet(applicableItems, bestItemFn);
+  return newLoadout(
+    name,
+    items.map((i) => convertToLoadoutItem(i, true))
+  );
+}
+/** Create a loadout from all of this character's items that can be in loadouts */
+export function loadoutFromAllItems(
+  store: DimStore,
+  name: string,
+  onlyEquipped?: boolean
+): Loadout {
+  const allItems = store.items.filter(
+    (item) => item.canBeInLoadout() && (!onlyEquipped || item.equipped)
+  );
+  return newLoadout(
+    name,
+    allItems.map((i) => convertToLoadoutItem(i, i.equipped))
+  );
+}
+
+/**
+ * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ */
+export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
+  return {
+    id: item.id,
+    hash: item.hash,
+    amount: item.amount,
+    equipped
+  };
 }

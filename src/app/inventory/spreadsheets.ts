@@ -15,6 +15,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { ThunkResult } from 'app/store/reducers';
+import { getClass } from './store/character-utils';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -57,7 +58,9 @@ export function downloadCsvFiles(
   stores.forEach((store) => {
     allItems = allItems.concat(store.items);
     nameMap[store.id] =
-      store.id === 'vault' ? 'Vault' : `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
+      store.id === 'vault'
+        ? 'Vault'
+        : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {

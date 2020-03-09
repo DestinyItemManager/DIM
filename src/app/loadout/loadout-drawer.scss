@@ -31,6 +31,9 @@
   position: relative;
   margin-right: var(--item-margin);
   margin-bottom: var(--item-margin);
+  .close {
+    right: 2px;
+  }
 }
 
 .loadout-content {
@@ -196,9 +199,6 @@
   .equipped {
     .item {
       margin: 0;
-    }
-    .close {
-      right: 2px;
     }
     .pull-item-button {
       width: var(--item-size);

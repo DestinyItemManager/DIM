@@ -18,8 +18,8 @@ import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
-import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, ItemInfos, getTag, getNotes } from '../inventory/dim-item-info';
+import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
+import { itemTagSelectorList, getTag, getNotes, ItemInfos } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -27,8 +27,6 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import { getLoadouts as getLoadoutsFromStorage } from '../loadout/loadout-storage';
-
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
@@ -429,6 +427,7 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: ItemInfos
 ): SearchFilters {
+  // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
@@ -437,7 +436,6 @@ function searchFilters(
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
-  const getLoadouts = _.once(getLoadoutsFromStorage);
 
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
@@ -779,11 +777,7 @@ function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerLoadoutItems.push(
-              ...Object.values(maxLightLoadout(store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
-            );
+            _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).map((i) => i.id));
           });
         }
 
@@ -802,9 +796,7 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ...Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
+              ...maxStatLoadout(maxStatHash, store.getStoresService(), store).items.map((i) => i.id)
             );
           });
         }
@@ -1190,18 +1182,12 @@ function searchFilters(
       inloadout(item: DimItem) {
         // Lazy load loadouts and re-trigger
         if (!_loadoutItemIds) {
-          if (loadouts.length === 0) {
-            getLoadouts();
-            return false;
-          }
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
-            if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.forIn(loadout.items, (items) => {
-                for (const item of items) {
-                  _loadoutItemIds!.add(item.id);
-                }
-              });
+            for (const item of loadout.items) {
+              if (item.id && item.id !== '0') {
+                _loadoutItemIds.add(item.id);
+              }
             }
           }
         }

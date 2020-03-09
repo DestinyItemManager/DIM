@@ -3,31 +3,29 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { Loadout } from './loadout-types';
 import { router } from '../router';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
-export default function LoadoutDrawerOptions(
-  this: void,
-  {
-    loadout,
-    showClass,
-    isNew,
-    classTypeOptions,
-    updateLoadout,
-    saveLoadout,
-    saveAsNew
-  }: {
-    loadout?: Loadout;
-    showClass: boolean;
-    isNew: boolean;
-    clashingLoadout?: Loadout;
-    classTypeOptions: {
-      label: string;
-      value: number;
-    }[];
-    updateLoadout(loadout: Loadout);
-    saveLoadout(e);
-    saveAsNew(e);
-  }
-) {
+export default function LoadoutDrawerOptions({
+  loadout,
+  showClass,
+  isNew,
+  classTypeOptions,
+  updateLoadout,
+  saveLoadout,
+  saveAsNew
+}: {
+  loadout?: Loadout;
+  showClass: boolean;
+  isNew: boolean;
+  clashingLoadout?: Loadout;
+  classTypeOptions: {
+    label: string;
+    value: DestinyClass;
+  }[];
+  updateLoadout(loadout: Loadout);
+  saveLoadout(e);
+  saveAsNew(e);
+}) {
   if (!loadout) {
     return null;
   }
@@ -84,10 +82,7 @@ export default function LoadoutDrawerOptions(
           )}
         </div>
         <div className="input-group">
-          <button
-            className="dim-button"
-            disabled={!loadout.name.length || _.isEmpty(loadout.items)}
-          >
+          <button className="dim-button" disabled={!loadout.name.length || !loadout.items.length}>
             {t('Loadouts.Save')}
           </button>
           {!isNew && (

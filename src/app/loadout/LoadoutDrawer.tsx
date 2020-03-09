@@ -3,14 +3,14 @@ import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import _ from 'lodash';
 import copy from 'fast-copy';
-import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions';
-import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { router } from '../router';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -30,13 +30,9 @@ import { DimStore } from '../inventory/store-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import { Subject } from 'rxjs';
-import {
-  Loadout,
-  loadoutClassToClassType,
-  LoadoutClass,
-  classTypeToLoadoutClass
-} from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { saveLoadout } from './loadout-storage';
+import produce from 'immer';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -45,7 +41,6 @@ export let loadoutDialogOpen = false;
 
 export const editLoadout$ = new Subject<{
   loadout: Loadout;
-  equipAll?: boolean;
   showClass?: boolean;
   isNew?: boolean;
 }>();
@@ -54,13 +49,9 @@ export const addItem$ = new Subject<{
   clickEvent: MouseEvent;
 }>();
 
-export function editLoadout(
-  loadout: Loadout,
-  { equipAll = false, showClass = true, isNew = true } = {}
-) {
+export function editLoadout(loadout: Loadout, { showClass = true, isNew = true } = {}) {
   editLoadout$.next({
     loadout,
-    equipAll,
     showClass,
     isNew
   });
@@ -83,13 +74,13 @@ interface StoreProps {
   }[];
   stores: DimStore[];
   buckets: InventoryBuckets;
+  defs: D1ManifestDefinitions | D2ManifestDefinitions;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Loadout;
-  warnitems: DimItem[];
   show: boolean;
   showClass: boolean;
   isNew: boolean;
@@ -107,35 +98,12 @@ function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
       label: string;
-      value: LoadoutClass;
-    }[] = [{ label: t('Loadouts.Any'), value: LoadoutClass.any }];
+      value: DestinyClass;
+    }[] = [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }];
     _.uniqBy(
       stores.filter((s) => !s.isVault),
       (store) => store.classType
-    ).forEach((store) => {
-      let classType = 0;
-
-      /*
-      Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
-      These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
-      */
-      switch (parseInt(store.classType.toString(), 10)) {
-        case DestinyClass.Titan: {
-          classType = LoadoutClass.titan;
-          break;
-        }
-        case DestinyClass.Hunter: {
-          classType = LoadoutClass.hunter;
-          break;
-        }
-        case DestinyClass.Warlock: {
-          classType = LoadoutClass.warlock;
-          break;
-        }
-      }
-
-      classTypeValues.push({ label: store.className, value: classType });
-    });
+    ).map((store) => ({ label: store.className, value: store.classType }));
     return classTypeValues;
   });
 
@@ -145,13 +113,14 @@ function mapStateToProps() {
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
-    buckets: state.inventory.buckets!
+    buckets: state.inventory.buckets!,
+    defs:
+      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!
   });
 }
 
 class LoadoutDrawer extends React.Component<Props, State> {
   state: State = {
-    warnitems: [],
     show: false,
     showClass: true,
     isNew: false,
@@ -181,7 +150,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   render() {
     const { buckets, classTypeOptions, stores, itemSortOrder } = this.props;
-    const { show, loadout, warnitems, showClass, isNew, clashingLoadout } = this.state;
+    const { show, loadout, showClass, isNew, clashingLoadout } = this.state;
 
     if (!loadout || !show) {
       return null;
@@ -191,6 +160,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     const onEdit = () =>
       clashingLoadout &&
       this.setState({ loadout: clashingLoadout, isNew: false, clashingLoadout: null });
+
+    const [items, warnitems] = this.findItems(loadout);
 
     const header = (
       <div className="loadout-drawer-header">
@@ -240,6 +211,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
               <div className="loadout-contents">
                 <LoadoutDrawerContents
                   loadout={loadout}
+                  items={items}
                   buckets={buckets}
                   stores={stores}
                   itemSortOrder={itemSortOrder}
@@ -255,12 +227,50 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   }
 
-  private editLoadout = (args: {
-    loadout: Loadout;
-    equipAll?: boolean;
-    showClass?: boolean;
-    isNew?: boolean;
-  }) => {
+  /**
+   * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
+   * are returned as warnitems.
+   */
+  // TODO: memoize?
+  private findItems = (loadout: Loadout) => {
+    const { stores, defs } = this.props;
+
+    const findItem = (loadoutItem: LoadoutItem) => {
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (loadoutItem.id && loadoutItem.id === item.id) {
+            return item;
+          } else if (!loadoutItem.id && loadoutItem.hash === item.hash) {
+            return item;
+          }
+        }
+      }
+      return undefined;
+    };
+
+    const items: DimItem[] = [];
+    const warnitems: DimItem[] = [];
+    for (const loadoutItem of loadout.items) {
+      const item = findItem(loadoutItem);
+      if (item) {
+        items.push(item);
+      } else {
+        const itemDef = defs.InventoryItem.get(loadoutItem.hash);
+        if (itemDef) {
+          // TODO: makeFakeItem
+          warnitems.push({
+            ...loadoutItem,
+            icon: itemDef.displayProperties.icon,
+            name: itemDef.displayProperties.name
+          } as DimItem);
+        }
+      }
+    }
+
+    return [items, warnitems];
+  };
+
+  private editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
     const { account } = this.props;
     const loadout = copy(args.loadout);
     loadoutDialogOpen = true;
@@ -269,26 +279,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
     loadout.items = loadout.items || {};
     loadout.destinyVersion = account.destinyVersion;
-    loadout.platform = account.platformLabel;
     loadout.membershipId = account.membershipId;
-
-    // Filter out any vendor items and equip all if requested
-    const warnitems = Object.values(loadout.items).flatMap((items) =>
-      items.filter((item) => !item.owner)
-    );
-    this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
-
-    _.forIn(loadout.items, (items, type) => {
-      loadout.items[type] = items.filter((item) => item.owner);
-      if (args.equipAll && loadout.items[type][0]) {
-        loadout.items[type][0].equipped = true;
-      }
-    });
 
     this.setState({
       show: true,
       loadout,
-      warnitems,
       showClass: Boolean(args.showClass),
       isNew: Boolean(args.isNew)
     });
@@ -297,7 +292,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private fixWarnItem = async (warnItem: DimItem) => {
     const { loadout } = this.state;
 
-    const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
+    const loadoutClassType = loadout?.classType;
 
     try {
       const { item, equip } = await showItemPicker({
@@ -305,7 +300,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           item.hash === warnItem.hash &&
           item.canBeInLoadout() &&
           (!loadout ||
-            loadout.classType === LoadoutClass.any ||
+            loadout.classType === DestinyClass.Unknown ||
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
@@ -326,53 +321,66 @@ class LoadoutDrawer extends React.Component<Props, State> {
     if (!loadout) {
       return;
     }
-    if (item.canBeInLoadout()) {
-      const clone = copy(item);
+    if (!item.canBeInLoadout()) {
+      showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
+      return;
+    }
+    const [items] = this.findItems(loadout);
 
-      const discriminator = clone.type.toLowerCase();
-      const typeInventory = (loadout.items[discriminator] = loadout.items[discriminator] || []);
+    const loadoutItem: LoadoutItem = {
+      id: item.id,
+      hash: item.hash,
+      amount: Math.min(item.amount, e?.shiftKey ? 5 : 1),
+      equipped: false
+    };
 
-      clone.amount = Math.min(clone.amount, e?.shiftKey ? 5 : 1);
+    const itemType = item.type.toLowerCase();
+    const typeInventory = items.filter((i) => i.type === itemType);
 
-      const dupe = typeInventory.find((i) => i.hash === clone.hash && i.id === clone.id);
+    const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
-      let maxSlots = 10;
-      if (item.type === 'Material') {
-        maxSlots = 20;
-      } else if (item.type === 'Consumable') {
-        maxSlots = 19;
-      }
+    const maxSlots = item.bucket.capacity;
 
+    const newLoadout = produce(loadout, (draftLoadout) => {
       if (!dupe) {
-        if (typeInventory.length < maxSlots) {
-          clone.equipped =
+        if (typeInventory.length < item.bucket.capacity) {
+          loadoutItem.equipped =
             equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
 
-          // Only allow one subclass per burn
-          if (clone.type === 'Class') {
-            const other = loadout.items.class;
-            if (other?.length && other[0].element?.hash !== clone.element?.hash) {
-              loadout.items.class.splice(0, loadout.items.class.length);
+          // Only allow one subclass per element
+          if (item.type === 'Class') {
+            const conflictingItem = items.find(
+              (i) => i.type === item.type && i.element?.hash === item.element?.hash
+            );
+            if (conflictingItem) {
+              draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
             }
-            clone.equipped = true;
+            loadoutItem.equipped = true;
           }
 
-          typeInventory.push(clone);
+          draftLoadout.items.push(loadoutItem);
         } else {
-          showNotification({ type: 'warning', title: t('Loadouts.MaxSlots', { slots: maxSlots }) });
+          showNotification({
+            type: 'warning',
+            title: t('Loadouts.MaxSlots', { slots: maxSlots })
+          });
         }
-      } else if (dupe && clone.maxStackSize > 1) {
-        const increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
-        dupe.amount += increment;
+      } else if (dupe && item.maxStackSize > 1) {
+        const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
+        dupe.amount = dupe.amount + increment;
         // TODO: handle stack splits
       }
 
-      if (loadout.classType === LoadoutClass.any && item.classType !== DestinyClass.Unknown) {
-        loadout.classType = classTypeToLoadoutClass[item.classType];
+      if (
+        draftLoadout.classType === DestinyClass.Unknown &&
+        item.classType !== DestinyClass.Unknown
+      ) {
+        draftLoadout.classType = item.classType;
       }
-      this.setState({ loadout });
-    } else {
-      showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
+    });
+
+    if (newLoadout !== loadout) {
+      this.setState({ loadout: newLoadout });
     }
   };
 
@@ -383,37 +391,55 @@ class LoadoutDrawer extends React.Component<Props, State> {
     if (!loadout) {
       return;
     }
-    const discriminator = item.type.toLowerCase();
-    const typeInventory = (loadout.items[discriminator] = loadout.items[discriminator] || []);
 
-    const index = typeInventory.findIndex((i) => i.hash === item.hash && i.id === item.id);
+    const newLoadout = produce(loadout, (draftLoadout) => {
+      const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
-    if (index >= 0) {
-      const decrement = $event.shiftKey ? 5 : 1;
-      item.amount -= decrement;
-      if (item.amount <= 0) {
-        typeInventory.splice(index, 1);
+      if (!loadoutItem) {
+        return;
       }
-    }
 
-    if (item.equipped && typeInventory.length > 0) {
-      typeInventory[0].equipped = true;
-    }
+      const decrement = $event.shiftKey ? 5 : 1;
+      loadoutItem.amount = (loadoutItem.amount || 1) - decrement;
+      if (loadoutItem.amount <= 0) {
+        draftLoadout.items = draftLoadout.items.filter(
+          (i) => !(i.hash === item.hash && i.id === item.id)
+        );
+      }
 
-    this.setState({ loadout });
+      if (loadoutItem.equipped) {
+        const [items] = this.findItems(draftLoadout);
+        const itemType = item.type.toLowerCase();
+        const typeInventory = items.filter((i) => i.type === itemType);
+        const nextInLine = draftLoadout.items.find(
+          (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
+        );
+        if (nextInLine) {
+          nextInLine.equipped = true;
+        }
+      }
+    });
+
+    if (newLoadout !== loadout) {
+      this.setState({ loadout: newLoadout });
+    }
   };
 
-  private saveLoadout = (e) => {
+  private saveLoadout = async (e) => {
     e.preventDefault();
+    const { dispatch } = this.props;
     const { loadout } = this.state;
     if (!loadout) {
       return;
     }
 
     this.close();
-    saveLoadout(loadout)
-      .then(this.handleLoadOutSaveResult)
-      .catch((e) => this.handleLoadoutError(e, loadout.name));
+    try {
+      const clashingLoadout = await dispatch(saveLoadout(loadout));
+      this.handleLoadOutSaveResult(clashingLoadout);
+    } catch (e) {
+      this.handleLoadoutError(e, loadout.name);
+    }
   };
 
   private handleLoadOutSaveResult = (clashingLoadout?: Loadout) => {
@@ -472,42 +498,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadoutDialogOpen = false;
   };
 
-  private fillInDefinitionsForWarnItems = (destinyVersion: 1 | 2, warnitems: DimItem[]) => {
-    if (!warnitems || !warnitems.length) {
-      return;
-    }
-
-    if (destinyVersion === 2) {
-      getD2Definitions().then((defs) => {
-        for (const warnItem of warnitems) {
-          const itemDef = defs.InventoryItem.get(warnItem.hash);
-          if (itemDef) {
-            warnItem.icon = itemDef.displayProperties.icon;
-            warnItem.name = itemDef.displayProperties.name;
-          }
-        }
-        this.setState({ warnitems });
-      });
-    } else {
-      getD1Definitions().then((defs) => {
-        for (const warnItem of warnitems) {
-          const itemDef = defs.InventoryItem.get(warnItem.hash);
-          if (itemDef) {
-            warnItem.icon = itemDef.icon;
-            warnItem.name = itemDef.itemName;
-          }
-        }
-        this.setState({ warnitems });
-      });
-    }
-  };
-
   private removeWarnItem = (item: DimItem) => {
-    const { warnitems } = this.state;
-
-    this.setState({
-      warnitems: warnitems.filter((i) => !(i.hash === item.hash && i.id === item.id))
-    });
+    this.setState((state) => ({
+      loadout: {
+        ...state.loadout!,
+        items: state.loadout!.items.filter((i) => !(i.hash === item.hash && i.id === item.id))
+      }
+    }));
   };
 
   private equip = (item: DimItem) => {

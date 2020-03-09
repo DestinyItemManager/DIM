@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loadout, loadoutClassToClassType, LoadoutClass } from './loadout-types';
+import { Loadout } from './loadout-types';
 import _ from 'lodash';
 import { AppIcon, addIcon } from '../shell/icons';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
@@ -8,7 +8,6 @@ import { DimItem } from '../inventory/item-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
-import { filterLoadoutToEquipped } from './LoadoutPopup';
 import { DimStore } from '../inventory/store-types';
 
 const loadoutTypes = [
@@ -42,7 +41,7 @@ const loadoutTypes = [
 
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
 // like emblems and ships and horns.
-const fromEquippedTypes = [
+export const fromEquippedTypes = [
   'class',
   'kinetic',
   'energy',
@@ -64,6 +63,7 @@ export default function LoadoutDrawerContents(
   {
     loadout,
     buckets,
+    items,
     stores,
     itemSortOrder,
     equip,
@@ -73,25 +73,25 @@ export default function LoadoutDrawerContents(
     loadout: Loadout;
     buckets: InventoryBuckets;
     stores: DimStore[];
+    items: DimItem[];
     itemSortOrder: string[];
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
   }
 ) {
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.id);
+
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutFromEquipped(loadout, stores, add);
+    fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) =>
-      bucket.type &&
-      loadout.items[bucket.type.toLowerCase()] &&
-      loadout.items[bucket.type.toLowerCase()].length
+    (bucket) => bucket.id && itemsByBucket[bucket.id] && itemsByBucket[bucket.id].length
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) =>
@@ -110,7 +110,7 @@ export default function LoadoutDrawerContents(
           {typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
-              onClick={() => pickLoadoutItem(loadout, bucket, add)}
+              onClick={() => pickLoadoutItem(loadout, itemsByBucket, bucket, add)}
               className="dim-button loadout-add"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
@@ -123,9 +123,10 @@ export default function LoadoutDrawerContents(
           <LoadoutDrawerBucket
             key={bucket.type}
             bucket={bucket}
-            loadout={loadout}
+            loadoutItems={loadout.items}
+            items={itemsByBucket[bucket.id] || []}
             itemSortOrder={itemSortOrder}
-            pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add)}
+            pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, itemsByBucket, bucket, add)}
             equip={equip}
             remove={remove}
           />
@@ -137,27 +138,24 @@ export default function LoadoutDrawerContents(
 
 async function pickLoadoutItem(
   loadout: Loadout,
+  itemsByBucket: { [bucketId: string]: DimItem[] },
   bucket: InventoryBucket,
   add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
 ) {
-  const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
+  const loadoutClassType = loadout?.classType;
 
   function loadoutHasItem(item: DimItem) {
-    return (
-      loadout &&
-      loadout.items[item.bucket.type!.toLowerCase()] &&
-      loadout.items[item.bucket.type!.toLowerCase()].some((i) => i.id === item.id)
-    );
+    return loadout && loadout.items.some((i) => i.id === item.id && i.hash === i.hash);
   }
 
-  const hasEquippedItem = (loadout.items[bucket.type!.toLowerCase()] || []).some((i) => i.equipped);
+  const hasEquippedItem = (itemsByBucket[bucket.id] || []).some((i) => i.equipped);
 
   try {
     const { item, equip } = await showItemPicker({
       filterItems: (item: DimItem) =>
         item.bucket.id === bucket.id &&
         (!loadout ||
-          loadout.classType === LoadoutClass.any ||
+          loadout.classType === DestinyClass.Unknown ||
           item.classType === loadoutClassType ||
           item.classType === DestinyClass.Unknown) &&
         item.canBeInLoadout() &&
@@ -176,6 +174,7 @@ async function pickLoadoutItem(
 
 function fillLoadoutFromEquipped(
   loadout: Loadout,
+  itemsByBucket: { [bucketId: string]: DimItem[] },
   stores: DimStore[],
   add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
 ) {
@@ -183,19 +182,19 @@ function fillLoadoutFromEquipped(
     return;
   }
 
-  const loadoutClass = loadout && loadoutClassToClassType[loadout.classType];
-
   // TODO: need to know which character "launched" the builder
   const dimStore =
-    (loadoutClass !== DestinyClass.Unknown && stores.find((s) => s.classType === loadoutClass)) ||
+    (loadout.classType !== DestinyClass.Unknown &&
+      stores.find((s) => s.classType === loadout.classType)) ||
     stores.find((s) => s.current)!;
 
-  const equippedLoadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
-  equippedLoadout.items = _.pick(equippedLoadout.items, ...fromEquippedTypes);
+  const items = dimStore.items.filter(
+    (item) => item.canBeInLoadout() && item.equipped && fromEquippedTypes.includes(item.type)
+  );
 
-  _.forIn(equippedLoadout.items, (items, type) => {
-    if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
+  for (const item of items) {
+    if (!itemsByBucket[item.bucket.id] || !itemsByBucket[item.bucket.id].some((i) => i.equipped)) {
       add(items[0], undefined, true);
     }
-  });
+  }
 }

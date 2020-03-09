@@ -1,18 +1,19 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { getLoadoutClassDisplay, LoadoutClass } from './loadout-types';
 import './loadout-edit-popup.scss';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { getClass } from 'app/inventory/store/character-utils';
 
 interface Props {
-  loadoutClass: LoadoutClass;
+  loadoutClass: DestinyClass;
   loadoutName: string;
   changeNameHandler(): void;
   editHandler(): void;
 }
 
-function getAlreadyExistsTranslation(loadoutClassType: number) {
-  if (loadoutClassType >= 0) {
-    const className = getLoadoutClassDisplay(loadoutClassType);
+function getAlreadyExistsTranslation(loadoutClassType: DestinyClass) {
+  if (loadoutClassType !== DestinyClass.Unknown) {
+    const className = getClass(loadoutClassType);
     return t('Loadouts.AlreadyExistsClass', { className });
   }
 
