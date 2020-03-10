@@ -5,7 +5,7 @@ import * as inventoryActions from '../inventory/actions';
 import { clearWishLists } from 'app/wishlists/actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
-import { ProfileUpdateWithRollback } from './api-types';
+import { ProfileUpdateWithRollback, DeleteLoadoutUpdateWithRollback } from './api-types';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import {
   TagValue,
@@ -31,14 +31,19 @@ export interface DimApiState {
   // TODO: encapsulate async loading state
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
+  // TODO: set this from an action
   profileLoadedError?: Error;
 
-  // Settings are global, not per-platform-membership
+  /**
+   * App settings. Settings are global, not per-platform-membership
+   */
   // TODO: add last account info to settings? we'd have to load them before accounts...
   // TODO: add changelog high water mark
   settings: Settings;
 
-  // Store profile data per account. The key is `${platformMembershipId}-d${destinyVersion}`.
+  /*
+   * DIM API profile data, per account. The key is `${platformMembershipId}-d${destinyVersion}`.
+   */
   profiles: {
     [accountKey: string]: {
       /** Loadouts stored by loadout ID */
@@ -52,10 +57,20 @@ export interface DimApiState {
     };
   };
 
-  // Updates that haven't yet been flushed to the API. Each one is optimistic - we apply its
-  // effects to local state immediately, but if they fail later we undo their effects. This
-  // is stored locally to be redriven.
+  /**
+   * Updates that haven't yet been flushed to the API. Each one is optimistic - we apply its
+   * effects to local state immediately, but if they fail later we undo their effects. This
+   * is stored locally to be redriven.
+   */
   updateQueue: ProfileUpdateWithRollback[];
+
+  /**
+   * This watermark indicates how many items in the update queue (starting with the head of the
+   * queue) are currently in the process of being flushed to the server. Items at indexes
+   * less than the watermark should not be modified. Once the flush is done, those items can
+   * be removed from the queue and this watermark set back to 0.
+   */
+  updateInProgressWatermark: number;
 }
 
 /**
@@ -80,11 +95,9 @@ export const initialState: DimApiState = {
 
   profiles: {},
 
-  updateQueue: []
+  updateQueue: [],
+  updateInProgressWatermark: 0
 };
-
-// TODO: gonna have to set this correctly on load...
-let updateCounter = 0;
 
 type DimApiAction =
   | ActionType<typeof actions>
@@ -115,7 +128,6 @@ export const dimApi = (
       const newUpdateQueue = action.payload
         ? [...action.payload.updateQueue, ...state.updateQueue]
         : [];
-      updateCounter = _.max(newUpdateQueue.map((u) => u.updateId)) || updateCounter;
       return action.payload
         ? {
             ...state,
@@ -159,9 +171,20 @@ export const dimApi = (
       };
     }
 
+    case getType(actions.prepareToFlushUpdates): {
+      return prepareUpdateQueue(state);
+    }
+
     case getType(actions.finishedUpdates): {
       return applyFinishedUpdatesToQueue(state, action.payload.updates, action.payload.results);
     }
+
+    // For now, a failed update just resets state so we can flush again. Note that flushing will happen immediately...
+    case getType(actions.flushUpdatesFailed):
+      return {
+        ...state,
+        updateInProgressWatermark: 0
+      };
 
     // *** Settings ***
 
@@ -222,13 +245,11 @@ export const dimApi = (
   }
 };
 
-// TODO: it'd be great to be able to compact the list, but we'd have to handle when some are already inflight
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
   return produce(state, (draft) => {
     const beforeValue = draft.settings[prop];
     draft.settings[prop] = value;
     draft.updateQueue.push({
-      updateId: updateCounter++,
       action: 'setting',
       payload: {
         [prop]: value
@@ -238,6 +259,210 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
       }
     });
   });
+}
+
+/**
+ * This prepares the update queue to be flushed to the DIM API. It first
+ * compacts the updates so that there aren't redundant actions, and then sets
+ * the update watermark.
+ */
+function prepareUpdateQueue(state: DimApiState) {
+  console.time('prepareUpdateQueue');
+  try {
+    return produce(state, (draft) => {
+      let platformMembershipId: string | undefined;
+      let destinyVersion: DestinyVersion | undefined;
+
+      // Multiple updates to a particular object can be coalesced into a single update
+      // before being sent. We iterate from beginning (oldest update) to end (newest update).
+      const compacted: {
+        [key: string]: ProfileUpdateWithRollback;
+      } = {};
+      const rest: ProfileUpdateWithRollback[] = [];
+      for (const update of draft.updateQueue) {
+        // The first time we see a profile-specific update, keep track of which
+        // profile it was, and reject updates for the other profiles. This is
+        // because DIM API update can only work one profile at a time.
+        if (!platformMembershipId && !destinyVersion) {
+          platformMembershipId = update.platformMembershipId;
+          destinyVersion = update.destinyVersion;
+        } else if (
+          update.platformMembershipId !== platformMembershipId ||
+          update.destinyVersion !== destinyVersion
+        ) {
+          // Put it on the list of other updates that won't be flushed, and move on.
+          // Some updates, like settings, aren't profile-specific and can always
+          // be sent.
+          rest.push(update);
+          continue;
+        }
+
+        compactUpdate(compacted, update);
+      }
+
+      draft.updateQueue = Object.values(compacted);
+
+      // Set watermark to what we're going to flush
+      draft.updateInProgressWatermark = draft.updateQueue.length;
+
+      // Put the other updates we aren't going to send back on the end of the queue.
+      draft.updateQueue.push(...rest);
+    });
+  } finally {
+    console.timeEnd('prepareUpdateQueue');
+  }
+}
+
+/**
+ * Combine this update with any update to the same object that's already in the queue.
+ * This is meant to reduce how many updates the API has to process - especially if the
+ * app has been offline for some time.
+ *
+ * For example, if I edit a loadout twice then delete it, we can just issue a delete.
+ *
+ * Note that this may result in taking two updates, one of which would succeed and one
+ * which would fail, and turning them into a single update that will fail and roll back
+ * to the initial state before either of them. Hopefully this is rare.
+ */
+function compactUpdate(
+  compacted: {
+    [key: string]: ProfileUpdateWithRollback;
+  },
+  update: ProfileUpdateWithRollback
+) {
+  // Figure out the ID of the object being acted on
+  let key: string;
+  switch (update.action) {
+    case 'setting':
+    case 'tag_cleanup':
+      // These don't act on a specific object
+      key = update.action;
+      break;
+    case 'loadout':
+    case 'tag':
+      // These store their ID in an object
+      key = `${update.action}-${update.payload.id}`;
+      break;
+    case 'delete_loadout':
+      // The payload is the ID, and it should coalesce with other loadout actions
+      key = `loadout-${update.payload}`;
+      break;
+  }
+
+  const existingUpdate = compacted[key];
+  if (!existingUpdate) {
+    compacted[key] = update;
+    return;
+  }
+
+  let combinedUpdate: ProfileUpdateWithRollback | undefined;
+
+  // The if statements checking existingUpdate's action are to inform types
+  switch (update.action) {
+    case 'setting': {
+      if (existingUpdate.action === 'setting') {
+        const payload = {
+          // Merge settings, newer overwriting older
+          ...existingUpdate.payload,
+          ...update.payload
+        };
+        const before = {
+          // Reversed order
+          ...update.before,
+          ...existingUpdate.before
+        };
+
+        // Eliminate chains of settings that get back to the initial state
+        for (const key in payload) {
+          if (payload[key] === before[key]) {
+            delete payload[key];
+            delete before[key];
+          }
+        }
+        if (_.isEmpty(payload)) {
+          break;
+        }
+
+        combinedUpdate = {
+          ...existingUpdate,
+          payload,
+          before
+        };
+      }
+      break;
+    }
+
+    case 'tag_cleanup': {
+      if (existingUpdate.action === 'tag_cleanup') {
+        combinedUpdate = {
+          ...existingUpdate,
+          // Combine into a unique set
+          payload: Array.from(new Set([...existingUpdate.payload, ...update.payload]))
+        };
+      }
+      break;
+    }
+
+    case 'loadout': {
+      if (existingUpdate.action === 'loadout') {
+        combinedUpdate = {
+          ...existingUpdate,
+          // Loadouts completely overwrite
+          payload: update.payload
+          // We keep the "before" from the existing update
+        };
+      } else if (existingUpdate.action === 'delete_loadout') {
+        // Someone deleted then recreated. Maybe a future undo delete case? It's not possible today.
+        combinedUpdate = {
+          ...update,
+          // Before is whatever loadout existed before being deleted.
+          before: existingUpdate.before as Loadout
+        };
+      }
+      break;
+    }
+
+    case 'delete_loadout': {
+      if (existingUpdate.action === 'loadout') {
+        // If there was no before (a new loadout) and now we're deleting it, there's nothing to update.
+        if (!existingUpdate.before) {
+          break;
+        }
+
+        combinedUpdate = {
+          // Turn it into a delete loadout
+          ...update,
+          // Loadouts completely overwrite
+          before: existingUpdate.before
+          // We keep the "before" from the existing update
+        } as DeleteLoadoutUpdateWithRollback;
+      } else if (existingUpdate.action === 'delete_loadout') {
+        // Doesn't seem like we should get two delete loadouts for the same thing. Ignore the new update.
+        combinedUpdate = existingUpdate;
+      }
+      break;
+    }
+    case 'tag': {
+      if (existingUpdate.action === 'tag') {
+        // Successive tag/notes updates overwrite
+        combinedUpdate = {
+          ...existingUpdate,
+          payload: {
+            ...existingUpdate.payload,
+            ...update.payload
+          },
+          before: existingUpdate.before
+        };
+      }
+      break;
+    }
+  }
+
+  if (combinedUpdate) {
+    compacted[key] = combinedUpdate;
+  } else {
+    delete compacted[key];
+  }
 }
 
 /**
@@ -263,9 +488,9 @@ function applyFinishedUpdatesToQueue(
     for (let i = 0; i < total; i++) {
       const update = updates[i];
       const result = results[i];
-      const index = draft.updateQueue.findIndex((u) => u.updateId === update.updateId);
+      const index = i;
 
-      if (result.status === 'Success') {
+      if (result.status === 'Success' || result.status === 'NotFound') {
         draft.updateQueue.splice(index, 1);
       } else {
         console.error(
@@ -278,6 +503,8 @@ function applyFinishedUpdatesToQueue(
         draft.updateQueue.splice(index, 1);
         reverseEffects(draft, update);
       }
+
+      draft.updateInProgressWatermark = 0;
     }
   });
 }
@@ -307,11 +534,9 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
     const [platformMembershipId, destinyVersion] = parseProfileKey(profileWithLoadout);
 
     draft.updateQueue.push({
-      updateId: updateCounter++,
       action: 'delete_loadout',
       payload: loadoutId,
-      before: loadoutId,
-      deletedLoadout: loadout,
+      before: loadout,
       platformMembershipId,
       destinyVersion
     });
@@ -328,7 +553,6 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
     const loadouts = profile.loadouts;
     const newLoadout = convertDimLoadoutToApiLoadout(loadout);
     const updateAction: ProfileUpdateWithRollback = {
-      updateId: updateCounter++,
       action: 'loadout',
       payload: newLoadout,
       platformMembershipId: loadout.membershipId,
@@ -358,16 +582,12 @@ function setTag(
   const existingTag = tags[itemId];
 
   const updateAction: ProfileUpdateWithRollback = {
-    updateId: updateCounter++,
     action: 'tag',
     payload: {
       id: itemId,
       tag: tag ?? null
     },
-    before: {
-      id: itemId,
-      tag: existingTag?.tag
-    },
+    before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
     destinyVersion: account.destinyVersion
   };
@@ -403,16 +623,12 @@ function setNote(
   const existingTag = tags[itemId];
 
   const updateAction: ProfileUpdateWithRollback = {
-    updateId: updateCounter++,
     action: 'tag',
     payload: {
       id: itemId,
       notes: notes && notes.length > 0 ? notes : null
     },
-    before: {
-      id: itemId,
-      notes: existingTag?.notes
-    },
+    before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
     destinyVersion: account.destinyVersion
   };
@@ -445,9 +661,9 @@ function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: Dest
     }
 
     draft.updateQueue.push({
-      updateId: updateCounter++,
       action: 'tag_cleanup',
       payload: itemIdsToRemove,
+      // "before" isn't really valuable here
       platformMembershipId: account.membershipId,
       destinyVersion: account.destinyVersion
     });

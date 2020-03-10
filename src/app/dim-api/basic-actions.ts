@@ -30,6 +30,13 @@ export const profileLoadedFromIDB = createAction('dim-api/LOADED_PROFILE_FROM_ID
   ProfileIndexedDBState | undefined
 >();
 
+/**
+ * This signals that we are about to flush the update queue.
+ */
+export const prepareToFlushUpdates = createAction('dim-api/PREPARE_UPDATES')();
+
+export const flushUpdatesFailed = createAction('dim-api/UPDATES_FAILED')();
+
 export const finishedUpdates = createAction('dim-api/FINISHED_UPDATES')<{
   updates: ProfileUpdateWithRollback[];
   results: ProfileUpdateResult[];

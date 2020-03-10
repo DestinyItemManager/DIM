@@ -11,7 +11,9 @@ import {
   profileLoaded,
   profileLoadedFromIDB,
   ProfileIndexedDBState,
-  finishedUpdates
+  finishedUpdates,
+  prepareToFlushUpdates,
+  flushUpdatesFailed
 } from './basic-actions';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import { deepEqual } from 'fast-equals';
@@ -20,17 +22,16 @@ import { ProfileUpdateWithRollback } from './api-types';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { readyResolve } from 'app/settings/settings';
+import { delay } from 'app/utils/util';
 
 /**
  * Watch the redux store and write out values to indexedDB.
  */
-const saveProfileToIndexedDB = _.once(() =>
+const saveProfileToIndexedDB = _.once(() => {
   observeStore(
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       // Avoid writing back what we just loaded from IDB
-      // TODO: don't save to IDB while a save is in progress?
-      // TODO: should we save different profiles to different places?
       if (currentState && currentState.profileLoadedFromIndexedDb) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
@@ -44,10 +45,9 @@ const saveProfileToIndexedDB = _.once(() =>
         set('dim-api-profile', savedState);
       }
     }, 1000)
-  )
-);
+  );
+});
 
-// TODO: watch the queue to flush!
 const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) =>
   observeStore(
     (state) => state.dimApi.updateQueue,
@@ -122,37 +122,32 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   };
 }
 
-// TODO: move this into redux if we want to show it?
-let flushingUpdates = false;
+// Backoff multiplier
+let backoff = 0;
 
 /**
  * Process the queue of updates by sending them to the server
  */
 export function flushUpdates(): ThunkResult<any> {
   return async (dispatch, getState) => {
-    const queue = getState().dimApi.updateQueue;
+    const dimApiState = getState().dimApi;
 
-    if (!flushingUpdates && queue.length) {
-      console.log('TODO flush queue');
-      // dispatch action to reset queue - how to keep track of which were sent and which weren't? just keep a number maybe
+    if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length) {
+      // Prepare the queue
+      dispatch(prepareToFlushUpdates());
+
+      console.log(
+        '[flushUpdates] Flushing queue of',
+        dimApiState.updateInProgressWatermark,
+        'updates'
+      );
+
+      // Only select the items that were frozen for update. They're guaranteed
+      // to not change while we're updating and they'll be for a single profile.
+      const updates = dimApiState.updateQueue.slice(0, dimApiState.updateInProgressWatermark);
 
       try {
-        // Only send one profile's worth at a time. Settings can go with anyone.
-        const firstWithAccount = queue.find((u) => u.platformMembershipId) || queue[0];
-        const updates = queue.filter(
-          (u) =>
-            !u.platformMembershipId ||
-            (u.platformMembershipId === firstWithAccount.platformMembershipId &&
-              u.destinyVersion === firstWithAccount.destinyVersion)
-        );
-
-        // TODO: maybe compact the queue here, and set state (also sort by account!)
-        // Or just maintain a separate queue per account
-        // dispatch(prepareForUpdates())
-
-        // TODO: it'd be great if we could combine like requests (like settings)
-        // Right now this results in tons of requests for things like changing the slider on item size
-        // Probably need to have a watermark in the state for what we're flushing
+        const firstWithAccount = updates.find((u) => u.platformMembershipId) || updates[0];
 
         const results = await postUpdates(
           firstWithAccount.platformMembershipId,
@@ -160,16 +155,27 @@ export function flushUpdates(): ThunkResult<any> {
           updates
         );
         console.log('[flushUpdates] got results', updates, results);
-        dispatch(finishedUpdates({ updates, results }));
 
-        // Check for more!
-        dispatch(flushUpdates());
+        // Quickly heal from being failure backoff
+        backoff = Math.floor(backoff / 2);
+
+        dispatch(finishedUpdates({ updates, results }));
       } catch (e) {
         console.error('[flushUpdates] Unable to save updates to DIM API', e);
-        // I don't think we should try again right here
-        // TODO: dispatch(updateFailed())
+
+        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
+        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, backoff) * 2500);
+        console.log('[flushUpdates] Waiting', waitTime, 'ms before re-attempting updates');
+        await delay(waitTime);
+
+        // Now mark the queue failed so it can be retried. Until
+        // updateInProgressWatermark gets reset no other flushUpdates call will
+        // do anything.
+        dispatch(flushUpdatesFailed());
       } finally {
-        flushingUpdates = false;
+        // Check for more - updates may have accumulated!
+        dispatch(flushUpdates());
       }
     }
   };
