@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
