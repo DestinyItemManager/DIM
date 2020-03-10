@@ -2,7 +2,7 @@ import React from 'react';
 import { Transition } from '@uirouter/react';
 import { t } from 'app/i18next-t';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 
 export default function Login({ transition }: { transition: Transition }) {
