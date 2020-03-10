@@ -7,8 +7,6 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
-import { D2Categories } from '../destiny2/d2-buckets';
-import { D1Categories } from '../destiny1/d1-buckets';
 import { router } from '../router';
 import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
@@ -65,7 +63,6 @@ export function addItemToLoadout(item: DimItem, $event) {
 }
 
 interface StoreProps {
-  types: string[];
   itemSortOrder: string[];
   account: DestinyAccount;
   classTypeOptions: {
@@ -88,13 +85,6 @@ interface State {
 }
 
 function mapStateToProps() {
-  const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
-    const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-    return Object.values(dimItemCategories)
-      .flat()
-      .map((t) => t.toLowerCase());
-  });
-
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
       label: string;
@@ -109,7 +99,6 @@ function mapStateToProps() {
 
   return (state: RootState): StoreProps => ({
     itemSortOrder: itemSortOrderSelector(state),
-    types: typesSelector(state),
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
@@ -334,8 +323,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       equipped: false
     };
 
-    const itemType = item.type.toLowerCase();
-    const typeInventory = items.filter((i) => i.type === itemType);
+    const typeInventory = items.filter((i) => i.type === item.type);
 
     const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
@@ -409,8 +397,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
       if (loadoutItem.equipped) {
         const [items] = this.findItems(draftLoadout);
-        const itemType = item.type.toLowerCase();
-        const typeInventory = items.filter((i) => i.type === itemType);
+        const typeInventory = items.filter((i) => i.type === item.type);
         const nextInLine = draftLoadout.items.find(
           (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
         );
