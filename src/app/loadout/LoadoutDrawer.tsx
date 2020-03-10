@@ -6,7 +6,7 @@ import copy from 'fast-copy';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem } from '../inventory/item-types';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { router } from '../router';
