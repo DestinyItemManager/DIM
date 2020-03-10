@@ -6,8 +6,6 @@ import {
   ProfileUpdateResult
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import _ from 'lodash';
-import { ProfileUpdateWithRollback } from './api-types';
 
 /**
  * These are all the "basic" actions for the API - stuff that gets reacted to in the reducer.
@@ -37,7 +35,4 @@ export const prepareToFlushUpdates = createAction('dim-api/PREPARE_UPDATES')();
 
 export const flushUpdatesFailed = createAction('dim-api/UPDATES_FAILED')();
 
-export const finishedUpdates = createAction('dim-api/FINISHED_UPDATES')<{
-  updates: ProfileUpdateWithRollback[];
-  results: ProfileUpdateResult[];
-}>();
+export const finishedUpdates = createAction('dim-api/FINISHED_UPDATES')<ProfileUpdateResult[]>();

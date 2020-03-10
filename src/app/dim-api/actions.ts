@@ -159,7 +159,7 @@ export function flushUpdates(): ThunkResult<any> {
         // Quickly heal from being failure backoff
         backoff = Math.floor(backoff / 2);
 
-        dispatch(finishedUpdates({ updates, results }));
+        dispatch(finishedUpdates(results));
       } catch (e) {
         console.error('[flushUpdates] Unable to save updates to DIM API', e);
 

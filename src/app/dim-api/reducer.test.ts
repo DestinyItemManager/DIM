@@ -1,7 +1,7 @@
 import { DimApiState, initialState, dimApi } from './reducer';
 import { DestinyClass, BungieMembershipType } from 'bungie-api-ts/destiny2';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
-import { prepareToFlushUpdates } from './basic-actions';
+import { prepareToFlushUpdates, finishedUpdates } from './basic-actions';
 import { setSetting } from 'app/settings/actions';
 import { setItemTag } from 'app/inventory/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
@@ -432,5 +432,45 @@ describe('prepareToFlushUpdates', () => {
       }
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
+  });
+});
+
+describe('finishedUpdates', () => {
+  it('can mark success', () => {
+    const state: DimApiState = {
+      ...initialState,
+      updateQueue: [
+        {
+          action: 'setting',
+          payload: {
+            showNewItems: true
+          },
+          before: {
+            showNewItems: false
+          }
+        },
+        // Save a tag for D2
+        {
+          action: 'tag',
+          payload: {
+            id: '1234',
+            tag: 'favorite'
+          },
+          before: {
+            id: '1234'
+          },
+          platformMembershipId: '3456',
+          destinyVersion: 2
+        }
+      ],
+      updateInProgressWatermark: 2
+    };
+    const updatedState = dimApi(
+      state,
+      finishedUpdates([{ status: 'Success' }, { status: 'Success' }])
+    );
+
+    expect(updatedState.updateInProgressWatermark).toBe(0);
+    expect(updatedState.updateQueue).toEqual([]);
   });
 });

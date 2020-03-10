@@ -176,7 +176,7 @@ export const dimApi = (
     }
 
     case getType(actions.finishedUpdates): {
-      return applyFinishedUpdatesToQueue(state, action.payload.updates, action.payload.results);
+      return applyFinishedUpdatesToQueue(state, action.payload);
     }
 
     // For now, a failed update just resets state so we can flush again. Note that flushing will happen immediately...
@@ -302,7 +302,8 @@ function prepareUpdateQueue(state: DimApiState) {
 
       draft.updateQueue = Object.values(compacted);
 
-      // Set watermark to what we're going to flush
+      // Set watermark to what we're going to flush.
+      // TODO: Maybe add a maximum update length?
       draft.updateInProgressWatermark = draft.updateQueue.length;
 
       // Put the other updates we aren't going to send back on the end of the queue.
@@ -468,31 +469,15 @@ function compactUpdate(
 /**
  * Record the result of an update call to the API
  */
-function applyFinishedUpdatesToQueue(
-  state: DimApiState,
-  updates: ProfileUpdateWithRollback[],
-  results: ProfileUpdateResult[]
-) {
+function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateResult[]) {
   return produce(state, (draft) => {
-    if (updates.length !== results.length) {
-      console.error(
-        '[applyFinishedUpdatesToQueue] Updates and results are different lengths',
-        updates.length,
-        results.length
-      );
-    }
-    const total = Math.min(updates.length, results.length);
-
-    // Actually maybe remove all the updates... do it range-based instead of IDs
+    const total = Math.min(state.updateInProgressWatermark, results.length);
 
     for (let i = 0; i < total; i++) {
-      const update = updates[i];
+      const update = state.updateQueue[i];
       const result = results[i];
-      const index = i;
 
-      if (result.status === 'Success' || result.status === 'NotFound') {
-        draft.updateQueue.splice(index, 1);
-      } else {
+      if (!(result.status === 'Success' || result.status === 'NotFound')) {
         console.error(
           '[applyFinishedUpdatesToQueue] failed to update:',
           result.status,
@@ -500,12 +485,13 @@ function applyFinishedUpdatesToQueue(
           result.message,
           update
         );
-        draft.updateQueue.splice(index, 1);
         reverseEffects(draft, update);
       }
-
-      draft.updateInProgressWatermark = 0;
     }
+
+    // There's currently no error that would leave them in the array
+    draft.updateQueue.splice(0, state.updateInProgressWatermark);
+    draft.updateInProgressWatermark = 0;
   });
 }
 
