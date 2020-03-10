@@ -1,5 +1,7 @@
 ## Next
 
+* Updated item metadata for Season of the Worthy! Mod slots, sources, ghost perks, etc.
+
 ## 5.73.0 <span className="changelog-date">(2020-03-08)</span>
 
 * You can now restrict what items get chosen by the random loadout feature by having an active search first. Try typing "tag:favorite" or "is:pulserifle" and then choosing Randomize.
