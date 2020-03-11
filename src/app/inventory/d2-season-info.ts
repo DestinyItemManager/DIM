@@ -128,11 +128,23 @@ export const D2SeasonInfo = {
     season: 9,
     year: 3,
     maxLevel: 50,
-    maxPower: 1010,
+    maxPower: 970,
     softCap: 900,
     releaseDate: '2019-12-10',
     resetTime: '17:00:00Z',
     numWeeks: 10 // TODO: Update on confirmation
+  },
+  10: {
+    DLCName: '',
+    seasonName: 'Season of the Worthy',
+    season: 10,
+    year: 3,
+    maxLevel: 50,
+    maxPower: 1010,
+    softCap: 950,
+    releaseDate: '2020-03-10',
+    resetTime: '17:00:00Z',
+    numWeeks: 10 // TODO: i don't know this is correct
   }
 };
 
