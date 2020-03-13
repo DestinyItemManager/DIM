@@ -11,7 +11,7 @@ export enum D2SeasonEnum {
 }
 
 // TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.PENUMBRA;
+export const D2CurrentSeason: number = D2SeasonEnum.DAWN;
 
 export const D2SeasonInfo = {
   0: {
