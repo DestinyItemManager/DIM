@@ -31,6 +31,7 @@ import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import Spreadsheets from './Spreadsheets';
+import DimApiSettings from 'app/storage/DimApiSettings';
 
 interface StoreProps {
   settings: Settings;
@@ -446,7 +447,7 @@ class SettingsPage extends React.Component<Props> {
             </section>
 
             <ErrorBoundary name="StorageSettings">
-              <StorageSettings />
+              {$featureFlags.dimApi ? <DimApiSettings /> : <StorageSettings />}
             </ErrorBoundary>
 
             <Spreadsheets />
