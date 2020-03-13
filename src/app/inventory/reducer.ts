@@ -180,29 +180,37 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 };
 
 function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {
+  const existingTag = draft.itemInfos[itemId];
   if (tag) {
-    if (!draft.itemInfos[itemId]) {
+    if (!existingTag) {
       draft.itemInfos[itemId] = {
         tag
       };
     } else {
-      draft.itemInfos[itemId].tag = tag;
+      existingTag.tag = tag;
     }
-  } else {
-    delete draft.itemInfos[itemId];
+  } else if (existingTag) {
+    delete existingTag?.tag;
+    if (!existingTag.tag && !existingTag.notes) {
+      delete draft.itemInfos[itemId];
+    }
   }
 }
 
 function setNote(draft: Draft<InventoryState>, itemId: string, notes?: string) {
+  const existingTag = draft.itemInfos[itemId];
   if (notes && notes.length > 0) {
-    if (!draft.itemInfos[itemId]) {
+    if (!existingTag) {
       draft.itemInfos[itemId] = {
         notes
       };
     } else {
-      draft.itemInfos[itemId].notes = notes;
+      existingTag.notes = notes;
     }
-  } else {
-    delete draft.itemInfos[itemId];
+  } else if (existingTag) {
+    delete existingTag?.notes;
+    if (!existingTag.tag && !existingTag.notes) {
+      delete draft.itemInfos[itemId];
+    }
   }
 }
