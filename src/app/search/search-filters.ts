@@ -43,6 +43,7 @@ import { loadoutsSelector } from '../loadout/reducer';
 import memoizeOne from 'memoize-one';
 import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
+import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
 
 /**
@@ -51,9 +52,10 @@ import store from '../store/store';
  */
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
-  store.getState().settings.language
-);
+const isLatinBased = () =>
+  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
+    settingsSelector(store.getState()).language
+  );
 
 /** escape special characters for a regex */
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -62,11 +64,11 @@ export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const startWordRegexp = memoizeOne(
   (predicate: string) =>
     // Only some languages effectively use the \b regex word boundary
-    new RegExp(`${isLatinBased ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
+    new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
 );
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLowerCase();
+const plainString = (s: string): string => (isLatinBased() ? latinise(s) : s).toLowerCase();
 
 /** remove starting and ending quotes ('") e.g. for notes:"this string" */
 const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');

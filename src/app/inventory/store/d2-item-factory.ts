@@ -200,7 +200,8 @@ export function makeFakeItem(
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
-      tooltipNotificationIndexes: []
+      tooltipNotificationIndexes: [],
+      metricObjective: {} as DestinyObjectiveProgress
     },
     undefined,
     mergedCollectibles

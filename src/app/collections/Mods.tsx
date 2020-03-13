@@ -73,8 +73,8 @@ function mapStateToProps() {
       if (!defs) {
         return [];
       }
-      //                                    InventoryItem "Void Impact Mod"
-      const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties
+      //                                    InventoryItem "Void Damage Mod"
+      const deprecatedModDescription = defs.InventoryItem.get(3728733956)?.displayProperties
         .description;
 
       return Object.values(defs.InventoryItem.getAll()).filter((i) =>
@@ -111,8 +111,9 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
     return null;
   }
 
-  //                                    InventoryItem "Void Impact Mod"
-  const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties.description;
+  //                                    InventoryItem "Void Damage Mod"
+  const deprecatedModDescription = defs.InventoryItem.get(3728733956)?.displayProperties
+    .description;
   const mods = new Set<number>();
 
   const processPlugSet = (plugs: { [key: number]: DestinyItemPlug[] }) => {
