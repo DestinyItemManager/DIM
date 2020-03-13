@@ -37,11 +37,6 @@
 
     display: none;
 
-    .drag-perf-debug & {
-      opacity: 0.2;
-      background-color: green;
-    }
-
     .drag-perf-show & {
       display: block;
     }

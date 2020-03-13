@@ -4,6 +4,7 @@ import { DimItem } from './item-types';
 import { stackableDrag } from './actions';
 import store from '../store/store';
 import { BehaviorSubject } from 'rxjs';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ExternalProps {
   item: DimItem;
@@ -38,7 +39,11 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
 
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
-      document.body.classList.add('drag-perf-show');
+      // The colorblind filters interact badly with this
+      const color = settingsSelector(store.getState()).colorA11y;
+      if (!color || color === '-') {
+        document.body.classList.add('drag-perf-show');
+      }
     });
 
     isDragging = true;
