@@ -1,21 +1,22 @@
-import _ from 'lodash';
-import { DimItem, DimSockets, DimGridNode } from './item-types';
-import { t } from 'app/i18next-t';
-import Papa from 'papaparse';
-import { getActivePlatform } from '../accounts/platforms';
-import { tagConfig, getTag, getNotes, ItemInfos } from './dim-item-info';
-import store from '../store/store';
-import { D2SeasonInfo } from './d2-season-info';
+import { DimGridNode, DimItem, DimSockets } from './item-types';
+import { ItemInfos, getNotes, getTag, tagConfig } from './dim-item-info';
+import { setItemNote, setItemTagsBulk } from './actions';
+
 import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2SeasonInfo } from './d2-season-info';
 import D2Sources from 'data/d2/source-info';
-import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
-import { getRating } from '../item-review/reducer';
-import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
-import { setItemNote, setItemTagsBulk } from './actions';
+import { DtrRating } from '../item-review/dtr-api-types';
+import Papa from 'papaparse';
 import { ThunkResult } from 'app/store/reducers';
+import _ from 'lodash';
+import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';
+import { getRating } from '../item-review/reducer';
+import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
+import store from '../store/store';
+import { t } from 'app/i18next-t';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -303,8 +304,8 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   const maxPerks = getMaxPerks(items);
 
   const seasonalModsByHash = {};
-  for (const mod in seasonalSocketHashesByName) {
-    const hashes = seasonalSocketHashesByName[mod];
+  for (const mod in modMetadataBySlotTag) {
+    const hashes = modMetadataBySlotTag[mod].thisSlotPlugCategoryHashes;
     hashes.forEach((hash) => {
       seasonalModsByHash[hash] = mod;
     });

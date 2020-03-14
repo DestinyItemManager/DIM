@@ -1,0 +1,26 @@
+{
+  "forge": {
+    "thisSlotPlugCategoryHashes": [65589297],
+    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297]
+  },
+  "opulent": {
+    "thisSlotPlugCategoryHashes": [1962317640, 2712224971, 1202876185],
+    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832]
+  },
+  "worthy": {
+    "thisSlotPlugCategoryHashes": [426869514],
+    "compatiblePlugCategoryHashes": [208760563, 426869514]
+  },
+  "outlaw": {
+    "thisSlotPlugCategoryHashes": [2149155760, 13646368],
+    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297]
+  },
+  "undying": {
+    "thisSlotPlugCategoryHashes": [1081029832],
+    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832, 208760563]
+  },
+  "dawn": {
+    "thisSlotPlugCategoryHashes": [208760563],
+    "compatiblePlugCategoryHashes": [1081029832, 208760563, 426869514]
+  }
+}
