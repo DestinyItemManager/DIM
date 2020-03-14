@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
   },
-  "Faction": {
-    "EngramsAvailable": "1 エングラム利用可能",
-    "EngramsAvailable_plural": "{{count}} エングラムが利用可能"
-  },
   "FarmingMode": {
     "D2Desc": "DIMは、アイテムタイプごとに必ず一つの空きスペースがあることを確認することで、アイテムがポストマスターに行くのを防いでいる {{store}}。スペースを空けるためにアイテムを保管庫に移動しています。",
     "D2Desc_female": "DIMは、アイテムタイプごとに必ず一つの空きスペースがあることを確認することで、アイテムがポストマスターに行くのを防いでいる {{store}}。スペースを空けるためにアイテムを保管庫に移動しています。",
@@ -137,7 +133,6 @@
       "MakeRoom": "装備を動かしてアイテムを拾うためのスペースを確保する",
       "Tooltip": "チェックをオンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
-    "MoveTokens": "レピュテーションアイテムを保管庫に送信する",
     "OutOfRoom": "{{character}} からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
     "Stop": "停止"
@@ -383,10 +378,6 @@
     "SwitchDirection": "変更",
     "TransferItems": "転送"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}} でした。",
-    "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
     "Distributed": "分散 {{name}}\n {{name}} は文字間で等しく分割されました。",
@@ -601,6 +592,8 @@
     "Random": "ランダム",
     "Randomize": "ランダムに表示:",
     "RandomizePrompt": "装備されたクラス、武器、防具、ゴーストをランダム化しますか?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "装備したクラスと武器をランダム化しますか？",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "バウンティ",
     "CrucibleRank": "ランク",
-    "Factions": "ファクション",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
     "PercentPrestige": "{{pct}}％でリセット",

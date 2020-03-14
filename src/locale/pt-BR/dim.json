@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Algo deu errado"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engrama disponível",
-    "EngramsAvailable_plural": "{{count}} engramas disponíveis"
-  },
   "FarmingMode": {
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "D2Desc_female": "DIM evitará que os itens fiquem no Chefe do Correio para garantir que haja sempre um espaço por tipo de item disponível na {{store}}. Os itens serão movidos para o cofre para liberar espaço.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
-    "MoveTokens": "Enviar itens de reputação para o cofre",
     "OutOfRoom": "Você está sem espaço para mover itens do {{character}}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
     "OutOfRoomTitle": "Sem espaço",
     "Stop": "Parar"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Inverter",
     "TransferItems": "Transferir"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro foi: {{error}}.",
-    "SaveInfoErrorTitle": "Erro salvando informação de item"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
     "Distributed": "{{name}} distribuído\n{{name}} está agora dividido por igual entre os personagens.",
@@ -601,6 +592,8 @@
     "Random": "Aleatória",
     "Randomize": "Tornar aleatório",
     "RandomizePrompt": "Tornar aleatório sua classe equipada, armas, armadura e fantasma?",
+    "RandomizeSearch": "Tornar aleatório a partir da busca",
+    "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
     "RandomizeWeapons": "Tornar aleatório sua classe equipada e armas?",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Contratos",
     "CrucibleRank": "Ranque",
-    "Factions": "Facções",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
     "PercentPrestige": "{{pct}}% para resetar",

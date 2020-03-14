@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "发生了一些错误"
   },
-  "Faction": {
-    "EngramsAvailable": "1记忆水晶可兑换",
-    "EngramsAvailable_plural": "{{count}}记忆水晶可兑换"
-  },
   "FarmingMode": {
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
     "D2Desc_female": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
@@ -137,7 +133,6 @@
       "MakeRoom": "移动装备腾出空间以便拾取物品",
       "Tooltip": "如果勾选，DIM将在保险库中移动武器和防具来给记忆水晶腾出空间。"
     },
-    "MoveTokens": "将声望物品移动到保险库",
     "OutOfRoom": "您的{{character}} 角色已经没有空间了。是时候来解锁一些记忆水晶和清理一些不必要的物品！",
     "OutOfRoomTitle": "空间不足",
     "Stop": "停止"
@@ -383,10 +378,6 @@
     "SwitchDirection": "转换",
     "TransferItems": "转移"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "保存特定DIM物品信息时出现问题。原因是可以存储的数据的数量是有限的。这也是为什么标签和备注没有被允许运行在Beta版之外的原因. 错误内容：{{error}}。",
-    "SaveInfoErrorTitle": "保存物品时发生错误"
-  },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上.",
@@ -601,6 +592,8 @@
     "Random": "随机",
     "Randomize": "随机搭配",
     "RandomizePrompt": "确定要将你的职业物品，武器，防具和机灵全部随机搭配吗？",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "确定将你的职业物品，武器随机搭配吗？",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "赏金单",
     "CrucibleRank": "排名",
-    "Factions": "阵营",
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
     "PercentPrestige": "重置百分比{{pct}}%",
