@@ -166,7 +166,6 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
       throw error(t('BungieService.NotLoggedIn'), errorCode);
 
     case PlatformErrorCodes.DestinyAccountNotFound:
-    case PlatformErrorCodes.DestinyUnexpectedError:
       if (response.url.indexOf('/Account/') >= 0 && response.url.indexOf('/Character/') < 0) {
         const account = getActivePlatform();
         throw error(
@@ -175,8 +174,9 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
           }),
           errorCode
         );
+      } else {
+        throw error(t('BungieService.Difficulties'), errorCode);
       }
-      break;
 
     case PlatformErrorCodes.DestinyLegacyPlatformInaccessible:
       throw error(t('BungieService.DestinyLegacyPlatform'), errorCode);
@@ -190,6 +190,9 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);
       }
+
+    case PlatformErrorCodes.DestinyUnexpectedError:
+      throw error(t('BungieService.Difficulties'), errorCode);
   }
 
   // Token expired and other auth maladies
@@ -198,7 +201,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     throw error(t('BungieService.NotLoggedIn'), errorCode);
   }
   /* 526 = cloudflare */
-  if (response.status >= 503 && response.status <= 526) {
+  if (response.status >= 500 && response.status <= 526) {
     throw error(t('BungieService.Difficulties'), errorCode);
   }
   if (errorCode === -1 && (response.status < 200 || response.status >= 400)) {
