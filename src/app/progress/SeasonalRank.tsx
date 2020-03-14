@@ -27,7 +27,7 @@ export default function SeasonalRank({
   store: DimStore;
   defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
-  season: DestinySeasonDefinition | undefined;
+  season?: DestinySeasonDefinition;
   seasonPass?: DestinySeasonPassDefinition;
   profileInfo: DestinyProfileResponse;
 }) {

@@ -7,11 +7,12 @@ export enum D2SeasonEnum {
   JOKERS_WILD,
   PENUMBRA,
   SHADOWKEEP,
-  DAWN
+  DAWN,
+  WORTHY
 }
 
 // TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.PENUMBRA;
+export const D2CurrentSeason: number = D2SeasonEnum.WORTHY;
 
 export const D2SeasonInfo = {
   0: {
