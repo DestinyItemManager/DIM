@@ -13,6 +13,9 @@ import { fetchWishList } from './wishlist-fetch';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 
+export const wishListsLastFetchedSelector = (state: RootState) =>
+  wishListsSelector(state).lastFetched;
+
 const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
   _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
@@ -48,8 +51,9 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
     case getType(actions.loadWishLists):
       return {
         ...state,
-        wishListAndInfo: action.payload,
-        loaded: true
+        wishListAndInfo: action.payload.wishList,
+        loaded: true,
+        lastFetched: action.payload.lastFetched || new Date()
       };
     case getType(actions.clearWishLists): {
       return {
@@ -62,12 +66,6 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
         lastFetched: undefined
       };
     }
-    case getType(actions.markWishListsFetched): {
-      return {
-        ...state,
-        lastFetched: action.payload
-      };
-    }
     default:
       return state;
   }
@@ -78,47 +76,43 @@ export function saveWishListToIndexedDB() {
     (state) => state.wishLists,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState);
+        set('wishlist', {
+          wishListAndInfo: nextState.wishListAndInfo,
+          lastFetched: nextState.lastFetched
+        });
       }
     }
   );
 }
 
-export function loadWishListAndInfoFromIndexedDB(): ThunkResult<void> {
+export function loadWishListAndInfoFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
-    if (!getState().wishLists.loaded) {
-      const wishListState = await get<WishListsState>('wishlist');
+    if (getState().wishLists.loaded) {
+      return;
+    }
 
-      // easing the transition from the old state (just an array) to the new state
-      // (object containing an array)
-      if (wishListState && Array.isArray(wishListState.wishListAndInfo.wishListRolls)) {
-        dispatch(
-          actions.loadWishLists({
+    const wishListState = await get<WishListsState>('wishlist');
+
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    // easing the transition from the old state (just an array) to the new state
+    // (object containing an array)
+    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
+      dispatch(
+        actions.loadWishLists({
+          wishList: {
             title: undefined,
             description: undefined,
             wishListRolls: wishListState.wishListAndInfo.wishListRolls
-          })
-        );
-
-        dispatch(actions.markWishListsFetched(wishListState.lastFetched));
-      } else {
-        // transition from old to new interface
-        if (wishListState && (wishListState as any).curatedRolls) {
-          wishListState.wishListAndInfo.wishListRolls = (wishListState as any).curatedRolls;
-        }
-
-        dispatch(
-          actions.loadWishLists({
-            title: undefined,
-            description: undefined,
-            wishListRolls: [],
-            ...wishListState
-          })
-        );
-      }
-
-      // Refresh the wish list from source if necessary
-      dispatch(fetchWishList(false));
+          },
+          lastFetched: wishListState.lastFetched
+        })
+      );
     }
+
+    // Refresh the wish list from source if necessary
+    dispatch(fetchWishList());
   };
 }

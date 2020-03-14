@@ -6,9 +6,13 @@ import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
-import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
+import {
+  wishListsEnabledSelector,
+  loadWishListAndInfoFromIndexedDB,
+  wishListsSelector,
+  wishListsLastFetchedSelector
+} from '../wishlists/reducer';
 import _ from 'lodash';
-import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
@@ -26,13 +30,15 @@ interface StoreProps {
 type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
+  const wishLists = wishListsSelector(state);
+  const wishList = wishLists.wishListAndInfo;
   return {
     wishListsEnabled: wishListsEnabledSelector(state),
-    numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
-    title: state.wishLists.wishListAndInfo.title,
-    description: state.wishLists.wishListAndInfo.description,
+    numWishListRolls: wishList.wishListRolls.length,
+    title: wishList.title,
+    description: wishList.description,
     wishListSource: settingsSelector(state).wishListSource,
-    wishListLastUpdated: state.wishLists.lastFetched
+    wishListLastUpdated: wishListsLastFetchedSelector(state)
   };
 }
 
@@ -145,9 +151,7 @@ class WishListSettings extends React.Component<Props, State> {
       return;
     }
 
-    this.props.dispatch(setSetting('wishListSource', wishListSource));
-
-    this.props.dispatch(fetchWishList(true));
+    this.props.dispatch(fetchWishList(wishListSource));
 
     ga('send', 'event', 'WishList', 'From URL');
   };
@@ -160,7 +164,7 @@ class WishListSettings extends React.Component<Props, State> {
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        this.props.dispatch(transformAndStoreWishList(wishListAndInfo, false));
+        this.props.dispatch(transformAndStoreWishList(wishListAndInfo));
         ga('send', 'event', 'WishList', 'From File');
       }
     };

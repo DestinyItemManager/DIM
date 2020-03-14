@@ -2,30 +2,37 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists, markWishListsFetched } from './actions';
+import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector } from './reducer';
+import { settingsSelector } from 'app/settings/reducer';
+import { setSetting } from 'app/settings/actions';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
     return 99999;
   }
 
-  return Math.abs(Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
+  return (Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
 }
 
-export function fetchWishList(ignoreThrottle: boolean): ThunkResult {
+export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
-    const wishListSource = getState().settings.wishListSource;
+    if (newWishlistSource) {
+      dispatch(setSetting('wishListSource', newWishlistSource));
+    }
+
+    const wishListSource = settingsSelector(getState()).wishListSource;
 
     if (!wishListSource) {
       return;
     }
 
-    const wishListLastUpdated = getState().wishLists.lastFetched;
+    const wishListLastUpdated = wishListsSelector(getState()).lastFetched;
 
-    if (!ignoreThrottle && hoursAgo(wishListLastUpdated) < 24) {
+    // Don't throttle updates if we're changing source
+    if (!newWishlistSource && hoursAgo(wishListLastUpdated) < 24) {
       return;
     }
 
@@ -42,26 +49,17 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult {
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListAndInfo, true));
+      dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }
   };
 }
 
-export function transformAndStoreWishList(
-  wishListAndInfo: WishListAndInfo,
-  wishListExternallySourced: boolean
-): ThunkResult {
+export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists(wishListAndInfo));
-
-      if (wishListExternallySourced) {
-        dispatch(markWishListsFetched(new Date()));
-      } else {
-        dispatch(markWishListsFetched(undefined));
-      }
+      dispatch(loadWishLists({ wishList: wishListAndInfo }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
