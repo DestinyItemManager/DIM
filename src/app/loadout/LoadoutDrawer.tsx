@@ -31,6 +31,7 @@ import { Subject } from 'rxjs';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { saveLoadout } from './loadout-storage';
 import produce from 'immer';
+import memoizeOne from 'memoize-one';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -77,7 +78,7 @@ interface StoreProps {
 type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
-  loadout?: Loadout;
+  loadout?: Readonly<Loadout>;
   show: boolean;
   showClass: boolean;
   isNew: boolean;
@@ -221,7 +222,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
    * are returned as warnitems.
    */
   // TODO: memoize?
-  private findItems = (loadout: Loadout) => {
+  private findItems = memoizeOne((loadout: Loadout | undefined) => {
+    if (!loadout) {
+      return [];
+    }
+
     const { stores, defs } = this.props;
 
     const findItem = (loadoutItem: LoadoutItem) => {
@@ -257,7 +262,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
 
     return [items, warnitems];
-  };
+  });
 
   private editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
     const { account } = this.props;
@@ -448,10 +453,14 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private changeNameHandler() {
     const { loadout } = this.state;
     if (loadout) {
-      loadout.name = '';
+      this.setState({
+        loadout: {
+          ...loadout,
+          name: ''
+        },
+        clashingLoadout: null
+      });
     }
-
-    this.setState({ loadout, clashingLoadout: null });
   }
 
   private handleLoadoutError = (e, name: string) => {
@@ -469,19 +478,23 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private saveAsNew = (e) => {
     e.preventDefault();
-    const { loadout } = this.state;
+    let { loadout } = this.state;
 
     if (!loadout) {
       return;
     }
-    loadout.id = uuidv4(); // Let it be a new ID
+    loadout = {
+      ...loadout,
+      id: uuidv4() // Let it be a new ID
+    };
     this.setState({ isNew: true });
     this.saveLoadout(e);
   };
 
   private close = (e?) => {
     e?.preventDefault();
-    this.setState({ show: false, clashingLoadout: null });
+    this.setState({ show: false, loadout: undefined, clashingLoadout: null });
+    this.findItems(undefined); // clear memoize
     loadoutDialogOpen = false;
   };
 
@@ -500,33 +513,37 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
-    if (item.equipment) {
-      if (item.type === 'Class' && !item.equipped) {
-        item.equipped = true;
-      } else if (item.equipped) {
-        item.equipped = false;
-      } else {
-        const allItems: DimItem[] = Object.values(loadout.items).flat();
-        if (item.equippingLabel) {
-          const exotics = allItems.filter(
-            (i) => i.equippingLabel === item.equippingLabel && i.equipped
-          );
-          for (const exotic of exotics) {
-            exotic.equipped = false;
-          }
+    const [items] = this.findItems(loadout);
+
+    const newLoadout = produce(loadout, (draftLoadout) => {
+      const findItem = (item: DimItem) =>
+        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+      const loadoutItem = findItem(item);
+      if (item.equipment) {
+        if (item.type === 'Class' && !loadoutItem.equipped) {
+          loadoutItem.equipped = true;
+        } else if (loadoutItem.equipped) {
+          loadoutItem.equipped = false;
+        } else {
+          items
+            .filter(
+              (i) =>
+                // Others in this slot
+                i.type === item.type ||
+                // Other exotics
+                (item.equippingLabel && i.equippingLabel === item.equippingLabel)
+            )
+            .map(findItem)
+            .forEach((i) => {
+              i.equipped = false;
+            });
+
+          loadoutItem.equipped = true;
         }
-
-        allItems
-          .filter((i) => i.type === item.type && i.equipped)
-          .forEach((i) => {
-            i.equipped = false;
-          });
-
-        item.equipped = true;
       }
-    }
+    });
 
-    this.setState({ loadout });
+    this.setState({ loadout: newLoadout });
   };
 }
 
