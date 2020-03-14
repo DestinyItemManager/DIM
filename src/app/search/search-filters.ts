@@ -16,11 +16,7 @@ import {
 import { ItemInfos, getNotes, getTag, itemTagSelectorList } from '../inventory/dim-item-info';
 import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import {
-  getItemDamageShortName,
-  getItemSpecialtyModSlotFilterName,
-  specialtyModSlotFilterNames
-} from 'app/utils/item-utils';
+import { getItemDamageShortName, getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
 import { itemInfosSelector, sortedStoresSelector } from '../inventory/reducer';
 import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 
@@ -41,6 +37,7 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import latinise from 'voca/latinise';
 import { loadoutsSelector } from '../loadout/reducer';
 import memoizeOne from 'memoize-one';
+import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
 import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
 import { settingsSelector } from 'app/settings/reducer';
@@ -319,9 +316,12 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .reverse()
       .map((tag) => `season:${tag}`),
     // keywords for seasonal mod slots
-    ...specialtyModSlotFilterNames
+    ...Object.keys(modMetadataBySlotTag)
       .concat(['any', 'none'])
       .map((modSlotName) => `modslot:${modSlotName}`),
+    ...Object.keys(modMetadataBySlotTag)
+      .concat(['any', 'none'])
+      .map((modSlotName) => `holdsmod:${modSlotName}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
@@ -1034,19 +1034,19 @@ function searchFilters(
         );
       },
       modslot(item: DimItem, predicate: string) {
-        const modSlotType = getItemSpecialtyModSlotFilterName(item);
+        const modSocketTypeHash = getSpecialtySocketCategoryHash(item);
         return (
-          Boolean(predicate === 'any' && modSlotType) ||
-          (predicate === 'none' && !modSlotType) ||
-          predicate === modSlotType
+          Boolean(predicate === 'any' && modSocketTypeHash) ||
+          (predicate === 'none' && !modSocketTypeHash) ||
+          modMetadataBySlotTag[predicate]?.thisSlotPlugCategoryHashes.includes(modSocketTypeHash)
         );
       },
       holdsmod(item: DimItem, predicate: string) {
-        const modSlotType = getItemSpecialtyModSlotFilterName(item);
+        const modSocketTypeHash = getSpecialtySocketCategoryHash(item);
         return (
-          Boolean(predicate === 'any' && modSlotType) ||
-          (predicate === 'none' && !modSlotType) ||
-          predicate === modSlotType
+          Boolean(predicate === 'any' && modSocketTypeHash) ||
+          (predicate === 'none' && !modSocketTypeHash) ||
+          modMetadataBySlotTag[predicate]?.compatiblePlugCategoryHashes.includes(modSocketTypeHash)
         );
       },
       powerfulreward(item: D2Item) {
