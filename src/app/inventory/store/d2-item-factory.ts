@@ -323,6 +323,17 @@ export function makeItem(
     overrideStyleItem = null;
   }
 
+  // Quest steps display their title as the quest line name, and their step name in the type position
+  let name = displayProperties.name;
+  let typeName = itemDef.itemTypeDisplayName || 'Unknown';
+  if (
+    itemDef.setData?.questLineName &&
+    itemDef.setData?.questLineName !== itemDef.displayProperties.name
+  ) {
+    typeName = itemDef.displayProperties.name;
+    name = itemDef.setData.questLineName;
+  }
+
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -337,7 +348,7 @@ export function makeItem(
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
-    name: displayProperties.name,
+    name,
     description: displayProperties.description,
     icon:
       overrideStyleItem?.displayProperties.icon ||
@@ -356,7 +367,7 @@ export function makeItem(
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
-    typeName: itemDef.itemTypeDisplayName || 'Unknown',
+    typeName,
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
