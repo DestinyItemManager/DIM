@@ -6,6 +6,7 @@ interface CssExports {
   'location': string;
   'title': string;
   'titleDetails': string;
+  'vendorIconWrapper': string;
   'xyzActiveThrob': string;
   'xyzEngram': string;
 }
