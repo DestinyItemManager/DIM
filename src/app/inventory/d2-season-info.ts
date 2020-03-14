@@ -7,7 +7,8 @@ export enum D2SeasonEnum {
   JOKERS_WILD,
   PENUMBRA,
   SHADOWKEEP,
-  DAWN
+  DAWN,
+  WORTHY
 }
 
 // TODO: Update on season change
