@@ -3,12 +3,14 @@ import { get, set, del } from 'idb-keyval';
 
 import { reportException } from '../utils/exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
-import { settings, settingsReady } from '../settings/settings';
+import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { settingsSelector } from 'app/settings/reducer';
+import store from 'app/store/store';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -40,7 +42,7 @@ class ManifestService {
     // This is not async because of https://bugs.webkit.org/show_bug.cgi?id=166879
     () => {
       this.getManifestApi().then((data) => {
-        const language = settings.language;
+        const language = settingsSelector(store.getState()).language;
         const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
         // The manifest has updated!
@@ -103,6 +105,7 @@ class ManifestService {
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest(tableWhitelist: string[]) {
     try {
+      console.time('Load manifest');
       const manifest = await this.loadManifest(tableWhitelist);
       if (!manifest.DestinyVendorDefinition) {
         throw new Error('Manifest corrupted, please reload');
@@ -133,13 +136,15 @@ class ManifestService {
       console.error('Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
       throw new Error(message);
+    } finally {
+      console.timeEnd('Load manifest');
     }
   }
 
   private async loadManifest(tableWhitelist: string[]): Promise<any> {
     const data = await this.getManifestApi();
     await settingsReady; // wait for settings to be ready
-    const language = settings.language;
+    const language = settingsSelector(store.getState()).language;
     const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
     // Use the path as the version, rather than the "version" field, because

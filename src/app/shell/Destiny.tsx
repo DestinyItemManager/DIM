@@ -9,11 +9,12 @@ import { t } from 'app/i18next-t';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
-import { DispatchProp, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
 import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
+import { ThunkDispatchProp } from 'app/store/reducers';
 
-interface Props extends DispatchProp {
+interface Props extends ThunkDispatchProp {
   account: DestinyAccount;
 }
 
@@ -22,8 +23,12 @@ interface Props extends DispatchProp {
  */
 class Destiny extends React.Component<Props> {
   componentDidMount() {
-    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
-    this.props.dispatch(loadVendorDropsFromIndexedDB() as any);
+    if ($featureFlags.wishLists) {
+      this.props.dispatch(loadWishListAndInfoFromIndexedDB());
+    }
+    if ($featureFlags.vendorEngrams) {
+      this.props.dispatch(loadVendorDropsFromIndexedDB());
+    }
   }
 
   render() {

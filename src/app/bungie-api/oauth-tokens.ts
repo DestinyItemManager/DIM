@@ -27,11 +27,13 @@ export interface Tokens {
  * Bungie.net OAuth.
  */
 
+const localStorageKey = 'authorization';
+
 /**
  * Get all token information from saved storage.
  */
 export function getToken(): Tokens | null {
-  const tokenString = localStorage.getItem('authorization');
+  const tokenString = localStorage.getItem(localStorageKey);
   return tokenString ? JSON.parse(tokenString) : null;
 }
 
@@ -39,14 +41,14 @@ export function getToken(): Tokens | null {
  * Save all the information about access/refresh tokens.
  */
 export function setToken(token: Tokens) {
-  localStorage.setItem('authorization', JSON.stringify(token));
+  localStorage.setItem(localStorageKey, JSON.stringify(token));
 }
 
 /**
  * Clear any saved token information.
  */
 export function removeToken() {
-  localStorage.removeItem('authorization');
+  localStorage.removeItem(localStorageKey);
 }
 
 /**

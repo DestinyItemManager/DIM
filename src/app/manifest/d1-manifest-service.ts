@@ -2,10 +2,12 @@ import _ from 'lodash';
 import { get, set, del } from 'idb-keyval';
 
 import { reportException } from '../utils/exceptions';
-import { settings, settingsReady } from '../settings/settings';
+import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { settingsSelector } from 'app/settings/reducer';
+import store from 'app/store/store';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -103,9 +105,9 @@ class ManifestService {
 
   private async loadManifest(): Promise<any> {
     await settingsReady; // wait for settings to be ready
-    const language = settings.language;
+    const language = settingsSelector(store.getState()).language;
     const manifestLang = manifestLangs.has(language) ? language : 'en';
-    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json?v=65704.18.06.11.1401-2`;
+    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json?v=2020-02-17`;
 
     // Use the path as the version
     const version = path;

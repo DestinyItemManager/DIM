@@ -120,10 +120,6 @@
   "ErrorBoundary": {
     "Title": "Something went wrong"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engram available",
-    "EngramsAvailable_plural": "{{count}} engrams available"
-  },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -196,6 +192,7 @@
     },
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
+    "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "Leveling": {
@@ -384,10 +381,6 @@
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",
-    "SaveInfoErrorTitle": "Error saving item info"
-  },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
@@ -540,6 +533,8 @@
     "Before": "Before '{{name}}'",
     "ChangeName": "Change name",
     "ChooseItem": "Add {{name}}",
+    "ClashingTitle": "Clashing loadout",
+    "ClashingDescription": "The loadout {{loadoutName}} clashes with a previous one and could not be saved. Click this to open the loadout drawer.",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSpace": "Move other items away",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
@@ -555,7 +550,6 @@
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
-    "GatherTokens": "Gather Reputation Items",
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
@@ -602,6 +596,8 @@
     "Random": "Random",
     "Randomize": "Randomize",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
@@ -690,7 +686,6 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
-    "Factions": "Factions",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",

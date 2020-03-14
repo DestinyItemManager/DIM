@@ -6,7 +6,6 @@ import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { getBuckets } from '../../destiny1/d1-buckets';
 import { NewItemsService } from './new-items';
-import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
@@ -105,47 +104,33 @@ export function resetIdTracker() {
  * @param items a list of "raw" items from the Destiny API
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @return a promise for the list of items
  */
 export function processItems(
   owner: D1Store,
   items: any[],
   previousItems = new Set<string>(),
-  newItems = new Set<string>(),
-  itemInfoService?: ItemInfoSource
+  newItems = new Set<string>()
 ): Promise<D1Item[]> {
-  return Promise.all([
-    getDefinitions(),
-    getBuckets(),
-    previousItems,
-    newItems,
-    itemInfoService
-  ]).then(([defs, buckets, previousItems, newItems, itemInfoService]) => {
-    const result: D1Item[] = [];
-    _.forIn(items, (item) => {
-      let createdItem: D1Item | null = null;
-      try {
-        createdItem = makeItem(
-          defs,
-          buckets,
-          previousItems,
-          newItems,
-          itemInfoService,
-          item,
-          owner
-        );
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing D1 item', e);
-      }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
-    });
-    return result;
-  });
+  return Promise.all([getDefinitions(), getBuckets(), previousItems, newItems]).then(
+    ([defs, buckets, previousItems, newItems]) => {
+      const result: D1Item[] = [];
+      _.forIn(items, (item) => {
+        let createdItem: D1Item | null = null;
+        try {
+          createdItem = makeItem(defs, buckets, previousItems, newItems, item, owner);
+        } catch (e) {
+          console.error('Error processing item', item, e);
+          reportException('Processing D1 item', e);
+        }
+        if (createdItem !== null) {
+          createdItem.owner = owner.id;
+          result.push(createdItem);
+        }
+      });
+      return result;
+    }
+  );
 }
 
 const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
@@ -163,7 +148,6 @@ const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1Manifes
  * @param buckets the bucket definitions
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */
@@ -172,7 +156,6 @@ function makeItem(
   buckets: InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
-  itemInfoService: ItemInfoSource | undefined,
   item: any,
   owner: D1Store
 ) {
@@ -266,7 +249,24 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+  const element = defs.DamageType.get(item.damageTypeHash);
+
+  /*    a d1 damagetype def looks like this:
+    {
+      "damageTypeHash": 2303181850,
+      "identifier": "DAMAGE_TYPE_ARC",
+      "damageTypeName": "Arc",
+      "description": "This weapon causes Arc damage.",
+      "iconPath": "/img/destiny_content/damage_types/arc.png",
+      "transparentIconPath": "img/destiny_content/damage_types/arc_trans.png",
+      "showIcon": true,
+      "enumValue": 2,
+      "hash": 2303181850,
+      "index": 0,
+      "redacted": false
+    }
+  i like the icons a lot
+*/
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -317,7 +317,7 @@ function makeItem(
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    dmg: dmgName,
+    element,
     visible: true,
     sourceHashes: itemDef.sourceHashes,
     lockable:
@@ -375,14 +375,6 @@ function makeItem(
     NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
-  }
-
-  if (itemInfoService) {
-    try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem);
-    } catch (e) {
-      console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
-    }
   }
 
   try {

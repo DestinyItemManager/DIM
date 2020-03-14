@@ -12,6 +12,7 @@
   gap: var(--item-margin);
   align-content: flex-start;
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
+  position: relative;
 
   &:empty {
     min-height: 0;
@@ -20,6 +21,25 @@
 
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
+
+  &:before {
+    content: '';
+
+    opacity: 0;
+
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    z-index: 9;
+
+    display: none;
+
+    .drag-perf-show & {
+      display: block;
+    }
   }
 
   &.equipped {
@@ -50,6 +70,7 @@
     box-sizing: border-box;
     width: var(--item-size);
     height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    font-size: calc(var(--item-size) * 0.71);
     padding: 8px;
     color: #999;
   }

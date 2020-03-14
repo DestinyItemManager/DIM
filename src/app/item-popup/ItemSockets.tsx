@@ -6,9 +6,9 @@ import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocketCategory, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
@@ -51,7 +51,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   };
 }
 
-type Props = ProvidedProps & StoreProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function ItemSockets({
   defs,
@@ -65,12 +65,15 @@ function ItemSockets({
   onShiftClick,
   dispatch
 }: Props) {
-  useEffect(() => {
-    // TODO: want to prevent double loading these
-    if (!bestPerks.size) {
-      dispatch(getItemReviews(item));
-    }
-  }, [item, bestPerks.size, dispatch]);
+  if ($featureFlags.reviewsEnabled) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      // TODO: want to prevent double loading these
+      if (!bestPerks.size) {
+        dispatch(getItemReviews(item));
+      }
+    }, [item, bestPerks.size, dispatch]);
+  }
 
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 

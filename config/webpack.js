@@ -32,8 +32,8 @@ module.exports = (env) => {
   if (process.env.WEBPACK_DEV_SERVER) {
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
-      execSync('mkcert create-ca --validity 3650');
-      execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
+      execSync('mkcert create-ca --validity 825');
+      execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
     }
   }
 
@@ -329,6 +329,7 @@ module.exports = (env) => {
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
+        $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify(
           '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
@@ -340,7 +341,7 @@ module.exports = (env) => {
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        '$featureFlags.reviewsEnabled': JSON.stringify(true),
+        '$featureFlags.reviewsEnabled': JSON.stringify(false),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(!env.release),

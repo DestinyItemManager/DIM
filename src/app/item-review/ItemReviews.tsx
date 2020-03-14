@@ -1,23 +1,29 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './item-review.scss';
-import { connect, DispatchProp } from 'react-redux';
-import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
+import { connect } from 'react-redux';
+import {
+  AppIcon,
+  thumbsUpIcon,
+  thumbsDownIcon,
+  faThumbsUpRegular,
+  faThumbsDownRegular
+} from '../shell/icons';
 import { getRating, ratingsSelector, getReviews, getUserReview, shouldShowRating } from './reducer';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import ItemReview from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
 import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { getItemReviews, submitReview } from './destiny-tracker.service';
+import { getItemReviews, submitReview, reportReview } from './destiny-tracker.service';
 import { DtrRating } from './dtr-api-types';
 import { saveUserReview } from './actions';
 import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
 import RatingIcon from '../inventory/RatingIcon';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -34,7 +40,7 @@ interface StoreProps {
 const EMPTY = [];
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  const settings = state.settings;
+  const settings = settingsSelector(state);
   const reviewsResponse = getReviews(item, state);
   return {
     canReview: settings.allowIdPostToDtr,
@@ -45,7 +51,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   };
 }
 
-type Props = ProvidedProps & StoreProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface State {
   submitted: boolean;
@@ -144,7 +150,9 @@ class ItemReviews extends React.Component<Props, State> {
                     <span className="user-review--thumbs-up-button">
                       <AppIcon
                         className="fa-2x"
-                        icon={dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUp}
+                        icon={
+                          dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUpRegular
+                        }
                       />
                     </span>
                   </div>
@@ -153,7 +161,11 @@ class ItemReviews extends React.Component<Props, State> {
                     <span className="user-review--thumbs-down-button" onClick={this.thumbsDown}>
                       <AppIcon
                         className="fa-2x"
-                        icon={dtrRating && userReview.voted === -1 ? thumbsDownIcon : faThumbsDown}
+                        icon={
+                          dtrRating && userReview.voted === -1
+                            ? thumbsDownIcon
+                            : faThumbsDownRegular
+                        }
                       />
                     </span>
                   </div>
@@ -220,6 +232,7 @@ class ItemReviews extends React.Component<Props, State> {
                     review={review}
                     reviewModeOptions={reviewModeOptions}
                     onEditReview={this.editReview}
+                    onReportReview={this.reportReview}
                   />
                 ))
             )}
@@ -268,9 +281,14 @@ class ItemReviews extends React.Component<Props, State> {
     });
   };
 
+  private reportReview = (review: D2ItemUserReview | D1ItemUserReview) => {
+    const { dispatch } = this.props;
+    dispatch(reportReview(review));
+  };
+
   private submitReview = async () => {
     const { item, userReview, dispatch } = this.props;
-    await (dispatch(submitReview(item, userReview)) as any);
+    await dispatch(submitReview(item, userReview));
     this.setState({ submitted: true });
     this.cancelEdit();
   };

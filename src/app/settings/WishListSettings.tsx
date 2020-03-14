@@ -1,8 +1,8 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { connect, DispatchProp } from 'react-redux';
-import { RootState } from '../store/reducers';
-import { clearWishLists, markWishListsFetched } from '../wishlists/actions';
+import { connect } from 'react-redux';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
@@ -12,6 +12,7 @@ import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
+import { settingsSelector } from './reducer';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -22,7 +23,7 @@ interface StoreProps {
   wishListLastUpdated?: Date;
 }
 
-type Props = StoreProps & DispatchProp;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -30,7 +31,7 @@ function mapStateToProps(state: RootState): StoreProps {
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
     description: state.wishLists.wishListAndInfo.description,
-    wishListSource: state.settings.wishListSource,
+    wishListSource: settingsSelector(state).wishListSource,
     wishListLastUpdated: state.wishLists.lastFetched
   };
 }
@@ -48,7 +49,7 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
+    this.props.dispatch(loadWishListAndInfoFromIndexedDB());
   }
 
   render() {
@@ -146,20 +147,20 @@ class WishListSettings extends React.Component<Props, State> {
 
     this.props.dispatch(setSetting('wishListSource', wishListSource));
 
-    this.props.dispatch(fetchWishList(true) as any);
+    this.props.dispatch(fetchWishList(true));
 
     ga('send', 'event', 'WishList', 'From URL');
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
-    this.props.dispatch(setSetting('wishListSource', undefined));
+    this.props.dispatch(clearWishLists());
     this.setState({ wishListSource: '' });
 
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        this.props.dispatch(transformAndStoreWishList(wishListAndInfo, false) as any);
+        this.props.dispatch(transformAndStoreWishList(wishListAndInfo, false));
         ga('send', 'event', 'WishList', 'From File');
       }
     };

@@ -98,6 +98,10 @@ h5 {
   font-weight: normal;
 }
 
+label {
+  cursor: inherit;
+}
+
 div:focus,
 span:focus {
   outline-width: 0;
@@ -370,6 +374,7 @@ select {
   }
   img {
     height: 1.3em;
+    width: auto;
     vertical-align: bottom;
     margin: 0 0.3em;
     filter: drop-shadow(0 0 1px black);

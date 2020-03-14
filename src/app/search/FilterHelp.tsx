@@ -830,6 +830,14 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <td>{t('Filter.HasShader')}</td>
               </tr>
             )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>is:ornamented</span> <span>is:hasornament</span>
+                </td>
+                <td>{t('Filter.HasOrnament')}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

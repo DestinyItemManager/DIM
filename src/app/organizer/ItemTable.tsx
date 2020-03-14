@@ -14,17 +14,14 @@ import {
   UseSortByColumnOptions,
   Cell
 } from 'react-table';
-import { AppIcon } from 'app/shell/icons';
+import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
-import { DimItemInfo, TagInfo } from 'app/inventory/dim-item-info';
+import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
-import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -32,27 +29,32 @@ import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { RootState } from 'app/store/reducers';
-import { storesSelector } from 'app/inventory/reducer';
+import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { storesSelector, itemInfosSelector } from 'app/inventory/reducer';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
-import { currentAccountSelector } from 'app/accounts/reducer';
-import { newLoadout } from 'app/loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { setItemLockState } from 'app/inventory/item-move-service';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
   return val !== undefined;
 }
+
+const categoryToClass = {
+  23: DestinyClass.Hunter,
+  22: DestinyClass.Titan,
+  21: DestinyClass.Warlock
+};
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -65,22 +67,16 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  account?: DestinyAccount;
   stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
-  itemInfos: { [key: string]: DimItemInfo };
+  itemInfos: ItemInfos;
   ratings: { [key: string]: DtrRating };
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
   isPhonePortrait: boolean;
 }
-
-const mapDispatchToProps = {
-  toggleSearchQueryComponent
-};
-type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
@@ -90,11 +86,10 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
     return {
-      account: currentAccountSelector(state),
       items: allItemsSelector(state).filter(searchFilter),
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
-      itemInfos: state.inventory.itemInfos,
+      itemInfos: itemInfosSelector(state),
       ratings: ratingsSelector(state),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait
@@ -102,7 +97,7 @@ function mapStateToProps() {
   };
 }
 
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface DimColumnExtras {
   /** An optional filter expression that would limit results to those matching this item. */
@@ -124,13 +119,16 @@ function ItemTable({
   wishList,
   defs,
   stores,
-  account,
-  toggleSearchQueryComponent
+  dispatch
 }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
 
   const terminal = Boolean(_.last(selection)?.terminal);
+  const classCategoryHash =
+    selection.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+
   items = useMemo(() => {
     const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
     return terminal
@@ -223,16 +221,7 @@ function ItemTable({
     const state = selectedTag === 'lock';
     try {
       for (const item of items) {
-        const store =
-          item.owner === 'vault'
-            ? item.getStoresService().getActiveStore()!
-            : item.getStoresService().getStore(item.owner)!;
-
-        if (item.isDestiny2()) {
-          await d2SetLockState(store, item, state);
-        } else if (item.isDestiny1()) {
-          await d1SetItemState(item, store, state, 'lock');
-        }
+        await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
         item.locked = state;
@@ -269,7 +258,7 @@ function ItemTable({
           if (e.shiftKey) {
             const filter = cell.column.filter!(row.original);
             if (filter !== undefined) {
-              toggleSearchQueryComponent(filter);
+              dispatch(toggleSearchQueryComponent(filter));
             }
           }
         }
@@ -278,7 +267,7 @@ function ItemTable({
   const onMoveSelectedItems = (store: DimStore) => {
     if (selectedFlatRows?.length) {
       const items = selectedFlatRows?.map((d) => d.original);
-      const loadoutItems: { [type: string]: DimItem[] } = {};
+      const loadoutItems: DimItem[] = [];
 
       for (const item of items) {
         if (!loadoutItems[item.type]) {
@@ -287,10 +276,10 @@ function ItemTable({
         loadoutItems[item.type].push(item);
       }
 
-      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), loadoutItems);
-      if (store.class !== 'vault') {
-        loadout.classType = LoadoutClass[store.class];
-      }
+      const loadout = newLoadout(
+        t('Organizer.BulkMoveLoadoutName'),
+        items.map((i) => convertToLoadoutItem(i, false))
+      );
 
       applyLoadout(store, loadout, true);
     }
@@ -299,7 +288,7 @@ function ItemTable({
   const onTagSelectedItems = (tagInfo: TagInfo) => {
     if (tagInfo.type && selectedFlatRows?.length) {
       const items = selectedFlatRows.map((d) => d.original);
-      bulkTagItems(account, items, tagInfo.type);
+      dispatch(bulkTagItems(items, tagInfo.type));
     }
   };
 
@@ -309,6 +298,7 @@ function ItemTable({
         columns={columns.filter((c) => c.id !== 'selection')}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
+        forClass={classIfAny}
       />
       <ItemActions
         itemsAreSelected={Boolean(selectedFlatRows.length)}
@@ -363,4 +353,4 @@ function ItemTable({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemTable);
+export default connect<StoreProps>(mapStateToProps)(ItemTable);

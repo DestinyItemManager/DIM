@@ -1,8 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { AppIcon, tagIcon } from '../shell/icons';
-import { faClone } from '@fortawesome/free-regular-svg-icons';
-import { itemTagSelectorList, isTagValue } from '../inventory/dim-item-info';
+import { AppIcon, tagIcon, faClone } from '../shell/icons';
+import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -10,8 +9,6 @@ import _ from 'lodash';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';
-import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
-import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
@@ -23,6 +20,7 @@ import { showNotification } from '../notifications/notifications';
 import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
+import { setItemLockState } from 'app/inventory/item-move-service';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -49,10 +47,12 @@ interface StoreProps {
 
 type DispatchProps = {
   setSearchQuery(query: string): void;
+  bulkTagItems(items: DimItem[], tag: TagValue): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
-  setSearchQuery: (query) => dispatch(setSearchQuery(query, true))
+  setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
+  bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any)
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -92,16 +92,7 @@ class SearchFilter extends React.Component<Props, State> {
           .filter((i) => i.lockable && this.props.searchFilter(i));
         try {
           for (const item of lockables) {
-            const store =
-              item.owner === 'vault'
-                ? item.getStoresService().getActiveStore()!
-                : item.getStoresService().getStore(item.owner)!;
-
-            if (item.isDestiny2()) {
-              await d2SetLockState(store, item, state);
-            } else if (item.isDestiny1()) {
-              await d1SetItemState(item, store, state, 'lock');
-            }
+            await setItemLockState(item, state);
 
             // TODO: Gotta do this differently in react land
             item.locked = state;
@@ -131,7 +122,7 @@ class SearchFilter extends React.Component<Props, State> {
           .filter((i) => i.taggable && this.props.searchFilter(i));
 
         if (isTagValue(selectedTag)) {
-          bulkTagItems(this.props.account, tagItems, selectedTag);
+          this.props.bulkTagItems(tagItems, selectedTag);
         }
       }
     }

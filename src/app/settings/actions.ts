@@ -1,20 +1,20 @@
-import { createAction } from 'typesafe-actions';
+import { createAction, PayloadAction } from 'typesafe-actions';
 import { Settings } from './reducer';
 
 /** Bulk update settings after they've been loaded. */
 export const loaded = createAction('settings/LOADED')<Partial<Settings>>();
 
 /** This one seems a bit like cheating, but it lets us set a specific property. */
-export const setSetting = createAction('settings/SET', (property: keyof Settings, value: any) => ({
-  property,
-  value
-}))();
-
-/** This one seems a bit like cheating, but it lets us set a specific property of the farming settings. */
-export const setFarmingSetting = createAction(
-  'settings/SET_FARMING',
-  (property: keyof Settings['farming'], value: any) => ({ property, value })
-)();
+export const setSetting = createAction(
+  'settings/SET',
+  <V extends keyof Settings>(property: V, value: Settings[V]) => ({
+    property,
+    value
+  })
+)() as <V extends keyof Settings>(
+  property: V,
+  value: Settings[V]
+) => PayloadAction<'settings/SET', { property: V; value: Settings[V] }>;
 
 /** Update a collapsible section */
 export const toggleCollapsedSection = createAction('settings/COLLAPSIBLE')<string>();

@@ -19,8 +19,7 @@ import { connect } from 'react-redux';
 import { storesSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
-import { AppIcon } from 'app/shell/icons';
-import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
 import LoadoutBucketDropTarget from './locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PerkPicker from './PerkPicker';
@@ -28,6 +27,7 @@ import ReactDOM from 'react-dom';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -51,7 +51,7 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    language: state.settings.language,
+    language: settingsSelector(state).language,
     defs: state.manifest.d2Manifest!
   });
 }
@@ -161,6 +161,8 @@ function LockArmorAndPerks({
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
+  const ghostType = buckets.byHash[LockableBuckets.ghost].type;
+  ghostType && bucketTypes.push(ghostType);
 
   const anyLocked = Object.values(lockedMap).some((lockedItems) => Boolean(lockedItems?.length));
 
@@ -199,7 +201,7 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
           </button>
           {filterPerksOpen &&
             ReactDOM.createPortal(
@@ -237,10 +239,10 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={chooseLockItem}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockItem')}
           </button>
           <button className="dim-button" onClick={lockEquipped}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockEquipped')}
           </button>
         </div>
       </LoadoutBucketDropTarget>

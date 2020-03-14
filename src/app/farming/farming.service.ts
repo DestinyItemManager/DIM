@@ -1,7 +1,6 @@
-import { settings } from '../settings/settings';
 import _ from 'lodash';
-import { MoveReservations } from '../inventory/item-move-service';
-import { D1Item, DimItem } from '../inventory/item-types';
+import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
+import { DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getBuckets } from '../destiny1/d1-buckets';
@@ -13,6 +12,8 @@ import { InventoryBucket } from '../inventory/inventory-buckets';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
+import { settingsSelector } from 'app/settings/reducer';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -112,7 +113,7 @@ export const D1FarmingService = new D1Farming();
 
 async function farm(store: D1Store) {
   await farmItems(store);
-  if (settings.farming.makeRoomForItems) {
+  if (settingsSelector(rxStore.getState()).farmingMakeRoomForItems) {
     await makeRoomForItems(store);
   }
 }
@@ -134,31 +135,35 @@ async function farmItems(store: D1Store) {
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D1Store) {
+  const buckets = await getBuckets();
+  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
+  makeRoomForItemsInBuckets(store, makeRoomBuckets, D1StoresService);
+}
+
+// Ensure that there's one open space in each category that could
+// hold an item, so they don't go to the postmaster.
+export async function makeRoomForItemsInBuckets(
+  store: DimStore,
+  makeRoomBuckets: InventoryBucket[],
+  storeService: StoreServiceType
+) {
   // If any category is full, we'll move one aside
-  const itemsToMove: D1Item[] = [];
-  makeRoomTypes.forEach((makeRoomType) => {
-    const items = store.buckets[makeRoomType];
+  const itemsToMove: DimItem[] = [];
+  const itemInfos = itemInfosSelector(rxStore.getState());
+  makeRoomBuckets.forEach((bucket) => {
+    const items = store.buckets[bucket.id];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
-      // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(
-        items.filter((i) => !i.equipped && !i.notransfer),
-        (i) => {
-          let value = {
-            Common: 0,
-            Uncommon: 1,
-            Rare: 2,
-            Legendary: 3,
-            Exotic: 4
-          }[i.tier];
-          // And low-stat
-          if (i.primStat) {
-            value += i.primStat.value / 1000;
-          }
-          return value;
-        }
+      const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+      const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        store,
+        storeService.getVault()!,
+        itemInfos
       );
-      if (!_.isNumber(itemToMove)) {
-        itemsToMove.push(itemToMove!);
+      // We'll move the first one to the vault
+      const itemToMove = prioritizedMoveAsideCandidates[0];
+      if (itemToMove) {
+        itemsToMove.push(itemToMove);
       }
     }
   });
@@ -167,12 +172,10 @@ async function makeRoomForItems(store: D1Store) {
     return;
   }
 
-  const buckets = await getBuckets();
-  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
-  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, D1StoresService);
+  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, storeService);
 }
 
-export async function moveItemsToVault(
+async function moveItemsToVault(
   store: DimStore,
   items: DimItem[],
   makeRoomBuckets: InventoryBucket[],

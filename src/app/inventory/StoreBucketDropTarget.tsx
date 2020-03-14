@@ -85,6 +85,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}
+        onClick={this.onClick}
         aria-label={bucket.name}
       >
         {children}
@@ -103,6 +104,10 @@ class StoreBucketDropTarget extends React.Component<Props> {
 
   private onDrag = (e: DragEvent) => {
     this.shiftKeyDown = e.shiftKey;
+  };
+
+  private onClick = () => {
+    document.body.classList.remove('drag-perf-show');
   };
 }
 

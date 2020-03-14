@@ -15,7 +15,7 @@ function hoursAgo(dateToCheck?: Date): number {
   return Math.abs(Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
 }
 
-export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void>> {
+export function fetchWishList(ignoreThrottle: boolean): ThunkResult {
   return async (dispatch, getState) => {
     const wishListSource = getState().settings.wishListSource;
 
@@ -52,7 +52,7 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
 export function transformAndStoreWishList(
   wishListAndInfo: WishListAndInfo,
   wishListExternallySourced: boolean
-): ThunkResult<Promise<void>> {
+): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
       dispatch(loadWishLists(wishListAndInfo));

@@ -5,15 +5,13 @@ import store from '../store/store';
 import { loaded } from './actions';
 import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
-import { initialState } from './reducer';
+import { settingsSelector } from './reducer';
+import { loadLoadouts } from 'app/loadout/loadout-storage';
 
-let readyResolve;
+export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
-// This is a backwards-compatibility shim for all the code that directly uses settings
-export let settings = initialState;
-
-const saveSettings = _.throttle(
+const saveSettings = _.debounce(
   (settings) =>
     SyncService.set({
       'settings-v1.0': settings
@@ -25,8 +23,20 @@ function saveSettingsOnUpdate() {
   return observeStore(
     (state) => state.settings,
     (_currentState, nextState) => {
-      settings = nextState;
       saveSettings(nextState);
+    }
+  );
+}
+
+export function watchLanguageChanges() {
+  return observeStore(
+    (state) => settingsSelector(state).language,
+    (_, language) => {
+      const languageChanged = language !== i18next.language;
+      localStorage.setItem('dimLanguage', language);
+      if (languageChanged) {
+        i18next.changeLanguage(language);
+      }
     }
   );
 }
@@ -44,16 +54,11 @@ export function initSettings() {
     data = data || {};
 
     const savedSettings = data['settings-v1.0'] || {};
-
-    const languageChanged = savedSettings.language !== i18next.language;
     store.dispatch(loaded(savedSettings));
-    const settings = store.getState().settings;
-    localStorage.setItem('dimLanguage', settings.language);
-    if (languageChanged) {
-      i18next.changeLanguage(settings.language);
-    }
+    store.dispatch(loadLoadouts(data));
 
     readyResolve();
+
     // Start saving settings changes
     unsubscribe = saveSettingsOnUpdate();
   });

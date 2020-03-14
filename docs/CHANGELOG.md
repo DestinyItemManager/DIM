@@ -1,6 +1,39 @@
 ## Next
 
 * External wish lists will be checked daily. Settings menu shows last fetched time.
+* Updated item metadata for Season of the Worthy! Mod slots, sources, ghost perks, etc.
+
+## 5.73.0 <span className="changelog-date">(2020-03-08)</span>
+
+* You can now restrict what items get chosen by the random loadout feature by having an active search first. Try typing "tag:favorite" or "is:pulserifle" and then choosing Randomize.
+* Improved drag and drop performance on some browsers.
+* Removed the Factions section from the Progress page. You can still see faction rank on the Vendors page.
+
+## 5.72.0 <span className="changelog-date">(2020-03-01)</span>
+
+* Worked around a long-standing Bungie.net bug where items would change lock state when moved. One caveat is that DIM will always preserve the lock state as it sees it, so if you've locked/unlocked in game and haven't refreshed DIM, it may revert your lock.
+
+## 5.71.0 <span className="changelog-date">(2020-02-23)</span>
+
+* Removed "Gather Reputation Tokens" feature. You can do the same thing with an "is:reptoken" search.
+* Changing language now properly updates the UI language and prompts to reload.
+* Update search filters to include 'is:hasornament' and 'is:ornamented'
+* Filter autocomplete should now work in increments, and suggest a wider variety of filters.
+* Filter autocomplete should now work in increments, and suggest a wider variety of filters
+* Farming mode now uses the same logic as regular item moves to choose your lowest-value item to send to the vault when a bucket is full. Favorite/keep your items and they'll stay put!
+* Removed the option to move tokens to the vault in farming mode.
+
+## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
+
+* Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
+* Updated Search suggestions to sort "armor" above "armor2.0"
+* Fixed ghosts not being draggable in the Loadout Optimizer.
+* Fixed the Infusion tool not showing all possible items.
+
+## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
+
+## 5.68.0 <span className="changelog-date">(2020-02-02)</span>
+
 * `wishlistnotes` autocompletes in the search filters now.
 
 ## 5.67.0 <span className="changelog-date">(2020-01-26)</span>

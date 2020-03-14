@@ -193,6 +193,7 @@
       "Item": "能与拉乎尔大师交换200微光币的物品."
     },
     "HasNotes": "显示已有备注的物品",
+    "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
     "InLoadout": "显示已被用于配装的物品.",
     "Infusable": "显示可以灌注的物品.",
@@ -272,7 +273,7 @@
       "Shipwright": "<i>船匠</i>出产物品",
       "SoS": "<i>群星之塔</i>出产物品",
       "Tangled": "<i>纠缠之岸</i>出产物品",
-      "Titan": "<i>泰坦</i>出产物品",
+      "Titan": "<i>土卫六</i>出产物品。",
       "Trials": "<i>玖的试炼</i>出产物品",
       "Zavala": "<i>萨瓦拉[泰坦导师]</i>出产物品"
     },
@@ -337,7 +338,7 @@
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
     "CompareMatching": "比较过滤器物品",
-    "FilterHelp": "Search item/perk, {{example}}, and more",
+    "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
@@ -517,7 +518,7 @@
     "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移动性",
     "UnlockItem": "解锁物品",
-    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
+    "YouTubeLink": "在 YouTube 上观看关于配装优化器的教程。"
   },
   "Loadouts": {
     "Abandon": "你确定要放弃此配装?",
@@ -538,6 +539,8 @@
     "Before": "撤销 '{{name}}'",
     "ChangeName": "更改名称",
     "ChooseItem": "添加 {{name}}",
+    "ClashingDescription": "配装 {{loadoutName}} 与前一个冲突，因此无法保存。点击此处打开配装抽屉。",
+    "ClashingTitle": "冲突的配装",
     "Classified": "你的某些物品是隐藏的，因此不能用于到最大光等的计算之中。",
     "ClearSpace": "移除其他装备",
     "ConfirmDelete": "你确认要删除'{{name}}'?",
@@ -553,7 +556,6 @@
     "FromEquipped": "当前装备",
     "GatherEngrams": "收集记忆水晶",
     "GatherEngramsExceptExotics": "异域",
-    "GatherTokens": "转移声望物品",
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "物品等级",
     "LoadoutName": "配装名称",
@@ -572,7 +574,6 @@
     "MaximizeStat": "最高属性",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
     "NoExotics": "没有记忆水晶可以转移.",
-    "NoTokens": "没有声望物品可以转移.",
     "NotificationMessage": "正在将包含1件物品的配装转移到保险柜",
     "NotificationMessage_female": "正在为{{store}} 穿戴1件物品的配装",
     "NotificationMessage_female_plural": "正在为{{store}} 穿戴{{count}} 件物品的配装",
@@ -680,7 +681,7 @@
   },
   "Organizer": {
     "BulkMove": "移动到",
-    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkMoveLoadoutName": "已在管理器中选中",
     "BulkTag": "标签",
     "EnabledColumns": "已启用的列",
     "Organizer": "管理器"
@@ -718,7 +719,7 @@
     "CsvImport": "从CSV导入标签/注释",
     "Data": "试算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而不会模糊物品图片或文本。",
-    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
+    "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具来比较相关物品。",
     "EnableAdvancedStats": "在装备上显示品质指数(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
@@ -917,16 +918,16 @@
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
     "Clear": "清除愿望清单",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "可选：提供愿望清单的 URL",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
     "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选取任何档案。",
     "ImportSuccess": "愿望单加载了某物品的信息。{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
+    "ImportSuccess_plural": "已加载愿望清单，包含 {{count, number}} 个物品。{{titleAndDescription}}",
+    "InvalidExternalSource": "请为你的外部愿望清单来源输入一个有效的 URL。URL 必须以 https://raw.githubusercontent.com 开头",
     "Num": "在您的愿望单中有{{num, number}} 个物品",
-    "UpdateExternalSource": "Update Wish List Source",
+    "UpdateExternalSource": "更新愿望清单来源",
     "WishListNotes": "愿望清单备注:{{notes}}"
   }
 }

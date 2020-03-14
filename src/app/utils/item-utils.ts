@@ -1,31 +1,29 @@
-import { damageTypeNames } from 'app/inventory/store/d2-item-factory';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import modSlotsByName from 'data/d2/seasonal-mod-slots.json';
+import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
-// a file for utilities where item goes in, info about the item comes out.
-// but not necessarily info worth wedging into the DimItem
-
-const dmgToEnum = _.invert(damageTypeNames);
-const generateEnumToDef: (
-  defs: D2ManifestDefinitions
-) => { [key: number]: DestinyDamageTypeDefinition } = memoizeOne((defs) =>
-  Object.values(defs.DamageType.getAll()).reduce((obj, dt) => {
-    obj[dt.enumValue] = dt;
-    return obj;
-  }, {})
-);
-/** convert DimItem's .dmg back to a DamageType */
-export const getItemDamageType: (
-  item: DimItem,
-  defs: D2ManifestDefinitions
-) => DestinyDamageTypeDefinition | null = (item, defs) => {
-  const enumToDef = generateEnumToDef(defs);
-  return (item.dmg && dmgToEnum[item.dmg] && enumToDef[dmgToEnum[item.dmg]]) || null;
+// damage is a mess!
+export const damageNamesByEnum: { [key in DamageType]: string | null } = {
+  0: null,
+  1: 'kinetic',
+  2: 'arc',
+  3: 'solar',
+  4: 'void',
+  5: 'raid'
 };
+export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
+  [DestinyEnergyType.Any]: 'any',
+  [DestinyEnergyType.Arc]: 'arc',
+  [DestinyEnergyType.Thermal]: 'solar',
+  [DestinyEnergyType.Void]: 'void'
+};
+// export const damageEnumsByName: { [key:string]: number } = _.invert(damageNamesByEnum) as {};
+// export const energyEnumsByName: { [key:string]: number } = _.invert(energyNamesByEnum) as {};
+
+export const getItemDamageShortName: (item: DimItem) => string | undefined = (item) =>
+  item.isDestiny2() && item.energy
+    ? energyNamesByEnum[item.element?.enumValue ?? -1]
+    : damageNamesByEnum[item.element?.enumValue ?? -1];
 
 // specialty slots are seasonal-ish, thus-far. some correspond to a season, some to an expansion
 const specialtyModSocketHashes = Object.values(modSlotsByName).flat();

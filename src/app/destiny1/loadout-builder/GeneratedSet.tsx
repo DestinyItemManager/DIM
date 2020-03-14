@@ -6,13 +6,10 @@ import _ from 'lodash';
 import { DimStore } from '../../inventory/store-types';
 import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import { AppIcon } from '../../shell/icons';
+import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
 import CharacterStats from '../../inventory/CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
-import { newLoadout } from '../../loadout/loadout-utils';
-import copy from 'fast-copy';
-import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
-import { LoadoutClass, Loadout } from 'app/loadout/loadout-types';
+import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 
@@ -118,55 +115,24 @@ export default class GeneratedSet extends React.Component<Props, State> {
 
   private toggle = () => this.setState((state) => ({ collapsed: !state.collapsed }));
 
-  private newLoadout = (set: ArmorSet) => {
-    const loadout = newLoadout('', {});
-    loadout.classType = LoadoutClass[this.props.store.class];
-    const items = _.pick(
-      set.armor,
-      'Helmet',
-      'Chest',
-      'Gauntlets',
-      'Leg',
-      'ClassItem',
-      'Ghost',
-      'Artifact'
-    );
-    _.forIn(items, (itemContainer, itemType) => {
-      loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
-    });
+  private makeLoadoutFromSet = (set: ArmorSet) => {
+    const items = Object.values(
+      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact')
+    ).map((si) => si.item);
 
-    editLoadout(loadout, {
-      equipAll: true,
+    const loadout = newLoadout(
+      '',
+      items.map((i) => convertToLoadoutItem(i, true))
+    );
+    loadout.classType = this.props.store.classType;
+    return loadout;
+  };
+
+  private newLoadout = (set: ArmorSet) => {
+    editLoadout(this.makeLoadoutFromSet(set), {
       showClass: false
     });
   };
-  private equipItems = (set: ArmorSet) => {
-    let loadout: Loadout = newLoadout(t('Loadouts.AppliedAuto'), {});
-    loadout.classType = LoadoutClass[this.props.store.class];
-    const items = _.pick(
-      set.armor,
-      'Helmet',
-      'Chest',
-      'Gauntlets',
-      'Leg',
-      'ClassItem',
-      'Ghost',
-      'Artifact'
-    );
-    loadout.items.helmet = [items.Helmet.item];
-    loadout.items.chest = [items.Chest.item];
-    loadout.items.gauntlets = [items.Gauntlets.item];
-    loadout.items.leg = [items.Leg.item];
-    loadout.items.classitem = [items.ClassItem.item];
-    loadout.items.ghost = [items.Ghost.item];
-    loadout.items.artifact = [items.Artifact.item];
-
-    loadout = copy(loadout);
-
-    _.forIn(loadout.items, (val) => {
-      val[0].equipped = true;
-    });
-
-    return applyLoadout(this.props.store, loadout, true);
-  };
+  private equipItems = (set: ArmorSet) =>
+    applyLoadout(this.props.store, this.makeLoadoutFromSet(set), true);
 }

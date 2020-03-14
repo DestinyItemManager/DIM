@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';
@@ -13,12 +13,12 @@ import {
   maxLightLoadout,
   itemLevelingLoadout,
   gatherEngramsLoadout,
-  gatherTokensLoadout,
   searchLoadout,
-  randomLoadout
+  randomLoadout,
+  maxLightItemSet
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
-import { newLoadout, getLight } from './loadout-utils';
+import { newLoadout, getLight, convertToLoadoutItem } from './loadout-utils';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import {
@@ -35,7 +35,6 @@ import {
   levellingIcon,
   sendIcon,
   banIcon,
-  raiseReputationIcon,
   undoIcon,
   deleteIcon,
   editIcon,
@@ -43,29 +42,31 @@ import {
   powerActionIcon,
   powerIndicatorIcon,
   globeIcon,
+  faRandom,
   hunterIcon,
   warlockIcon,
   titanIcon
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
-import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
 import { getArtifactBonus, maxPowerString } from 'app/inventory/d2-stores';
-import { LoadoutClass, Loadout } from './loadout-types';
+import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
-import { getLoadouts, deleteLoadout } from './loadout-storage';
+import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
+import { fromEquippedTypes } from './LoadoutDrawerContents';
+import { storesSelector } from 'app/inventory/reducer';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const loadoutIcon = {
-  [LoadoutClass.any]: globeIcon,
-  [LoadoutClass.hunter]: hunterIcon,
-  [LoadoutClass.warlock]: warlockIcon,
-  [LoadoutClass.titan]: titanIcon
+  [DestinyClass.Unknown]: globeIcon,
+  [DestinyClass.Hunter]: hunterIcon,
+  [DestinyClass.Warlock]: warlockIcon,
+  [DestinyClass.Titan]: titanIcon
 };
 
 interface ProvidedProps {
@@ -78,58 +79,47 @@ interface StoreProps {
   previousLoadout?: Loadout;
   loadouts: Loadout[];
   query: string;
-  classTypeId: number;
+  classTypeId: DestinyClass;
+  stores: DimStore[];
   searchFilter(item: DimItem): boolean;
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
     (_, { dimStore }: ProvidedProps) => dimStore,
-    (loadouts, dimStore) => {
-      const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
-
-      return _.sortBy(
+    (loadouts, dimStore) =>
+      _.sortBy(
         loadouts.filter(
           (loadout) =>
-            (dimStore.destinyVersion === 2
-              ? loadout.destinyVersion === 2
-              : loadout.destinyVersion !== 2) &&
-            (classTypeId === LoadoutClass.any ||
-              loadout.classType === LoadoutClass.any ||
-              loadout.classType === classTypeId)
+            dimStore.classType === DestinyClass.Unknown ||
+            loadout.classType === DestinyClass.Unknown ||
+            loadout.classType === dimStore.classType
         ),
         (l) => l.name
-      );
-    }
+      )
   );
 
   return (state: RootState, ownProps: ProvidedProps): StoreProps => {
     const { dimStore } = ownProps;
-
-    const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
 
     return {
       previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
       loadouts: loadoutsForPlatform(state, ownProps),
       query: querySelector(state),
       searchFilter: searchFilterSelector(state),
-      classTypeId,
-      account: currentAccountSelector(state)!
+      classTypeId: dimStore.classType,
+      account: currentAccountSelector(state)!,
+      stores: storesSelector(state)
     };
   };
 }
 
 class LoadoutPopup extends React.Component<Props> {
-  componentDidMount() {
-    // Need this to poke the state
-    getLoadouts();
-  }
-
   render() {
-    const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
+    const { dimStore, stores, previousLoadout, loadouts, query, onClick } = this.props;
     const sortedLoadouts = _.sortBy(loadouts, (loadout) => loadout.name);
 
     // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
@@ -142,7 +132,7 @@ class LoadoutPopup extends React.Component<Props> {
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
       );
 
-    const maxLight = getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore));
+    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
     const artifactLight = getArtifactBonus(dimStore);
     const maxLightValue = maxPowerString(maxLight, hasClassified, artifactLight);
 
@@ -241,23 +231,18 @@ class LoadoutPopup extends React.Component<Props> {
             </li>
           )}
 
-          {dimStore.isDestiny2() && (
-            <li className="loadout-set">
-              <span onClick={this.gatherTokensLoadout}>
-                <AppIcon icon={raiseReputationIcon} />
-                <span>{t('Loadouts.GatherTokens')}</span>
-              </span>
-            </li>
-          )}
-
           <li className="loadout-set">
             <span onClick={this.randomLoadout}>
               <AppIcon icon={faRandom} />
-              <span>{t('Loadouts.Randomize')}</span>
+              <span>
+                {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
+              </span>
             </span>
-            <span onClick={(e) => this.randomLoadout(e, true)}>
-              <span>{t('Loadouts.WeaponsOnly')}</span>
-            </span>
+            {query.length === 0 && (
+              <span onClick={(e) => this.randomLoadout(e, true)}>
+                <span>{t('Loadouts.WeaponsOnly')}</span>
+              </span>
+            )}
           </li>
 
           {!dimStore.isVault && (
@@ -311,39 +296,32 @@ class LoadoutPopup extends React.Component<Props> {
   }
 
   private newLoadout = () => {
-    this.editLoadout(newLoadout('', {}));
+    this.editLoadout(newLoadout('', []));
   };
 
   private newLoadoutFromEquipped = () => {
     const { dimStore, classTypeId } = this.props;
 
-    const loadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
-    // We don't want to prepopulate the loadout with a bunch of cosmetic junk
-    // like emblems and ships and horns.
-    loadout.items = _.pick(
-      loadout.items,
-      'class',
-      'kinetic',
-      'energy',
-      'power',
-      'primary',
-      'special',
-      'heavy',
-      'helmet',
-      'gauntlets',
-      'chest',
-      'leg',
-      'classitem',
-      'artifact',
-      'ghost'
+    const items = dimStore.items.filter(
+      (item) =>
+        item.canBeInLoadout() &&
+        item.equipped &&
+        fromEquippedTypes.includes(item.type.toLowerCase())
+    );
+    const loadout = newLoadout(
+      '',
+      items.map((i) => convertToLoadoutItem(i, true))
     );
     loadout.classType = classTypeId;
     this.editLoadout(loadout);
   };
 
-  private deleteLoadout = (loadout: Loadout) => {
+  private deleteLoadout = async (loadout: Loadout) => {
+    const { dispatch } = this.props;
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      deleteLoadout(loadout).catch((e) => {
+      try {
+        await dispatch(deleteLoadout(loadout));
+      } catch (e) {
         showNotification({
           type: 'error',
           title: t('Loadouts.DeleteErrorTitle'),
@@ -353,7 +331,7 @@ class LoadoutPopup extends React.Component<Props> {
           })
         });
         console.error(e);
-      });
+      }
     }
   };
 
@@ -389,8 +367,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   private maxLightLoadout = (e) => {
-    const { dimStore } = this.props;
-    const loadout = maxLightLoadout(dimStore.getStoresService(), dimStore);
+    const { dimStore, stores } = this.props;
+    const loadout = maxLightLoadout(stores, dimStore);
     this.applyLoadout(loadout, e);
   };
 
@@ -407,29 +385,26 @@ class LoadoutPopup extends React.Component<Props> {
     this.applyLoadout(loadout, e);
   };
 
-  private gatherTokensLoadout = (e) => {
-    const { dimStore } = this.props;
-    let loadout;
-    try {
-      loadout = gatherTokensLoadout(dimStore.getStoresService());
-    } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.GatherTokens'), body: e.message });
-      return;
-    }
-    this.applyLoadout(loadout, e);
-  };
-
   private randomLoadout = (e, weaponsOnly = false) => {
-    const { dimStore } = this.props;
+    const { dimStore, searchFilter, query } = this.props;
     if (
-      !window.confirm(weaponsOnly ? t('Loadouts.RandomizeWeapons') : t('Loadouts.RandomizePrompt'))
+      !window.confirm(
+        weaponsOnly
+          ? t('Loadouts.RandomizeWeapons')
+          : query.length > 0
+          ? t('Loadouts.RandomizeSearchPrompt', { query })
+          : t('Loadouts.RandomizePrompt')
+      )
     ) {
       e.preventDefault();
       return;
     }
     let loadout;
     try {
-      loadout = randomLoadout(dimStore.getStoresService(), weaponsOnly);
+      loadout = randomLoadout(
+        dimStore.getStoresService(),
+        weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
+      );
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
       return;
@@ -463,10 +438,12 @@ class LoadoutPopup extends React.Component<Props> {
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
+/**
+ * Filter a loadout down to only the equipped items in the loadout.
+ */
 export function filterLoadoutToEquipped(loadout: Loadout) {
-  const filteredLoadout = copy(loadout);
-  filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) =>
-    items.filter((i) => i.equipped)
-  );
-  return filteredLoadout;
+  return {
+    ...loadout,
+    items: loadout.items.filter((i) => i.equipped)
+  };
 }

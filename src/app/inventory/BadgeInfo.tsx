@@ -8,9 +8,10 @@ import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
+import iconStyles from 'app/inventory/ElementIcon.m.scss';
 import ElementIcon from './ElementIcon';
-import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
+import { DamageType } from 'bungie-api-ts/destiny2';
 
 interface Props {
   item: DimItem;
@@ -88,11 +89,6 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
     [styles.wishlistRoll]: uiWishListRoll
   };
 
-  const badgeElement =
-    item.dmg ||
-    (item.isDestiny2() && item.energy && energyCapacityTypeNames[item.energy.energyType]) ||
-    null;
-
   return (
     <div className={clsx(styles.badge, badgeclsx)}>
       {item.isDestiny1() && item.quality && (
@@ -111,7 +107,10 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
         item.isDestiny2() && item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
         {item.energy.energyCapacity}</span>)
         */}
-        {badgeElement && <ElementIcon element={badgeElement} />}
+        {item.element &&
+          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+            <ElementIcon element={item.element} className={iconStyles.lightBackground} />
+          )}
         <span>{badgeContent}</span>
       </div>
     </div>

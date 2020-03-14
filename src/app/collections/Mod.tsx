@@ -1,14 +1,8 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { makeItem } from '../inventory/store/d2-item-factory';
-import {
-  ItemBindStatus,
-  ItemLocation,
-  TransferStatuses,
-  ItemState,
-  DestinyInventoryItemDefinition
-} from 'bungie-api-ts/destiny2';
+import { makeFakeItem } from '../inventory/store/d2-item-factory';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import './Collectible.scss';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 
@@ -16,8 +10,7 @@ import clsx from 'clsx';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { AppIcon } from '../shell/icons';
+import { AppIcon, faCheck } from '../shell/icons';
 import styles from '../vendors/VendorItem.m.scss';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
@@ -49,29 +42,7 @@ export function ModCollectible({
   if (!inventoryItem) {
     return null;
   }
-  const item = makeItem(
-    defs,
-    buckets,
-    new Set(),
-    new Set(),
-    undefined,
-    undefined,
-    {
-      itemHash: inventoryItem.hash,
-      itemInstanceId: inventoryItem.hash.toString(),
-      quantity: 1,
-      bindStatus: ItemBindStatus.NotBound,
-      location: ItemLocation.Vendor,
-      bucketHash: 0,
-      transferStatus: TransferStatuses.NotTransferrable,
-      lockable: false,
-      state: ItemState.None,
-      isWrapper: false,
-      tooltipNotificationIndexes: []
-    },
-    undefined,
-    undefined // reviewData
-  );
+  const item = makeFakeItem(defs, buckets, undefined, inventoryItem.hash);
   const modDef = defs.InventoryItem.get(inventoryItem.hash);
   if (!item || !modDef) {
     return null;

@@ -10,15 +10,16 @@ import { Loadout } from '../loadout/loadout-types';
 import {
   DestinyAmmunitionType,
   DestinyCollectibleState,
-  DestinyClass
+  DestinyClass,
+  DestinyItemSubType
 } from 'bungie-api-ts/destiny2';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
-import { sortedStoresSelector } from '../inventory/reducer';
-import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
+import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
+import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
+import { itemTagSelectorList, getTag, getNotes, ItemInfos } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -26,8 +27,6 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import { getLoadouts as getLoadoutsFromStorage } from '../loadout/loadout-storage';
-
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
@@ -35,9 +34,16 @@ import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
 import {
   getItemSpecialtyModSlotFilterName,
-  specialtyModSlotFilterNames
+  specialtyModSlotFilterNames,
+  getItemDamageShortName
 } from 'app/utils/item-utils';
-import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
+import {
+  DEFAULT_SHADER,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_GLOW,
+  DEFAULT_GLOW_CATEGORY
+} from 'app/inventory/store/sockets';
+import { settingsSelector } from 'app/settings/reducer';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -45,9 +51,10 @@ import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
  */
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
-  store.getState().settings.language
-);
+const isLatinBased = () =>
+  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
+    settingsSelector(store.getState()).language
+  );
 
 /** escape special characters for a regex */
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -56,11 +63,11 @@ export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const startWordRegexp = memoizeOne(
   (predicate: string) =>
     // Only some languages effectively use the \b regex word boundary
-    new RegExp(`${isLatinBased ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
+    new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
 );
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLowerCase();
+const plainString = (s: string): string => (isLatinBased() ? latinise(s) : s).toLowerCase();
 
 /** remove starting and ending quotes ('") e.g. for notes:"this string" */
 const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
@@ -93,7 +100,7 @@ export const searchFiltersConfigSelector = createSelector(
   inventoryWishListsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
-  (state: RootState) => state.inventory.itemInfos,
+  itemInfosSelector,
   searchFilters
 );
 
@@ -161,7 +168,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic', 'heroic'],
+    dmg: hashes.damageTypeNames,
     type: itemTypes,
     tier: [
       'common',
@@ -265,6 +272,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           hasMod: ['hasmod'],
           modded: ['modded'],
           hasShader: ['shaded', 'hasshader'],
+          hasOrnament: ['ornamented', 'hasornament'],
           ikelos: ['ikelos'],
           masterwork: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
@@ -309,19 +317,20 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...Object.keys(seasonTags)
       .reverse()
       .map((tag) => `season:${tag}`),
-    // keywords for seaqsonal mod slots
+    // keywords for seasonal mod slots
     ...specialtyModSlotFilterNames
       .concat(['any', 'none'])
       .map((modSlotName) => `modslot:${modSlotName}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
+    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
           'source:',
+          'wishlistnotes:',
           ...Object.keys(D2Sources).map((word) => `source:${word}`),
           // maximum stat finders
           ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
@@ -330,9 +339,21 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
-    ...(isD2 ? ['wishlistnotes:'] : [])
+    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
   ];
+
+  // create suggestion stubs for filter names
+  const keywordStubs = keywords.flatMap((keyword) => {
+    const keywordSegments = keyword //   'basestat:mobility:<='
+      .split(':') //                   [ 'basestat' , 'mobility' , '<=']
+      .slice(0, -1); //                [ 'basestat' , 'mobility' ]
+    const stubs: string[] = [];
+    for (let i = 1; i <= keywordSegments.length; i++) {
+      stubs.push(keywordSegments.slice(0, i).join(':') + ':');
+    }
+    return stubs; //                   [ 'basestat:' , 'basestat:mobility:' ]
+  });
+  keywords.push(...new Set(keywordStubs));
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -406,8 +427,9 @@ function searchFilters(
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
-  itemInfos: { [key: string]: DimItemInfo }
+  itemInfos: ItemInfos
 ): SearchFilters {
+  // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
@@ -416,7 +438,6 @@ function searchFilters(
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
-  const getLoadouts = _.once(getLoadoutsFromStorage);
 
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
@@ -682,7 +703,7 @@ function searchFilters(
         return item.hash.toString() === predicate;
       },
       dmg(item: DimItem, predicate: string) {
-        return item.dmg === predicate;
+        return getItemDamageShortName(item) === predicate;
       },
       type(item: DimItem, predicate: string) {
         return item.type?.toLowerCase() === predicate;
@@ -758,11 +779,7 @@ function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerLoadoutItems.push(
-              ...Object.values(maxLightLoadout(store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
-            );
+            _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).map((i) => i.id));
           });
         }
 
@@ -781,9 +798,7 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ...Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
+              ...maxStatLoadout(maxStatHash, store.getStoresService(), store).items.map((i) => i.id)
             );
           });
         }
@@ -1169,18 +1184,12 @@ function searchFilters(
       inloadout(item: DimItem) {
         // Lazy load loadouts and re-trigger
         if (!_loadoutItemIds) {
-          if (loadouts.length === 0) {
-            getLoadouts();
-            return false;
-          }
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
-            if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.forIn(loadout.items, (items) => {
-                for (const item of items) {
-                  _loadoutItemIds!.add(item.id);
-                }
-              });
+            for (const item of loadout.items) {
+              if (item.id && item.id !== '0') {
+                _loadoutItemIds.add(item.id);
+              }
             }
           }
         }
@@ -1257,6 +1266,20 @@ function searchFilters(
                 socket.plug.plugItem.plug &&
                 socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
                 socket.plug.plugItem.hash !== DEFAULT_SHADER
+            )
+          )
+        );
+      },
+      hasOrnament(item: D2Item) {
+        return (
+          item.sockets &&
+          item.sockets.sockets.some((socket) =>
+            Boolean(
+              socket.plug &&
+                socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
+                socket.plug.plugItem.hash !== DEFAULT_GLOW &&
+                !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
+                !socket.plug.plugItem.itemCategoryHashes.includes(DEFAULT_GLOW_CATEGORY)
             )
           )
         );

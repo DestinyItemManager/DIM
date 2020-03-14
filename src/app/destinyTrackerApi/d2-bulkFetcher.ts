@@ -6,11 +6,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
 import { dtrFetch, dtrTextReviewMultiplier, dtrD2ReviewsEndpoint } from './dtr-service-helper';
-import {
-  D2ItemFetchResponse,
-  D2ItemFetchRequest,
-  DtrD2ActivityModes
-} from '../item-review/d2-dtr-api-types';
+import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { getVendorItemList, getItemList } from './d2-itemListBuilder';
 import _ from 'lodash';
 import { updateRatings } from '../item-review/actions';
@@ -20,7 +16,7 @@ import { ThunkResult, RootState } from '../store/reducers';
 import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { DtrReviewPlatform } from './platformOptionsFetcher';
+import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 function getBulkFetchPromise(
   ratings: {
@@ -116,7 +112,7 @@ export function bulkFetch(
   stores: D2Store[],
   platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     if (!getState().reviews.loadedFromIDB) {
       await loadReviewsFromIndexedDB()(dispatch, getState, {});
@@ -141,7 +137,7 @@ export function bulkFetchVendorItems(
   mode: DtrD2ActivityModes,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const existingRatings = ratingsSelector(getState());
     const bulkRankings = await getVendorBulkFetchPromise(

@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
+import { currentAccountSelector } from '../accounts/reducer';
 import { Loadout } from './loadout-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
@@ -9,8 +9,7 @@ import { createSelector } from 'reselect';
 
 const EMPTY_ARRAY = [];
 
-// TODO: Enable this once the membership ID saving code has been out a while, so we can track how often it happens.
-// const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
+const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
@@ -20,10 +19,16 @@ export const loadoutsSelector = createSelector(
     currentAccount
       ? allLoadouts.filter((loadout) => {
           if (loadout.membershipId !== undefined) {
-            return loadout.membershipId === currentAccount.membershipId;
+            return (
+              loadout.membershipId === currentAccount.membershipId &&
+              loadout.destinyVersion === currentAccount.destinyVersion
+            );
           } else if (loadout.platform !== undefined) {
-            // reportOldLoadout();
-            if (loadout.platform === currentAccount.platformLabel) {
+            reportOldLoadout();
+            if (
+              loadout.platform === currentAccount.platformLabel &&
+              loadout.destinyVersion === currentAccount.destinyVersion
+            ) {
               // Take this opportunity to fix up the membership ID
               loadout.membershipId = currentAccount.membershipId;
               return true;
@@ -31,7 +36,8 @@ export const loadoutsSelector = createSelector(
               return false;
             }
           } else {
-            return true;
+            // In D1 loadouts could get saved without platform or membership ID
+            return currentAccount.destinyVersion === 1;
           }
         })
       : EMPTY_ARRAY
@@ -56,7 +62,7 @@ const initialState: LoadoutsState = {
   previousLoadouts: {}
 };
 
-export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> = (
+export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
   state: LoadoutsState = initialState,
   action: LoadoutsAction
 ) => {

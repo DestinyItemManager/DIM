@@ -1,68 +1,32 @@
-import React from 'react';
-import { D1ManifestService, ManifestServiceState } from '../manifest/d1-manifest-service';
+import React, { useState } from 'react';
+import { D1ManifestService } from '../manifest/d1-manifest-service';
 import './ManifestProgress.scss';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AppIcon, refreshIcon } from './icons';
 import { D2ManifestService } from '../manifest/manifest-service-json';
-import { Subscription } from 'rxjs';
-
-interface Props {
-  destinyVersion: number;
-}
+import { useSubscription } from 'app/utils/hooks';
 
 /**
  * A dialog that shows the progress of loading the manifest.
  */
-export default class ManifestProgress extends React.Component<Props, ManifestServiceState> {
-  private subscription?: Subscription;
+export default function ManifestProgress({ destinyVersion }: { destinyVersion: number }) {
+  const manifestService = destinyVersion === 2 ? D2ManifestService : D1ManifestService;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = this.manifestService.state;
-  }
+  const [manifestState, setManifestState] = useState(manifestService.state);
+  useSubscription(() => manifestService.state$.subscribe(setManifestState));
 
-  componentDidMount() {
-    this.listenForUpdates();
-  }
+  const { loaded, error, statusText } = manifestState;
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.destinyVersion !== this.props.destinyVersion) {
-      this.listenForUpdates();
-    }
-  }
-
-  render() {
-    const { loaded, error, statusText } = this.state;
-    return (
-      <TransitionGroup component={null}>
-        {(!loaded || error) && statusText && (
-          <CSSTransition clsx="manifest" timeout={{ enter: 300, exit: 300 }}>
-            <div className="manifest-progress">
-              {!error && <AppIcon icon={refreshIcon} spinning={true} />}
-              <div> {statusText}</div>
-            </div>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  private listenForUpdates() {
-    this.unsubscribe();
-    this.subscription = this.manifestService.state$.subscribe((state) => this.setState(state));
-  }
-
-  private unsubscribe() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  private get manifestService() {
-    return this.props.destinyVersion === 2 ? D2ManifestService : D1ManifestService;
-  }
+  return (
+    <TransitionGroup component={null}>
+      {(!loaded || error) && statusText && (
+        <CSSTransition clsx="manifest" timeout={{ enter: 300, exit: 300 }}>
+          <div className="manifest-progress">
+            {!error && <AppIcon icon={refreshIcon} spinning={true} />}
+            <div> {statusText}</div>
+          </div>
+        </CSSTransition>
+      )}
+    </TransitionGroup>
+  );
 }

@@ -14,8 +14,7 @@ import { reportException } from '../utils/exceptions';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { router } from '../router';
 import { showNotification } from '../notifications/notifications';
-import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';
-import { stadiaIcon, battleNetIcon } from 'app/shell/icons';
+import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
@@ -36,6 +35,20 @@ export const PLATFORM_LABELS = {
   // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.BungieNext]: 'Bungie.net'
+};
+
+export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
+  Xbox: BungieMembershipType.TigerXbox,
+  // t('Accounts.PlayStation')
+  PlayStation: BungieMembershipType.TigerPsn,
+  // t('Accounts.Blizzard')
+  Blizzard: BungieMembershipType.TigerBlizzard,
+  Demon: BungieMembershipType.TigerDemon,
+  // t('Accounts.Steam')
+  Steam: BungieMembershipType.TigerSteam,
+  // t('Accounts.Stadia')
+  Stadia: BungieMembershipType.TigerStadia,
+  'Bungie.net': BungieMembershipType.BungieNext
 };
 
 export const PLATFORM_ICONS = {

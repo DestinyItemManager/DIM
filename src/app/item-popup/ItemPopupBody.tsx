@@ -6,8 +6,7 @@ import { ItemPopupExtraInfo } from './item-popup';
 import clsx from 'clsx';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
-import { AppIcon } from '../shell/icons';
-import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 
 export const enum ItemPopupTab {
@@ -50,7 +49,7 @@ export default function ItemPopupBody({
       component: <ItemOverview item={item} extraInfo={extraInfo} />
     }
   ];
-  if (item.reviewable) {
+  if ($featureFlags.reviewsEnabled && item.reviewable) {
     tabs.push({
       tab: ItemPopupTab.Reviews,
       title: t('MovePopup.ReviewsTab'),
@@ -118,7 +117,7 @@ export default function ItemPopupBody({
         ) : (
           <div className="item-popup-collapsed item-details">
             <button className="dim-button" onClick={onToggleExpanded}>
-              <AppIcon icon={faChevronCircleDown} /> {t('MovePopup.Expand')}
+              <AppIcon icon={openDropdownIcon} /> {t('MovePopup.Expand')}
             </button>
           </div>
         )}

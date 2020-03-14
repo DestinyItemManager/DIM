@@ -15,9 +15,9 @@ import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import { storesSelector, ownedItemsSelector, profileResponseSelector } from '../inventory/reducer';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
@@ -49,7 +49,7 @@ interface State {
   vendorResponse?: DestinyVendorResponse;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & UIViewInjectedProps & ThunkDispatchProp;
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
@@ -196,9 +196,13 @@ class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ vendorResponse });
 
-      dispatch(fetchRatingsForVendor(defs, vendorResponse));
+      if ($featureFlags.reviewsEnabled) {
+        dispatch(fetchRatingsForVendor(defs, vendorResponse));
+      }
     } else {
-      dispatch(fetchRatingsForVendorDef(defs, vendorDef));
+      if ($featureFlags.reviewsEnabled) {
+        dispatch(fetchRatingsForVendorDef(defs, vendorDef));
+      }
     }
   }
 

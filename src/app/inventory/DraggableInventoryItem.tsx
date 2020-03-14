@@ -4,6 +4,7 @@ import { DimItem } from './item-types';
 import { stackableDrag } from './actions';
 import store from '../store/store';
 import { BehaviorSubject } from 'rxjs';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ExternalProps {
   item: DimItem;
@@ -28,20 +29,39 @@ export interface DragObject {
 export const isDragging$ = new BehaviorSubject(false);
 export let isDragging = false;
 
+let dragTimeout: number | null = null;
+
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
     if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
       store.dispatch(stackableDrag(true));
     }
+
+    dragTimeout = requestAnimationFrame(() => {
+      dragTimeout = null;
+      // The colorblind filters interact badly with this
+      const color = settingsSelector(store.getState()).colorA11y;
+      if (!color || color === '-') {
+        document.body.classList.add('drag-perf-show');
+      }
+    });
+
     isDragging = true;
     isDragging$.next(true);
     return { item: props.item };
   },
 
   endDrag(props) {
+    if (dragTimeout !== null) {
+      cancelAnimationFrame(dragTimeout);
+    }
+
     if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
       store.dispatch(stackableDrag(false));
     }
+
+    document.body.classList.remove('drag-perf-show');
+
     isDragging = false;
     isDragging$.next(false);
   },

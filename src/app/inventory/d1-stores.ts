@@ -6,7 +6,7 @@ import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { getBuckets } from '../destiny1/d1-buckets';
 import { NewItemsService } from './store/new-items';
-import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
+import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
 import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
@@ -154,10 +154,10 @@ function StoreService(): D1StoreServiceType {
       getDefinitions(),
       getBuckets(),
       NewItemsService.loadNewItems(account),
-      getItemInfoSource(account),
+      store.dispatch(loadItemInfos(account)),
       getStores(account)
     ])
-      .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
+      .then(([defs, buckets, newItems, , rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(rawStores);
@@ -168,32 +168,25 @@ function StoreService(): D1StoreServiceType {
         const processStorePromises = Promise.all(
           _.compact(
             (rawStores as any[]).map((raw) =>
-              processStore(
-                raw,
-                defs,
-                buckets,
-                previousItems,
-                newItems,
-                itemInfoService,
-                currencies,
-                lastPlayedDate
-              )
+              processStore(raw, defs, buckets, previousItems, newItems, currencies, lastPlayedDate)
             )
           )
         );
 
-        return Promise.all([buckets, newItems, itemInfoService, processStorePromises]);
+        return Promise.all([buckets, newItems, processStorePromises]);
       })
-      .then(([buckets, newItems, itemInfoService, stores]) => {
+      .then(([buckets, newItems, stores]) => {
         // Save and notify about new items
         NewItemsService.applyRemovedNewItems(newItems);
         NewItemsService.saveNewItems(newItems, account);
 
         _stores = stores;
 
-        store.dispatch(fetchRatings(stores));
+        if ($featureFlags.reviewsEnabled) {
+          store.dispatch(fetchRatings(stores));
+        }
 
-        itemInfoService.cleanInfos(stores);
+        store.dispatch(cleanInfos(stores));
 
         // Let our styling know how many characters there are
         document
@@ -228,7 +221,6 @@ function StoreService(): D1StoreServiceType {
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService: ItemInfoSource,
     currencies: DimVault['currencies'],
     lastPlayedDate: Date
   ) {
@@ -248,7 +240,7 @@ function StoreService(): D1StoreServiceType {
       items = result.items;
     }
 
-    return processItems(store, items, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, previousItems, newItems).then((items) => {
       store.items = items;
 
       // by type-bucket

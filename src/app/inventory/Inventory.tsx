@@ -17,6 +17,7 @@ import D1Farming from '../farming/D1Farming';
 import InfusionFinder from '../infuse/InfusionFinder';
 import { queueAction } from './action-queue';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
+import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 
 interface Props {
   account: DestinyAccount;
@@ -73,6 +74,7 @@ class Inventory extends React.Component<Props> {
         <LoadoutDrawer />
         <Compare />
         <StackableDragHelp />
+        <DragPerformanceFix />
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
         <InfusionFinder destinyVersion={account.destinyVersion} />
         <ClearNewItems account={account} />

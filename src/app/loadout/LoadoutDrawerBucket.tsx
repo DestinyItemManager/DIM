@@ -1,45 +1,45 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { AppIcon } from '../shell/icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, addIcon } from '../shell/icons';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
-import { Loadout } from './loadout-types';
+import { LoadoutItem } from './loadout-types';
 import { sortItems } from '../shell/filters';
 
-export default function LoadoutDrawerBucket(
-  this: never,
-  {
-    bucket,
-    loadout,
-    itemSortOrder,
-    pickLoadoutItem,
-    equip,
-    remove
-  }: {
-    bucket: InventoryBucket;
-    loadout: Loadout;
-    itemSortOrder: string[];
-    pickLoadoutItem(bucket: InventoryBucket): void;
-    equip(item: DimItem, e: React.MouseEvent): void;
-    remove(item: DimItem, e: React.MouseEvent): void;
-  }
-) {
+export default function LoadoutDrawerBucket({
+  bucket,
+  loadoutItems,
+  items,
+  itemSortOrder,
+  pickLoadoutItem,
+  equip,
+  remove
+}: {
+  bucket: InventoryBucket;
+  loadoutItems: LoadoutItem[];
+  items: DimItem[];
+  itemSortOrder: string[];
+  pickLoadoutItem(bucket: InventoryBucket): void;
+  equip(item: DimItem, e: React.MouseEvent): void;
+  remove(item: DimItem, e: React.MouseEvent): void;
+}) {
   if (!bucket.type) {
     return null;
   }
 
-  const loadoutItems = loadout.items[bucket.type.toLowerCase()] || [];
-
-  const equippedItem = loadoutItems.find((i) => i.equipped);
+  const equippedItem = items.find((i) =>
+    loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equipped)
+  );
   const unequippedItems = sortItems(
-    loadoutItems.filter((i) => !i.equipped),
+    items.filter((i) =>
+      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && !li.equipped)
+    ),
     itemSortOrder
   );
 
   return (
     <div className="loadout-bucket">
-      {loadoutItems.length > 0 ? (
+      {equippedItem || unequippedItems.length > 0 ? (
         <>
           <div className="loadout-bucket-name">{bucket.name}</div>
           <div className={`loadout-bucket-items bucket-${bucket.type}`}>
@@ -49,7 +49,7 @@ export default function LoadoutDrawerBucket(
                   <LoadoutDrawerItem item={equippedItem} equip={equip} remove={remove} />
                 ) : (
                   <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={faPlusCircle} />
+                    <AppIcon icon={addIcon} />
                   </a>
                 )}
               </div>
@@ -61,7 +61,7 @@ export default function LoadoutDrawerBucket(
                 ))}
                 {equippedItem && unequippedItems.length < 9 && bucket.type !== 'Class' && (
                   <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={faPlusCircle} />
+                    <AppIcon icon={addIcon} />
                   </a>
                 )}
               </div>
@@ -70,7 +70,7 @@ export default function LoadoutDrawerBucket(
         </>
       ) : (
         <a onClick={() => pickLoadoutItem(bucket)} className="dim-button loadout-add">
-          <AppIcon icon={faPlusCircle} /> {bucket.name}
+          <AppIcon icon={addIcon} /> {bucket.name}
         </a>
       )}
     </div>

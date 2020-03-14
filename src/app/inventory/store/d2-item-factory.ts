@@ -11,7 +11,7 @@ import {
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  DamageType
+  ItemBindStatus
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -19,7 +19,6 @@ import { reportException } from '../../utils/exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
 import { NewItemsService } from './new-items';
-import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
@@ -35,20 +34,10 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
-import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
 import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
-
-export const damageTypeNames: { [key in DamageType]: string | null } = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid'
-};
 
 /**
  * A factory service for producing DIM inventory items.
@@ -117,7 +106,6 @@ export function resetIdTracker() {
  * @param items a list of "raw" items from the Destiny API
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @return a promise for the list of items
  */
 export function processItems(
@@ -128,7 +116,6 @@ export function processItems(
   itemComponents: DestinyItemComponentSetOfint64,
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
-  itemInfoService: ItemInfoSource,
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   },
@@ -145,7 +132,6 @@ export function processItems(
         buckets,
         previousItems,
         newItems,
-        itemInfoService,
         itemComponents,
         item,
         owner,
@@ -185,13 +171,49 @@ const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2Manifes
   }
 });
 
+/** Make a "fake" item from other information - used for Collectibles, etc. */
+export function makeFakeItem(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  itemHash: number,
+  itemInstanceId: string = itemHash.toString(),
+  quantity = 1,
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
+  }
+): D2Item | null {
+  return makeItem(
+    defs,
+    buckets,
+    new Set(),
+    new Set(),
+    itemComponents,
+    {
+      itemHash,
+      itemInstanceId,
+      quantity,
+      bindStatus: ItemBindStatus.NotBound,
+      location: ItemLocation.Vendor,
+      bucketHash: 0,
+      transferStatus: TransferStatuses.NotTransferrable,
+      lockable: false,
+      state: ItemState.None,
+      isWrapper: false,
+      tooltipNotificationIndexes: [],
+      metricObjective: {} as DestinyObjectiveProgress
+    },
+    undefined,
+    mergedCollectibles
+  );
+}
+
 /**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */
@@ -201,7 +223,6 @@ export function makeItem(
   buckets: InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
-  itemInfoService: ItemInfoSource | undefined,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
@@ -284,10 +305,11 @@ export function makeItem(
       : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
-  const damageType = instanceDef?.damageType || itemDef.defaultDamageType || DamageType.None;
-  const dmgName =
-    damageTypeNames[damageType] ||
-    (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+  const element =
+    (instanceDef?.damageTypeHash !== undefined &&
+      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (instanceDef?.energy?.energyTypeHash !== undefined &&
+      defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
 
   const collectible =
@@ -338,10 +360,9 @@ export function makeItem(
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
-    // 0: titan, 1: hunter, 2: warlock, 3: any
-    classType: itemDef.classType,
+    classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    dmg: dmgName,
+    element,
     energy: instanceDef?.energy ?? null,
     visible: true,
     lockable: item.lockable,
@@ -399,15 +420,6 @@ export function makeItem(
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
     reportException('Newness', e, { itemHash: item.itemHash });
-  }
-
-  if (itemInfoService) {
-    try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem);
-    } catch (e) {
-      console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
-      reportException('DimInfo', e, { itemHash: item.itemHash });
-    }
   }
 
   try {

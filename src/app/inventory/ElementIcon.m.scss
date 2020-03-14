@@ -2,13 +2,9 @@
   width: calc(var(--item-size) / 6);
   height: calc(var(--item-size) / 6);
   margin-right: 1px;
-}
 
-.void {
-  filter: brightness(200%);
-  background-color: transparent !important;
-}
-
-.arc {
-  filter: brightness(65%) saturate(200%);
+  &.lightBackground {
+    filter: brightness(75%) saturate(200%);
+    background-color: transparent !important;
+  }
 }

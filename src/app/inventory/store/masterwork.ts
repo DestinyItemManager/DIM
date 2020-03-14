@@ -107,10 +107,11 @@ function buildForsakenMasterworkStats(
     masterworkSocket.plug.plugItem.investmentStats.length
   ) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-    if (!createdItem.dmg && createdItem.bucket?.sort === 'Armor') {
-      createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
-        resistanceMods[masterwork.statTypeHash]
-      ] as typeof createdItem.dmg;
+    if (!createdItem.element && createdItem.bucket?.sort === 'Armor') {
+      createdItem.element =
+        Object.values(defs.DamageType.getAll()).find(
+          (damageType) => damageType.enumValue === resistanceMods[masterwork.statTypeHash]
+        ) ?? null;
     }
 
     const statDef = defs.Stat.get(masterwork.statTypeHash);

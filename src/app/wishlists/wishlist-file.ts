@@ -1,5 +1,4 @@
 import { WishListRoll, DimWishList, WishListAndInfo } from './types';
-import _ from 'lodash';
 
 const EMPTY_NUMBER_SET = new Set<number>();
 let _blockNotes: string | undefined;
@@ -11,20 +10,27 @@ let _blockNotes: string | undefined;
  * a wish list text file.
  */
 export function toWishList(fileText: string): WishListAndInfo {
-  return {
-    wishListRolls: toWishListRolls(fileText),
-    title: getTitle(fileText),
-    description: getDescription(fileText)
-  };
+  try {
+    console.time('Parse wish list');
+    return {
+      wishListRolls: toWishListRolls(fileText),
+      title: getTitle(fileText),
+      description: getDescription(fileText)
+    };
+  } finally {
+    console.timeEnd('Parse wish list');
+  }
 }
 
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
+const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>.*)/;
+
 /** Side effect-y function that will set/unset block notes */
 function parseBlockNoteLine(blockNoteLine: string): null {
-  const blockMatchResults = blockNoteLine.match(/^\/\/notes:(?<blockNotes>.*)/);
+  const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
 
   _blockNotes = blockMatchResults?.groups?.blockNotes;
 
@@ -36,12 +42,17 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
     return EMPTY_NUMBER_SET;
   }
 
-  return new Set(
-    matchResults[2]
-      .split(',')
-      .map(Number)
-      .filter((perkHash) => perkHash > 0)
-  );
+  const split = matchResults[2].split(',');
+
+  const s = new Set<number>();
+  for (const perkHash of split) {
+    const n = Number(perkHash);
+    if (n > 0) {
+      s.add(n);
+    }
+  }
+
+  return s;
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
@@ -56,6 +67,7 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   return Number(matchResults.groups.itemHash);
 }
 
+const dtrTextLineRegex = /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/;
 function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   if (!dtrTextLine || dtrTextLine.length === 0) {
     return null;
@@ -65,9 +77,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
     return null;
   }
 
-  const matchResults = dtrTextLine.match(
-    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
-  );
+  const matchResults = dtrTextLineRegex.exec(dtrTextLine);
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
@@ -84,6 +94,8 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
     notes
   };
 }
+
+const bansheeTextLineRegex = /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/;
 
 /** Translate a single banshee-44.com URL -> WishListRoll. */
 function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
@@ -95,9 +107,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
     return null;
   }
 
-  const matchResults = bansheeTextLine.match(
-    /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
-  );
+  const matchResults = bansheeTextLineRegex.exec(bansheeTextLine);
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
@@ -115,6 +125,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   };
 }
 
+const textLineRegex = /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>.*)?/;
 function toDimWishListRoll(textLine: string): WishListRoll | null {
   if (!textLine || textLine.length === 0) {
     return null;
@@ -124,9 +135,7 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(
-    /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>.*)?/
-  );
+  const matchResults = textLineRegex.exec(textLine);
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
@@ -150,42 +159,40 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
   };
 }
 
+function sortedSetToString(set: Set<number>): string {
+  return [...set].sort((a, b) => a - b).toString();
+}
+
 /** Newline-separated banshee-44.com text -> WishListRolls. */
 function toWishListRolls(fileText: string): WishListRoll[] {
   const textArray = fileText.split('\n');
 
-  const rolls = _.compact(
-    textArray.map(
-      (line) =>
-        toDimWishListRoll(line) ||
-        toBansheeWishListRoll(line) ||
-        toDtrWishListRoll(line) ||
-        parseBlockNoteLine(line)
-    )
-  );
+  const rolls: WishListRoll[] = [];
+  for (const line of textArray) {
+    const roll =
+      toDimWishListRoll(line) ||
+      toBansheeWishListRoll(line) ||
+      toDtrWishListRoll(line) ||
+      parseBlockNoteLine(line);
 
-  function eqSet<T>(as: Set<T>, bs: Set<T>) {
-    if (as.size !== bs.size) {
-      return false;
+    if (roll) {
+      rolls.push(roll);
     }
-    for (const a of as) {
-      if (!bs.has(a)) {
-        return false;
-      }
-    }
-    return true;
   }
-  return Object.values(
-    _.mapValues(
-      _.groupBy(rolls, (r) => r.itemHash),
-      (v) =>
-        _.uniqWith(
-          v,
-          (v1, v2) =>
-            v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
-        )
-    )
-  ).flat();
+
+  const seen = new Set<string>();
+  const ret: WishListRoll[] = [];
+  for (const roll of rolls) {
+    const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
+      roll.recommendedPerks
+    )}`;
+    if (!seen.has(rollHash)) {
+      seen.add(rollHash);
+      ret.push(roll);
+    }
+  }
+
+  return ret;
 }
 
 function findMatch(sourceFileLine: string, regExToMatch: RegExp): string | undefined {

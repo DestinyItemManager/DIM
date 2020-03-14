@@ -84,7 +84,7 @@ export function saveWishListToIndexedDB() {
   );
 }
 
-export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
+export function loadWishListAndInfoFromIndexedDB(): ThunkResult<void> {
   return async (dispatch, getState) => {
     if (!getState().wishLists.loaded) {
       const wishListState = await get<WishListsState>('wishlist');

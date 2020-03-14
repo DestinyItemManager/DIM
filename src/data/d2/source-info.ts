@@ -110,6 +110,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
@@ -154,6 +155,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523 // Source: Complete the "Season 8: Keepin' On" quest.
     ]
   },
@@ -220,6 +222,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523 // Source: Complete the "Season 8: Keepin' On" quest.
     ]
   },
@@ -278,6 +281,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2448092902 // Rusted Iron
     ],
     sourceHashes: [
+      1027607603, // Source: Complete this reward's associated Iron Banner quest.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
@@ -467,7 +471,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       594540014, // Source: Exotic quest "Make Bows, Not War." Available only to Season Pass owners.
-      1593696611 // Source: Season Pass Reward
+      1593696611, // Source: Season Pass Reward
+      1838401392, // Source: Earned as a Season Pass reward.
+      2917345346 // Source: Earned as a Season Pass reward.
     ]
   },
   shaxx: {
@@ -489,6 +495,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
@@ -523,6 +530,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ],
     sourceHashes: [
       288436121, // Source: Complete this weapon's associated Vanguard quest.
+      539840256, // Source: Complete this reward's associated Vanguard quest.
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
@@ -566,7 +574,10 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+      752988954, // Source: Flawless chest completion in the Trials of Osiris Lighthouse.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
+      3390015730, // Source: Earned by completing challenges in the Trials of Osiris.
+      3471208558, // Source: Win matches in the Trials of Osiris.
       3543690049 // Source: Complete a flawless Trials ticket.
     ]
   },
@@ -635,6 +646,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ],
     sourceHashes: [
       288436121, // Source: Complete this weapon's associated Vanguard quest.
+      539840256, // Source: Complete this reward's associated Vanguard quest.
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.

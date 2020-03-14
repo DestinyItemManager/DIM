@@ -13,10 +13,9 @@ import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
 import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
+import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon, addIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './move-item';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { characterOrderSelector } from 'app/settings/character-sort';
@@ -82,7 +81,7 @@ class StoreBucket extends React.Component<Props> {
           {classTypeOrder.map((classType) => (
             <React.Fragment key={classType}>
               <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
-              {sortItems(itemsByClass[classType]).map((item) => (
+              {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
             </React.Fragment>
@@ -113,7 +112,7 @@ class StoreBucket extends React.Component<Props> {
                   store: store.name
                 })}
               >
-                <AppIcon icon={faPlusCircle} />
+                <AppIcon icon={addIcon} />
               </a>
             )}
           </StoreBucketDropTarget>

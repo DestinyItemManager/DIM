@@ -5,7 +5,7 @@ import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../utils/rx-utils';
 import { router } from '../router';
 import Sheet from '../dim-ui/Sheet';
-import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
+import { AppIcon, plusIcon, helpIcon, faRandom, faEquals, faArrowCircleDown } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import copy from 'fast-copy';
 import { storesSelector } from '../inventory/reducer';
@@ -13,11 +13,10 @@ import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../utils/comparators';
-import { newLoadout } from '../loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import SearchFilterInput from '../search/SearchFilterInput';
 import {
   SearchConfig,
@@ -27,8 +26,10 @@ import {
 } from '../search/search-filters';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
-import { InfuseDirection } from './infuse-direction';
 import { applyLoadout } from 'app/loadout/loadout-apply';
+import { settingsSelector } from 'app/settings/reducer';
+import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { LoadoutItem } from 'app/loadout/loadout-types';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -56,7 +57,7 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
-    lastInfusionDirection: state.settings.infusionDirection,
+    lastInfusionDirection: settingsSelector(state).infusionDirection,
     isPhonePortrait: state.shell.isPhonePortrait
   };
 }
@@ -168,8 +169,8 @@ class InfusionFinder extends React.Component<Props, State> {
     items = items.filter((item) => item.hash !== query.hash);
     items.sort(itemComparator);
 
-    target = target || items[0];
-    source = source || items[0];
+    target = target || dupes[0] || items[0];
+    source = source || dupes[0] || items[0];
 
     let result: DimItem | undefined;
     if (source && target && source.primStat && target.primStat) {
@@ -244,7 +245,7 @@ class InfusionFinder extends React.Component<Props, State> {
     return (
       <Sheet onClose={this.onClose} header={header} sheetClassName="infuseDialog">
         <div className="infuseSources" ref={this.itemContainer} style={{ height }}>
-          {items.length > 0 ? (
+          {items.length > 0 || dupes.length > 0 ? (
             <>
               <div className="sub-bucket">
                 {dupes.map((item) => (
@@ -327,21 +328,15 @@ class InfusionFinder extends React.Component<Props, State> {
     onClose();
 
     const store = source.getStoresService().getActiveStore()!;
-    const items: { [key: string]: any[] } = {};
-    const targetKey = target.type.toLowerCase();
-    items[targetKey] = items[targetKey] || [];
-    const itemCopy = copy(target);
-    itemCopy.equipped = false;
-    items[targetKey].push(itemCopy);
-    // Include the source, since we wouldn't want it to get moved out of the way
-    const sourceKey = source.type.toLowerCase();
-    items[sourceKey] = items[sourceKey] || [];
-    items[sourceKey].push(source);
+    const items: LoadoutItem[] = [
+      convertToLoadoutItem(target, false),
+      // Include the source, since we wouldn't want it to get moved out of the way
+      convertToLoadoutItem(source, source.equipped)
+    ];
 
-    items.material = [];
     if (target.bucket.sort === 'General') {
       // Mote of Light
-      items.material.push({
+      items.push({
         id: '0',
         hash: 937555249,
         amount: 2,
@@ -349,7 +344,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     } else if (source.isDestiny1() && source.primStat!.stat.statIdentifier === 'STAT_DAMAGE') {
       // Weapon Parts
-      items.material.push({
+      items.push({
         id: '0',
         hash: 1898539128,
         amount: 10,
@@ -357,7 +352,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     } else {
       // Armor Materials
-      items.material.push({
+      items.push({
         id: '0',
         hash: 1542293174,
         amount: 10,
@@ -366,7 +361,7 @@ class InfusionFinder extends React.Component<Props, State> {
     }
     if (source.isExotic) {
       // Exotic shard
-      items.material.push({
+      items.push({
         id: '0',
         hash: 452597397,
         amount: 1,
@@ -374,6 +369,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     }
 
+    // TODO: another one where we want to respect equipped
     const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
     await applyLoadout(store, loadout);

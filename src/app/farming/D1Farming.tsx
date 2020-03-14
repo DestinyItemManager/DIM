@@ -3,12 +3,13 @@ import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
-import { setFarmingSetting } from '../settings/actions';
 import _ from 'lodash';
 import { farmingStoreSelector } from './reducer';
 import './farming.scss';
 import { D1FarmingService } from './farming.service';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { setSetting } from '../settings/actions';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface StoreProps {
   makeRoomForItems: boolean;
@@ -18,70 +19,67 @@ interface StoreProps {
 function mapStateToProps() {
   const storeSelector = farmingStoreSelector();
   return (state: RootState): StoreProps => ({
-    makeRoomForItems: state.settings.farming.makeRoomForItems,
+    makeRoomForItems: settingsSelector(state).farmingMakeRoomForItems,
     store: storeSelector(state)
   });
 }
 
 const mapDispatchToProps = {
-  setFarmingSetting
+  setSetting
 };
 type DispatchProps = typeof mapDispatchToProps;
 
 type Props = StoreProps & DispatchProps;
 
-class D1Farming extends React.Component<Props> {
-  render() {
-    const { store, makeRoomForItems } = this.props;
-    const i18nData = {
-      store: store?.name,
-      context: store?.genderName
-    };
+function D1Farming({ store, makeRoomForItems, setSetting }: Props) {
+  const i18nData = {
+    store: store?.name,
+    context: store?.genderName
+  };
 
-    return (
-      <TransitionGroup component={null}>
-        {store && (
-          <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
-            <div id="item-farming">
-              <div>
-                <p>
-                  {makeRoomForItems
-                    ? t('FarmingMode.Desc', i18nData)
-                    : t('FarmingMode.MakeRoom.Desc', i18nData)}
-                  {/*
+  const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.checked;
+    setSetting('farmingMakeRoomForItems', value);
+  };
+
+  return (
+    <TransitionGroup component={null}>
+      {store && (
+        <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
+          <div id="item-farming">
+            <div>
+              <p>
+                {makeRoomForItems
+                  ? t('FarmingMode.Desc', i18nData)
+                  : t('FarmingMode.MakeRoom.Desc', i18nData)}
+                {/*
                     t('FarmingMode.Desc_male')
                     t('FarmingMode.Desc_female')
                     t('FarmingMode.MakeRoom.Desc_male')
                     t('FarmingMode.MakeRoom.Desc_female')
                   */}
-                </p>
-                <p>
-                  <input
-                    name="make-room-for-items"
-                    type="checkbox"
-                    checked={makeRoomForItems}
-                    onChange={this.makeRoomForItemsChanged}
-                  />
-                  <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
-                    {t('FarmingMode.MakeRoom.MakeRoom')}
-                  </label>
-                </p>
-              </div>
-
-              <div>
-                <button onClick={D1FarmingService.stop}>{t('FarmingMode.Stop')}</button>
-              </div>
+              </p>
+              <p>
+                <input
+                  name="make-room-for-items"
+                  type="checkbox"
+                  checked={makeRoomForItems}
+                  onChange={makeRoomForItemsChanged}
+                />
+                <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
+                  {t('FarmingMode.MakeRoom.MakeRoom')}
+                </label>
+              </p>
             </div>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
-    );
-  }
 
-  private makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.checked;
-    this.props.setFarmingSetting('makeRoomForItems', value);
-  };
+            <div>
+              <button onClick={D1FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+            </div>
+          </div>
+        </CSSTransition>
+      )}
+    </TransitionGroup>
+  );
 }
 
 export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(D1Farming);
