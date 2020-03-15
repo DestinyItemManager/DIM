@@ -1,17 +1,17 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import Countdown from '../dim-ui/Countdown';
-import VendorItems from './VendorItems';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import Countdown from '../dim-ui/Countdown';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Vendor } from './d2-vendors';
-import styles from './Vendor.m.scss';
-import _ from 'lodash';
-import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
+import React from 'react';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import VendorItems from './VendorItems';
+import _ from 'lodash';
+import clsx from 'clsx';
+import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import styles from './Vendor.m.scss';
+import { t } from 'app/i18next-t';
+import vendorEngramSvg from '../../images/engram.svg';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -56,18 +56,20 @@ export default function Vendor({
         className={styles.title}
         title={
           <>
-            {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
-              <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
-                <img
-                  className={clsx(styles.xyzEngram, {
-                    [styles.xyzActiveThrob]: dropActive
-                  })}
-                  src={vendorEngramSvg}
-                  title={vendorLinkTitle}
-                />
-              </a>
-            )}
-            <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
+            <span className={styles.vendorIconWrapper}>
+              <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
+              {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
+                <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
+                  <img
+                    className={clsx(styles.xyzEngram, {
+                      [styles.xyzActiveThrob]: dropActive
+                    })}
+                    src={vendorEngramSvg}
+                    title={vendorLinkTitle}
+                  />
+                </a>
+              )}
+            </span>
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
               <div className={styles.location}>{placeString}</div>
