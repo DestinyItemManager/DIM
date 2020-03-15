@@ -403,9 +403,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
       if (loadoutItem.equipped) {
         const [items] = this.findItems(draftLoadout);
         const typeInventory = items.filter((i) => i.type === item.type);
-        const nextInLine = draftLoadout.items.find(
-          (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
-        );
+        const nextInLine =
+          typeInventory.length > 0 &&
+          draftLoadout.items.find(
+            (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
+          );
         if (nextInLine) {
           nextInLine.equipped = true;
         }
