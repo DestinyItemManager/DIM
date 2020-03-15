@@ -18,6 +18,24 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
+  "AuditLog": {
+    "Description": "This log tracks all the changes you have made to data stored on DIM's servers - including changes to settings, tags, and loadouts. After a while this log gets cleaned up.",
+    "Date": "Date",
+    "Action": "Action",
+    "Details": "Details",
+    "Account": "Account",
+    "Application": "Application",
+    "TagCleanup": "Cleaned up tags for dismantled items",
+    "DeleteAll": "Deleted all saved data",
+    "Loadout": "Changed loadout {{name}}",
+    "DeleteLoadout": "Deleted loadout {{name}}",
+    "Import": "Imported {{loadouts}} loadouts and {{tags}} tagged items",
+    "Setting": "Set {{key}} to {{value}}",
+    "RemoveNotes": "Removed notes from item ID {{id}}",
+    "RemoveTag": "Removed tag from item ID {{id}}",
+    "SetTag": "Set tag to {{tag}} for item ID {{id}}",
+    "SetNotes": "Set notes to \"{{notes}}\" for item ID {{id}}"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",

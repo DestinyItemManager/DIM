@@ -6,7 +6,8 @@ import {
   ProfileUpdate,
   ProfileUpdateRequest,
   ProfileUpdateResult,
-  DestinyVersion
+  DestinyVersion,
+  AuditLogEntry
 } from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
@@ -71,4 +72,12 @@ export async function postUpdates(
     body: request
   });
   return response.results;
+}
+
+export async function getAuditLog() {
+  const response = await authenticatedApi<{ log: AuditLogEntry[] }>({
+    url: '/audit',
+    method: 'GET'
+  });
+  return response.log;
 }

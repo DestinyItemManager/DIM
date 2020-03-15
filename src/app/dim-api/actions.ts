@@ -132,9 +132,13 @@ export function flushUpdates(): ThunkResult<any> {
   return async (dispatch, getState) => {
     const dimApiState = getState().dimApi;
 
-    if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length) {
+    if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length > 0) {
       // Prepare the queue
       dispatch(prepareToFlushUpdates());
+
+      if (dimApiState.updateInProgressWatermark === 0) {
+        return;
+      }
 
       console.log(
         '[flushUpdates] Flushing queue of',
