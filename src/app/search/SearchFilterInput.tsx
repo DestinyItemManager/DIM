@@ -238,7 +238,6 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 // push math operators to the front for things like "masterwork:"
                 (word: string) => !mathCheck.test(word)
               ]);
-              console.log(words);
               if (filterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {
