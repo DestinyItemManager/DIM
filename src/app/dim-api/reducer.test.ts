@@ -275,6 +275,94 @@ describe('prepareToFlushUpdates', () => {
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
 
+  it('can handle multiple profile updates with settings last', () => {
+    const state: DimApiState = {
+      ...initialState,
+      updateQueue: [
+        // Save a tag for D2
+        {
+          action: 'tag',
+          payload: {
+            id: '1234',
+            tag: 'favorite'
+          },
+          before: {
+            id: '1234'
+          },
+          platformMembershipId: '3456',
+          destinyVersion: 2
+        },
+        // Save a tag for D2, same profile
+        {
+          action: 'tag',
+          payload: {
+            id: '76543',
+            tag: 'junk'
+          },
+          before: {
+            id: '76543'
+          },
+          platformMembershipId: '3456',
+          destinyVersion: 2
+        },
+        // Turn new items on
+        {
+          action: 'setting',
+          payload: {
+            showNewItems: true
+          },
+          before: {
+            showNewItems: false
+          }
+        }
+      ]
+    };
+
+    const updatedState = dimApi(state, prepareToFlushUpdates());
+
+    expect(updatedState.updateInProgressWatermark).toBe(3);
+    // Expect that the queue is rearranged to have the D2 account updates together
+    const expected = [
+      // Save a tag for D2
+      {
+        action: 'tag',
+        payload: {
+          id: '1234',
+          tag: 'favorite'
+        },
+        before: {
+          id: '1234'
+        },
+        platformMembershipId: '3456',
+        destinyVersion: 2
+      },
+      // Save a tag for D2
+      {
+        action: 'tag',
+        payload: {
+          id: '76543',
+          tag: 'junk'
+        },
+        before: {
+          id: '76543'
+        },
+        platformMembershipId: '3456',
+        destinyVersion: 2
+      },
+      // Turn new items on
+      {
+        action: 'setting',
+        payload: {
+          showNewItems: true
+        },
+        before: {
+          showNewItems: false
+        }
+      }
+    ];
+    expect(copy(updatedState.updateQueue)).toEqual(expected);
+  });
+
   it('can handle loadouts', () => {
     const state: DimApiState = {
       ...initialState,

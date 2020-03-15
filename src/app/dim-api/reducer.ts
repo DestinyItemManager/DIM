@@ -287,8 +287,9 @@ function prepareUpdateQueue(state: DimApiState) {
           platformMembershipId = update.platformMembershipId;
           destinyVersion = update.destinyVersion;
         } else if (
-          update.platformMembershipId !== platformMembershipId ||
-          update.destinyVersion !== destinyVersion
+          update.platformMembershipId &&
+          (update.platformMembershipId !== platformMembershipId ||
+            update.destinyVersion !== destinyVersion)
         ) {
           // Put it on the list of other updates that won't be flushed, and move on.
           // Some updates, like settings, aren't profile-specific and can always

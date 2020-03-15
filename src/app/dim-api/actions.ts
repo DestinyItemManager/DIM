@@ -130,11 +130,12 @@ let backoff = 0;
  */
 export function flushUpdates(): ThunkResult<any> {
   return async (dispatch, getState) => {
-    const dimApiState = getState().dimApi;
+    let dimApiState = getState().dimApi;
 
     if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length > 0) {
       // Prepare the queue
       dispatch(prepareToFlushUpdates());
+      dimApiState = getState().dimApi;
 
       if (dimApiState.updateInProgressWatermark === 0) {
         return;
