@@ -1,15 +1,17 @@
-import React, { Suspense } from 'react';
-import { t } from 'app/i18next-t';
-import { AppIcon, helpIcon, disabledIcon, searchIcon } from '../shell/icons';
-import _ from 'lodash';
 import './search-filter.scss';
-import Textcomplete from 'textcomplete/lib/textcomplete';
-import Textarea from 'textcomplete/lib/textarea';
-import { SearchConfig } from './search-filters';
+
+import { AppIcon, disabledIcon, helpIcon, searchIcon } from '../shell/icons';
+import React, { Suspense } from 'react';
+
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import Sheet from 'app/dim-ui/Sheet';
-import ReactDOM from 'react-dom';
 import { Loading } from 'app/dim-ui/Loading';
+import ReactDOM from 'react-dom';
+import { SearchConfig } from './search-filters';
+import Sheet from 'app/dim-ui/Sheet';
+import Textarea from 'textcomplete/lib/textarea';
+import Textcomplete from 'textcomplete/lib/textcomplete';
+import _ from 'lodash';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   alwaysShowClearButton?: boolean;
@@ -220,22 +222,23 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                   this.words.filter((word: string) => word.includes(term.toLowerCase()));
 
               words = _.sortBy(words, [
+                // tags are UGC and therefore important
+                (word: string) => !word.startsWith('tag:'),
+                // prioritize is: & not: because a pair takes up only 2 slots at the top,
+                // vs filters that end in like 8 statnames
+                (word: string) => !(word.startsWith('is:') || word.startsWith('not:')),
                 // sort incomplete terms (ending with ':') to the front
                 (word: string) => !word.endsWith(':'),
                 // sort more-basic incomplete terms (fewer colons) to the front
                 (word: string) => word.split(':').length,
-                // tags are UGC and therefore important
-                (word: string) => !word.startsWith('tag:'),
                 // prioritize strings we are typing the beginning of
                 (word: string) => word.indexOf(term.toLowerCase()) !== 0,
-                // prioritize is: & not: because a pair takes up only 2 slots at the top,
-                // vs filters that end in like 8 statnames
-                (word: string) => word.startsWith('is:') || word.startsWith('not:'),
                 // prioritize words with less left to type
                 (word: string) => word.length - (term.length + word.indexOf(term.toLowerCase())),
                 // push math operators to the front for things like "masterwork:"
                 (word: string) => !mathCheck.test(word)
               ]);
+              console.log(words);
               if (filterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {
