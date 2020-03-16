@@ -6,7 +6,7 @@ import { clearWishLists } from 'app/wishlists/actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
 import { ProfileUpdateWithRollback, DeleteLoadoutUpdateWithRollback } from './api-types';
-import { initialState as initialSettingsState, Settings } from '../settings/reducer';
+import { initialSettingsState, Settings } from '../settings/initial-settings';
 import {
   TagValue,
   GlobalSettings,
@@ -26,7 +26,7 @@ export interface DimApiState {
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
-  apiPermissionGranted: boolean;
+  apiPermissionGranted: boolean | null;
 
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
@@ -72,6 +72,17 @@ export interface DimApiState {
   updateInProgressWatermark: number;
 }
 
+function getInitialApiPermissionSetting() {
+  const setting = localStorage.getItem('dim-api-enabled');
+  if (setting === null) {
+    return null;
+  } else if (setting === 'true') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /**
  * Global DIM platform settings from the DIM API.
  */
@@ -83,7 +94,7 @@ export const initialState: DimApiState = {
     autoRefresh: false
   },
 
-  apiPermissionGranted: localStorage.getItem('dim-api-enabled') === 'true',
+  apiPermissionGranted: getInitialApiPermissionSetting(),
 
   // TODO: don't allow mutations if DIM API is disabled, profile isn't loaded, or API usage isn't agreed to
   profileLoaded: false,

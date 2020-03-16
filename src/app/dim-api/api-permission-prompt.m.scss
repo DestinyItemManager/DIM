@@ -1,0 +1,11 @@
+.buttons {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  justify-content: space-evenly;
+
+  > * {
+    margin: 10px 8px 0 0;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

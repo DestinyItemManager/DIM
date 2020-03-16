@@ -6,7 +6,7 @@ import { GoogleDriveStorage } from './google-drive-storage';
 import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
-import { Settings } from 'app/settings/reducer';
+import { Settings } from 'app/settings/initial-settings';
 
 export interface DimData {
   // The last selected platform membership ID

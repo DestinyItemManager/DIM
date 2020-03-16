@@ -1,5 +1,5 @@
 import { createAction, PayloadAction } from 'typesafe-actions';
-import { Settings } from './reducer';
+import { Settings } from './initial-settings';
 
 /** Bulk update settings after they've been loaded. */
 export const loaded = createAction('settings/LOADED')<Partial<Settings>>();

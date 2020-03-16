@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings } from './reducer';
+import { Settings } from './initial-settings';
 import _ from 'lodash';
 
 export default function Select({

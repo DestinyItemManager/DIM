@@ -13,7 +13,7 @@ import { SyncService } from './sync.service';
 import { dataStats } from './data-stats';
 import _ from 'lodash';
 import { initSettings } from 'app/settings/settings';
-import { importLegacyData, deleteAllApiData } from 'app/dim-api/actions';
+import { importLegacyData, deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
 import { UISref } from '@uirouter/react';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
@@ -40,8 +40,10 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
 
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
-  const onApiPermissionChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+  const onApiPermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setApiPermissionGranted(event.target.checked));
+    dispatch(loadDimApiData());
+  };
 
   const onExportData = async () => {
     setHasBackedUp(true);
@@ -89,6 +91,8 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
       dispatch(deleteAllApiData());
     }
   };
+
+  // TODO: button to manually sync
 
   return (
     <section className="storage" id="storage">

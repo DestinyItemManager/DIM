@@ -6,8 +6,8 @@ import { loaded } from './actions';
 import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
-import { importLegacyData } from 'app/dim-api/actions';
 import { loadLoadouts } from 'app/loadout/loadout-storage';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 
 export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -59,14 +59,7 @@ export function initSettings() {
     store.dispatch(loaded(savedSettings));
     store.dispatch(loadLoadouts(data));
 
-    // TODO: After this has been out for a while, make this into a button in settings
-    if ($featureFlags.dimApi && !data.importedToDimApi) {
-      store.dispatch(importLegacyData(data));
-    }
-
-    store.dispatch(loadLoadouts(data));
-
-    if (!$featureFlags.dimApi) {
+    if (!$featureFlags.dimApi || !apiPermissionGrantedSelector(store.getState())) {
       readyResolve();
     }
     // Start saving settings changes

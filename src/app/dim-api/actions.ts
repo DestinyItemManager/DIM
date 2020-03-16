@@ -20,9 +20,9 @@ import {
   finishedUpdates,
   prepareToFlushUpdates,
   flushUpdatesFailed,
-  allDataDeleted
+  allDataDeleted,
+  setApiPermissionGranted
 } from './basic-actions';
-import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import { deepEqual } from 'fast-equals';
 import { DimData, SyncService } from 'app/storage/sync.service';
 import { ProfileUpdateWithRollback } from './api-types';
@@ -31,6 +31,10 @@ import { AnyAction } from 'redux';
 import { readyResolve } from 'app/settings/settings';
 import { delay } from 'app/utils/util';
 import { apiPermissionGrantedSelector } from './selectors';
+import { promptForApiPermission } from './api-permission-prompt';
+import { initialSettingsState, Settings } from 'app/settings/initial-settings';
+import { showNotification } from 'app/notifications/notifications';
+import { t } from 'app/i18next-t';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -101,19 +105,37 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       await dispatch(loadGlobalSettings());
     }
 
-    // TODO: check API if it's out of date?
     // API is disabled, give up
     if (!getState().dimApi.globalSettings.dimApiEnabled) {
       return;
     }
 
-    // TODO: load from gdrive, check for import
-    const dimApiState = getState().dimApi;
+    // Show a prompt if the user has not said one way or another whether they want to use the API
+    if (getState().dimApi.apiPermissionGranted === null) {
+      const useApi = await promptForApiPermission();
+      dispatch(setApiPermissionGranted(useApi));
+      if (useApi) {
+        showNotification({
+          type: 'success',
+          title: t('Storage.DimSyncEnabled'),
+          body: t('Storage.AutoBackup')
+        });
+      }
+    }
 
-    // TODO: don't load from remote if there is already an update queue from IDB - we'll roll back data!
+    if (!getState().dimApi.apiPermissionGranted) {
+      // OK, they don't want to use DIM Sync...
+      return;
+    }
+
+    // don't load from remote if there is already an update queue from IDB - we'd roll back data otherwise!
+    if (getState().dimApi.updateQueue.length > 0) {
+      await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
+      return;
+    }
 
     // TODO: check if profile is out of date, poll on a schedule?
-    if (forceLoad || !dimApiState.profileLoaded) {
+    if (forceLoad || !getState().dimApi.profileLoaded) {
       // get current account
       const accounts = await getPlatformsPromise;
       if (!accounts) {
@@ -127,7 +149,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       dispatch(profileLoaded({ profileResponse, account: currentAccount }));
     }
 
-    return dispatch(flushUpdates());
+    await dispatch(flushUpdates());
+
+    // TODO: load from gdrive, check for import
+    await dispatch(importLegacyData());
   };
 }
 
@@ -188,10 +213,14 @@ export function flushUpdates(): ThunkResult<any> {
         // do anything.
         dispatch(flushUpdatesFailed());
       } finally {
-        // Check for more - updates may have accumulated!
-        dispatch(flushUpdates());
-
-        // TODO: if we're done flushing and we haven't loaded remote data, load it now
+        dimApiState = getState().dimApi;
+        if (dimApiState.updateQueue.length > 0) {
+          // Flush more updates!
+          dispatch(flushUpdates());
+        } else if (!dimApiState.profileLoaded) {
+          // Load API data in case we didn't do it before
+          dispatch(loadDimApiData());
+        }
       }
     }
   };
@@ -243,8 +272,12 @@ function waitForProfileLoad() {
   });
 }
 
-export function importLegacyData(data: DimData, force = false): ThunkResult<any> {
+export function importLegacyData(data?: DimData, force = false): ThunkResult<any> {
   return async (dispatch, getState) => {
+    if (!data) {
+      data = await SyncService.get();
+    }
+
     let dimApiData = getState().dimApi;
 
     if (!dimApiData.globalSettings.dimApiEnabled) {
@@ -253,6 +286,11 @@ export function importLegacyData(data: DimData, force = false): ThunkResult<any>
 
     if (!dimApiData.profileLoaded) {
       await waitForProfileLoad();
+    }
+
+    if (!force && data.importedToDimApi) {
+      console.log("[importLegacyData] Don't need to import, already imported");
+      return;
     }
 
     dimApiData = getState().dimApi;

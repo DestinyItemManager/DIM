@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings } from './reducer';
+import { Settings } from './initial-settings';
 import HelpLink from '../dim-ui/HelpLink';
 
 export default function Checkbox({

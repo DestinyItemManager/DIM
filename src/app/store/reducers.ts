@@ -1,5 +1,5 @@
 import { combineReducers, AnyAction, Reducer } from 'redux';
-import { settings, Settings } from '../settings/reducer';
+import { settings } from '../settings/reducer';
 import { AccountsState, accounts, currentAccountSelector } from '../accounts/reducer';
 import { InventoryState, inventory } from '../inventory/reducer';
 import { ShellState, shell } from '../shell/reducer';
@@ -11,6 +11,7 @@ import { ManifestState, manifest } from '../manifest/reducer';
 import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-api/reducer';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { VendorDropsState, vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
+import { Settings } from 'app/settings/initial-settings';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 

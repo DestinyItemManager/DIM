@@ -3,7 +3,8 @@ import { createSelector } from 'reselect';
 import { makeProfileKeyFromAccount } from './reducer';
 import { currentAccountSelector } from 'app/accounts/reducer';
 
-export const apiPermissionGrantedSelector = (state: RootState) => state.dimApi.apiPermissionGranted;
+export const apiPermissionGrantedSelector = (state: RootState) =>
+  state.dimApi.apiPermissionGranted === true;
 
 /**
  * Return saved API data for the currently active profile (account).
