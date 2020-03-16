@@ -17,6 +17,27 @@ export function preventNaN(testValue, defaultValue) {
 }
 
 /**
+ * given @key 'key', turns
+ * [           { key: '1' },      { key: '2' } ]
+ * into { '1': { key: '1' }, '2': { key: '2' } }
+ */
+export function objectifyArray<T>(
+  array: T[],
+  key: string | ((obj: any) => number)
+): { [key: number]: T };
+export function objectifyArray<T>(
+  array: T[],
+  key: string | ((obj: any) => string)
+): { [key: string]: T };
+export function objectifyArray<T>(array: T[], key: string | ((obj: any) => string | number)) {
+  return array.reduce((acc, val) => {
+    if (typeof key === 'string') acc[val[key]] = val;
+    else acc[key(val)] = val;
+    return acc;
+  }, {});
+}
+
+/**
  * Produce a function that can memoize a calculation about an item. The cache is backed by
  * a WeakMap so when the item is garbage collected the cache is freed up too.
  */

@@ -14,7 +14,7 @@ import _ from 'lodash';
 import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';
 import { getRating } from '../item-review/reducer';
-import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import store from '../store/store';
 import { t } from 'app/i18next-t';
 
@@ -303,14 +303,6 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
-  const seasonalModsByHash = {};
-  for (const mod in modMetadataBySlotTag) {
-    const hashes = modMetadataBySlotTag[mod].thisSlotPlugCategoryHashes;
-    hashes.forEach((hash) => {
-      seasonalModsByHash[hash] = mod;
-    });
-  }
-
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
@@ -399,12 +391,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
 
       if (item.isDestiny2() && item.sockets) {
-        const seasonalMods = item.sockets.sockets
-          .map((socket) => socket?.plug?.plugItem?.plug?.plugCategoryHash)
-          .map((hash) => hash && seasonalModsByHash[hash])
-          .filter((mod) => mod)
-          .sort();
-        row['Seasonal Mod'] = seasonalMods.length > 0 ? seasonalMods.join(',') : '';
+        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
       }
     }
 
