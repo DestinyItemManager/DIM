@@ -1,26 +1,44 @@
 {
-  "forge": {
+  "720857": {
+    "tag": "forge",
     "thisSlotPlugCategoryHashes": [65589297],
-    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297]
+    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297],
+    "compatibleTags": ["forge", "outlaw"],
+    "emptySlotItemHash": 720857
   },
-  "opulent": {
+  "4106547009": {
+    "tag": "opulent",
     "thisSlotPlugCategoryHashes": [1962317640, 2712224971, 1202876185],
-    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832]
+    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832],
+    "compatibleTags": ["undying", "opulent"],
+    "emptySlotItemHash": 4106547009
   },
-  "worthy": {
+  "2655746324": {
+    "tag": "worthy",
     "thisSlotPlugCategoryHashes": [426869514],
-    "compatiblePlugCategoryHashes": [208760563, 426869514]
+    "compatiblePlugCategoryHashes": [208760563, 426869514],
+    "compatibleTags": ["undying", "worthy"],
+    "emptySlotItemHash": 2655746324
   },
-  "outlaw": {
+  "3625698764": {
+    "tag": "outlaw",
     "thisSlotPlugCategoryHashes": [2149155760, 13646368],
-    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297]
+    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297],
+    "compatibleTags": ["forge", "outlaw"],
+    "emptySlotItemHash": 3625698764
   },
-  "undying": {
+  "2620967748": {
+    "tag": "undying",
     "thisSlotPlugCategoryHashes": [1081029832],
-    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832, 208760563]
+    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832, 208760563],
+    "compatibleTags": ["opulent", "undying", "worthy"],
+    "emptySlotItemHash": 2620967748
   },
-  "dawn": {
+  "2357307006": {
+    "tag": "dawn",
     "thisSlotPlugCategoryHashes": [208760563],
-    "compatiblePlugCategoryHashes": [1081029832, 208760563, 426869514]
+    "compatiblePlugCategoryHashes": [1081029832, 208760563, 426869514],
+    "compatibleTags": ["undying", "dawn", "worthy"],
+    "emptySlotItemHash": 2357307006
   }
 }
