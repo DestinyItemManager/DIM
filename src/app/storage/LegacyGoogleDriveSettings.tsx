@@ -16,6 +16,10 @@ declare global {
   }
 }
 
+interface Props {
+  onImportData(data: object): Promise<any>;
+}
+
 interface State {
   driveInfo?: DriveAboutResource;
   adapterStats: {
@@ -23,7 +27,7 @@ interface State {
   };
 }
 
-export default class LegacyGoogleDriveSettings extends React.Component<{}, State> {
+export default class LegacyGoogleDriveSettings extends React.Component<Props, State> {
   state: State = {
     adapterStats: {}
   };
@@ -33,7 +37,7 @@ export default class LegacyGoogleDriveSettings extends React.Component<{}, State
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
         if (router.globals.params.gdrive === 'true') {
-          this.forceSync(undefined, false).then(() =>
+          this.forceSync(undefined).then(() =>
             router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
           );
         }
@@ -88,9 +92,6 @@ export default class LegacyGoogleDriveSettings extends React.Component<{}, State
                   )}
                   <button className="dim-button" onClick={this.driveLogout}>
                     <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
-                  </button>{' '}
-                  <button className="dim-button" onClick={this.goToRevisions}>
-                    <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
                   </button>
                 </>
               ) : (
@@ -98,7 +99,7 @@ export default class LegacyGoogleDriveSettings extends React.Component<{}, State
                   <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
                 </button>
               )}{' '}
-              <button className="dim-button" onClick={this.forceSync}>
+              <button className="dim-button" onClick={this.importFromLegacy}>
                 <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveImportButton')}</span>
               </button>
             </div>
@@ -114,9 +115,14 @@ export default class LegacyGoogleDriveSettings extends React.Component<{}, State
       const data = await SyncService.get(true);
       await SyncService.set(data, true);
       Promise.all(SyncService.adapters.map(this.refreshAdapter));
-      // TODO: import into DIM API
     }
     return false;
+  };
+
+  private importFromLegacy = async (e?: any) => {
+    e?.preventDefault();
+    const data = await SyncService.get(true);
+    this.props.onImportData(data);
   };
 
   private driveSync = async (e) => {
@@ -137,12 +143,6 @@ export default class LegacyGoogleDriveSettings extends React.Component<{}, State
     e.preventDefault();
     alert(t('Storage.GDriveLogout'));
     return SyncService.GoogleDriveStorage.revokeDrive();
-  };
-
-  private goToRevisions = (e) => {
-    e.preventDefault();
-    router.stateService.go('gdrive-revisions');
-    return false;
   };
 
   private refreshAdapter = async (adapter: StorageAdapter) => {

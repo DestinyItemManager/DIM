@@ -28,7 +28,6 @@ export interface DimApiState {
   /** Has the user granted us permission to store their info? */
   apiPermissionGranted: boolean;
 
-  // TODO: encapsulate async loading state
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
   // TODO: set this from an action

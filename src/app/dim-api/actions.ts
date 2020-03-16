@@ -228,33 +228,34 @@ function subtractObject(obj: object | undefined, defaults: object) {
   return result;
 }
 
-// TODO: Need a function to clear all data on logout?
+/** Returns a promise that resolves when the profile is fully loaded. */
+function waitForProfileLoad() {
+  return new Promise((resolve) => {
+    const unsubscribe = observeStore(
+      (state) => state.dimApi.profileLoaded,
+      (_, loaded) => {
+        if (loaded) {
+          unsubscribe();
+          resolve();
+        }
+      }
+    );
+  });
+}
 
 export function importLegacyData(data: DimData, force = false): ThunkResult<any> {
   return async (dispatch, getState) => {
-    const dimApiData = getState().dimApi;
+    let dimApiData = getState().dimApi;
 
     if (!dimApiData.globalSettings.dimApiEnabled) {
       return;
     }
 
     if (!dimApiData.profileLoaded) {
-      // TODO: how to defer this?
-      console.warn(
-        "[importLegacyData] Skipping legacy data import because DIM API data isn't loaded yet"
-      );
-      // I guess wait for the thing to be ready. This could be a promise...
-      const unsubscribe = observeStore(
-        (state) => state.dimApi.profileLoaded,
-        (_, loaded) => {
-          if (loaded) {
-            unsubscribe();
-            dispatch(importLegacyData(data, force));
-          }
-        }
-      );
-      return;
+      await waitForProfileLoad();
     }
+
+    dimApiData = getState().dimApi;
 
     if (
       !force &&

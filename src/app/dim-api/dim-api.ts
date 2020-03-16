@@ -7,7 +7,8 @@ import {
   ProfileUpdateRequest,
   ProfileUpdateResult,
   DestinyVersion,
-  AuditLogEntry
+  AuditLogEntry,
+  ExportResponse
 } from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
@@ -94,4 +95,12 @@ export async function deleteAllData() {
     method: 'POST'
   });
   return response.deleted;
+}
+
+export async function exportDimApiData() {
+  const response = await authenticatedApi<ExportResponse>({
+    url: '/export',
+    method: 'GET'
+  });
+  return response;
 }

@@ -18,6 +18,7 @@ import { UISref } from '@uirouter/react';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
+import { exportDimApiData } from 'app/dim-api/dim-api';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -35,15 +36,7 @@ const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
-  // TODO: disable import/export if API not enabled?
-  // TODO: disable tags/loadouts if API not enabled
-  // TODO: explain that it's supported by volunteers
-
   // TODO: Show any sync errors here
-
-  // TODO: reject new-style import in old mode
-  // TODO: legacy gdrive settings for import/revisions
-  // TODO: require export before delete
 
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
@@ -52,19 +45,19 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
 
   const onExportData = async () => {
     setHasBackedUp(true);
-    if ($featureFlags.dimApi && apiPermissionGranted) {
-      // TODO: dispatch export redux action
-    } else {
-      const data = SyncService.get();
-      download(JSON.stringify(data), 'dim-data.json', 'application/json');
-    }
+    const data = await ($featureFlags.dimApi && apiPermissionGranted
+      ? exportDimApiData()
+      : SyncService.get());
+    download(JSON.stringify(data), 'dim-data.json', 'application/json');
   };
 
   const onImportData = async (data: object) => {
     if ($featureFlags.dimApi && apiPermissionGranted) {
-      // TODO: dispatch import redux action
-      // TODO: confirm, etc
-      await ((dispatch(importLegacyData(data, true)) as any) as Promise<any>);
+      if (confirm(t('Storage.ImportConfirmDimApi'))) {
+        // TODO: At this point the legacy data is definitely out of sync
+        await dispatch(importLegacyData(data, true));
+        alert(t('Storage.ImportSuccess'));
+      }
     } else {
       const stats = dataStats(data);
 
@@ -135,7 +128,9 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
       {(!$featureFlags.dimApi || !apiPermissionGranted) && <GoogleDriveSettings />}
       <LocalStorageInfo showDetails={!$featureFlags.dimApi || !apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      {$featureFlags.dimApi && apiPermissionGranted && <LegacyGoogleDriveSettings />}
+      {$featureFlags.dimApi && apiPermissionGranted && (
+        <LegacyGoogleDriveSettings onImportData={onImportData} />
+      )}
     </section>
   );
 }
