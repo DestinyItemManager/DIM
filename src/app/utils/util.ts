@@ -21,10 +21,6 @@ export function preventNaN(testValue, defaultValue) {
  * [           { key: '1' },      { key: '2' } ]
  * into { '1': { key: '1' }, '2': { key: '2' } }
  */
-// i should be able to make this work though
-// export function objectifyArray<T, K extends keyof T>( array: T[],  key: string ): { [k: T[K]]: T };
-// export function objectifyArray<T>(  array: T[],  key: ((obj: any) => number)): { [k: number]: T };
-// export function objectifyArray<T>(  array: T[],  key: ((obj: any) => string)): { [k: string]: T };
 export function objectifyArray<T>(
   array: T[],
   key: string | ((obj: any) => number)
