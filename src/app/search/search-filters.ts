@@ -1035,19 +1035,16 @@ function searchFilters(
       modslot(item: DimItem, predicate: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
         return (
-          modSocketTypeHash &&
-          (Boolean(predicate === 'any' && modSocketTypeHash) ||
-            (predicate === 'none' && !modSocketTypeHash) ||
-            modSocketTypeHash.tag === predicate)
+          (predicate === 'none' && !modSocketTypeHash) ||
+          (modSocketTypeHash && (predicate === 'any' || modSocketTypeHash.tag === predicate))
         );
       },
       holdsmod(item: DimItem, predicate: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
         return (
-          modSocketTypeHash &&
-          (Boolean(predicate === 'any' && modSocketTypeHash) ||
-            (predicate === 'none' && !modSocketTypeHash) ||
-            modSocketTypeHash.compatibleTags.includes(predicate))
+          (predicate === 'none' && !modSocketTypeHash) ||
+          (modSocketTypeHash &&
+            (predicate === 'any' || modSocketTypeHash.compatibleTags.includes(predicate)))
         );
       },
       powerfulreward(item: D2Item) {
