@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engramme disponible",
-    "EngramsAvailable_plural": "{{count}} engrammes disponibles"
-  },
   "FarmingMode": {
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
     "D2Desc_female": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
       "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
     },
-    "MoveTokens": "Envoyer les objets de réputation au coffre",
     "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {{character}}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
     "OutOfRoomTitle": "Plus de Place",
     "Stop": "Stop"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Inverser",
     "TransferItems": "Transférer"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les balises et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
-    "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
     "Distributed": "{{name}} a été distribué\n{{name}} est maintenant divisé équitablement entre les personnages.",
@@ -601,6 +592,8 @@
     "Random": "Aléatoire",
     "Randomize": "Randomiser",
     "RandomizePrompt": "Randomiser votre class, spectre et vos armes et armures équipés?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomiser votre class et vos armes équipés?",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Contrats",
     "CrucibleRank": "Rangs",
-    "Factions": "Factions",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
     "PercentPrestige": "{{pct}}% pour réinitialiser",

@@ -1,48 +1,47 @@
-import _ from 'lodash';
-import memoizeOne from 'memoize-one';
-import latinise from 'voca/latinise';
-import { createSelector } from 'reselect';
+import * as hashes from './search-filter-hashes';
 
-import { compareBy, chainComparator, reverseComparator } from '../utils/comparators';
-import { DimItem, D1Item, D2Item } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import { Loadout } from '../loadout/loadout-types';
+import { D1Item, D2Item, DimItem } from '../inventory/item-types';
+import {
+  DEFAULT_GLOW,
+  DEFAULT_GLOW_CATEGORY,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_SHADER
+} from 'app/inventory/store/sockets';
 import {
   DestinyAmmunitionType,
-  DestinyCollectibleState,
   DestinyClass,
+  DestinyCollectibleState,
   DestinyItemSubType
 } from 'bungie-api-ts/destiny2';
-import { destinyVersionSelector } from '../accounts/reducer';
+import { ItemInfos, getNotes, getTag, itemTagSelectorList } from '../inventory/dim-item-info';
+import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { getItemDamageShortName, getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
+import { itemInfosSelector, sortedStoresSelector } from '../inventory/reducer';
+import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
+
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
-import { querySelector } from '../shell/reducer';
-import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
-import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, getTag, getNotes, ItemInfos } from '../inventory/dim-item-info';
-import store from '../store/store';
-import { loadoutsSelector } from '../loadout/reducer';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { inventoryWishListsSelector } from '../wishlists/reducer';
-import { D2SeasonInfo } from '../inventory/d2-season-info';
-import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
-import { RootState } from '../store/reducers';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
-import * as hashes from './search-filter-hashes';
+import { D2SeasonInfo } from '../inventory/d2-season-info';
 import D2Sources from 'data/d2/source-info';
+import { DimStore } from '../inventory/store-types';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { Loadout } from '../loadout/loadout-types';
+import { RootState } from '../store/reducers';
 import S8Sources from 'data/d2/s8-source-info';
+import _ from 'lodash';
+import { createSelector } from 'reselect';
+import { destinyVersionSelector } from '../accounts/reducer';
+import { inventoryWishListsSelector } from '../wishlists/reducer';
+import latinise from 'voca/latinise';
+import { loadoutsSelector } from '../loadout/reducer';
+import memoizeOne from 'memoize-one';
+import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
+import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
-import {
-  getItemSpecialtyModSlotFilterName,
-  specialtyModSlotFilterNames,
-  getItemDamageShortName
-} from 'app/utils/item-utils';
-import {
-  DEFAULT_SHADER,
-  DEFAULT_ORNAMENTS,
-  DEFAULT_GLOW,
-  DEFAULT_GLOW_CATEGORY
-} from 'app/inventory/store/sockets';
+import { settingsSelector } from 'app/settings/reducer';
+import store from '../store/store';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -50,9 +49,10 @@ import {
  */
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
-  store.getState().settings.language
-);
+const isLatinBased = () =>
+  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
+    settingsSelector(store.getState()).language
+  );
 
 /** escape special characters for a regex */
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -61,11 +61,11 @@ export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const startWordRegexp = memoizeOne(
   (predicate: string) =>
     // Only some languages effectively use the \b regex word boundary
-    new RegExp(`${isLatinBased ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
+    new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
 );
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLowerCase();
+const plainString = (s: string): string => (isLatinBased() ? latinise(s) : s).toLowerCase();
 
 /** remove starting and ending quotes ('") e.g. for notes:"this string" */
 const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
@@ -192,7 +192,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     inloadout: ['inloadout'],
     maxpower: ['maxpower'],
     new: ['new'],
-    tag: ['tagged'],
+    tagged: ['tagged'],
     level: ['level'],
     equipment: ['equipment', 'equippable'],
     postmaster: ['postmaster', 'inpostmaster'],
@@ -272,7 +272,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           hasShader: ['shaded', 'hasshader'],
           hasOrnament: ['ornamented', 'hasornament'],
           ikelos: ['ikelos'],
-          masterwork: ['masterwork', 'masterworks'],
+          masterworked: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
           reacquirable: ['reacquirable'],
@@ -316,9 +316,12 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .reverse()
       .map((tag) => `season:${tag}`),
     // keywords for seasonal mod slots
-    ...specialtyModSlotFilterNames
+    ...Object.keys(modMetadataBySlotTag)
       .concat(['any', 'none'])
       .map((modSlotName) => `modslot:${modSlotName}`),
+    ...Object.keys(modMetadataBySlotTag)
+      .concat(['any', 'none'])
+      .map((modSlotName) => `holdsmod:${modSlotName}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
@@ -593,7 +596,7 @@ function searchFilters(
           switch (filterName) {
             case 'not':
               invert = !invert;
-            // fall through intentionally after setting "not" inversion eslint demands this comment :|
+            // fall through intentionally after setting "not" inversion. eslint demands this comment :|
             case 'is': {
               // do a lookup by filterValue (i.e. arc)
               // to find the appropriate predicate (i.e. dmg)
@@ -603,10 +606,6 @@ function searchFilters(
               }
               break;
             }
-            // translate this filter name from search field name to actual name
-            case 'tag':
-              addPredicate('itemtags', filterValue, invert);
-              break;
             // filters whose filterValue needs outer quotes trimmed
             case 'notes':
             case 'perk':
@@ -625,12 +624,8 @@ function searchFilters(
             case 'percentage':
               addPredicate('quality', filterValue, invert);
               break;
-            // filter names with "Value" in the actual filter name but not in search bar
-            // currently just masterworkValue but depends on name collisions
-            case 'masterwork':
-              addPredicate(`${filterName}Value`, filterValue, invert);
-              break;
             // pass these filter names and values unaltered
+            case 'masterwork':
             case 'season':
             case 'year':
             case 'stack':
@@ -639,6 +634,7 @@ function searchFilters(
             case 'maxbasestatvalue':
             case 'maxstatloadout':
             case 'maxstatvalue':
+            case 'tag':
             case 'level':
             case 'rating':
             case 'ratingcount':
@@ -646,6 +642,7 @@ function searchFilters(
             case 'hash':
             case 'source':
             case 'modslot':
+            case 'holdsmod':
               addPredicate(filterName, filterValue, invert);
               break;
             // stat filter has sub-searchterm and needs further separation
@@ -771,7 +768,7 @@ function searchFilters(
       locked(item: DimItem) {
         return item.locked;
       },
-      masterwork(item: DimItem) {
+      masterworked(item: DimItem) {
         return item.masterwork;
       },
       maxpower(item: DimItem) {
@@ -939,7 +936,7 @@ function searchFilters(
         }
         return false;
       },
-      itemtags(item: DimItem, predicate: string) {
+      tag(item: DimItem, predicate: string) {
         const tag = getTag(item, itemInfos);
         return (tag || 'none') === predicate;
       },
@@ -1037,11 +1034,19 @@ function searchFilters(
         );
       },
       modslot(item: DimItem, predicate: string) {
-        const modSlotType = getItemSpecialtyModSlotFilterName(item);
+        const modSocketTypeHash = getSpecialtySocketCategoryHash(item);
         return (
-          Boolean(predicate === 'any' && modSlotType) ||
-          (predicate === 'none' && !modSlotType) ||
-          predicate === modSlotType
+          Boolean(predicate === 'any' && modSocketTypeHash) ||
+          (predicate === 'none' && !modSocketTypeHash) ||
+          modMetadataBySlotTag[predicate]?.thisSlotPlugCategoryHashes.includes(modSocketTypeHash)
+        );
+      },
+      holdsmod(item: DimItem, predicate: string) {
+        const modSocketTypeHash = getSpecialtySocketCategoryHash(item);
+        return (
+          Boolean(predicate === 'any' && modSocketTypeHash) ||
+          (predicate === 'none' && !modSocketTypeHash) ||
+          modMetadataBySlotTag[predicate]?.compatiblePlugCategoryHashes.includes(modSocketTypeHash)
         );
       },
       powerfulreward(item: D2Item) {
@@ -1056,7 +1061,7 @@ function searchFilters(
         }
         return compareByOperator(item.primStat.value, predicate);
       },
-      masterworkValue(item: D2Item, predicate: string) {
+      masterwork(item: D2Item, predicate: string) {
         if (!item.masterworkInfo) {
           return false;
         }
@@ -1083,7 +1088,7 @@ function searchFilters(
         if (item.isDestiny1()) {
           return compareByOperator(item.year, predicate);
         } else if (item.isDestiny2()) {
-          return compareByOperator(D2SeasonInfo[item.season].year, predicate);
+          return compareByOperator(D2SeasonInfo[item.season]?.year, predicate);
         }
       },
       level(item: DimItem, predicate: string) {
@@ -1197,7 +1202,7 @@ function searchFilters(
       new(item: DimItem) {
         return newItems.has(item.id);
       },
-      tag(item: DimItem) {
+      tagged(item: DimItem) {
         return Boolean(getTag(item, itemInfos));
       },
       hasLight(item: DimItem) {

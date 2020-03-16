@@ -128,7 +128,7 @@ class ManifestService {
         });
       } else {
         // Something may be wrong with the manifest
-        this.deleteManifestFile();
+        await this.deleteManifestFile();
       }
 
       this.manifestPromise = null;
@@ -205,7 +205,7 @@ class ManifestService {
 
   private deleteManifestFile() {
     localStorage.removeItem(this.localStorageKey);
-    del(this.idbKey);
+    return del(this.idbKey);
   }
 
   /**
@@ -225,10 +225,13 @@ class ManifestService {
     if (currentManifestVersion === version && deepEqual(currentWhitelist, tableWhitelist)) {
       const manifest = await get<object>(this.idbKey);
       if (!manifest) {
+        await this.deleteManifestFile();
         throw new Error('Empty cached manifest file');
       }
       return manifest;
     } else {
+      // Delete the existing manifest first, to make space
+      await this.deleteManifestFile();
       throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
   }

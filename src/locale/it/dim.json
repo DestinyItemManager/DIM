@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engramma disponibile",
-    "EngramsAvailable_plural": "{{count}} engrammi disponibili"
-  },
   "FarmingMode": {
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "D2Desc_female": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sulla {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
-    "MoveTokens": "Invia i pegni di reputazione al deposito",
     "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
     "OutOfRoomTitle": "Spazio esaurito",
     "Stop": "Stop"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Cambia",
     "TransferItems": "Trasferisci"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo le etichette e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {{error}}.",
-    "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
     "Distributed": "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
@@ -601,6 +592,8 @@
     "Random": "Casuale",
     "Randomize": "Randomizza",
     "RandomizePrompt": "Randomizzare la tua classe equipaggiata, armi, armature e spettro?",
+    "RandomizeSearch": "Randomizza da Ricerca",
+    "RandomizeSearchPrompt": "Randomizzare i tuoi oggetti equipaggiati da ricerca\"{{query}}\"?",
     "RandomizeWeapons": "Randomizzare la tua classe equipaggiata e le armi?",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Taglie",
     "CrucibleRank": "Gradi",
-    "Factions": "Fazioni",
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
     "PercentPrestige": "{{pct}}% al reset",

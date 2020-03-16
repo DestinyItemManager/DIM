@@ -1,11 +1,6 @@
 import React from 'react';
 import { DimStore } from 'app/inventory/store-types';
-import {
-  DestinyProfileResponse,
-  DestinyMilestone,
-  DestinySeasonDefinition,
-  DestinySeasonPassDefinition
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyMilestone } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import _ from 'lodash';
@@ -32,8 +27,12 @@ export default function Milestones({
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = profileInfo?.characterProgressions?.data?.[store.id];
-  const season = currentSeason(defs);
-  const seasonPass = currentSeasonPass(defs, season);
+  const season = profileInfo.profile.data?.currentSeasonHash
+    ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
+    : undefined;
+  const seasonPass = season?.seasonPassHash
+    ? defs.SeasonPass.get(season.seasonPassHash)
+    : undefined;
 
   const milestoneItems = [
     ...milestonesForCharacter(defs, profileInfo, store),
@@ -123,26 +122,4 @@ function milestonesForCharacter(
   });
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
-}
-
-/**
- * Find the currently active Season.
- */
-function currentSeason(defs: D2ManifestDefinitions): DestinySeasonDefinition | undefined {
-  return Object.values(defs.Season.getAll()).find(
-    (season) =>
-      season.startDate &&
-      season.endDate &&
-      new Date(season.startDate).getTime() < Date.now() &&
-      new Date(season.endDate).getTime() > Date.now()
-  );
-}
-
-function currentSeasonPass(
-  defs: D2ManifestDefinitions,
-  season: DestinySeasonDefinition | undefined
-): DestinySeasonPassDefinition | undefined {
-  return Object.values(defs.SeasonPass.getAll()).find(
-    (seasonPass) => seasonPass.rewardProgressionHash === season?.seasonPassProgressionHash
-  );
 }
