@@ -1,5 +1,7 @@
 ## Next
 
+## 5.74.0 <span className="changelog-date">(2020-03-15)</span>
+
 * Updated item metadata for Season of the Worthy! Mod slots, sources, ghost perks, etc.
 * Fixed a bug where using the colorblindness filters interfered with drag and drop.
 * Restyled vendor engrams icons to make them clearer.
