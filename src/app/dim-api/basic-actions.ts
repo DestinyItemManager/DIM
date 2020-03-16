@@ -36,3 +36,7 @@ export const prepareToFlushUpdates = createAction('dim-api/PREPARE_UPDATES')();
 export const flushUpdatesFailed = createAction('dim-api/UPDATES_FAILED')();
 
 export const finishedUpdates = createAction('dim-api/FINISHED_UPDATES')<ProfileUpdateResult[]>();
+
+export const setApiPermissionGranted = createAction('dim-api/SET_API_PERMISSION')<boolean>();
+
+export const allDataDeleted = createAction('dim-api/ALL_DATA_DELETED')();

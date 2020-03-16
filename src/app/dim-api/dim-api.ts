@@ -81,3 +81,17 @@ export async function getAuditLog() {
   });
   return response.log;
 }
+
+export async function deleteAllData() {
+  const response = await authenticatedApi<{
+    deleted: {
+      settings: number;
+      loadouts: number;
+      tags: number;
+    };
+  }>({
+    url: '/delete_all_data',
+    method: 'POST'
+  });
+  return response.deleted;
+}

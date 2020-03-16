@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import { percent } from '../shell/filters';
 
-export default function LocalStorageInfo(this: never) {
+export default function LocalStorageInfo({ showDetails }: { showDetails: boolean }) {
   const [browserMayClearData, setBrowserMayClearData] = useState(true);
   const [quota, setQuota] = useState<{ quota: number; usage: number }>();
 
@@ -25,13 +25,21 @@ export default function LocalStorageInfo(this: never) {
     }
   }, []);
 
+  if (!showDetails && !quota) {
+    return null;
+  }
+
   return (
     <div className="storage-adapter">
-      <h2>
-        <span>{t('Storage.IndexedDBStorage')}</span>
-      </h2>
-      <p>{t(`Storage.Details.IndexedDBStorage`)}</p>
-      {browserMayClearData && <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>}
+      {showDetails && (
+        <>
+          <h3>{t('Storage.IndexedDBStorage')}</h3>
+          <p>{t(`Storage.Details.IndexedDBStorage`)}</p>
+          {browserMayClearData && (
+            <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
+          )}
+        </>
+      )}
       {quota && (
         <div>
           <div className="storage-guage">

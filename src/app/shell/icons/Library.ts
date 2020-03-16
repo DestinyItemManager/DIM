@@ -23,7 +23,7 @@ const faChevronCircleDown = 'fas fa-chevron-circle-down';
 const faCircleRegular = 'far fa-circle';
 const faCog = 'fas fa-cog';
 const faCopy = 'fas fa-copy';
-const faDownload = 'fas fa-download';
+const faDownload = 'fas fa-file-export';
 const faEnvelope = 'fas fa-envelope';
 const faEraser = 'fas fa-eraser';
 const faLevelUpAlt = 'fas fa-level-up-alt';
@@ -36,6 +36,7 @@ const faCaretRight = 'fas fa-caret-right';
 const faPlusCircle = 'fas fa-plus-circle';
 const faPlusSquare = 'fas fa-plus-square';
 const faQuestionCircle = 'far fa-question-circle';
+const faRestore = 'fas fa-trash-restore';
 const faSave = 'fas fa-save';
 const faSearch = 'fas fa-search';
 const faSignInAlt = 'fas fa-sign-in-alt';
@@ -57,7 +58,7 @@ const faTimesCircle = 'fas fa-times-circle';
 const faTrashAlt = 'far fa-trash-alt';
 const faTwitter = 'fab fa-twitter';
 const faUndo = 'fas fa-undo';
-const faUpload = 'fas fa-upload';
+const faUpload = 'fas fa-file-import';
 const faHeart = 'fas fa-heart';
 const faGlobe = 'fas fa-globe';
 const faStickyNote = 'fas fa-sticky-note';
@@ -131,6 +132,7 @@ export {
   faSignOutAlt as signOutIcon,
   faChevronDown as moveDownIcon,
   faChevronUp as moveUpIcon,
+  faRestore as restoreIcon,
   faStar as starIcon,
   faStarHalfAlt as halfStarIcon,
   faStarOutline as starOutlineIcon,

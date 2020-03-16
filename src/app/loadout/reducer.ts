@@ -11,16 +11,21 @@ import {
   LoadoutItem as DimApiLoadoutItem,
   DestinyVersion
 } from '@destinyitemmanager/dim-api-types';
-import { currentProfileSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector, apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 
 const EMPTY_ARRAY = [];
 
 const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
 
 /** All loadouts relevant to the current account */
-export const loadoutsSelector = $featureFlags.dimApi
-  ? createSelector(currentAccountSelector, currentProfileSelector, (currentAccount, profile) =>
-      profile
+export const loadoutsSelector = createSelector(
+  currentAccountSelector,
+  currentProfileSelector,
+  (state: RootState) => state.loadouts.loadouts,
+  apiPermissionGrantedSelector,
+  (currentAccount, profile, legacyLoadouts, apiPermissionGranted) =>
+    $featureFlags.dimApi && apiPermissionGranted
+      ? profile
         ? Object.values(profile?.loadouts).map((loadout) =>
             convertDimApiLoadoutToLoadout(
               currentAccount!.membershipId,
@@ -29,37 +34,32 @@ export const loadoutsSelector = $featureFlags.dimApi
             )
           )
         : EMPTY_ARRAY
-    )
-  : createSelector(
-      (state: RootState) => state.loadouts.loadouts,
-      currentAccountSelector,
-      (allLoadouts, currentAccount) =>
-        currentAccount
-          ? allLoadouts.filter((loadout) => {
-              if (loadout.membershipId !== undefined) {
-                return (
-                  loadout.membershipId === currentAccount.membershipId &&
-                  loadout.destinyVersion === currentAccount.destinyVersion
-                );
-              } else if (loadout.platform !== undefined) {
-                reportOldLoadout();
-                if (
-                  loadout.platform === currentAccount.platformLabel &&
-                  loadout.destinyVersion === currentAccount.destinyVersion
-                ) {
-                  // Take this opportunity to fix up the membership ID
-                  loadout.membershipId = currentAccount.membershipId;
-                  return true;
-                } else {
-                  return false;
-                }
-              } else {
-                // In D1 loadouts could get saved without platform or membership ID
-                return currentAccount.destinyVersion === 1;
-              }
-            })
-          : EMPTY_ARRAY
-    );
+      : currentAccount
+      ? legacyLoadouts.filter((loadout) => {
+          if (loadout.membershipId !== undefined) {
+            return (
+              loadout.membershipId === currentAccount.membershipId &&
+              loadout.destinyVersion === currentAccount.destinyVersion
+            );
+          } else if (loadout.platform !== undefined) {
+            reportOldLoadout();
+            if (
+              loadout.platform === currentAccount.platformLabel &&
+              loadout.destinyVersion === currentAccount.destinyVersion
+            ) {
+              // Take this opportunity to fix up the membership ID
+              loadout.membershipId = currentAccount.membershipId;
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            // In D1 loadouts could get saved without platform or membership ID
+            return currentAccount.destinyVersion === 1;
+          }
+        })
+      : EMPTY_ARRAY
+);
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
   if (state.loadouts.previousLoadouts[storeId]) {
     return _.last(state.loadouts.previousLoadouts[storeId]);

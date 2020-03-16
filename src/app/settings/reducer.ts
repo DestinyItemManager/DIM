@@ -7,6 +7,7 @@ import { clearWishLists } from 'app/wishlists/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 import { RootState } from 'app/store/reducers';
 import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -16,7 +17,9 @@ export interface Settings extends DimApiSettings {
 }
 
 export const settingsSelector = (state: RootState) =>
-  $featureFlags.dimApi ? state.dimApi.settings : state.settings;
+  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
+    ? state.dimApi.settings
+    : state.settings;
 
 export function defaultItemSize() {
   return 50;

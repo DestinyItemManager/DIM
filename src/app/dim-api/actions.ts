@@ -1,4 +1,10 @@
-import { getGlobalSettings, getDimApiProfile, importData, postUpdates } from '../dim-api/dim-api';
+import {
+  getGlobalSettings,
+  getDimApiProfile,
+  importData,
+  postUpdates,
+  deleteAllData
+} from '../dim-api/dim-api';
 import { ThunkResult, RootState } from '../store/reducers';
 import { DimApiState } from './reducer';
 import { get, set } from 'idb-keyval';
@@ -13,7 +19,8 @@ import {
   ProfileIndexedDBState,
   finishedUpdates,
   prepareToFlushUpdates,
-  flushUpdatesFailed
+  flushUpdatesFailed,
+  allDataDeleted
 } from './basic-actions';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import { deepEqual } from 'fast-equals';
@@ -23,6 +30,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { readyResolve } from 'app/settings/settings';
 import { delay } from 'app/utils/util';
+import { apiPermissionGrantedSelector } from './selectors';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -81,6 +89,7 @@ export function loadGlobalSettings(): ThunkResult<void> {
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
 // TODO: this should be a one-at-a-time action!
+// TODO: reload on page visibility changes, timer?
 export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
@@ -101,7 +110,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
     // TODO: load from gdrive, check for import
     const dimApiState = getState().dimApi;
 
-    // TODO: don't load from remote if there is already an update queue from IDB?
+    // TODO: don't load from remote if there is already an update queue from IDB - we'll roll back data!
 
     // TODO: check if profile is out of date, poll on a schedule?
     if (forceLoad || !dimApiState.profileLoaded) {
@@ -181,6 +190,8 @@ export function flushUpdates(): ThunkResult<any> {
       } finally {
         // Check for more - updates may have accumulated!
         dispatch(flushUpdates());
+
+        // TODO: if we're done flushing and we haven't loaded remote data, load it now
       }
     }
   };
@@ -268,5 +279,18 @@ export function importLegacyData(data: DimData, force = false): ThunkResult<any>
 
     // Reload from the server
     return dispatch(loadDimApiData(true));
+  };
+}
+
+export function deleteAllApiData(): ThunkResult<any> {
+  return async (dispatch, getState) => {
+    const result = await deleteAllData();
+
+    // If they have the API enabled, also clear out everything locally. Otherwise we'll just clear out the remote data.
+    if (apiPermissionGrantedSelector(getState())) {
+      dispatch(allDataDeleted());
+    }
+
+    return result;
   };
 }

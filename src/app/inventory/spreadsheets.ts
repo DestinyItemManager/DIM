@@ -16,6 +16,7 @@ import { DimStore } from './store-types';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { getClass } from './store/character-utils';
+import { download } from 'app/utils/util';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -183,13 +184,7 @@ function capitalizeFirstLetter(str: string) {
 }
 
 function downloadCsv(filename: string, csv: string) {
-  filename = `${filename}.csv`;
-  const pom = document.createElement('a');
-  pom.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
-  pom.setAttribute('download', filename);
-  document.body.appendChild(pom);
-  pom.click();
-  document.body.removeChild(pom);
+  download(csv, `${filename}.csv`, 'text/csv');
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {

@@ -171,8 +171,27 @@ export const dimApi = (
       };
     }
 
+    case getType(actions.setApiPermissionGranted): {
+      // This is bad, but whatever
+      localStorage.setItem('dim-api-enabled', action.payload ? 'true' : 'false');
+      return {
+        ...state,
+        apiPermissionGranted: action.payload
+      };
+    }
+
     case getType(actions.prepareToFlushUpdates): {
       return prepareUpdateQueue(state);
+    }
+
+    case getType(actions.allDataDeleted): {
+      return {
+        ...state,
+        profiles: initialState.profiles,
+        settings: initialState.settings,
+        updateQueue: [],
+        updateInProgressWatermark: 0
+      };
     }
 
     case getType(actions.finishedUpdates): {
