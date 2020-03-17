@@ -20,6 +20,7 @@ import {
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { apiPermissionGrantedSelector } from './selectors';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -120,6 +121,17 @@ export const dimApi = (
   // This is a specially-handled reducer (see reducers.ts) which gets the current account (based on incoming state) passed along
   account?: DestinyAccount
 ): DimApiState => {
+  if (
+    !$featureFlags.dimApi ||
+    state.apiPermissionGranted !== true ||
+    !state.globalSettings.dimApiEnabled
+  ) {
+    // If the API is off, don't track state. We will want to tweak this when we start using
+    // this state as the local state even when Sync is off, but for now it avoids us doing the
+    // wrong thing.
+    return state;
+  }
+
   switch (action.type) {
     case getType(actions.globalSettingsLoaded):
       return {
@@ -666,6 +678,10 @@ function setNote(
 }
 
 function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: DestinyAccount) {
+  if (!state.profileLoaded) {
+    // Don't try to cleanup anything if we haven't loaded yet
+    return state;
+  }
   return produce(state, (draft) => {
     const profileKey = makeProfileKeyFromAccount(account);
     const profile = ensureProfile(draft, profileKey);
