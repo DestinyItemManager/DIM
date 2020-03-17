@@ -94,14 +94,10 @@ export default function copyString(str: string) {
 /** Download a string as a file */
 export function download(data: string, filename: string, type: string) {
   const a = document.createElement('a');
-  const file = new Blob([data], { type });
-  const url = URL.createObjectURL(file);
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
+  a.setAttribute('href', `data:${type};charset=utf-8,${encodeURIComponent(data)}`);
+  a.setAttribute('download', filename);
   a.click();
   setTimeout(() => {
     document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
   });
 }
