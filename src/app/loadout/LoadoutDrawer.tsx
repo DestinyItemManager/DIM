@@ -419,10 +419,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private saveLoadout = async (e) => {
+  private saveLoadout = async (e, loadout = this.state.loadout) => {
     e.preventDefault();
     const { dispatch } = this.props;
-    const { loadout } = this.state;
     if (!loadout) {
       return;
     }
@@ -480,17 +479,17 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private saveAsNew = (e) => {
     e.preventDefault();
-    let { loadout } = this.state;
+    const { loadout } = this.state;
 
     if (!loadout) {
       return;
     }
-    loadout = {
-      ...loadout,
+    const newLoadout = {
+      ...copy(loadout),
       id: uuidv4() // Let it be a new ID
     };
-    this.setState({ isNew: true });
-    this.saveLoadout(e);
+    this.setState({ loadout: newLoadout, isNew: true });
+    this.saveLoadout(e, newLoadout);
   };
 
   private close = (e?) => {
