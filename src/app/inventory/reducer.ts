@@ -37,9 +37,10 @@ export const ownedItemsSelector = () =>
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
+const EMPTY_MAP = {};
 export const itemInfosSelector = (state: RootState) =>
   $featureFlags.dimApi && apiPermissionGrantedSelector(state)
-    ? (currentProfileSelector(state)?.tags as InventoryState['itemInfos'])
+    ? ((currentProfileSelector(state)?.tags || EMPTY_MAP) as InventoryState['itemInfos'])
     : state.inventory.itemInfos;
 
 /**

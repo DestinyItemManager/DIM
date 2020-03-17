@@ -92,7 +92,6 @@ export function loadGlobalSettings(): ThunkResult<void> {
 /**
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
-// TODO: this should be a one-at-a-time action!
 // TODO: reload on page visibility changes, timer?
 export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   return async (dispatch, getState) => {
@@ -134,7 +133,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       return;
     }
 
-    // TODO: check if profile is out of date, poll on a schedule?
     if (forceLoad || !getState().dimApi.profileLoaded) {
       // get current account
       const accounts = await getPlatformsPromise;
@@ -151,7 +149,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
 
     await dispatch(flushUpdates());
 
-    // TODO: load from gdrive, check for import
     await dispatch(importLegacyData());
   };
 }

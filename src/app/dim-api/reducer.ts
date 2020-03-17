@@ -96,11 +96,9 @@ export const initialState: DimApiState = {
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
 
-  // TODO: don't allow mutations if DIM API is disabled, profile isn't loaded, or API usage isn't agreed to
   profileLoaded: false,
   profileLoadedFromIndexedDb: false,
 
-  // TODO: move to
   settings: initialSettingsState,
 
   profiles: {},
@@ -171,7 +169,6 @@ export const dimApi = (
           ? {
               ...state.profiles,
               // Overwrite just this account's profile
-              // TODO: if there's an update queue, replay it on top!
               [makeProfileKeyFromAccount(account)]: {
                 loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
                 tags: _.keyBy(profileResponse.tags || [], (t) => t.id)
