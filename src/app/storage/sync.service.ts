@@ -88,7 +88,7 @@ export const SyncService = {
       });
     } else {
       const apiScript = document.createElement('script');
-      apiScript.setAttribute('src', 'https://apis.google.com/js/api.js?callback=googleApiInit');
+      apiScript.setAttribute('src', 'https://apis.google.com/js/api.js');
       apiScript.defer = true;
       apiScript.async = true;
       document.body.append(apiScript);
