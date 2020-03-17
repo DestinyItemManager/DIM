@@ -1,6 +1,6 @@
-import { combineReducers, AnyAction } from 'redux';
-import { settings, Settings } from '../settings/reducer';
-import { AccountsState, accounts } from '../accounts/reducer';
+import { combineReducers, AnyAction, Reducer } from 'redux';
+import { settings } from '../settings/reducer';
+import { AccountsState, accounts, currentAccountSelector } from '../accounts/reducer';
 import { InventoryState, inventory } from '../inventory/reducer';
 import { ShellState, shell } from '../shell/reducer';
 import { ReviewsState, reviews } from '../item-review/reducer';
@@ -8,9 +8,10 @@ import { LoadoutsState, loadouts } from '../loadout/reducer';
 import { WishListsState, wishLists } from '../wishlists/reducer';
 import { FarmingState, farming } from '../farming/reducer';
 import { ManifestState, manifest } from '../manifest/reducer';
-import { DimApiState, dimApi } from '../dim-api/reducer';
+import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-api/reducer';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { VendorDropsState, vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
+import { Settings } from 'app/settings/initial-settings';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
@@ -33,7 +34,7 @@ export type ThunkDispatchProp = {
   dispatch: ThunkDispatch<RootState, {}, AnyAction>;
 };
 
-export default combineReducers({
+const combinedReducers = combineReducers({
   settings,
   accounts,
   inventory,
@@ -44,5 +45,28 @@ export default combineReducers({
   farming,
   manifest,
   vendorDrops,
-  dimApi
+  // Dummy reducer to get the types to work
+  dimApi: (state: DimApiState = dimApiInitialState) => state
 });
+
+const reducer: Reducer<RootState> = (state, action) => {
+  const intermediateState = combinedReducers(state, action);
+
+  // Run the DIM API reducer last, and provide the current account along with it
+  const dimApiState = dimApi(
+    intermediateState.dimApi,
+    action,
+    currentAccountSelector(intermediateState)
+  );
+
+  if (intermediateState.dimApi !== dimApiState) {
+    return {
+      ...intermediateState,
+      dimApi: dimApiState
+    };
+  }
+
+  return intermediateState;
+};
+
+export default reducer;

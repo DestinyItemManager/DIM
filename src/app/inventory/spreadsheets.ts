@@ -13,6 +13,7 @@ import { ThunkResult } from 'app/store/reducers';
 import _ from 'lodash';
 import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';
+import { download } from 'app/utils/util';
 import { getRating } from '../item-review/reducer';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import store from '../store/store';
@@ -184,13 +185,7 @@ function capitalizeFirstLetter(str: string) {
 }
 
 function downloadCsv(filename: string, csv: string) {
-  filename = `${filename}.csv`;
-  const pom = document.createElement('a');
-  pom.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
-  pom.setAttribute('download', filename);
-  document.body.appendChild(pom);
-  pom.click();
-  document.body.removeChild(pom);
+  download(csv, `${filename}.csv`, 'text/csv');
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {

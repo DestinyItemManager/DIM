@@ -53,25 +53,6 @@
     margin-bottom: 4px;
   }
 
-  .notif-button {
-    margin: 10px auto 0px;
-    padding: 6px;
-    border-radius: 4px;
-    text-align: center;
-    color: #888;
-    background-color: #222;
-    display: block;
-    width: 30%;
-    cursor: pointer;
-    &:hover {
-      background-color: $blue;
-      color: #222;
-    }
-    & > svg {
-      margin-right: 0.5em;
-    }
-  }
-
   .notification-info,
   .notification-progress {
     border-top-color: #2f96b4;

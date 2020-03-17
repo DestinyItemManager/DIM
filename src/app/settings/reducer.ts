@@ -2,35 +2,26 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
-import { defaultLanguage } from '../i18n';
 import { clearWishLists } from 'app/wishlists/actions';
-import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 import { RootState } from 'app/store/reducers';
-import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { initialSettingsState, Settings } from './initial-settings';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
-export interface Settings extends DimApiSettings {
-  /** list of stat hashes of interest, keyed by class enum */
-  readonly customTotalStatsByClass: KeyedStatHashLists;
-}
-
-export const settingsSelector = (state: RootState) => state.settings;
+export const settingsSelector = (state: RootState) =>
+  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
+    ? state.dimApi.settings
+    : state.settings;
 
 export function defaultItemSize() {
   return 50;
 }
 
-export const initialState: Settings = {
-  ...defaultSettings,
-  language: defaultLanguage(),
-  customTotalStatsByClass: {}
-};
-
 type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;
 
 export const settings: Reducer<Settings, SettingsAction> = (
-  state: Settings = initialState,
+  state: Settings = initialSettingsState,
   action: SettingsAction
 ) => {
   switch (action.type) {

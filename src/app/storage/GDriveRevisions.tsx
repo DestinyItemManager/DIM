@@ -163,6 +163,7 @@ class GDriveRevisionComponent extends React.Component<
         await SyncService.set(content, true);
         alert(t('Storage.ImportSuccess'));
         initSettings();
+        // TODO: gotta import to DIM API
         this.props.onRestoreSuccess();
       }
     }

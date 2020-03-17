@@ -79,3 +79,29 @@ export function dedupePromise<T extends any[], K>(
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/** Copy a string to the clipboard */
+export default function copyString(str: string) {
+  function listener(e) {
+    e.clipboardData.setData('text/plain', str);
+    e.preventDefault();
+  }
+  document.addEventListener('copy', listener);
+  document.execCommand('copy');
+  document.removeEventListener('copy', listener);
+}
+
+/** Download a string as a file */
+export function download(data: string, filename: string, type: string) {
+  const a = document.createElement('a');
+  const file = new Blob([data], { type });
+  const url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  });
+}

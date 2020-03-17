@@ -14,6 +14,7 @@ import produce, { Draft } from 'immer';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
 import { SyncService } from 'app/storage/sync.service';
+import { apiPermissionGrantedSelector, currentProfileSelector } from 'app/dim-api/selectors';
 
 export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
@@ -36,7 +37,10 @@ export const ownedItemsSelector = () =>
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
-export const itemInfosSelector = (state: RootState) => state.inventory.itemInfos;
+export const itemInfosSelector = (state: RootState) =>
+  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
+    ? (currentProfileSelector(state)?.tags as InventoryState['itemInfos'])
+    : state.inventory.itemInfos;
 
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).

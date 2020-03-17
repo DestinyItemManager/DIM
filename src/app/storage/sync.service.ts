@@ -6,7 +6,7 @@ import { GoogleDriveStorage } from './google-drive-storage';
 import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
-import { Settings } from 'app/settings/reducer';
+import { Settings } from 'app/settings/initial-settings';
 
 export interface DimData {
   // The last selected platform membership ID
@@ -21,6 +21,9 @@ export interface DimData {
   // dimItemInfo-m${account.membershipId}-d${account.destinyVersion}
   // [`info.${id}`]
   [key: string]: any;
+
+  // Has this data been imported into the DIM API?
+  importedToDimApi?: boolean;
 }
 
 export interface StorageAdapter {
@@ -68,18 +71,28 @@ const adapters: StorageAdapter[] = [new IndexedDBStorage(), GoogleDriveStorageAd
 let _getPromise: Promise<DimData> | undefined;
 let cached: DimData;
 
+let gapiLoaded = false;
+
 export const SyncService = {
   adapters,
   GoogleDriveStorage: GoogleDriveStorageAdapter,
 
   init() {
-    GoogleDriveStorageAdapter.init();
+    if (gapiLoaded) {
+      GoogleDriveStorageAdapter.init();
 
-    GoogleDriveStorageAdapter.signIn$.subscribe(() => {
-      // Force refresh data
-      console.log('GDrive sign in, refreshing data');
-      this.get(true).then(initSettings);
-    });
+      GoogleDriveStorageAdapter.signIn$.subscribe(() => {
+        // Force refresh data
+        console.log('GDrive sign in, refreshing data');
+        this.get(true).then(initSettings);
+      });
+    } else {
+      const apiScript = document.createElement('script');
+      apiScript.setAttribute('src', 'https://apis.google.com/js/api.js?callback=googleApiInit');
+      apiScript.defer = true;
+      apiScript.async = true;
+      document.body.append(apiScript);
+    }
   },
 
   /**
@@ -212,3 +225,9 @@ async function getFromAdapters(): Promise<DimData | undefined> {
   }
   return undefined;
 }
+
+// eslint-disable-next-line @typescript-eslint/camelcase
+window.gapi_onload = () => {
+  gapiLoaded = true;
+  SyncService.init();
+};

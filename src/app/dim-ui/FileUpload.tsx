@@ -3,6 +3,7 @@ import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import './FileUpload.scss';
+import { AppIcon, uploadIcon } from 'app/shell/icons';
 
 export default function FileUpload({
   accept,
@@ -18,7 +19,9 @@ export default function FileUpload({
       {({ getRootProps, getInputProps, isDragActive }) => (
         <div {...getRootProps()} className={clsx('file-input', { 'drag-active': isDragActive })}>
           <input {...getInputProps()} />
-          <div>{title}</div>
+          <div className="dim-button">
+            <AppIcon icon={uploadIcon} /> {title}
+          </div>
           <div className="file-input-instructions">{t('FileUpload.Instructions')}</div>
         </div>
       )}

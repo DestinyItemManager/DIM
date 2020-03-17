@@ -7,6 +7,7 @@ import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
 import { loadLoadouts } from 'app/loadout/loadout-storage';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 
 export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -21,6 +22,7 @@ const saveSettings = _.debounce(
 
 function saveSettingsOnUpdate() {
   return observeStore(
+    // Specifically watching the old settings store
     (state) => state.settings,
     (_currentState, nextState) => {
       saveSettings(nextState);
@@ -57,8 +59,9 @@ export function initSettings() {
     store.dispatch(loaded(savedSettings));
     store.dispatch(loadLoadouts(data));
 
-    readyResolve();
-
+    if (!$featureFlags.dimApi || !apiPermissionGrantedSelector(store.getState())) {
+      readyResolve();
+    }
     // Start saving settings changes
     unsubscribe = saveSettingsOnUpdate();
   });

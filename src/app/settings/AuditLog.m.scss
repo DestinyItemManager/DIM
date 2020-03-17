@@ -1,0 +1,61 @@
+.auditLog {
+  composes: dim-page from global;
+  list-style: none;
+  margin: 2em auto;
+  width: 100%;
+  padding: 0;
+  border-spacing: 0;
+
+  th {
+    text-align: left;
+    border-bottom: 1px solid white;
+  }
+
+  td,
+  th {
+    vertical-align: top;
+    padding: 16px 8px;
+  }
+
+  tr:nth-child(2n) {
+    td {
+      background-color: #282828;
+    }
+  }
+}
+
+.account {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+
+  > div {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.accountDetails {
+  font-size: 12px !important;
+  color: #aaa;
+  margin: 1px 0 0 0 !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  // Match the "D2" branding
+  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+
+  :global(.app-icon) {
+    font-size: 14px !important;
+    margin: 0 0 0 2px;
+    &.first {
+      border-left: 1px solid #666;
+      padding-left: 4px;
+      margin-left: 6px;
+    }
+    &:hover {
+      color: #aaa !important;
+    }
+  }
+}

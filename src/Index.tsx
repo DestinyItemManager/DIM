@@ -24,7 +24,7 @@ import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 import updateCSSVariables from 'app/css-variables';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import store from 'app/store/store';
-import { loadGlobalSettings } from 'app/dim-api/actions';
+import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/reducer';
 
 polyfill({
@@ -50,7 +50,10 @@ if ($featureFlags.vendorEngrams) {
   saveVendorDropsToIndexedDB();
 }
 updateCSSVariables();
-store.dispatch(loadGlobalSettings());
+
+if ($featureFlags.dimApi) {
+  store.dispatch(loadDimApiData());
+}
 
 saveItemInfosOnStateChange();
 
