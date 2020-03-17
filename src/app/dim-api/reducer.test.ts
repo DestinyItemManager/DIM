@@ -1,4 +1,4 @@
-import { DimApiState, initialState, dimApi } from './reducer';
+import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
 import { DestinyClass, BungieMembershipType } from 'bungie-api-ts/destiny2';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
 import { prepareToFlushUpdates, finishedUpdates } from './basic-actions';
@@ -16,6 +16,11 @@ const currentAccount: DestinyAccount = {
   platforms: [BungieMembershipType.TigerPsn]
 };
 const currentAccountKey = '98765-d2';
+
+const initialState: DimApiState = {
+  ...apiInitialState,
+  apiPermissionGranted: true
+};
 
 describe('setSetting', () => {
   it('changes settings', () => {

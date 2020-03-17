@@ -8,6 +8,9 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   globals: {
     $BROWSERS: [],
+    $featureFlags: {
+      dimApi: true
+    },
     'ts-jest': {
       tsConfig: {
         target: 'ES2015',
