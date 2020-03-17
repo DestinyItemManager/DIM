@@ -20,7 +20,6 @@ import {
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { apiPermissionGrantedSelector } from './selectors';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
