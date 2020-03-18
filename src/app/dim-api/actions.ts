@@ -289,9 +289,10 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
       return;
     }
 
+    // Check to see if there's anything to import - don't want to start a brand new user out with importing.
     if (isLegacyDataEmpty(data)) {
       console.log(
-        "[importLegacyData] Don't need to import, there are no tags or loadouts in the legacy data"
+        "[importLegacyData] Don't need to import, there are no settings, tags or loadouts in the legacy data"
       );
       // Silently return
       return;
@@ -300,11 +301,12 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
     dimApiData = getState().dimApi;
 
     if (
-      !force &&
-      Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length)
+      (!force &&
+        Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length)) ||
+      !_.isEmpty(subtractObject(dimApiData.settings, initialSettingsState))
     ) {
       console.warn(
-        '[importLegacyData] Skipping legacy data import because there are already loadouts or tags in the DIM API profile data'
+        '[importLegacyData] Skipping legacy data import because there are already settings, loadouts or tags in the DIM API profile data'
       );
 
       // Mark in the legacy data that this has been imported already
@@ -344,7 +346,7 @@ export function deleteAllApiData(): ThunkResult<any> {
   };
 }
 
-/** Does the legacy data contain any loadouts or tags? We don't check settings. */
+/** Does the legacy data contain any settings, loadouts or tags? */
 function isLegacyDataEmpty(data: DimData) {
   if (data['loadouts-v3.0']?.length) {
     return false;
@@ -357,7 +359,9 @@ function isLegacyDataEmpty(data: DimData) {
     }
   }
 
-  // TODO: we could look for different settings, but I suspect that'll be noisy
+  if (!_.isEmpty(subtractObject(data['settings-v1.0'], initialSettingsState))) {
+    return false;
+  }
 
   return true;
 }
