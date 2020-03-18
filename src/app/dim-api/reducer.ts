@@ -31,6 +31,8 @@ export interface DimApiState {
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
   profileLoadedError?: Error;
+  // unix timestamp for when the profile was last loaded
+  profileLastLoaded: number;
 
   /**
    * App settings. Settings are global, not per-platform-membership
@@ -97,6 +99,7 @@ export const initialState: DimApiState = {
 
   profileLoaded: false,
   profileLoadedFromIndexedDb: false,
+  profileLastLoaded: 0,
 
   settings: initialSettingsState,
 
@@ -174,6 +177,7 @@ export const dimApi = (
         ...state,
         profileLoaded: true,
         profileLoadedError: undefined,
+        profileLastLoaded: Date.now(),
         settings: {
           ...state.settings,
           ...profileResponse.settings

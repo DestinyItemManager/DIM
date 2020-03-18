@@ -37,6 +37,7 @@ import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import { refresh$ } from 'app/shell/refresh';
 
 /**
  * Watch the redux store and write out values to indexedDB, etc.
@@ -94,6 +95,9 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
       dispatch(loadDimApiData(true));
     }
   });
+
+  // Every time data is refreshed, maybe load DIM API data too
+  refresh$.subscribe(() => dispatch(loadDimApiData()));
 });
 
 /**
@@ -156,7 +160,12 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       return;
     }
 
-    if (forceLoad || !getState().dimApi.profileLoaded) {
+    // How long before the API data is considered stale is controlled from the server
+    const profileOutOfDate =
+      Date.now() - getState().dimApi.profileLastLoaded >
+      getState().dimApi.globalSettings.dimProfileMinimumRefreshInterval * 1000;
+
+    if (forceLoad || !getState().dimApi.profileLoaded || profileOutOfDate) {
       // get current account
       const accounts = await getPlatformsPromise;
       if (!accounts) {
