@@ -6,9 +6,13 @@ import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
-import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
+import {
+  wishListsEnabledSelector,
+  loadWishListAndInfoFromIndexedDB,
+  wishListsSelector,
+  wishListsLastFetchedSelector
+} from '../wishlists/reducer';
 import _ from 'lodash';
-import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
@@ -20,17 +24,21 @@ interface StoreProps {
   title?: string;
   description?: string;
   wishListSource: string;
+  wishListLastUpdated?: Date;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
+  const wishLists = wishListsSelector(state);
+  const wishList = wishLists.wishListAndInfo;
   return {
     wishListsEnabled: wishListsEnabledSelector(state),
-    numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
-    title: state.wishLists.wishListAndInfo.title,
-    description: state.wishLists.wishListAndInfo.description,
-    wishListSource: settingsSelector(state).wishListSource
+    numWishListRolls: wishList.wishListRolls.length,
+    title: wishList.title,
+    description: wishList.description,
+    wishListSource: settingsSelector(state).wishListSource,
+    wishListLastUpdated: wishListsLastFetchedSelector(state)
   };
 }
 
@@ -41,7 +49,9 @@ interface State {
 class WishListSettings extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { wishListSource: props.wishListSource };
+    this.state = {
+      wishListSource: props.wishListSource
+    };
   }
 
   componentDidMount() {
@@ -49,7 +59,13 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   render() {
-    const { wishListsEnabled, numWishListRolls, title, description } = this.props;
+    const {
+      wishListsEnabled,
+      numWishListRolls,
+      title,
+      description,
+      wishListLastUpdated
+    } = this.props;
     const { wishListSource } = this.state;
 
     return (
@@ -82,6 +98,14 @@ class WishListSettings extends React.Component<Props, State> {
                   onClick={this.wishListUpdateEvent}
                 />
               </div>
+              {wishListLastUpdated && (
+                <div className="fineprint">
+                  {t('WishListRoll.LastUpdated', {
+                    lastUpdatedDate: wishListLastUpdated.toLocaleDateString(),
+                    lastUpdatedTime: wishListLastUpdated.toLocaleTimeString()
+                  })}
+                </div>
+              )}
             </div>
 
             {wishListsEnabled && (
@@ -127,13 +151,7 @@ class WishListSettings extends React.Component<Props, State> {
       return;
     }
 
-    if (this.props.wishListSource === wishListSource) {
-      return;
-    }
-
-    this.props.dispatch(setSetting('wishListSource', wishListSource));
-
-    this.props.dispatch(fetchWishList());
+    this.props.dispatch(fetchWishList(wishListSource));
 
     ga('send', 'event', 'WishList', 'From URL');
   };

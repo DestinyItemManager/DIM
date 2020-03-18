@@ -60,7 +60,7 @@ export function saveVendorDropsToIndexedDB() {
   );
 }
 
-export function loadVendorDropsFromIndexedDB(): ThunkResult<void> {
+export function loadVendorDropsFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
     if (!getState().vendorDrops.loaded) {
       const vendorDropsState = await get<VendorDropsState>('vendorengrams');

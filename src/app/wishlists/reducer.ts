@@ -13,6 +13,9 @@ import { fetchWishList } from './wishlist-fetch';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 
+export const wishListsLastFetchedSelector = (state: RootState) =>
+  wishListsSelector(state).lastFetched;
+
 const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
   _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
@@ -29,13 +32,15 @@ export const inventoryWishListsSelector = createSelector(
 export interface WishListsState {
   loaded: boolean;
   wishListAndInfo: WishListAndInfo;
+  lastFetched?: Date;
 }
 
 export type WishListAction = ActionType<typeof actions>;
 
 const initialState: WishListsState = {
   loaded: false,
-  wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] }
+  wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] },
+  lastFetched: undefined
 };
 
 export const wishLists: Reducer<WishListsState, WishListAction> = (
@@ -46,8 +51,9 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
     case getType(actions.loadWishLists):
       return {
         ...state,
-        wishListAndInfo: action.payload,
-        loaded: true
+        wishListAndInfo: action.payload.wishList,
+        loaded: true,
+        lastFetched: action.payload.lastFetched || new Date()
       };
     case getType(actions.clearWishLists): {
       return {
@@ -56,7 +62,8 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
           title: undefined,
           description: undefined,
           wishListRolls: []
-        }
+        },
+        lastFetched: undefined
       };
     }
     default:
@@ -69,45 +76,43 @@ export function saveWishListToIndexedDB() {
     (state) => state.wishLists,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState.wishListAndInfo);
+        set('wishlist', {
+          wishListAndInfo: nextState.wishListAndInfo,
+          lastFetched: nextState.lastFetched
+        });
       }
     }
   );
 }
 
-export function loadWishListAndInfoFromIndexedDB(): ThunkResult<void> {
+export function loadWishListAndInfoFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
-    if (!getState().wishLists.loaded) {
-      const wishListAndInfo = await get<WishListsState['wishListAndInfo']>('wishlist');
-
-      // easing the transition from the old state (just an array) to the new state
-      // (object containing an array)
-      if (wishListAndInfo && Array.isArray(wishListAndInfo.wishListRolls)) {
-        dispatch(
-          actions.loadWishLists({
-            title: undefined,
-            description: undefined,
-            wishListRolls: wishListAndInfo.wishListRolls
-          })
-        );
-      } else {
-        // transition from old to new interface
-        if (wishListAndInfo && (wishListAndInfo as any).curatedRolls) {
-          wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
-        }
-
-        dispatch(
-          actions.loadWishLists({
-            title: undefined,
-            description: undefined,
-            wishListRolls: [],
-            ...wishListAndInfo
-          })
-        );
-      }
-
-      // Refresh the wish list from source if necessary
-      dispatch(fetchWishList());
+    if (getState().wishLists.loaded) {
+      return;
     }
+
+    const wishListState = await get<WishListsState>('wishlist');
+
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    // easing the transition from the old state (just an array) to the new state
+    // (object containing an array)
+    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
+      dispatch(
+        actions.loadWishLists({
+          wishList: {
+            title: undefined,
+            description: undefined,
+            wishListRolls: wishListState.wishListAndInfo.wishListRolls
+          },
+          lastFetched: wishListState.lastFetched
+        })
+      );
+    }
+
+    // Refresh the wish list from source if necessary
+    dispatch(fetchWishList());
   };
 }

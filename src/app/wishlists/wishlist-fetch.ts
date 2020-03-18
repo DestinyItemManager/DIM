@@ -6,12 +6,33 @@ import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector } from './reducer';
+import { settingsSelector } from 'app/settings/reducer';
+import { setSetting } from 'app/settings/actions';
 
-export function fetchWishList(): ThunkResult<void> {
+function hoursAgo(dateToCheck?: Date): number {
+  if (!dateToCheck) {
+    return 99999;
+  }
+
+  return (Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
+}
+
+export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
-    const wishListSource = getState().settings.wishListSource;
+    if (newWishlistSource) {
+      dispatch(setSetting('wishListSource', newWishlistSource));
+    }
+
+    const wishListSource = settingsSelector(getState()).wishListSource;
 
     if (!wishListSource) {
+      return;
+    }
+
+    const wishListLastUpdated = wishListsSelector(getState()).lastFetched;
+
+    // Don't throttle updates if we're changing source
+    if (!newWishlistSource && hoursAgo(wishListLastUpdated) < 24) {
       return;
     }
 
@@ -35,10 +56,10 @@ export function fetchWishList(): ThunkResult<void> {
   };
 }
 
-export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult<void> {
+export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists(wishListAndInfo));
+      dispatch(loadWishLists({ wishList: wishListAndInfo }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,

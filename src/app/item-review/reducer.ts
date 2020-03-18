@@ -229,7 +229,7 @@ export function saveReviewsToIndexedDB() {
   );
 }
 
-export function loadReviewsFromIndexedDB(): ThunkResult<void> {
+export function loadReviewsFromIndexedDB(): ThunkResult {
   return async (dispatch) => {
     const ratingsP = get<{ [key: string]: DtrRating }>('ratings-v2');
     const reviewsP = get<{ [key: string]: D2ItemReviewResponse | D1ItemReviewResponse }>('reviews');

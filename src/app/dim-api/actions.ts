@@ -103,7 +103,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
  */
-export function loadGlobalSettings(): ThunkResult<void> {
+export function loadGlobalSettings(): ThunkResult {
   return async (dispatch, getState) => {
     // TODO: better to use a state machine (UNLOADED => LOADING => LOADED)
     if (!getState().dimApi.globalSettingsLoaded) {
@@ -125,7 +125,7 @@ let getProfileBackoff = 0;
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
 // TODO: reload on page visibility changes, timer?
-export function loadDimApiData(forceLoad = false): ThunkResult<void> {
+export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
