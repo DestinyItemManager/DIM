@@ -121,9 +121,11 @@ export const dimApi = (
   account?: DestinyAccount
 ): DimApiState => {
   if (
-    !$featureFlags.dimApi ||
-    state.apiPermissionGranted !== true ||
-    !state.globalSettings.dimApiEnabled
+    (!$featureFlags.dimApi ||
+      state.apiPermissionGranted !== true ||
+      !state.globalSettings.dimApiEnabled) &&
+    // Let through the ability to change the API permission
+    action.type !== getType(actions.setApiPermissionGranted)
   ) {
     // If the API is off, don't track state. We will want to tweak this when we start using
     // this state as the local state even when Sync is off, but for now it avoids us doing the
