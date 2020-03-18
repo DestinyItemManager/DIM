@@ -128,7 +128,9 @@ let getProfileBackoff = 0;
 export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
-    dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
+    if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
+      dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
+    }
     installObservers(dispatch); // idempotent
 
     if (!getState().dimApi.globalSettingsLoaded) {
