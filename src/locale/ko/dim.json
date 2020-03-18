@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
   },
-  "Faction": {
-    "EngramsAvailable": "엔그램 1개 보유 중",
-    "EngramsAvailable_plural": "엔그램 {{count}}개 보유 중"
-  },
   "FarmingMode": {
     "D2Desc": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
     "D2Desc_female": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
@@ -137,7 +133,6 @@
       "MakeRoom": "장비를 이동시켜 아이템을 얻을 공간을 확보",
       "Tooltip": "체크하면 DIM이 금고 내 엔그램의 공간 확보를 위해서 무기와 방어구를 옮길 것입니다."
     },
-    "MoveTokens": "평판 아이템을 금고로 이동",
     "OutOfRoom": "{{character}}에게서 아이템을 이동할 공간이 없습니다. 엔그램을 해독하고 쓰레기를 청소할 때가 됐습니다!",
     "OutOfRoomTitle": "공간 부족",
     "Stop": "중지"
@@ -383,10 +378,6 @@
     "SwitchDirection": "전환",
     "TransferItems": "이동"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "아이템에 대한 DIM의 정보를 저장하는 중 문제가 발생하였습니다. 한 가지 문제는 데이터가 저장될 수 있는 한도가 있는 것입니다. 이것이 태그와 메모 기능을 베타 버전에서만 사용할 수 있는 이유입니다. 오류는 다음과 같습니다: {{error}}",
-    "SaveInfoErrorTitle": "아이템 정보 저장 중 문제 발생"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
     "Distributed": "{{name}}을(를) 분배함\n{{name}}을(를) 모든 캐릭터에게 공평하게 나누었습니다.",
@@ -601,6 +592,8 @@
     "Random": "무작위",
     "Randomize": "무작위",
     "RandomizePrompt": "장착된 직업, 무기, 방어구, 고스트를 무작위로 설정하시겠습니까?",
+    "RandomizeSearch": "검색 결과에서 무작위화",
+    "RandomizeSearchPrompt": "\"{{query}}\"로 검색된 결과에서 무작위로 장착하시겠습니까?",
     "RandomizeWeapons": "장착된 직업과 무기를 무작위로 설정하시겠습니까?",
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "현상금",
     "CrucibleRank": "등급",
-    "Factions": "진영",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
     "PercentPrestige": "초기화까지 {{pct}}%",

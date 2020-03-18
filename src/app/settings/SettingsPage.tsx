@@ -21,7 +21,8 @@ import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
-import { Settings, defaultItemSize, settingsSelector } from './reducer';
+import { Settings } from './initial-settings';
+import { defaultItemSize, settingsSelector } from './reducer';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
@@ -31,6 +32,7 @@ import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import Spreadsheets from './Spreadsheets';
+import DimApiSettings from 'app/storage/DimApiSettings';
 
 interface StoreProps {
   settings: Settings;
@@ -446,7 +448,7 @@ class SettingsPage extends React.Component<Props> {
             </section>
 
             <ErrorBoundary name="StorageSettings">
-              <StorageSettings />
+              {$featureFlags.dimApi ? <DimApiSettings /> : <StorageSettings />}
             </ErrorBoundary>
 
             <Spreadsheets />

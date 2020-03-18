@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Coś poszło nie tak"
   },
-  "Faction": {
-    "EngramsAvailable": "1 dostępny engram",
-    "EngramsAvailable_plural": "{{count}} dostępnych engramów"
-  },
   "FarmingMode": {
     "D2Desc": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
     "D2Desc_female": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Zrób miejsce do podnoszenia przedmiotów przenosząc wyposażenie",
       "Tooltip": "Jeśli zaznaczone, DIM przeniesie broń i wyposażenie tak by zrobić miejsce w schowku na engramy."
     },
-    "MoveTokens": "Wyślij przedmioty reputacji do schowka",
     "OutOfRoom": "Brakuje Ci miejsca na przeniesienie przedmiotów z {{character}}. Czas odszyfrować niektóre engramy i usunąć śmieci!",
     "OutOfRoomTitle": "Brak wolnego miejsca",
     "Stop": "Zatrzymaj"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Przełącz",
     "TransferItems": "Przenieś"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Wystąpił błąd przy zapisywaniu informacji specyficznych dla DIM dla przedmiotu. Jest problem, który ogranicza ilość przechowywanych danych - dlatego tagi i notatki nie są dostępne poza wersją Beta. Błąd: {{error}}.",
-    "SaveInfoErrorTitle": "Błąd zapisu informacji przedmiotu"
-  },
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
     "Distributed": "Rozprowadzanie {{name}}\n {{name}} został równo rozprowadzony pomiędzy postaciami.",
@@ -601,6 +592,8 @@
     "Random": "Losowy",
     "Randomize": "Losuj",
     "RandomizePrompt": "Losować twoją założoną klasę, broń, pancerz i ducha?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Losować twoją założoną klasę i broń?",
     "RestoreAllItems": "Wszystkie Przedmioty",
     "Save": "Zapisz",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Zlecenia",
     "CrucibleRank": "Rangi",
-    "Factions": "Frakcje",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
     "PercentPrestige": "{{pct}}% do resetu",

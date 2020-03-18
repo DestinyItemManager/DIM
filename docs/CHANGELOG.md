@@ -1,7 +1,15 @@
 ## Next
 
 * External wish lists will be checked daily. Settings menu shows last fetched time.
+## 5.74.0 <span className="changelog-date">(2020-03-15)</span>
+
 * Updated item metadata for Season of the Worthy! Mod slots, sources, ghost perks, etc.
+* Fixed a bug where using the colorblindness filters interfered with drag and drop.
+* Restyled vendor engrams icons to make them clearer.
+* Quest steps now use their questline name as a title, and the quest step as subtitle, just like in game.
+* Reorganized some of the search keyword suggestions.
+* Add "holdsmod:" search to find armor compatible with a certain season's mods.
+* Behind-the-scenes changes to support upcoming DIM Sync storage feature.
 
 ## 5.73.0 <span className="changelog-date">(2020-03-08)</span>
 

@@ -1,21 +1,23 @@
-import _ from 'lodash';
-import { DimItem, DimSockets, DimGridNode } from './item-types';
-import { t } from 'app/i18next-t';
-import Papa from 'papaparse';
-import { getActivePlatform } from '../accounts/platforms';
-import { tagConfig, getTag, getNotes, ItemInfos } from './dim-item-info';
-import store from '../store/store';
-import { D2SeasonInfo } from './d2-season-info';
+import { DimGridNode, DimItem, DimSockets } from './item-types';
+import { ItemInfos, getNotes, getTag, tagConfig } from './dim-item-info';
+import { setItemNote, setItemTagsBulk } from './actions';
+
 import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2SeasonInfo } from './d2-season-info';
 import D2Sources from 'data/d2/source-info';
-import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
-import { getRating } from '../item-review/reducer';
-import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
-import { setItemNote, setItemTagsBulk } from './actions';
+import { DtrRating } from '../item-review/dtr-api-types';
+import Papa from 'papaparse';
 import { ThunkResult } from 'app/store/reducers';
+import _ from 'lodash';
+import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';
+import { download } from 'app/utils/util';
+import { getRating } from '../item-review/reducer';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import store from '../store/store';
+import { t } from 'app/i18next-t';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -183,13 +185,7 @@ function capitalizeFirstLetter(str: string) {
 }
 
 function downloadCsv(filename: string, csv: string) {
-  filename = `${filename}.csv`;
-  const pom = document.createElement('a');
-  pom.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
-  pom.setAttribute('download', filename);
-  document.body.appendChild(pom);
-  pom.click();
-  document.body.removeChild(pom);
+  download(csv, `${filename}.csv`, 'text/csv');
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {
@@ -302,14 +298,6 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
-  const seasonalModsByHash = {};
-  for (const mod in seasonalSocketHashesByName) {
-    const hashes = seasonalSocketHashesByName[mod];
-    hashes.forEach((hash) => {
-      seasonalModsByHash[hash] = mod;
-    });
-  }
-
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
@@ -398,12 +386,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
 
       if (item.isDestiny2() && item.sockets) {
-        const seasonalMods = item.sockets.sockets
-          .map((socket) => socket?.plug?.plugItem?.plug?.plugCategoryHash)
-          .map((hash) => hash && seasonalModsByHash[hash])
-          .filter((mod) => mod)
-          .sort();
-        row['Seasonal Mod'] = seasonalMods.length > 0 ? seasonalMods.join(',') : '';
+        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
       }
     }
 

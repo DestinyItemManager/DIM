@@ -1,31 +1,36 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
 import './storage.scss';
-import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
-import { StorageAdapter, SyncService } from './sync.service';
-import { router } from '../router';
-import clsx from 'clsx';
-import _ from 'lodash';
-import { reportException } from '../utils/exceptions';
-import { dataStats } from './data-stats';
+
 import {
   AppIcon,
-  saveIcon,
   clearIcon,
-  enabledIcon,
   disabledIcon,
-  signOutIcon,
-  uploadIcon,
+  downloadIcon,
+  enabledIcon,
+  saveIcon,
   signInIcon,
-  downloadIcon
+  signOutIcon,
+  uploadIcon
 } from '../shell/icons';
-import { Subscriptions } from '../utils/rx-utils';
-import { initSettings } from '../settings/settings';
+import { StorageAdapter, SyncService } from './sync.service';
+
 import { DriveAboutResource } from './google-drive-storage';
-import { GoogleDriveInfo } from './GoogleDriveInfo';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
+import { GoogleDriveInfo } from './GoogleDriveInfo';
+import React from 'react';
+import { Subscriptions } from '../utils/rx-utils';
+import _ from 'lodash';
+import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
+import clsx from 'clsx';
+import { dataStats } from './data-stats';
+import { download } from 'app/utils/util';
+import { importLegacyData } from 'app/dim-api/actions';
+import { initSettings } from '../settings/settings';
 import { percent } from '../shell/filters';
+import { reportException } from '../utils/exceptions';
+import { router } from '../router';
+import store from 'app/store/store';
+import { t } from 'app/i18next-t';
 
 declare global {
   interface Window {
@@ -231,21 +236,6 @@ export default class StorageSettings extends React.Component<{}, State> {
 
   private exportData = (e) => {
     e.preventDefault();
-    // Function to download data to a file
-    function download(data, filename, type) {
-      const a = document.createElement('a');
-      const file = new Blob([data], { type });
-      const url = URL.createObjectURL(file);
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      });
-    }
-
     SyncService.get().then((data) => {
       download(JSON.stringify(data), 'dim-data.json', 'application/json');
     });
@@ -292,6 +282,9 @@ export default class StorageSettings extends React.Component<{}, State> {
             await SyncService.set(data, true);
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
+            if ($featureFlags.dimApi) {
+              await ((store.dispatch(importLegacyData(data, true)) as any) as Promise<any>);
+            }
             alert(t('Storage.ImportSuccess'));
           }
         } catch (e) {

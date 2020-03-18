@@ -1,9 +1,10 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
 import './FilterHelp.scss';
-import { destinyVersionSelector } from '../accounts/reducer';
+
+import React from 'react';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
+import { destinyVersionSelector } from '../accounts/reducer';
+import { t } from 'app/i18next-t';
 
 const youTubeLink =
   "<a href='https://www.youtube.com/watch?v=TDMiysNXoOo&list=PLwhQ0xgGDsPuKwoA8nBxeb9Gin-UcUf6d' target='_blank' rel='noopener noreferrer'>YouTube</a>";
@@ -537,6 +538,19 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>modslot:undying</span>
                 </td>
                 <td>{t('Filter.ModSlot')}</td>
+              </tr>
+            )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>holdsmod:none</span>
+                  <span>holdsmod:any</span>
+                  <span>holdsmod:forge</span>
+                  <span>holdsmod:opulent</span>
+                  <span>holdsmod:outlaw</span>
+                  <span>holdsmod:undying</span>
+                </td>
+                <td>{t('Filter.HoldsMod')}</td>
               </tr>
             )}
             <tr>

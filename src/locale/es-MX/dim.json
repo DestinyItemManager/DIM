@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Algo salió mal"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engrama disponible",
-    "EngramsAvailable_plural": "{{count}} engramas disponibles"
-  },
   "FarmingMode": {
     "D2Desc": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
     "D2Desc_female": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Mueva equipamiento para hacer espacio para recolectar objetos",
       "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en la bóveda para engramas."
     },
-    "MoveTokens": "Enviar objetos de reputación a la bóveda",
     "OutOfRoom": "Ya no hay espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
     "OutOfRoomTitle": "Sin espacio",
     "Stop": "Detener"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Ha habido un problema al guardar información específica de DIM para un objeto.\nUn problema es que hay un límite de cuántos datos se pueden guardar - es por esto que las etiquetas y notas no han salido de la versión Beta. El error fue: {{error}}.",
-    "SaveInfoErrorTitle": "Error al guardar información del objeto"
-  },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} distribuido.\nAhora {{name}} se encuentra distribuido de manera equitativa entre los personajes.",
@@ -601,6 +592,8 @@
     "Random": "Aleatorio",
     "Randomize": "Modo Aleatorio",
     "RandomizePrompt": "¿Escoger de forma aleatoria tu clase equipada, armas, armadura y espectro?",
+    "RandomizeSearch": "Aleatorizar desde la Búsqueda",
+    "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
     "RandomizeWeapons": "¿Escoger de forma aleatoria tu clase y armas equipadas?",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Contratos",
     "CrucibleRank": "Rango",
-    "Factions": "Facciones",
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
     "PercentPrestige": "{{pct}}% para el reinicio",

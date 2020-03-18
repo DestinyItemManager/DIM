@@ -139,7 +139,12 @@ const StoreProto = {
       bucketItems = [...bucketItems.slice(0, bucketIndex), ...bucketItems.slice(bucketIndex + 1)];
       this.buckets[item.location.id] = bucketItems;
 
-      if (this.current && item.location.accountWide && this.vault) {
+      if (
+        this.current &&
+        item.location.accountWide &&
+        this.vault &&
+        this.vault.vaultCounts[item.location.id]
+      ) {
         this.vault.vaultCounts[item.location.id].count--;
       }
 

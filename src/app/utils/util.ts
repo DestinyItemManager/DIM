@@ -17,6 +17,27 @@ export function preventNaN(testValue, defaultValue) {
 }
 
 /**
+ * given @key 'key', turns
+ * [           { key: '1' },      { key: '2' } ]
+ * into { '1': { key: '1' }, '2': { key: '2' } }
+ */
+export function objectifyArray<T>(
+  array: T[],
+  key: string | ((obj: any) => number)
+): { [key: number]: T };
+export function objectifyArray<T>(
+  array: T[],
+  key: string | ((obj: any) => string)
+): { [key: string]: T };
+export function objectifyArray<T>(array: T[], key: string | ((obj: any) => string | number)) {
+  return array.reduce((acc, val) => {
+    if (typeof key === 'string') acc[val[key]] = val;
+    else acc[key(val)] = val;
+    return acc;
+  }, {});
+}
+
+/**
  * Produce a function that can memoize a calculation about an item. The cache is backed by
  * a WeakMap so when the item is garbage collected the cache is freed up too.
  */
@@ -57,4 +78,26 @@ export function dedupePromise<T extends any[], K>(
 // setTimeout as a promise
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Copy a string to the clipboard */
+export default function copyString(str: string) {
+  function listener(e) {
+    e.clipboardData.setData('text/plain', str);
+    e.preventDefault();
+  }
+  document.addEventListener('copy', listener);
+  document.execCommand('copy');
+  document.removeEventListener('copy', listener);
+}
+
+/** Download a string as a file */
+export function download(data: string, filename: string, type: string) {
+  const a = document.createElement('a');
+  a.setAttribute('href', `data:${type};charset=utf-8,${encodeURIComponent(data)}`);
+  a.setAttribute('download', filename);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+  });
 }

@@ -7,11 +7,12 @@ export enum D2SeasonEnum {
   JOKERS_WILD,
   PENUMBRA,
   SHADOWKEEP,
-  DAWN
+  DAWN,
+  WORTHY
 }
 
 // TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.PENUMBRA;
+export const D2CurrentSeason: number = D2SeasonEnum.WORTHY;
 
 export const D2SeasonInfo = {
   0: {
@@ -132,7 +133,7 @@ export const D2SeasonInfo = {
     softCap: 900,
     releaseDate: '2019-12-10',
     resetTime: '17:00:00Z',
-    numWeeks: 10 // TODO: Update on confirmation
+    numWeeks: 13
   },
   10: {
     DLCName: '',
@@ -144,7 +145,7 @@ export const D2SeasonInfo = {
     softCap: 950,
     releaseDate: '2020-03-10',
     resetTime: '17:00:00Z',
-    numWeeks: 10 // TODO: i don't know this is correct
+    numWeeks: 13
   }
 };
 

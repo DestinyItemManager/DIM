@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Ein Fehler ist aufgetreten"
   },
-  "Faction": {
-    "EngramsAvailable": "1 Engramm verfügbar",
-    "EngramsAvailable_plural": "{{count}} Engramme verfügbar"
-  },
   "FarmingMode": {
     "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "D2Desc_female": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Schaffe Platz durch Verschieben von Ausrüstung, um Items aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
-    "MoveTokens": "Sende Reputations-Items zum Tresor",
     "OutOfRoom": "Dir ist der Platz ausgegangen um Items von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
     "OutOfRoomTitle": "Kein Platz mehr",
     "Stop": "Halt"
@@ -383,10 +378,6 @@
     "SwitchDirection": "Wechseln",
     "TransferItems": "Übertragen"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gespeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
-    "SaveInfoErrorTitle": "Fehler beim Speichern der Item-Infos"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
     "Distributed": "{{name}} verteilt\n{{name}} ist gleichermaßen zwischen Charakteren verteilt.",
@@ -601,6 +592,8 @@
     "Random": "Zufällig",
     "Randomize": "Zufällig",
     "RandomizePrompt": "Sollen die getragene Klasse, Waffen, Rüstungen und Geist zufällig ausgewählt werden?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Ausgestattete Klasse und Waffen randomisieren?",
     "RestoreAllItems": "Alle Items",
     "Save": "Speichern",
@@ -689,7 +682,6 @@
   "Progress": {
     "Bounties": "Beutezüge",
     "CrucibleRank": "Ränge",
-    "Factions": "Fraktionen",
     "Items": "Quest-Items",
     "Milestones": "Meilensteine & Herausforderungen",
     "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",

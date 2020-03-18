@@ -195,20 +195,13 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     if (
       e.code &&
       (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
-        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible ||
-        e.code === PlatformErrorCodes.DestinyUnexpectedError)
+        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
     ) {
       return null;
     }
     console.error('Error getting D1 characters for', account, e);
     reportException('findD1Characters', e);
-    // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
-    const destinyAccount: DestinyAccount = {
-      ...account,
-      destinyVersion: 1,
-      platforms: [account.originalPlatformType]
-    };
-    return destinyAccount;
+    return null;
   }
 }
 

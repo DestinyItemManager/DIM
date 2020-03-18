@@ -54,7 +54,7 @@ export default function Sheet({
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
   const sheet = useRef<HTMLDivElement>(null);
-  const height = () => sheet.current!.clientHeight;
+  const height = () => sheet.current?.clientHeight || 0;
 
   /** When the sheet stops animating, if we were closing, fire the close callback. */
   const onRest = useCallback(() => {

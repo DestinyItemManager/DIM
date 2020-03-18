@@ -278,9 +278,9 @@ function buildPlug(
   }
 
   const failReasons = plug.enableFailIndexes
-    ? plug.enableFailIndexes
-        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-        .join('\n')
+    ? _.compact(
+        plug.enableFailIndexes.map((index) => plugItem.plug.enabledRules[index]?.failureMessage)
+      ).join('\n')
     : '';
 
   return {

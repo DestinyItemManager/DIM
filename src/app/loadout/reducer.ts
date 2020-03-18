@@ -2,10 +2,16 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { currentAccountSelector } from '../accounts/reducer';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
+import {
+  Loadout as DimApiLoadout,
+  LoadoutItem as DimApiLoadoutItem,
+  DestinyVersion
+} from '@destinyitemmanager/dim-api-types';
+import { currentProfileSelector, apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 
 const EMPTY_ARRAY = [];
 
@@ -13,11 +19,23 @@ const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Member
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
-  (state: RootState) => state.loadouts.loadouts,
   currentAccountSelector,
-  (allLoadouts, currentAccount) =>
-    currentAccount
-      ? allLoadouts.filter((loadout) => {
+  currentProfileSelector,
+  (state: RootState) => state.loadouts.loadouts,
+  apiPermissionGrantedSelector,
+  (currentAccount, profile, legacyLoadouts, apiPermissionGranted) =>
+    $featureFlags.dimApi && apiPermissionGranted
+      ? profile
+        ? Object.values(profile?.loadouts).map((loadout) =>
+            convertDimApiLoadoutToLoadout(
+              currentAccount!.membershipId,
+              currentAccount!.destinyVersion,
+              loadout
+            )
+          )
+        : EMPTY_ARRAY
+      : currentAccount
+      ? legacyLoadouts.filter((loadout) => {
           if (loadout.membershipId !== undefined) {
             return (
               loadout.membershipId === currentAccount.membershipId &&
@@ -110,3 +128,41 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
       return state;
   }
 };
+
+/**
+ * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. This converts the API
+ * storage format to the old loadout format.
+ */
+function convertDimApiLoadoutToLoadout(
+  platformMembershipId: string,
+  destinyVersion: DestinyVersion,
+  loadout: DimApiLoadout
+): Loadout {
+  return {
+    id: loadout.id,
+    classType: loadout.classType,
+    name: loadout.name,
+    clearSpace: loadout.clearSpace || false,
+    membershipId: platformMembershipId,
+    destinyVersion,
+    items: [
+      ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
+      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false))
+    ]
+  };
+}
+
+/**
+ * Converts DimApiLoadoutItem to real loadout items.
+ */
+export function convertDimApiLoadoutItemToLoadoutItem(
+  item: DimApiLoadoutItem,
+  equipped: boolean
+): LoadoutItem {
+  return {
+    id: item.id || '0',
+    hash: item.hash,
+    amount: item.amount || 1,
+    equipped
+  };
+}
