@@ -832,7 +832,9 @@
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportNotification": {
-      "SkippedBody": "Your old data wasn't imported because you already have loadouts or tags saved in DIM Sync. If you want to replace that data, you can use the backup that was just saved, or from the Settings page.",
+      "AlreadyImportedBody": "We didn't import your old data into DIM Sync because it has already been imported in the past. If you want to import it again, go to Settings.",
+      "AlreadyImportedTitle": "Already Imported",
+      "SkippedBody": "Your old data wasn't imported because you already have loadouts or tags saved in DIM Sync. If you want to replace that data, you can use the backup that was just saved, or from Settings.",
       "SkippedTitle": "Skipped Data Import",
       "SuccessBody": "Imported {{loadouts}} loadouts and {{tags}} tagged items from your saved data into DIM Sync.",
       "SuccessTitle": "Import Successful"

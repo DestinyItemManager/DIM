@@ -32,6 +32,7 @@ export function promptForApiPermission() {
     type: 'success',
     onClick: () => false,
     promise,
+    duration: 0, // close immediately on click
     title: t('Storage.ApiPermissionPrompt.Title'),
     body: (
       <>

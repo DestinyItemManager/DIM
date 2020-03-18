@@ -114,11 +114,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       const useApi = await promptForApiPermission();
       dispatch(setApiPermissionGranted(useApi));
       if (useApi) {
-        showNotification({
-          type: 'success',
-          title: t('Storage.DimSyncEnabled'),
-          body: t('Storage.AutoBackup')
-        });
+        showBackupDownloadedNotification();
       }
     }
 
@@ -289,6 +285,7 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
 
     if (!force && data.importedToDimApi) {
       console.log("[importLegacyData] Don't need to import, this legacy data has already imported");
+      showAlreadyImportedNotification();
       return;
     }
 
@@ -339,7 +336,15 @@ export function deleteAllApiData(): ThunkResult<any> {
   };
 }
 
-export function showImportSkippedNotification() {
+function showBackupDownloadedNotification() {
+  showNotification({
+    type: 'success',
+    title: t('Storage.DimSyncEnabled'),
+    body: t('Storage.AutoBackup')
+  });
+}
+
+function showImportSkippedNotification() {
   showNotification({
     type: 'warning',
     title: t('Storage.ImportNotification.SkippedTitle'),
@@ -347,10 +352,18 @@ export function showImportSkippedNotification() {
   });
 }
 
-export function showImportSuccessNotification(result: { loadouts: number; tags: number }) {
+function showImportSuccessNotification(result: { loadouts: number; tags: number }) {
   showNotification({
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
     body: t('Storage.ImportNotification.SuccessBody', result)
+  });
+}
+
+function showAlreadyImportedNotification() {
+  showNotification({
+    type: 'warning',
+    title: t('Storage.ImportNotification.AlreadyImportedTitle'),
+    body: t('Storage.ImportNotification.AlreadyImportedBody')
   });
 }

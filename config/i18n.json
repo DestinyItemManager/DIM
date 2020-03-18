@@ -836,8 +836,10 @@
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportNotification": {
+      "AlreadyImportedTitle": "Already Imported",
+      "AlreadyImportedBody": "We didn't import your old data into DIM Sync because it has already been imported in the past. If you want to import it again, go to Settings.",
       "SkippedTitle": "Skipped Data Import",
-      "SkippedBody": "Your old data wasn't imported because you already have loadouts or tags saved in DIM Sync. If you want to replace that data, you can use the backup that was just saved, or from the Settings page.",
+      "SkippedBody": "Your old data wasn't imported because you already have loadouts or tags saved in DIM Sync. If you want to replace that data, you can use the backup that was just saved, or from Settings.",
       "SuccessTitle": "Import Successful",
       "SuccessBody": "Imported {{loadouts}} loadouts and {{tags}} tagged items from your saved data into DIM Sync."
     },
