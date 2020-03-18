@@ -37,9 +37,10 @@ import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 
 /**
- * Watch the redux store and write out values to indexedDB.
+ * Watch the redux store and write out values to indexedDB, etc.
  */
-const saveProfileToIndexedDB = _.once(() => {
+const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+  // Watch the state and write it out to IndexedDB
   observeStore(
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
@@ -58,9 +59,8 @@ const saveProfileToIndexedDB = _.once(() => {
       }
     }, 1000)
   );
-});
 
-const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) =>
+  // Watch the update queue and flush updates
   observeStore(
     (state) => state.dimApi.updateQueue,
     _.debounce((_, queue: ProfileUpdateWithRollback[]) => {
@@ -68,8 +68,22 @@ const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAct
         dispatch(flushUpdates());
       }
     }, 1000)
-  )
-);
+  );
+
+  // Observe API permission and reflect it into local storage
+  // We could also use a thunk action instead of an observer... either way
+  observeStore(
+    (state) => state.dimApi.apiPermissionGranted,
+    (_, apiPermissionGranted) => {
+      // Save the permission preference to local storage
+      localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
+      if (!apiPermissionGranted) {
+        // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
+        SyncService.set({ importedToDimApi: false });
+      }
+    }
+  );
+});
 
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
@@ -97,8 +111,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
-    saveProfileToIndexedDB(); // idempotent
-    observeUpdateQueue(dispatch); // idempotent
+    installObservers(dispatch); // idempotent
 
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());

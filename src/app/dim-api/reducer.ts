@@ -192,8 +192,6 @@ export const dimApi = (
     }
 
     case getType(actions.setApiPermissionGranted): {
-      // This is bad, but whatever
-      localStorage.setItem('dim-api-enabled', action.payload ? 'true' : 'false');
       return {
         ...state,
         apiPermissionGranted: action.payload

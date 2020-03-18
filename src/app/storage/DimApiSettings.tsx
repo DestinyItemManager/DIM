@@ -41,8 +41,11 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
   const onApiPermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setApiPermissionGranted(event.target.checked));
-    dispatch(loadDimApiData());
+    const granted = event.target.checked;
+    dispatch(setApiPermissionGranted(granted));
+    if (granted) {
+      dispatch(loadDimApiData());
+    }
   };
 
   const onExportData = async () => {
