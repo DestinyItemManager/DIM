@@ -30,6 +30,7 @@ export function promptForApiPermission() {
 
   showNotification({
     type: 'success',
+    onClick: () => false,
     promise,
     title: t('Storage.ApiPermissionPrompt.Title'),
     body: (

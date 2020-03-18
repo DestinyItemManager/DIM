@@ -45,8 +45,9 @@ export default function Notification({ notification, style, onClose }: Props) {
   }, [setupTimer]);
 
   const onClick = (event: React.MouseEvent) => {
-    notification.onClick?.(event);
-    onClose(notification);
+    if (notification.onClick?.(event) !== false) {
+      onClose(notification);
+    }
   };
 
   const onMouseOver = () => {
