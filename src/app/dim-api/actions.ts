@@ -285,7 +285,6 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
 
     if (!force && data.importedToDimApi) {
       console.log("[importLegacyData] Don't need to import, this legacy data has already imported");
-      showAlreadyImportedNotification();
       return;
     }
 
@@ -387,13 +386,5 @@ function showImportSuccessNotification(result: { loadouts: number; tags: number 
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
     body: t('Storage.ImportNotification.SuccessBody', result)
-  });
-}
-
-function showAlreadyImportedNotification() {
-  showNotification({
-    type: 'warning',
-    title: t('Storage.ImportNotification.AlreadyImportedTitle'),
-    body: t('Storage.ImportNotification.AlreadyImportedBody')
   });
 }
