@@ -289,6 +289,14 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
       return;
     }
 
+    if (isLegacyDataEmpty(data)) {
+      console.log(
+        "[importLegacyData] Don't need to import, there are no tags or loadouts in the legacy data"
+      );
+      // Silently return
+      return;
+    }
+
     dimApiData = getState().dimApi;
 
     if (
@@ -334,6 +342,24 @@ export function deleteAllApiData(): ThunkResult<any> {
 
     return result;
   };
+}
+
+/** Does the legacy data contain any loadouts or tags? We don't check settings. */
+function isLegacyDataEmpty(data: DimData) {
+  if (data['loadouts-v3.0']?.length) {
+    return false;
+  }
+
+  for (const key in importData) {
+    const match = /dimItemInfo-m(\d+)-d(1|2)/.exec(key);
+    if (match && !_.isEmpty(importData[key])) {
+      return false;
+    }
+  }
+
+  // TODO: we could look for different settings, but I suspect that'll be noisy
+
+  return true;
 }
 
 function showBackupDownloadedNotification() {
