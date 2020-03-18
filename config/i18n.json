@@ -853,6 +853,8 @@
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
     "MenuTitle": "Sync & Backups",
     "NoData": "No data",
+    "ProfileErrorTitle": "DIM Sync Error",
+    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
     "RestoreRevision": "Restore",
     "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
     "Settings": "Your DIM settings and preferences",
@@ -860,6 +862,8 @@
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
     "Title": "Data Storage",
+    "UpdateErrorTitle": "DIM Sync Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {

@@ -832,8 +832,6 @@
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportNotification": {
-      "AlreadyImportedBody": "We didn't import your old data into DIM Sync because it has already been imported in the past. If you want to import it again, go to Settings.",
-      "AlreadyImportedTitle": "Already Imported",
       "SkippedBody": "Your old data wasn't imported because you already have settings, loadouts or tags saved in DIM Sync. If you want to replace that data, you can use the backup that was just saved, or from Settings.",
       "SkippedTitle": "Skipped Data Import",
       "SuccessBody": "Imported {{loadouts}} loadouts and {{tags}} tagged items from your saved data into DIM Sync.",
@@ -848,6 +846,8 @@
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
     "MenuTitle": "Sync & Backups",
     "NoData": "No data",
+    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
+    "ProfileErrorTitle": "DIM Sync Error",
     "RestoreRevision": "Restore",
     "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
     "Settings": "Your DIM settings and preferences",
@@ -855,6 +855,8 @@
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
     "Title": "Data Storage",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
+    "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {

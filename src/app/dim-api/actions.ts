@@ -21,7 +21,8 @@ import {
   prepareToFlushUpdates,
   flushUpdatesFailed,
   allDataDeleted,
-  setApiPermissionGranted
+  setApiPermissionGranted,
+  profileLoadError
 } from './basic-actions';
 import { deepEqual } from 'fast-equals';
 import { DimData, SyncService } from 'app/storage/sync.service';
@@ -35,6 +36,7 @@ import { promptForApiPermission } from './api-permission-prompt';
 import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
+import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 
 /**
  * Watch the redux store and write out values to indexedDB, etc.
@@ -103,6 +105,9 @@ export function loadGlobalSettings(): ThunkResult<void> {
   };
 }
 
+// Backoff multiplier
+let getProfileBackoff = 0;
+
 /**
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
@@ -151,9 +156,34 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       }
       const currentAccount = currentAccountSelector(getState());
 
-      const profileResponse = await getDimApiProfile(currentAccount);
-      readyResolve();
-      dispatch(profileLoaded({ profileResponse, account: currentAccount }));
+      try {
+        const profileResponse = await getDimApiProfile(currentAccount);
+        dispatch(profileLoaded({ profileResponse, account: currentAccount }));
+
+        // Quickly heal from being failure backoff
+        getProfileBackoff = Math.floor(getProfileBackoff / 2);
+      } catch (e) {
+        // Only notify error once
+        if (!getState().dimApi.profileLoadedError) {
+          showProfileLoadErrorNotification(e);
+        }
+        dispatch(profileLoadError(e));
+
+        console.error('[loadDimApiData] Unable to get profile from DIM API', e);
+
+        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
+        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        getProfileBackoff++;
+        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, getProfileBackoff) * 2500);
+        console.log('[loadDimApiData] Waiting', waitTime, 'ms before re-attempting profile fetch');
+        await delay(waitTime);
+
+        // Retry
+        dispatch(loadDimApiData(forceLoad));
+        return;
+      } finally {
+        readyResolve();
+      }
     }
 
     // Make sure any queued updates get sent to the server
@@ -165,7 +195,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
 }
 
 // Backoff multiplier
-let backoff = 0;
+let flushUpdatesBackoff = 0;
 
 /**
  * Process the queue of updates by sending them to the server
@@ -204,15 +234,19 @@ export function flushUpdates(): ThunkResult<any> {
         console.log('[flushUpdates] got results', updates, results);
 
         // Quickly heal from being failure backoff
-        backoff = Math.floor(backoff / 2);
+        flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
 
         dispatch(finishedUpdates(results));
       } catch (e) {
+        if (flushUpdatesBackoff === 0) {
+          showUpdateErrorNotification(e);
+        }
         console.error('[flushUpdates] Unable to save updates to DIM API', e);
 
         // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
         // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
-        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, backoff) * 2500);
+        flushUpdatesBackoff++;
+        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, flushUpdatesBackoff) * 2500);
         console.log('[flushUpdates] Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
@@ -400,4 +434,14 @@ function showImportSuccessNotification(result: { loadouts: number; tags: number 
     title: t('Storage.ImportNotification.SuccessTitle'),
     body: t('Storage.ImportNotification.SuccessBody', result)
   });
+}
+
+function showProfileLoadErrorNotification(e: Error) {
+  showNotification(
+    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), e)
+  );
+}
+
+function showUpdateErrorNotification(e: Error) {
+  showNotification(dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), e));
 }

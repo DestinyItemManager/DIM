@@ -29,3 +29,26 @@ export function bungieErrorToaster(e: Error): NotifyInput {
     )
   };
 }
+
+export function dimErrorToaster(title: string, message: string, e: Error): NotifyInput {
+  return {
+    type: 'error',
+    title,
+    body: (
+      <>
+        <div>
+          {message}: {e.message}
+        </div>
+        <div>
+          {t('BungieService.Twitter')}{' '}
+          <ExternalLink href="http://twitter.com/ThisIsDIM">Twitter</ExternalLink>{' '}
+          <ExternalLink href="http://twitter.com/ThisIsDIM">
+            <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
+              <AppIcon icon={twitterIcon} />
+            </span>
+          </ExternalLink>
+        </div>
+      </>
+    )
+  };
+}

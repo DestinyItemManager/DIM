@@ -30,7 +30,6 @@ export interface DimApiState {
 
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
-  // TODO: set this from an action
   profileLoadedError?: Error;
 
   /**
@@ -174,6 +173,7 @@ export const dimApi = (
       return {
         ...state,
         profileLoaded: true,
+        profileLoadedError: undefined,
         settings: {
           ...state.settings,
           ...profileResponse.settings
@@ -188,6 +188,13 @@ export const dimApi = (
               }
             }
           : state.profiles
+      };
+    }
+
+    case getType(actions.profileLoadError): {
+      return {
+        ...state,
+        profileLoadedError: action.payload
       };
     }
 
