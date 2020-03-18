@@ -85,6 +85,15 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
       }
     }
   );
+
+  // Observe the current account and reload data
+  // Another one that should probably be a thunk action once account transitions are actions
+  observeStore(currentAccountSelector, (oldAccount) => {
+    // Force load profile data if the account changed
+    if (oldAccount) {
+      dispatch(loadDimApiData(true));
+    }
+  });
 });
 
 /**
@@ -347,9 +356,9 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
     dimApiData = getState().dimApi;
 
     if (
-      (!force &&
-        Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length)) ||
-      !_.isEmpty(subtractObject(dimApiData.settings, initialSettingsState))
+      !force &&
+      (Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length) ||
+        !_.isEmpty(subtractObject(dimApiData.settings, initialSettingsState)))
     ) {
       console.warn(
         '[importLegacyData] Skipping legacy data import because there are already settings, loadouts or tags in the DIM API profile data'
