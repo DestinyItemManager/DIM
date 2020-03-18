@@ -41,7 +41,10 @@ export async function getDimApiProfile(account?: DestinyAccount) {
 }
 
 export async function importData(data: DimData) {
-  const response = await authenticatedApi<ProfileResponse>({
+  const response = await authenticatedApi<{
+    loadouts: number;
+    tags: number;
+  }>({
     url: '/import',
     method: 'POST',
     body: data

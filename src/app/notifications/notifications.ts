@@ -13,7 +13,8 @@ export interface NotifyInput {
   promise?: Promise<any>;
   /** The notification will show for the given number of milliseconds. */
   duration?: number;
-  onClick?(event: React.MouseEvent): void;
+  /** Return false to not close the notification on click. */
+  onClick?(event: React.MouseEvent): boolean | void;
 }
 
 export interface Notify {
@@ -26,7 +27,7 @@ export interface Notify {
   promise?: Promise<any>;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: number;
-  onClick?(event: React.MouseEvent): void;
+  onClick?(event: React.MouseEvent): boolean | void;
 }
 
 export const notifications$ = new Subject<Notify>();

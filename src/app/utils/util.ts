@@ -96,8 +96,7 @@ export function download(data: string, filename: string, type: string) {
   const a = document.createElement('a');
   a.setAttribute('href', `data:${type};charset=utf-8,${encodeURIComponent(data)}`);
   a.setAttribute('download', filename);
+  document.body.appendChild(a);
   a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-  });
+  setTimeout(() => document.body.removeChild(a));
 }

@@ -22,11 +22,13 @@ import { exportDimApiData } from 'app/dim-api/dim-api';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
+  profileLoadedError?: Error;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    apiPermissionGranted: apiPermissionGrantedSelector(state)
+    apiPermissionGranted: apiPermissionGrantedSelector(state),
+    profileLoadedError: state.dimApi.profileLoadedError
   };
 }
 
@@ -35,14 +37,15 @@ type Props = StoreProps & ThunkDispatchProp;
 export const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
-function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
-  // TODO: Show any sync errors here
-
+function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
   const onApiPermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setApiPermissionGranted(event.target.checked));
-    dispatch(loadDimApiData());
+    const granted = event.target.checked;
+    dispatch(setApiPermissionGranted(granted));
+    if (granted) {
+      dispatch(loadDimApiData());
+    }
   };
 
   const onExportData = async () => {
@@ -113,6 +116,12 @@ function DimApiSettings({ apiPermissionGranted, dispatch }: Props) {
         </div>
         <div className="fineprint">{t('Storage.DimApiFinePrint')}</div>
       </div>
+      {profileLoadedError && (
+        <div className="dim-error">
+          <h2>{t('Storage.ProfileErrorTitle')}</h2>
+          <div>{profileLoadedError.message}</div>
+        </div>
+      )}
       {$featureFlags.dimApi && apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.AuditLogLabel')}</label>

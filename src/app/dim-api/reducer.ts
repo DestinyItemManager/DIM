@@ -30,8 +30,9 @@ export interface DimApiState {
 
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
-  // TODO: set this from an action
   profileLoadedError?: Error;
+  // unix timestamp for when the profile was last loaded
+  profileLastLoaded: number;
 
   /**
    * App settings. Settings are global, not per-platform-membership
@@ -98,6 +99,7 @@ export const initialState: DimApiState = {
 
   profileLoaded: false,
   profileLoadedFromIndexedDb: false,
+  profileLastLoaded: 0,
 
   settings: initialSettingsState,
 
@@ -121,9 +123,11 @@ export const dimApi = (
   account?: DestinyAccount
 ): DimApiState => {
   if (
-    !$featureFlags.dimApi ||
-    state.apiPermissionGranted !== true ||
-    !state.globalSettings.dimApiEnabled
+    (!$featureFlags.dimApi ||
+      state.apiPermissionGranted !== true ||
+      !state.globalSettings.dimApiEnabled) &&
+    // Let through the ability to change the API permission
+    action.type !== getType(actions.setApiPermissionGranted)
   ) {
     // If the API is off, don't track state. We will want to tweak this when we start using
     // this state as the local state even when Sync is off, but for now it avoids us doing the
@@ -172,6 +176,8 @@ export const dimApi = (
       return {
         ...state,
         profileLoaded: true,
+        profileLoadedError: undefined,
+        profileLastLoaded: Date.now(),
         settings: {
           ...state.settings,
           ...profileResponse.settings
@@ -189,9 +195,14 @@ export const dimApi = (
       };
     }
 
+    case getType(actions.profileLoadError): {
+      return {
+        ...state,
+        profileLoadedError: action.payload
+      };
+    }
+
     case getType(actions.setApiPermissionGranted): {
-      // This is bad, but whatever
-      localStorage.setItem('dim-api-enabled', action.payload ? 'true' : 'false');
       return {
         ...state,
         apiPermissionGranted: action.payload
