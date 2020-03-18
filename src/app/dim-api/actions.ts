@@ -147,8 +147,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult<void> {
       dispatch(profileLoaded({ profileResponse, account: currentAccount }));
     }
 
+    // Make sure any queued updates get sent to the server
     await dispatch(flushUpdates());
 
+    // Check to see if legacy data needs to be auto-imported
     await dispatch(importLegacyData());
   };
 }
@@ -286,7 +288,7 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
     }
 
     if (!force && data.importedToDimApi) {
-      console.log("[importLegacyData] Don't need to import, already imported");
+      console.log("[importLegacyData] Don't need to import, this legacy data has already imported");
       return;
     }
 
@@ -297,20 +299,26 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
       Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length)
     ) {
       console.warn(
-        '[importLegacyData] Skipping legacy data import because there are already loadouts or tags in the DIM API data'
+        '[importLegacyData] Skipping legacy data import because there are already loadouts or tags in the DIM API profile data'
       );
+
+      // Mark in the legacy data that this has been imported already
+      await SyncService.set({ importedToDimApi: true });
+      showImportSkippedNotification();
       return;
     }
 
     try {
       console.log('[importLegacyData] Attempting to import legacy data into DIM API');
-      await importData(data);
+      const result = await importData(data);
       console.log('[importLegacyData] Successfully imported legacy data into DIM API');
+      showImportSuccessNotification(result);
     } catch (e) {
       console.error('[importLegacyData] Error importing legacy data into DIM API', e);
       return;
     }
 
+    // Mark in the legacy data that this has been imported already
     await SyncService.set({ importedToDimApi: true });
 
     // Reload from the server
@@ -329,4 +337,20 @@ export function deleteAllApiData(): ThunkResult<any> {
 
     return result;
   };
+}
+
+export function showImportSkippedNotification() {
+  showNotification({
+    type: 'warning',
+    title: t('Storage.ImportNotification.SkippedTitle'),
+    body: t('Storage.ImportNotification.SkippedBody')
+  });
+}
+
+export function showImportSuccessNotification(result: { loadouts: number; tags: number }) {
+  showNotification({
+    type: 'success',
+    title: t('Storage.ImportNotification.SuccessTitle'),
+    body: t('Storage.ImportNotification.SuccessBody', result)
+  });
 }

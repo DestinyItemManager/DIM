@@ -24,12 +24,10 @@ import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import clsx from 'clsx';
 import { dataStats } from './data-stats';
 import { download } from 'app/utils/util';
-import { importLegacyData } from 'app/dim-api/actions';
 import { initSettings } from '../settings/settings';
 import { percent } from '../shell/filters';
 import { reportException } from '../utils/exceptions';
 import { router } from '../router';
-import store from 'app/store/store';
 import { t } from 'app/i18next-t';
 
 declare global {
@@ -282,9 +280,6 @@ export default class StorageSettings extends React.Component<{}, State> {
             await SyncService.set(data, true);
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
-            if ($featureFlags.dimApi) {
-              await ((store.dispatch(importLegacyData(data, true)) as any) as Promise<any>);
-            }
             alert(t('Storage.ImportSuccess'));
           }
         } catch (e) {
