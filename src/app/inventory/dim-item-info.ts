@@ -133,7 +133,7 @@ export const itemTagSelectorList: TagInfo[] = [
 /**
  * Load item infos (tags and notes) into Redux from the sync service
  */
-export function loadItemInfos(account: DestinyAccount): ThunkResult<void> {
+export function loadItemInfos(account: DestinyAccount): ThunkResult {
   return async (dispatch) => {
     const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
 
@@ -150,7 +150,7 @@ export function loadItemInfos(account: DestinyAccount): ThunkResult<void> {
 /**
  * Delete items from the loaded items that don't appear in newly-loaded stores
  */
-export function cleanInfos(stores: DimStore[]): ThunkResult<void> {
+export function cleanInfos(stores: DimStore[]): ThunkResult {
   return async (dispatch, getState) => {
     if (!stores.length || stores.some((s) => s.items.length === 0)) {
       // don't accidentally wipe out notes

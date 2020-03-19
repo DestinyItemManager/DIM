@@ -9,7 +9,7 @@ import { ThunkResult } from 'app/store/reducers';
 import { setItemTagsBulk } from './actions';
 import { itemInfosSelector } from './reducer';
 
-export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult<void> {
+export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult {
   return async (dispatch, getState) => {
     const appliedTagInfo = tagConfig[selectedTag];
     const itemInfos = itemInfosSelector(getState());

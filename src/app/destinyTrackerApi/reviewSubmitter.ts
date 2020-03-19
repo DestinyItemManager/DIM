@@ -98,7 +98,7 @@ function submitReviewPromise(
  *
  * Item is just an item from DIM's stores.
  */
-function eventuallyPurgeCachedData(item: DimItem): ThunkResult<void> {
+function eventuallyPurgeCachedData(item: DimItem): ThunkResult {
   const tenMinutes = 1000 * 60 * 10;
   return async (dispatch) => {
     await delay(tenMinutes);
