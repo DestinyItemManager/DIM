@@ -48,7 +48,7 @@ interface DehydratedLoadout {
 }
 
 /** Called when sync service is loaded to populate loadouts in Redux */
-export function loadLoadouts(data: DimData): ThunkResult<void> {
+export function loadLoadouts(data: DimData): ThunkResult {
   return async (dispatch) => {
     const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data) : [];
     if (newLoadouts.length) {
@@ -71,7 +71,7 @@ export function saveLoadout(loadout: Loadout): ThunkResult<Loadout | undefined> 
   };
 }
 
-export function deleteLoadout(loadout: Loadout): ThunkResult<void> {
+export function deleteLoadout(loadout: Loadout): ThunkResult {
   return async (dispatch, getState) => {
     dispatch(actions.deleteLoadout(loadout.id));
 
