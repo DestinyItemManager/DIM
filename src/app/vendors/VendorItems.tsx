@@ -62,10 +62,15 @@ export default function VendorItems({
   if (vendor?.component?.vendorHash === 863940356) {
     currencies = _.uniqBy(
       [
-        ...vendor.def.itemList
-          .filter((i) => i.currencies.length && i.currencies[0].quantity === 5)
-          .map((i) => defs.InventoryItem.get(i.currencies[0].itemHash))
-          .filter((i) => i.itemCategoryHashes?.includes(2088636411)), // "Reputation Tokens"
+        defs.InventoryItem.get(950899352), // dusklight shards
+        defs.InventoryItem.get(2014411539), // alkane dust
+        defs.InventoryItem.get(3487922223), //  datalattice
+        defs.InventoryItem.get(1305274547), // phaseglass
+        defs.InventoryItem.get(49145143), // sim seed
+        defs.InventoryItem.get(31293053), // seraphite
+        defs.InventoryItem.get(1177810185), // etheric spiral
+        defs.InventoryItem.get(592227263), // baryon bough
+        defs.InventoryItem.get(3592324052), // helium filaments
         ...currencies
       ],
       (i) => i.hash
