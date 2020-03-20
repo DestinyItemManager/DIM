@@ -30,10 +30,6 @@ const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 
 /** Side effect-y function that will set/unset block notes */
 function parseBlockNoteLine(blockNoteLine: string): null {
-  if (blockNoteLine.includes('knocks')) {
-    console.log('it knocks');
-  }
-
   const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
 
   _blockNotes = blockMatchResults?.groups?.blockNotes;
