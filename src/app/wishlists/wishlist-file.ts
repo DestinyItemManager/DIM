@@ -26,10 +26,14 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
-const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>.*)/;
+const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 
 /** Side effect-y function that will set/unset block notes */
 function parseBlockNoteLine(blockNoteLine: string): null {
+  if (blockNoteLine.includes('knocks')) {
+    console.log('it knocks');
+  }
+
   const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
 
   _blockNotes = blockMatchResults?.groups?.blockNotes;
@@ -56,7 +60,9 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return matchResults.groups?.wishListNotes || _blockNotes;
+  return matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
+    ? matchResults.groups.wishListNotes
+    : _blockNotes;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
@@ -67,7 +73,7 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   return Number(matchResults.groups.itemHash);
 }
 
-const dtrTextLineRegex = /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/;
+const dtrTextLineRegex = /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)?/;
 function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   if (!dtrTextLine || dtrTextLine.length === 0) {
     return null;
@@ -95,7 +101,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   };
 }
 
-const bansheeTextLineRegex = /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/;
+const bansheeTextLineRegex = /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)?/;
 
 /** Translate a single banshee-44.com URL -> WishListRoll. */
 function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
@@ -125,7 +131,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   };
 }
 
-const textLineRegex = /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>.*)?/;
+const textLineRegex = /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>[^|]*)?/;
 function toDimWishListRoll(textLine: string): WishListRoll | null {
   if (!textLine || textLine.length === 0) {
     return null;
