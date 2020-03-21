@@ -123,11 +123,11 @@ export function loadGlobalSettings(): ThunkResult {
 
 // Backoff multiplier
 let getProfileBackoff = 0;
+let waitingForApiPermission = false;
 
 /**
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
-// TODO: reload on page visibility changes, timer?
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
@@ -151,12 +151,23 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       return;
     }
 
+    // Don't let actions pile up blocked on the approval UI
+    if (waitingForApiPermission) {
+      return;
+    }
+
     // Show a prompt if the user has not said one way or another whether they want to use the API
     if (getState().dimApi.apiPermissionGranted === null) {
-      const useApi = await promptForApiPermission();
-      dispatch(setApiPermissionGranted(useApi));
-      if (useApi) {
-        showBackupDownloadedNotification();
+      // TODO: show only once at a time!
+      waitingForApiPermission = true;
+      try {
+        const useApi = await promptForApiPermission();
+        dispatch(setApiPermissionGranted(useApi));
+        if (useApi) {
+          showBackupDownloadedNotification();
+        }
+      } finally {
+        waitingForApiPermission = false;
       }
     }
 
