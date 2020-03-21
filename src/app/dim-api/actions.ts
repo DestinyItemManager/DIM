@@ -38,6 +38,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
+import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 
 /**
  * Watch the redux store and write out values to indexedDB, etc.
@@ -78,11 +79,13 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
   observeStore(
     (state) => state.dimApi.apiPermissionGranted,
     (_, apiPermissionGranted) => {
-      // Save the permission preference to local storage
-      localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
-      if (!apiPermissionGranted) {
-        // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
-        SyncService.set({ importedToDimApi: false });
+      if (apiPermissionGranted !== null) {
+        // Save the permission preference to local storage
+        localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
+        if (!apiPermissionGranted) {
+          // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
+          SyncService.set({ importedToDimApi: false });
+        }
       }
     }
   );
@@ -139,6 +142,12 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // API is disabled, give up
     if (!getState().dimApi.globalSettings.dimApiEnabled) {
+      return;
+    }
+
+    // Check if we're even logged into Bungie.net. Don't need to load or sync if not.
+    const bungieToken = await getBungieToken();
+    if (!bungieToken) {
       return;
     }
 
