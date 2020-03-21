@@ -94,7 +94,6 @@ function mapStateToProps() {
       stores.filter((s) => !s.isVault),
       (store) => store.classType
     ).map((store) => ({ label: store.className, value: store.classType }));
-    console.log();
     return [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }, ...classTypeValues];
   });
 

@@ -303,10 +303,7 @@ class LoadoutPopup extends React.Component<Props> {
     const { dimStore, classTypeId } = this.props;
 
     const items = dimStore.items.filter(
-      (item) =>
-        item.canBeInLoadout() &&
-        item.equipped &&
-        fromEquippedTypes.includes(item.type.toLowerCase())
+      (item) => item.canBeInLoadout() && item.equipped && fromEquippedTypes.includes(item.type)
     );
     const loadout = newLoadout(
       '',
