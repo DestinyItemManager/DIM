@@ -309,79 +309,80 @@ class LoadoutDrawer extends React.Component<Props, State> {
   };
 
   private add = (item: DimItem, e?: MouseEvent, equip?: boolean) => {
-    const { loadout } = this.state;
-    if (!loadout) {
-      return;
-    }
-    if (!item.canBeInLoadout()) {
-      showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
-      return;
-    }
-    const [items] = this.findItems(loadout);
+    this.setState((state) => {
+      const { loadout } = state;
+      if (!loadout) {
+        return {};
+      }
+      if (!item.canBeInLoadout()) {
+        showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
+        return {};
+      }
+      const [items] = this.findItems(loadout);
 
-    const loadoutItem: LoadoutItem = {
-      id: item.id,
-      hash: item.hash,
-      amount: Math.min(item.amount, e?.shiftKey ? 5 : 1),
-      equipped: false
-    };
+      const loadoutItem: LoadoutItem = {
+        id: item.id,
+        hash: item.hash,
+        amount: Math.min(item.amount, e?.shiftKey ? 5 : 1),
+        equipped: false
+      };
 
-    // Other items of the same type (as DimItem)
-    const typeInventory = items.filter((i) => i.type === item.type);
+      // Other items of the same type (as DimItem)
+      const typeInventory = items.filter((i) => i.type === item.type);
 
-    const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+      const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
-    const maxSlots = item.bucket.capacity;
+      const maxSlots = item.bucket.capacity;
 
-    const newLoadout = produce(loadout, (draftLoadout) => {
-      const findItem = (item: DimItem) =>
-        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+      const newLoadout = produce(loadout, (draftLoadout) => {
+        const findItem = (item: DimItem) =>
+          draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
 
-      if (!dupe) {
-        if (typeInventory.length < maxSlots) {
-          loadoutItem.equipped =
-            equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
-          if (loadoutItem.equipped) {
-            for (const otherItem of typeInventory) {
-              findItem(otherItem).equipped = false;
+        if (!dupe) {
+          if (typeInventory.length < maxSlots) {
+            loadoutItem.equipped =
+              equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
+            if (loadoutItem.equipped) {
+              for (const otherItem of typeInventory) {
+                findItem(otherItem).equipped = false;
+              }
             }
-          }
 
-          // Only allow one subclass per element
-          if (item.type === 'Class') {
-            const conflictingItem = items.find(
-              (i) => i.type === item.type && i.element?.hash === item.element?.hash
-            );
-            if (conflictingItem) {
-              draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
+            // Only allow one subclass per element
+            if (item.type === 'Class') {
+              const conflictingItem = items.find(
+                (i) => i.type === item.type && i.element?.hash === item.element?.hash
+              );
+              if (conflictingItem) {
+                draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
+              }
+              loadoutItem.equipped = true;
             }
-            loadoutItem.equipped = true;
-          }
 
-          draftLoadout.items.push(loadoutItem);
-        } else {
-          showNotification({
-            type: 'warning',
-            title: t('Loadouts.MaxSlots', { slots: maxSlots })
-          });
+            draftLoadout.items.push(loadoutItem);
+          } else {
+            showNotification({
+              type: 'warning',
+              title: t('Loadouts.MaxSlots', { slots: maxSlots })
+            });
+          }
+        } else if (dupe && item.maxStackSize > 1) {
+          const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
+          dupe.amount = dupe.amount + increment;
+          // TODO: handle stack splits
         }
-      } else if (dupe && item.maxStackSize > 1) {
-        const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-        dupe.amount = dupe.amount + increment;
-        // TODO: handle stack splits
-      }
 
-      if (
-        draftLoadout.classType === DestinyClass.Unknown &&
-        item.classType !== DestinyClass.Unknown
-      ) {
-        draftLoadout.classType = item.classType;
-      }
+        if (
+          draftLoadout.classType === DestinyClass.Unknown &&
+          item.classType !== DestinyClass.Unknown
+        ) {
+          draftLoadout.classType = item.classType;
+        }
+      });
+      return {
+        loadout: newLoadout
+      };
     });
-
-    if (newLoadout !== loadout) {
-      this.setState({ loadout: newLoadout });
-    }
   };
 
   private remove = (item: DimItem, $event) => {

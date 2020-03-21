@@ -193,7 +193,7 @@ function fillLoadoutFromEquipped(
   console.log({ items, loadout, dimStore });
   for (const item of items) {
     if (!itemsByBucket[item.bucket.id] || !itemsByBucket[item.bucket.id].some((i) => i.equipped)) {
-      add(items[0], undefined, true);
+      add(item, undefined, true);
     } else {
       console.log('Skipping', item, { itemsByBucket, bucketId: item.bucket.id });
     }
