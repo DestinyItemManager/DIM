@@ -1,6 +1,7 @@
 ## Next
 
 * External wish lists will be checked daily. Settings menu shows last fetched time.
+* Seasonal Artifact is no longer considered a weapon or a dupe when searching.
 
 ## 5.74.0 <span className="changelog-date">(2020-03-15)</span>
 

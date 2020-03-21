@@ -849,6 +849,7 @@ function searchFilters(
           _duplicates &&
           !item.itemCategoryHashes.includes(58) &&
           item.hash !== DEFAULT_SHADER &&
+          item.bucket.hash !== 1506418338 &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
         );
@@ -1235,7 +1236,7 @@ function searchFilters(
         );
       },
       weapon(item: DimItem) {
-        return item.bucket?.sort === 'Weapons';
+        return item.bucket?.sort === 'Weapons' && item.bucket.hash !== 1506418338;
       },
       armor(item: DimItem) {
         return item.bucket?.sort === 'Armor';
