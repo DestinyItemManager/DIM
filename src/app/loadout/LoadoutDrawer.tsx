@@ -221,7 +221,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
    * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
    * are returned as warnitems.
    */
-  // TODO: memoize?
   private findItems = memoizeOne((loadout: Loadout | undefined) => {
     if (!loadout) {
       return [];
@@ -328,6 +327,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       equipped: false
     };
 
+    // Other items of the same type (as DimItem)
     const typeInventory = items.filter((i) => i.type === item.type);
 
     const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
@@ -335,10 +335,18 @@ class LoadoutDrawer extends React.Component<Props, State> {
     const maxSlots = item.bucket.capacity;
 
     const newLoadout = produce(loadout, (draftLoadout) => {
+      const findItem = (item: DimItem) =>
+        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+
       if (!dupe) {
-        if (typeInventory.length < item.bucket.capacity) {
+        if (typeInventory.length < maxSlots) {
           loadoutItem.equipped =
             equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
+          if (loadoutItem.equipped) {
+            for (const otherItem of typeInventory) {
+              findItem(otherItem).equipped = false;
+            }
+          }
 
           // Only allow one subclass per element
           if (item.type === 'Class') {
