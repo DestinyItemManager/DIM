@@ -17,7 +17,7 @@ export async function unauthenticatedApi<T>(
   config: HttpClientConfig,
   noApiKey?: boolean
 ): Promise<T> {
-  if (!API_KEY) {
+  if (!noApiKey && !API_KEY) {
     router.stateService.go('developer');
     throw new Error('No DIM API key configured');
   }
