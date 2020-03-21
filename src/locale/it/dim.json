@@ -18,6 +18,24 @@
     "Normal": "Normale",
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
+  "AuditLog": {
+    "Account": "Account",
+    "Action": "Azione",
+    "Application": "Applicazione",
+    "Date": "Data",
+    "DeleteAll": "Eliminati tutti i dati salvati",
+    "DeleteLoadout": "Eliminato loadout {{name}}",
+    "Description": "Questo registro tiene traccia di tutti i cambiamenti che hai fatto sui dati memorizzati nei server di DIM - compresi cambiamenti alle impostazioni, etichette, e loadout. Ogni tanto questo registro viene ripulito.",
+    "Details": "Dettagli",
+    "Import": "Importati {{loadouts}} loadouts e {{tags}} oggetti con etichette",
+    "Loadout": "Cambiato loadout {{name}}",
+    "RemoveNotes": "Rimosse note dall'oggeto ID {{id}}",
+    "RemoveTag": "Rimossa etichetta dall'oggetto ID {{id}}",
+    "SetNotes": "Impostate note su \"{{notes}}\" per oggetto ID {{id}}",
+    "SetTag": "Impostata etichetta su {{tag}} per oggetto ID {{id}}",
+    "Setting": "Impostato {{key}} a {{value}}",
+    "TagCleanup": "Ripulite etichette degli oggetti smantellati"
+  },
   "Bucket": {
     "Armor": "Armatura",
     "General": "Generale",
@@ -81,7 +99,7 @@
     "ImportSuccess": "Etichette/note caricate per un oggetto.",
     "ImportSuccess_plural": "Etichette/note caricate per {{count}} oggetti.",
     "ImportWrongFileType": "Il file non è un file CSV.",
-    "WrongFields": "Il CVS deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
+    "WrongFields": "Il CSV deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
@@ -190,6 +208,7 @@
     "HasNotes": "Mostra gli oggetti che hanno delle note.",
     "HasOrnament": "Mostra gli oggetti sui quali è applicato un decoro.",
     "HasShader": "Mostra oggetti che hanno uno shader applicato.",
+    "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica Stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
     "Leveling": {
@@ -206,7 +225,7 @@
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
-    "ModSlot": "Mostra armature compatibili con una specifica Mod Stagionale.",
+    "ModSlot": "Mostra armature con uno specifico slot Modifica Stagionale.",
     "Mods": {
       "Y2": "Mostra gli oggetti con una modifica Anno 2 inserita.",
       "Y3": "Mostra gli oggetti con qualunque modifica Armatura 2.0 selezionata."
@@ -518,7 +537,6 @@
     "AlreadyExistsGlobal": "Un loadout globale con questo nome esiste già.",
     "Any": "Qualsiasi classe",
     "Applied": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
-    "AppliedAuto": "Costruttore Automatico di loadout",
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "Applied_female": "Il tuo loadout di un oggetto è stato trasferito alla tua {{store}}.",
@@ -739,7 +757,7 @@
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Giudizio della comunità o Qualità Armatura",
-    "SortByTag": "Tag ({{taglist}})",
+    "SortByTag": "Etichetta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome"
@@ -763,24 +781,44 @@
     "Total": "Totale"
   },
   "Storage": {
+    "ApiPermissionPrompt": {
+      "Description": "DIM può ora immagazzinare le tue etichette, loadout e impostazioni sui propri server e sincronizzarle tra tutte le diverse versioni di DIM, senza alcun accesso separato. I tuoi dati esistenti possono essere importati automaticamente. Questo è stato reso possibile grazie al supporto dei nostri backer OpenCollective!",
+      "No": "Non adesso",
+      "Title": "Attiva DIM Sync",
+      "Yes": "Attiva Sync"
+    },
+    "AuditLog": "Cronologia modifiche di DIM Sync",
+    "AuditLogLabel": "Visualizza le modifiche passate dei dati",
+    "AutoBackup": "Abbiamo salvato i tuoi dati in un file chiamato dim-data.json, giusto per.",
+    "BackUpFirst": "Dovresti fare un backup dei tuoi dati prima di eliminare TUTTO. Non si sa mai.",
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
     "ClearIgnoredUsers": "Cancella Recensori Ignorati",
+    "DeleteAllData": "Elimina TUTTI i dati dai server di DIM",
+    "DeleteAllDataConfirm": "Sei sicuro di voler eliminare TUTTI i tuoi dati, da tutti gli account, da DIM Sync? Non è possibile annullare questa operazione.",
+    "DeleteAllDataLabel": "Elimina dati di DIM Sync",
     "Details": {
       "GoogleDriveStorage": "DIM può salvare dati nell'archivio dell'app di Google Drive. Se accedi a Google Drive su più browsers, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie. Se hai problemi di accesso, potresti dover autorizzare cookies di terze parti sul tuo browser.",
       "IndexedDBStorage": "Archiviazione in locale salverà le informazioni solo su questo browser. Se cancelli i tuoi dati di navigazione, esse andranno perse."
     },
+    "DimApiFinePrint": "DIM sincronizzerà le tue etichette, loadout e impostazioni nei server di DIM e tra le diverse versioni di DIM stesso.",
+    "DimSyncEnabled": "DIM Sync Attivato",
     "Disabled": "Disabilitato",
     "DriveLogout": "Disconnetti da Google Drive",
     "DriveSync": "Effettua login con Google Drive",
+    "EnableDimApi": "Attiva DIM Sync",
     "Enabled": "Abilitato",
-    "Explain": "DIM conserva i suoi dati separatamente dai tuoi dati di Destiny (che sono conservati su Bungie.net).",
+    "Explain": "DIM conserva i suoi dati (loadout, etichette, impostazioni, ecc) separatamente dai tuoi dati di Destiny (che sono conservati su Bungie.net).",
     "Export": "Scarica Backup Dati",
     "ForceSync": "Forza sincronizzazione dati da Google Drive",
     "ForceSyncWarning": "Questo sovrascriverà tutti i dati locali con quelli provenienti da Google Drive. Sei sicuro di volerlo fare?",
+    "GDriveImport": "Importa dati da un vecchio Google Drive o Archivio Locale",
+    "GDriveImportButton": "Importa vecchi dati",
+    "GDriveImportExplain": "Puoi importare i dati memorizzati su Google Drive (o localmente su questo dispositivo) in DIM Sync.",
     "GDriveLogout": "I tuoi dati sono ancora su Google Drive - Se effettui di nuovo l'accesso, DIM ricomincerà ad utilizzarli.",
     "GDriveRevisions": "Ripristina Vecchia Versione",
     "GDriveSignInError": "Errore durante l'accesso a Google Drive:",
     "GDriveSignInWarning": "Se ci sono già dati di DIM salvati su Google Drive, quelli salvati localmente verranno sovrascritti. Potresti voler salvare questi dati prima di effettuare l'accesso.\n\nContinuare con l'accesso a Google Drive?",
+    "GDriveSignedIn": "Accesso effettuato su Google Drive come {{email}}",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il JavaScript di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
     "GoogleDriveUsage": "Il tuo Google Drive ha {{usage, humanBytes}} totali usati su {{limit, humanBytes}}. DIM ne sta usando {{dimQuotaUsed, humanBytes}}. Se Google Drive si riempie DIM non potrà salvare dati.",
@@ -789,9 +827,16 @@
     "IgnoredUsers": "Recensori ignorati",
     "Import": "Importa Backup Dati",
     "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione? Ha {{stats}}.",
-    "ImportExport": "Backups",
+    "ImportConfirmDimApi": "Sei sicuro di voler sovrascrivere le tue etichette, loadout e impostazioni attuali? Sostituirà completamente quelli che avevi.",
+    "ImportExport": "Backup & Importazione",
     "ImportFailed": "Importazione Fallita! {{error}}",
     "ImportNoFile": "Nessun file selezionato!",
+    "ImportNotification": {
+      "SkippedBody": "I tuoi vecchi dati non sono stati importati perchè hai già delle impostazioni, loadout o etichette salvate su DIM Sync. Se vuoi sostituire quei dati puoi usare il backup che è appena stato salvato, oppure da Impostazioni.",
+      "SkippedTitle": "Importazione dati saltata",
+      "SuccessBody": "Importati si DIM Sync {{loadouts}} loadout e {{tags}} oggetti etichettati dai tuoi dati salvati.",
+      "SuccessTitle": "Importazione avvenuta con successo"
+    },
     "ImportSuccess": "Dati DIM importati!",
     "ImportTooManyFiles": "Per favore seleziona un solo file da importare.",
     "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
@@ -799,8 +844,10 @@
     "LoadRevision": "Carica Contenuto",
     "LoadoutsD1": "{{value}} loadouts di Destiny 1",
     "LoadoutsD2": "{{value}} loadouts di Destiny 2",
-    "MenuTitle": "Dati & Backups",
+    "MenuTitle": "Sync & Backup",
     "NoData": "Nessun dato",
+    "ProfileErrorBody": "Si è verificato un errore durante il caricamento dei tuoi dati su DIM Sync",
+    "ProfileErrorTitle": "Errore DIM Sync",
     "RestoreRevision": "Ripristina",
     "RevisionsDescription": "Google Drive salva gli ultimi 100 aggiornamenti delle tue impostazioni. Usa questa pagina per caricare vecchie versioni e ripristinarle.",
     "Settings": "Le tue impostazioni e preferenze di DIM",
@@ -808,6 +855,8 @@
     "TagNotesD1": "{{value}} oggetti di Destiny 1 con etichette o note",
     "TagNotesD2": "{{value}} oggetti di Destiny 2 con etichette o note",
     "Title": "Archiviazione Dati",
+    "UpdateErrorBody": "Si è verificato un errore durante il salvataggio dei tuoi dati su DIM Sync",
+    "UpdateErrorTitle": "Errore DIM Sync",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
   "StoreBucket": {
@@ -918,6 +967,7 @@
     "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count, number}} rolls. {{titleAndDescription}}",
     "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con https://raw.githubusercontent.com",
+    "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
     "Num": "{{num, number}} roll nella tua lista desideri",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
