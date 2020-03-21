@@ -90,12 +90,12 @@ function mapStateToProps() {
     const classTypeValues: {
       label: string;
       value: DestinyClass;
-    }[] = [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }];
-    _.uniqBy(
+    }[] = _.uniqBy(
       stores.filter((s) => !s.isVault),
       (store) => store.classType
     ).map((store) => ({ label: store.className, value: store.classType }));
-    return classTypeValues;
+    console.log();
+    return [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }, ...classTypeValues];
   });
 
   return (state: RootState): StoreProps => ({
