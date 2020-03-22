@@ -163,6 +163,26 @@ export default function Privacy() {
                 </ol>
               </li>
             )}
+
+            {$DIM_FLAVOR !== 'release' && (
+              <li>
+                <strong>Sentry: Error reporting</strong>
+                <ol>
+                  <li>
+                    In the Beta version of DIM, any errors encountered while using DIM may be sent
+                    to Sentry, a service provided by Functional Software, Inc. These error reports
+                    contain information about your browser, recent actions in DIM as well as the
+                    details of any errors. No personal information is shared with Sentry.
+                  </li>
+                  <li>
+                    Use of Sentry for error reporting is governed by the Sentry{' '}
+                    <ExternalLink href="https://sentry.io/terms/">Terms of Service</ExternalLink>{' '}
+                    and{' '}
+                    <ExternalLink href="https://sentry.io/privacy/">Privacy Policy</ExternalLink>.
+                  </li>
+                </ol>
+              </li>
+            )}
           </ol>
         </li>
 
