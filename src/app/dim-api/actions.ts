@@ -405,7 +405,7 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
       console.log('[importLegacyData] Attempting to import legacy data into DIM API');
       const result = await importData(data);
       console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
-      showImportSuccessNotification(result);
+      showImportSuccessNotification(result, force);
     } catch (e) {
       console.error('[importLegacyData] Error importing legacy data into DIM API', e);
       return;
@@ -470,11 +470,16 @@ function showImportSkippedNotification() {
   });
 }
 
-function showImportSuccessNotification(result: { loadouts: number; tags: number }) {
+function showImportSuccessNotification(
+  result: { loadouts: number; tags: number },
+  forceImport = false
+) {
   showNotification({
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
-    body: t('Storage.ImportNotification.SuccessBody', result),
+    body: forceImport
+      ? t('Storage.ImportNotification.SuccessBodyForced', result)
+      : t('Storage.ImportNotification.SuccessBody', result),
     duration: 15000
   });
 }

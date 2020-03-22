@@ -839,7 +839,8 @@
       "SkippedTitle": "Loaded Data From DIM Sync",
       "SkippedBody": "DIM Sync is using the settings, loadouts, and tags you had previously saved in DIM Sync, replacing what was saved in this browser. That replaced data has been saved to a backup file. You can replace DIM Sync's data with this local backup in Settings.",
       "SuccessTitle": "Import Successful",
-      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there."
+      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync."
     },
     "ImportExport": "Backup & Import",
     "ImportFailed": "Import Failed! {{error}}",
