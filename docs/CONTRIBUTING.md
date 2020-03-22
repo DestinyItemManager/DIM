@@ -39,9 +39,9 @@ Here are some tips to make sure your pull request can be merged smoothly:
 1. Click `Create New App`
 1. Enter any application name, and `https://github.com/YourGithubUsername/DIM`
 1. For `Oauth Client type` select `Confidential`
-1. Set your redirect url to `https://127.0.0.1:8080/return.html` (or whatever the IP or hostname is of your dev server)
+1. Set your redirect url to `https://localhost:8080/return.html` (or whatever the IP or hostname is of your dev server)
 1. Select all scopes _except_ the Administrate Groups/Clans
-1. Enter `https://127.0.0.1:8080` as the `Origin Header`
+1. Enter `https://localhost:8080` as the `Origin Header`
 
 ### Start Dev Server
 
