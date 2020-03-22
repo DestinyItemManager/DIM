@@ -26,20 +26,20 @@ export async function unauthenticatedApi<T>(
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
+
+  const headers = {};
+  if (config.body) {
+    headers['Content-Type'] = 'application/json';
+  }
+  if (!noApiKey) {
+    headers['X-API-Key'] = API_KEY;
+  }
+
   const response = await fetch(
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: noApiKey
-        ? {}
-        : config.body
-        ? {
-            'X-API-Key': API_KEY,
-            'Content-Type': 'application/json'
-          }
-        : {
-            'X-API-Key': API_KEY
-          }
+      headers
     })
   );
 
