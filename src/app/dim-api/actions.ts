@@ -127,6 +127,9 @@ let waitingForApiPermission = false;
 
 /**
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
+ *
+ * This action effectively drives a workflow that enables DIM Sync, as well. We check for whether the user has
+ * opted in to Sync, and if they haven't we prompt. We also use this action to kick off auto-import of legacy data.
  */
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
@@ -354,6 +357,13 @@ function waitForProfileLoad() {
   });
 }
 
+/**
+ * Import legacy-format data (from SyncService) into DIM Sync. This may be from a user clicking "Import" but we
+ * also kick this off automatically after every sync so that we auto-import legacy data into DIM Sync if the user
+ * doesn't already have data in DIM Sync.
+ *
+ * @param force Whether to overwrite data in DIM Sync if there's already data there.
+ */
 export function importLegacyData(data?: DimData, force = false): ThunkResult<any> {
   return async (dispatch, getState) => {
     if (!data) {
@@ -419,6 +429,9 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
   };
 }
 
+/**
+ * Wipe out all data in the DIM Sync cloud storage. Not recoverable!
+ */
 export function deleteAllApiData(): ThunkResult<any> {
   return async (dispatch, getState) => {
     const result = await deleteAllData();

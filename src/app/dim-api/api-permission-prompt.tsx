@@ -7,7 +7,10 @@ import { SyncService } from 'app/storage/sync.service';
 import styles from './api-permission-prompt.m.scss';
 import { exportBackupData } from 'app/storage/export-data';
 
-/** This asks the user if they want to use the API. */
+/**
+ * This asks the user if they want to use DIM Sync. It will stay up until a choice is made.
+ * If the user chooses to enable sync, this also kicks off an immediate backup of legacy data.
+ */
 export function promptForApiPermission() {
   let returnValue: (result: boolean) => void;
   const promise = new Promise<boolean>((resolve) => {
