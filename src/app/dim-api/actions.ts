@@ -84,7 +84,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
         localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
         if (!apiPermissionGranted) {
           // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
-          SyncService.set({ importedToDimApi: false });
+          SyncService.get().then(() => SyncService.set({ importedToDimApi: false }));
         }
       }
     }
