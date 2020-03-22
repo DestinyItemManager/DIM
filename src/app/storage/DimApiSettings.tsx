@@ -96,7 +96,8 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     }
   };
 
-  const deleteAllData = () => {
+  const deleteAllData = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (apiPermissionGranted && !hasBackedUp) {
       alert(t('Storage.BackUpFirst'));
     } else if (confirm(t('Storage.DeleteAllDataConfirm'))) {
