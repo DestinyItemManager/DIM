@@ -1,5 +1,7 @@
 ## Next
 
+## 6.1.0 <span className="changelog-date">(2020-03-22)</span>
+
 * Introducing [DIM Sync](https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)), a brand new way for DIM to store your loadouts and tags and sync them between all your devices. This is a big step forward that'll let us build lots of new things and share data between other apps and websites! Plus, you no longer have to log into anything separate, and we should avoid some of the bugs that have in the past led to lost data.
 * External wish lists will be checked daily. Settings menu shows last fetched time.
 * Seasonal Artifact is no longer considered a weapon or a dupe when searching.
