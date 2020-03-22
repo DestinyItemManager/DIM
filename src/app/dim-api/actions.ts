@@ -433,7 +433,7 @@ export function deleteAllApiData(): ThunkResult<any> {
 }
 
 /** Does the legacy data contain any settings, loadouts or tags? */
-export function isLegacyDataEmpty(data: DimData) {
+function isLegacyDataEmpty(data: DimData) {
   if (data['loadouts-v3.0']?.length) {
     return false;
   }

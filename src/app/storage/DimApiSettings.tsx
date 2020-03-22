@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './storage.scss';
 import LocalStorageInfo from './LocalStorageInfo';
 import { t } from 'app/i18next-t';
@@ -16,15 +16,13 @@ import {
   importLegacyData,
   deleteAllApiData,
   loadDimApiData,
-  showBackupDownloadedNotification,
-  isLegacyDataEmpty
+  showBackupDownloadedNotification
 } from 'app/dim-api/actions';
 import { UISref } from '@uirouter/react';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { exportDimApiData } from 'app/dim-api/dim-api';
-import { useSubscription } from 'app/utils/hooks';
 import { exportBackupData } from './export-data';
 
 interface StoreProps {
@@ -46,16 +44,6 @@ export const dimApiHelpLink =
 
 function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
   const [hasBackedUp, setHasBackedUp] = useState(false);
-
-  const [hasLegacyData, setHasLegacyData] = useState(false);
-  const updateLegacyData = async () =>
-    setHasLegacyData(!isLegacyDataEmpty(await SyncService.get()));
-
-  useSubscription(() => SyncService.GoogleDriveStorage.signIn$.subscribe(updateLegacyData));
-  useSubscription(() => SyncService.GoogleDriveStorage.enabled$.subscribe(updateLegacyData));
-  useEffect(() => {
-    updateLegacyData();
-  }, []);
 
   const onApiPermissionChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const granted = event.target.checked;
@@ -162,7 +150,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {(!$featureFlags.dimApi || !apiPermissionGranted) && <GoogleDriveSettings />}
       <LocalStorageInfo showDetails={!$featureFlags.dimApi || !apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      {$featureFlags.dimApi && apiPermissionGranted && hasLegacyData && (
+      {$featureFlags.dimApi && apiPermissionGranted && (
         <LegacyGoogleDriveSettings onImportData={onImportData} />
       )}
     </section>
