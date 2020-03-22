@@ -23,12 +23,12 @@ import _ from 'lodash';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import clsx from 'clsx';
 import { dataStats } from './data-stats';
-import { download } from 'app/utils/util';
 import { initSettings } from '../settings/settings';
 import { percent } from '../shell/filters';
 import { reportException } from '../utils/exceptions';
 import { router } from '../router';
 import { t } from 'app/i18next-t';
+import { exportBackupData } from './export-data';
 
 declare global {
   interface Window {
@@ -234,9 +234,7 @@ export default class StorageSettings extends React.Component<{}, State> {
 
   private exportData = (e) => {
     e.preventDefault();
-    SyncService.get().then((data) => {
-      download(JSON.stringify(data), 'dim-data.json', 'application/json');
-    });
+    SyncService.get().then(exportBackupData);
     return false;
   };
 

@@ -130,12 +130,6 @@ let waitingForApiPermission = false;
  */
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
-    const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
-    if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
-      dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
-    }
-    installObservers(dispatch); // idempotent
-
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
     }
@@ -175,6 +169,12 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       // OK, they don't want to use DIM Sync...
       return;
     }
+
+    const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
+    if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
+      dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
+    }
+    installObservers(dispatch); // idempotent
 
     // don't load from remote if there is already an update queue from IDB - we'd roll back data otherwise!
     if (getState().dimApi.updateQueue.length > 0) {
@@ -433,7 +433,7 @@ export function deleteAllApiData(): ThunkResult<any> {
 }
 
 /** Does the legacy data contain any settings, loadouts or tags? */
-function isLegacyDataEmpty(data: DimData) {
+export function isLegacyDataEmpty(data: DimData) {
   if (data['loadouts-v3.0']?.length) {
     return false;
   }
@@ -452,11 +452,12 @@ function isLegacyDataEmpty(data: DimData) {
   return true;
 }
 
-function showBackupDownloadedNotification() {
+export function showBackupDownloadedNotification() {
   showNotification({
     type: 'success',
     title: t('Storage.DimSyncEnabled'),
-    body: t('Storage.AutoBackup')
+    body: t('Storage.AutoBackup'),
+    duration: 15000
   });
 }
 
@@ -464,7 +465,8 @@ function showImportSkippedNotification() {
   showNotification({
     type: 'warning',
     title: t('Storage.ImportNotification.SkippedTitle'),
-    body: t('Storage.ImportNotification.SkippedBody')
+    body: t('Storage.ImportNotification.SkippedBody'),
+    duration: 15000
   });
 }
 
@@ -472,7 +474,8 @@ function showImportSuccessNotification(result: { loadouts: number; tags: number 
   showNotification({
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
-    body: t('Storage.ImportNotification.SuccessBody', result)
+    body: t('Storage.ImportNotification.SuccessBody', result),
+    duration: 15000
   });
 }
 
