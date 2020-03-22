@@ -42,20 +42,20 @@ const loadoutTypes = [
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
 // like emblems and ships and horns.
 export const fromEquippedTypes = [
-  'class',
-  'kinetic',
-  'energy',
-  'power',
-  'primary',
-  'special',
-  'heavy',
-  'helmet',
-  'gauntlets',
-  'chest',
-  'leg',
-  'classitem',
-  'artifact',
-  'ghost'
+  'Class',
+  'Kinetic',
+  'Energy',
+  'Power',
+  'Primary',
+  'Special',
+  'Heavy',
+  'Helmet',
+  'Gauntlets',
+  'Chest',
+  'Leg',
+  'ClassItem',
+  'Artifact',
+  'Ghost'
 ];
 
 export default function LoadoutDrawerContents(
@@ -94,9 +94,7 @@ export default function LoadoutDrawerContents(
     (bucket) => bucket.id && itemsByBucket[bucket.id] && itemsByBucket[bucket.id].length
   );
 
-  const showFillFromEquipped = typesWithoutItems.some((b) =>
-    fromEquippedTypes.includes(b.type!.toLowerCase())
-  );
+  const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
 
   return (
     <>
@@ -189,12 +187,15 @@ function fillLoadoutFromEquipped(
     stores.find((s) => s.current)!;
 
   const items = dimStore.items.filter(
-    (item) => item.canBeInLoadout() && item.equipped && fromEquippedTypes.includes(item.type)
+    (item) => item.equipped && item.canBeInLoadout() && fromEquippedTypes.includes(item.type)
   );
 
+  console.log({ items, loadout, dimStore });
   for (const item of items) {
     if (!itemsByBucket[item.bucket.id] || !itemsByBucket[item.bucket.id].some((i) => i.equipped)) {
-      add(items[0], undefined, true);
+      add(item, undefined, true);
+    } else {
+      console.log('Skipping', item, { itemsByBucket, bucketId: item.bucket.id });
     }
   }
 }
