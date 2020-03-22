@@ -1150,14 +1150,16 @@ function searchFilters(
         if (!item && (!D2Sources[predicate] || !D2EventPredicateLookup[predicate])) {
           return false;
         }
-        if (D2EventPredicateLookup[predicate]) {
+        if (D2Sources[predicate]) {
+          return (
+            (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
+            D2Sources[predicate].itemHashes.includes(item.hash) ||
+            (S8Sources[predicate] && S8Sources[predicate].includes(item.hash))
+          );
+        } else if (D2EventPredicateLookup[predicate]) {
           return D2EventPredicateLookup[predicate] === item?.event;
         }
-        return (
-          (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
-          D2Sources[predicate].itemHashes.includes(item.hash) ||
-          (S8Sources[predicate] && S8Sources[predicate].includes(item.hash))
-        );
+        return false;
       },
       activity(item: D1Item, predicate: string) {
         if (!item) {
