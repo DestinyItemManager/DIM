@@ -25,7 +25,7 @@
     "Date": "Fecha",
     "DeleteAll": "Borrar toda la información guardada",
     "DeleteLoadout": "Borrar equipación {{name}}",
-    "Description": "Este registro rastrea todos los cambios que has hecho a la información almacenada en los servidores de DIM - incluyendo los cambios a configuraciones, etiquetas y equipaciones. Después de un tiempo este registro se limpia.",
+    "Description": "Este registro rastrea todos los cambios que has almacenado en Sincronización DIM - incluyendo cambios a configuraciones, etiquetas y equipaciones. Después de un tiempo, este registro se limpia.",
     "Details": "Detalles",
     "Import": "Importadas {{loadouts}} equipaciones y {{tags}} objetos etiquetados",
     "Loadout": "Cambiada equipación {{name}}",
@@ -208,7 +208,7 @@
     "HasNotes": "Muestra objetos que contengan notas.",
     "HasOrnament": "Muestra objetos que tengan ornamento aplicado.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
-    "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InLoadout": "Muestra objetos que están incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "Leveling": {
@@ -225,7 +225,7 @@
     "LockAllSuccess": "{{num}} objetos bloqueados",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "MaxPower": "Muestra objetos que maximizarían el Nivel de Poder para cada clase de personaje.",
-    "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
+    "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
     "Mods": {
       "Y2": "Muestra objetos con un mod de Año 2 aplicado.",
       "Y3": "Muestra objetos con cualquier mod de Armadura 2.0 seleccionados."
@@ -782,25 +782,25 @@
   },
   "Storage": {
     "ApiPermissionPrompt": {
-      "Description": "DIM ahora puede almacenar tus etiquetas, equipaciones y configuraciones en nuestros propios servidores y sincronizar la información entre diferentes versiones de DIM, sin inicio de sesión separado. Tus datos existentes pueden ser automáticamente importados. ¡Esto fue hecho posible por el apoyo de nuestros partidarios de OpenCollective!",
+      "Description": "Ahora DIM puede almacenar tus etiquetas, equipaciones y configuraciones en nuestros propios servidores y sincronizar la información entre diferentes versiones de DIM, sin inicio de sesión separado. Tu información existente será importada si no has habilitado Sincronización DIM antes. ¡Esto fue hecho posible por el apoyo de nuestros partidarios de OpenCollective!",
       "No": "Ahora no",
-      "Title": "Habilitar Sincronización DIM",
+      "Title": "¿Habilitar Sincronización DIM?",
       "Yes": "Habilitar Sincronización"
     },
     "AuditLog": "Historial de cambios de Sincronización DIM",
     "AuditLogLabel": "Ver de cambios de información anteriores",
-    "AutoBackup": "Hemos guardado tus datos en un archivo llamado dim-data.json, sólo por si acaso.",
-    "BackUpFirst": "Deberías hacer una copia de seguridad primero, antes de que lo borres TODO. Sólo por si acaso.",
+    "AutoBackup": "Hemos hecho una copia de seguridad de tu información en un archivo llamado dim-data.json, sólo por si acaso.",
+    "BackUpFirst": "DEBES hacer una copia de tu información primero, antes de borrarlo todo. Sólo por si acaso.",
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
     "ClearIgnoredUsers": "Limpiar Reseñantes Ignorados",
-    "DeleteAllData": "Borrar TODA la información de los Servidores de DIM",
+    "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro de que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
-    "DeleteAllDataLabel": "Borrar información de Sincronización DIM",
+    "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
     "Details": {
       "GoogleDriveStorage": "DIM puede guardar datos en el almacenamiento de las aplicaciones de Google Drive. Si inicias sesión en Google Drive en varios navegadores, tus datos serán compartidos en todas partes. Estos datos se almacenan por cuenta de Bungie. Si estás teniendo problemas iniciando sesión, podrías necesitar permitir cookies de terceros en tu navegador.",
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. El limpiar tus datos de navegación borrará esta información."
     },
-    "DimApiFinePrint": "DIM sincronizará tus etiquetas, equipaciones y configuraciones con los servidores de DIM y entre diferentes versiones de DIM.",
+    "DimApiFinePrint": "DIM guardará todas tus etiquetas, equipaciones y configuraciones a los servidores de DIM y se sincronizarán entre diferentes versiones de DIM.",
     "DimSyncEnabled": "Sincronización DIM habilitada",
     "Disabled": "Deshabilitado",
     "DriveLogout": "Cerrar sesión de Google Drive",
@@ -811,9 +811,9 @@
     "Export": "Descargar Información para Respaldo",
     "ForceSync": "Forzar sincronización de datos de Google Drive",
     "ForceSyncWarning": "Estos sobreescribirá cualquier información local con la información de Google Drive. ¿Estás seguro de que quieres hacer eso?",
-    "GDriveImport": "Importar información desde Google Drive antiguo o el Almacenamiento Local",
-    "GDriveImportButton": "Importar información antigua",
-    "GDriveImportExplain": "Puedes importar la información almacenada en Google Drive (o localmente en este dispositivo) en Sincronización DIM.",
+    "GDriveImport": "Importar desde datos heredados de Google Drive o almacenamiento local",
+    "GDriveImportButton": "Importar información heredada",
+    "GDriveImportExplain": "Puedes restaurar la información heredada guardada en tu navegador o en Google Drive. Esto debería incluír los cambios que hayas hecho desde que habilitaste Sincronización DIM, pero no podemos garantizarlo. Solo usa esto si habilitando Sincronización DIM hizo cambios que no querías.",
     "GDriveLogout": "Tu información sigue en Google Drive - Si vuelves a iniciar sesión, DIM volverá a usarla.",
     "GDriveRevisions": "Restaurar Versiones Antiguas",
     "GDriveSignInError": "Error de autentificación en Google Drive:",
@@ -832,10 +832,11 @@
     "ImportFailed": "¡Falló la Importación! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportNotification": {
-      "SkippedBody": "Tu información antigua no fue importada porque ya tenías configuraciones, equipaciones o etiquetas guardadas en Sincronización DIM. Si quieres reemplazar los datos, puedes usar una copia de seguridad que acabe de ser guardada o desde Configuración.",
-      "SkippedTitle": "Importación de Datos Omitidos",
-      "SuccessBody": "Importadas {{loadouts}} equipaciones y {{tags}} etiquetas de objetos de tus datos guardados hacia Sincronización DIM.",
-      "SuccessTitle": "Import Successful"
+      "SkippedBody": "Sincronización DIM está usando configuraciones, equipaciones y etiquetas que tenías previamente guardadas en Sincronización DIM, reemplazando lo que hubiera guardado en este navegador. Esa información reemplazada ha sido guardada en un archivo de copia de seguridad. Puedes reemplazar la información de Sincronización DIM con esta copia de seguridad local en Configuración.",
+      "SkippedTitle": "Información Cargada Desde Sincronización DIM",
+      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync.",
+      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessTitle": "Importación Exitosa"
     },
     "ImportSuccess": "¡Datos de DIM importados!",
     "ImportTooManyFiles": "Por favor, selecciona sólo un archivo a importar.",
@@ -967,7 +968,7 @@
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count, number}} tiradas.{{titleAndDescription}}",
     "InvalidExternalSource": "Por favor, introduce una URL válida para la fuente de su lista de deseos externa. La URL debe empezar con https://raw.githubusercontent.com",
-    "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
+    "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
