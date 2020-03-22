@@ -200,8 +200,9 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     goToLoginPage();
     throw error(t('BungieService.NotLoggedIn'), errorCode);
   }
-  /* 526 = cloudflare */
-  if (response.status >= 500 && response.status <= 526) {
+  // 526 = cloudflare
+  // We don't catch 500s because the Bungie.net API started returning 500 for legitimate game conditions
+  if (response.status >= 502 && response.status <= 526) {
     throw error(t('BungieService.Difficulties'), errorCode);
   }
   if (errorCode === -1 && (response.status < 200 || response.status >= 400)) {
