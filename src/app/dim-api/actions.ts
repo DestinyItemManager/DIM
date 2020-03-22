@@ -38,6 +38,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
+import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 
 /**
  * Watch the redux store and write out values to indexedDB, etc.
@@ -78,11 +79,13 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
   observeStore(
     (state) => state.dimApi.apiPermissionGranted,
     (_, apiPermissionGranted) => {
-      // Save the permission preference to local storage
-      localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
-      if (!apiPermissionGranted) {
-        // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
-        SyncService.set({ importedToDimApi: false });
+      if (apiPermissionGranted !== null) {
+        // Save the permission preference to local storage
+        localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
+        if (!apiPermissionGranted) {
+          // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
+          SyncService.set({ importedToDimApi: false });
+        }
       }
     }
   );
@@ -120,11 +123,11 @@ export function loadGlobalSettings(): ThunkResult {
 
 // Backoff multiplier
 let getProfileBackoff = 0;
+let waitingForApiPermission = false;
 
 /**
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
-// TODO: reload on page visibility changes, timer?
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
@@ -142,12 +145,29 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       return;
     }
 
+    // Check if we're even logged into Bungie.net. Don't need to load or sync if not.
+    const bungieToken = await getBungieToken();
+    if (!bungieToken) {
+      return;
+    }
+
+    // Don't let actions pile up blocked on the approval UI
+    if (waitingForApiPermission) {
+      return;
+    }
+
     // Show a prompt if the user has not said one way or another whether they want to use the API
     if (getState().dimApi.apiPermissionGranted === null) {
-      const useApi = await promptForApiPermission();
-      dispatch(setApiPermissionGranted(useApi));
-      if (useApi) {
-        showBackupDownloadedNotification();
+      // TODO: show only once at a time!
+      waitingForApiPermission = true;
+      try {
+        const useApi = await promptForApiPermission();
+        dispatch(setApiPermissionGranted(useApi));
+        if (useApi) {
+          showBackupDownloadedNotification();
+        }
+      } finally {
+        waitingForApiPermission = false;
       }
     }
 

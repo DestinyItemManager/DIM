@@ -203,10 +203,20 @@ export const dimApi = (
     }
 
     case getType(actions.setApiPermissionGranted): {
-      return {
-        ...state,
-        apiPermissionGranted: action.payload
-      };
+      const apiPermissionGranted = action.payload;
+      return apiPermissionGranted
+        ? {
+            ...state,
+            apiPermissionGranted
+          }
+        : // If we're disabling DIM Sync, reset local state to the initial state, as if we'd never loaded
+          {
+            ...state,
+            apiPermissionGranted,
+            profiles: initialState.profiles,
+            settings: initialState.settings,
+            profileLoaded: false
+          };
     }
 
     case getType(actions.prepareToFlushUpdates): {
