@@ -555,8 +555,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             )}
             <tr>
               <td>
-                <span>is:dawning</span> <span>is:crimsondays</span> <span>is:solstice</span>
-                <span>is:fotl</span> <span>is:revelry</span>
+                <span>source:dawning</span> <span>source:crimsondays</span>{' '}
+                <span>source:solstice</span> <span>source:fotl</span> <span>source:revelry</span>
               </td>
               <td>{t('Filter.Event')}</td>
             </tr>

@@ -268,7 +268,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           hascapacity: ['hascapacity', 'armor2.0'],
           complete: ['goldborder', 'yellowborder', 'complete'],
           curated: ['curated'],
-          event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
           hasLight: ['light', 'haslight', 'haspower'],
           hasMod: ['hasmod'],
           modded: ['modded'],
@@ -332,6 +331,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           'source:',
           'wishlistnotes:',
           ...Object.keys(D2Sources).map((word) => `source:${word}`),
+          ...Object.keys(D2EventPredicateLookup).map((word) => `source:${word}`),
           // maximum stat finders
           ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
           ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
@@ -1127,12 +1127,6 @@ function searchFilters(
         const dtrRating = getRating(item, ratings);
         return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
       },
-      event(item: D2Item, predicate: string) {
-        if (!item || !D2EventPredicateLookup[predicate] || !item.event) {
-          return false;
-        }
-        return D2EventPredicateLookup[predicate] === item.event;
-      },
       vendor(item: D1Item, predicate: string) {
         if (!item) {
           return false;
@@ -1153,8 +1147,11 @@ function searchFilters(
         }
       },
       source(item: D2Item, predicate: string) {
-        if (!item || !D2Sources[predicate]) {
+        if (!item && (!D2Sources[predicate] || !D2EventPredicateLookup[predicate])) {
           return false;
+        }
+        if (D2EventPredicateLookup[predicate]) {
+          return D2EventPredicateLookup[predicate] === item?.event;
         }
         return (
           (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
