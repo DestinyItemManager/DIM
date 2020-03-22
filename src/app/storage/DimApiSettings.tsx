@@ -8,17 +8,22 @@ import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import GoogleDriveSettings from './GoogleDriveSettings';
-import { download } from 'app/utils/util';
 import { SyncService } from './sync.service';
 import { dataStats } from './data-stats';
 import _ from 'lodash';
 import { initSettings } from 'app/settings/settings';
-import { importLegacyData, deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
+import {
+  importLegacyData,
+  deleteAllApiData,
+  loadDimApiData,
+  showBackupDownloadedNotification
+} from 'app/dim-api/actions';
 import { UISref } from '@uirouter/react';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { exportDimApiData } from 'app/dim-api/dim-api';
+import { exportBackupData } from './export-data';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -40,10 +45,14 @@ export const dimApiHelpLink =
 function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
-  const onApiPermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onApiPermissionChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const granted = event.target.checked;
     dispatch(setApiPermissionGranted(granted));
     if (granted) {
+      // Force a backup of their data just in case
+      const data = await SyncService.get();
+      exportBackupData(data);
+      showBackupDownloadedNotification();
       dispatch(loadDimApiData());
     }
   };
@@ -53,7 +62,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     const data = await ($featureFlags.dimApi && apiPermissionGranted
       ? exportDimApiData()
       : SyncService.get());
-    download(JSON.stringify(data), 'dim-data.json', 'application/json');
+    exportBackupData(data);
   };
 
   const onImportData = async (data: object) => {
