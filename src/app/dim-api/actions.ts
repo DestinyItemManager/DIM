@@ -404,7 +404,7 @@ export function importLegacyData(data?: DimData, force = false): ThunkResult<any
     try {
       console.log('[importLegacyData] Attempting to import legacy data into DIM API');
       const result = await importData(data);
-      console.log('[importLegacyData] Successfully imported legacy data into DIM API');
+      console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
       showImportSuccessNotification(result);
     } catch (e) {
       console.error('[importLegacyData] Error importing legacy data into DIM API', e);

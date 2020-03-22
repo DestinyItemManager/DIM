@@ -45,15 +45,19 @@ export const itemInfosSelector = (state: RootState) =>
 
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
+ * We specifically watch the legacy state, not the new one.
  */
 export const saveItemInfosOnStateChange = _.once(() =>
-  observeStore(itemInfosSelector, (_currentState, nextState, rootState) => {
-    const account = currentAccountSelector(rootState);
-    if (account) {
-      const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-      SyncService.set({ [key]: nextState });
+  observeStore(
+    (state: RootState) => state.inventory.itemInfos,
+    (_currentState, nextState, rootState) => {
+      const account = currentAccountSelector(rootState);
+      if (account) {
+        const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
+        SyncService.set({ [key]: nextState });
+      }
     }
-  })
+  )
 );
 
 // TODO: Should this be by account? Accounts need IDs

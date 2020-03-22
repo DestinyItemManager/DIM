@@ -89,7 +89,9 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
         .join(', ');
 
       if (confirm(t('Storage.ImportConfirm', { stats: statsLine }))) {
-        await SyncService.set(data, true);
+        // Don't save the `importedToDimApi` flag
+        const { importedToDimApi, ...otherData } = data as any;
+        await SyncService.set(otherData, true);
         initSettings();
         alert(t('Storage.ImportSuccess'));
       }
