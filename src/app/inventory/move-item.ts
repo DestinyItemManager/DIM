@@ -9,6 +9,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { moveItemNotification } from './MoveNotifications';
+import { PlatformErrorCodes } from 'bungie-api-ts/common';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -42,7 +43,7 @@ export const moveItemTo = queuedAction(
         if (
           e.code !== 'wrong-level' &&
           e.code !== 'no-space' &&
-          e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
+          e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
         ) {
           reportException('moveItem', e);
         }
