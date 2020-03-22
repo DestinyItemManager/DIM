@@ -368,7 +368,7 @@ module.exports = (env) => {
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the new DIM API
-        '$featureFlags.dimApi': JSON.stringify(!env.release)
+        '$featureFlags.dimApi': JSON.stringify(true)
       }),
 
       new LodashModuleReplacementPlugin({
