@@ -7,7 +7,8 @@ import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 import { Settings } from 'app/settings/initial-settings';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { loadoutClassToClassType } from 'app/loadout/loadout-storage';
+import { Loadout, ItemAnnotation, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 export interface DimData {
   // The last selected platform membership ID
@@ -232,3 +233,61 @@ window.gapi_onload = () => {
   gapiLoaded = true;
   SyncService.init();
 };
+
+/**
+ * Extract loadouts in DIM API format from the legacy DimData
+ */
+export function extractLoadouts(importData: DimData): Loadout[] {
+  const ids = importData['loadouts-v3.0'];
+  if (!ids) {
+    return [];
+  }
+  return ids
+    .map((id) => importData[id])
+    .filter(Boolean)
+    .map((rawLoadout) => ({
+      platformMembershipId: rawLoadout.membershipId,
+      destinyVersion: rawLoadout.destinyVersion,
+      id: rawLoadout.id,
+      name: rawLoadout.name,
+      classType:
+        loadoutClassToClassType[rawLoadout.classType === undefined ? -1 : rawLoadout.classType],
+      clearSpace: rawLoadout.clearSpace || false,
+      equipped: rawLoadout.items
+        .filter((i) => i.equipped)
+        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
+      unequipped: rawLoadout.items
+        .filter((i) => !i.equipped)
+        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
+    }));
+}
+
+type PlatformItemAnnotation = ItemAnnotation & {
+  platformMembershipId: string;
+  destinyVersion: DestinyVersion;
+};
+
+/**
+ * Extract tags/notes in DIM API format from the legacy DimData
+ */
+function extractItemAnnotations(importData: DimData): PlatformItemAnnotation[] {
+  const annotations: PlatformItemAnnotation[] = [];
+  for (const key in importData) {
+    const match = /dimItemInfo-m(\d+)-d(1|2)/.exec(key);
+    if (match) {
+      const platformMembershipId = match[1];
+      const destinyVersion = parseInt(match[2], 10) as DestinyVersion;
+      for (const id in importData[key]) {
+        const value = importData[key][id];
+        annotations.push({
+          platformMembershipId,
+          destinyVersion,
+          id,
+          tag: value.tag,
+          notes: value.notes,
+        });
+      }
+    }
+  }
+  return annotations;
+}

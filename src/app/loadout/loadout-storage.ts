@@ -17,7 +17,7 @@ const enum LoadoutClass {
   hunter = 2,
 }
 
-const loadoutClassToClassType = {
+export const loadoutClassToClassType = {
   [LoadoutClass.warlock]: DestinyClass.Warlock,
   [LoadoutClass.titan]: DestinyClass.Titan,
   [LoadoutClass.hunter]: DestinyClass.Hunter,
