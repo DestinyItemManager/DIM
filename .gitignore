@@ -3,6 +3,7 @@ extension-dist/
 .settings/
 .idea/
 node_modules/
+coverage/
 typings/
 *.DS_Store
 config/dim_travis.rsa
