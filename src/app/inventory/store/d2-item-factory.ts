@@ -422,7 +422,7 @@ export function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = Object.create(statDef);
+    createdItem.primStat.stat = statDef;
   }
 
   // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
