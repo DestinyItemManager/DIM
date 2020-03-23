@@ -151,7 +151,7 @@ export async function makeRoomForItemsInBuckets(
   const itemsToMove: DimItem[] = [];
   const itemInfos = itemInfosSelector(rxStore.getState());
   makeRoomBuckets.forEach((bucket) => {
-    const items = store.buckets[bucket.id];
+    const items = store.buckets[bucket.hash];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
       const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(

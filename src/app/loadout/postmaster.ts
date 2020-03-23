@@ -13,9 +13,9 @@ export async function makeRoomForPostmaster(
 ): Promise<void> {
   const buckets = await bucketsService();
   const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
-    (bucket: InventoryBucket) => store.buckets[bucket.id]
+    (bucket: InventoryBucket) => store.buckets[bucket.hash]
   );
-  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
+  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
   // If any category is full, we'll move enough aside
   const itemsToMove: DimItem[] = [];
   _.forIn(postmasterItemCountsByType, (count, bucket) => {

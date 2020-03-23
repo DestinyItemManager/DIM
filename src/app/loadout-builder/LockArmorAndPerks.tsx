@@ -116,7 +116,7 @@ function LockArmorAndPerks({
               item.canBeEquippedBy(selectedStore) &&
               (!filter || filter(item))
           ),
-        sortBy: (item) => order.indexOf(item.bucket.id)
+        sortBy: (item) => order.indexOf(item.bucket.hash)
       });
 
       updateFunc(item);
@@ -145,7 +145,7 @@ function LockArmorAndPerks({
     addLockItem,
     // Exclude types that already have a locked item represented
     (item) =>
-      !lockedMap[item.bucket.id] || !lockedMap[item.bucket.id].some((li) => li.type === 'item')
+      !lockedMap[item.bucket.hash] || !lockedMap[item.bucket.hash].some((li) => li.type === 'item')
   );
   const chooseExcludeItem = chooseItem(addExcludeItem);
 

@@ -61,6 +61,7 @@ const vaultTypes = {
   BUCKET_VAULT_WEAPONS: 'Weapons',
   BUCKET_VAULT_ITEMS: 'General'
 };
+// TODO: use hashes
 const sortToVault = {
   Armor: 'BUCKET_VAULT_ARMOR',
   Weapons: 'BUCKET_VAULT_WEAPONS',
@@ -78,11 +79,9 @@ export const getBuckets = _.once(async () => {
   const defs = await getDefinitions();
   const buckets: InventoryBuckets = {
     byHash: {},
-    byId: {},
     byType: {},
     byCategory: {},
     unknown: {
-      id: 'BUCKET_UNKNOWN',
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
@@ -109,8 +108,8 @@ export const getBuckets = _.once(async () => {
       } else if (vaultTypes[id]) {
         sort = vaultTypes[id];
       }
+      console.log('bucket', id, def.hash);
       const bucket: InventoryBucket = {
-        id,
         description: def.bucketDescription,
         name: def.bucketName,
         hash: def.hash,
@@ -129,12 +128,11 @@ export const getBuckets = _.once(async () => {
         bucket[`in${sort}`] = true;
       }
       buckets.byHash[bucket.hash] = bucket;
-      buckets.byId[bucket.id] = bucket;
     }
   });
   _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
     if (bucket.sort && sortToVault[bucket.sort]) {
-      bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
+      bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
     }
   });
   _.forIn(D1Categories, (types, category) => {

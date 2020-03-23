@@ -244,12 +244,12 @@ function StoreService(): D1StoreServiceType {
       store.items = items;
 
       // by type-bucket
-      store.buckets = _.groupBy(items, (i) => i.location.id);
+      store.buckets = _.groupBy(items, (i) => i.location.hash);
 
       // Fill in any missing buckets
       Object.values(buckets.byType).forEach((bucket) => {
-        if (!store.buckets[bucket.id]) {
-          store.buckets[bucket.id] = [];
+        if (!store.buckets[bucket.hash]) {
+          store.buckets[bucket.hash] = [];
         }
       });
 
@@ -264,14 +264,14 @@ function StoreService(): D1StoreServiceType {
 
         _.sortBy(
           Object.values(buckets.byType).filter((b) => b.vaultBucket),
-          (b) => vaultBucketOrder.indexOf(b.vaultBucket!.id)
+          (b) => vaultBucketOrder.indexOf(b.vaultBucket!.hash)
         ).forEach((bucket) => {
-          const vaultBucketId = bucket.vaultBucket!.id;
+          const vaultBucketId = bucket.vaultBucket!.hash;
           vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
             count: 0,
             bucket: bucket.accountWide ? bucket : bucket.vaultBucket
           };
-          vault.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
+          vault.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
         });
       }
 

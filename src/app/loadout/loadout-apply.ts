@@ -366,7 +366,7 @@ function clearSpaceAfterLoadout(
   items: DimItem[],
   storesService: StoreServiceType
 ) {
-  const itemsByType = _.groupBy(items, (i) => i.bucket.id);
+  const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {};
   // reserve one space in the active character

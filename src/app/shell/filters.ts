@@ -154,7 +154,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
     return items;
   }
 
-  const itemLocationId = items[0].location.id.toString();
+  const itemLocationId = items[0].location.hash;
   if (!items.length || ITEM_SORT_BLACKLIST.has(itemLocationId)) {
     return items;
   }

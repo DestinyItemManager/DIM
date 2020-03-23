@@ -187,7 +187,7 @@ class Stores extends React.Component<Props, State> {
                 */}
                 {buckets.byCategory[category].map((bucket) => (
                   <StoreBuckets
-                    key={bucket.id}
+                    key={bucket.hash}
                     bucket={bucket}
                     stores={stores}
                     vault={vault}
@@ -213,7 +213,7 @@ function categoryHasItems(
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
     const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
-    return storesToSearch.some((s) => s.buckets[bucket.id] && s.buckets[bucket.id].length > 0);
+    return storesToSearch.some((s) => s.buckets[bucket.hash] && s.buckets[bucket.hash].length > 0);
   });
 }
 

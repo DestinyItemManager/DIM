@@ -90,14 +90,12 @@ async function getBucketsUncached() {
     }
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
-    const id = def.hash.toString();
     const type = bucketToType[def.hash];
     let sort: string | undefined;
     if (type) {
       sort = typeToSort[type];
     }
     const bucket: InventoryBucket = {
-      id,
       description: def.displayProperties.description,
       name: def.displayProperties.name,
       hash: def.hash,
@@ -116,7 +114,6 @@ async function getBucketsUncached() {
       bucket[`in${bucket.sort}`] = true;
     }
     buckets.byHash[bucket.hash] = bucket;
-    buckets.byId[bucket.id] = bucket;
   });
   const vaultMappings = {};
   defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {

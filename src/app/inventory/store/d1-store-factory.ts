@@ -74,7 +74,7 @@ const StoreProto = {
     }
     const openStacks = Math.max(
       0,
-      this.capacityForItem(item) - this.buckets[item.location.id].length
+      this.capacityForItem(item) - this.buckets[item.location.hash].length
     );
     const maxStackSize = item.maxStackSize || 1;
     if (maxStackSize === 1) {
@@ -107,10 +107,10 @@ const StoreProto = {
     if (sourceIndex >= 0) {
       this.items = [...this.items.slice(0, sourceIndex), ...this.items.slice(sourceIndex + 1)];
 
-      let bucketItems = this.buckets[item.location.id];
+      let bucketItems = this.buckets[item.location.hash];
       const bucketIndex = bucketItems.findIndex(match);
       bucketItems = [...bucketItems.slice(0, bucketIndex), ...bucketItems.slice(bucketIndex + 1)];
-      this.buckets[item.location.id] = bucketItems;
+      this.buckets[item.location.hash] = bucketItems;
 
       return true;
     }
@@ -119,7 +119,7 @@ const StoreProto = {
 
   addItem(this: D1Store, item: D1Item) {
     this.items = [...this.items, item];
-    this.buckets[item.location.id] = [...this.buckets[item.location.id], item];
+    this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
     item.owner = this.id;
   },
 
@@ -312,14 +312,14 @@ export function makeVault(
     removeItem(this: D1Vault, item: D1Item) {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.id].count--;
+        this.vaultCounts[item.location.vaultBucket.hash].count--;
       }
       return result;
     },
     addItem(this: D1Vault, item: D1Item) {
       StoreProto.addItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.id].count++;
+        this.vaultCounts[item.location.vaultBucket.hash].count++;
       }
     }
   });

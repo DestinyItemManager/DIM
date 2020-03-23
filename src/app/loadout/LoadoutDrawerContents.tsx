@@ -80,7 +80,7 @@ export default function LoadoutDrawerContents(
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
   }
 ) {
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.id);
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -91,7 +91,7 @@ export default function LoadoutDrawerContents(
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) => bucket.id && itemsByBucket[bucket.id] && itemsByBucket[bucket.id].length
+    (bucket) => bucket.hash && itemsByBucket[bucket.hash] && itemsByBucket[bucket.hash].length
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
@@ -122,7 +122,7 @@ export default function LoadoutDrawerContents(
             key={bucket.type}
             bucket={bucket}
             loadoutItems={loadout.items}
-            items={itemsByBucket[bucket.id] || []}
+            items={itemsByBucket[bucket.hash] || []}
             itemSortOrder={itemSortOrder}
             pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, itemsByBucket, bucket, add)}
             equip={equip}
@@ -146,12 +146,12 @@ async function pickLoadoutItem(
     return loadout && loadout.items.some((i) => i.id === item.id && i.hash === i.hash);
   }
 
-  const hasEquippedItem = (itemsByBucket[bucket.id] || []).some((i) => i.equipped);
+  const hasEquippedItem = (itemsByBucket[bucket.hash] || []).some((i) => i.equipped);
 
   try {
     const { item, equip } = await showItemPicker({
       filterItems: (item: DimItem) =>
-        item.bucket.id === bucket.id &&
+        item.bucket.hash === bucket.hash &&
         (!loadout ||
           loadout.classType === DestinyClass.Unknown ||
           item.classType === loadoutClassType ||
@@ -192,10 +192,13 @@ function fillLoadoutFromEquipped(
 
   console.log({ items, loadout, dimStore });
   for (const item of items) {
-    if (!itemsByBucket[item.bucket.id] || !itemsByBucket[item.bucket.id].some((i) => i.equipped)) {
+    if (
+      !itemsByBucket[item.bucket.hash] ||
+      !itemsByBucket[item.bucket.hash].some((i) => i.equipped)
+    ) {
       add(item, undefined, true);
     } else {
-      console.log('Skipping', item, { itemsByBucket, bucketId: item.bucket.id });
+      console.log('Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
     }
   }
 }
