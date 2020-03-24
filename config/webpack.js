@@ -10,7 +10,6 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
@@ -138,8 +137,7 @@ module.exports = (env) => {
           exclude: /index\.html/,
           loader: 'html-loader',
           options: {
-            exportAsEs6Default: true,
-            minimize: true
+            esModule: true
           }
         },
         {
@@ -266,9 +264,6 @@ module.exports = (env) => {
         filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
         chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
       }),
-
-      // Fix some chunks not showing up in Webpack 4
-      new HtmlWebpackIncludeSiblingChunksPlugin(),
 
       new HtmlWebpackPlugin({
         inject: true,
