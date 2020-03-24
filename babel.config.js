@@ -48,6 +48,7 @@ module.exports = function(api) {
       [
         '@babel/preset-env',
         {
+          bugfixes: true,
           modules: false,
           loose: true,
           useBuiltIns: 'usage',
