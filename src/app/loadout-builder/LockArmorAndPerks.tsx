@@ -106,7 +106,7 @@ function LockArmorAndPerks({
   ) => async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const order = Object.values(LockableBuckets).map((v) => v.toString());
+    const order = Object.values(LockableBuckets);
     try {
       const { item } = await showItemPicker({
         hideStoreEquip: true,
@@ -145,7 +145,7 @@ function LockArmorAndPerks({
     addLockItem,
     // Exclude types that already have a locked item represented
     (item) =>
-      !lockedMap[item.bucket.hash] || !lockedMap[item.bucket.hash].some((li) => li.type === 'item')
+      !lockedMap[item.bucket.hash] || !lockedMap[item.bucket.hash]!.some((li) => li.type === 'item')
   );
   const chooseExcludeItem = chooseItem(addExcludeItem);
 

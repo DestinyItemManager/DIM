@@ -124,7 +124,7 @@ const StoreProto = {
   },
 
   factionAlignment(this: D1Store) {
-    const badge = this.buckets.BUCKET_MISSION.find((i) => factionBadges[i.hash]);
+    const badge = this.buckets[375726501].find((i) => factionBadges[i.hash]);
     if (!badge) {
       return null;
     }

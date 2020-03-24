@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { getDefinitions } from './d2-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 
-// TODO: These have to change
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Postmaster: ['Engrams', 'LostItems', 'Messages', 'SpecialOrders'],
@@ -13,16 +12,11 @@ export const D2Categories = {
   Inventory: ['Consumables', 'Modifications', 'Shaders']
 };
 
-// A mapping from the bucket names to DIM item types
-// Some buckets like vault and currencies have been ommitted
-// TODO: These have to change
-// TODO: retire "DIM types" in favor of DestinyItemCategoryDefinitions
-// TODO: there are no more bucket IDs... gotta update all this
-// bucket hash to DIM type
+// A mapping from the bucket hash to DIM item types
 const bucketToType: { [hash: number]: string | undefined } = {
   2465295065: 'Energy',
-  2689798304: 'Upgrade Point',
-  2689798305: 'Strange Coin',
+  2689798304: 'UpgradePoint',
+  2689798305: 'StrangeCoin',
   2689798308: 'Glimmer',
   2689798309: 'Legendary Shards',
   2689798310: 'Silver',
@@ -70,12 +64,10 @@ async function getBucketsUncached() {
   const buckets: InventoryBuckets = {
     byHash: {},
     byType: {},
-    byId: {},
     byCategory: {},
     unknown: {
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
-      id: '-1',
       hash: -1,
       hasTransferDestination: false,
       capacity: Number.MAX_SAFE_INTEGER,

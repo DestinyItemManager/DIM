@@ -4,7 +4,7 @@ import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { getBuckets } from '../../destiny1/d1-buckets';
+import { getBuckets, vaultTypes } from '../../destiny1/d1-buckets';
 import { NewItemsService } from './new-items';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
@@ -231,16 +231,20 @@ function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if (currentBucket.id.startsWith('BUCKET_VAULT')) {
+  if (currentBucket.hash in vaultTypes) {
     // TODO: Remove this if Bungie ever returns bucket.id for classified
     // items in the vault.
     if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
-      if (currentBucket.id.endsWith('WEAPONS')) {
-        currentBucket = buckets.byType.Heavy;
-      } else if (currentBucket.id.endsWith('ARMOR')) {
-        currentBucket = buckets.byType.ClassItem;
-      } else if (currentBucket.id.endsWith('ITEMS')) {
-        currentBucket = buckets.byType.Artifact;
+      switch (currentBucket.hash) {
+        case 4046403665:
+          currentBucket = buckets.byType.Heavy;
+          break;
+        case 3003523923:
+          currentBucket = buckets.byType.ClassItem;
+          break;
+        case 138197802:
+          currentBucket = buckets.byType.Artifact;
+          break;
       }
     } else {
       currentBucket = normalBucket;

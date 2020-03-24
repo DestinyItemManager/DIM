@@ -108,11 +108,10 @@ const D1_MATERIAL_SORT_ORDER = [
 // Don't resort postmaster items - that way people can see
 // what'll get bumped when it's full.
 const ITEM_SORT_BLACKLIST = new Set([
-  'BUCKET_BOUNTIES',
-  'BUCKET_MISSION',
-  'BUCKET_QUESTS',
-  'BUCKET_POSTMASTER',
-  '215593132' // LostItems
+  2197472680, // Bounties (D1)
+  375726501, // Mission (D1)
+  1801258597, // Quests (D1)
+  215593132 // LostItems
 ]);
 
 // TODO: pass in state
@@ -161,12 +160,12 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === 'BUCKET_CONSUMABLES') {
+  if (itemLocationId === 1469714392) {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === 'BUCKET_MATERIALS') {
+  if (itemLocationId === 3865314626) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
@@ -179,7 +178,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort mods
-  if (itemLocationId === '3313201758') {
+  if (itemLocationId === 3313201758) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
     if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
@@ -188,7 +187,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort consumables
-  if (itemLocationId === '1469714392') {
+  if (itemLocationId === 1469714392) {
     return items.sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,

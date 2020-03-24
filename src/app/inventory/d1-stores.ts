@@ -257,9 +257,9 @@ function StoreService(): D1StoreServiceType {
         const vault = store;
         vault.vaultCounts = {};
         const vaultBucketOrder = [
-          'BUCKET_VAULT_WEAPONS',
-          'BUCKET_VAULT_ARMOR',
-          'BUCKET_VAULT_ITEMS'
+          4046403665, // Weapons
+          3003523923, // Armor
+          138197802 // General
         ];
 
         _.sortBy(

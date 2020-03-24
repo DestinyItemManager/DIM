@@ -17,15 +17,15 @@ const bucketIcons = {
 };
 const vaultBucketOrder = [
   // D1
-  'BUCKET_VAULT_WEAPONS',
-  'BUCKET_VAULT_ARMOR',
-  'BUCKET_VAULT_ITEMS',
+  3003523923, // Armor
+  4046403665, // Weapons
+  138197802, // General
 
   // D2
-  '138197802',
-  '1469714392',
-  '3313201758',
-  '2973005342'
+  138197802,
+  1469714392,
+  3313201758,
+  2973005342
 ];
 
 export default function VaultStats({ store }: { store: DimVault }) {
@@ -49,28 +49,28 @@ export default function VaultStats({ store }: { store: DimVault }) {
           <div />
         </React.Fragment>
       ))}
-      {_.sortBy(Object.keys(store.vaultCounts), (id) => vaultBucketOrder.indexOf(id)).map(
-        (bucketId) => (
-          <React.Fragment key={bucketId}>
-            <div className={styles.bucketTag} title={store.vaultCounts[bucketId].bucket.name}>
-              {bucketIcons[bucketId] ? (
-                <img src={bucketIcons[bucketId]} alt="" />
-              ) : (
-                store.vaultCounts[bucketId].bucket.name.substring(0, 1)
-              )}
-            </div>
-            <div
-              title={store.vaultCounts[bucketId].bucket.name}
-              className={clsx({
-                [styles.full]:
-                  store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity
-              })}
-            >
-              {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
-            </div>
-          </React.Fragment>
-        )
-      )}
+      {_.sortBy(Object.keys(store.vaultCounts), (id) =>
+        vaultBucketOrder.indexOf(parseInt(id, 10))
+      ).map((bucketId) => (
+        <React.Fragment key={bucketId}>
+          <div className={styles.bucketTag} title={store.vaultCounts[bucketId].bucket.name}>
+            {bucketIcons[bucketId] ? (
+              <img src={bucketIcons[bucketId]} alt="" />
+            ) : (
+              store.vaultCounts[bucketId].bucket.name.substring(0, 1)
+            )}
+          </div>
+          <div
+            title={store.vaultCounts[bucketId].bucket.name}
+            className={clsx({
+              [styles.full]:
+                store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity
+            })}
+          >
+            {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
+          </div>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
