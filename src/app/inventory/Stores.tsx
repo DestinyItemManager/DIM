@@ -68,7 +68,7 @@ class Stores extends React.Component<Props, State> {
     if (isPhonePortrait) {
       return (
         <div
-          className="inventory-content phone-portrait"
+          className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
           role="main"
           aria-label={t('Header.Inventory')}
         >
@@ -116,7 +116,11 @@ class Stores extends React.Component<Props, State> {
     }
 
     return (
-      <div className="inventory-content" role="main" aria-label={t('Header.Inventory')}>
+      <div
+        className={`inventory-content destiny${selectedStore.destinyVersion}`}
+        role="main"
+        aria-label={t('Header.Inventory')}
+      >
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store, index) => (
             <div

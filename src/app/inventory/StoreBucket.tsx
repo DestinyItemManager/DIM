@@ -123,7 +123,8 @@ class StoreBucket extends React.Component<Props> {
           {unequippedItems.map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
-          {bucket.hash === 375726501 &&
+          {store.isDestiny2() &&
+          bucket.hash === 375726501 && // Engrams. D1 uses this same bucket hash for "Missions"
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
             ))}

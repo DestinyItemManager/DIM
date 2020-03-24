@@ -99,13 +99,12 @@ export const getBuckets = _.once(async () => {
   };
   _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
-      const id = def.bucketIdentifier;
-      const type = bucketToType[def.bucketIdentifier];
+      const type = bucketToType[def.hash];
       let sort: string | undefined;
       if (type) {
         sort = typeToSort[type];
-      } else if (vaultTypes[id]) {
-        sort = vaultTypes[id];
+      } else if (vaultTypes[def.hash]) {
+        sort = vaultTypes[def.hash];
       }
       const bucket: InventoryBucket = {
         description: def.bucketDescription,
@@ -115,7 +114,7 @@ export const getBuckets = _.once(async () => {
         capacity: def.itemCount,
         accountWide: false,
         category: BucketCategory.Item,
-        type: bucketToType[def.bucketIdentifier],
+        type: bucketToType[def.hash],
         sort
       };
       if (bucket.type) {
