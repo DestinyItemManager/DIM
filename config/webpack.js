@@ -296,6 +296,7 @@ module.exports = (env) => {
         filename: '.htaccess',
         template: 'src/htaccess',
         inject: false,
+        minify: false,
         templateParameters: {
           csp: csp(env.name)
         }
