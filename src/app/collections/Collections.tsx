@@ -17,7 +17,6 @@ import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from '../inventory/reducer';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import Mods from './Mods';
 import { useSubscription } from 'app/utils/hooks';
 
 interface ProvidedProps extends UIViewInjectedProps {
@@ -92,9 +91,6 @@ function Collections({
     <div className="vendor d2-vendors dim-page">
       <ErrorBoundary name="Catalysts">
         <Catalysts defs={defs} profileResponse={profileResponse} />
-      </ErrorBoundary>
-      <ErrorBoundary name="Mods">
-        <Mods profileResponse={profileResponse} />
       </ErrorBoundary>
       <ErrorBoundary name="Collections">
         <PresentationNodeRoot
