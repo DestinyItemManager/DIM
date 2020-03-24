@@ -142,32 +142,20 @@ class ManifestService {
   }
 
   private async loadManifest(tableWhitelist: string[]): Promise<any> {
-    let version: string | null = null;
-    try {
-      const data = await this.getManifestApi();
-      await settingsReady; // wait for settings to be ready
-      const language = settingsSelector(store.getState()).language;
-      const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
+    const data = await this.getManifestApi();
+    await settingsReady; // wait for settings to be ready
+    const language = settingsSelector(store.getState()).language;
+    const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
-      // Use the path as the version, rather than the "version" field, because
-      // Bungie can update the manifest file without changing that version.
-      version = path;
-      this.version = version;
-    } catch (e) {
-      // If we can't get info about the current manifest, try to just use whatever's already saved.
-      version = localStorage.getItem(this.localStorageKey);
-      if (version) {
-        this.version = version;
-        return this.loadManifestFromCache(version, tableWhitelist);
-      } else {
-        throw e;
-      }
-    }
+    // Use the path as the version, rather than the "version" field, because
+    // Bungie can update the manifest file without changing that version.
+    const version = path;
+    this.version = version;
 
     try {
       return await this.loadManifestFromCache(version, tableWhitelist);
     } catch (e) {
-      return this.loadManifestRemote(version, version, tableWhitelist);
+      return this.loadManifestRemote(version, path, tableWhitelist);
     }
   }
 
