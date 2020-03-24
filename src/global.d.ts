@@ -62,6 +62,11 @@ interface Window {
   OC?: any;
   // eslint-disable-next-line @typescript-eslint/camelcase
   gapi_onload(): void;
+
+  // Service worker stuff
+  __precacheManifest: string[];
+  __WB_MANIFEST: string[];
+  skipWaiting(): void;
 }
 
 interface Navigator {

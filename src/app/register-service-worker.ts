@@ -11,8 +11,6 @@ let updateServiceWorker = () => Promise.resolve();
 
 /** Whether a new service worker has been installed */
 const serviceWorkerUpdated$ = new BehaviorSubject(false);
-/** Whether workbox has reported *any* new cached files */
-const contentChanged$ = new BehaviorSubject(false);
 
 /**
  * An observable for what version the server thinks is current.
@@ -41,8 +39,7 @@ export let dimNeedsUpdate = false;
 export const dimNeedsUpdate$ = combineLatest(
   serverVersionChanged$,
   serviceWorkerUpdated$,
-  contentChanged$,
-  (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
+  (serverVersionChanged, updated) => serverVersionChanged || updated
 ).pipe(
   tap((needsUpdate) => {
     dimNeedsUpdate = needsUpdate;
@@ -60,27 +57,6 @@ export default function registerServiceWorker() {
   navigator.serviceWorker
     .register('/service-worker.js')
     .then((registration) => {
-      // If we have access to the broadcast channel API, use that to listen
-      // for whether there are actual content updates from Workbox.
-      if ('BroadcastChannel' in window) {
-        const updateChannel = new BroadcastChannel('precache-updates');
-
-        const updateMessage = () => {
-          console.log('SW: Service worker cached updated files');
-          contentChanged$.next(true);
-          updateChannel.removeEventListener('message', updateMessage);
-          updateChannel.close();
-        };
-
-        updateChannel.addEventListener('message', updateMessage);
-
-        // TODO: close and reopen the broadcast channel on freeze/unfreeze
-      } else {
-        // We have to assume a newly installed service worker means new content. This isn't
-        // as good since we may say we updated when the content is the same.
-        contentChanged$.next(true);
-      }
-
       // TODO: save off a handler that can call registration.update() to force update on refresh?
       registration.onupdatefound = () => {
         if ($featureFlags.debugSW) {
