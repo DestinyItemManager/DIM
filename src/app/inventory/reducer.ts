@@ -7,41 +7,11 @@ import { TagValue } from './dim-item-info';
 import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
 import { RootState } from '../store/reducers';
-import { createSelector } from 'reselect';
-import { characterSortSelector } from '../settings/character-sort';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import produce, { Draft } from 'immer';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
 import { SyncService } from 'app/storage/sync.service';
-import { apiPermissionGrantedSelector, currentProfileSelector } from 'app/dim-api/selectors';
-import { emptyObject } from 'app/utils/empty';
-
-export const storesSelector = (state: RootState) => state.inventory.stores;
-export const sortedStoresSelector = createSelector(
-  storesSelector,
-  characterSortSelector,
-  (stores, sortStores) => sortStores(stores)
-);
-export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
-
-export const ownedItemsSelector = () =>
-  createSelector(storesSelector, (stores) => {
-    const ownedItemHashes = new Set<number>();
-    for (const store of stores) {
-      for (const item of store.items) {
-        ownedItemHashes.add(item.hash);
-      }
-    }
-    return ownedItemHashes;
-  });
-
-export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
-
-export const itemInfosSelector = (state: RootState) =>
-  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
-    ? ((currentProfileSelector(state)?.tags || emptyObject()) as InventoryState['itemInfos'])
-    : state.inventory.itemInfos;
 
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).

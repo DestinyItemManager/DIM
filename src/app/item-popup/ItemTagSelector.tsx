@@ -6,7 +6,7 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 import { setItemTag } from 'app/inventory/actions';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 
 interface ProvidedProps {
   item: DimItem;

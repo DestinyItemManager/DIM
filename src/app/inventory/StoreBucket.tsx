@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
-import { sortedStoresSelector } from './reducer';
+import { sortedStoresSelector } from './selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon, addIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';

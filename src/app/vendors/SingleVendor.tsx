@@ -16,7 +16,11 @@ import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { connect } from 'react-redux';
-import { storesSelector, ownedItemsSelector, profileResponseSelector } from '../inventory/reducer';
+import {
+  storesSelector,
+  ownedItemsSelector,
+  profileResponseSelector
+} from '../inventory/selectors';
 import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';

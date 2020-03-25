@@ -12,7 +12,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
-import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
+import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';

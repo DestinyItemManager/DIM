@@ -7,7 +7,7 @@ import { DropzoneOptions } from 'react-dropzone';
 import { DimStore } from 'app/inventory/store-types';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { connect } from 'react-redux';
-import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/reducer';
+import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 
 interface StoreProps {

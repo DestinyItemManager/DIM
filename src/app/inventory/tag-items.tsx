@@ -7,7 +7,7 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
 import { ThunkResult } from 'app/store/reducers';
 import { setItemTagsBulk } from './actions';
-import { itemInfosSelector } from './reducer';
+import { itemInfosSelector } from './selectors';
 
 export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult {
   return async (dispatch, getState) => {

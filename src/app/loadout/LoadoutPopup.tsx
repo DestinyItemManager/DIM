@@ -59,7 +59,7 @@ import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const loadoutIcon = {

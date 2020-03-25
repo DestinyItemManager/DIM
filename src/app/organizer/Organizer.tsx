@@ -8,7 +8,7 @@ import { useSubscription } from 'app/utils/hooks';
 import { queueAction } from 'app/inventory/action-queue';
 import { refresh$ } from 'app/shell/refresh';
 import { Loading } from 'app/dim-ui/Loading';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import ItemTypeSelector, { SelectionTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';

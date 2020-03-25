@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { sortedStoresSelector } from '../inventory/reducer';
+import { sortedStoresSelector } from '../inventory/selectors';
 import './CharacterOrderEditor.scss';
 import { AppIcon, refreshIcon } from '../shell/icons';
 

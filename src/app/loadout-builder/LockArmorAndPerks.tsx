@@ -16,7 +16,7 @@ import {
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
