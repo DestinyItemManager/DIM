@@ -455,7 +455,8 @@ class Compare extends React.Component<Props, State> {
     const exampleItem = comparisonItems[0];
     const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
 
-    const matchesExample = (key: string) => (item: DimItem) => item[key] === exampleItem[key];
+    const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
+      item[key] === exampleItem[key];
     // stuff for looking up weapon archetypes
     const getRpm = (i: DimItem) => {
       const itemRpmStat =
