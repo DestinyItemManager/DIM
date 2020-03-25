@@ -172,8 +172,6 @@ export interface D1Item extends DimItem {
   /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
   element: D1DamageType;
   talentGrid: D1TalentGrid | null;
-  /** The overall item group (e.g. Weapons, Armor) this item is in. See InventoryBuckets. */
-  sort?: string;
   stats: D1Stat[] | null;
   /** Armor quality evaluation. */
   quality: {

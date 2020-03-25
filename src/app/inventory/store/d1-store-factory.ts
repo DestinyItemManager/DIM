@@ -292,7 +292,7 @@ export function makeVault(
       return vaultBucket ? vaultBucket.capacity : 0;
     },
     spaceLeftForItem(this: D1Vault, item: D1Item) {
-      const sort = item.bucket?.sort || item.sort;
+      const sort = item.bucket?.sort;
       if (!sort) {
         throw new Error("item needs a 'sort' field");
       }
