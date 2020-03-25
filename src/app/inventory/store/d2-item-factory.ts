@@ -18,7 +18,6 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { reportException } from '../../utils/exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
-import { NewItemsService } from './new-items';
 import { t } from 'app/i18next-t';
 import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
@@ -113,8 +112,6 @@ export function processItems(
   owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  previousItems: Set<string> = new Set(),
-  newItems: Set<string> = new Set(),
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   },
@@ -129,8 +126,6 @@ export function processItems(
       createdItem = makeItem(
         defs,
         buckets,
-        previousItems,
-        newItems,
         itemComponents,
         item,
         owner,
@@ -185,8 +180,6 @@ export function makeFakeItem(
   return makeItem(
     defs,
     buckets,
-    new Set(),
-    new Set(),
     itemComponents,
     {
       itemHash,
@@ -220,8 +213,6 @@ export function makeFakeItem(
 export function makeItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  previousItems: Set<string>,
-  newItems: Set<string>,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
@@ -417,14 +408,6 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = statDef;
-  }
-
-  // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
-  try {
-    NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
-  } catch (e) {
-    console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
-    reportException('Newness', e, { itemHash: item.itemHash });
   }
 
   try {

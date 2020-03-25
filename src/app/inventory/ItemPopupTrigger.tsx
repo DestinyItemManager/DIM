@@ -1,9 +1,10 @@
 import React from 'react';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
-import { NewItemsService } from './store/new-items';
 import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 import { loadoutDialogOpen, addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import store from 'app/store/store';
+import { clearNewItem } from './actions';
 
 interface Props {
   item: DimItem;
@@ -28,7 +29,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
 
     const { item, extraData } = this.props;
 
-    NewItemsService.dropNewItem(item);
+    store.dispatch(clearNewItem(item.id));
 
     // TODO: a dispatcher based on store state?
     if (loadoutDialogOpen) {
