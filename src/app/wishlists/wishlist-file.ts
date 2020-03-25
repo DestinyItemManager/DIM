@@ -1,6 +1,6 @@
 import { WishListRoll, DimWishList, WishListAndInfo } from './types';
+import { emptySet } from 'app/utils/empty';
 
-const EMPTY_NUMBER_SET = new Set<number>();
 let _blockNotes: string | undefined;
 
 /* Utilities for reading a wishlist file */
@@ -39,7 +39,7 @@ function parseBlockNoteLine(blockNoteLine: string): null {
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
   if (!matchResults.groups || matchResults.groups.itemPerks === undefined) {
-    return EMPTY_NUMBER_SET;
+    return emptySet<number>();
   }
 
   const split = matchResults[2].split(',');

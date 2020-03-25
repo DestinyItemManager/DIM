@@ -16,6 +16,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { ModCollectible } from './Mod';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { t } from 'app/i18next-t';
+import { emptyArray } from 'app/utils/empty';
 
 const armorPieceGroups = [
   1362265421, // ItemCategory "Armor Mods: Helmet"
@@ -71,7 +72,7 @@ function mapStateToProps() {
     (state: RootState) => state.manifest.d2Manifest,
     (defs) => {
       if (!defs) {
-        return [];
+        return emptyArray<DestinyInventoryItemDefinition>();
       }
       //                                    InventoryItem "Void Damage Mod"
       const deprecatedModDescription = defs.InventoryItem.get(3728733956)?.displayProperties
