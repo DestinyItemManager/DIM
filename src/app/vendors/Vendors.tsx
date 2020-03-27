@@ -2,7 +2,8 @@ import {
   DestinyVendorsResponse,
   DestinyProfileResponse,
   DestinyCurrenciesComponent,
-  DestinyItemPlug
+  DestinyItemPlug,
+  DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -44,6 +45,7 @@ import Hammer from 'react-hammerjs';
 import _ from 'lodash';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import { emptyArray, emptyObject } from 'app/utils/empty';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -84,9 +86,6 @@ interface State {
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & ThunkDispatchProp;
 
-const EMPTY_MAP = {};
-const EMPTY_ARRAY = [];
-
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
@@ -102,7 +101,9 @@ class Vendors extends React.Component<Props, State> {
             profileResponse.profileCollectibles,
             profileResponse.characterCollectibles
           )
-        : EMPTY_MAP
+        : emptyObject<{
+            [x: number]: DestinyCollectibleComponent;
+          }>()
   );
   private vendorGroupsSelector = createSelector(
     (state: State) => state.vendorsResponse,
@@ -113,7 +114,7 @@ class Vendors extends React.Component<Props, State> {
     (vendorsResponse, defs, buckets, account, mergedCollectibles): readonly D2VendorGroup[] =>
       vendorsResponse && defs && buckets
         ? toVendorGroups(vendorsResponse, defs, buckets, account, mergedCollectibles)
-        : EMPTY_ARRAY
+        : emptyArray<D2VendorGroup>()
   );
 
   async loadVendors() {

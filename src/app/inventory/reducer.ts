@@ -15,6 +15,7 @@ import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
 import { SyncService } from 'app/storage/sync.service';
 import { apiPermissionGrantedSelector, currentProfileSelector } from 'app/dim-api/selectors';
+import { emptyObject } from 'app/utils/empty';
 
 export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
@@ -37,10 +38,9 @@ export const ownedItemsSelector = () =>
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
-const EMPTY_MAP = {};
 export const itemInfosSelector = (state: RootState) =>
   $featureFlags.dimApi && apiPermissionGrantedSelector(state)
-    ? ((currentProfileSelector(state)?.tags || EMPTY_MAP) as InventoryState['itemInfos'])
+    ? ((currentProfileSelector(state)?.tags || emptyObject()) as InventoryState['itemInfos'])
     : state.inventory.itemInfos;
 
 /**
