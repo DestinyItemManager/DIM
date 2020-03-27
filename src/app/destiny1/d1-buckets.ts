@@ -23,48 +23,48 @@ export const D1Categories = {
   Progress: ['Bounties', 'Quests', 'Missions']
 };
 
-// A mapping from the bucket names to DIM item types
-// Some buckets like vault and currencies have been ommitted
+// A mapping from the bucket hash to DIM item types
 const bucketToType = {
-  BUCKET_CHEST: 'Chest',
-  BUCKET_LEGS: 'Leg',
-  BUCKET_RECOVERY: 'LostItems',
-  BUCKET_SHIP: 'Ship',
-  BUCKET_MISSION: 'Missions',
-  BUCKET_ARTIFACT: 'Artifact',
-  BUCKET_HEAVY_WEAPON: 'Heavy',
-  BUCKET_COMMERCIALIZATION: 'SpecialOrders',
-  BUCKET_CONSUMABLES: 'Consumable',
-  BUCKET_PRIMARY_WEAPON: 'Primary',
-  BUCKET_CLASS_ITEMS: 'ClassItem',
-  BUCKET_BOOK_LARGE: 'RecordBook',
-  BUCKET_BOOK_SMALL: 'RecordBookLegacy',
-  BUCKET_QUESTS: 'Quests',
-  BUCKET_VEHICLE: 'Vehicle',
-  BUCKET_BOUNTIES: 'Bounties',
-  BUCKET_SPECIAL_WEAPON: 'Special',
-  BUCKET_SHADER: 'Shader',
-  BUCKET_MODS: 'Ornaments',
-  BUCKET_EMOTES: 'Emote',
-  BUCKET_MAIL: 'Messages',
-  BUCKET_BUILD: 'Class',
-  BUCKET_HEAD: 'Helmet',
-  BUCKET_ARMS: 'Gauntlets',
-  BUCKET_HORN: 'Horn',
-  BUCKET_MATERIALS: 'Material',
-  BUCKET_GHOST: 'Ghost',
-  BUCKET_EMBLEM: 'Emblem'
+  14239492: 'Chest',
+  20886954: 'Leg',
+  215593132: 'LostItems',
+  284967655: 'Ship',
+  375726501: 'Missions',
+  434908299: 'Artifact',
+  953998645: 'Heavy',
+  1367666825: 'SpecialOrders',
+  1469714392: 'Consumable',
+  1498876634: 'Primary',
+  1585787867: 'ClassItem',
+  2987185182: 'RecordBook',
+  549485690: 'RecordBookLegacy',
+  1801258597: 'Quests',
+  2025709351: 'Vehicle',
+  2197472680: 'Bounties',
+  2465295065: 'Special',
+  2973005342: 'Shader',
+  3313201758: 'Ornaments',
+  3054419239: 'Emote',
+  3161908920: 'Messages',
+  3284755031: 'Class',
+  3448274439: 'Helmet',
+  3551918588: 'Gauntlets',
+  3796357825: 'Horn',
+  3865314626: 'Material',
+  4023194814: 'Ghost',
+  4274335291: 'Emblem'
 };
 
-const vaultTypes = {
-  BUCKET_VAULT_ARMOR: 'Armor',
-  BUCKET_VAULT_WEAPONS: 'Weapons',
-  BUCKET_VAULT_ITEMS: 'General'
+export const vaultTypes = {
+  3003523923: 'Armor',
+  4046403665: 'Weapons',
+  138197802: 'General'
 };
+
 const sortToVault = {
-  Armor: 'BUCKET_VAULT_ARMOR',
-  Weapons: 'BUCKET_VAULT_WEAPONS',
-  General: 'BUCKET_VAULT_ITEMS'
+  Armor: 3003523923,
+  Weapons: 4046403665,
+  General: 138197802
 };
 
 const typeToSort = {};
@@ -78,11 +78,9 @@ export const getBuckets = _.once(async () => {
   const defs = await getDefinitions();
   const buckets: InventoryBuckets = {
     byHash: {},
-    byId: {},
     byType: {},
     byCategory: {},
     unknown: {
-      id: 'BUCKET_UNKNOWN',
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
@@ -101,16 +99,14 @@ export const getBuckets = _.once(async () => {
   };
   _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
-      const id = def.bucketIdentifier;
-      const type = bucketToType[def.bucketIdentifier];
+      const type = bucketToType[def.hash];
       let sort: string | undefined;
       if (type) {
         sort = typeToSort[type];
-      } else if (vaultTypes[id]) {
-        sort = vaultTypes[id];
+      } else if (vaultTypes[def.hash]) {
+        sort = vaultTypes[def.hash];
       }
       const bucket: InventoryBucket = {
-        id,
         description: def.bucketDescription,
         name: def.bucketName,
         hash: def.hash,
@@ -118,7 +114,7 @@ export const getBuckets = _.once(async () => {
         capacity: def.itemCount,
         accountWide: false,
         category: BucketCategory.Item,
-        type: bucketToType[def.bucketIdentifier],
+        type: bucketToType[def.hash],
         sort
       };
       if (bucket.type) {
@@ -129,12 +125,11 @@ export const getBuckets = _.once(async () => {
         bucket[`in${sort}`] = true;
       }
       buckets.byHash[bucket.hash] = bucket;
-      buckets.byId[bucket.id] = bucket;
     }
   });
   _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
     if (bucket.sort && sortToVault[bucket.sort]) {
-      bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
+      bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
     }
   });
   _.forIn(D1Categories, (types, category) => {

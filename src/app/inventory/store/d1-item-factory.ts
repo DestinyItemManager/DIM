@@ -4,14 +4,18 @@ import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { getBuckets } from '../../destiny1/d1-buckets';
+import { getBuckets, vaultTypes } from '../../destiny1/d1-buckets';
 import { NewItemsService } from './new-items';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1StoresService } from '../d1-stores';
-import { DestinyClass, DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyDisplayPropertiesDefinition,
+  DestinyDamageTypeDefinition
+} from 'bungie-api-ts/destiny2';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -143,6 +147,58 @@ const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1Manifes
 });
 
 /**
+ * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
+ */
+const toD2DamageType = _.memoize(
+  (damageType: {
+    damageTypeHash: number;
+    identifier: string;
+    damageTypeName: string;
+    description: string;
+    iconPath: string;
+    transparentIconPath: string;
+    showIcon: boolean;
+    enumValue: number;
+    hash: number;
+    index: number;
+    redacted: boolean;
+  }): DestinyDamageTypeDefinition =>
+    /*    a d1 damagetype def looks like this:
+    {
+      "damageTypeHash": 2303181850,
+      "identifier": "DAMAGE_TYPE_ARC",
+      "damageTypeName": "Arc",
+      "description": "This weapon causes Arc damage.",
+      "iconPath": "/img/destiny_content/damage_types/arc.png",
+      "transparentIconPath": "img/destiny_content/damage_types/arc_trans.png",
+      "showIcon": true,
+      "enumValue": 2,
+      "hash": 2303181850,
+      "index": 0,
+      "redacted": false
+    }
+  i like the icons a lot
+*/
+
+    ({
+      displayProperties: {
+        name: damageType.damageTypeName,
+        description: damageType.description,
+        icon: damageType.iconPath,
+        hasIcon: true,
+        highResIcon: '',
+        iconSequences: []
+      },
+      transparentIconPath: damageType.transparentIconPath,
+      hash: damageType.hash,
+      showIcon: damageType.showIcon,
+      enumValue: damageType.enumValue,
+      index: damageType.index,
+      redacted: damageType.redacted
+    })
+);
+
+/**
  * Process a single raw item into a DIM item.s
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
@@ -231,16 +287,20 @@ function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if (currentBucket.id.startsWith('BUCKET_VAULT')) {
+  if (currentBucket.hash in vaultTypes) {
     // TODO: Remove this if Bungie ever returns bucket.id for classified
     // items in the vault.
     if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
-      if (currentBucket.id.endsWith('WEAPONS')) {
-        currentBucket = buckets.byType.Heavy;
-      } else if (currentBucket.id.endsWith('ARMOR')) {
-        currentBucket = buckets.byType.ClassItem;
-      } else if (currentBucket.id.endsWith('ITEMS')) {
-        currentBucket = buckets.byType.Artifact;
+      switch (currentBucket.hash) {
+        case 4046403665:
+          currentBucket = buckets.byType.Heavy;
+          break;
+        case 3003523923:
+          currentBucket = buckets.byType.ClassItem;
+          break;
+        case 138197802:
+          currentBucket = buckets.byType.Artifact;
+          break;
       }
     } else {
       currentBucket = normalBucket;
@@ -249,24 +309,7 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const element = defs.DamageType.get(item.damageTypeHash);
-
-  /*    a d1 damagetype def looks like this:
-    {
-      "damageTypeHash": 2303181850,
-      "identifier": "DAMAGE_TYPE_ARC",
-      "damageTypeName": "Arc",
-      "description": "This weapon causes Arc damage.",
-      "iconPath": "/img/destiny_content/damage_types/arc.png",
-      "transparentIconPath": "img/destiny_content/damage_types/arc_trans.png",
-      "showIcon": true,
-      "enumValue": 2,
-      "hash": 2303181850,
-      "index": 0,
-      "redacted": false
-    }
-  i like the icons a lot
-*/
+  const element = toD2DamageType(defs.DamageType.get(item.damageTypeHash));
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 

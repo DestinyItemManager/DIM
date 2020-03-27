@@ -56,8 +56,8 @@ export interface DimItem {
   icon: string;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon: string;
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | D1DamageType | null;
+  /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
+  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Whether we can pull this item from the postmaster */
@@ -168,11 +168,7 @@ export interface DimItem {
  * A Destiny 1 item. Use this type when you need specific D1 properties.
  */
 export interface D1Item extends DimItem {
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: D1DamageType;
   talentGrid: D1TalentGrid | null;
-  /** The overall item group (e.g. Weapons, Armor) this item is in. See InventoryBuckets. */
-  sort?: string;
   stats: D1Stat[] | null;
   /** Armor quality evaluation. */
   quality: {
@@ -203,8 +199,6 @@ export interface D2Item extends DimItem {
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** for y3 armor, this is the type and capacity information */
   energy: DestinyItemInstanceEnergy | null;
   /** Information about how this item works with infusion. */
@@ -237,20 +231,6 @@ export interface D2Item extends DimItem {
   };
 
   getStoresService(): D2StoreServiceType;
-}
-
-export interface D1DamageType {
-  damageTypeHash: number;
-  identifier: string;
-  damageTypeName: string;
-  description: string;
-  iconPath: string;
-  transparentIconPath: string;
-  showIcon: boolean;
-  enumValue: number;
-  hash: number;
-  index: number;
-  redacted: boolean;
 }
 
 export interface DimMasterwork {

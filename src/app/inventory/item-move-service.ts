@@ -162,7 +162,7 @@ function ItemService(): ItemServiceType {
       // Items to be decremented
       const sourceItems = stackable
         ? _.sortBy(
-            source.buckets[item.location.id].filter(
+            source.buckets[item.location.hash].filter(
               (i) => i.hash === item.hash && i.id === item.id
             ),
             (i) => i.amount
@@ -172,7 +172,7 @@ function ItemService(): ItemServiceType {
       // it's easier to deal with as a list.
       const targetItems = stackable
         ? _.sortBy(
-            target.buckets[item.bucket.id].filter(
+            target.buckets[item.bucket.hash].filter(
               (i) =>
                 i.hash === item.hash &&
                 i.id === item.id &&
@@ -244,7 +244,7 @@ function ItemService(): ItemServiceType {
     }
 
     if (equip) {
-      target.buckets[item.bucket.id] = target.buckets[item.bucket.id].map((i) => {
+      target.buckets[item.bucket.hash] = target.buckets[item.bucket.hash].map((i) => {
         // TODO: this state needs to be moved out
         i.equipped = i.index === item.index;
         return i;
@@ -300,7 +300,7 @@ function ItemService(): ItemServiceType {
     let candidates = store.items.filter(
       (i) =>
         i.canBeEquippedBy(target) &&
-        i.location.id === item.location.id &&
+        i.location.hash === item.location.hash &&
         !i.equipped &&
         // Not the same item
         i.id !== item.id &&
@@ -449,7 +449,7 @@ function ItemService(): ItemServiceType {
     // Note that this can result in the wrong lock state if DIM is out of date (they've locked/unlocked in game but we haven't refreshed).
     // Only apply this hack if the source bucket contains duplicates of the same item hash.
     const overrideLockState =
-      count(ownerStore.buckets[item.location.id], (i) => i.hash === item.hash) > 1
+      count(ownerStore.buckets[item.location.hash], (i) => i.hash === item.hash) > 1
         ? item.locked
         : undefined;
 
@@ -526,7 +526,7 @@ function ItemService(): ItemServiceType {
     // Find an item that's not in the slot we're equipping, but has a matching equipping label
     return store.items.find(
       (i) =>
-        i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.id !== item.bucket.id
+        i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.hash !== item.bucket.hash
     );
   }
 
@@ -581,9 +581,9 @@ function ItemService(): ItemServiceType {
             (i) =>
               i.bucket.vaultBucket &&
               item.bucket.vaultBucket &&
-              i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
+              i.bucket.vaultBucket.hash === item.bucket.vaultBucket.hash
           )
-        : store.buckets[item.bucket.id];
+        : store.buckets[item.bucket.hash];
     } catch (e) {
       if (store.isVault && !item.bucket.vaultBucket) {
         console.error(

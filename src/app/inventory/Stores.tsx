@@ -68,7 +68,7 @@ class Stores extends React.Component<Props, State> {
     if (isPhonePortrait) {
       return (
         <div
-          className="inventory-content phone-portrait"
+          className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
           role="main"
           aria-label={t('Header.Inventory')}
         >
@@ -116,7 +116,11 @@ class Stores extends React.Component<Props, State> {
     }
 
     return (
-      <div className="inventory-content" role="main" aria-label={t('Header.Inventory')}>
+      <div
+        className={`inventory-content destiny${selectedStore.destinyVersion}`}
+        role="main"
+        aria-label={t('Header.Inventory')}
+      >
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store, index) => (
             <div
@@ -187,7 +191,7 @@ class Stores extends React.Component<Props, State> {
                 */}
                 {buckets.byCategory[category].map((bucket) => (
                   <StoreBuckets
-                    key={bucket.id}
+                    key={bucket.hash}
                     bucket={bucket}
                     stores={stores}
                     vault={vault}
@@ -213,7 +217,7 @@ function categoryHasItems(
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
     const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
-    return storesToSearch.some((s) => s.buckets[bucket.id] && s.buckets[bucket.id].length > 0);
+    return storesToSearch.some((s) => s.buckets[bucket.hash] && s.buckets[bucket.hash].length > 0);
   });
 }
 
