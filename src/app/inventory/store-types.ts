@@ -17,9 +17,7 @@ import { ConnectableObservable } from 'rxjs';
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
  * if you don't care about the differences between the two.
  */
-export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, ItemType = DimItem> {
-  /** Get the active or last-played character. */
-  getActiveStore(): StoreType | undefined;
+export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault> {
   /** Get a list of all characters plus the vault. */
   getStores(): StoreType[];
   /** Get a store by character ID. */
@@ -42,12 +40,12 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
 /**
  * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
  */
-export type D2StoreServiceType = StoreServiceType<D2Store, D2Vault, D2Item>;
+export type D2StoreServiceType = StoreServiceType<D2Store, D2Vault>;
 
 /**
  * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
  */
-export type D1StoreServiceType = StoreServiceType<D1Store, D1Vault, D1Item>;
+export type D1StoreServiceType = StoreServiceType<D1Store, D1Vault>;
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,

@@ -6,6 +6,7 @@ import { CompareService } from '../compare/compare.service';
 import { moveItemTo } from './move-item';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { getCurrentStore } from './stores-helpers';
 
 interface Props {
   item: DimItem;
@@ -39,7 +40,7 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
     const item = this.props.item;
     if (!loadoutDialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
-      const active = item.getStoresService().getActiveStore()!;
+      const active = getCurrentStore(item.getStoresService().getStores())!;
 
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;

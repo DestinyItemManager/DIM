@@ -10,7 +10,7 @@ import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
 import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
-import { D1Item, DimItem } from './item-types';
+import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
@@ -52,7 +52,6 @@ function StoreService(): D1StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
@@ -60,7 +59,6 @@ function StoreService(): D1StoreServiceType {
       return;
     },
     getStoresStream,
-    getItemAcrossStores,
     updateCharacters,
     reloadStores,
     touch() {
