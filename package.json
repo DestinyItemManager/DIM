@@ -134,7 +134,7 @@
     "webpack-cli": "^3.0.0",
     "webpack-dev-server": "^3.8.2",
     "webpack-notifier": "^1.6.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^5.1.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
@@ -202,7 +202,13 @@
     "uuid": "^7.0.2",
     "valid-url": "^1.0.9",
     "voca": "^1.4.0",
-    "workbox-window": "^4.3.1"
+    "workbox-cacheable-response": "^5.1.1",
+    "workbox-core": "^5.1.1",
+    "workbox-expiration": "^5.1.1",
+    "workbox-precaching": "^5.1.1",
+    "workbox-routing": "^5.1.1",
+    "workbox-strategies": "^5.1.1",
+    "workbox-window": "^5.1.1"
   },
   "greenkeeper": {
     "ignore": []
