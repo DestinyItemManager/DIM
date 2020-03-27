@@ -170,8 +170,6 @@ export interface DimItem {
 export interface D1Item extends DimItem {
   primStat: D1PrimStat | null;
   talentGrid: D1TalentGrid | null;
-  /** The overall item group (e.g. Weapons, Armor) this item is in. See InventoryBuckets. */
-  sort?: string;
   stats: D1Stat[] | null;
   /** Armor quality evaluation. */
   quality: {
