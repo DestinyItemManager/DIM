@@ -223,9 +223,9 @@ export function getColor(value: number, property = 'background-color') {
   } else if (value >= 100) {
     color = 190;
   }
-  const result = {};
-  result[property] = `hsla(${color},65%,50%, 1)`;
-  return result;
+  return {
+    [property]: `hsla(${color},65%,50%, 1)`
+  };
 }
 
 export function dtrRatingColor(value: number, property = 'color') {
@@ -247,9 +247,9 @@ export function dtrRatingColor(value: number, property = 'color') {
   } else if (value >= 4.9) {
     color = 'hsl(190,90%,45%)';
   }
-  const result = {};
-  result[property] = color;
-  return result;
+  return {
+    [property]: color
+  };
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {

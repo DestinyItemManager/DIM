@@ -17,9 +17,9 @@ interface ProvidedProps {
   allowFilter?: boolean;
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
-  onClick?(e): void;
-  onShiftClick?(e): void;
-  onDoubleClick?(e): void;
+  onClick?(e: React.MouseEvent): void;
+  onShiftClick?(e: React.MouseEvent): void;
+  onDoubleClick?(e: React.MouseEvent): void;
 }
 
 // Props from Redux via mapStateToProps

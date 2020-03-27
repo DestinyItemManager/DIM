@@ -137,8 +137,9 @@ function LockArmorAndPerks({
     });
   };
 
-  const addLockItem = (item) => addLockedItemType({ type: 'item', item, bucket: item.bucket });
-  const addExcludeItem = (item) =>
+  const addLockItem = (item: DimItem) =>
+    addLockedItemType({ type: 'item', item, bucket: item.bucket });
+  const addExcludeItem = (item: DimItem) =>
     addLockedItemType({ type: 'exclude', item, bucket: item.bucket });
 
   const chooseLockItem = chooseItem(

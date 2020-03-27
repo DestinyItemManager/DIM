@@ -208,7 +208,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   // prevent touches from bubbling which blocks scrolling
-  private stopTouches = (e) => {
+  private stopTouches = (e: React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -228,7 +228,7 @@ class Compare extends React.Component<Props, State> {
     CompareService.dialogOpen = false;
   };
 
-  private compareSimilar = (e, comparisonSetItems: DimItem[]) => {
+  private compareSimilar = (e: React.MouseEvent, comparisonSetItems: DimItem[]) => {
     e.preventDefault();
     this.setState({
       comparisonItems: comparisonSetItems
@@ -350,7 +350,8 @@ class Compare extends React.Component<Props, State> {
     const exampleItemModSlot = getItemSpecialtyModSlotDisplayName(exampleItem);
 
     // helper functions for filtering items
-    const matchesExample = (key: string) => (item: DimItem) => item[key] === exampleItem[key];
+    const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
+      item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
       exampleItemModSlot === getItemSpecialtyModSlotDisplayName(item);
     const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
@@ -455,7 +456,8 @@ class Compare extends React.Component<Props, State> {
     const exampleItem = comparisonItems[0];
     const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
 
-    const matchesExample = (key: string) => (item: DimItem) => item[key] === exampleItem[key];
+    const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
+      item[key] === exampleItem[key];
     // stuff for looking up weapon archetypes
     const getRpm = (i: DimItem) => {
       const itemRpmStat =
