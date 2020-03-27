@@ -168,7 +168,6 @@ export interface DimItem {
  * A Destiny 1 item. Use this type when you need specific D1 properties.
  */
 export interface D1Item extends DimItem {
-  primStat: D1PrimStat | null;
   talentGrid: D1TalentGrid | null;
   stats: D1Stat[] | null;
   /** Armor quality evaluation. */
@@ -232,13 +231,6 @@ export interface D2Item extends DimItem {
   };
 
   getStoresService(): D2StoreServiceType;
-}
-
-export interface D1PrimStat extends DestinyStat {
-  stat: DestinyStatDefinition & {
-    statName: string;
-    statIdentifier: string;
-  };
 }
 
 export interface DimMasterwork {
