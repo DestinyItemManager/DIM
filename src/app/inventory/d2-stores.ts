@@ -94,7 +94,6 @@ function makeD2StoresService(): D2StoreServiceType {
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => _stores.flatMap((s) => s.items),
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,

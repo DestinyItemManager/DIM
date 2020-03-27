@@ -26,8 +26,6 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
   getStore(id: string): StoreType | undefined;
   /** Get the vault. */
   getVault(): VaultType | undefined;
-  /** Get all items across all stores. */
-  getAllItems(): ItemType[];
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
   /** Get an item matching certain characteristics, no matter where it is in inventory. */
