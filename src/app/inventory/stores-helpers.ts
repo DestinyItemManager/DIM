@@ -8,12 +8,14 @@ import { DimItem } from './item-types';
 /**
  * Get whichever character was last played.
  */
-export const getCurrentStore = (stores: DimStore[]) => stores.find((s) => s.current);
+export const getCurrentStore = <Store extends DimStore>(stores: Store[]) =>
+  stores.find((s) => s.current);
 
 /**
  * Get a store from a list by ID.
  */
-export const getStore = (stores: DimStore[], id: string) => stores.find((s) => s.id === id);
+export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
+  stores.find((s) => s.id === id);
 
 /**
  * Get the Vault from a list of stores.
@@ -24,14 +26,16 @@ export const getVault = (stores: DimStore[]) =>
 /**
  * Get all items from all stores as a flat list.
  */
-export const getAllItems = (stores: DimStore[], filter?: (item: DimItem) => unknown) =>
-  stores.flatMap((s) => (filter ? s.items.filter(filter) : s.items));
+export const getAllItems = <Item extends DimItem, Store extends DimStore<Item>>(
+  stores: Store[],
+  filter?: (item: Item) => unknown
+) => stores.flatMap((s) => (filter ? s.items.filter(filter) : s.items));
 
 /**
  * Find an item among all stores that matches the params provided.
  */
-export function getItemAcrossStores(
-  stores: DimStore[],
+export function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
+  stores: Store[],
   params: {
     id?: string;
     hash?: number;
