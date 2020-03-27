@@ -23,7 +23,6 @@ import { NewItemsService } from './store/new-items';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
-import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
@@ -95,7 +94,6 @@ function makeD2StoresService(): D2StoreServiceType {
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
     getStoresStream,
-    getItemAcrossStores,
     updateCharacters,
     reloadStores,
     refreshRatingsData,
@@ -105,27 +103,6 @@ function makeD2StoresService(): D2StoreServiceType {
   };
 
   return service;
-
-  /**
-   * Find an item among all stores that matches the params provided.
-   */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
-      i: DimItem
-    ) => boolean;
-    for (const store of _stores) {
-      const result = store.items.find(predicate);
-      if (result) {
-        return result;
-      }
-    }
-    return undefined;
-  }
 
   /**
    * Update the high level character information for all the stores

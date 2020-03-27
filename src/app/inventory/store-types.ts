@@ -28,13 +28,6 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
   getVault(): VaultType | undefined;
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Get an item matching certain characteristics, no matter where it is in inventory. */
-  getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }): ItemType | undefined;
   /** Refresh just character info (current light/stats, etc.) */
   updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
   /** Reload inventory completely. */

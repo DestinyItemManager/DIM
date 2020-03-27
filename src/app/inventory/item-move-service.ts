@@ -32,6 +32,7 @@ import {
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
 import { itemInfosSelector } from './selectors';
+import { getStore, getItemAcrossStores } from './stores-helpers';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -150,10 +151,11 @@ function ItemService(): ItemServiceType {
   ) {
     // Refresh all the items - they may have been reloaded!
     const storeService = item.getStoresService();
-    source = storeService.getStore(source.id)!;
-    target = storeService.getStore(target.id)!;
+    const stores = storeService.getStores();
+    source = getStore(stores, source.id)!;
+    target = getStore(stores, target.id)!;
     // We really shouldn't do this!
-    item = storeService.getItemAcrossStores(item) || item;
+    item = getItemAcrossStores(stores, item) || item;
 
     // If we've moved to a new place
     if (source.id !== target.id || item.location.inPostmaster) {

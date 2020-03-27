@@ -12,6 +12,7 @@ import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
 import copy from 'fast-copy';
 import { loadoutFromAllItems } from './loadout-utils';
+import { getItemAcrossStores } from 'app/inventory/stores-helpers';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -159,7 +160,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 
   // Stuff that's equipped on another character. We can bulk-dequip these
   const itemsToDequip = items.filter((pseudoItem) => {
-    const item = storeService.getItemAcrossStores(pseudoItem);
+    const item = getItemAcrossStores(storeService.getStores(), pseudoItem);
     return item?.equipped && item.owner !== store.id;
   });
 
@@ -175,9 +176,8 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   };
 
   if (itemsToDequip.length > 1) {
-    const realItemsToDequip = _.compact(
-      itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
-    );
+    const stores = storeService.getStores();
+    const realItemsToDequip = _.compact(itemsToDequip.map((i) => getItemAcrossStores(stores, i)));
     const dequips = _.map(
       _.groupBy(realItemsToDequip, (i) => i.owner),
       (dequipItems, owner) => {
@@ -346,7 +346,8 @@ async function applyLoadoutItems(
 // A special getItem that takes into account the fact that
 // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
 function getLoadoutItem(pseudoItem: LoadoutItem, store: DimStore): DimItem | null {
-  let item = store.getStoresService().getItemAcrossStores(_.omit(pseudoItem, 'amount'));
+  const stores = store.getStoresService().getStores();
+  let item = getItemAcrossStores(stores, _.omit(pseudoItem, 'amount'));
   if (!item) {
     return null;
   }
@@ -355,7 +356,7 @@ function getLoadoutItem(pseudoItem: LoadoutItem, store: DimStore): DimItem | nul
     item =
       store.items.find((i) => i.hash === pseudoItem.hash) ||
       // Then other characters
-      store.getStoresService().getItemAcrossStores({ hash: item.hash }) ||
+      getItemAcrossStores(stores, { hash: item.hash }) ||
       item;
   }
   return item;

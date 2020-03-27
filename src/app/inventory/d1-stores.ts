@@ -71,27 +71,6 @@ function StoreService(): D1StoreServiceType {
   return service;
 
   /**
-   * Find an item among all stores that matches the params provided.
-   */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
-      i: DimItem
-    ) => boolean;
-    for (const store of _stores) {
-      const result = store.items.find(predicate);
-      if (result) {
-        return result;
-      }
-    }
-    return undefined;
-  }
-
-  /**
    * Update the high level character information for all the stores
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
