@@ -13,9 +13,9 @@ export async function makeRoomForPostmaster(
 ): Promise<void> {
   const buckets = await bucketsService();
   const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
-    (bucket: InventoryBucket) => store.buckets[bucket.id]
+    (bucket: InventoryBucket) => store.buckets[bucket.hash]
   );
-  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
+  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
   // If any category is full, we'll move enough aside
   const itemsToMove: DimItem[] = [];
   _.forIn(postmasterItemCountsByType, (count, bucket) => {
@@ -92,10 +92,7 @@ export function postmasterAlmostFull(store: DimStore) {
 }
 
 export function postmasterSpaceLeft(store: DimStore) {
-  return Math.max(
-    0,
-    POSTMASTER_SIZE - (store.buckets[215593132] && store.buckets[215593132].length)
-  );
+  return Math.max(0, POSTMASTER_SIZE - totalPostmasterItems(store));
 }
 export function postmasterSpaceUsed(store: DimStore) {
   return POSTMASTER_SIZE - postmasterSpaceLeft(store);
@@ -103,10 +100,7 @@ export function postmasterSpaceUsed(store: DimStore) {
 
 // to-do: either typing is wrong and this can return undefined, or this doesn't need &&s and ?.s
 export function totalPostmasterItems(store: DimStore) {
-  return (
-    (store.buckets[215593132] && store.buckets[215593132].length) ||
-    store.buckets.BUCKET_RECOVERY?.length
-  );
+  return store.buckets[215593132]?.length || 0;
 }
 
 const showNoSpaceError = _.throttle(

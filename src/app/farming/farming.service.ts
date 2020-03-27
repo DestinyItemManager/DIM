@@ -24,18 +24,18 @@ const glimmerHashes = new Set([
 
 // These are things you may pick up frequently out in the wild
 const makeRoomTypes = [
-  'BUCKET_PRIMARY_WEAPON',
-  'BUCKET_SPECIAL_WEAPON',
-  'BUCKET_HEAVY_WEAPON',
-  'BUCKET_HEAD',
-  'BUCKET_ARMS',
-  'BUCKET_CHEST',
-  'BUCKET_LEGS',
-  'BUCKET_CLASS_ITEMS',
-  'BUCKET_ARTIFACT',
-  'BUCKET_GHOST',
-  'BUCKET_CONSUMABLES',
-  'BUCKET_MATERIALS'
+  1498876634, // Primary
+  2465295065, // Special
+  953998645, // Heavy
+  3448274439, // Helmet
+  3551918588, // Gauntlets
+  14239492, // Chest
+  20886954, // Legs
+  1585787867, // ClassItem
+  434908299, // Artifact
+  4023194814, // Ghost
+  1469714392, // Consumable
+  3865314626 // Material
 ];
 
 /**
@@ -136,7 +136,7 @@ async function farmItems(store: D1Store) {
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D1Store) {
   const buckets = await getBuckets();
-  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
+  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
   makeRoomForItemsInBuckets(store, makeRoomBuckets, D1StoresService);
 }
 
@@ -151,7 +151,7 @@ export async function makeRoomForItemsInBuckets(
   const itemsToMove: DimItem[] = [];
   const itemInfos = itemInfosSelector(rxStore.getState());
   makeRoomBuckets.forEach((bucket) => {
-    const items = store.buckets[bucket.id];
+    const items = store.buckets[bucket.hash];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
       const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(

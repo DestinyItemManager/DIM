@@ -24,7 +24,7 @@ export function StoreBuckets({
   // Don't show buckets with no items
   if (
     (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
-    !stores.some((s) => s.buckets[bucket.id].length > 0)
+    !stores.some((s) => s.buckets[bucket.hash].length > 0)
   ) {
     return null;
   }
@@ -36,12 +36,12 @@ export function StoreBuckets({
       <>
         {(allStoresView || stores[0] !== vault) && (
           <div className="store-cell account-wide">
-            <StoreBucket bucketId={bucket.id} storeId={currentStore.id} />
+            <StoreBucket bucket={bucket} store={currentStore} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
           <div className="store-cell vault">
-            <StoreBucket bucketId={bucket.id} storeId={vault.id} />
+            <StoreBucket bucket={bucket} store={vault} />
           </div>
         )}
       </>
@@ -57,15 +57,13 @@ export function StoreBuckets({
         })}
         style={storeBackgroundColor(store, index)}
       >
-        {(!store.isVault || bucket.vaultBucket) && (
-          <StoreBucket bucketId={bucket.id} storeId={store.id} />
-        )}
+        {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&
           store.isDestiny2() &&
-          store.buckets[bucket.id].length > 0 && <PullFromPostmaster store={store} />}
+          store.buckets[bucket.hash].length > 0 && <PullFromPostmaster store={store} />}
       </div>
     ));
   }
 
-  return <div className={`store-row bucket-${bucket.id}`}>{content}</div>;
+  return <div className={`store-row bucket-${bucket.hash}`}>{content}</div>;
 }

@@ -22,31 +22,28 @@ import { characterOrderSelector } from 'app/settings/character-sort';
 
 // Props provided from parents
 interface ProvidedProps {
-  storeId: string;
-  bucketId: string;
+  store: DimStore;
+  bucket: InventoryBucket;
 }
 
 // Props from Redux via mapStateToProps
 interface StoreProps {
-  // TODO: which of these will actually update purely?
   items: DimItem[];
-  bucket: InventoryBucket;
-  store: DimStore;
   itemSortOrder: string[];
   allStores: DimStore[];
   characterOrder: string;
 }
 
+const EMPTY_ARRAY = [];
+
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { storeId, bucketId } = props;
-  const store = state.inventory.stores.find((s) => s.id === storeId)!;
+  const { store, bucket } = props;
 
   return {
-    items: store.buckets[bucketId],
-    bucket: state.inventory.buckets!.byId[props.bucketId],
-    store,
+    items: store.buckets[bucket.hash],
     itemSortOrder: itemSortOrderSelector(state),
-    allStores: sortedStoresSelector(state),
+    // We only need this property when this is a vault armor bucket
+    allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : EMPTY_ARRAY,
     characterOrder: characterOrderSelector(state)
   };
 }
@@ -126,7 +123,8 @@ class StoreBucket extends React.Component<Props> {
           {unequippedItems.map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
-          {bucket.id === '375726501' &&
+          {store.isDestiny2() &&
+          bucket.hash === 375726501 && // Engrams. D1 uses this same bucket hash for "Missions"
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
             ))}
@@ -140,7 +138,8 @@ class StoreBucket extends React.Component<Props> {
 
     try {
       const { item, equip } = await showItemPicker({
-        filterItems: (item: DimItem) => item.bucket.id === bucket.id && item.canBeEquippedBy(store),
+        filterItems: (item: DimItem) =>
+          item.bucket.hash === bucket.hash && item.canBeEquippedBy(store),
         prompt: t('MovePopup.PullItem', {
           bucket: bucket.name,
           store: store.name

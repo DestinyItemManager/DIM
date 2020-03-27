@@ -68,7 +68,9 @@ const StoreProto = {
       return 0;
     }
 
-    const occupiedStacks = this.buckets[item.bucket.id] ? this.buckets[item.bucket.id].length : 10;
+    const occupiedStacks = this.buckets[item.bucket.hash]
+      ? this.buckets[item.bucket.hash].length
+      : 10;
     const openStacks = Math.max(0, this.capacityForItem(item) - occupiedStacks);
 
     // Some things can't have multiple stacks.
@@ -134,18 +136,18 @@ const StoreProto = {
     if (sourceIndex >= 0) {
       this.items = [...this.items.slice(0, sourceIndex), ...this.items.slice(sourceIndex + 1)];
 
-      let bucketItems = this.buckets[item.location.id];
+      let bucketItems = this.buckets[item.location.hash];
       const bucketIndex = bucketItems.findIndex(match);
       bucketItems = [...bucketItems.slice(0, bucketIndex), ...bucketItems.slice(bucketIndex + 1)];
-      this.buckets[item.location.id] = bucketItems;
+      this.buckets[item.location.hash] = bucketItems;
 
       if (
         this.current &&
         item.location.accountWide &&
         this.vault &&
-        this.vault.vaultCounts[item.location.id]
+        this.vault.vaultCounts[item.location.hash]
       ) {
-        this.vault.vaultCounts[item.location.id].count--;
+        this.vault.vaultCounts[item.location.hash].count--;
       }
 
       return true;
@@ -155,11 +157,11 @@ const StoreProto = {
 
   addItem(this: D2Store, item: D2Item) {
     this.items = [...this.items, item];
-    this.buckets[item.location.id] = [...this.buckets[item.location.id], item];
+    this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
     item.owner = this.id;
 
     if (this.current && item.location.accountWide && this.vault) {
-      this.vault.vaultCounts[item.location.id].count++;
+      this.vault.vaultCounts[item.location.hash].count++;
     }
   },
 
@@ -256,7 +258,7 @@ export function makeVault(
       }
       const vaultBucket = item.bucket.vaultBucket;
       const usedSpace = item.bucket.vaultBucket
-        ? count(this.items, (i) => Boolean(i.bucket.vaultBucket?.id === vaultBucket.id))
+        ? count(this.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
         : 0;
       const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);
       const maxStackSize = item.maxStackSize || 1;
@@ -271,14 +273,14 @@ export function makeVault(
     removeItem(this: D2Vault, item: D2Item): boolean {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.id].count--;
+        this.vaultCounts[item.location.vaultBucket.hash].count--;
       }
       return result;
     },
     addItem(this: D2Vault, item: D2Item) {
       StoreProto.addItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.id].count++;
+        this.vaultCounts[item.location.vaultBucket.hash].count++;
       }
     }
   });
