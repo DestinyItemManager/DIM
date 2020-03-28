@@ -33,7 +33,7 @@
     "RemoveTag": "아이템 ID {{id}}에서 태그를 삭제함",
     "SetNotes": "아이템 ID {{id}}의 메모가 {{notes}}로 설정됨",
     "SetTag": "아이템 ID {{id}}의 태그가 {{tag}}로 설정됨",
-    "Setting": "{{value}}(으)로 {{key}}이(가) 설정됨",
+    "Setting": "{{key}}의 값이 {{value}}(으)로 설정됨",
     "TagCleanup": "분해한 아이템의 태그를 정리함"
   },
   "Bucket": {
@@ -782,7 +782,7 @@
   },
   "Storage": {
     "ApiPermissionPrompt": {
-      "Description": "DIM은 별도의 로그인 없이 태그, 로드아웃, 설정을 서버에 저장하고 다른 버전의 DIM과 데이터를 동기화할 수 있습니다. DIM 동기화를 활성화하지 않았으면 기존 데이터를 자동으로 가져옵니다. OpenCollective 후원자의 지원으로 가능했습니다!",
+      "Description": "DIM은 별도의 로그인 없이 태그, 로드아웃, 설정을 서버에 저장하고 다른 버전의 DIM과 데이터를 동기화할 수 있습니다. 이전에 DIM 동기화를 활성화하지 않았으면 자동으로 현재 데이터를 사용합니다. OpenCollective 후원자의 지원으로 가능했습니다!",
       "No": "나중에",
       "Title": "DIM 동기화를 활성화합니까?",
       "Yes": "동기화 사용"
@@ -813,7 +813,7 @@
     "ForceSyncWarning": "로컬 데이터를 구글 드라이브의 데이터로 덮어씁니다. 정말로 진행하시겠습니까?",
     "GDriveImport": "기존 구글 드라이브나 로컬 저장소 데이터에서 가져오기",
     "GDriveImportButton": "이전 데이터 가져오기",
-    "GDriveImportExplain": "브라우저나 구글 드라이브에 저장된 이전 데이터를 복원할 수 있습니다. DIM 동기화 활성화 이후 변경된 내용을 포함할 것이지만, 보증하지는 않습니다. DIM 동기화가 원치 않은 변화를 가져왔을 경우에만 사용하세요.",
+    "GDriveImportExplain": "브라우저나 구글 드라이브에 저장된 이전 데이터를 복원할 수 있습니다. DIM 동기화 활성화 이후 변경된 내용은 유지될 것이지만, 보증하지는 않습니다. DIM 동기화가 원치 않은 변화를 가져왔을 경우에만 사용하세요.",
     "GDriveLogout": "당신의 데이터는 여전히 구글 드라이브에 있습니다 - 다시 로그인 하신다면 DIM은 다시 데이터를 사용할 것입니다",
     "GDriveRevisions": "구버전 복원",
     "GDriveSignInError": "구글 드라이브 로그인 중 문제 발생:",
@@ -827,15 +827,15 @@
     "IgnoredUsers": "무시한 리뷰어",
     "Import": "데이터 백업 불러오기",
     "ImportConfirm": "현재 설정을 이 버전으로 덮어쓰시겠습니까? 이 버전은 {{stats}}을 포함하고 있습니다.",
-    "ImportConfirmDimApi": "정말로 현재 태그, 로드아웃, 설정을 이 버전으로 덮어쓰시겠습니까? 기존 데이터를 완전히 덮어씁니다.",
+    "ImportConfirmDimApi": "정말로 현재 태그, 로드아웃, 설정을 이 버전으로 덮어쓰시겠습니까? 기존 데이터를 완전히 대체할 것입니다.",
     "ImportExport": "백업 & 복원",
     "ImportFailed": "불러오기 실패! {{error}}",
     "ImportNoFile": "선택된 파일이 없습니다!",
     "ImportNotification": {
-      "SkippedBody": "DIM 동기화는 이 브라우저에 저장된 데이터를 대신 DIM 동기화에 저장된 설정, 로드아웃, 태그를 사용하고 있습니다. 대체된 데이터는 백업 파일로 저장되었습니다. 설정에서 DIM 동기화의 데이터를 이 로컬 백업으로 교체할 수 있습니다.",
+      "SkippedBody": "DIM 동기화는 이 브라우저에 저장된 데이터 대신 DIM 동기화에 저장된 설정, 로드아웃, 태그를 사용하고 있습니다. 대체된 데이터는 백업 파일로 저장되었습니다. 설정에서 DIM 동기화의 데이터를 이 로컬 백업으로 교체할 수 있습니다.",
       "SkippedTitle": "DIM 동기화에서 데이터 가져옴",
-      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync.",
-      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBody": "백업에서 DIM 동기화로 설정, {{loadouts}}개의 로드아웃, {{tags}}개의 태그된 아이템을 가져왔습니다.",
+      "SuccessBodyForced": "백업에서 DIM 동기화로 설정, {{loadouts}}개의 로드아웃, {{tags}}개의 태그된 아이템을 가져와서 기존 데이터를 대체했습니다.",
       "SuccessTitle": "가져오기 성공"
     },
     "ImportSuccess": "DIM 데이터 복원 완료!",
