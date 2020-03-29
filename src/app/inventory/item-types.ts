@@ -91,6 +91,7 @@ export interface DimItem {
         stat: DestinyStatDefinition;
       })
     | null;
+  ammoType: DestinyAmmunitionType;
   /** Localized name of this item's type. */
   typeName: string;
   /** The level a character must be to equip this item. */
@@ -129,7 +130,7 @@ export interface DimItem {
   reviewable: boolean;
   /** The "base power" without any power-enhancing mods. */
   basePower: number;
-  /** A synthetic unique ID used to help Angular tell items apart. This changes to signal that Angular should re-render the item. */
+  /** A synthetic unique ID used to help React tell items apart. Use this as a "key" property. */
   index: string;
   /** Can this be infused? */
   infusable: boolean;
@@ -210,7 +211,6 @@ export interface D2Item extends DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
-  ammoType: DestinyAmmunitionType;
   /** The Destiny season that a specific item belongs to. */
   season: number;
   /** The Destiny event that a specific item belongs to. */
