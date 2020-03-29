@@ -330,8 +330,8 @@ export function loadProfileFromIndexedDB(): ThunkResult<any> {
 }
 
 /** Produce a new object that's only the key/values of obj that are also keys in defaults and which have values different from defaults. */
-function subtractObject(obj: object | undefined, defaults: object) {
-  const result = {};
+function subtractObject<T>(obj: T | undefined, defaults: T): Partial<T> {
+  const result: Partial<T> = {};
   if (obj) {
     for (const key in defaults) {
       if (obj[key] !== undefined && !deepEqual(obj[key], defaults[key])) {

@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { dimItemService } from '../inventory/item-move-service';
+import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -189,16 +189,16 @@ async function moveItemsToVault(
   storeService: StoreServiceType,
   store: DimStore,
   items: DimItem[],
-  dimItemService
+  dimItemService: ItemServiceType
 ): Promise<void> {
-  const reservations = {};
+  const reservations: MoveReservations = {};
   // reserve space for all move-asides
   reservations[store.id] = _.countBy(items, (i) => i.type);
 
   for (const item of items) {
     // Move a single item. We reevaluate the vault each time in case things have changed.
-    const vault = storeService.getVault();
-    const vaultSpaceLeft = vault!.spaceLeftForItem(item);
+    const vault = storeService.getVault()!;
+    const vaultSpaceLeft = vault.spaceLeftForItem(item);
     if (vaultSpaceLeft <= 1) {
       // If we're down to one space, try putting it on other characters
       const otherStores = storeService

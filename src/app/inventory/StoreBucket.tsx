@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
-import { sortedStoresSelector } from './reducer';
+import { sortedStoresSelector } from './selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon, addIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
@@ -19,6 +19,7 @@ import { moveItemTo } from './move-item';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { characterOrderSelector } from 'app/settings/character-sort';
+import { emptyArray } from 'app/utils/empty';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -34,8 +35,6 @@ interface StoreProps {
   characterOrder: string;
 }
 
-const EMPTY_ARRAY = [];
-
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { store, bucket } = props;
 
@@ -43,7 +42,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     items: store.buckets[bucket.hash],
     itemSortOrder: itemSortOrderSelector(state),
     // We only need this property when this is a vault armor bucket
-    allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : EMPTY_ARRAY,
+    allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
     characterOrder: characterOrderSelector(state)
   };
 }

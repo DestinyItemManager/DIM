@@ -17,7 +17,7 @@ export function promptForApiPermission() {
     returnValue = resolve;
   });
 
-  const ok = async (e) => {
+  const ok = async (e: React.MouseEvent) => {
     e.preventDefault();
 
     // Force a backup of their data just in case
@@ -26,7 +26,7 @@ export function promptForApiPermission() {
     returnValue(true);
   };
 
-  const no = (e) => {
+  const no = (e: React.MouseEvent) => {
     e.preventDefault();
     returnValue(false);
   };

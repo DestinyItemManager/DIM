@@ -9,7 +9,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
 import { RootState } from 'app/store/reducers';
 import { createSelector } from 'reselect';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';

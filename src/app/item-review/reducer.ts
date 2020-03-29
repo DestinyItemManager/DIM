@@ -198,7 +198,9 @@ export function shouldShowRating(dtrRating: DtrRating | undefined) {
 }
 
 function convertToRatingMap(ratings: DtrRating[]) {
-  const result = {};
+  const result: {
+    [key: string]: DtrRating;
+  } = {};
   for (const rating of ratings) {
     result[getItemStoreKey(rating.referenceId, rating.roll)] = rating;
   }

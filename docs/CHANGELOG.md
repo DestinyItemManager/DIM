@@ -1,5 +1,8 @@
 ## Next
 
+* Removed duplicate Mods section from the top level of the Collections screen - they're still under the normal collections tree.
+* Fixed a missing icon when season rank is over 100.
+
 ## 6.2.0 <span className="changelog-date">(2020-03-22)</span>
 
 ## 6.1.1 <span className="changelog-date">(2020-03-22)</span>

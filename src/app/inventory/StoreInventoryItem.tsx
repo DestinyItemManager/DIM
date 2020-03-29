@@ -35,7 +35,7 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
     );
   }
 
-  private doubleClicked = (e) => {
+  private doubleClicked = (e: React.MouseEvent) => {
     const item = this.props.item;
     if (!loadoutDialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();

@@ -6,7 +6,7 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -223,9 +223,9 @@ export function getColor(value: number, property = 'background-color') {
   } else if (value >= 100) {
     color = 190;
   }
-  const result = {};
-  result[property] = `hsla(${color},65%,50%, 1)`;
-  return result;
+  return {
+    [property]: `hsla(${color},65%,50%, 1)`
+  };
 }
 
 export function dtrRatingColor(value: number, property = 'color') {
@@ -247,9 +247,9 @@ export function dtrRatingColor(value: number, property = 'color') {
   } else if (value >= 4.9) {
     color = 'hsl(190,90%,45%)';
   }
-  const result = {};
-  result[property] = color;
-  return result;
+  return {
+    [property]: color
+  };
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {

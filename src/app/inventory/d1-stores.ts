@@ -54,7 +54,7 @@ function StoreService(): D1StoreServiceType {
   const service = {
     getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
-    getStore: (id) => _stores.find((s) => s.id === id),
+    getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
     getAllItems: () => _stores.flatMap((s) => s.items),
     refreshRatingsData() {

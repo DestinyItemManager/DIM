@@ -9,7 +9,7 @@ import { searchFilterSelector } from '../search/search-filters';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector } from './reducer';
+import { itemInfosSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -17,9 +17,9 @@ interface ProvidedProps {
   allowFilter?: boolean;
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
-  onClick?(e): void;
-  onShiftClick?(e): void;
-  onDoubleClick?(e): void;
+  onClick?(e: React.MouseEvent): void;
+  onShiftClick?(e: React.MouseEvent): void;
+  onDoubleClick?(e: React.MouseEvent): void;
 }
 
 // Props from Redux via mapStateToProps

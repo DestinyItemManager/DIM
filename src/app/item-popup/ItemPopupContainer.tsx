@@ -20,7 +20,7 @@ import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { router } from '../router';
 import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { t } from 'app/i18next-t';
 
 interface ProvidedProps {

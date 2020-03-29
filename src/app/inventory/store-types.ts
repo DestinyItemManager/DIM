@@ -252,9 +252,9 @@ export interface D1Store extends DimStore {
   advisors: any;
 
   updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
-  updateCharacterInfoFromEquip(characterInfo);
+  updateCharacterInfoFromEquip(characterInfo): void;
   /** Which faction is this character currently aligned with? */
-  factionAlignment();
+  factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
 }
 

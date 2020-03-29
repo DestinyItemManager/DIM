@@ -59,7 +59,7 @@ import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const loadoutIcon = {
@@ -396,17 +396,18 @@ class LoadoutPopup extends React.Component<Props> {
       e.preventDefault();
       return;
     }
-    let loadout;
     try {
-      loadout = randomLoadout(
+      const loadout = randomLoadout(
         dimStore.getStoresService(),
         weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
       );
+      if (loadout) {
+        this.applyLoadout(loadout, e);
+      }
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
       return;
     }
-    this.applyLoadout(loadout, e);
   };
 
   // Move items matching the current search. Max 9 per type.

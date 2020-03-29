@@ -31,13 +31,13 @@ import {
 } from './dim-item-info';
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
-import { itemInfosSelector } from './reducer';
+import { itemInfosSelector } from './selectors';
 
 /**
  * You can reserve a number of each type of item in each store.
  */
 export interface MoveReservations {
-  [storeId: number]: {
+  [storeId: string]: {
     [type: string]: number;
   };
 }

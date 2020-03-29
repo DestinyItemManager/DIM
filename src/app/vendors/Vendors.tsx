@@ -27,7 +27,7 @@ import {
   ownedItemsSelector,
   sortedStoresSelector,
   profileResponseSelector
-} from '../inventory/reducer';
+} from '../inventory/selectors';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
