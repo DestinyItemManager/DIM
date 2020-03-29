@@ -114,7 +114,7 @@ export default function SeasonalRank({
             const itemInfo = prestigeMode
               ? getBrightEngram
                 ? defs.InventoryItem.get(brightEngramHash)
-                : season // make fake item out of season info for prestigeMode
+                : defs.InventoryItem.get(season.artifactItemHash || 0) // make fake item out of season info for prestigeMode
               : defs.InventoryItem.get(item.itemHash);
 
             return (
