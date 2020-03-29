@@ -47,7 +47,6 @@ const modMetadataIndexedByEmptySlotHash = objectifyArray(
   modMetadataBySlotTag as ModMetadata[],
   'emptyModSocketHashes'
 );
-console.log(modMetadataIndexedByEmptySlotHash);
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modMetadataBySlotTag.map((m) => m.tag);

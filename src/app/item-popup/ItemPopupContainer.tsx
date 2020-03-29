@@ -104,7 +104,6 @@ class ItemPopupContainer extends React.Component<Props, State> {
           }));
           if ($DIM_FLAVOR !== 'release') {
             console.log(item);
-            console.log(getSpecialtySocketMetadata(item));
           }
         }
       })
