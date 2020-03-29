@@ -789,11 +789,11 @@
     },
     "AuditLog": "Registros de alterações de sincronização do DIM",
     "AuditLogLabel": "Visualizar alterações de dados anteriores",
-    "AutoBackup": "Estamos salvando seus dados em um arquivo chamado dim-data.json, só por precaução.",
-    "BackUpFirst": "Você deve salvar seus dados atuais antes de apagar tudo. Só por precaução.",
+    "AutoBackup": "Nós fizemos o backup de seus dados em um arquivo chamado dim-data.json, só por precaução.",
+    "BackUpFirst": "Você DEVE fazer o backup dos seus dados atuais antes de apagar tudo. Só por precaução.",
     "BrowserMayClearData": "O navegador pode apagar esses dados se você ficar sem espaço ou não visitar DIM frequentemente.",
     "ClearIgnoredUsers": "Limpar Revisores Ignorados",
-    "DeleteAllData": "Remover TODOS os dados dos servidores de Sincronização DIM",
+    "DeleteAllData": "Remover TODOS os dados dos Servidores de Sincronização DIM",
     "DeleteAllDataConfirm": "Tem certeza que TODOS os seus dados devem ser removidos, de todas as contas, da Sincronização DIM? Não dá pra voltar atrás.",
     "DeleteAllDataLabel": "Descartar todos os dados da Sincronização DIM",
     "Details": {
@@ -834,8 +834,8 @@
     "ImportNotification": {
       "SkippedBody": "A Sincronização DIM está usando configurações, tags e sets que você tinha salvo anteriormente, substituindo as que estavam em seu navegador. Os dados anteriores foram salvos em um arquivo de backup. Se desejar, você poderá usar estes dados novamente através das Configurações.",
       "SkippedTitle": "Dados carregados da Sincronização DIM",
-      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync.",
-      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBody": "Dados de configurações, {{tags}} tags e {{loadouts}} sets foram importados de seu backup para a Sincronização DIM.",
+      "SuccessBodyForced": "Dados de configurações, {{tags}} tags e {{loadouts}} sets foram importados de seu backup para a Sincronização DIM, substituindo o que havia por lá.",
       "SuccessTitle": "Sucesso ao Importar"
     },
     "ImportSuccess": "Dados do DIM importados!",

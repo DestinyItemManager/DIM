@@ -21,7 +21,7 @@ import {
   getSpecialtySocketMetadata,
   modSlotTags
 } from 'app/utils/item-utils';
-import { itemInfosSelector, sortedStoresSelector } from '../inventory/reducer';
+import { itemInfosSelector, sortedStoresSelector } from '../inventory/selectors';
 import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 
 import { D1Categories } from '../destiny1/d1-buckets';

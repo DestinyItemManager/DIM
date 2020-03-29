@@ -16,7 +16,7 @@ import {
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
@@ -106,7 +106,7 @@ function LockArmorAndPerks({
   ) => async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const order = Object.values(LockableBuckets).map((v) => v.toString());
+    const order = Object.values(LockableBuckets);
     try {
       const { item } = await showItemPicker({
         hideStoreEquip: true,
@@ -116,7 +116,7 @@ function LockArmorAndPerks({
               item.canBeEquippedBy(selectedStore) &&
               (!filter || filter(item))
           ),
-        sortBy: (item) => order.indexOf(item.bucket.id)
+        sortBy: (item) => order.indexOf(item.bucket.hash)
       });
 
       updateFunc(item);
@@ -137,15 +137,16 @@ function LockArmorAndPerks({
     });
   };
 
-  const addLockItem = (item) => addLockedItemType({ type: 'item', item, bucket: item.bucket });
-  const addExcludeItem = (item) =>
+  const addLockItem = (item: DimItem) =>
+    addLockedItemType({ type: 'item', item, bucket: item.bucket });
+  const addExcludeItem = (item: DimItem) =>
     addLockedItemType({ type: 'exclude', item, bucket: item.bucket });
 
   const chooseLockItem = chooseItem(
     addLockItem,
     // Exclude types that already have a locked item represented
     (item) =>
-      !lockedMap[item.bucket.id] || !lockedMap[item.bucket.id].some((li) => li.type === 'item')
+      !lockedMap[item.bucket.hash] || !lockedMap[item.bucket.hash]!.some((li) => li.type === 'item')
   );
   const chooseExcludeItem = chooseItem(addExcludeItem);
 

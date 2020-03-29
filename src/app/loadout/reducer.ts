@@ -12,8 +12,7 @@ import {
   DestinyVersion
 } from '@destinyitemmanager/dim-api-types';
 import { currentProfileSelector, apiPermissionGrantedSelector } from 'app/dim-api/selectors';
-
-const EMPTY_ARRAY = [];
+import { emptyArray } from 'app/utils/empty';
 
 const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
 
@@ -33,7 +32,7 @@ export const loadoutsSelector = createSelector(
               loadout
             )
           )
-        : EMPTY_ARRAY
+        : emptyArray<Loadout>()
       : currentAccount
       ? legacyLoadouts.filter((loadout) => {
           if (loadout.membershipId !== undefined) {
@@ -58,7 +57,7 @@ export const loadoutsSelector = createSelector(
             return currentAccount.destinyVersion === 1;
           }
         })
-      : EMPTY_ARRAY
+      : emptyArray<Loadout>()
 );
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
   if (state.loadouts.previousLoadouts[storeId]) {

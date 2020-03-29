@@ -11,7 +11,7 @@ import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
-import { sortedStoresSelector } from './reducer';
+import { sortedStoresSelector } from './selectors';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
@@ -68,7 +68,7 @@ class Stores extends React.Component<Props, State> {
     if (isPhonePortrait) {
       return (
         <div
-          className="inventory-content phone-portrait"
+          className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
           role="main"
           aria-label={t('Header.Inventory')}
         >
@@ -116,7 +116,11 @@ class Stores extends React.Component<Props, State> {
     }
 
     return (
-      <div className="inventory-content" role="main" aria-label={t('Header.Inventory')}>
+      <div
+        className={`inventory-content destiny${selectedStore.destinyVersion}`}
+        role="main"
+        aria-label={t('Header.Inventory')}
+      >
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store, index) => (
             <div
@@ -138,7 +142,7 @@ class Stores extends React.Component<Props, State> {
     );
   }
 
-  private onViewChange = (indices) => {
+  private onViewChange = (indices: number[]) => {
     const { stores } = this.props;
     this.setState({ selectedStoreId: stores[indices[0]].id });
     hideItemPopup();
@@ -187,7 +191,7 @@ class Stores extends React.Component<Props, State> {
                 */}
                 {buckets.byCategory[category].map((bucket) => (
                   <StoreBuckets
-                    key={bucket.id}
+                    key={bucket.hash}
                     bucket={bucket}
                     stores={stores}
                     vault={vault}
@@ -213,7 +217,7 @@ function categoryHasItems(
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
     const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
-    return storesToSearch.some((s) => s.buckets[bucket.id] && s.buckets[bucket.id].length > 0);
+    return storesToSearch.some((s) => s.buckets[bucket.hash] && s.buckets[bucket.hash].length > 0);
   });
 }
 

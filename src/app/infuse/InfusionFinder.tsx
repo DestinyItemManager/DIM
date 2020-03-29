@@ -8,7 +8,7 @@ import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon, faRandom, faEquals, faArrowCircleDown } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import copy from 'fast-copy';
-import { storesSelector } from '../inventory/reducer';
+import { storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
@@ -334,39 +334,41 @@ class InfusionFinder extends React.Component<Props, State> {
       convertToLoadoutItem(source, source.equipped)
     ];
 
-    if (target.bucket.sort === 'General') {
-      // Mote of Light
-      items.push({
-        id: '0',
-        hash: 937555249,
-        amount: 2,
-        equipped: false
-      });
-    } else if (source.isDestiny1() && source.primStat!.stat.statIdentifier === 'STAT_DAMAGE') {
-      // Weapon Parts
-      items.push({
-        id: '0',
-        hash: 1898539128,
-        amount: 10,
-        equipped: false
-      });
-    } else {
-      // Armor Materials
-      items.push({
-        id: '0',
-        hash: 1542293174,
-        amount: 10,
-        equipped: false
-      });
-    }
-    if (source.isExotic) {
-      // Exotic shard
-      items.push({
-        id: '0',
-        hash: 452597397,
-        amount: 1,
-        equipped: false
-      });
+    if (source.isDestiny1()) {
+      if (target.bucket.sort === 'General') {
+        // Mote of Light
+        items.push({
+          id: '0',
+          hash: 937555249,
+          amount: 2,
+          equipped: false
+        });
+      } else if (target.bucket.sort === 'Weapons') {
+        // Weapon Parts
+        items.push({
+          id: '0',
+          hash: 1898539128,
+          amount: 10,
+          equipped: false
+        });
+      } else {
+        // Armor Materials
+        items.push({
+          id: '0',
+          hash: 1542293174,
+          amount: 10,
+          equipped: false
+        });
+      }
+      if (source.isExotic) {
+        // Exotic shard
+        items.push({
+          id: '0',
+          hash: 452597397,
+          amount: 1,
+          equipped: false
+        });
+      }
     }
 
     // TODO: another one where we want to respect equipped

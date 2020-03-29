@@ -11,8 +11,6 @@ let updateServiceWorker = () => Promise.resolve();
 
 /** Whether a new service worker has been installed */
 const serviceWorkerUpdated$ = new BehaviorSubject(false);
-/** Whether workbox has reported *any* new cached files */
-const contentChanged$ = new BehaviorSubject(false);
 
 /**
  * An observable for what version the server thinks is current.
@@ -41,8 +39,7 @@ export let dimNeedsUpdate = false;
 export const dimNeedsUpdate$ = combineLatest(
   serverVersionChanged$,
   serviceWorkerUpdated$,
-  contentChanged$,
-  (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
+  (serverVersionChanged, updated) => serverVersionChanged || updated
 ).pipe(
   tap((needsUpdate) => {
     dimNeedsUpdate = needsUpdate;
@@ -57,98 +54,80 @@ export default function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) {
     return;
   }
-  navigator.serviceWorker
-    .register('/service-worker.js')
-    .then((registration) => {
-      // If we have access to the broadcast channel API, use that to listen
-      // for whether there are actual content updates from Workbox.
-      if ('BroadcastChannel' in window) {
-        const updateChannel = new BroadcastChannel('precache-updates');
 
-        const updateMessage = () => {
-          console.log('SW: Service worker cached updated files');
-          contentChanged$.next(true);
-          updateChannel.removeEventListener('message', updateMessage);
-          updateChannel.close();
-        };
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        // TODO: save off a handler that can call registration.update() to force update on refresh?
+        registration.onupdatefound = () => {
+          if ($featureFlags.debugSW) {
+            console.log('SW: A new Service Worker version has been found...');
+          }
+          const installingWorker = registration.installing!;
+          installingWorker.onstatechange = () => {
+            if (installingWorker.state === 'installed') {
+              if (navigator.serviceWorker.controller) {
+                // At this point, the old content will have been purged and
+                // the fresh content will have been added to the cache.
+                // It's the perfect time to display a "New content is
+                // available; please refresh." message in your web app.
+                console.log('SW: New content is available; please refresh. (from onupdatefound)');
+                // At this point, is it really cached??
 
-        updateChannel.addEventListener('message', updateMessage);
+                serviceWorkerUpdated$.next(true);
 
-        // TODO: close and reopen the broadcast channel on freeze/unfreeze
-      } else {
-        // We have to assume a newly installed service worker means new content. This isn't
-        // as good since we may say we updated when the content is the same.
-        contentChanged$.next(true);
-      }
-
-      // TODO: save off a handler that can call registration.update() to force update on refresh?
-      registration.onupdatefound = () => {
-        if ($featureFlags.debugSW) {
-          console.log('SW: A new Service Worker version has been found...');
-        }
-        const installingWorker = registration.installing!;
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the old content will have been purged and
-              // the fresh content will have been added to the cache.
-              // It's the perfect time to display a "New content is
-              // available; please refresh." message in your web app.
-              console.log('SW: New content is available; please refresh. (from onupdatefound)');
-              // At this point, is it really cached??
-
-              serviceWorkerUpdated$.next(true);
-
-              let preventDevToolsReloadLoop;
-              navigator.serviceWorker.addEventListener('controllerchange', () => {
-                // Ensure refresh is only called once.
-                // This works around a bug in "force update on reload".
-                if (preventDevToolsReloadLoop) {
-                  return;
+                let preventDevToolsReloadLoop = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                  // Ensure refresh is only called once.
+                  // This works around a bug in "force update on reload".
+                  if (preventDevToolsReloadLoop) {
+                    return;
+                  }
+                  preventDevToolsReloadLoop = true;
+                  window.location.reload();
+                });
+              } else {
+                // At this point, everything has been precached.
+                // It's the perfect time to display a
+                // "Content is cached for offline use." message.
+                if ($featureFlags.debugSW) {
+                  console.log('SW: Content is cached for offline use.');
                 }
-                preventDevToolsReloadLoop = true;
-                window.location.reload();
-              });
+              }
             } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
               if ($featureFlags.debugSW) {
-                console.log('SW: Content is cached for offline use.');
+                console.log('SW: New Service Worker state: ', installingWorker.state);
               }
             }
-          } else {
-            if ($featureFlags.debugSW) {
-              console.log('SW: New Service Worker state: ', installingWorker.state);
-            }
-          }
+          };
         };
-      };
 
-      updateServiceWorker = () => {
-        console.log('SW: Checking for service worker update.');
-        return registration
-          .update()
-          .catch((err) => {
-            if ($featureFlags.debugSW) {
-              console.error('SW: Unable to update service worker.', err);
-              reportException('service-worker', err);
-            }
-          })
-          .then(() => {
-            if (registration.waiting) {
-              console.log('SW: New content is available; please refresh. (from update)');
-              serviceWorkerUpdated$.next(true);
-            } else {
-              console.log('SW: Updated, but theres not a new worker waiting');
-            }
-          });
-      };
-    })
-    .catch((err) => {
-      console.error('SW: Unable to register service worker.', err);
-      reportException('service-worker', err);
-    });
+        updateServiceWorker = () => {
+          console.log('SW: Checking for service worker update.');
+          return registration
+            .update()
+            .catch((err) => {
+              if ($featureFlags.debugSW) {
+                console.error('SW: Unable to update service worker.', err);
+                reportException('service-worker', err);
+              }
+            })
+            .then(() => {
+              if (registration.waiting) {
+                console.log('SW: New content is available; please refresh. (from update)');
+                serviceWorkerUpdated$.next(true);
+              } else {
+                console.log('SW: Updated, but theres not a new worker waiting');
+              }
+            });
+        };
+      })
+      .catch((err) => {
+        console.error('SW: Unable to register service worker.', err);
+        reportException('service-worker', err);
+      });
+  });
 }
 
 /**

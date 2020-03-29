@@ -339,11 +339,11 @@ function makeD2StoresService(): D2StoreServiceType {
     );
     store.items = processedItems;
     // by type-bucket
-    store.buckets = _.groupBy(store.items, (i) => i.location.id);
+    store.buckets = _.groupBy(store.items, (i) => i.location.hash);
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
-      if (!store.buckets[bucket.id]) {
-        store.buckets[bucket.id] = [];
+      if (!store.buckets[bucket.hash]) {
+        store.buckets[bucket.hash] = [];
       }
     });
     return store;
@@ -386,20 +386,20 @@ function makeD2StoresService(): D2StoreServiceType {
     );
     store.items = processedItems;
     // by type-bucket
-    store.buckets = _.groupBy(store.items, (i) => i.location.id);
+    store.buckets = _.groupBy(store.items, (i) => i.location.hash);
     store.vaultCounts = {};
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
-      if (!store.buckets[bucket.id]) {
-        store.buckets[bucket.id] = [];
+      if (!store.buckets[bucket.hash]) {
+        store.buckets[bucket.hash] = [];
       }
       if (bucket.vaultBucket) {
-        const vaultBucketId = bucket.vaultBucket.id;
+        const vaultBucketId = bucket.vaultBucket.hash;
         store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
           count: 0,
           bucket: bucket.accountWide ? bucket : bucket.vaultBucket
         };
-        store.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
+        store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
       }
     });
     return store;
@@ -495,12 +495,12 @@ function makeD2StoresService(): D2StoreServiceType {
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
       if (bucket.accountWide && bucket.vaultBucket) {
-        const vaultBucketId = bucket.id;
+        const vaultBucketId = bucket.hash;
         vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
           count: 0,
           bucket
         };
-        vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.id].length;
+        vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.hash].length;
       }
     });
     activeStore.vault = vault; // god help me

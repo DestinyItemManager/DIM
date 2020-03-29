@@ -94,6 +94,12 @@ export const consolidate = queuedAction(
   })
 );
 
+interface Move {
+  source: DimStore;
+  target: DimStore;
+  amount: number;
+}
+
 /**
  * Distribute a stackable item evently across characters.
  */
@@ -123,16 +129,8 @@ export const distribute = queuedAction(
     });
     const deltas = _.zip(amounts, targets).map(([amount, target]) => target! - amount!);
 
-    const vaultMoves: {
-      source: DimStore;
-      target: DimStore;
-      amount: number;
-    }[] = [];
-    const targetMoves: {
-      source: DimStore;
-      target: DimStore;
-      amount: number;
-    }[] = [];
+    const vaultMoves: Move[] = [];
+    const targetMoves: Move[] = [];
     const vaultIndex = stores.length - 1;
     const vault = stores[vaultIndex];
 
@@ -153,9 +151,9 @@ export const distribute = queuedAction(
     });
 
     // All moves to vault in parallel, then all moves to targets in parallel
-    async function applyMoves(moves) {
+    async function applyMoves(moves: Move[]) {
       for (const move of moves) {
-        const item = move.source.items.find((i) => i.hash === actionableItem.hash);
+        const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
         await dimItemService.moveTo(item, move.target, false, move.amount);
       }
     }

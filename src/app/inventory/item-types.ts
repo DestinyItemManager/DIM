@@ -22,6 +22,9 @@ import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } fr
 import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 
+/** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
+export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
+
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
  * or you don't use anything specific to one of them.
@@ -43,7 +46,7 @@ export interface DimItem {
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: number[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: string;
+  tier: Tier;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** Did this come from a vendor instead of character inventory? */
@@ -56,8 +59,8 @@ export interface DimItem {
   icon: string;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon: string;
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | D1DamageType | null;
+  /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
+  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Whether we can pull this item from the postmaster */
@@ -88,6 +91,7 @@ export interface DimItem {
         stat: DestinyStatDefinition;
       })
     | null;
+  ammoType: DestinyAmmunitionType;
   /** Localized name of this item's type. */
   typeName: string;
   /** The level a character must be to equip this item. */
@@ -126,7 +130,7 @@ export interface DimItem {
   reviewable: boolean;
   /** The "base power" without any power-enhancing mods. */
   basePower: number;
-  /** A synthetic unique ID used to help Angular tell items apart. This changes to signal that Angular should re-render the item. */
+  /** A synthetic unique ID used to help React tell items apart. Use this as a "key" property. */
   index: string;
   /** Can this be infused? */
   infusable: boolean;
@@ -168,12 +172,7 @@ export interface DimItem {
  * A Destiny 1 item. Use this type when you need specific D1 properties.
  */
 export interface D1Item extends DimItem {
-  primStat: D1PrimStat | null;
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: D1DamageType;
   talentGrid: D1TalentGrid | null;
-  /** The overall item group (e.g. Weapons, Armor) this item is in. See InventoryBuckets. */
-  sort?: string;
   stats: D1Stat[] | null;
   /** Armor quality evaluation. */
   quality: {
@@ -204,8 +203,6 @@ export interface D2Item extends DimItem {
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
-  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** for y3 armor, this is the type and capacity information */
   energy: DestinyItemInstanceEnergy | null;
   /** Information about how this item works with infusion. */
@@ -214,7 +211,6 @@ export interface D2Item extends DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
-  ammoType: DestinyAmmunitionType;
   /** The Destiny season that a specific item belongs to. */
   season: number;
   /** The Destiny event that a specific item belongs to. */
@@ -238,26 +234,6 @@ export interface D2Item extends DimItem {
   };
 
   getStoresService(): D2StoreServiceType;
-}
-
-export interface D1PrimStat extends DestinyStat {
-  stat: DestinyStatDefinition & {
-    statName: string;
-    statIdentifier: string;
-  };
-}
-export interface D1DamageType {
-  damageTypeHash: number;
-  identifier: string;
-  damageTypeName: string;
-  description: string;
-  iconPath: string;
-  transparentIconPath: string;
-  showIcon: boolean;
-  enumValue: number;
-  hash: number;
-  index: number;
-  redacted: boolean;
 }
 
 export interface DimMasterwork {

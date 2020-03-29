@@ -834,8 +834,8 @@
     "ImportNotification": {
       "SkippedBody": "Sincronización DIM está usando configuraciones, equipaciones y etiquetas que tenías previamente guardadas en Sincronización DIM, reemplazando lo que hubiera guardado en este navegador. Esa información reemplazada ha sido guardada en un archivo de copia de seguridad. Puedes reemplazar la información de Sincronización DIM con esta copia de seguridad local en Configuración.",
       "SkippedTitle": "Información Cargada Desde Sincronización DIM",
-      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync.",
-      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBody": "Importadas configuraciones, {{loadouts}} equipaciones y {{tags}} objetos etiquetados de tu copia de seguridad en Sincronización DIM.",
+      "SuccessBodyForced": "Importadas configuraciones, {{loadouts}} equipaciones y {{tags}} objetos etiquetas desde tu copia de seguridad a Sincronización DIM, reemplazando lo que ya estaba allí.",
       "SuccessTitle": "Importación Exitosa"
     },
     "ImportSuccess": "¡Datos de DIM importados!",

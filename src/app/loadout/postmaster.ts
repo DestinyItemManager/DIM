@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { dimItemService } from '../inventory/item-move-service';
+import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -13,9 +13,9 @@ export async function makeRoomForPostmaster(
 ): Promise<void> {
   const buckets = await bucketsService();
   const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
-    (bucket: InventoryBucket) => store.buckets[bucket.id]
+    (bucket: InventoryBucket) => store.buckets[bucket.hash]
   );
-  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
+  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
   // If any category is full, we'll move enough aside
   const itemsToMove: DimItem[] = [];
   _.forIn(postmasterItemCountsByType, (count, bucket) => {
@@ -92,10 +92,7 @@ export function postmasterAlmostFull(store: DimStore) {
 }
 
 export function postmasterSpaceLeft(store: DimStore) {
-  return Math.max(
-    0,
-    POSTMASTER_SIZE - (store.buckets[215593132] && store.buckets[215593132].length)
-  );
+  return Math.max(0, POSTMASTER_SIZE - totalPostmasterItems(store));
 }
 export function postmasterSpaceUsed(store: DimStore) {
   return POSTMASTER_SIZE - postmasterSpaceLeft(store);
@@ -103,10 +100,7 @@ export function postmasterSpaceUsed(store: DimStore) {
 
 // to-do: either typing is wrong and this can return undefined, or this doesn't need &&s and ?.s
 export function totalPostmasterItems(store: DimStore) {
-  return (
-    (store.buckets[215593132] && store.buckets[215593132].length) ||
-    store.buckets.BUCKET_RECOVERY?.length
-  );
+  return store.buckets[215593132]?.length || 0;
 }
 
 const showNoSpaceError = _.throttle(
@@ -195,16 +189,16 @@ async function moveItemsToVault(
   storeService: StoreServiceType,
   store: DimStore,
   items: DimItem[],
-  dimItemService
+  dimItemService: ItemServiceType
 ): Promise<void> {
-  const reservations = {};
+  const reservations: MoveReservations = {};
   // reserve space for all move-asides
   reservations[store.id] = _.countBy(items, (i) => i.type);
 
   for (const item of items) {
     // Move a single item. We reevaluate the vault each time in case things have changed.
-    const vault = storeService.getVault();
-    const vaultSpaceLeft = vault!.spaceLeftForItem(item);
+    const vault = storeService.getVault()!;
+    const vaultSpaceLeft = vault.spaceLeftForItem(item);
     if (vaultSpaceLeft <= 1) {
       // If we're down to one space, try putting it on other characters
       const otherStores = storeService

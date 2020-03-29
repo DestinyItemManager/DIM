@@ -67,8 +67,8 @@
     white-space: normal;
   }
 
-  // Engrams
-  .bucket-375726501 & {
+  // Engrams. D1 uses this same bucket hash for "Missions"
+  .destiny2 .bucket-375726501 & {
     /* prettier-ignore */
     --engram-size: calc(var(--character-column-width) / 10);
 

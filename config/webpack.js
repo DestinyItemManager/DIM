@@ -10,7 +10,6 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
@@ -22,7 +21,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[md5:hash:6].[ext]';
 
 const packageJson = require('../package.json');
 
@@ -138,8 +137,7 @@ module.exports = (env) => {
           exclude: /index\.html/,
           loader: 'html-loader',
           options: {
-            exportAsEs6Default: true,
-            minimize: true
+            esModule: true
           }
         },
         {
@@ -224,7 +222,7 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: { name: '[name]-[hash:6].[ext]' }
+              options: { name: '[name]-[md5:hash:6].[ext]' }
             }
           ]
         },
@@ -267,9 +265,6 @@ module.exports = (env) => {
         chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
       }),
 
-      // Fix some chunks not showing up in Webpack 4
-      new HtmlWebpackIncludeSiblingChunksPlugin(),
-
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'index.html',
@@ -301,6 +296,7 @@ module.exports = (env) => {
         filename: '.htaccess',
         template: 'src/htaccess',
         inject: false,
+        minify: false,
         templateParameters: {
           csp: csp(env.name)
         }
@@ -441,9 +437,8 @@ module.exports = (env) => {
           // Android manifest
           /\.well-known/
         ],
-        swSrc: './src/service-worker.js',
-        swDest: 'service-worker.js',
-        importWorkboxFrom: 'local'
+        swSrc: './src/service-worker.ts',
+        swDest: 'service-worker.js'
       })
     );
 

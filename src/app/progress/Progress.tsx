@@ -14,7 +14,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
-import { sortedStoresSelector, profileResponseSelector } from 'app/inventory/reducer';
+import { sortedStoresSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { AppIcon, faExternalLinkAlt } from 'app/shell/icons';

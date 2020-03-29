@@ -6,7 +6,7 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -108,11 +108,10 @@ const D1_MATERIAL_SORT_ORDER = [
 // Don't resort postmaster items - that way people can see
 // what'll get bumped when it's full.
 const ITEM_SORT_BLACKLIST = new Set([
-  'BUCKET_BOUNTIES',
-  'BUCKET_MISSION',
-  'BUCKET_QUESTS',
-  'BUCKET_POSTMASTER',
-  '215593132' // LostItems
+  2197472680, // Bounties (D1)
+  375726501, // Mission (D1)
+  1801258597, // Quests (D1)
+  215593132 // LostItems
 ]);
 
 // TODO: pass in state
@@ -154,19 +153,19 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
     return items;
   }
 
-  const itemLocationId = items[0].location.id.toString();
+  const itemLocationId = items[0].location.hash;
   if (!items.length || ITEM_SORT_BLACKLIST.has(itemLocationId)) {
     return items;
   }
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === 'BUCKET_CONSUMABLES') {
+  if (itemLocationId === 1469714392) {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === 'BUCKET_MATERIALS') {
+  if (itemLocationId === 3865314626) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
@@ -179,7 +178,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort mods
-  if (itemLocationId === '3313201758') {
+  if (itemLocationId === 3313201758) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
     if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
@@ -188,7 +187,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort consumables
-  if (itemLocationId === '1469714392') {
+  if (itemLocationId === 1469714392) {
     return items.sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,
@@ -224,9 +223,9 @@ export function getColor(value: number, property = 'background-color') {
   } else if (value >= 100) {
     color = 190;
   }
-  const result = {};
-  result[property] = `hsla(${color},65%,50%, 1)`;
-  return result;
+  return {
+    [property]: `hsla(${color},65%,50%, 1)`
+  };
 }
 
 export function dtrRatingColor(value: number, property = 'color') {
@@ -248,9 +247,9 @@ export function dtrRatingColor(value: number, property = 'color') {
   } else if (value >= 4.9) {
     color = 'hsl(190,90%,45%)';
   }
-  const result = {};
-  result[property] = color;
-  return result;
+  return {
+    [property]: color
+  };
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {

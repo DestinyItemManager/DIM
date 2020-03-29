@@ -70,7 +70,7 @@ export interface DimStore {
   /** All items in the store, across all buckets. */
   items: DimItem[];
   /** All items, grouped by their bucket. */
-  buckets: { [bucketId: string]: DimItem[] };
+  buckets: { [bucketHash: number]: DimItem[] };
   /** The Destiny version this store came from. */
   destinyVersion: 1 | 2;
   /** An icon (emblem) for the store. */
@@ -149,7 +149,7 @@ export interface DimStore {
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
 interface VaultCounts {
-  [bucketId: number]: { count: number; bucket: InventoryBucket };
+  [bucketHash: number]: { count: number; bucket: InventoryBucket };
 }
 
 export interface DimVault extends DimStore {
@@ -252,9 +252,9 @@ export interface D1Store extends DimStore {
   advisors: any;
 
   updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
-  updateCharacterInfoFromEquip(characterInfo);
+  updateCharacterInfoFromEquip(characterInfo): void;
   /** Which faction is this character currently aligned with? */
-  factionAlignment();
+  factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
 }
 

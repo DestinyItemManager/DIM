@@ -834,8 +834,8 @@
     "ImportNotification": {
       "SkippedBody": "DIM Sync sta utilizzando le impostazioni, i loadout e le etichette che hai precedentemente salvato su DIM Sync, sostituendo ciò che era salvato in questo browser. Quei dati sovrascritti sono stati salvati in un file di backup. Puoi sostituire i dati di DIM Sync con questo backup locale dalle Impostazioni.",
       "SkippedTitle": "Caricati dati da DIM Sync",
-      "SuccessBody": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync.",
-      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBody": "Importate impostazioni, {{loadouts}} loadout, e {{tags}} oggetti etichettati dal tuo backup in DIM Sync.",
+      "SuccessBodyForced": "Importate impostazioni, {{loadouts}} loadout, e {{tags}} oggetti etichettati dal tuo backup in DIM Sync, sostituendo ciò che era già presente.",
       "SuccessTitle": "Importazione avvenuta con successo"
     },
     "ImportSuccess": "Dati DIM importati!",

@@ -12,7 +12,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
-import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
+import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
@@ -22,6 +22,7 @@ import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
+import { emptySet } from 'app/utils/empty';
 
 interface ProvidedProps {
   item: D2Item;
@@ -35,8 +36,6 @@ interface StoreProps {
   unlockedPlugs: Set<number>;
 }
 
-const EMPTY_SET = new Set<number>();
-
 function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
@@ -46,7 +45,7 @@ function mapStateToProps() {
       props.socket.socketDefinition.randomizedPlugSetHash,
     (profileResponse, plugSetHash) => {
       if (!plugSetHash || !profileResponse) {
-        return EMPTY_SET;
+        return emptySet<number>();
       }
       const unlockedPlugs = new Set<number>();
       const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
@@ -71,7 +70,7 @@ function mapStateToProps() {
           socketType.plugWhitelist
         )
       ) {
-        return EMPTY_SET;
+        return emptySet<number>();
       }
 
       const modHashes = new Set<number>();

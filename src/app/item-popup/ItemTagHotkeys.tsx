@@ -7,7 +7,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 
 interface ProvidedProps {
   item: DimItem;
