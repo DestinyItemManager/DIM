@@ -12,7 +12,7 @@ export function shallowCopy<T>(o: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
 }
 
-export function preventNaN(testValue: number, defaultValue: number | string) {
+export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
   return !isNaN(testValue) ? testValue : defaultValue;
 }
 
