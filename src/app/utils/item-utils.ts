@@ -65,6 +65,7 @@ export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (ite
       specialtyModSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999)
     )) ||
   undefined;
+
 /** just gives you the hash that defines what socket a plug can fit into */
 export const getSpecialtySocketCategoryHash: (item: DimItem) => number | undefined = (item) =>
   getSpecialtySocket(item)?.socketDefinition.singleInitialItemHash;
