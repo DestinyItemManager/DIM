@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { count } from '../../utils/util';
 import { setSetting } from '../../settings/actions';
 import { D1Store } from '../../inventory/store-types';
-import { storesSelector } from '../../inventory/reducer';
+import { storesSelector } from '../../inventory/selectors';
 import { RootState } from '../../store/reducers';
 import { connect } from 'react-redux';
 import { Loading } from '../../dim-ui/Loading';

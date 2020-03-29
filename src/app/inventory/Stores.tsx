@@ -11,7 +11,7 @@ import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
-import { sortedStoresSelector } from './reducer';
+import { sortedStoresSelector } from './selectors';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';

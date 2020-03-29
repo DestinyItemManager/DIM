@@ -6,7 +6,7 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 

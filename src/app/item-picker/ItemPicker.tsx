@@ -6,7 +6,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { connect, MapStateToProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
-import { storesSelector } from '../inventory/reducer';
+import { storesSelector } from '../inventory/selectors';
 import {
   SearchConfig,
   searchConfigSelector,

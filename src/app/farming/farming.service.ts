@@ -13,7 +13,7 @@ import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners

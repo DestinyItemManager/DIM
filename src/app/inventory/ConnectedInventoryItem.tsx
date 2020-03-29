@@ -9,7 +9,7 @@ import { searchFilterSelector } from '../search/search-filters';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector } from './reducer';
+import { itemInfosSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {

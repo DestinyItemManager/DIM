@@ -15,7 +15,7 @@ import './ItemPopupContainer.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import ItemActions from './ItemActions';
 import { settingsSelector } from 'app/settings/reducer';

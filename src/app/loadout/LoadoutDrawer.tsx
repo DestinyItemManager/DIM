@@ -13,7 +13,7 @@ import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
-import { storesSelector } from '../inventory/reducer';
+import { storesSelector } from '../inventory/selectors';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
