@@ -8,7 +8,6 @@ import {
   DestinyCollectibleState,
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
-import './Collectible.scss';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 
 interface Props {

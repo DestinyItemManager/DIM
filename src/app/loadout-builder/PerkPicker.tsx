@@ -26,11 +26,18 @@ import { storesSelector, profileResponseSelector } from 'app/inventory/selectors
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
-import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
+export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
+  compareBy((i) => i.plug.energyCost?.energyType),
+  compareBy((i) => i.plug.energyCost?.energyCost),
+  compareBy((i) => i.displayProperties.name)
+);
 
 const burns: BurnItem[] = [
   {
