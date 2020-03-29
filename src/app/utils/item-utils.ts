@@ -58,19 +58,13 @@ const specialtyModSocketHashes = Object.values(modMetadataBySlotTag)
   .flat();
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (item) => {
-  return (
-    (item.isDestiny2() &&
-      item.bucket?.sort === 'Armor' &&
-      item.sockets?.sockets.find((socket) =>
-        specialtyModSocketHashes.includes(
-          socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999
-        )
-      )) ||
-    undefined
-  );
-};
-
+export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (item) =>
+  (item.isDestiny2() &&
+    item.bucket?.sort === 'Armor' &&
+    item.sockets?.sockets.find((socket) =>
+      specialtyModSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999)
+    )) ||
+  undefined;
 /** just gives you the hash that defines what socket a plug can fit into */
 export const getSpecialtySocketCategoryHash: (item: DimItem) => number | undefined = (item) =>
   getSpecialtySocket(item)?.socketDefinition.singleInitialItemHash;
