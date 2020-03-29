@@ -142,7 +142,7 @@ class Stores extends React.Component<Props, State> {
     );
   }
 
-  private onViewChange = (indices) => {
+  private onViewChange = (indices: number[]) => {
     const { stores } = this.props;
     this.setState({ selectedStoreId: stores[indices[0]].id });
     hideItemPopup();

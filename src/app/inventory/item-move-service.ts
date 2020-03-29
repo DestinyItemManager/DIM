@@ -37,7 +37,7 @@ import { itemInfosSelector } from './reducer';
  * You can reserve a number of each type of item in each store.
  */
 export interface MoveReservations {
-  [storeId: number]: {
+  [storeId: string]: {
     [type: string]: number;
   };
 }

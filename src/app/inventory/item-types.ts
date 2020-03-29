@@ -22,6 +22,9 @@ import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } fr
 import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 
+/** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
+export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
+
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
  * or you don't use anything specific to one of them.
@@ -43,7 +46,7 @@ export interface DimItem {
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: number[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: string;
+  tier: Tier;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** Did this come from a vendor instead of character inventory? */

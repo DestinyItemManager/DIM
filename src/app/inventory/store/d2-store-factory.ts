@@ -2,7 +2,8 @@ import {
   DestinyCharacterComponent,
   DestinyItemComponent,
   DestinyStatDefinition,
-  DestinyClass
+  DestinyClass,
+  DestinyGender
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
@@ -22,8 +23,9 @@ import { armorStats } from './stats';
  */
 
 const genderTypeToEnglish = {
-  0: 'male',
-  1: 'female'
+  [DestinyGender.Male]: 'male',
+  [DestinyGender.Female]: 'female',
+  [DestinyGender.Unknown]: ''
 };
 
 // Prototype for Store objects - add methods to this to add them to all

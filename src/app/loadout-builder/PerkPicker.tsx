@@ -406,13 +406,13 @@ class PerkPicker extends React.Component<Props, State> {
     }
   };
 
-  private onSubmit = (e, onClose: () => void) => {
+  private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
     this.props.onPerksSelected(this.state.selectedPerks);
     onClose();
   };
 
-  private scrollToBucket = (bucketId) => {
+  private scrollToBucket = (bucketId: number) => {
     const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
     elem?.scrollIntoView();
   };
@@ -427,7 +427,7 @@ function LockedItemIcon({
 }: {
   lockedItem: LockedItemType;
   defs: D2ManifestDefinitions;
-  onClick(e): void;
+  onClick(e: React.MouseEvent): void;
 }) {
   switch (lockedItem.type) {
     case 'mod':
