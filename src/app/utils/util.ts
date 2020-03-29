@@ -31,8 +31,21 @@ export function objectifyArray<T>(
 ): { [key: string]: T };
 export function objectifyArray<T>(array: T[], key: string | ((obj: any) => string | number)) {
   return array.reduce((acc, val) => {
-    if (typeof key === 'string') acc[val[key]] = val;
-    else acc[key(val)] = val;
+    if (typeof key === 'string') {
+      const keyName =
+        typeof val[key] === 'string'
+          ? val[key]
+          : !Array.isArray(val[key])
+          ? JSON.stringify(val[key])
+          : false;
+
+      if (keyName !== false) acc[keyName] = val;
+      else {
+        for (const eachKeyName of val[key]) {
+          acc[eachKeyName] = val;
+        }
+      }
+    } else acc[key(val)] = val;
     return acc;
   }, {});
 }

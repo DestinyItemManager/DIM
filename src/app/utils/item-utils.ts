@@ -41,12 +41,13 @@ interface ModMetadata {
   compatibleTags: string[];
   thisSlotPlugCategoryHashes: number[];
   compatiblePlugCategoryHashes: number[];
-  emptyModSocketHash: number;
+  emptyModSocketHashes: number[];
 }
 const modMetadataIndexedByEmptySlotHash = objectifyArray(
   modMetadataBySlotTag as ModMetadata[],
-  'emptyModSocketHash'
+  'emptyModSocketHashes'
 );
+console.log(modMetadataIndexedByEmptySlotHash);
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modMetadataBySlotTag.map((m) => m.tag);
@@ -57,13 +58,18 @@ const specialtyModSocketHashes = Object.values(modMetadataBySlotTag)
   .flat();
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (item) =>
-  (item.isDestiny2() &&
-    item.bucket?.sort === 'Armor' &&
-    item.sockets?.sockets.find((socket) =>
-      specialtyModSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999)
-    )) ||
-  undefined;
+export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (item) => {
+  return (
+    (item.isDestiny2() &&
+      item.bucket?.sort === 'Armor' &&
+      item.sockets?.sockets.find((socket) =>
+        specialtyModSocketHashes.includes(
+          socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999
+        )
+      )) ||
+    undefined
+  );
+};
 
 /** just gives you the hash that defines what socket a plug can fit into */
 export const getSpecialtySocketCategoryHash: (item: DimItem) => number | undefined = (item) =>
