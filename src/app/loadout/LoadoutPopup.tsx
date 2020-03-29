@@ -88,16 +88,16 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-/** Does the user have an classified items? */
-const hasClassifiedSelector = createSelector(storesSelector, (stores) =>
-  getAllItems(stores).some(
-    (i) =>
-      i.classified &&
-      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-  )
-);
-
 function mapStateToProps() {
+  /** Does the user have an classified items? */
+  const hasClassifiedSelector = createSelector(storesSelector, (stores) =>
+    getAllItems(stores).some(
+      (i) =>
+        i.classified &&
+        (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+    )
+  );
+
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
     (_, { dimStore }: ProvidedProps) => dimStore,
