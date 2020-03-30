@@ -30,8 +30,6 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault> {
   updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
-  /** Reload DTR rating data. */
-  refreshRatingsData(): void;
 
   /** Tell Redux things have changed. Temporary bridge for Redux. */
   touch(): void;

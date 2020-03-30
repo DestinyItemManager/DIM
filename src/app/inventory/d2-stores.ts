@@ -30,7 +30,6 @@ import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
-import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import { getActivePlatform } from 'app/accounts/platforms';
@@ -95,7 +94,6 @@ function makeD2StoresService(): D2StoreServiceType {
     getStoresStream,
     updateCharacters,
     reloadStores,
-    refreshRatingsData,
     touch() {
       store.dispatch(update({ stores: _stores }));
     }
@@ -479,13 +477,6 @@ function makeD2StoresService(): D2StoreServiceType {
       }
     });
     activeStore.vault = vault; // god help me
-  }
-
-  function refreshRatingsData() {
-    if ($featureFlags.reviewsEnabled) {
-      store.dispatch(clearRatings());
-      store.dispatch(fetchRatings(_stores));
-    }
   }
 }
 
