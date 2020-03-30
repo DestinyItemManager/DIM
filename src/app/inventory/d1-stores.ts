@@ -246,8 +246,6 @@ function StoreService(): D1StoreServiceType {
       // by type-bucket
       store.buckets = _.groupBy(items, (i) => i.location.hash);
 
-      console.log(store.items, store.buckets);
-
       // Fill in any missing buckets
       Object.values(buckets.byType).forEach((bucket) => {
         if (!store.buckets[bucket.hash]) {

@@ -181,7 +181,7 @@ const toD2DamageType = _.memoize(
   i like the icons a lot
 */
 
-    ({
+    damageType && {
       displayProperties: {
         name: damageType.damageTypeName,
         description: damageType.description,
@@ -196,7 +196,7 @@ const toD2DamageType = _.memoize(
       enumValue: damageType.enumValue,
       index: damageType.index,
       redacted: damageType.redacted
-    })
+    }
 );
 
 /**

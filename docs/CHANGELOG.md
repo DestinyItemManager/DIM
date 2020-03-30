@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed a bug where D1 items could fail to display.
+* Fixed a bug where responding "Not now" to the DIM Sync prompt wouldn't cause it to go away forever.
+
 ## 6.3.0 <span className="changelog-date">(2020-03-29)</span>
 
 * Removed duplicate Mods section from the top level of the Collections screen - they're still under the normal collections tree.
