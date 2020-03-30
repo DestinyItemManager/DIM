@@ -32,7 +32,9 @@ import {
   DestinyStatGroupDefinition,
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
-  DestinyMaterialRequirementSetDefinition
+  DestinyMaterialRequirementSetDefinition,
+  DestinyMetricDefinition,
+  DestinyTraitDefinition
 } from 'bungie-api-ts/destiny2';
 import { ManifestDefinitions } from './definitions';
 import _ from 'lodash';
@@ -67,7 +69,9 @@ const lazyTables = [
   'PlugSet',
   'Collectible',
   'PresentationNode',
-  'Record'
+  'Record',
+  'Metric',
+  'Trait'
 ];
 
 const eagerTables = [
@@ -113,6 +117,8 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Collectible: LazyDefinition<DestinyCollectibleDefinition>;
   PresentationNode: LazyDefinition<DestinyPresentationNodeDefinition>;
   Record: LazyDefinition<DestinyRecordDefinition>;
+  Metric: LazyDefinition<DestinyMetricDefinition>;
+  Trait: LazyDefinition<DestinyTraitDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };

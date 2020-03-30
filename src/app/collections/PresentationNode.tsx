@@ -17,6 +17,7 @@ import Checkbox from '../settings/Checkbox';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
+import Metric from './Metric';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -162,10 +163,17 @@ class PresentationNode extends React.Component<Props> {
       3: 'Records'
     };
 
+    // TODO: need more info on what iconSequences are
+
     const title = (
       <span className="node-name">
         {presentationNodeDef.displayProperties.icon && (
-          <BungieImage src={presentationNodeDef.displayProperties.icon} />
+          <BungieImage
+            src={
+              presentationNodeDef.displayProperties.iconSequences?.[0]?.frames?.[1] ??
+              presentationNodeDef.displayProperties.icon
+            }
+          />
         )}{' '}
         {presentationNodeDef.displayProperties.name}
       </span>
@@ -277,6 +285,19 @@ class PresentationNode extends React.Component<Props> {
                     profileResponse={profileResponse}
                     completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
+                  />
+                ))}
+              </div>
+            )}
+            {presentationNodeDef.children.metrics.length > 0 && (
+              <div className="metrics">
+                {/* TODO: group by trait */}
+                {presentationNodeDef.children.metrics.map((metric) => (
+                  <Metric
+                    key={metric.metricHash}
+                    metricHash={metric.metricHash}
+                    defs={defs}
+                    profileResponse={profileResponse}
                   />
                 ))}
               </div>

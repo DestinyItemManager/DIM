@@ -88,6 +88,11 @@ function Collections({
 
   const presentationNodeHash = transition?.params().presentationNodeHash;
 
+  const badgesRootNodeHash =
+    profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
+  const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
+  console.log(profileResponse, profileResponse.metrics?.data);
+
   return (
     <div className="vendor d2-vendors dim-page">
       <ErrorBoundary name="Catalysts">
@@ -106,14 +111,26 @@ function Collections({
           openedPresentationHash={presentationNodeHash}
           showPlugSets={true}
         />
-        <PresentationNodeRoot
-          presentationNodeHash={498211331}
-          defs={defs}
-          profileResponse={profileResponse}
-          buckets={buckets}
-          ownedItemHashes={ownedItemHashes}
-          openedPresentationHash={presentationNodeHash}
-        />
+        {badgesRootNodeHash && (
+          <PresentationNodeRoot
+            presentationNodeHash={badgesRootNodeHash}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
+        )}
+        {metricsRootNodeHash && (
+          <PresentationNodeRoot
+            presentationNodeHash={metricsRootNodeHash}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
+        )}
       </ErrorBoundary>
       <div className="collections-partners">
         <a

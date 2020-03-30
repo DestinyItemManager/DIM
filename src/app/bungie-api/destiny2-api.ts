@@ -84,7 +84,9 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemReusablePlugs,
     // TODO: We should try to defer this until the popup is open!
     DestinyComponentType.ItemPlugObjectives,
-    DestinyComponentType.Records
+    // TODO: we should defer this unless you're on the collections screen
+    DestinyComponentType.Records,
+    DestinyComponentType.Metrics
   );
 }
 

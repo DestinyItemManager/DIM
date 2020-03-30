@@ -64,6 +64,8 @@ export const D2SupplementalManifestDefinitions = {
   Collectible: { get, getAll },
   PresentationNode: { get, getAll },
   Record: { get, getAll },
+  Metric: { get, getAll },
+  Trait: { get, getAll },
 
   InventoryBucket: {},
   Class: {},
