@@ -2,7 +2,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedItemType, BurnItem } from '../types';
+import { LockedItemType, BurnItem, LockedModBase } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -35,20 +35,26 @@ export function SelectableMod({
   bucket,
   selected,
   unselectable,
-  onLockedPerk
+  onLockedPerk,
+  onLockedModBase
 }: {
   mod: DestinyInventoryItemDefinition;
   // plugSet this mod appears in
   plugSetHash: number;
   defs: D2ManifestDefinitions;
-  bucket: InventoryBucket;
+  bucket?: InventoryBucket;
   selected: boolean;
-  unselectable: boolean;
-  onLockedPerk(perk: LockedItemType): void;
+  unselectable?: boolean;
+  onLockedPerk?(perk: LockedItemType): void;
+  onLockedModBase?(mod: LockedModBase): void;
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
+    if (bucket && onLockedPerk) {
+      onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
+    } else if (onLockedModBase) {
+      onLockedModBase({ item: mod, plugSetHash });
+    }
   };
 
   const perk = Boolean(mod.perks?.length) && defs.SandboxPerk.get(mod.perks[0].perkHash);

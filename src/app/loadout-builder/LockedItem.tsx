@@ -38,7 +38,9 @@ export default function LockedItem({
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.mod.hash}>
           <div className={styles.emptyItem}>
             <SocketDetailsMod itemDef={lockedItem.mod} defs={defs} />
-            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+            {lockedItem.bucket && (
+              <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+            )}
           </div>
         </ClosableContainer>
       );

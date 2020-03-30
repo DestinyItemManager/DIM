@@ -52,7 +52,7 @@ const modMetadataIndexedByEmptySlotHash = objectifyArray(
 export const modSlotTags = modMetadataBySlotTag.map((m) => m.tag);
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
-const specialtyModSocketHashes = Object.values(modMetadataBySlotTag)
+export const specialtyModSocketHashes = Object.values(modMetadataBySlotTag)
   .map((modMetadata) => modMetadata.thisSlotPlugCategoryHashes)
   .flat();
 

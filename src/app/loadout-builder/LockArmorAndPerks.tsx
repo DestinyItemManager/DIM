@@ -11,7 +11,8 @@ import {
   ItemsByBucket,
   LockedPerk,
   LockedMap,
-  LockedMod
+  LockedMod,
+  LockedModBase
 } from './types';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -28,12 +29,16 @@ import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import ClosableContainer from './ClosableContainer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
   items: ItemsByBucket;
   lockedMap: LockedMap;
+  lockedSeasonalMods: LockedModBase[];
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
+  onSeasonalModsChanged(mod: LockedModBase[]): void;
 }
 
 interface StoreProps {
@@ -63,11 +68,13 @@ function LockArmorAndPerks({
   selectedStore,
   defs,
   lockedMap,
+  lockedSeasonalMods,
   items,
   buckets,
   stores,
   isPhonePortrait,
-  onLockedMapChanged
+  onLockedMapChanged,
+  onSeasonalModsChanged
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
 
@@ -124,17 +131,21 @@ function LockArmorAndPerks({
   };
 
   const addLockedItemType = (item: LockedItemType) => {
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
-    });
+    if (item.bucket) {
+      onLockedMapChanged({
+        ...lockedMap,
+        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+      });
+    }
   };
 
   const removeLockedItemType = (item: LockedItemType) => {
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
-    });
+    if (item.bucket) {
+      onLockedMapChanged({
+        ...lockedMap,
+        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+      });
+    }
   };
 
   const addLockItem = (item) => addLockedItemType({ type: 'item', item, bucket: item.bucket });
@@ -171,11 +182,12 @@ function LockArmorAndPerks({
       <div className={styles.area}>
         {(Boolean(flatLockedMap.perk?.length) ||
           Boolean(flatLockedMap.mod?.length) ||
-          Boolean(flatLockedMap.burn?.length)) && (
+          Boolean(flatLockedMap.burn?.length) ||
+          Boolean(lockedSeasonalMods.length)) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.mod.hash}`}
+                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
                 lockedItem={lockedItem}
                 defs={defs}
                 onRemove={removeLockedItemType}
@@ -183,7 +195,7 @@ function LockArmorAndPerks({
             ))}
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
+                key={`${lockedItem.bucket?.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
                 defs={defs}
                 onRemove={removeLockedItemType}
@@ -197,6 +209,20 @@ function LockArmorAndPerks({
                 onRemove={removeLockedItemType}
               />
             ))}
+            {lockedSeasonalMods.map((mod) => (
+              <ClosableContainer
+                onClose={() =>
+                  onSeasonalModsChanged(
+                    lockedSeasonalMods.filter((locked) => locked.item.hash !== mod.item.hash)
+                  )
+                }
+                key={mod.item.hash}
+              >
+                <div className={'new-class'}>
+                  <SocketDetailsMod itemDef={mod.item} defs={defs} />
+                </div>
+              </ClosableContainer>
+            ))}
           </div>
         )}
         <div className={styles.buttons}>
@@ -209,8 +235,10 @@ function LockArmorAndPerks({
                 classType={selectedStore.classType}
                 items={items}
                 lockedMap={lockedMap}
+                lockedSeasonalMods={lockedSeasonalMods}
                 onClose={() => setFilterPerksOpen(false)}
                 onPerksSelected={onLockedMapChanged}
+                onSeasonalModsChanged={onSeasonalModsChanged}
               />,
               document.body
             )}

@@ -1,6 +1,14 @@
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
+import {
+  ArmorSet,
+  LockedItemType,
+  StatTypes,
+  LockedMap,
+  LockedMod,
+  MinMaxIgnored,
+  LockedModBase
+} from '../types';
 import { count } from '../../utils/util';
 import {
   DestinyInventoryItemDefinition,
@@ -10,6 +18,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
+import { getSpecialtySocket } from 'app/utils/item-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -118,6 +127,7 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
@@ -126,6 +136,24 @@ export function filterGeneratedSets(
   // Filter before set tiers are generated
   if (minimumPower > 0) {
     matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
+  }
+
+  if (lockedSeasonalMods.length) {
+    const setsBeforeFilter = matchedSets.length;
+    matchedSets = sets.filter((set) =>
+      set.firstValidSet.some((item) =>
+        lockedSeasonalMods.some(
+          (mod) =>
+            mod.item.plug.plugCategoryHash ===
+            getSpecialtySocket(item)?.plug?.plugItem.plug.plugCategoryHash
+        )
+      )
+    );
+
+    console.info(
+      `Filtered out ${setsBeforeFilter -
+        matchedSets.length} sets based on seasonal mod requirements`
+    );
   }
 
   matchedSets = matchedSets.sort(
