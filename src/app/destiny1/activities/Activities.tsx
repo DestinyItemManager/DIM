@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import { DimStore, D1Store } from '../../inventory/store-types';
 import { RootState } from '../../store/reducers';
-import { sortedStoresSelector } from '../../inventory/reducer';
+import { sortedStoresSelector } from '../../inventory/selectors';
 import SimpleCharacterTile from '../../inventory/SimpleCharacterTile';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../../shell/icons';

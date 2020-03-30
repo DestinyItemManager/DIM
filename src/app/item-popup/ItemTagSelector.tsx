@@ -6,7 +6,7 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 import { setItemTag } from 'app/inventory/actions';
-import { itemInfosSelector } from 'app/inventory/reducer';
+import { itemInfosSelector } from 'app/inventory/selectors';
 
 interface ProvidedProps {
   item: DimItem;
@@ -23,7 +23,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function ItemTagSelector({ item, tag, dispatch }: Props) {
-  const onTagUpdated = (e) => {
+  const onTagUpdated = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tag = e.currentTarget.value as TagValue;
     dispatch(setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag }));
   };

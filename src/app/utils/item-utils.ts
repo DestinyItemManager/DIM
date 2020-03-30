@@ -41,11 +41,11 @@ interface ModMetadata {
   compatibleTags: string[];
   thisSlotPlugCategoryHashes: number[];
   compatiblePlugCategoryHashes: number[];
-  emptyModSocketHash: number;
+  emptyModSocketHashes: number[];
 }
 const modMetadataIndexedByEmptySlotHash = objectifyArray(
   modMetadataBySlotTag as ModMetadata[],
-  'emptyModSocketHash'
+  'emptyModSocketHashes'
 );
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */

@@ -34,7 +34,6 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
-import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -233,11 +232,6 @@ export function makeItem(
     [key: number]: DestinyObjectiveProgress[];
   }
 ): D2Item | null {
-  // Fix Sundial Weapons definitions.
-  // https://github.com/Bungie-net/api/issues/1170
-  if (item.itemHash in definitionReplacements) {
-    (item as any).itemHash = definitionReplacements[item.itemHash];
-  }
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
     item.itemInstanceId && itemComponents?.instances.data

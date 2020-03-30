@@ -14,7 +14,8 @@ import { D1StoresService } from '../d1-stores';
 import {
   DestinyClass,
   DestinyDisplayPropertiesDefinition,
-  DestinyDamageTypeDefinition
+  DestinyDamageTypeDefinition,
+  DestinyAmmunitionType
 } from 'bungie-api-ts/destiny2';
 
 const yearHashes = {
@@ -180,7 +181,7 @@ const toD2DamageType = _.memoize(
   i like the icons a lot
 */
 
-    ({
+    damageType && {
       displayProperties: {
         name: damageType.damageTypeName,
         description: damageType.description,
@@ -195,7 +196,7 @@ const toD2DamageType = _.memoize(
       enumValue: damageType.enumValue,
       index: damageType.index,
       redacted: damageType.redacted
-    })
+    }
 );
 
 /**
@@ -361,7 +362,7 @@ function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
-    visible: true,
+    ammoType: getAmmoType(itemType),
     sourceHashes: itemDef.sourceHashes,
     lockable:
       normalBucket.type !== 'Class' &&
@@ -508,6 +509,19 @@ function makeItem(
   createdItem.index = createItemIndex(createdItem);
 
   return createdItem;
+}
+
+function getAmmoType(itemType: string) {
+  switch (itemType) {
+    case 'Primary':
+      return DestinyAmmunitionType.Primary;
+    case 'Special':
+      return DestinyAmmunitionType.Special;
+    case 'Heavy':
+      return DestinyAmmunitionType.Heavy;
+  }
+
+  return DestinyAmmunitionType.None;
 }
 
 // Set an ID for the item that should be unique across all items

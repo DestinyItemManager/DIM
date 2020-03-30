@@ -24,5 +24,5 @@ export interface InventoryBuckets {
   byType: { [type: string]: InventoryBucket };
   byCategory: { [category: string]: InventoryBucket[] };
   unknown: InventoryBucket; // TODO: get rid of this?
-  setHasUnknown();
+  setHasUnknown(): void;
 }

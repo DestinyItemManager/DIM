@@ -7,9 +7,10 @@ import { tagCleanup, tagsAndNotesLoaded } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { InventoryState, itemInfosSelector } from './reducer';
+import { InventoryState } from './reducer';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 import { ThunkResult } from 'app/store/reducers';
+import { itemInfosSelector } from './selectors';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')

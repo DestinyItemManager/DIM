@@ -20,7 +20,7 @@ import {
   MinMaxIgnored,
   LockedModBase
 } from './types';
-import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
+import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';

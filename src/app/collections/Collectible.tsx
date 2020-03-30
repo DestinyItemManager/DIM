@@ -8,8 +8,8 @@ import {
   DestinyCollectibleState,
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
-import './Collectible.scss';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
+import _ from 'lodash';
 
 interface Props {
   collectibleHash: number;
@@ -61,9 +61,13 @@ export function getCollectibleState(
 ) {
   return collectibleDef.scope === DestinyScope.Character
     ? profileResponse.characterCollectibles.data
-      ? Object.values(profileResponse.characterCollectibles.data)[0].collectibles[
-          collectibleDef.hash
-        ].state
+      ? _.minBy(
+          // Find the version of the collectible that's unlocked, if any
+          Object.values(profileResponse.characterCollectibles.data)
+            .map((c) => c.collectibles[collectibleDef.hash].state)
+            .filter((s) => s !== undefined),
+          (state) => state & DestinyCollectibleState.NotAcquired
+        )
       : undefined
     : profileResponse.profileCollectibles.data
     ? profileResponse.profileCollectibles.data.collectibles[collectibleDef.hash].state

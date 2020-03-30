@@ -17,7 +17,7 @@ import {
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
@@ -147,8 +147,9 @@ function LockArmorAndPerks({
     }
   };
 
-  const addLockItem = (item) => addLockedItemType({ type: 'item', item, bucket: item.bucket });
-  const addExcludeItem = (item) =>
+  const addLockItem = (item: DimItem) =>
+    addLockedItemType({ type: 'item', item, bucket: item.bucket });
+  const addExcludeItem = (item: DimItem) =>
     addLockedItemType({ type: 'exclude', item, bucket: item.bucket });
 
   const chooseLockItem = chooseItem(

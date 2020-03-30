@@ -77,7 +77,7 @@ export default function registerServiceWorker() {
 
                 serviceWorkerUpdated$.next(true);
 
-                let preventDevToolsReloadLoop;
+                let preventDevToolsReloadLoop = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                   // Ensure refresh is only called once.
                   // This works around a bug in "force update on reload".

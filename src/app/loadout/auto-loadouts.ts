@@ -22,7 +22,7 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
       i.hash !== 1425539750
   );
 
-  const bestItemFn = (item) => {
+  const bestItemFn = (item: DimItem) => {
     let value = 0;
 
     if (item.owner === store.id) {
@@ -46,7 +46,9 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
     value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
 
     // Choose the item w/ the highest XP
-    value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
+    if (item.isDestiny1() && item.talentGrid) {
+      value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
+    }
 
     value += item.primStat ? item.primStat.value / 1000 : 0;
 
@@ -94,8 +96,8 @@ export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] 
     }
   }
 
-  const bestItemFn = (item) => {
-    let value = item.primStat.value;
+  const bestItemFn = (item: DimItem) => {
+    let value = item.primStat!.value;
 
     // Break ties when items have the same stats. Note that this should only
     // add less than 0.25 total, since in the exotics special case there can be

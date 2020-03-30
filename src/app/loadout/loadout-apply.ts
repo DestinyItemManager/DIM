@@ -258,7 +258,7 @@ async function applyLoadoutItems(
       level: string;
     }[];
   }
-) {
+): Promise<void> {
   if (items.length === 0) {
     // We're done!
     return;
@@ -404,7 +404,8 @@ function clearSpaceAfterLoadout(
     }
 
     // Reserve enough space to only leave the loadout items
-    reservations[store.id] = loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
+    reservations[store.id][loadoutItems[0].bucket.type!] =
+      loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   });
 
   return clearItemsOffCharacter(store, itemsToRemove, reservations, storesService);

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { sortedStoresSelector } from '../inventory/reducer';
+import { sortedStoresSelector } from '../inventory/selectors';
 import './CharacterOrderEditor.scss';
 import { AppIcon, refreshIcon } from '../shell/icons';
 
@@ -85,7 +85,7 @@ class CharacterOrderEditor extends React.Component<Props> {
     );
   }
 
-  private moveItem(oldIndex, newIndex) {
+  private moveItem(oldIndex: number, newIndex: number) {
     newIndex = Math.min(this.props.characters.length, Math.max(newIndex, 0));
     const order = reorder(
       this.props.characters.filter((c) => !c.isVault).map((c) => c.id),

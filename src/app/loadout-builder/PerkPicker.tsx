@@ -29,17 +29,24 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
 import ArmorBucketIcon from './ArmorBucketIcon';
 import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
+import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
-import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
 import { specialtyModSocketHashes } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
+export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
+  compareBy((i) => i.plug.energyCost?.energyType),
+  compareBy((i) => i.plug.energyCost?.energyCost),
+  compareBy((i) => i.displayProperties.name)
+);
 
 const burns: BurnItem[] = [
   {
@@ -469,14 +476,14 @@ class PerkPicker extends React.Component<Props, State> {
     }
   };
 
-  private onSubmit = (e, onClose: () => void) => {
+  private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
     this.props.onPerksSelected(this.state.selectedPerks);
     this.props.onSeasonalModsChanged(this.state.selectedSeasonalMods);
     onClose();
   };
 
-  private scrollToBucket = (bucketIdOrSeasonal) => {
+  private scrollToBucket = (bucketIdOrSeasonal: number | string) => {
     const elementId =
       bucketIdOrSeasonal === 'seasonal' ? bucketIdOrSeasonal : `perk-bucket-${bucketIdOrSeasonal}`;
     const elem = document.getElementById(elementId)!;
@@ -493,7 +500,7 @@ function LockedItemIcon({
 }: {
   lockedItem: LockedItemType;
   defs: D2ManifestDefinitions;
-  onClick(e): void;
+  onClick(e: React.MouseEvent): void;
 }) {
   switch (lockedItem.type) {
     case 'mod':

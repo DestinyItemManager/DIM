@@ -7,7 +7,7 @@ import styles from './ItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import { moveItemTo, consolidate, distribute } from '../inventory/move-item';
 import { RootState } from '../store/reducers';
-import { storesSelector, sortedStoresSelector } from '../inventory/reducer';
+import { storesSelector, sortedStoresSelector } from '../inventory/selectors';
 import { connect } from 'react-redux';
 import ItemMoveAmount from './ItemMoveAmount';
 import { createSelector } from 'reselect';
