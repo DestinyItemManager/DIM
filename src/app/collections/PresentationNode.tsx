@@ -17,7 +17,7 @@ import Checkbox from '../settings/Checkbox';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
-import Metric from './Metric';
+import Metrics from './Metrics';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -290,17 +290,11 @@ class PresentationNode extends React.Component<Props> {
               </div>
             )}
             {presentationNodeDef.children.metrics.length > 0 && (
-              <div className="metrics">
-                {/* TODO: group by trait */}
-                {presentationNodeDef.children.metrics.map((metric) => (
-                  <Metric
-                    key={metric.metricHash}
-                    metricHash={metric.metricHash}
-                    defs={defs}
-                    profileResponse={profileResponse}
-                  />
-                ))}
-              </div>
+              <Metrics
+                metrics={presentationNodeDef.children.metrics}
+                defs={defs}
+                profileResponse={profileResponse}
+              />
             )}
           </>
         )}

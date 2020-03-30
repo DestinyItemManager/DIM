@@ -2,10 +2,14 @@
 // Please do not change this file!
 interface CssExports {
   'bannerIcon': string;
+  'header': string;
   'icon': string;
+  'masterworked': string;
   'metric': string;
   'metricIcon': string;
+  'name': string;
   'scopeIcon': string;
+  'value': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
