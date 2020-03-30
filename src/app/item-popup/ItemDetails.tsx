@@ -20,6 +20,7 @@ import { ActivityModifier } from 'app/progress/ActivityModifier';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
+import MetricBanner from 'app/collections/MetricBanner';
 
 interface ProvidedProps {
   item: DimItem;
@@ -53,8 +54,45 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
+      {!item.stats && defs && item.isDestiny2() && item.collectibleHash !== null && (
+        <div className="item-details">
+          {defs.Collectible.get(item.collectibleHash).sourceString}
+        </div>
+      )}
+
       {item.itemCategoryHashes.includes(19) && (
-        <BungieImage className="item-details" src={item.secondaryIcon} width="237" height="48" />
+        <div className="item-details">
+          {item.metricObjective && item.metricHash && (
+            <MetricBanner
+              defs={defs!}
+              metricHash={item.metricHash}
+              objectiveProgress={item.metricObjective}
+            />
+          )}
+          {item.metricObjective && (
+            <div>{(item.metricObjective.progress || 0).toLocaleString()}</div>
+          )}
+          <BungieImage src={item.secondaryIcon} width="237" height="48" />
+          {defs && item.metricObjective && item.metricHash && (
+            <div>{defs.Metric.get(item.metricHash).displayProperties.name}</div>
+          )}
+        </div>
+      )}
+
+      {defs && item.availableMetricCategoryNodeHashes && (
+        <div>
+          {item.availableMetricCategoryNodeHashes.map((categoryHash) => (
+            <div key={categoryHash}>
+              <BungieImage
+                src={
+                  defs.PresentationNode.get(categoryHash).displayProperties.iconSequences[0]
+                    .frames[2]
+                }
+              />
+              {defs.PresentationNode.get(categoryHash).displayProperties.name}
+            </div>
+          ))}
+        </div>
       )}
 
       {item.isDestiny2() &&
@@ -176,8 +214,6 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           )}
         </div>
       )}
-
-      {/* TODO: show source info via collections */}
     </div>
   );
 }

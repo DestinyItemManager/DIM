@@ -152,6 +152,12 @@ export interface DimItem {
   lastManuallyMoved: number;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
+  /** Stat Tracker */
+  metricHash?: number;
+  /** Stat Tracker Progress */
+  metricObjective?: DestinyObjectiveProgress;
+  /** Metrics that can be used with this item. */
+  availableMetricCategoryNodeHashes?: number[];
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;

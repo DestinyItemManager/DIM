@@ -391,7 +391,10 @@ export function makeItem(
         costElementIcon: defs.Stat.get(
           defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
         ).displayProperties.icon
-      }
+      },
+    metricHash: item.metricHash,
+    metricObjective: item.metricObjective,
+    availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes
   });
 
   createdItem.season = getSeason(createdItem);
