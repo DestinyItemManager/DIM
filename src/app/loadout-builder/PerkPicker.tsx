@@ -268,7 +268,7 @@ class PerkPicker extends React.Component<Props, State> {
 
     const header = (
       <div>
-        <h1>Choose a perk</h1>
+        <h1>{t('LB.ChooseAPerk')}</h1>
         <div className="item-picker-search">
           <div className="search-filter" role="search">
             <AppIcon icon={searchIcon} />

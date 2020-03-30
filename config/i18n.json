@@ -436,6 +436,7 @@
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
