@@ -291,7 +291,7 @@ class PerkPicker extends React.Component<Props, State> {
             </div>
           ))}
           <div className={styles.tab} onClick={() => this.scrollToBucket('seasonal')}>
-            {'Seasonal'}
+            {t('LB.Season')}
           </div>
         </div>
       </div>
@@ -375,6 +375,7 @@ class PerkPicker extends React.Component<Props, State> {
                     )
                 )}
                 <>
+                  <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
                   {selectedSeasonalMods.map((item) => (
                     <SocketDetailsMod
                       key={item.mod.hash}

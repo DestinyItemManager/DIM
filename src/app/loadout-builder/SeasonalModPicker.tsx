@@ -3,6 +3,7 @@ import { SelectableMod } from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { LockedModBase } from './types';
+import { t } from 'app/i18next-t';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
@@ -20,7 +21,7 @@ export default function SeasonalModPicker({
 }) {
   return (
     <div className={styles.bucket} id="seasonal">
-      <h3>Seasonal</h3>
+      <h3>{t('LB.Season')}</h3>
       <div className={styles.perks}>
         {mods.map((item) => (
           <SelectableMod
