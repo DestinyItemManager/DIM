@@ -143,8 +143,8 @@ export function filterGeneratedSets(
     matchedSets = sets.filter((set) =>
       set.firstValidSet.some((item) =>
         lockedSeasonalMods.some(
-          (mod) =>
-            mod.item.plug.plugCategoryHash ===
+          (modItem) =>
+            modItem.mod.plug.plugCategoryHash ===
             getSpecialtySocket(item)?.plug?.plugItem.plug.plugCategoryHash
         )
       )

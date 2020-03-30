@@ -22,13 +22,13 @@ export default function SeasonalModPicker({
     <div className={styles.bucket} id="seasonal">
       <h3>Seasonal</h3>
       <div className={styles.perks}>
-        {mods.map((mod) => (
+        {mods.map((item) => (
           <SelectableMod
-            key={mod.item.hash}
+            key={item.mod.hash}
             defs={defs}
-            selected={Boolean(locked?.some((p) => p.item.hash === mod.item.hash))}
-            mod={mod.item}
-            plugSetHash={mod.plugSetHash}
+            selected={Boolean(locked?.some((p) => p.mod.hash === item.mod.hash))}
+            mod={item.mod}
+            plugSetHash={item.plugSetHash}
             onLockedModBase={onSeasonalModSelected}
           />
         ))}

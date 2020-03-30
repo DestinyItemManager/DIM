@@ -328,11 +328,11 @@ class PerkPicker extends React.Component<Props, State> {
 
     const queryFilteredSeasonalMods = _.uniqBy(
       Object.values(queryFilteredMods).flatMap((bucktedMods) =>
-        bucktedMods.filter((mod) =>
-          specialtyModSocketHashes.includes(mod.item.plug.plugCategoryHash)
-        )
+        bucktedMods
+          .filter(({ item }) => specialtyModSocketHashes.includes(item.plug.plugCategoryHash))
+          .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
       ),
-      (mod) => mod.item.hash
+      ({ mod }) => mod.hash
     );
 
     const footer =
@@ -375,10 +375,10 @@ class PerkPicker extends React.Component<Props, State> {
                     )
                 )}
                 <>
-                  {selectedSeasonalMods.map((mod) => (
+                  {selectedSeasonalMods.map((item) => (
                     <SocketDetailsMod
-                      key={mod.item.hash}
-                      itemDef={mod.item}
+                      key={item.mod.hash}
+                      itemDef={item.mod}
                       defs={defs}
                       className={styles.selectedPerk}
                     />
@@ -452,21 +452,18 @@ class PerkPicker extends React.Component<Props, State> {
     }
   };
 
-  private onSeasonalModSelected = (mod: {
-    item: DestinyInventoryItemDefinition;
-    plugSetHash: number;
-  }) => {
+  private onSeasonalModSelected = (item: LockedModBase) => {
     const { selectedSeasonalMods } = this.state;
 
-    if (selectedSeasonalMods.some((li) => li.item.hash === mod.item.hash)) {
+    if (selectedSeasonalMods.some((li) => li.mod.hash === item.mod.hash)) {
       this.setState({
         selectedSeasonalMods: selectedSeasonalMods.filter(
-          (existing) => existing.item.hash !== mod.item.hash
+          (existing) => existing.mod.hash !== item.mod.hash
         )
       });
     } else {
       this.setState({
-        selectedSeasonalMods: [...selectedSeasonalMods, mod]
+        selectedSeasonalMods: [...selectedSeasonalMods, item]
       });
     }
   };

@@ -53,7 +53,7 @@ export function SelectableMod({
     if (bucket && onLockedPerk) {
       onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
     } else if (onLockedModBase) {
-      onLockedModBase({ item: mod, plugSetHash });
+      onLockedModBase({ mod, plugSetHash });
     }
   };
 

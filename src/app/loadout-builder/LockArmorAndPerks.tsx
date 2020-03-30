@@ -29,8 +29,7 @@ import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
-import ClosableContainer from './ClosableContainer';
+import LockedSeasonalMod from './LockedSeasonalMod';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -209,19 +208,17 @@ function LockArmorAndPerks({
                 onRemove={removeLockedItemType}
               />
             ))}
-            {lockedSeasonalMods.map((mod) => (
-              <ClosableContainer
-                onClose={() =>
+            {lockedSeasonalMods.map((item) => (
+              <LockedSeasonalMod
+                key={item.mod.hash}
+                item={item}
+                defs={defs}
+                onModClicked={() =>
                   onSeasonalModsChanged(
-                    lockedSeasonalMods.filter((locked) => locked.item.hash !== mod.item.hash)
+                    lockedSeasonalMods.filter((locked) => locked.mod.hash !== item.mod.hash)
                   )
                 }
-                key={mod.item.hash}
-              >
-                <div className={'new-class'}>
-                  <SocketDetailsMod itemDef={mod.item} defs={defs} />
-                </div>
-              </ClosableContainer>
+              />
             ))}
           </div>
         )}
