@@ -140,10 +140,11 @@ export function filterGeneratedSets(
 
   if (lockedSeasonalMods.length) {
     const setsBeforeFilter = matchedSets.length;
+    // Filter so that every mod slots into some item
     matchedSets = sets.filter((set) =>
-      set.firstValidSet.some((item) =>
-        lockedSeasonalMods.some(
-          (modItem) =>
+      lockedSeasonalMods.every((modItem) =>
+        set.firstValidSet.some(
+          (item) =>
             modItem.mod.plug.plugCategoryHash ===
             getSpecialtySocket(item)?.plug?.plugItem.plug.plugCategoryHash
         )
