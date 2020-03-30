@@ -40,6 +40,24 @@ import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 
+const installApiPermissionObserver = _.once(() => {
+  // Observe API permission and reflect it into local storage
+  // We could also use a thunk action instead of an observer... either way
+  observeStore(
+    (state) => state.dimApi.apiPermissionGranted,
+    (_, apiPermissionGranted) => {
+      if (apiPermissionGranted !== null) {
+        // Save the permission preference to local storage
+        localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
+        if (!apiPermissionGranted) {
+          // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
+          SyncService.get().then(() => SyncService.set({ importedToDimApi: false }));
+        }
+      }
+    }
+  );
+});
+
 /**
  * Watch the redux store and write out values to indexedDB, etc.
  */
@@ -72,22 +90,6 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
         dispatch(flushUpdates());
       }
     }, 1000)
-  );
-
-  // Observe API permission and reflect it into local storage
-  // We could also use a thunk action instead of an observer... either way
-  observeStore(
-    (state) => state.dimApi.apiPermissionGranted,
-    (_, apiPermissionGranted) => {
-      if (apiPermissionGranted !== null) {
-        // Save the permission preference to local storage
-        localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
-        if (!apiPermissionGranted) {
-          // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
-          SyncService.get().then(() => SyncService.set({ importedToDimApi: false }));
-        }
-      }
-    }
   );
 
   // Observe the current account and reload data
@@ -133,6 +135,8 @@ let waitingForApiPermission = false;
  */
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
+    installApiPermissionObserver();
+
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
     }
