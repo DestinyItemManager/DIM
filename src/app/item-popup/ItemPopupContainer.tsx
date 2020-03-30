@@ -1,24 +1,26 @@
-import React from 'react';
-import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
-import { Subscriptions } from '../utils/rx-utils';
-import Popper from 'popper.js';
-import { RootState } from '../store/reducers';
-import { connect } from 'react-redux';
-import ClickOutside from '../dim-ui/ClickOutside';
-import ItemPopupHeader from './ItemPopupHeader';
-import { router } from '../router';
-import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
-import { setSetting } from '../settings/actions';
-import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import './ItemPopupContainer.scss';
-import ItemTagHotkeys from './ItemTagHotkeys';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
+
+import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
+import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
+
+import ClickOutside from '../dim-ui/ClickOutside';
+import { DimItem } from '../inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import ItemActions from './ItemActions';
+import ItemPopupHeader from './ItemPopupHeader';
+import ItemTagHotkeys from './ItemTagHotkeys';
+import Popper from 'popper.js';
+import React from 'react';
+import { RootState } from '../store/reducers';
+import Sheet from '../dim-ui/Sheet';
+import { Subscriptions } from '../utils/rx-utils';
+import { connect } from 'react-redux';
+import { router } from '../router';
+import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
+import { storesSelector } from 'app/inventory/selectors';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   boundarySelector?: string;
