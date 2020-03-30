@@ -30,7 +30,7 @@ export default function Notification({ notification, style, onClose }: Props) {
         error ? 5000 : notification.duration
       );
     } else {
-      onClose(notification);
+      window.setTimeout(() => onClose(notification), 0);
     }
   }, [error, success, notification, mouseover, onClose]);
 
