@@ -63,8 +63,9 @@ interface State {
 }
 
 function mapStateToProps(state: RootState): StoreProps {
+  const searchFilter = searchFilterSelector(state);
   // TODO: Narrow this down by screen?
-  const filteredItems = getAllItems(storesSelector(state), this.props.searchFilter);
+  const filteredItems = getAllItems(storesSelector(state), searchFilter);
 
   let isComparable = false;
   if (filteredItems.length && !CompareService.dialogOpen) {
@@ -77,7 +78,7 @@ function mapStateToProps(state: RootState): StoreProps {
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
     searchConfig: searchConfigSelector(state),
-    searchFilter: searchFilterSelector(state),
+    searchFilter,
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
     filteredItems,
