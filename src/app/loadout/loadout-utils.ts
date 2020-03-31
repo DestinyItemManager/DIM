@@ -26,36 +26,33 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
  */
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-  let itemWeight = {
-    Weapons: 6,
-    Armor: 5,
-    General: 4
-  };
-  // 3 Weapons, 4 Armor, 2 General
-  let itemWeightDenominator = 46;
   if (store.isDestiny2()) {
-    // 3 Weapons, 4 Armor, 1 General
-    itemWeight = {
-      Weapons: 1,
-      Armor: 1,
-      General: 1
+    const exactLight = _.sumBy(items, (i) => i.primStat!.value) / items.length;
+    return Math.floor(exactLight * 10) / 10;
+  } else {
+    const itemWeight = {
+      Weapons: 6,
+      Armor: 5,
+      General: 4
     };
-    itemWeightDenominator = 8;
-  } else if (store.level === 40) {
-    // 3 Weapons, 4 Armor, 3 General
-    itemWeightDenominator = 50;
-  }
 
-  const exactLight =
-    items.reduce(
+    const itemWeightDenominator = items.reduce(
       (memo, item) =>
-        memo +
-        item.primStat!.value *
-          (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+        memo + (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 0),
       0
-    ) / itemWeightDenominator;
+    );
 
-  return Math.floor(exactLight * 10) / 10;
+    const exactLight =
+      items.reduce(
+        (memo, item) =>
+          memo +
+          item.primStat!.value *
+            (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+        0
+      ) / itemWeightDenominator;
+
+    return Math.floor(exactLight * 10) / 10;
+  }
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
