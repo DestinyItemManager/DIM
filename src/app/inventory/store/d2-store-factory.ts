@@ -12,7 +12,7 @@ import { D2ManifestDefinitions, DefinitionTable } from '../../destiny2/d2-defini
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
-import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
+import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { armorStats } from './stats';
@@ -296,22 +296,22 @@ export function getCharacterStatsData(
   stats: {
     [key: number]: number;
   }
-): { [hash: number]: D2CharacterStat } {
+): { [hash: number]: DimCharacterStat } {
   const statWhitelist = armorStats;
-  const ret: { [hash: number]: D2CharacterStat } = {};
+  const ret: { [hash: number]: DimCharacterStat } = {};
+
+  // TODO: Fill in effect and countdown for D2 stats
 
   // Fill in missing stats
   statWhitelist.forEach((statHash) => {
     const def = statDefs.get(statHash);
     const value = stats[statHash] || 0;
-    const stat: D2CharacterStat = {
-      id: statHash,
+    const stat: DimCharacterStat = {
+      hash: statHash,
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon),
-      tiers: [value],
-      tierMax: 100
+      icon: bungieNetPath(def.displayProperties.icon)
     };
     ret[statHash] = stat;
   });

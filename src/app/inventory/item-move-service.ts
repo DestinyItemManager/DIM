@@ -883,7 +883,7 @@ function ItemService(): ItemServiceType {
         storeService.getStores();
       const storeId = store.id;
       options.triedFallback = true;
-      const reloadedStore = reloadedStores.find((s) => s.id === storeId);
+      const reloadedStore = (reloadedStores as DimStore[]).find((s) => s.id === storeId);
       if (!reloadedStore) {
         throw new Error("Can't find the store to move to.");
       }

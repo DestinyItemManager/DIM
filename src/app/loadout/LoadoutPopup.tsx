@@ -53,7 +53,7 @@ import PressTip from '../dim-ui/PressTip';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
-import { getArtifactBonus, maxPowerString } from 'app/inventory/d2-stores';
+import { getArtifactBonus } from 'app/inventory/d2-stores';
 import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
@@ -144,7 +144,6 @@ class LoadoutPopup extends React.Component<Props> {
     // For the most part we don't need to memoize this - this menu is destroyed when closed
     const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
     const artifactLight = getArtifactBonus(dimStore);
-    const maxLightValue = maxPowerString(maxLight, hasClassified, artifactLight);
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
     const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
@@ -176,7 +175,8 @@ class LoadoutPopup extends React.Component<Props> {
                   <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
                     <span className="light">
                       <AppIcon icon={powerIndicatorIcon} />
-                      {maxLightValue}
+                      {maxLight + artifactLight}
+                      {hasClassified && <sup>*</sup>}
                     </span>
                   </PressTip>
                   <AppIcon icon={powerActionIcon} />

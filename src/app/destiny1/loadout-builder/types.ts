@@ -1,5 +1,6 @@
 import { D1Item, D1GridNode } from '../../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DimCharacterStat } from 'app/inventory/store-types';
 
 export interface D1ItemWithNormalStats extends D1Item {
   normalStats?: {
@@ -24,8 +25,6 @@ export type ArmorTypes =
   | 'Artifact'
   | 'Ghost';
 
-export type StatTypes = 'STAT_INTELLECT' | 'STAT_DISCIPLINE' | 'STAT_STRENGTH';
-
 export type ClassTypes = DestinyClass.Titan | DestinyClass.Warlock | DestinyClass.Hunter;
 
 export interface ArmorSet {
@@ -36,12 +35,7 @@ export interface ArmorSet {
     };
   };
   stats: {
-    [statType in StatTypes]: {
-      value: number;
-      tier: 0 | 1 | 2 | 3 | 4 | 5;
-      name: string;
-      icon: string;
-    };
+    [statHash: number]: DimCharacterStat;
   };
   setHash: string;
   includesVendorItems: boolean;
