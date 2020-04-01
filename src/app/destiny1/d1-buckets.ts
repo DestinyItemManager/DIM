@@ -93,7 +93,6 @@ export const getBuckets = _.once(async () => {
     },
     setHasUnknown() {
       this.byCategory[this.unknown.sort] = [this.unknown];
-      this.byId[this.unknown.id] = this.unknown;
       this.byType[this.unknown.type] = this.unknown;
     }
   };
