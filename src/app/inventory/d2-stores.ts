@@ -23,7 +23,6 @@ import { NewItemsService } from './store/new-items';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
-import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
@@ -31,7 +30,6 @@ import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
-import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import { getActivePlatform } from 'app/accounts/platforms';
@@ -90,43 +88,18 @@ function makeD2StoresService(): D2StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => _stores.flatMap((s) => s.items),
     getStoresStream,
-    getItemAcrossStores,
     updateCharacters,
     reloadStores,
-    refreshRatingsData,
     touch() {
       store.dispatch(update({ stores: _stores }));
     }
   };
 
   return service;
-
-  /**
-   * Find an item among all stores that matches the params provided.
-   */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
-      i: DimItem
-    ) => boolean;
-    for (const store of _stores) {
-      const result = store.items.find(predicate);
-      if (result) {
-        return result;
-      }
-    }
-    return undefined;
-  }
 
   /**
    * Update the high level character information for all the stores
@@ -504,13 +477,6 @@ function makeD2StoresService(): D2StoreServiceType {
       }
     });
     activeStore.vault = vault; // god help me
-  }
-
-  function refreshRatingsData() {
-    if ($featureFlags.reviewsEnabled) {
-      store.dispatch(clearRatings());
-      store.dispatch(fetchRatings(_stores));
-    }
   }
 }
 

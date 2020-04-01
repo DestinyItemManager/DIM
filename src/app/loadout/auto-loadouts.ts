@@ -2,16 +2,18 @@ import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { optimalLoadout, newLoadout, convertToLoadoutItem, optimalItemSet } from './loadout-utils';
-import { StoreServiceType, DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Loadout } from './loadout-types';
+import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
  */
-export function itemLevelingLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  const applicableItems = storeService.getAllItems().filter(
+export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadout {
+  const applicableItems = getAllItems(
+    stores,
     (i) =>
       i.canBeEquippedBy(store) &&
       i.talentGrid &&
@@ -123,12 +125,9 @@ export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] 
 /**
  * A loadout to maximize a specific stat
  */
-export function maxStatLoadout(
-  statHash: number,
-  storeService: StoreServiceType,
-  store: DimStore
-): Loadout {
-  const applicableItems = storeService.getAllItems().filter(
+export function maxStatLoadout(statHash: number, stores: DimStore[], store: DimStore): Loadout {
+  const applicableItems = getAllItems(
+    stores,
     (i) =>
       (i.canBeEquippedBy(store) ||
         (i.location.inPostmaster &&
@@ -168,14 +167,13 @@ export function maxStatLoadout(
  * A dynamic loadout set up to level weapons and armor
  */
 export function gatherEngramsLoadout(
-  storeService: StoreServiceType,
+  stores: DimStore[],
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
-  const engrams = storeService
-    .getAllItems()
-    .filter(
-      (i) => i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic)
-    );
+  const engrams = getAllItems(
+    stores,
+    (i) => i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic)
+  );
 
   if (engrams.length === 0) {
     let engramWarning = t('Loadouts.NoEngrams');
@@ -206,13 +204,14 @@ export function gatherEngramsLoadout(
  * Move items matching the current search.
  */
 export function searchLoadout(
-  storeService: StoreServiceType,
+  stores: DimStore[],
   store: DimStore,
   searchFilter: (item: DimItem) => boolean
 ): Loadout {
-  let items = storeService
-    .getAllItems()
-    .filter((i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i));
+  let items = getAllItems(
+    stores,
+    (i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i)
+  );
 
   items = addUpStackables(items);
 
@@ -281,18 +280,17 @@ const randomLoadoutTypes = new Set([
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
-export function randomLoadout(storeService: StoreServiceType, filter: (i: DimItem) => boolean) {
-  const currentCharacter = storeService.getActiveStore();
+export function randomLoadout(stores: DimStore[], filter: (i: DimItem) => boolean) {
+  const currentCharacter = getCurrentStore(stores);
   if (!currentCharacter) {
     return null;
   }
 
   // Any item equippable by this character in the given types
-  const applicableItems = storeService
-    .getAllItems()
-    .filter(
-      (i) => randomLoadoutTypes.has(i.type) && i.canBeEquippedBy(currentCharacter) && filter(i)
-    );
+  const applicableItems = getAllItems(
+    stores,
+    (i) => randomLoadoutTypes.has(i.type) && i.canBeEquippedBy(currentCharacter) && filter(i)
+  );
 
   // Use "random" as the value function
   return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
