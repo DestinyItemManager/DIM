@@ -262,6 +262,7 @@ export const dimApi = (
       return changeSetting(
         state,
         'customCharacterSort',
+        // The order includes characters from multiple profiles, so we can't just replace it
         state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order)
       );
     }

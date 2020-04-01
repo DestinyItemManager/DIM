@@ -23,6 +23,7 @@ import {
 } from '../destinyTrackerApi/bulkFetcher';
 import { reportReview as doReportReview } from '../destinyTrackerApi/reviewReporter';
 import { settingsSelector } from 'app/settings/reducer';
+import { storesSelector } from 'app/inventory/selectors';
 
 /** Redux thunk action that populates item reviews for an item if necessary. */
 export function getItemReviews(item: DimItem): ThunkResult<any> {
@@ -92,8 +93,11 @@ export function updateVendorRankings(vendors: { [key: number]: Vendor }): ThunkR
   };
 }
 
-export function fetchRatings(stores: DimStore[]): ThunkResult<DtrRating[]> {
+export function fetchRatings(stores?: DimStore[]): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
+    if (!stores) {
+      stores = storesSelector(getState());
+    }
     const settings = settingsSelector(getState());
     if (!settings.showReviews || !stores || !stores[0]) {
       return [];

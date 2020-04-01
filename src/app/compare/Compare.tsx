@@ -28,8 +28,12 @@ import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 // archetypes are difficult.
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import ElementIcon from 'app/inventory/ElementIcon';
+import { DimStore } from 'app/inventory/store-types';
+import { storesSelector } from 'app/inventory/selectors';
+import { getAllItems } from 'app/inventory/stores-helpers';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
+  stores: DimStore[];
   defs?: D2ManifestDefinitions;
 }
 
@@ -38,6 +42,7 @@ type Props = StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     ratings: ratingsSelector(state),
+    stores: storesSelector(state),
     defs: state.manifest.d2Manifest
   };
 }
@@ -279,7 +284,7 @@ class Compare extends React.Component<Props, State> {
 
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
     else {
-      const allItems = exampleItem.getStoresService().getAllItems();
+      const allItems = getAllItems(this.props.stores);
       // comparisonSets is an array so that it has order, filled with {label, setOfItems} objects
       const comparisonSets = exampleItem.bucket.inArmor
         ? this.findSimilarArmors(allItems, additionalItems)

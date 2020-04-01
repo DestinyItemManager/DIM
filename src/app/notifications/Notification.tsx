@@ -20,7 +20,7 @@ export default function Notification({ notification, style, onClose }: Props) {
   const setupTimer = useCallback(() => {
     if (!error && !success && notification.promise) {
       notification.promise.then(() => setSuccess(true)).catch(setError);
-    } else {
+    } else if (notification.duration) {
       timer.current = window.setTimeout(
         () => {
           if (!mouseover) {
@@ -29,6 +29,8 @@ export default function Notification({ notification, style, onClose }: Props) {
         },
         error ? 5000 : notification.duration
       );
+    } else {
+      window.setTimeout(() => onClose(notification), 0);
     }
   }, [error, success, notification, mouseover, onClose]);
 

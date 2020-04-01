@@ -230,9 +230,12 @@ class LoadoutDrawer extends React.Component<Props, State> {
     const findItem = (loadoutItem: LoadoutItem) => {
       for (const store of stores) {
         for (const item of store.items) {
-          if (loadoutItem.id && loadoutItem.id === item.id) {
+          if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
             return item;
-          } else if (!loadoutItem.id && loadoutItem.hash === item.hash) {
+          } else if (
+            (!loadoutItem.id || loadoutItem.id === '0') &&
+            loadoutItem.hash === item.hash
+          ) {
             return item;
           }
         }

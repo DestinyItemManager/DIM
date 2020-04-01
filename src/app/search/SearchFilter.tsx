@@ -10,10 +10,7 @@ import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2StoresService } from '../inventory/d2-stores';
-import { D1StoresService } from '../inventory/d1-stores';
 import { DimItem } from '../inventory/item-types';
-import { StoreServiceType } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
@@ -21,6 +18,8 @@ import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { storesSelector } from 'app/inventory/selectors';
+import { getAllItems } from 'app/inventory/stores-helpers';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -42,6 +41,8 @@ interface StoreProps {
   searchConfig: SearchConfig;
   searchQueryVersion: number;
   searchQuery: string;
+  filteredItems: DimItem[];
+  isComparable: boolean;
   searchFilter(item: DimItem): boolean;
 }
 
@@ -62,14 +63,26 @@ interface State {
 }
 
 function mapStateToProps(state: RootState): StoreProps {
+  const searchFilter = searchFilterSelector(state);
+  // TODO: Narrow this down by screen?
+  const filteredItems = getAllItems(storesSelector(state), searchFilter);
+
+  let isComparable = false;
+  if (filteredItems.length && !CompareService.dialogOpen) {
+    const type = filteredItems[0].typeName;
+    isComparable = filteredItems.every((i) => i.typeName === type);
+  }
+
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
     searchConfig: searchConfigSelector(state),
-    searchFilter: searchFilterSelector(state),
+    searchFilter,
     searchQuery: querySelector(state),
-    searchQueryVersion: searchQueryVersionSelector(state)
+    searchQueryVersion: searchQueryVersionSelector(state),
+    filteredItems,
+    isComparable
   };
 }
 
@@ -87,9 +100,7 @@ class SearchFilter extends React.Component<Props, State> {
         // Bulk locking/unlocking
 
         const state = selectedTag === 'lock';
-        const lockables = this.getStoresService()
-          .getAllItems()
-          .filter((i) => i.lockable && this.props.searchFilter(i));
+        const lockables = this.props.filteredItems.filter((i) => i.lockable);
         try {
           for (const item of lockables) {
             await setItemLockState(item, state);
@@ -117,9 +128,7 @@ class SearchFilter extends React.Component<Props, State> {
         }
       } else {
         // Bulk tagging
-        const tagItems = this.getStoresService()
-          .getAllItems()
-          .filter((i) => i.taggable && this.props.searchFilter(i));
+        const tagItems = this.props.filteredItems.filter((i) => i.taggable);
 
         if (isTagValue(selectedTag)) {
           this.props.bulkTagItems(tagItems, selectedTag);
@@ -135,19 +144,11 @@ class SearchFilter extends React.Component<Props, State> {
       searchConfig,
       setSearchQuery,
       searchQuery,
-      searchQueryVersion
+      searchQueryVersion,
+      filteredItems,
+      isComparable
     } = this.props;
     const { showSelect } = this.state;
-
-    const filteredItems = this.getStoresService()
-      .getAllItems()
-      .filter(this.props.searchFilter);
-
-    let isComparable = false;
-    if (filteredItems.length && !CompareService.dialogOpen) {
-      const type = filteredItems[0].typeName;
-      isComparable = filteredItems.every((i) => i.typeName === type);
-    }
 
     // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
@@ -206,10 +207,7 @@ class SearchFilter extends React.Component<Props, State> {
   };
 
   private compareMatching = () => {
-    const comparableItems = this.getStoresService()
-      .getAllItems()
-      .filter(this.props.searchFilter);
-    CompareService.addItemsToCompare(comparableItems, false);
+    CompareService.addItemsToCompare(this.props.filteredItems, false);
   };
 
   private onTagClicked = () => {
@@ -220,9 +218,6 @@ class SearchFilter extends React.Component<Props, State> {
     this.setState({ showSelect: false });
     this.props.onClear?.();
   };
-
-  private getStoresService = (): StoreServiceType =>
-    this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
 }
 
 export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {

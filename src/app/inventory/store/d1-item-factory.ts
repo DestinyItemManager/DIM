@@ -106,28 +106,31 @@ export function resetIdTracker() {
  * Process an entire list of items into DIM items.
  * @param owner the ID of the owning store.
  * @param items a list of "raw" items from the Destiny API
- * @param previousItems a set of item IDs representing the previous store's items
- * @param newItems a set of item IDs representing the previous list of new items
  * @return a promise for the list of items
  */
-export function processItems(owner: D1Store, items: any[]): Promise<D1Item[]> {
-  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
-    const result: D1Item[] = [];
-    _.forIn(items, (item) => {
-      let createdItem: D1Item | null = null;
-      try {
-        createdItem = makeItem(defs, buckets, item, owner);
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing D1 item', e);
+export function processItems(
+  owner: D1Store,
+  items: any[]
+): Promise<D1Item[]> {
+  return Promise.all([getDefinitions(), getBuckets(), previousItems, newItems]).then(
+    ([defs, buckets, previousItems, newItems]) => {
+      const result: D1Item[] = [];
+      for (const item of items) {
+        let createdItem: D1Item | null = null;
+        try {
+          createdItem = makeItem(defs, buckets, item, owner);
+        } catch (e) {
+          console.error('Error processing item', item, e);
+          reportException('Processing D1 item', e);
+        }
+        if (createdItem !== null) {
+          createdItem.owner = owner.id;
+          result.push(createdItem);
+        }
       }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
-    });
-    return result;
-  });
+      return result;
+    }
+  );
 }
 
 const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
@@ -173,7 +176,7 @@ const toD2DamageType = _.memoize(
   i like the icons a lot
 */
 
-    ({
+    damageType && {
       displayProperties: {
         name: damageType.damageTypeName,
         description: damageType.description,
@@ -188,7 +191,7 @@ const toD2DamageType = _.memoize(
       enumValue: damageType.enumValue,
       index: damageType.index,
       redacted: damageType.redacted
-    })
+    }
 );
 
 /**

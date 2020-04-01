@@ -1,5 +1,13 @@
 ## Next
 
+## 6.3.1 <span className="changelog-date">(2020-03-29)</span>
+
+* Fixed a bug where D1 items could fail to display.
+* Fixed a bug where responding "Not now" to the DIM Sync prompt wouldn't cause it to go away forever.
+* Make mod slot for Reverie Dawn armor set detect correctly as outlaw.
+
+## 6.3.0 <span className="changelog-date">(2020-03-29)</span>
+
 * Removed duplicate Mods section from the top level of the Collections screen - they're still under the normal collections tree.
 * Fixed a missing icon when season rank is over 100.
 

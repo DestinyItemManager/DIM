@@ -17,32 +17,19 @@ import { ConnectableObservable } from 'rxjs';
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
  * if you don't care about the differences between the two.
  */
-export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, ItemType = DimItem> {
-  /** Get the active or last-played character. */
-  getActiveStore(): StoreType | undefined;
+export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault> {
   /** Get a list of all characters plus the vault. */
   getStores(): StoreType[];
   /** Get a store by character ID. */
   getStore(id: string): StoreType | undefined;
   /** Get the vault. */
   getVault(): VaultType | undefined;
-  /** Get all items across all stores. */
-  getAllItems(): ItemType[];
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Get an item matching certain characteristics, no matter where it is in inventory. */
-  getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }): ItemType | undefined;
   /** Refresh just character info (current light/stats, etc.) */
   updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
-  /** Reload DTR rating data. */
-  refreshRatingsData(): void;
 
   /** Tell Redux things have changed. Temporary bridge for Redux. */
   touch(): void;
@@ -51,26 +38,26 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
 /**
  * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
  */
-export type D2StoreServiceType = StoreServiceType<D2Store, D2Vault, D2Item>;
+export type D2StoreServiceType = StoreServiceType<D2Store, D2Vault>;
 
 /**
  * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
  */
-export type D1StoreServiceType = StoreServiceType<D1Store, D1Vault, D1Item>;
+export type D1StoreServiceType = StoreServiceType<D1Store, D1Vault>;
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
  * or you don't use anything specific to one of them.
  */
-export interface DimStore {
+export interface DimStore<Item = DimItem> {
   /** An ID for the store. Character ID or 'vault'. */
   id: string;
   /** Localized name for the store. */
   name: string;
   /** All items in the store, across all buckets. */
-  items: DimItem[];
+  items: Item[];
   /** All items, grouped by their bucket. */
-  buckets: { [bucketHash: number]: DimItem[] };
+  buckets: { [bucketHash: number]: Item[] };
   /** The Destiny version this store came from. */
   destinyVersion: 1 | 2;
   /** An icon (emblem) for the store. */
@@ -121,19 +108,19 @@ export interface DimStore {
    * How much of items like this item can fit in this store? For
    * stackables, this is in stacks, not individual pieces.
    */
-  capacityForItem(item: DimItem): number;
+  capacityForItem(item: Item): number;
   /**
    * How many *more* items like this item can fit in this store?
    * This takes into account stackables, so the answer will be in
    * terms of individual pieces.
    */
-  spaceLeftForItem(item: DimItem): number;
+  spaceLeftForItem(item: Item): number;
 
   /** Remove an item from this store. Returns whether it actually removed anything. */
-  removeItem(item: DimItem): boolean;
+  removeItem(item: Item): boolean;
 
   /** Add an item to the store. */
-  addItem(item: DimItem): void;
+  addItem(item: Item): void;
 
   /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
   isDestiny1(): this is D1Store;
@@ -238,9 +225,7 @@ export interface D1Progression extends DestinyProgression {
 /**
  * A D1 character. Use this when you need D1-specific properties or D1-specific items.
  */
-export interface D1Store extends DimStore {
-  items: D1Item[];
-  buckets: { [bucketId: string]: D1Item[] };
+export interface D1Store extends DimStore<D1Item> {
   stats: {
     [hash: string]: D1CharacterStat;
   };
@@ -261,9 +246,7 @@ export interface D1Store extends DimStore {
 /**
  * A D2 character. Use this when you need D2-specific properties or D2-specific items.
  */
-export interface D2Store extends DimStore {
-  items: D2Item[];
-  buckets: { [bucketId: string]: D2Item[] };
+export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;

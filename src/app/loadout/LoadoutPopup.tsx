@@ -61,6 +61,7 @@ import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { getAllItems } from 'app/inventory/stores-helpers';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -81,12 +82,22 @@ interface StoreProps {
   query: string;
   classTypeId: DestinyClass;
   stores: DimStore[];
+  hasClassified: boolean;
   searchFilter(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
+  /** Does the user have an classified items? */
+  const hasClassifiedSelector = createSelector(storesSelector, (stores) =>
+    getAllItems(stores).some(
+      (i) =>
+        i.classified &&
+        (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+    )
+  );
+
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
     (_, { dimStore }: ProvidedProps) => dimStore,
@@ -112,26 +123,25 @@ function mapStateToProps() {
       searchFilter: searchFilterSelector(state),
       classTypeId: dimStore.classType,
       account: currentAccountSelector(state)!,
-      stores: storesSelector(state)
+      stores: storesSelector(state),
+      hasClassified: hasClassifiedSelector(state)
     };
   };
 }
 
 class LoadoutPopup extends React.Component<Props> {
   render() {
-    const { dimStore, stores, previousLoadout, loadouts, query, onClick } = this.props;
-    const sortedLoadouts = _.sortBy(loadouts, (loadout) => loadout.name);
+    const {
+      dimStore,
+      stores,
+      previousLoadout,
+      loadouts,
+      query,
+      onClick,
+      hasClassified
+    } = this.props;
 
-    // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
-    const hasClassified = dimStore
-      .getStoresService()
-      .getAllItems()
-      .some(
-        (i) =>
-          i.classified &&
-          (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-      );
-
+    // For the most part we don't need to memoize this - this menu is destroyed when closed
     const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
     const artifactLight = getArtifactBonus(dimStore);
     const maxLightValue = maxPowerString(maxLight, hasClassified, artifactLight);
@@ -269,7 +279,7 @@ class LoadoutPopup extends React.Component<Props> {
             </li>
           )}
 
-          {sortedLoadouts.map((loadout) => (
+          {loadouts.map((loadout) => (
             <li key={loadout.id} className="loadout-set">
               <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
                 <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
@@ -357,8 +367,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // A dynamic loadout set up to level weapons and armor
   private itemLevelingLoadout = (e) => {
-    const { dimStore } = this.props;
-    const loadout = itemLevelingLoadout(dimStore.getStoresService(), dimStore);
+    const { dimStore, stores } = this.props;
+    const loadout = itemLevelingLoadout(stores, dimStore);
     this.applyLoadout(loadout, e);
   };
 
@@ -371,10 +381,10 @@ class LoadoutPopup extends React.Component<Props> {
 
   // A dynamic loadout set up to level weapons and armor
   private gatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
-    const { dimStore } = this.props;
+    const { stores } = this.props;
     let loadout;
     try {
-      loadout = gatherEngramsLoadout(dimStore.getStoresService(), options);
+      loadout = gatherEngramsLoadout(stores, options);
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
       return;
@@ -383,7 +393,7 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private randomLoadout = (e, weaponsOnly = false) => {
-    const { dimStore, searchFilter, query } = this.props;
+    const { stores, searchFilter, query } = this.props;
     if (
       !window.confirm(
         weaponsOnly
@@ -398,7 +408,7 @@ class LoadoutPopup extends React.Component<Props> {
     }
     try {
       const loadout = randomLoadout(
-        dimStore.getStoresService(),
+        stores,
         weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
       );
       if (loadout) {
@@ -412,8 +422,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // Move items matching the current search. Max 9 per type.
   private searchLoadout = (e) => {
-    const { dimStore, searchFilter } = this.props;
-    const loadout = searchLoadout(dimStore.getStoresService(), dimStore, searchFilter);
+    const { stores, dimStore, searchFilter } = this.props;
+    const loadout = searchLoadout(stores, dimStore, searchFilter);
     this.applyLoadout(loadout, e);
   };
 
