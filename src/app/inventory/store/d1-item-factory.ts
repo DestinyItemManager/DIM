@@ -120,7 +120,7 @@ export function processItems(
   return Promise.all([getDefinitions(), getBuckets(), previousItems, newItems]).then(
     ([defs, buckets, previousItems, newItems]) => {
       const result: D1Item[] = [];
-      _.forIn(items, (item) => {
+      for (const item of items) {
         let createdItem: D1Item | null = null;
         try {
           createdItem = makeItem(defs, buckets, previousItems, newItems, item, owner);
@@ -132,7 +132,7 @@ export function processItems(
           createdItem.owner = owner.id;
           result.push(createdItem);
         }
-      });
+      }
       return result;
     }
   );
