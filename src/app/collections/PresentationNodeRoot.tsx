@@ -12,6 +12,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record, { getRecordComponent } from './Record';
+import { getMetricComponent } from './Metric';
 
 interface Props {
   presentationNodeHash: number;
@@ -194,6 +195,28 @@ export function countCollectibles(
       [node]: {
         acquired: acquiredCollectibles,
         visible: visibleCollectibles
+      }
+    };
+  } else if (presentationNodeDef.children.metrics?.length) {
+    const metricDefs = presentationNodeDef.children.metrics.map((c) =>
+      defs.Metric.get(c.metricHash)
+    );
+
+    // TODO: class based on displayStyle
+    const visible = count(metricDefs, (m) => {
+      const metric = m && getMetricComponent(m, profileResponse);
+      return Boolean(metric !== undefined && !metric.invisible);
+    });
+    const acquired = count(metricDefs, (m) => {
+      const metric = m && getMetricComponent(m, profileResponse);
+      return Boolean(
+        metric !== undefined && !metric.invisible && metric.objectiveProgress.complete
+      );
+    });
+    return {
+      [node]: {
+        acquired,
+        visible
       }
     };
   } else {

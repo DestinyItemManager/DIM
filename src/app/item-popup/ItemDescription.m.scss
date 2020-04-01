@@ -6,12 +6,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   margin: 5px 10px;
 
-  > * {
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
+  @include horizontal-space-children(10px);
 }
 
 .addNote {

@@ -93,12 +93,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    > * {
-      margin-right: 8px;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
+    @include horizontal-space-children(8px);
   }
 }
 
@@ -161,12 +156,7 @@
   .seasonal-rewards {
     display: flex;
     flex-direction: row;
-    > * {
-      margin-right: 2px;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
+    @include horizontal-space-children(2px);
   }
 
   .seasonal-reward-wrapper {
