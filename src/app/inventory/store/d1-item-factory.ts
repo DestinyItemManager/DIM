@@ -108,29 +108,24 @@ export function resetIdTracker() {
  * @param items a list of "raw" items from the Destiny API
  * @return a promise for the list of items
  */
-export function processItems(
-  owner: D1Store,
-  items: any[]
-): Promise<D1Item[]> {
-  return Promise.all([getDefinitions(), getBuckets(), previousItems, newItems]).then(
-    ([defs, buckets, previousItems, newItems]) => {
-      const result: D1Item[] = [];
-      for (const item of items) {
-        let createdItem: D1Item | null = null;
-        try {
-          createdItem = makeItem(defs, buckets, item, owner);
-        } catch (e) {
-          console.error('Error processing item', item, e);
-          reportException('Processing D1 item', e);
-        }
-        if (createdItem !== null) {
-          createdItem.owner = owner.id;
-          result.push(createdItem);
-        }
+export function processItems(owner: D1Store, items: any[]): Promise<D1Item[]> {
+  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
+    const result: D1Item[] = [];
+    for (const item of items) {
+      let createdItem: D1Item | null = null;
+      try {
+        createdItem = makeItem(defs, buckets, item, owner);
+      } catch (e) {
+        console.error('Error processing item', item, e);
+        reportException('Processing D1 item', e);
       }
-      return result;
+      if (createdItem !== null) {
+        createdItem.owner = owner.id;
+        result.push(createdItem);
+      }
     }
-  );
+    return result;
+  });
 }
 
 const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
