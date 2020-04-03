@@ -4,6 +4,9 @@ import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { TagValue } from './dim-item-info';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { ThunkResult } from 'app/store/reducers';
+import { get } from 'idb-keyval';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
@@ -11,7 +14,6 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
   buckets?: InventoryBuckets;
-  newItems?: Set<string>;
   profileResponse?: DestinyProfileResponse;
 }>();
 
@@ -33,6 +35,25 @@ export const moveItem = createAction('inventory/MOVE_ITEM')<{
 
 /** Update the set of new items. */
 export const setNewItems = createAction('new_items/SET')<Set<string>>();
+/** Clear new-ness of an item by its instance ID */
+export const clearNewItem = createAction('new_items/CLEAR_NEW')<string>();
+/** Clear new-ness of all items */
+export const clearAllNewItems = createAction('new_items/CLEAR_ALL')();
+
+/** Load which items are new from IndexedDB */
+export function loadNewItems(account: DestinyAccount): ThunkResult {
+  return async (dispatch, getState) => {
+    if (getState().inventory.newItemsLoaded) {
+      return;
+    }
+
+    const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;
+    const newItems = await get<Set<string> | undefined>(key);
+    if (newItems) {
+      dispatch(setNewItems(newItems));
+    }
+  };
+}
 
 export const setItemTag = createAction('tag_notes/SET_TAG')<{
   /** Item instance ID */
