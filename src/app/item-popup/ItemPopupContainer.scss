@@ -40,7 +40,6 @@
     height: 0;
     border-style: solid;
     position: absolute;
-    margin: 5px;
     border-color: black;
   }
 
@@ -50,9 +49,6 @@
     border-right-color: transparent;
     border-bottom-color: transparent;
     bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
   }
 
   &[data-popper-placement^='bottom'] .arrow {
@@ -61,9 +57,6 @@
     border-right-color: transparent;
     border-top-color: transparent;
     top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
 
     border-bottom-color: white;
 
@@ -89,9 +82,6 @@
     border-top-color: transparent;
     border-bottom-color: transparent;
     left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
   }
   &[data-popper-placement^='left'] .arrow {
     border-width: 5px 0 5px 5px;
@@ -99,9 +89,6 @@
     border-right-color: transparent;
     border-bottom-color: transparent;
     right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
   }
   textarea {
     resize: vertical;
