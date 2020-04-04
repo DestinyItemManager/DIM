@@ -68,7 +68,9 @@
         img[src^='data'] {
           filter: invert(1);
         }
-        .stat:nth-child(2) {
+        > div:nth-child(2) {
+          display: flex;
+          flex-direction: row;
           &::before,
           &::after {
             font-size: 11px;

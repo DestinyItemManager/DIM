@@ -105,7 +105,7 @@ export default function Plug({
     >
       {!(hasMenu && isPhonePortrait) ? (
         <PressTip
-          tooltip={
+          tooltip={() => (
             <PlugTooltip
               item={item}
               plug={plug}
@@ -114,7 +114,7 @@ export default function Plug({
               bestPerks={bestPerks}
               inventoryWishListRoll={inventoryWishListRoll}
             />
-          }
+          )}
         >
           {contents}
         </PressTip>

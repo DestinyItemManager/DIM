@@ -14,6 +14,8 @@ import _ from 'lodash';
 interface Props {
   tooltip: React.ReactNode;
   children: React.ReactElement<any, any>;
+  /** By default everything gets wrapped in a div, but you can choose a different element type here. */
+  elementType?: React.ReactType;
 }
 
 interface State {
@@ -146,9 +148,15 @@ export default class PressTip extends React.Component<Props, State> {
     const { tooltip, children } = this.props;
     const { isOpen } = this.state;
 
+    if (!tooltip) {
+      return <div>{children}</div>;
+    }
+
+    const Component = this.props.elementType ?? 'div';
+
     // TODO: if we reuse a stable tooltip container instance we could animate between them
     return (
-      <div
+      <Component
         ref={this.ref}
         onMouseEnter={this.hover}
         onMouseDown={this.press}
@@ -166,7 +174,7 @@ export default class PressTip extends React.Component<Props, State> {
             </div>,
             document.body
           )}
-      </div>
+      </Component>
     );
   }
 
