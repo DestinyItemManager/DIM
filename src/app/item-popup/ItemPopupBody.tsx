@@ -8,6 +8,7 @@ import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import './ItemPopupBody.scss';
 
 export const enum ItemPopupTab {
   Overview,

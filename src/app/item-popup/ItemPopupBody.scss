@@ -1,99 +1,4 @@
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Move Popup
-//
-// The popup displaying info and actions for an single item.
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 @import '../variables.scss';
-
-.move-popup-dialog {
-  min-height: 77px;
-  width: 375px;
-  z-index: 8;
-
-  --backgroundColor: 0, 0%, 0%;
-
-  &.is-Exotic {
-    --backgroundColor: 48, 71%, 5%;
-  }
-  &.is-Legendary {
-    --backgroundColor: 279, 36%, 5%;
-  }
-  &.is-Rare {
-    --backgroundColor: 213, 34%, 6%;
-  }
-  &.is-Uncommon {
-    --backgroundColor: 126, 35%, 5%;
-  }
-  &.is-Common {
-    --backgroundColor: 0, 0%, 7%;
-  }
-  > div:first-child {
-    height: 100%;
-    background-color: #{'hsl(var(--backgroundColor))'};
-    contain: content;
-  }
-  box-shadow: 0 -1px 24px 4px #222;
-
-  .arrow {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    position: absolute;
-    border-color: black;
-  }
-
-  &[data-popper-placement^='top'] .arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    bottom: -5px;
-  }
-
-  &[data-popper-placement^='bottom'] .arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
-    top: -5px;
-
-    border-bottom-color: white;
-
-    &.is-Exotic {
-      border-bottom-color: $exotic;
-    }
-    &.is-Legendary {
-      border-bottom-color: $legendary;
-    }
-    &.is-Rare {
-      border-bottom-color: $rare;
-    }
-    &.is-Uncommon {
-      border-bottom-color: $uncommon;
-    }
-    &.is-Common {
-      border-bottom-color: $common;
-    }
-  }
-  &[data-popper-placement^='right'] .arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    left: -5px;
-  }
-  &[data-popper-placement^='left'] .arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    right: -5px;
-  }
-  textarea {
-    resize: vertical;
-  }
-}
 
 .move-popup-tabs {
   display: flex;
@@ -149,13 +54,6 @@
   margin: 5px 10px;
   white-space: pre-wrap;
   font-style: italic;
-}
-
-.item-lore {
-  margin: 5px 10px;
-  img {
-    vertical-align: text-bottom;
-  }
 }
 
 .item-shader {

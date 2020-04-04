@@ -1,4 +1,4 @@
-import './ItemPopupContainer.scss';
+import styles from './ItemPopupContainer.m.scss';
 
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
@@ -28,6 +28,7 @@ import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { storesSelector } from 'app/inventory/selectors';
 import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -114,12 +115,20 @@ const popperOptions = (boundarySelector: string | undefined): Partial<Options> =
       {
         name: 'arrow',
         options: {
-          element: '.arrow'
+          element: '.' + styles.arrow
         }
       }
     ]
   };
 };
+
+const tierClasses: { [key in DimItem['tier']]: string } = {
+  Exotic: styles.exotic,
+  Legendary: styles.legendary,
+  Rare: styles.rare,
+  Uncommon: styles.uncommon,
+  Common: styles.common
+} as const;
 
 /**
  * A container that can show a single item popup/tooltip. This is a
@@ -214,7 +223,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
       </Sheet>
     ) : (
       <div
-        className={`move-popup-dialog is-${item.tier}`}
+        className={clsx(styles.movePopupDialog, tierClasses[item.tier])}
         ref={this.popupRef}
         role="dialog"
         aria-modal="false"
@@ -226,7 +235,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
             <div className="item-details">{footer}</div>
           </ItemTagHotkeys>
         </ClickOutside>
-        <div className={`arrow is-${item.tier}`} />
+        <div className={clsx(styles.arrow, tierClasses[item.tier])} />
         <GlobalHotkeys
           hotkeys={[
             {
