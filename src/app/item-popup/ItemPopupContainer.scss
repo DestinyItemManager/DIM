@@ -44,7 +44,7 @@
     border-color: black;
   }
 
-  &[x-placement^='top'] .arrow {
+  &[data-popper-placement^='top'] .arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -55,7 +55,7 @@
     margin-bottom: 0;
   }
 
-  &[x-placement^='bottom'] .arrow {
+  &[data-popper-placement^='bottom'] .arrow {
     border-width: 0 5px 5px 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -83,7 +83,7 @@
       border-bottom-color: $common;
     }
   }
-  &[x-placement^='right'] .arrow {
+  &[data-popper-placement^='right'] .arrow {
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
     border-top-color: transparent;
@@ -93,7 +93,7 @@
     margin-left: 0;
     margin-right: 0;
   }
-  &[x-placement^='left'] .arrow {
+  &[data-popper-placement^='left'] .arrow {
     border-width: 5px 0 5px 5px;
     border-top-color: transparent;
     border-right-color: transparent;

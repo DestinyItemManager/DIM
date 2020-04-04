@@ -10,7 +10,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import ItemActions from './ItemActions';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
-import Popper from 'popper.js';
+import { createPopper, Instance, Options, Padding } from '@popperjs/core';
 import React from 'react';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
@@ -57,24 +57,50 @@ interface State {
   tab: ItemPopupTab;
 }
 
-const popperOptions = {
-  placement: 'right',
-  eventsEnabled: false,
-  modifiers: {
-    preventOverflow: {
-      priority: ['bottom', 'top', 'right', 'left']
-    },
-    flip: {
-      behavior: ['top', 'bottom', 'right', 'left']
-    },
-    offset: {
-      offset: '0,5px'
-    },
-    arrow: {
-      element: '.arrow'
-    }
-  }
-} as any;
+const popperOptions = (boundarySelector: string | undefined): Partial<Options> => {
+  const headerHeight = document.getElementById('header')!.clientHeight;
+  const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
+  const padding: Padding = {
+    left: 0,
+    top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
+    right: 0,
+    bottom: 0
+  };
+  return {
+    placement: 'auto',
+    modifiers: [
+      { name: 'eventListeners', enabled: false },
+      {
+        name: 'preventOverflow',
+        options: {
+          priority: ['bottom', 'top', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'flip',
+        options: {
+          behavior: ['top', 'bottom', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 5]
+        }
+      },
+      {
+        name: 'arrow',
+        options: {
+          element: '.arrow'
+        }
+      }
+    ]
+  };
+};
 
 /**
  * A container that can show a single item popup/tooltip. This is a
@@ -83,7 +109,7 @@ const popperOptions = {
 class ItemPopupContainer extends React.Component<Props, State> {
   state: State = { tab: ItemPopupTab.Overview };
   private subscriptions = new Subscriptions();
-  private popper?: Popper;
+  private popper?: Instance;
   private popupRef = React.createRef<HTMLDivElement>();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
@@ -214,23 +240,12 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
     if (element && this.popupRef.current) {
       if (this.popper) {
-        this.popper.scheduleUpdate();
+        this.popper.update();
       } else {
-        const headerHeight = document.getElementById('header')!.clientHeight;
-        const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-        const padding = {
-          left: 0,
-          top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
-          right: 0,
-          bottom: 0
-        };
-        popperOptions.modifiers.preventOverflow.padding = padding;
-        popperOptions.modifiers.preventOverflow.boundariesElement = 'viewport';
-        popperOptions.modifiers.flip.padding = padding;
-        popperOptions.modifiers.flip.boundariesElement = 'viewport';
+        const options = popperOptions(boundarySelector);
 
-        this.popper = new Popper(element, this.popupRef.current, popperOptions);
-        this.popper.scheduleUpdate(); // helps fix arrow position
+        this.popper = createPopper(element, this.popupRef.current, options);
+        this.popper.update(); // helps fix arrow position
       }
     }
   };
