@@ -10,7 +10,14 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import ItemActions from './ItemActions';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
-import { createPopper, Instance, Options, Padding } from '@popperjs/core';
+import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
+import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
+import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
 import React from 'react';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
@@ -57,6 +64,19 @@ interface State {
   tab: ItemPopupTab;
 }
 
+/** Makes a custom popper that doesn't have the event listeners modifier */
+const createPopper = popperGenerator({
+  defaultModifiers: [
+    popperOffsets,
+    offset,
+    computeStyles,
+    applyStyles,
+    flip,
+    preventOverflow,
+    arrow
+  ]
+});
+
 const popperOptions = (boundarySelector: string | undefined): Partial<Options> => {
   const headerHeight = document.getElementById('header')!.clientHeight;
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
@@ -69,7 +89,6 @@ const popperOptions = (boundarySelector: string | undefined): Partial<Options> =
   return {
     placement: 'auto',
     modifiers: [
-      { name: 'eventListeners', enabled: false },
       {
         name: 'preventOverflow',
         options: {

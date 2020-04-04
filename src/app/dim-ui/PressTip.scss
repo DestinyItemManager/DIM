@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-.tooltip {
+.tippy-box {
   position: absolute;
   background-color: #444;
   color: white;
@@ -20,7 +20,7 @@
     @include destiny-header;
   }
 
-  .tooltip-arrow {
+  .tippy-arrow {
     width: 0;
     height: 0;
     border-style: solid;
@@ -28,12 +28,19 @@
     margin: 5px;
     border-color: #444;
   }
+
+  .tippy-content {
+    width: fit-content;
+    > div {
+      width: fit-content;
+    }
+  }
 }
 
-.tooltip[x-placement^='top'] {
+.tippy-box[data-placement^='top'] {
   margin-bottom: 5px;
 }
-.tooltip[x-placement^='top'] .tooltip-arrow {
+.tippy-box[data-placement^='top'] .tippy-arrow {
   border-width: 5px 5px 0 5px;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -43,10 +50,10 @@
   margin-top: 0;
   margin-bottom: 0;
 }
-.tooltip[x-placement^='bottom'] {
+.tippy-box[data-placement^='bottom'] {
   margin-top: 5px;
 }
-.tooltip[x-placement^='bottom'] .tooltip-arrow {
+.tippy-box[data-placement^='bottom'] .tippy-arrow {
   border-width: 0 5px 5px 5px;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -56,10 +63,10 @@
   margin-top: 0;
   margin-bottom: 0;
 }
-.tooltip[x-placement^='right'] {
+.tippy-box[data-placement^='right'] {
   margin-left: 5px;
 }
-.tooltip[x-placement^='right'] .tooltip-arrow {
+.tippy-box[data-placement^='right'] .tippy-arrow {
   border-width: 5px 5px 5px 0;
   border-left-color: transparent;
   border-top-color: transparent;
@@ -69,10 +76,10 @@
   margin-left: 0;
   margin-right: 0;
 }
-.tooltip[x-placement^='left'] {
+.tippy-box[data-popper-placement^='left'] {
   margin-right: 5px;
 }
-.tooltip[x-placement^='left'] .tooltip-arrow {
+.tippy-box[data-popper-placement^='left'] .tippy-arrow {
   border-width: 5px 0 5px 5px;
   border-top-color: transparent;
   border-right-color: transparent;

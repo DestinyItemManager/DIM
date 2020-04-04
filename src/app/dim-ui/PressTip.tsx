@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Tooltip from 'tooltip.js';
+import tippy, { Instance } from 'tippy.js';
 import './PressTip.scss';
 
 interface Props {
@@ -32,7 +32,7 @@ interface State {
  * </PressTip>
  */
 export default class PressTip extends React.Component<Props, State> {
-  private tooltip?: Tooltip;
+  private tooltip?: Instance;
   private timer: number;
   private tooltipContent: Element;
   private ref: HTMLElement | null;
@@ -55,30 +55,24 @@ export default class PressTip extends React.Component<Props, State> {
     if (this.tooltip) {
       this.tooltip.show();
     } else {
-      this.tooltip = new Tooltip(this.ref, {
+      this.tooltipContent = document.createElement('div');
+      this.tooltip = tippy(this.ref, {
         placement: 'top', // or bottom, left, right, and variations
-        title: '...',
-        html: true,
         trigger: 'manual',
-        container: 'body'
+        appendTo: () => document.body,
+        content: this.tooltipContent
       });
       this.tooltip.show();
-
-      // Ugh this is a real hack
-      const tooltipHack: any = this.tooltip;
-      this.tooltipContent = tooltipHack._tooltipNode.querySelector(
-        tooltipHack.options.innerSelector
-      );
-      this.tooltipContent.innerHTML = '';
     }
     this.setState({ isOpen: true });
   };
 
   closeToolTip = (e) => {
+    return;
     e.preventDefault();
     e.stopPropagation();
     if (this.tooltip) {
-      this.tooltip.dispose();
+      this.tooltip.destroy();
       this.tooltip = undefined;
     }
     this.setState({ isOpen: false });
@@ -145,7 +139,7 @@ export default class PressTip extends React.Component<Props, State> {
 
   private destroy() {
     if (this.tooltip) {
-      this.tooltip.dispose();
+      this.tooltip.destroy();
       this.tooltip = undefined;
     }
     if (this.ref) {
