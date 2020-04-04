@@ -83,7 +83,6 @@ interface State {
 class InfusionFinder extends React.Component<Props, State> {
   state: State = { direction: InfuseDirection.INFUSE, filter: '' };
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
   private itemContainer = React.createRef<HTMLDivElement>();
 

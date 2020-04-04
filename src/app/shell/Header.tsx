@@ -115,7 +115,6 @@ interface State {
 
 class Header extends React.PureComponent<Props, State> {
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLAnchorElement>();
   private searchFilter = React.createRef<SearchFilterInput>();

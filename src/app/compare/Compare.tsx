@@ -76,7 +76,6 @@ class Compare extends React.Component<Props, State> {
     sortBetterFirst: true
   };
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private listener: Function;
 
   // Memoize computing the list of stats

@@ -116,7 +116,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     clashingLoadout: null
   };
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private listener: Function;
 
   componentDidMount() {

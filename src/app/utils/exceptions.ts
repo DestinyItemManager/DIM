@@ -5,7 +5,6 @@ export let reportException: (name: string, e: Error, errorInfo?: {}) => void = _
 
 if ($featureFlags.sentry) {
   // The require instead of import helps us trim this from the production bundle
-  // tslint:disable-next-line
   const Sentry = require('@sentry/browser');
   Sentry.init({
     dsn: 'https://1367619d45da481b8148dd345c1a1330@sentry.io/279673',
