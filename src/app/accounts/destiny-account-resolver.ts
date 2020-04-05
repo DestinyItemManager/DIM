@@ -20,8 +20,6 @@ export function destinyAccountResolver(destinyVersion: 1 | 2) {
         account.membershipId === membershipId && account.destinyVersion === destinyVersion
     );
     if (!account) {
-      // If we didn't load an account, kick out and re-resolve
-      $transition$.router.stateService.go('default-account');
       return null;
     }
     return store.dispatch(setActivePlatform(account));

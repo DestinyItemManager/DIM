@@ -23,6 +23,9 @@ interface Props extends ThunkDispatchProp {
  */
 class Destiny extends React.Component<Props> {
   componentDidMount() {
+    if (!this.props.account) {
+      return;
+    }
     if ($featureFlags.wishLists) {
       this.props.dispatch(loadWishListAndInfoFromIndexedDB());
     }
@@ -32,6 +35,15 @@ class Destiny extends React.Component<Props> {
   }
 
   render() {
+    if (!this.props.account) {
+      return (
+        <div className="dim-error dim-page">
+          <h2>{t('Account.MissingTitle')}</h2>
+          <div>{t('Account.MissingDescription')}</div>
+        </div>
+      );
+    }
+
     // Define some hotkeys without implementation, so they show up in the help
     const hotkeys: Hotkey[] = [
       {
