@@ -177,7 +177,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       return;
     }
 
-    const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
+    const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
     if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
       dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
     }

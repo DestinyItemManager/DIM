@@ -132,7 +132,7 @@ export const itemTagSelectorList: TagInfo[] = [
 ];
 
 /**
- * Load item infos (tags and notes) into Redux from the sync service
+ * Load legacy (pre-DIM-Sync) item infos (tags and notes) into Redux from the sync service
  */
 export function loadItemInfos(account: DestinyAccount): ThunkResult {
   return async (dispatch) => {
