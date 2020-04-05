@@ -3,7 +3,8 @@ export const enum D2EventEnum {
   CRIMSON_DAYS,
   SOLSTICE_OF_HEROES,
   FESTIVAL_OF_THE_LOST,
-  REVELRY
+  REVELRY,
+  GUARDIAN_GAMES
 }
 
 export const D2EventInfo = {
@@ -36,6 +37,12 @@ export const D2EventInfo = {
     shortname: 'revelry',
     sources: [2187511136],
     engram: [1974821348, 2570200927]
+  },
+  6: {
+    name: 'Guardian Games',
+    shortname: 'games',
+    sources: [3388021959],
+    engram: []
   }
 };
 
@@ -44,7 +51,8 @@ export const D2EventPredicateLookup = {
   crimsondays: D2EventEnum.CRIMSON_DAYS,
   solstice: D2EventEnum.SOLSTICE_OF_HEROES,
   fotl: D2EventEnum.FESTIVAL_OF_THE_LOST,
-  revelry: D2EventEnum.REVELRY
+  revelry: D2EventEnum.REVELRY,
+  games: D2EventEnum.GUARDIAN_GAMES
 };
 
 export const D2SourcesToEvent = {
@@ -55,5 +63,6 @@ export const D2SourcesToEvent = {
   3724111213: D2EventEnum.SOLSTICE_OF_HEROES,
   1677921161: D2EventEnum.FESTIVAL_OF_THE_LOST,
   3190938946: D2EventEnum.FESTIVAL_OF_THE_LOST,
-  2187511136: D2EventEnum.REVELRY
+  2187511136: D2EventEnum.REVELRY,
+  3388021959: D2EventEnum.GUARDIAN_GAMES
 };
