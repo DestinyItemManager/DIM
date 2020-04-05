@@ -240,8 +240,6 @@ class ManifestService {
 
     this.statusText = `${t('Manifest.Build')}...`;
 
-    // TODO: trim specific tables
-
     // We intentionally don't wait on this promise
     this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
 
