@@ -58,13 +58,15 @@ export default function ErrorPanel({
   showReload?: boolean;
   children?: React.ReactNode;
 }) {
+  const hasBungieErrorCode = error && error.code && error.code > 0;
+
   return (
     <div>
       <div className={styles.errorPanel}>
         <h2>
           {title || t('ErrorBoundary.Title')}
 
-          {error && error.code && error.code > 0 ? (
+          {error && hasBungieErrorCode ? (
             <span className={styles.errorCode}>Error {error.code}</span>
           ) : (
             error && <span className={styles.errorCode}>{error.name}</span>
@@ -72,13 +74,15 @@ export default function ErrorPanel({
         </h2>
         <p>
           {error ? error.message : fallbackMessage}{' '}
-          {error && error.code && error.code > 0 && t('ErrorPanel.Description')}
+          {hasBungieErrorCode && t('ErrorPanel.Description')}
         </p>
         {children}
         <div className={styles.twitterLinks}>
-          <ExternalLink href={bungieHelpLink} className="dim-button">
-            <AppIcon icon={twitterIcon} /> @BungieHelp
-          </ExternalLink>
+          {hasBungieErrorCode && (
+            <ExternalLink href={bungieHelpLink} className="dim-button">
+              <AppIcon icon={twitterIcon} /> @BungieHelp
+            </ExternalLink>
+          )}
           <ExternalLink href={dimHelpLink} className="dim-button">
             <AppIcon icon={twitterIcon} /> @ThisIsDim
           </ExternalLink>
