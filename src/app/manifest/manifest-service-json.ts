@@ -5,12 +5,13 @@ import { reportException } from '../utils/exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
-import { DestinyManifest } from 'bungie-api-ts/destiny2';
+import { DestinyManifest, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { settingsSelector } from 'app/settings/reducer';
 import store from 'app/store/store';
+import { emptyObject, emptyArray } from 'app/utils/empty';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -24,6 +25,44 @@ export interface ManifestServiceState {
   statusText?: string;
 }
 
+type Mutable<T> = { -readonly [P in keyof T]: Mutable<T[P]> };
+/** Functions that can reduce the size of a table after it's downloaded but before it's saved to cache. */
+const tableTrimmers = {
+  DestinyInventoryItemDefinition(table: { [hash: number]: DestinyInventoryItemDefinition }) {
+    for (const key in table) {
+      const def = table[key] as Mutable<DestinyInventoryItemDefinition>;
+
+      // Deleting properties can actually make memory usage go up as V8 replaces some efficient
+      // structures from JSON parsing. Only replace objects with empties, and always test with the
+      // memory profiler. Don't assume that deleting something makes this smaller.
+
+      def.action = emptyObject();
+      def.backgroundColor = emptyObject();
+      def.translationBlock = emptyObject();
+      if (def.equippingBlock?.displayStrings?.length) {
+        def.equippingBlock.displayStrings = emptyArray();
+      }
+      if (def.preview?.derivedItemCategories?.length) {
+        def.preview.derivedItemCategories = emptyArray();
+      }
+      if (def.inventory.bucketTypeHash !== 3284755031) {
+        def.talentGrid = emptyObject();
+      }
+
+      if (def.sockets) {
+        def.sockets.intrinsicSockets = emptyArray();
+        for (const socket of def.sockets.socketEntries) {
+          if (socket.reusablePlugSetHash && socket.reusablePlugItems.length > 0) {
+            socket.reusablePlugItems = emptyArray();
+          }
+        }
+      }
+    }
+
+    return table;
+  }
+};
+
 class ManifestService {
   version: string | null = null;
   state: ManifestServiceState = {
@@ -34,7 +73,7 @@ class ManifestService {
   newManifest$ = new Subject();
 
   /**
-   * This tells users to reload the extension. It fires no more
+   * This tells users to reload the app. It fires no more
    * often than every 10 seconds, and only warns if the manifest
    * version has actually changed.
    */
@@ -194,7 +233,7 @@ class ManifestService {
       .map(async (table) => {
         const response = await fetch(`https://www.bungie.net${components[table]}`);
         const body = await (response.ok ? response.json() : Promise.reject(response));
-        manifest[table] = body;
+        manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
       });
 
     await Promise.all(futures);
