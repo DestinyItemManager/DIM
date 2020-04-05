@@ -291,8 +291,7 @@ export function makeItem(
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
-    (instanceDef?.damageTypeHash !== undefined &&
-      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (instanceDef?.damageTypeHash !== undefined && defs.DamageType[instanceDef.damageTypeHash]) ||
     (instanceDef?.energy?.energyTypeHash !== undefined &&
       defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
