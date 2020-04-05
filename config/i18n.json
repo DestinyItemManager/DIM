@@ -15,7 +15,7 @@
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
     "UnlinkTwitchButton": "Unlink Twitch",
-    "ErrorLoadInventory": "Unable to load Destiny profile"
+    "ErrorLoadInventory": "Unable to load your Destiny profile"
   },
   "Activities": {
     "Activities": "Activities",
