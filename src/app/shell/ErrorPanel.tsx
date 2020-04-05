@@ -64,8 +64,10 @@ export default function ErrorPanel({
         <h2>
           {title || t('ErrorBoundary.Title')}
 
-          {error && error.code && error.code > 0 && (
+          {error && error.code && error.code > 0 ? (
             <span className={styles.errorCode}>Error {error.code}</span>
+          ) : (
+            error && <span className={styles.errorCode}>{error.name}</span>
           )}
         </h2>
         <p>
