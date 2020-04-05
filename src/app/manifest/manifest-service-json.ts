@@ -143,11 +143,16 @@ class ManifestService {
 
   private async loadManifest(tableWhitelist: string[]): Promise<any> {
     let version: string | null = null;
+    let components: {
+      [key: string]: string;
+    } | null = null;
     try {
       const data = await this.getManifestApi();
       await settingsReady; // wait for settings to be ready
       const language = settingsSelector(store.getState()).language;
       const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
+      components =
+        data.jsonWorldComponentContentPaths[language] || data.jsonWorldComponentContentPaths.en;
 
       // Use the path as the version, rather than the "version" field, because
       // Bungie can update the manifest file without changing that version.
@@ -167,7 +172,7 @@ class ManifestService {
     try {
       return await this.loadManifestFromCache(version, tableWhitelist);
     } catch (e) {
-      return this.loadManifestRemote(version, version, tableWhitelist);
+      return this.loadManifestRemote(version, components, tableWhitelist);
     }
   }
 
@@ -176,16 +181,27 @@ class ManifestService {
    */
   private async loadManifestRemote(
     version: string,
-    path: string,
+    components: {
+      [key: string]: string;
+    },
     tableWhitelist: string[]
   ): Promise<object> {
     this.statusText = `${t('Manifest.Download')}...`;
 
-    const response = await fetch(`https://www.bungie.net${path}`);
-    const body = await (response.ok ? response.json() : Promise.reject(response));
+    const manifest = {};
+    const futures = tableWhitelist
+      .map((t) => `Destiny${t}Definition`)
+      .map(async (table) => {
+        const response = await fetch(`https://www.bungie.net${components[table]}`);
+        const body = await (response.ok ? response.json() : Promise.reject(response));
+        manifest[table] = body;
+      });
+
+    await Promise.all(futures);
+
     this.statusText = `${t('Manifest.Build')}...`;
 
-    const manifest = _.pick(body, ...tableWhitelist.map((t) => `Destiny${t}Definition`));
+    // TODO: trim specific tables
 
     // We intentionally don't wait on this promise
     this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
