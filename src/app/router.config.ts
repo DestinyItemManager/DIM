@@ -10,7 +10,6 @@ export default function makeRouter() {
 
   // Debug visualizer
   if ($featureFlags.debugRouter) {
-    // tslint:disable-next-line:no-require-imports
     router.plugin(require('@uirouter/visualizer').Visualizer);
     router.trace.enable('TRANSITION');
   }

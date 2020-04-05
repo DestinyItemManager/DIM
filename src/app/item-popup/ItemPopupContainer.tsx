@@ -85,7 +85,6 @@ class ItemPopupContainer extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private popper?: Popper;
   private popupRef = React.createRef<HTMLDivElement>();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
 
   componentDidMount() {

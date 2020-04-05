@@ -29,8 +29,7 @@
     "**/zh-CN",
     "**/zh-TW",
     "package.json",
-    "tsconfig.json",
-    "tslint.json"
+    "tsconfig.json"
   ],
   "cSpell.words": [
     "Dont",

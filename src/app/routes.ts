@@ -26,6 +26,5 @@ export const states: ReactStateDeclaration[] = [
   ...settingsStates,
   ...shellStates,
   // Only include developer stuff in the bundle in dev
-  // tslint:disable-next-line:no-require-imports
   ...($DIM_FLAVOR === 'dev' ? require('./developer/routes').states : [])
 ];

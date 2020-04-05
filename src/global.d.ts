@@ -44,13 +44,11 @@ declare const $featureFlags: {
   dimApi: boolean;
 };
 
-/* tslint:disable */
 declare namespace React {
   interface ImgHTMLAttributes {
     loading?: 'lazy';
   }
 }
-/* tslint:enable */
 
 declare function ga(...params: string[]);
 

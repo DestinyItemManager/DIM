@@ -19,7 +19,6 @@ interface State {
 export default class ItemPickerContainer extends React.Component<{}, State> {
   state: State = { generation: 0 };
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
 
   componentDidMount() {
