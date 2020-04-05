@@ -25,7 +25,7 @@ import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems } from './actions';
+import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
@@ -230,7 +230,12 @@ function makeD2StoresService(): D2StoreServiceType {
     } catch (e) {
       console.error('Error loading stores', e);
       reportException('d2stores', e);
-      showNotification(bungieErrorToaster(e));
+      if (_stores.length > 0) {
+        // don't replace their inventory with the error, just notify
+        showNotification(bungieErrorToaster(e));
+      } else {
+        store.dispatch(error(e));
+      }
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to

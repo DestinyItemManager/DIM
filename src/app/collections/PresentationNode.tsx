@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
 import Metrics from './Metrics';
+import ErrorPanel from 'app/shell/ErrorPanel';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -100,10 +101,10 @@ class PresentationNode extends React.Component<Props> {
 
     if (!presentationNodeDef) {
       return (
-        <div className="dim-error">
-          <h2>Bad presentation node</h2>
-          <div>This isn't real {presentationNodeHash}</div>
-        </div>
+        <ErrorPanel
+          title="Bad presentation node"
+          error={new Error(`This isn't real ${presentationNodeHash}`)}
+        />
       );
     }
 

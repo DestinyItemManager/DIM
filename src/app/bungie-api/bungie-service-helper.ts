@@ -119,7 +119,12 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   let data: ServerResponse<any> | undefined;
   try {
     data = await response.json();
-  } catch {}
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      console.error('Error parsing Bungie.net response', e);
+      throw new Error(t('BungieService.Difficulties'));
+    }
+  }
 
   // There's an alternate error response that can be returned during maintenance
   const eMessage = data && (data as any).error && (data as any).error_description;

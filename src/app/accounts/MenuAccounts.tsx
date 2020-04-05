@@ -1,7 +1,7 @@
 import React from 'react';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import './Account.scss';
-import { compareAccounts, DestinyAccount } from './destiny-account';
+import { DestinyAccount } from './destiny-account';
 import { UISref } from '@uirouter/react';
 import { router } from '../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
@@ -10,6 +10,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import Account from './Account';
 import { t } from 'app/i18next-t';
+import _ from 'lodash';
 
 interface ProvidedProps {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
@@ -34,7 +35,7 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
     return null;
   }
 
-  const otherAccounts = accounts.filter((p) => !compareAccounts(p, currentAccount));
+  const sortedAccounts = _.sortBy(accounts, (a) => -(a.lastPlayed?.getTime() || 0));
 
   const logOut = () => {
     removeToken();
@@ -44,14 +45,17 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
   return (
     <div className="account-select">
       <h3>Accounts</h3>
-      <Account className="selected-account" account={currentAccount} />
-      {otherAccounts.map((account) => (
+      {sortedAccounts.map((account) => (
         <UISref
           key={`${account.membershipId}-${account.destinyVersion}`}
           to={account.destinyVersion === 1 ? 'destiny1' : 'destiny2'}
           params={account}
         >
-          <Account account={account} onClick={closeDropdown} />
+          <Account
+            className={account === currentAccount ? 'selected-account' : ''}
+            account={account}
+            onClick={closeDropdown}
+          />
         </UISref>
       ))}
       <div className="account log-out" onClick={logOut}>

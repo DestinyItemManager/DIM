@@ -141,11 +141,14 @@ let initialLanguage: string;
 
 class SettingsPage extends React.Component<Props> {
   componentDidMount() {
+    const { settings, dispatch } = this.props;
+
     if (!initialLanguage) {
-      initialLanguage = this.props.settings.language;
+      initialLanguage = settings.language;
     }
+
     getDefinitions();
-    getPlatforms().then(() => {
+    dispatch(getPlatforms()).then(() => {
       const account = getActivePlatform();
       if (account) {
         account.destinyVersion === 2

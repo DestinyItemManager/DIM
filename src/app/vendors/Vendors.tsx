@@ -46,6 +46,7 @@ import _ from 'lodash';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { emptyArray, emptyObject } from 'app/utils/empty';
+import ErrorPanel from 'app/shell/ErrorPanel';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -204,10 +205,7 @@ class Vendors extends React.Component<Props, State> {
     if (error) {
       return (
         <PageWithMenu>
-          <div className="dim-error">
-            <h2>{t('ErrorBoundary.Title')}</h2>
-            <div>{error.message}</div>
-          </div>
+          <ErrorPanel error={error} />
         </PageWithMenu>
       );
     }

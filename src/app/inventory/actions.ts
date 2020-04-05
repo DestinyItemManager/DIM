@@ -7,6 +7,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { ThunkResult } from 'app/store/reducers';
 import { get } from 'idb-keyval';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
@@ -16,6 +17,11 @@ export const update = createAction('inventory/UPDATE')<{
   buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
 }>();
+
+/**
+ * Reflect the old stores service data into the Redux store as a migration aid.
+ */
+export const error = createAction('inventory/ERROR')<DimError>();
 
 /**
  * Set the bucket info.
