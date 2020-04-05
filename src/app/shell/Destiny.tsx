@@ -12,34 +12,84 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import { connect } from 'react-redux';
 import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
 import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
-import { ThunkDispatchProp } from 'app/store/reducers';
+import { ThunkDispatchProp, RootState } from 'app/store/reducers';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
+import ErrorPanel from './ErrorPanel';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import { getToken } from 'app/bungie-api/oauth-tokens';
+import { AppIcon, banIcon } from './icons';
 
-interface Props extends ThunkDispatchProp {
+interface ProvidedProps {
   account: DestinyAccount;
 }
+
+interface StoreProps {
+  profileError?: DimError;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    profileError: state.inventory.profileError
+  };
+}
+
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 /**
  * Base view for pages that show Destiny content.
  */
 class Destiny extends React.Component<Props> {
   componentDidMount() {
-    if (!this.props.account) {
+    const { account, dispatch } = this.props;
+    if (!account) {
       return;
     }
     if ($featureFlags.wishLists) {
-      this.props.dispatch(loadWishListAndInfoFromIndexedDB());
+      dispatch(loadWishListAndInfoFromIndexedDB());
     }
     if ($featureFlags.vendorEngrams) {
-      this.props.dispatch(loadVendorDropsFromIndexedDB());
+      dispatch(loadVendorDropsFromIndexedDB());
     }
   }
 
   render() {
-    if (!this.props.account) {
+    const { account, profileError } = this.props;
+
+    if (!account) {
       return (
-        <div className="dim-error dim-page">
-          <h2>{t('Account.MissingTitle')}</h2>
-          <div>{t('Account.MissingDescription')}</div>
+        <div className="dim-page">
+          <ErrorPanel
+            title={t('Accounts.MissingTitle')}
+            fallbackMessage={t('Accounts.MissingDescription')}
+            showTwitters={true}
+          />
+        </div>
+      );
+    }
+
+    if (profileError) {
+      const token = getToken()!;
+      return (
+        <div className="dim-page">
+          <ErrorPanel
+            title={t('Accounts.ErrorLoadInventory')}
+            error={profileError}
+            showTwitters={true}
+          >
+            {account.destinyVersion === 1 &&
+              profileError.code === PlatformErrorCodes.DestinyUnexpectedError && (
+                <p>
+                  <ExternalLink
+                    className="dim-button"
+                    href={`https://www.bungie.net/en/Profile/Settings/254/${token.bungieMembershipId}?category=Accounts`}
+                  >
+                    <AppIcon icon={banIcon} /> {t('Accounts.UnlinkTwitchButton')}
+                  </ExternalLink>{' '}
+                  <b>{t('Accounts.UnlinkTwitch')}</b>
+                </p>
+              )}
+          </ErrorPanel>
         </div>
       );
     }
@@ -78,10 +128,10 @@ class Destiny extends React.Component<Props> {
         <ItemPopupContainer boundarySelector=".store-header" />
         <ItemPickerContainer />
         <MoveAmountPopupContainer />
-        <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
+        <ManifestProgress destinyVersion={account.destinyVersion} />
       </>
     );
   }
 }
 
-export default connect()(Destiny);
+export default connect<StoreProps>(mapStateToProps)(Destiny);

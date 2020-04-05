@@ -31,7 +31,12 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
 
     if (!getState().accounts.loadedFromIDB && !getState().accounts.loaded && realAccountsPromise) {
       // Fall back to Bungie.net
-      await realAccountsPromise;
+      try {
+        await realAccountsPromise;
+      } catch (e) {
+        dispatch(actions.error(e));
+        console.error('Unable to load accounts from Bungie.net', e);
+      }
     }
 
     // Whatever we've got at this point is the answer

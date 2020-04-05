@@ -15,6 +15,7 @@ import { SyncService } from 'app/storage/sync.service';
 import { set } from 'idb-keyval';
 import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
@@ -61,6 +62,8 @@ export interface InventoryState {
 
   readonly profileResponse?: DestinyProfileResponse;
 
+  readonly profileError?: DimError;
+
   /**
    * The inventoryItemIds of all items that are "new".
    */
@@ -105,6 +108,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         buckets: action.payload
+      };
+
+    case getType(actions.error):
+      return {
+        ...state,
+        profileError: action.payload
       };
 
     // *** New items ***
@@ -201,7 +210,8 @@ function updateInventory(
   const newState = {
     ...state,
     stores: [...stores],
-    newItems: computeNewItems(state.stores, state.newItems, stores)
+    newItems: computeNewItems(state.stores, state.newItems, stores),
+    profileError: undefined
   };
   if (buckets) {
     newState.buckets = buckets;

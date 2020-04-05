@@ -2,8 +2,9 @@
 
 .dim-error {
   margin: 1em 0;
-  padding: 1em;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  padding: 0.85em;
+  background: scale-color($red, $lightness: -90%);
+  border-top: 4px solid $red;
   h2 {
     margin: 0 0 1em 0;
   }
@@ -11,5 +12,4 @@
     color: white;
     font-size: 12px;
   }
-  background-color: $red !important;
 }
