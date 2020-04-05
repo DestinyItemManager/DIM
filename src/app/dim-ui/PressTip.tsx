@@ -1,19 +1,83 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Tooltip from 'tooltip.js';
-import './PressTip.scss';
+import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
+import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
+import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
+import styles from './PressTip.m.scss';
+import _ from 'lodash';
 
 interface Props {
   tooltip: React.ReactNode;
   children: React.ReactElement<any, any>;
+  /** By default everything gets wrapped in a div, but you can choose a different element type here. */
+  elementType?: React.ReactType;
 }
 
 interface State {
   isOpen: boolean;
 }
 
-// TODO: Right now we have to wrap any content that's not a DOM node with a div so we get a real element. What's the real answer? React.forwardRef?
-// TODO: defer rendering the tooltip?
+/** Makes a custom popper that doesn't have the event listeners modifier */
+const createPopper = popperGenerator({
+  defaultModifiers: [
+    popperOffsets,
+    offset,
+    computeStyles,
+    applyStyles,
+    flip,
+    preventOverflow,
+    arrow
+  ]
+});
+
+const popperOptions = (): Partial<Options> => {
+  const headerHeight = document.getElementById('header')!.clientHeight;
+  const padding: Padding = {
+    left: 0,
+    top: headerHeight + 5,
+    right: 0,
+    bottom: 0
+  };
+
+  return {
+    placement: 'top',
+    modifiers: [
+      {
+        name: 'preventOverflow',
+        options: {
+          priority: ['bottom', 'top', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'flip',
+        options: {
+          behavior: ['top', 'bottom', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 5]
+        }
+      },
+      {
+        name: 'arrow',
+        options: {
+          element: '.' + styles.arrow
+        }
+      }
+    ]
+  };
+};
 
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
@@ -23,19 +87,19 @@ interface State {
  * Example:
  *
  * <PressTip
- *   tooltip={
+ *   tooltip={() => (
  *     <span>
  *       PressTip Content
  *     </span>
- *   }>
- *   <div>PressTip context element</div>
+ *   )}>
+ *   PressTip context element
  * </PressTip>
  */
 export default class PressTip extends React.Component<Props, State> {
-  private tooltip?: Tooltip;
+  private popper?: Instance;
   private timer: number;
-  private tooltipContent: Element;
-  private ref: HTMLElement | null;
+  private tooltipContents = React.createRef<HTMLDivElement>();
+  private ref = React.createRef<HTMLDivElement>();
 
   constructor(props) {
     super(props);
@@ -44,43 +108,26 @@ export default class PressTip extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.reposition();
+  }
+
   componentWillUnmount() {
     this.destroy();
+    clearTimeout(this.timer);
+  }
+
+  componentDidUpdate() {
+    this.reposition();
   }
 
   showTip = () => {
-    if (!this.ref) {
-      return;
-    }
-    if (this.tooltip) {
-      this.tooltip.show();
-    } else {
-      this.tooltip = new Tooltip(this.ref, {
-        placement: 'top', // or bottom, left, right, and variations
-        title: '...',
-        html: true,
-        trigger: 'manual',
-        container: 'body'
-      });
-      this.tooltip.show();
-
-      // Ugh this is a real hack
-      const tooltipHack: any = this.tooltip;
-      this.tooltipContent = tooltipHack._tooltipNode.querySelector(
-        tooltipHack.options.innerSelector
-      );
-      this.tooltipContent.innerHTML = '';
-    }
     this.setState({ isOpen: true });
   };
 
   closeToolTip = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (this.tooltip) {
-      this.tooltip.dispose();
-      this.tooltip = undefined;
-    }
     this.setState({ isOpen: false });
     clearTimeout(this.timer);
   };
@@ -97,65 +144,64 @@ export default class PressTip extends React.Component<Props, State> {
     this.showTip();
   };
 
-  captureReference = (ref: HTMLElement) => {
-    if (ref === this.ref) {
-      return;
-    }
-
-    this.destroy();
-
-    this.ref = ref;
-
-    if (ref) {
-      ref.addEventListener('mouseenter', this.hover);
-      ref.addEventListener('mousedown', this.press);
-      ref.addEventListener('touchstart', this.press);
-      ref.addEventListener('mouseup', this.closeToolTip);
-      ref.addEventListener('mouseleave', this.closeToolTip);
-      ref.addEventListener('touchend', this.closeToolTip);
-    }
-  };
-
   render() {
     const { tooltip, children } = this.props;
     const { isOpen } = this.state;
 
     if (!tooltip) {
-      return children;
+      return <div>{children}</div>;
     }
 
-    const element = React.Children.only(children);
-    if (element.props.ref) {
-      throw new Error(
-        "You can't use the ref option with PressTip contents, because we steal it for ergonomics' sake"
-      );
-    }
+    const Component = this.props.elementType ?? 'div';
 
-    const otherProps = {
-      ref: this.captureReference
-    };
-
+    // TODO: if we reuse a stable tooltip container instance we could animate between them
     return (
-      <>
-        <element.type {...element.props} {...otherProps} />
-        {isOpen && ReactDOM.createPortal(tooltip, this.tooltipContent)}
-      </>
+      <Component
+        ref={this.ref}
+        onMouseEnter={this.hover}
+        onMouseDown={this.press}
+        onTouchStart={this.press}
+        onMouseUp={this.closeToolTip}
+        onMouseLeave={this.closeToolTip}
+        onTouchEnd={this.closeToolTip}
+      >
+        {children}
+        {isOpen &&
+          ReactDOM.createPortal(
+            <div className={styles.tooltip} ref={this.tooltipContents}>
+              <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
+              <div className={styles.arrow} />
+            </div>,
+            document.body
+          )}
+      </Component>
     );
   }
 
-  private destroy() {
-    if (this.tooltip) {
-      this.tooltip.dispose();
-      this.tooltip = undefined;
+  // Reposition the popup as it is shown or if its size changes
+  private reposition = () => {
+    if (this.state.isOpen) {
+      if (!this.tooltipContents.current || !this.ref.current) {
+        return;
+      } else {
+        if (this.popper) {
+          this.popper.update();
+        } else {
+          const options = popperOptions();
+
+          this.popper = createPopper(this.ref.current, this.tooltipContents.current, options);
+          this.popper.update(); // helps fix arrow position
+        }
+      }
+    } else {
+      this.destroy();
     }
-    if (this.ref) {
-      this.ref.removeEventListener('mouseenter', this.hover);
-      this.ref.removeEventListener('mousedown', this.press);
-      this.ref.removeEventListener('touchstart', this.press);
-      this.ref.removeEventListener('mouseup', this.closeToolTip);
-      this.ref.removeEventListener('mouseleave', this.closeToolTip);
-      this.ref.removeEventListener('touchend', this.closeToolTip);
-      this.ref = null;
+  };
+
+  private destroy() {
+    if (this.popper) {
+      this.popper.destroy();
+      this.popper = undefined;
     }
   }
 }

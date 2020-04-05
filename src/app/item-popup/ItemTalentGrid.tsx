@@ -78,6 +78,7 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
       <g transform={`scale(${scaleFactor})`}>
         {talentGridNodesFilter(talentGrid.nodes, hiddenColumns).map((node) => (
           <PressTip
+            elementType="g"
             key={node.hash}
             tooltip={
               <>
