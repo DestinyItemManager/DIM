@@ -1,3 +1,19 @@
+@import '../variables.scss';
+
+.errorPanel {
+  margin: 1em 0;
+  padding: 0.85em;
+  background: scale-color($red, $lightness: -90%);
+  border-top: 4px solid $red;
+  h2 {
+    margin: 0 0 1em 0;
+  }
+  a {
+    color: white;
+    font-size: 12px;
+  }
+}
+
 .twitterLinks {
   composes: flexRow from '../dim-ui/common.m.scss';
   > * {

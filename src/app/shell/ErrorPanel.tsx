@@ -48,17 +48,19 @@ export default function ErrorPanel({
   error,
   fallbackMessage,
   showTwitters,
-  children
+  children,
+  showReload
 }: {
   title?: string;
   error?: DimError;
   fallbackMessage?: string;
   showTwitters?: boolean;
+  showReload?: boolean;
   children?: React.ReactNode;
 }) {
   return (
     <div>
-      <div className="dim-error">
+      <div className={styles.errorPanel}>
         <h2>
           {title || t('ErrorBoundary.Title')}
 
@@ -66,8 +68,10 @@ export default function ErrorPanel({
             <span className={styles.errorCode}>Error {error.code}</span>
           )}
         </h2>
-        <p>{error ? error.message : fallbackMessage}</p>
-        {error && error.code && error.code > 0 && <p>{t('ErrorPanel.Description')}</p>}
+        <p>
+          {error ? error.message : fallbackMessage}{' '}
+          {error && error.code && error.code > 0 && t('ErrorPanel.Description')}
+        </p>
         {children}
         <div className={styles.twitterLinks}>
           <ExternalLink href={bungieHelpLink} className="dim-button">
@@ -76,9 +80,11 @@ export default function ErrorPanel({
           <ExternalLink href={dimHelpLink} className="dim-button">
             <AppIcon icon={twitterIcon} /> @ThisIsDim
           </ExternalLink>
-          <div className="dim-button" onClick={() => window.location.reload()}>
-            <AppIcon icon={refreshIcon} /> Reload
-          </div>
+          {showReload && (
+            <div className="dim-button" onClick={() => window.location.reload()}>
+              <AppIcon icon={refreshIcon} /> Reload
+            </div>
+          )}
         </div>
       </div>
       {showTwitters && twitters}

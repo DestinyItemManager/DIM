@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'errorCode': string;
+  'errorPanel': string;
   'twitterLinks': string;
   'twitters': string;
 }

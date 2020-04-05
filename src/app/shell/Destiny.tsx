@@ -76,6 +76,7 @@ class Destiny extends React.Component<Props> {
             title={t('Accounts.ErrorLoadInventory')}
             error={profileError}
             showTwitters={true}
+            showReload={true}
           >
             {account.destinyVersion === 1 &&
               profileError.code === PlatformErrorCodes.DestinyUnexpectedError && (

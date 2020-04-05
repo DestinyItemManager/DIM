@@ -24,6 +24,7 @@ import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { exportDimApiData } from 'app/dim-api/dim-api';
 import { exportBackupData } from './export-data';
+import ErrorPanel from 'app/shell/ErrorPanel';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -129,10 +130,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
         <div className="fineprint">{t('Storage.DimApiFinePrint')}</div>
       </div>
       {profileLoadedError && (
-        <div className="dim-error">
-          <h2>{t('Storage.ProfileErrorTitle')}</h2>
-          <div>{profileLoadedError.message}</div>
-        </div>
+        <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}
       {$featureFlags.dimApi && apiPermissionGranted && (
         <div className="setting horizontal">

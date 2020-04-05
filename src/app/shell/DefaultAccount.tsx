@@ -28,6 +28,7 @@ function DefaultAccount({ accountsError }: Props) {
         fallbackMessage={t('Accounts.NoCharacters')}
         title={t('Accounts.ErrorLoading')}
         showTwitters={true}
+        showReload={true}
       />
     </div>
   );
