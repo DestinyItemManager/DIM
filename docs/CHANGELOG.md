@@ -1,5 +1,7 @@
 ## Next
 
+## 6.4.0 <span className="changelog-date">(2020-04-05)</span>
+
 ## 6.3.1 <span className="changelog-date">(2020-03-29)</span>
 
 * Fixed a bug where D1 items could fail to display.
