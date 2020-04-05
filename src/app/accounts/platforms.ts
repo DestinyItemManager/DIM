@@ -101,7 +101,7 @@ function loadPlatforms(membershipId: string): ThunkResult<readonly DestinyAccoun
 }
 
 function loadActivePlatform(): ThunkResult<DestinyAccount | undefined> {
-  return async (_, getState) => {
+  return async (_dispatch, getState) => {
     const account = currentAccountSelector(getState());
     if (account) {
       return account;
@@ -121,6 +121,6 @@ function loadActivePlatform(): ThunkResult<DestinyAccount | undefined> {
         account.membershipId === membershipId && account.destinyVersion === destinyVersion
     );
 
-    return active ?? accounts[0];
+    return active ?? _.maxBy(accounts, (account) => account.lastPlayed);
   };
 }
