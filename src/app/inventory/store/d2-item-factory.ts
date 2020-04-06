@@ -556,17 +556,6 @@ function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
-const categoryBlacklist = new Set(D2SeasonToSource.categoryBlacklist);
-function isInCategoryBlacklist(categoryHashes: number[]) {
-  for (const itemHash of categoryHashes) {
-    if (categoryBlacklist.has(itemHash)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 function getSeason(item: D2Item): number {
   if (item.classified) {
     return D2CalculatedSeason;
@@ -574,7 +563,9 @@ function getSeason(item: D2Item): number {
   if (
     !item.itemCategoryHashes.length ||
     item.typeName === 'Unknown' ||
-    isInCategoryBlacklist(item.itemCategoryHashes)
+    item.itemCategoryHashes.some((itemHash) =>
+      D2SeasonToSource.categoryBlacklist.includes(itemHash)
+    )
   ) {
     return 0;
   }

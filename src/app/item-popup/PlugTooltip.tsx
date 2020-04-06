@@ -8,7 +8,7 @@ import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
-import { statWhiteListObj } from 'app/inventory/store/stats';
+import { statWhiteList } from 'app/inventory/store/stats';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -70,9 +70,8 @@ export default function PlugTooltip({
       {defs && Boolean(plug?.plugItem?.investmentStats?.length) && (
         <div className="plug-stats">
           {plug.stats &&
-            _.sortBy(
-              Object.keys(plug.stats),
-              (h) => statWhiteListObj[parseInt(h, 10)]
+            _.sortBy(Object.keys(plug.stats), (h) =>
+              statWhiteList.indexOf(parseInt(h, 10))
             ).map((statHash) => (
               <StatValue
                 key={statHash + '_'}

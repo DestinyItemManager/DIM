@@ -1,21 +1,21 @@
 import {
-  DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
+  DestinyStatDisplayDefinition,
+  DestinyStatGroupDefinition,
   DestinyItemInvestmentStatDefinition,
+  DestinyStatDefinition,
   DestinyItemStatsComponent,
-  DestinySocketCategoryStyle,
+  DestinyDisplayPropertiesDefinition,
   DestinyStatAggregationType,
   DestinyStatCategory,
-  DestinyStatDefinition,
-  DestinyStatDisplayDefinition,
-  DestinyStatGroupDefinition
+  DestinySocketCategoryStyle
 } from 'bungie-api-ts/destiny2';
-import { D2Item, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
-import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from 'app/utils/socket-utils';
+import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
 import { D2CategoryHashes } from 'app/search/search-filter-hashes';
 
 /**
@@ -33,15 +33,6 @@ import { D2CategoryHashes } from 'app/search/search-filter-hashes';
  *  if (is armor) stats.push(total)
  * }
  */
-
-function createHashObj(arr: number[]): { [k: number]: number } {
-  const ret = Object.create({});
-  for (let i = 0; i < arr.length; i++) {
-    ret[arr[i]] = i + 1; // allow boolean comparison
-  }
-
-  return ret;
-}
 
 /** Stats that all armor should have. */
 export const armorStats = [
@@ -81,8 +72,6 @@ export const statWhiteList = [
   -1000 // Total
 ];
 
-export const statWhiteListObj = createHashObj(statWhiteList);
-
 /** Stats that should be forced to display without a bar (just a number). */
 const statsNoBar = [
   4284893193, // Rounds Per Minute
@@ -93,15 +82,11 @@ const statsNoBar = [
   2715839340 // Recoil Direction
 ];
 
-export const statsNoBarObj = createHashObj(statsNoBar);
-
 /** Stats that are measured in milliseconds. */
 export const statsMs = [
   447667954, // Draw Time
   2961396640 // Charge Time
 ];
-
-export const statsMsObj = createHashObj(statsMs);
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsWhitelist = [
@@ -109,8 +94,6 @@ const hiddenStatsWhitelist = [
   3555269338, // Zoom
   2715839340 // Recoil Direction
 ];
-
-const hiddenStatsWhitelistObj = createHashObj(hiddenStatsWhitelist);
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
@@ -239,9 +222,9 @@ function shouldShowStat(
 
   return (
     // Must be on the whitelist
-    statWhiteListObj[statHash] &&
+    statWhiteList.includes(statHash) &&
     // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsWhitelistObj[statHash]))
+    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsWhitelist.includes(statHash)))
   );
 }
 
@@ -286,7 +269,7 @@ function buildStat(
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
-  let bar = !statsNoBarObj[statHash];
+  let bar = !statsNoBar.includes(statHash);
   let smallerIsBetter = false;
   const statDisplay = statDisplays[statHash];
   if (statDisplay) {
@@ -304,7 +287,7 @@ function buildStat(
     investmentValue: itemStat.value || 0,
     statHash,
     displayProperties: statDef.displayProperties,
-    sort: statWhiteListObj[statHash],
+    sort: statWhiteList.indexOf(statHash),
     value,
     base: value,
     maximumValue,
@@ -439,7 +422,7 @@ function buildLiveStats(
     }
 
     let maximumValue = statGroup.maximumValue;
-    let bar = !statsNoBarObj[statHash];
+    let bar = !statsNoBar.includes(statHash);
     let smallerIsBetter = false;
     const statDisplay = statDisplays[statHash];
     if (statDisplay) {
@@ -455,7 +438,7 @@ function buildLiveStats(
       investmentValue: itemStat.value || 0,
       statHash,
       displayProperties: statDef.displayProperties,
-      sort: statWhiteListObj[statHash],
+      sort: statWhiteList.indexOf(statHash),
       value: itemStat.value,
       base: itemStat.value,
       maximumValue,
@@ -502,7 +485,7 @@ function totalStat(stats: DimStat[]): DimStat {
     displayProperties: ({
       name: t('Stats.Total')
     } as any) as DestinyDisplayPropertiesDefinition,
-    sort: statWhiteListObj['-1000'],
+    sort: statWhiteList.indexOf(-1000),
     value: total,
     base: baseTotal,
     maximumValue: 100,

@@ -1,16 +1,16 @@
 import {
-  DestinyInventoryItemDefinition,
   DestinyItemComponent,
+  DestinyInventoryItemDefinition,
+  DestinyItemSocketEntryDefinition,
+  DestinyItemSocketState,
+  DestinyItemSocketEntryPlugItemDefinition,
   DestinyItemComponentSetOfint64,
   DestinyItemPlugBase,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
-  DestinyItemSocketState,
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimPlug, DimSocket, DimSocketCategory, DimSockets } from '../item-types';
+import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 

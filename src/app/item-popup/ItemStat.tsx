@@ -7,7 +7,7 @@ import {
   DimSocketCategory,
   DimSocket
 } from 'app/inventory/item-types';
-import { armorStats, statsMsObj } from 'app/inventory/store/stats';
+import { statsMs, armorStats } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import clsx from 'clsx';
@@ -103,7 +103,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         {displayValue}
       </div>
 
-      {statsMsObj[stat.statHash] && (
+      {statsMs.includes(stat.statHash) && (
         <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
       )}
 
