@@ -222,6 +222,9 @@ function filterReusablePlug(reusablePlug: DimPlug) {
   );
 }
 
+/**
+ * Build a socket from definitions, without the benefit of live profile info.
+ */
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
   socketDef: DestinyItemSocketEntryDefinition,
@@ -249,11 +252,24 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
-  if (socketDef.reusablePlugItems) {
-    for (const reusablePlug of socketDef.reusablePlugItems) {
-      const built = buildDefinedPlug(defs, reusablePlug);
-      if (built) {
-        reusablePlugs.push(built);
+  // We only build a larger list of plug options if this is a perk socket, since users would
+  // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
+  // we will only populate plugOptions with the currently inserted plug.
+  if (isPerk) {
+    if (socketDef.reusablePlugSetHash) {
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
+      for (const reusablePlug of plugSet.reusablePlugItems) {
+        const built = buildDefinedPlug(defs, reusablePlug);
+        if (built) {
+          reusablePlugs.push(built);
+        }
+      }
+    } else if (socketDef.reusablePlugItems) {
+      for (const reusablePlug of socketDef.reusablePlugItems) {
+        const built = buildDefinedPlug(defs, reusablePlug);
+        if (built) {
+          reusablePlugs.push(built);
+        }
       }
     }
   }
