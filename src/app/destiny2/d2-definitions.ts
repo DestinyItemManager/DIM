@@ -1,7 +1,6 @@
 import {
   DestinyActivityDefinition,
   DestinyActivityModifierDefinition,
-  DestinyActivityTypeDefinition,
   DestinyClassDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
@@ -43,18 +42,17 @@ import store from '../store/store';
 import { setD2Manifest } from '../manifest/actions';
 
 const lazyTables = [
-  'InventoryItem', // DestinyInventoryItemDefinition
-  'Objective', // DestinyObjectiveDefinition
-  'SandboxPerk', // DestinySandboxPerkDefinition
-  'Stat', // DestinyStatDefinition
+  'InventoryItem',
+  'Objective',
+  'SandboxPerk',
+  'Stat',
   'StatGroup',
   'EnergyType',
   'DamageType',
-  'TalentGrid', // DestinyTalentGridDefinition
-  'Progression', // DestinyProgressionDefinition
-  'ItemCategory', // DestinyItemCategoryDefinition
-  'Activity', // DestinyActivityDefinition
-  'ActivityType', // DestinyActivityTypeDefinition
+  'TalentGrid',
+  'Progression',
+  'ItemCategory',
+  'Activity',
   'ActivityModifier',
   'Vendor',
   'SocketCategory',
@@ -75,50 +73,48 @@ const lazyTables = [
 ];
 
 const eagerTables = [
-  'InventoryBucket', // DestinyInventoryBucketDefinition
-  'Class', // DestinyClassDefinition
-  'Gender', // DestinyGenderDefinition
-  'Race', // DestinyRaceDefinition
-  'Faction', // DestinyFactionDefinition
-  'ItemTierType', // DestinyItemTierTypeDefinition
-  'ActivityMode' // DestinyActivityModeDefinition
+  'InventoryBucket',
+  'Class',
+  'Gender',
+  'Race',
+  'Faction',
+  'ItemTierType',
+  'ActivityMode'
 ];
 
-export interface LazyDefinition<T> {
+/** These aren't really lazy */
+export interface DefinitionTable<T> {
   get(hash: number): T;
-  getAll(): { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
-  InventoryItem: LazyDefinition<DestinyInventoryItemDefinition>;
-  Objective: LazyDefinition<DestinyObjectiveDefinition>;
-  SandboxPerk: LazyDefinition<DestinySandboxPerkDefinition>;
-  Stat: LazyDefinition<DestinyStatDefinition>;
-  StatGroup: LazyDefinition<DestinyStatGroupDefinition>;
-  EnergyType: LazyDefinition<DestinyEnergyTypeDefinition>;
-  DamageType: LazyDefinition<DestinyDamageTypeDefinition>;
-  TalentGrid: LazyDefinition<DestinyTalentGridDefinition>;
-  Progression: LazyDefinition<DestinyProgressionDefinition>;
-  ItemCategory: LazyDefinition<DestinyItemCategoryDefinition>;
-  Activity: LazyDefinition<DestinyActivityDefinition>;
-  ActivityType: LazyDefinition<DestinyActivityTypeDefinition>;
-  ActivityModifier: LazyDefinition<DestinyActivityModifierDefinition>;
-  Vendor: LazyDefinition<DestinyVendorDefinition>;
-  SocketCategory: LazyDefinition<DestinySocketCategoryDefinition>;
-  SocketType: LazyDefinition<DestinySocketTypeDefinition>;
-  MaterialRequirementSet: LazyDefinition<DestinyMaterialRequirementSetDefinition>;
-  Season: LazyDefinition<DestinySeasonDefinition>;
-  SeasonPass: LazyDefinition<DestinySeasonPassDefinition>;
-  Milestone: LazyDefinition<DestinyMilestoneDefinition>;
-  Destination: LazyDefinition<DestinyDestinationDefinition>;
-  Place: LazyDefinition<DestinyPlaceDefinition>;
-  VendorGroup: LazyDefinition<DestinyVendorGroupDefinition>;
-  PlugSet: LazyDefinition<DestinyPlugSetDefinition>;
-  Collectible: LazyDefinition<DestinyCollectibleDefinition>;
-  PresentationNode: LazyDefinition<DestinyPresentationNodeDefinition>;
-  Record: LazyDefinition<DestinyRecordDefinition>;
-  Metric: LazyDefinition<DestinyMetricDefinition>;
-  Trait: LazyDefinition<DestinyTraitDefinition>;
+  InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;
+  Objective: DefinitionTable<DestinyObjectiveDefinition>;
+  SandboxPerk: DefinitionTable<DestinySandboxPerkDefinition>;
+  Stat: DefinitionTable<DestinyStatDefinition>;
+  StatGroup: DefinitionTable<DestinyStatGroupDefinition>;
+  EnergyType: DefinitionTable<DestinyEnergyTypeDefinition>;
+  TalentGrid: DefinitionTable<DestinyTalentGridDefinition>;
+  Progression: DefinitionTable<DestinyProgressionDefinition>;
+  ItemCategory: DefinitionTable<DestinyItemCategoryDefinition>;
+  Activity: DefinitionTable<DestinyActivityDefinition>;
+  ActivityModifier: DefinitionTable<DestinyActivityModifierDefinition>;
+  Vendor: DefinitionTable<DestinyVendorDefinition>;
+  SocketCategory: DefinitionTable<DestinySocketCategoryDefinition>;
+  SocketType: DefinitionTable<DestinySocketTypeDefinition>;
+  MaterialRequirementSet: DefinitionTable<DestinyMaterialRequirementSetDefinition>;
+  Season: DefinitionTable<DestinySeasonDefinition>;
+  SeasonPass: DefinitionTable<DestinySeasonPassDefinition>;
+  Milestone: DefinitionTable<DestinyMilestoneDefinition>;
+  Destination: DefinitionTable<DestinyDestinationDefinition>;
+  Place: DefinitionTable<DestinyPlaceDefinition>;
+  VendorGroup: DefinitionTable<DestinyVendorGroupDefinition>;
+  PlugSet: DefinitionTable<DestinyPlugSetDefinition>;
+  Collectible: DefinitionTable<DestinyCollectibleDefinition>;
+  PresentationNode: DefinitionTable<DestinyPresentationNodeDefinition>;
+  Record: DefinitionTable<DestinyRecordDefinition>;
+  Metric: DefinitionTable<DestinyMetricDefinition>;
+  Trait: DefinitionTable<DestinyTraitDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
@@ -127,6 +123,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
+  DamageType: { [hash: number]: DestinyDamageTypeDefinition };
 }
 
 /**

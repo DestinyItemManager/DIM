@@ -8,7 +8,7 @@ import {
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
+import { D2ManifestDefinitions, DefinitionTable } from '../../destiny2/d2-definitions';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
@@ -292,7 +292,7 @@ export function makeVault(
  * Compute character-level stats.
  */
 export function getCharacterStatsData(
-  statDefs: LazyDefinition<DestinyStatDefinition>,
+  statDefs: DefinitionTable<DestinyStatDefinition>,
   stats: {
     [key: number]: number;
   }

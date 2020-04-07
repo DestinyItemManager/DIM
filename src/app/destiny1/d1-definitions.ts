@@ -24,27 +24,27 @@ const lazyTables = [
 
 const eagerTables = ['InventoryBucket', 'Class', 'Race', 'Faction', 'Vendor'];
 
-export interface LazyDefinition<T> {
+export interface DefinitionTable<T> {
   get(hash: number): T;
 }
 
 // D1 types don't exist yet
 export interface D1ManifestDefinitions extends ManifestDefinitions {
-  InventoryItem: LazyDefinition<any>;
-  Objective: LazyDefinition<any>;
-  SandboxPerk: LazyDefinition<any>;
-  Stat: LazyDefinition<any>;
-  TalentGrid: LazyDefinition<any>;
-  Progression: LazyDefinition<any>;
-  Record: LazyDefinition<any>;
-  ItemCategory: LazyDefinition<any>;
-  VendorCategory: LazyDefinition<any>;
-  RecordBook: LazyDefinition<any>;
-  ActivityCategory: LazyDefinition<any>;
-  ScriptedSkull: LazyDefinition<any>;
-  Activity: LazyDefinition<any>;
-  ActivityType: LazyDefinition<any>;
-  DamageType: LazyDefinition<any>;
+  InventoryItem: DefinitionTable<any>;
+  Objective: DefinitionTable<any>;
+  SandboxPerk: DefinitionTable<any>;
+  Stat: DefinitionTable<any>;
+  TalentGrid: DefinitionTable<any>;
+  Progression: DefinitionTable<any>;
+  Record: DefinitionTable<any>;
+  ItemCategory: DefinitionTable<any>;
+  VendorCategory: DefinitionTable<any>;
+  RecordBook: DefinitionTable<any>;
+  ActivityCategory: DefinitionTable<any>;
+  ScriptedSkull: DefinitionTable<any>;
+  Activity: DefinitionTable<any>;
+  ActivityType: DefinitionTable<any>;
+  DamageType: DefinitionTable<any>;
 
   InventoryBucket: { [hash: number]: any };
   Class: { [hash: number]: any };
