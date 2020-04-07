@@ -47,8 +47,9 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const collectiblesByItemHash = _.once((Collectible: D2ManifestDefinitions['Collectible']) =>
-  _.keyBy(Collectible, (c) => c.itemHash)
+const collectiblesByItemHash = _.once(
+  (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
+    _.keyBy(Collectible, (c) => c.itemHash)
 );
 
 /**
@@ -249,7 +250,7 @@ export function makeItem(
   let displayProperties = itemDef.displayProperties;
   if (itemDef.redacted) {
     // Fill in display info from the collectible, sometimes it's not redacted there!
-    const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
+    const collectibleDef = collectiblesByItemHash(defs.Collectible.getAll())[item.itemHash];
     if (collectibleDef) {
       displayProperties = collectibleDef.displayProperties;
     }

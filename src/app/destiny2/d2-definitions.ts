@@ -86,6 +86,7 @@ const eagerTables = [
 /** These aren't really lazy */
 export interface DefinitionTable<T> {
   get(hash: number): T;
+  getAll(): { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
@@ -116,8 +117,8 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Metric: DefinitionTable<DestinyMetricDefinition>;
   Trait: DefinitionTable<DestinyTraitDefinition>;
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
+  Collectible: DefinitionTable<DestinyCollectibleDefinition>;
 
-  Collectible: { [hash: number]: DestinyCollectibleDefinition };
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
   Gender: { [hash: number]: DestinyGenderDefinition };
@@ -150,6 +151,9 @@ async function getDefinitionsUncached() {
     defs[tableShort] = {
       get(name: number) {
         return D2ManifestService.getRecord(db, table, name);
+      },
+      getAll() {
+        return D2ManifestService.getAllRecords(db, table);
       }
     };
   });
