@@ -275,7 +275,7 @@ function makeD2StoresService(): D2StoreServiceType {
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
-    const items = characterInventory;
+    const items = characterInventory.slice();
     for (const k in characterEquipment) {
       items.push(characterEquipment[k]);
     }
