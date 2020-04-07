@@ -111,13 +111,13 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Place: DefinitionTable<DestinyPlaceDefinition>;
   VendorGroup: DefinitionTable<DestinyVendorGroupDefinition>;
   PlugSet: DefinitionTable<DestinyPlugSetDefinition>;
-  Collectible: DefinitionTable<DestinyCollectibleDefinition>;
   PresentationNode: DefinitionTable<DestinyPresentationNodeDefinition>;
   Record: DefinitionTable<DestinyRecordDefinition>;
   Metric: DefinitionTable<DestinyMetricDefinition>;
   Trait: DefinitionTable<DestinyTraitDefinition>;
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
 
+  Collectible: { [hash: number]: DestinyCollectibleDefinition };
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
   Gender: { [hash: number]: DestinyGenderDefinition };

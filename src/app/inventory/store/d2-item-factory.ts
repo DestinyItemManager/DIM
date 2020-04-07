@@ -47,8 +47,8 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const collectiblesByItemHash = _.once((Collectible) =>
-  _.keyBy(Collectible.getAll(), (c) => c.itemHash)
+const collectiblesByItemHash = _.once((Collectible: D2ManifestDefinitions['Collectible']) =>
+  _.keyBy(Collectible, (c) => c.itemHash)
 );
 
 /**
@@ -377,9 +377,7 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    source: itemDef.collectibleHash
-      ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
-      : null,
+    source: itemDef.collectibleHash ? defs.Collectible[itemDef.collectibleHash]?.sourceHash : null,
     collectibleState: collectible ? collectible.state : null,
     collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
