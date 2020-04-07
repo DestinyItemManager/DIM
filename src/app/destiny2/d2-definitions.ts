@@ -1,45 +1,46 @@
 import {
   DestinyActivityDefinition,
+  DestinyActivityModeDefinition,
   DestinyActivityModifierDefinition,
   DestinyClassDefinition,
+  DestinyCollectibleDefinition,
+  DestinyDamageTypeDefinition,
+  DestinyDestinationDefinition,
+  DestinyEnergyTypeDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
   DestinyInventoryBucketDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyItemTierTypeDefinition,
+  DestinyMaterialRequirementSetDefinition,
+  DestinyMetricDefinition,
   DestinyMilestoneDefinition,
   DestinyObjectiveDefinition,
+  DestinyPlaceDefinition,
+  DestinyPlugSetDefinition,
+  DestinyPresentationNodeDefinition,
   DestinyProgressionDefinition,
   DestinyRaceDefinition,
+  DestinyRecordDefinition,
   DestinySandboxPerkDefinition,
+  DestinySeasonDefinition,
+  DestinySeasonPassDefinition,
   DestinySocketCategoryDefinition,
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
-  DestinyEnergyTypeDefinition,
-  DestinyDamageTypeDefinition,
-  DestinyTalentGridDefinition,
-  DestinyVendorDefinition,
-  DestinyDestinationDefinition,
-  DestinyPlaceDefinition,
-  DestinyVendorGroupDefinition,
-  DestinyActivityModeDefinition,
-  DestinyPlugSetDefinition,
-  DestinyCollectibleDefinition,
-  DestinyPresentationNodeDefinition,
-  DestinyRecordDefinition,
   DestinyStatGroupDefinition,
-  DestinySeasonDefinition,
-  DestinySeasonPassDefinition,
-  DestinyMaterialRequirementSetDefinition,
-  DestinyMetricDefinition,
-  DestinyTraitDefinition
+  DestinyTalentGridDefinition,
+  DestinyTraitDefinition,
+  DestinyVendorDefinition,
+  DestinyVendorGroupDefinition
 } from 'bungie-api-ts/destiny2';
+
+import { D2ManifestService } from '../manifest/manifest-service-json';
 import { ManifestDefinitions } from './definitions';
 import _ from 'lodash';
-import { D2ManifestService } from '../manifest/manifest-service-json';
-import store from '../store/store';
 import { setD2Manifest } from '../manifest/actions';
+import store from '../store/store';
 
 const lazyTables = [
   'InventoryItem',
@@ -115,6 +116,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Record: DefinitionTable<DestinyRecordDefinition>;
   Metric: DefinitionTable<DestinyMetricDefinition>;
   Trait: DefinitionTable<DestinyTraitDefinition>;
+  DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
@@ -123,7 +125,6 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
-  DamageType: { [hash: number]: DestinyDamageTypeDefinition };
 }
 
 /**
@@ -149,10 +150,6 @@ async function getDefinitionsUncached() {
     defs[tableShort] = {
       get(name: number) {
         return D2ManifestService.getRecord(db, table, name);
-      },
-
-      getAll() {
-        return D2ManifestService.getAllRecords(db, table);
       }
     };
   });
