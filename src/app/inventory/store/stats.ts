@@ -116,12 +116,14 @@ export function buildStats(
 
   // We only use the raw "investment" stats to calculate all item stats.
   let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
+  let investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
 
   // Include the contributions from perks and mods
   if (createdItem.sockets?.sockets.length) {
-    investmentStats = enhanceStatsWithPlugs(
+    enhanceStatsWithPlugs(
       itemDef,
       investmentStats,
+      investmentStatsByHash,
       createdItem.sockets.sockets,
       defs,
       statGroup,
@@ -133,13 +135,17 @@ export function buildStats(
   if ((!investmentStats.length || createdItem.bucket.inArmor) && stats?.[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
+    investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
+
     if (createdItem.bucket.inArmor) {
       if (createdItem.sockets?.sockets.length) {
-        investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets);
+        buildBaseStats(investmentStatsByHash, createdItem.sockets.sockets);
       }
 
       // Add the "Total" stat for armor
-      investmentStats.push(totalStat(investmentStats));
+      const tStat = totalStat(investmentStats);
+      investmentStats.push(tStat);
+      // investmentStatsByHash[tStat.statHash] = tStat; // not used after this line
     }
   } else if (
     createdItem.isDestiny2() &&
@@ -236,21 +242,22 @@ function buildInvestmentStats(
 ): DimStat[] | null {
   const itemStats = itemDef.investmentStats || [];
 
-  return _.compact(
-    Object.values(itemStats).map((itemStat): DimStat | undefined => {
-      const statHash = itemStat.statTypeHash;
-      if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
-        return undefined;
-      }
+  const ret: DimStat[] = [];
+  for (const itemStat of itemStats) {
+    const statHash = itemStat.statTypeHash;
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+      continue;
+    }
 
-      const def = defs.Stat.get(statHash);
-      if (!def) {
-        return undefined;
-      }
+    const def = defs.Stat.get(statHash);
+    if (!def) {
+      continue;
+    }
 
-      return buildStat(itemStat, statGroup, def, statDisplays);
-    })
-  );
+    ret.push(buildStat(itemStat, statGroup, def, statDisplays));
+  }
+
+  return ret;
 }
 
 function buildStat(
@@ -296,14 +303,13 @@ function buildStat(
 
 function enhanceStatsWithPlugs(
   itemDef: DestinyInventoryItemDefinition,
-  stats: DimStat[],
+  stats: DimStat[], // mutated
+  statsByHash: { [k: number]: DimStat }, // mutated
   sockets: DimSocket[],
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
-  const statsByHash = _.keyBy(stats, (s) => s.statHash);
-
   const modifiedStats = new Set<number>();
 
   // Add the chosen plugs' investment stats to the item's base investment stats
@@ -323,8 +329,7 @@ function enhanceStatsWithPlugs(
 
           if (stat?.value) {
             const statDef = defs.Stat.get(statHash);
-            const builtStat = buildStat(stat, statGroup, statDef, statDisplays);
-            statsByHash[statHash] = builtStat;
+            statsByHash[statHash] = buildStat(stat, statGroup, statDef, statDisplays);
             stats.push(statsByHash[statHash]);
           }
         }
@@ -354,8 +359,6 @@ function enhanceStatsWithPlugs(
       }
     }
   }
-
-  return stats;
 }
 
 /**
@@ -403,45 +406,49 @@ function buildLiveStats(
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
-  return _.compact(
-    Object.values(stats.stats).map((itemStat): DimStat | undefined => {
-      const statHash = itemStat.statHash;
-      if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
-        return undefined;
-      }
+  const ret: DimStat[] = [];
 
-      const statDef = defs.Stat.get(statHash);
-      if (!statDef) {
-        return undefined;
-      }
+  for (const itemStatKey in stats.stats) {
+    const itemStat = stats.stats[itemStatKey];
 
-      let maximumValue = statGroup.maximumValue;
-      let bar = !statsNoBar.includes(statHash);
-      let smallerIsBetter = false;
-      const statDisplay = statDisplays[statHash];
-      if (statDisplay) {
-        const firstInterp = statDisplay.displayInterpolation[0];
-        const lastInterp =
-          statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
-        smallerIsBetter = firstInterp.weight > lastInterp.weight;
-        maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
-        bar = !statDisplay.displayAsNumeric;
-      }
+    const statHash = itemStat.statHash;
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+      continue;
+    }
 
-      return {
-        investmentValue: itemStat.value || 0,
-        statHash,
-        displayProperties: statDef.displayProperties,
-        sort: statWhiteList.indexOf(statHash),
-        value: itemStat.value,
-        base: itemStat.value,
-        maximumValue,
-        bar,
-        smallerIsBetter,
-        additive: statDef.aggregationType === DestinyStatAggregationType.Character
-      };
-    })
-  );
+    const statDef = defs.Stat.get(statHash);
+    if (!statDef) {
+      continue;
+    }
+
+    let maximumValue = statGroup.maximumValue;
+    let bar = !statsNoBar.includes(statHash);
+    let smallerIsBetter = false;
+    const statDisplay = statDisplays[statHash];
+    if (statDisplay) {
+      const firstInterp = statDisplay.displayInterpolation[0];
+      const lastInterp =
+        statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
+      smallerIsBetter = firstInterp.weight > lastInterp.weight;
+      maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
+      bar = !statDisplay.displayAsNumeric;
+    }
+
+    ret.push({
+      investmentValue: itemStat.value || 0,
+      statHash,
+      displayProperties: statDef.displayProperties,
+      sort: statWhiteList.indexOf(statHash),
+      value: itemStat.value,
+      base: itemStat.value,
+      maximumValue,
+      bar,
+      smallerIsBetter,
+      additive: statDef.aggregationType === DestinyStatAggregationType.Character
+    });
+  }
+
+  return ret;
 }
 
 /**
@@ -451,12 +458,15 @@ function buildLiveStats(
  * it takes .base, currently equal to .value, and adjusts it down to make a de-adjusted value
  * representing the raw armor stats before mods changed them
  */
-function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
+function buildBaseStats(
+  statsByHash: { [k: number]: DimStat }, // mutated
+  sockets: DimSocket[]
+) {
   for (const socket of sockets) {
     if (socket.plug?.plugItem.investmentStats) {
       for (const perkStat of socket.plug.plugItem.investmentStats) {
         const statHash = perkStat.statTypeHash;
-        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const itemStat = statsByHash[statHash];
         const perkValue = perkStat.value || 0;
         if (itemStat && itemStat.base > perkValue) {
           itemStat.base -= perkValue;
@@ -464,8 +474,6 @@ function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
       }
     }
   }
-
-  return stats;
 }
 
 function totalStat(stats: DimStat[]): DimStat {

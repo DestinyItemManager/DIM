@@ -130,28 +130,39 @@ export function buildInstancedSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) =>
-    buildSocket(
+  const realSockets: (DimSocket | undefined)[] = [];
+  for (let i = 0; i < sockets.length; i++) {
+    const built = buildSocket(
       defs,
-      socket,
+      sockets[i],
       itemDef.sockets.socketEntries[i],
       i,
       reusablePlugData?.[i],
       plugObjectivesData
-    )
-  );
+    );
 
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => ({
+    realSockets.push(built);
+  }
+
+  const categories: DimSocketCategory[] = [];
+
+  for (const category of itemDef.sockets.socketCategories) {
+    const sockets: DimSocket[] = [];
+    for (const index of category.socketIndexes) {
+      const s = realSockets[index];
+      if (s) {
+        sockets.push(s);
+      }
+    }
+
+    categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash),
-      sockets: category.socketIndexes
-        .map((index) => realSockets[index])
-        .filter(Boolean) as DimSocket[]
-    })
-  );
+      sockets
+    });
+  }
 
   return {
-    sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
+    sockets: _.compact(realSockets), // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
@@ -168,17 +179,31 @@ function buildDefinedSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) => buildDefinedSocket(defs, socket, i));
+  const realSockets: (DimSocket | undefined)[] = [];
   // TODO: check out intrinsicsockets as well
 
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => ({
+  for (let i = 0; i < sockets.length; i++) {
+    const socket = sockets[i];
+    realSockets.push(buildDefinedSocket(defs, socket, i));
+  }
+
+  const categories: DimSocketCategory[] = [];
+
+  for (const category of itemDef.sockets.socketCategories) {
+    const sockets: DimSocket[] = [];
+
+    for (const index of category.socketIndexes) {
+      const s = realSockets[index];
+      if (s && s.plugOptions.length) {
+        sockets.push(s);
+      }
+    }
+
+    categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash),
-      sockets: _.compact(category.socketIndexes.map((index) => realSockets[index])).filter(
-        (s) => s.plugOptions.length
-      )
-    })
-  );
+      sockets
+    });
+  }
 
   return {
     sockets: _.compact(realSockets), // Flat list of sockets
@@ -222,17 +247,25 @@ function buildDefinedSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
   // The currently equipped plug, if any
-  const reusablePlugs = _.compact(
-    (socketDef.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug))
-  );
+  const reusablePlugs: DimPlug[] = [];
+
+  if (socketDef.reusablePlugItems) {
+    for (const reusablePlug of socketDef.reusablePlugItems) {
+      const built = buildDefinedPlug(defs, reusablePlug);
+      if (built) {
+        reusablePlugs.push(built);
+      }
+    }
+  }
+
   const plugOptions: DimPlug[] = [];
 
   if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
+    for (const reusablePlug of reusablePlugs) {
       if (filterReusablePlug(reusablePlug)) {
         plugOptions.push(reusablePlug);
       }
-    });
+    }
   }
 
   return {
@@ -361,32 +394,23 @@ function buildSocket(
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
   if (isPerk && reusablePlugs) {
-    // This perk's list of plugs comes from the live reusablePlugs component.
-    const reusableDimPlugs = reusablePlugs
-      ? _.compact(
-          reusablePlugs.map((reusablePlug) =>
-            buildPlug(defs, reusablePlug, socketDef, plugObjectivesData)
-          )
-        )
-      : [];
-    if (reusableDimPlugs.length) {
-      reusableDimPlugs.forEach((reusablePlug) => {
-        if (filterReusablePlug(reusablePlug)) {
-          if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-            // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
-            plugOptions.shift();
-            plugOptions.push(plug);
-          } else {
-            // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-            if (
-              !reusablePlug.plugItem.itemCategoryHashes ||
-              !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-            ) {
-              plugOptions.push(reusablePlug);
-            }
+    for (const reusablePlug of reusablePlugs) {
+      const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData);
+      if (built && filterReusablePlug(built)) {
+        if (plug && built.plugItem.hash === plug.plugItem.hash) {
+          // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
+          plugOptions.shift();
+          plugOptions.push(plug);
+        } else {
+          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+          if (
+            !built.plugItem.itemCategoryHashes ||
+            !built.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+          ) {
+            plugOptions.push(built);
           }
         }
-      });
+      }
     }
   }
 

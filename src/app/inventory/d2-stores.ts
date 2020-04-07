@@ -6,7 +6,8 @@ import {
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
   DestinyGameVersions,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
+  DestinyItemComponent
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
@@ -213,7 +214,9 @@ function makeD2StoresService(): D2StoreServiceType {
 
       store.dispatch(cleanInfos(stores));
 
-      stores.forEach((s) => updateBasePower(account, stores, s, defs));
+      for (const s of stores) {
+        updateBasePower(account, stores, s, defs);
+      }
 
       // Let our styling know how many characters there are
       // TODO: this should be an effect on the stores component
@@ -272,15 +275,19 @@ function makeD2StoresService(): D2StoreServiceType {
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
-    let items = characterInventory.concat(Object.values(characterEquipment));
+    const items = characterInventory.slice();
+    for (const k in characterEquipment) {
+      items.push(characterEquipment[k]);
+    }
+
     if (store.current) {
-      items = items.concat(
-        Object.values(profileInventory).filter((i) => {
-          const bucket = buckets.byHash[i.bucketHash];
-          // items that can be stored in a vault
-          return bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders');
-        })
-      );
+      for (const i of profileInventory) {
+        const bucket = buckets.byHash[i.bucketHash];
+        // items that can be stored in a vault
+        if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
+          items.push(i);
+        }
+      }
     }
 
     const processedItems = processItems(
@@ -322,11 +329,15 @@ function makeD2StoresService(): D2StoreServiceType {
 
     const store = makeVault(defs, profileCurrencies);
 
-    const items = Object.values(profileInventory).filter((i) => {
+    const items: DestinyItemComponent[] = [];
+    for (const i of profileInventory) {
       const bucket = buckets.byHash[i.bucketHash];
       // items that cannot be stored in the vault, and are therefore *in* a vault
-      return bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders';
-    });
+      if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+        items.push(i);
+      }
+    }
+
     const processedItems = processItems(
       defs,
       buckets,
