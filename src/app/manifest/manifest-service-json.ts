@@ -231,7 +231,8 @@ class ManifestService {
     const futures = tableWhitelist
       .map((t) => `Destiny${t}Definition`)
       .map(async (table) => {
-        const response = await fetch(`https://www.bungie.net${components[table]}`);
+        // Adding a cache buster "?dim" to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+        const response = await fetch(`https://www.bungie.net${components[table]}?dim`);
         const body = await (response.ok ? response.json() : Promise.reject(response));
         manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
       });
