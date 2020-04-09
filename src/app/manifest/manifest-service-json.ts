@@ -174,7 +174,9 @@ class ManifestService {
       this.setState({ error: e, statusText });
       console.error('Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
-      throw new Error(message);
+      const error = new Error(message);
+      error.name = 'ManifestError';
+      throw error;
     } finally {
       console.timeEnd('Load manifest');
     }
