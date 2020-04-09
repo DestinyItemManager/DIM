@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-export function AppIconComponent({
+export default React.memo(function AppIcon({
   icon,
   className,
   title,
@@ -35,6 +35,4 @@ export function AppIconComponent({
       />
     );
   }
-}
-
-export default AppIconComponent;
+});
