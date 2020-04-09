@@ -7,6 +7,7 @@ import { observeStore } from 'app/utils/redux-utils';
 import { set, get } from 'idb-keyval';
 import { dedupePromise } from 'app/utils/util';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { deepEqual } from 'fast-equals';
 
 export const accountsSelector = (state: RootState) => state.accounts.accounts;
 
@@ -47,7 +48,7 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
     case getType(actions.accountsLoaded):
       return {
         ...state,
-        accounts: action.payload || [],
+        accounts: deepEqual(action.payload, state.accounts) ? state.accounts : action.payload || [],
         loaded: true,
         accountsError: undefined
       };
@@ -61,11 +62,14 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         : state;
     }
     case getType(actions.loadFromIDB):
+      console.log('load from IDB', action.payload);
       return state.loaded
         ? state
         : {
             ...state,
-            accounts: action.payload || [],
+            accounts: deepEqual(action.payload, state.accounts)
+              ? state.accounts
+              : action.payload || [],
             loadedFromIDB: true
           };
     case getType(actions.error):
