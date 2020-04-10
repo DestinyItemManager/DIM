@@ -1,14 +1,7 @@
+import { LockableBuckets, LockedModBase } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
-import {
-  ArmorSet,
-  LockedItemType,
-  StatTypes,
-  LockedMap,
-  LockedMod,
-  MinMaxIgnored,
-  LockedModBase
-} from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
 import { count } from '../../utils/util';
 import {
   DestinyInventoryItemDefinition,
@@ -18,7 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
-import { getSpecialtySocket } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -120,6 +113,51 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
   return comparators;
 }
 
+function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[]) {
+  if (seasonalMods.length > 5) {
+    return false;
+  }
+
+  const modArrays = {};
+
+  for (const mod of seasonalMods) {
+    for (const item of set.firstValidSet) {
+      const itemModCategories =
+        getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
+
+      // Not currently checking energy of mod and armour matches.
+      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash)) {
+        if (!modArrays[item.bucket.hash]) {
+          modArrays[item.bucket.hash] = [];
+        }
+
+        modArrays[item.bucket.hash].push(mod);
+      }
+    }
+  }
+
+  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
+    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
+      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
+        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
+          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
+            const applicableMods = [helmetMod, armsMod, chestMod, legsMod, classMod].filter(
+              Boolean
+            );
+            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
+
+            if (containsAllLocked) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 /**
  * Filter sets down based on stat filters, locked perks, etc.
  */
@@ -141,15 +179,7 @@ export function filterGeneratedSets(
   if (lockedSeasonalMods.length) {
     const setsBeforeFilter = matchedSets.length;
     // Filter so that every mod slots into some item
-    matchedSets = sets.filter((set) =>
-      lockedSeasonalMods.every((modItem) =>
-        set.firstValidSet.some(
-          (item) =>
-            modItem.mod.plug.plugCategoryHash ===
-            getSpecialtySocket(item)?.plug?.plugItem.plug.plugCategoryHash
-        )
-      )
-    );
+    matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedSeasonalMods));
 
     console.info(
       `Filtered out ${setsBeforeFilter -
