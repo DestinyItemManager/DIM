@@ -1,6 +1,7 @@
 ## Next
 
 * Improved overall performance and memory usage of DIM - as the game grows, so has DIM's memory usage. If your browser was crashing before, give it a try now.
+* Collectibles now show perks.
 
 ## 6.4.0 <span className="changelog-date">(2020-04-05)</span>
 
