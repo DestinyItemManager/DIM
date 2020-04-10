@@ -1,0 +1,65 @@
+@import '../variables.scss';
+
+.tooltip {
+  position: absolute;
+  background-color: #444;
+  color: white;
+  width: fit-content;
+  max-width: 250px;
+  border-top: 5px solid #888;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  text-align: left;
+  z-index: 99999;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+
+  h2 {
+    background-color: #444;
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    @include destiny-header;
+  }
+
+  &[data-popper-placement='top'] .arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+  }
+  &[data-popper-placement='bottom'] .arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: -10px;
+    border-bottom-color: #888;
+  }
+  &[data-popper-placement='right'] .arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: -10px;
+  }
+  &[data-popper-placement='left'] .arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    right: -10px;
+  }
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  border-color: #444;
+}
+
+.content {
+  width: fit-content;
+}

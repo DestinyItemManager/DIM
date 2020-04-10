@@ -1,4 +1,4 @@
-import './ItemPopupContainer.scss';
+import styles from './ItemPopupContainer.m.scss';
 
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
@@ -10,7 +10,14 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import ItemActions from './ItemActions';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
-import Popper from 'popper.js';
+import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
+import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
+import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
 import React from 'react';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
@@ -21,6 +28,7 @@ import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { storesSelector } from 'app/inventory/selectors';
 import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -57,24 +65,70 @@ interface State {
   tab: ItemPopupTab;
 }
 
-const popperOptions = {
-  placement: 'right',
-  eventsEnabled: false,
-  modifiers: {
-    preventOverflow: {
-      priority: ['bottom', 'top', 'right', 'left']
-    },
-    flip: {
-      behavior: ['top', 'bottom', 'right', 'left']
-    },
-    offset: {
-      offset: '0,5px'
-    },
-    arrow: {
-      element: '.arrow'
-    }
-  }
-} as any;
+/** Makes a custom popper that doesn't have the event listeners modifier */
+const createPopper = popperGenerator({
+  defaultModifiers: [
+    popperOffsets,
+    offset,
+    computeStyles,
+    applyStyles,
+    flip,
+    preventOverflow,
+    arrow
+  ]
+});
+
+const popperOptions = (boundarySelector: string | undefined): Partial<Options> => {
+  const headerHeight = document.getElementById('header')!.clientHeight;
+  const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
+  const padding: Padding = {
+    left: 0,
+    top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
+    right: 0,
+    bottom: 0
+  };
+  return {
+    placement: 'auto',
+    modifiers: [
+      {
+        name: 'preventOverflow',
+        options: {
+          priority: ['bottom', 'top', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'flip',
+        options: {
+          behavior: ['top', 'bottom', 'right', 'left'],
+          boundariesElement: 'viewport',
+          padding
+        }
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 5]
+        }
+      },
+      {
+        name: 'arrow',
+        options: {
+          element: '.' + styles.arrow
+        }
+      }
+    ]
+  };
+};
+
+const tierClasses: { [key in DimItem['tier']]: string } = {
+  Exotic: styles.exotic,
+  Legendary: styles.legendary,
+  Rare: styles.rare,
+  Uncommon: styles.uncommon,
+  Common: styles.common
+} as const;
 
 /**
  * A container that can show a single item popup/tooltip. This is a
@@ -83,9 +137,8 @@ const popperOptions = {
 class ItemPopupContainer extends React.Component<Props, State> {
   state: State = { tab: ItemPopupTab.Overview };
   private subscriptions = new Subscriptions();
-  private popper?: Popper;
+  private popper?: Instance;
   private popupRef = React.createRef<HTMLDivElement>();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
 
   componentDidMount() {
@@ -169,7 +222,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
       </Sheet>
     ) : (
       <div
-        className={`move-popup-dialog is-${item.tier}`}
+        className={clsx(styles.movePopupDialog, tierClasses[item.tier])}
         ref={this.popupRef}
         role="dialog"
         aria-modal="false"
@@ -181,7 +234,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
             <div className="item-details">{footer}</div>
           </ItemTagHotkeys>
         </ClickOutside>
-        <div className={`arrow is-${item.tier}`} />
+        <div className={clsx(styles.arrow, tierClasses[item.tier])} />
         <GlobalHotkeys
           hotkeys={[
             {
@@ -214,23 +267,12 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
     if (element && this.popupRef.current) {
       if (this.popper) {
-        this.popper.scheduleUpdate();
+        this.popper.update();
       } else {
-        const headerHeight = document.getElementById('header')!.clientHeight;
-        const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-        const padding = {
-          left: 0,
-          top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
-          right: 0,
-          bottom: 0
-        };
-        popperOptions.modifiers.preventOverflow.padding = padding;
-        popperOptions.modifiers.preventOverflow.boundariesElement = 'viewport';
-        popperOptions.modifiers.flip.padding = padding;
-        popperOptions.modifiers.flip.boundariesElement = 'viewport';
+        const options = popperOptions(boundarySelector);
 
-        this.popper = new Popper(element, this.popupRef.current, popperOptions);
-        this.popper.scheduleUpdate(); // helps fix arrow position
+        this.popper = createPopper(element, this.popupRef.current, options);
+        this.popper.update(); // helps fix arrow position
       }
     }
   };

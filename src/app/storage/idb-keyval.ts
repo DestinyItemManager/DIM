@@ -41,7 +41,6 @@ export class Store {
       (db) =>
         new Promise<void>((resolve, reject) => {
           const transaction = db.transaction(this.storeName, type);
-          // tslint:disable-next-line: no-unnecessary-callback-wrapper
           transaction.oncomplete = () => resolve();
           transaction.onabort = transaction.onerror = () => reject(transaction.error);
           callback(transaction.objectStore(this.storeName));

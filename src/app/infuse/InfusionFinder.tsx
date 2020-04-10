@@ -8,7 +8,7 @@ import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon, faRandom, faEquals, faArrowCircleDown } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import copy from 'fast-copy';
-import { storesSelector } from '../inventory/selectors';
+import { storesSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
@@ -46,6 +46,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
+  currentStore: DimStore;
   searchConfig: SearchConfig;
   filters: SearchFilters;
   lastInfusionDirection: InfuseDirection;
@@ -55,6 +56,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
+    currentStore: currentStoreSelector(state)!,
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
@@ -81,7 +83,6 @@ interface State {
 class InfusionFinder extends React.Component<Props, State> {
   state: State = { direction: InfuseDirection.INFUSE, filter: '' };
   private subscriptions = new Subscriptions();
-  // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
   private itemContainer = React.createRef<HTMLDivElement>();
 
@@ -327,7 +328,6 @@ class InfusionFinder extends React.Component<Props, State> {
 
     onClose();
 
-    const store = source.getStoresService().getActiveStore()!;
     const items: LoadoutItem[] = [
       convertToLoadoutItem(target, false),
       // Include the source, since we wouldn't want it to get moved out of the way
@@ -374,7 +374,7 @@ class InfusionFinder extends React.Component<Props, State> {
     // TODO: another one where we want to respect equipped
     const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
-    await applyLoadout(store, loadout);
+    await applyLoadout(this.props.currentStore, loadout);
   };
 }
 

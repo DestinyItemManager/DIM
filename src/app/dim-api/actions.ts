@@ -39,6 +39,7 @@ import { t } from 'app/i18next-t';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
+import { compareAccounts } from 'app/accounts/destiny-account';
 
 const installApiPermissionObserver = _.once(() => {
   // Observe API permission and reflect it into local storage
@@ -94,9 +95,9 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
 
   // Observe the current account and reload data
   // Another one that should probably be a thunk action once account transitions are actions
-  observeStore(currentAccountSelector, (oldAccount) => {
+  observeStore(currentAccountSelector, (oldAccount, newAccount) => {
     // Force load profile data if the account changed
-    if (oldAccount) {
+    if (oldAccount && newAccount && !compareAccounts(oldAccount, newAccount)) {
       dispatch(loadDimApiData(true));
     }
   });
@@ -177,7 +178,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       return;
     }
 
-    const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
+    const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
     if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
       dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
     }

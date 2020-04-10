@@ -42,6 +42,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
+import ErrorPanel from 'app/shell/ErrorPanel';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -286,10 +287,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
         <PageWithMenu.Contents>
           {processError ? (
-            <div className="dim-error">
-              <h2>{t('ErrorBoundary.Title')}</h2>
-              <div>{processError.message}</div>
-            </div>
+            <ErrorPanel error={processError} />
           ) : (
             <GeneratedSets
               sets={filteredSets}

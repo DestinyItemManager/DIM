@@ -1,5 +1,17 @@
 ## Next
 
+* Improved overall performance and memory usage of DIM - as the game grows, so has DIM's memory usage. If your browser was crashing before, give it a try now.
+
+## 6.4.0 <span className="changelog-date">(2020-04-05)</span>
+
+* Added stat trackers to the Collections page (under "Metrics")
+* Improved error handling when Bungie.net is down or something is wrong with your account. Includes helpful tips for D1 users locked out by Twitch-linking bug. If your D1 accounts disappeared, they're in the menu now.
+* Accounts in the menu are now always ordered by last-played date.
+* DIM will no longer bounce you to a different account if the one you wanted cannot be loaded.
+* Fixed some bugs that could cause D1 pages to not display.
+* Fix display of collectibles that are tied to one of your alternate characters.
+* Fix the levels that reward Bright Engrams after season rank 100.
+
 ## 6.3.1 <span className="changelog-date">(2020-03-29)</span>
 
 * Fixed a bug where D1 items could fail to display.

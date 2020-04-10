@@ -1,39 +1,38 @@
+import { D2CalculatedSeason, D2CurrentSeason } from '../d2-season-info';
+import { D2Item, DimPerk } from '../item-types';
 import {
+  DestinyAmmunitionType,
   DestinyClass,
+  DestinyCollectibleComponent,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
   DestinyItemType,
-  ItemLocation,
-  TransferStatuses,
-  DestinyAmmunitionType,
-  ItemState,
-  DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  ItemBindStatus
+  ItemBindStatus,
+  ItemLocation,
+  ItemState,
+  TransferStatuses
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { reportException } from '../../utils/exceptions';
+import { buildFlavorObjective, buildObjectives } from './objectives';
 
-import { D2ManifestService } from '../../manifest/manifest-service-json';
-import { NewItemsService } from './new-items';
-import { t } from 'app/i18next-t';
-import { D2Item, DimPerk } from '../item-types';
-import { D2Store } from '../store-types';
-import { InventoryBuckets } from '../inventory-buckets';
-import { D2StoresService } from '../d2-stores';
-import { D2CalculatedSeason, D2CurrentSeason } from '../d2-season-info';
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
-import D2Seasons from 'data/d2/seasons.json';
-import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
-import { buildStats } from './stats';
-import { buildSockets } from './sockets';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
+import { D2ManifestService } from '../../manifest/manifest-service-json';
+import D2SeasonToSource from 'data/d2/seasonToSource.json';
+import D2Seasons from 'data/d2/seasons.json';
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
+import { D2Store } from '../store-types';
+import { D2StoresService } from '../d2-stores';
+import { InventoryBuckets } from '../inventory-buckets';
+import _ from 'lodash';
 import { buildMasterwork } from './masterwork';
-import { buildObjectives, buildFlavorObjective } from './objectives';
+import { buildSockets } from './sockets';
+import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
+import { reportException } from '../../utils/exceptions';
+import { t } from 'app/i18next-t';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -48,8 +47,9 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const collectiblesByItemHash = _.once((Collectible) =>
-  _.keyBy(Collectible.getAll(), (c) => c.itemHash)
+const collectiblesByItemHash = _.once(
+  (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
+    _.keyBy(Collectible, (c) => c.itemHash)
 );
 
 /**
@@ -113,8 +113,6 @@ export function processItems(
   owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  previousItems: Set<string> = new Set(),
-  newItems: Set<string> = new Set(),
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   },
@@ -129,8 +127,6 @@ export function processItems(
       createdItem = makeItem(
         defs,
         buckets,
-        previousItems,
-        newItems,
         itemComponents,
         item,
         owner,
@@ -185,8 +181,6 @@ export function makeFakeItem(
   return makeItem(
     defs,
     buckets,
-    new Set(),
-    new Set(),
     itemComponents,
     {
       itemHash,
@@ -220,8 +214,6 @@ export function makeFakeItem(
 export function makeItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  previousItems: Set<string>,
-  newItems: Set<string>,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
@@ -258,7 +250,7 @@ export function makeItem(
   let displayProperties = itemDef.displayProperties;
   if (itemDef.redacted) {
     // Fill in display info from the collectible, sometimes it's not redacted there!
-    const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
+    const collectibleDef = collectiblesByItemHash(defs.Collectible.getAll())[item.itemHash];
     if (collectibleDef) {
       displayProperties = collectibleDef.displayProperties;
     }
@@ -387,7 +379,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
-      ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
+      ? defs.Collectible.get(itemDef.collectibleHash)?.sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
     collectibleHash: itemDef.collectibleHash || null,
@@ -417,14 +409,6 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = statDef;
-  }
-
-  // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
-  try {
-    NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
-  } catch (e) {
-    console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
-    reportException('Newness', e, { itemHash: item.itemHash });
   }
 
   try {

@@ -18,6 +18,7 @@ import InfusionFinder from '../infuse/InfusionFinder';
 import { queueAction } from './action-queue';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
+import { storesLoadedSelector } from './selectors';
 
 interface Props {
   account: DestinyAccount;
@@ -26,7 +27,7 @@ interface Props {
 
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
-    storesLoaded: state.inventory.stores.length > 0
+    storesLoaded: storesLoadedSelector(state)
   };
 }
 

@@ -21,7 +21,11 @@ import {
   getSpecialtySocketMetadata,
   modSlotTags
 } from 'app/utils/item-utils';
-import { itemInfosSelector, sortedStoresSelector } from '../inventory/selectors';
+import {
+  itemInfosSelector,
+  sortedStoresSelector,
+  currentStoreSelector
+} from '../inventory/selectors';
 import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 
 import { D1Categories } from '../destiny1/d1-buckets';
@@ -45,6 +49,7 @@ import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
 import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
+import { getStore } from 'app/inventory/stores-helpers';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -97,6 +102,7 @@ export const searchConfigSelector = createSelector(destinyVersionSelector, build
 export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
+  currentStoreSelector,
   loadoutsSelector,
   inventoryWishListsSelector,
   ratingsSelector,
@@ -423,6 +429,7 @@ export interface SearchFilters {
 function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
+  currentStore: DimStore,
   loadouts: Loadout[],
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
@@ -792,7 +799,7 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ...maxStatLoadout(maxStatHash, store.getStoresService(), store).items.map((i) => i.id)
+              ...maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
             );
           });
         }
@@ -869,9 +876,8 @@ function searchFilters(
             desiredStore = 'vault';
             break;
           case 'incurrentchar': {
-            const activeStore = stores[0].getStoresService().getActiveStore();
-            if (activeStore) {
-              desiredStore = activeStore.id;
+            if (currentStore) {
+              desiredStore = currentStore.id;
             } else {
               return false;
             }
@@ -905,7 +911,7 @@ function searchFilters(
           : item.owner === stores[storeIndex].id;
       },
       onwrongclass(item: DimItem) {
-        const ownerStore = item.getStoresService().getStore(item.owner);
+        const ownerStore = getStore(stores, item.owner);
 
         return (
           !item.classified &&

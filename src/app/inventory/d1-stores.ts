@@ -5,16 +5,15 @@ import { reportException } from '../utils/exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { getBuckets } from '../destiny1/d1-buckets';
-import { NewItemsService } from './store/new-items';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
 import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
-import { D1Item, DimItem } from './item-types';
+import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update } from './actions';
+import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
@@ -52,16 +51,10 @@ function StoreService(): D1StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
-    getAllItems: () => _stores.flatMap((s) => s.items),
-    refreshRatingsData() {
-      return;
-    },
     getStoresStream,
-    getItemAcrossStores,
     updateCharacters,
     reloadStores,
     touch() {
@@ -70,27 +63,6 @@ function StoreService(): D1StoreServiceType {
   };
 
   return service;
-
-  /**
-   * Find an item among all stores that matches the params provided.
-   */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
-      i: DimItem
-    ) => boolean;
-    for (const store of _stores) {
-      const result = store.items.find(predicate);
-      if (result) {
-        return result;
-      }
-    }
-    return undefined;
-  }
 
   /**
    * Update the high level character information for all the stores
@@ -145,21 +117,16 @@ function StoreService(): D1StoreServiceType {
    * Returns a promise for a fresh view of the stores and their items.
    */
   function loadStores(account: DestinyAccount): Promise<D1Store[] | undefined> {
-    // Save a snapshot of all the items before we update
-    const previousItems = NewItemsService.buildItemSet(_stores);
-
     resetIdTracker();
 
     const reloadPromise = Promise.all([
       getDefinitions(),
       getBuckets(),
-      NewItemsService.loadNewItems(account),
+      store.dispatch(loadNewItems(account)),
       store.dispatch(loadItemInfos(account)),
       getStores(account)
     ])
-      .then(([defs, buckets, newItems, , rawStores]) => {
-        NewItemsService.applyRemovedNewItems(newItems);
-
+      .then(([defs, buckets, , , rawStores]) => {
         const lastPlayedDate = findLastPlayedDate(rawStores);
 
         // Currencies object gets mutated by processStore
@@ -168,18 +135,14 @@ function StoreService(): D1StoreServiceType {
         const processStorePromises = Promise.all(
           _.compact(
             (rawStores as any[]).map((raw) =>
-              processStore(raw, defs, buckets, previousItems, newItems, currencies, lastPlayedDate)
+              processStore(raw, defs, buckets, currencies, lastPlayedDate)
             )
           )
         );
 
-        return Promise.all([buckets, newItems, processStorePromises]);
+        return Promise.all([buckets, processStorePromises]);
       })
-      .then(([buckets, newItems, stores]) => {
-        // Save and notify about new items
-        NewItemsService.applyRemovedNewItems(newItems);
-        NewItemsService.saveNewItems(newItems, account);
-
+      .then(([buckets, stores]) => {
         _stores = stores;
 
         if ($featureFlags.reviewsEnabled) {
@@ -193,14 +156,19 @@ function StoreService(): D1StoreServiceType {
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
 
-        store.dispatch(update({ stores, buckets, newItems }));
+        store.dispatch(update({ stores, buckets }));
 
         return stores;
       })
       .catch((e) => {
-        showNotification(bungieErrorToaster(e));
         console.error('Error loading stores', e);
         reportException('D1StoresService', e);
+        if (_stores.length > 0) {
+          // don't replace their inventory with the error, just notify
+          showNotification(bungieErrorToaster(e));
+        } else {
+          store.dispatch(error(e));
+        }
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
@@ -219,8 +187,6 @@ function StoreService(): D1StoreServiceType {
     raw,
     defs: D1ManifestDefinitions,
     buckets: InventoryBuckets,
-    previousItems: Set<string>,
-    newItems: Set<string>,
     currencies: DimVault['currencies'],
     lastPlayedDate: Date
   ) {
@@ -240,7 +206,7 @@ function StoreService(): D1StoreServiceType {
       items = result.items;
     }
 
-    return processItems(store, items, previousItems, newItems).then((items) => {
+    return processItems(store, items).then((items) => {
       store.items = items;
 
       // by type-bucket

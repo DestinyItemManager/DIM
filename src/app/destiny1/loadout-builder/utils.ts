@@ -178,7 +178,7 @@ export function getBestArmor(
             return true;
           }
           function matchNode(perkHash) {
-            return item.talentGrid!.nodes.some((n) => n.hash === perkHash);
+            return item.talentGrid?.nodes.some((n) => n.hash === perkHash);
           }
           return Boolean(
             (orPerkHashes.length && orPerkHashes.some(matchNode)) ||

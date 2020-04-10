@@ -42,7 +42,6 @@ export default function SocketDetailsSelectedPlug({
       if (!itemStat) {
         return null;
       }
-      // const statDef = defs.Stat.get(stat.statTypeHash);
       const statGroupDef = defs.StatGroup.get(
         defs.InventoryItem.get(item.hash).stats.statGroupHash!
       );

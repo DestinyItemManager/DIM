@@ -8,7 +8,7 @@ import {
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
+import { D2ManifestDefinitions, DefinitionTable } from '../../destiny2/d2-definitions';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
@@ -16,6 +16,7 @@ import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { armorStats } from './stats';
+import { getCurrentStore } from '../stores-helpers';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -81,10 +82,9 @@ const StoreProto = {
       // we need to check out how much space is left in that bucket, which is
       // only on the current store.
       if (item.bucket.accountWide) {
-        const existingAmount = item
-          .getStoresService()
-          .getActiveStore()!
-          .amountOfItem(item);
+        const existingAmount = getCurrentStore(this.getStoresService().getStores())!.amountOfItem(
+          item
+        );
 
         if (existingAmount === 0) {
           // if this would be the first stack, make sure there's room for a stack
@@ -292,7 +292,7 @@ export function makeVault(
  * Compute character-level stats.
  */
 export function getCharacterStatsData(
-  statDefs: LazyDefinition<DestinyStatDefinition>,
+  statDefs: DefinitionTable<DestinyStatDefinition>,
   stats: {
     [key: number]: number;
   }

@@ -151,7 +151,7 @@ export default function RichDestinyText({
     <>
       {// don't bother processing without d2 defs
       !defs || defs.isDestiny1()
-        ? { text }
+        ? text
         : // split into segments, filter out empty, try replacing each piece with an icon if one matches
           text
             .split(iconPlaceholder)

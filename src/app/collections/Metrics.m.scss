@@ -1,0 +1,21 @@
+@import '../variables.scss';
+
+.metrics {
+  margin: 6px 10px 8px;
+  @include vertical-space-children(24px);
+}
+
+.title {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  text-transform: uppercase;
+  align-items: center;
+
+  img {
+    height: 25px;
+    width: 25px;
+    margin-right: 4px;
+    margin-left: 5px;
+  }
+}

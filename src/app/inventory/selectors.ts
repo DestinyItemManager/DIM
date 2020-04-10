@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { apiPermissionGrantedSelector, currentProfileSelector } from 'app/dim-api/selectors';
 import { InventoryState } from './reducer';
 import { emptyObject } from 'app/utils/empty';
+import { getCurrentStore } from './stores-helpers';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
@@ -18,6 +19,9 @@ export const sortedStoresSelector = createSelector(
 
 /** Have stores been loaded? */
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
+
+/** The current (last played) character */
+export const currentStoreSelector = (state: RootState) => getCurrentStore(storesSelector(state));
 
 /** A set containing all the hashes of owned items. */
 export const ownedItemsSelector = () =>

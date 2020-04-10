@@ -1,7 +1,7 @@
 import { getPlatforms, setActivePlatform } from './platforms';
 import { Transition } from '@uirouter/react';
 import store from 'app/store/store';
-import { accountsSelector } from './reducer';
+import { DestinyAccount } from './destiny-account';
 
 /**
  * This is a function that generates a resolver that can be used for both the destiny1 and destiny2
@@ -11,17 +11,17 @@ export function destinyAccountResolver(destinyVersion: 1 | 2) {
   return async ($transition$: Transition) => {
     const { membershipId } = $transition$.params();
 
-    await getPlatforms();
+    const accounts = await ((store.dispatch(getPlatforms()) as any) as Promise<
+      readonly DestinyAccount[]
+    >);
     // TODO: getPlatformMatching should be able to load an account that we don't know
-    const account = accountsSelector(store.getState()).find(
+    const account = accounts.find(
       (account) =>
         account.membershipId === membershipId && account.destinyVersion === destinyVersion
     );
     if (!account) {
-      // If we didn't load an account, kick out and re-resolve
-      $transition$.router.stateService.go('default-account');
       return null;
     }
-    return setActivePlatform(account);
+    return store.dispatch(setActivePlatform(account));
   };
 }

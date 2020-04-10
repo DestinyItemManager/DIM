@@ -5,6 +5,9 @@ import { ActionType, getType } from 'typesafe-actions';
 import { RootState, ThunkResult } from '../store/reducers';
 import { observeStore } from 'app/utils/redux-utils';
 import { set, get } from 'idb-keyval';
+import { dedupePromise } from 'app/utils/util';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { deepEqual } from 'fast-equals';
 
 export const accountsSelector = (state: RootState) => state.accounts.accounts;
 
@@ -24,6 +27,8 @@ export interface AccountsState {
   readonly currentAccount: number;
   readonly loaded: boolean;
   readonly loadedFromIDB: boolean;
+
+  readonly accountsError?: DimError;
 }
 
 export type AccountsAction = ActionType<typeof actions>;
@@ -43,22 +48,36 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
     case getType(actions.accountsLoaded):
       return {
         ...state,
-        accounts: action.payload || [],
-        loaded: true
+        accounts: deepEqual(action.payload, state.accounts) ? state.accounts : action.payload || [],
+        loaded: true,
+        accountsError: undefined
       };
-    case getType(actions.setCurrentAccount):
-      return {
-        ...state,
-        currentAccount: action.payload ? state.accounts.indexOf(action.payload) : -1
-      };
+    case getType(actions.setCurrentAccount): {
+      const newCurrentAccount = action.payload ? state.accounts.indexOf(action.payload) : -1;
+      return newCurrentAccount !== state.currentAccount
+        ? {
+            ...state,
+            currentAccount: newCurrentAccount
+          }
+        : state;
+    }
     case getType(actions.loadFromIDB):
+      console.log('load from IDB', action.payload);
       return state.loaded
         ? state
         : {
             ...state,
-            accounts: action.payload || [],
+            accounts: deepEqual(action.payload, state.accounts)
+              ? state.accounts
+              : action.payload || [],
             loadedFromIDB: true
           };
+    case getType(actions.error):
+      return {
+        ...state,
+        accountsError: action.payload
+      };
+
     default:
       return state;
   }
@@ -75,10 +94,13 @@ export function saveAccountsToIndexedDB() {
   );
 }
 
-export function loadAccountsFromIndexedDB(): ThunkResult {
-  return async (dispatch) => {
-    const accounts = await get<DestinyAccount[] | undefined>('accounts');
+const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
+  console.log('Load accounts from IDB');
+  const accounts = await get<DestinyAccount[] | undefined>('accounts');
 
-    dispatch(actions.loadFromIDB(accounts || []));
-  };
+  dispatch(actions.loadFromIDB(accounts || []));
+});
+
+export function loadAccountsFromIndexedDB(): ThunkResult {
+  return loadAccountsFromIndexedDBAction;
 }

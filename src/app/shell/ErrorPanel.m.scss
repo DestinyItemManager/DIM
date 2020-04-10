@@ -1,0 +1,50 @@
+@import '../variables.scss';
+
+.errorPanel {
+  margin: 16px 0;
+  padding: 0.85em;
+  background: scale-color($red, $lightness: -90%);
+  border-top: 4px solid $red;
+  h2 {
+    margin: 0 0 8px 0 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+  a {
+    color: white;
+    font-size: 12px;
+  }
+}
+
+.twitterLinks {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  > * {
+    margin-right: 8px;
+  }
+
+  :global(.fa-twitter) {
+    font-size: 1.5em;
+    vertical-align: bottom;
+  }
+}
+
+.errorCode {
+  color: #888;
+  margin: 0 0 0 8px;
+  font-size: 12px;
+  float: right;
+}
+
+.twitters {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+
+  > div {
+    height: 400px;
+  }
+}

@@ -570,7 +570,11 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   trials: {
-    itemHashes: [],
+    itemHashes: [
+      1983519830, // Hardened by Trial
+      2071635914, // Light for the Lost
+      2071635915 // Flawless Empyrean
+    ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.

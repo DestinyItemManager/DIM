@@ -1,7 +1,6 @@
 import React from 'react';
 import { reportException } from '../utils/exceptions';
-import { t } from 'app/i18next-t';
-import './ErrorBoundary.scss';
+import ErrorPanel from 'app/shell/ErrorPanel';
 
 interface Props {
   name: string;
@@ -25,12 +24,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   render() {
     if (this.state.error) {
-      return (
-        <div className="dim-error">
-          <h2>{t('ErrorBoundary.Title')}</h2>
-          <div>{this.state.error.message}</div>
-        </div>
-      );
+      return <ErrorPanel error={this.state.error} />;
     }
     return this.props.children;
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import i18next from 'i18next';
 import { setSetting, setCharacterOrder } from './actions';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import InventoryItem from '../inventory/InventoryItem';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import CharacterOrderEditor from './CharacterOrderEditor';
@@ -33,6 +33,8 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import Spreadsheets from './Spreadsheets';
 import DimApiSettings from 'app/storage/DimApiSettings';
+import { clearRatings } from 'app/item-review/actions';
+import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 
 interface StoreProps {
   settings: Settings;
@@ -48,13 +50,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-const mapDispatchToProps = {
-  setSetting,
-  setCharacterOrder
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = StoreProps & DispatchProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -145,11 +141,14 @@ let initialLanguage: string;
 
 class SettingsPage extends React.Component<Props> {
   componentDidMount() {
+    const { settings, dispatch } = this.props;
+
     if (!initialLanguage) {
-      initialLanguage = this.props.settings.language;
+      initialLanguage = settings.language;
     }
+
     getDefinitions();
-    getPlatforms().then(() => {
+    dispatch(getPlatforms()).then(() => {
       const account = getActivePlatform();
       if (account) {
         account.destinyVersion === 2
@@ -464,9 +463,9 @@ class SettingsPage extends React.Component<Props> {
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      this.props.setSetting(e.target.name as any, e.target.checked);
+      this.props.dispatch(setSetting(e.target.name as any, e.target.checked));
     } else {
-      this.props.setSetting(e.target.name as any, e.target.value);
+      this.props.dispatch(setSetting(e.target.name as any, e.target.value));
     }
   };
 
@@ -474,20 +473,23 @@ class SettingsPage extends React.Component<Props> {
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
-      this.props.setSetting('language', language);
+      this.props.dispatch(setSetting('language', language));
     });
   };
 
   private resetItemSize = (e) => {
     e.preventDefault();
-    this.props.setSetting('itemSize', defaultItemSize());
+    this.props.dispatch(setSetting('itemSize', defaultItemSize()));
     return false;
   };
 
   private saveAndReloadReviews = (e) => {
     e.preventDefault();
     this.onChange(e);
-    D2StoresService.refreshRatingsData();
+
+    this.props.dispatch(clearRatings());
+    this.props.dispatch(fetchRatings());
+
     return false;
   };
 
@@ -498,19 +500,21 @@ class SettingsPage extends React.Component<Props> {
   };
 
   private itemSortOrderChanged = (sortOrder: SortProperty[]) => {
-    this.props.setSetting('itemSort', 'custom');
-    this.props.setSetting(
-      'itemSortOrderCustom',
-      sortOrder.filter((o) => o.enabled).map((o) => o.id)
+    this.props.dispatch(setSetting('itemSort', 'custom'));
+    this.props.dispatch(
+      setSetting(
+        'itemSortOrderCustom',
+        sortOrder.filter((o) => o.enabled).map((o) => o.id)
+      )
     );
   };
 
   private characterSortOrderChanged = (order: string[]) => {
-    this.props.setCharacterOrder(order);
+    this.props.dispatch(setCharacterOrder(order));
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage);
+export default connect<StoreProps>(mapStateToProps)(SettingsPage);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

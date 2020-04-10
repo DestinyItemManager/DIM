@@ -32,6 +32,7 @@ import {
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
 import { itemInfosSelector } from './selectors';
+import { getStore, getItemAcrossStores, getCurrentStore } from './stores-helpers';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -77,10 +78,8 @@ export async function setItemLockState(
   state: boolean,
   type: 'lock' | 'track' = 'lock'
 ) {
-  const store =
-    item.owner === 'vault'
-      ? item.getStoresService().getActiveStore()!
-      : item.getStoresService().getStore(item.owner)!;
+  const stores = item.getStoresService().getStores();
+  const store = item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
   if (item.isDestiny2()) {
     await d2SetLockState(store, item, state);
@@ -150,10 +149,11 @@ function ItemService(): ItemServiceType {
   ) {
     // Refresh all the items - they may have been reloaded!
     const storeService = item.getStoresService();
-    source = storeService.getStore(source.id)!;
-    target = storeService.getStore(target.id)!;
+    const stores = storeService.getStores();
+    source = getStore(stores, source.id)!;
+    target = getStore(stores, target.id)!;
     // We really shouldn't do this!
-    item = storeService.getItemAcrossStores(item) || item;
+    item = getItemAcrossStores(stores, item) || item;
 
     // If we've moved to a new place
     if (source.id !== target.id || item.location.inPostmaster) {
@@ -953,14 +953,14 @@ function ItemService(): ItemServiceType {
     excludes?: DimItem[],
     reservations?: MoveReservations
   ): Promise<DimItem> {
+    const storeService = item.getStoresService();
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
-      target = item.getStoresService().getActiveStore()!;
+      target = getCurrentStore(storeService.getStores())!;
     }
 
     await isValidTransfer(equip, target, item, amount, excludes, reservations);
 
-    const storeService = item.getStoresService();
     // Replace the target store - isValidTransfer may have reloaded it
     target = storeService.getStore(target.id)!;
     let source = storeService.getStore(item.owner)!;

@@ -6,7 +6,8 @@ import {
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
   DestinyGameVersions,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
+  DestinyItemComponent
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
@@ -19,19 +20,16 @@ import { reportException } from '../utils/exceptions';
 import { getLight } from '../loadout/loadout-utils';
 import { resetIdTracker, processItems } from './store/d2-item-factory';
 import { makeVault, makeCharacter } from './store/d2-store-factory';
-import { NewItemsService } from './store/new-items';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
-import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update } from './actions';
+import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
-import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import { getActivePlatform } from 'app/accounts/platforms';
@@ -90,43 +88,18 @@ function makeD2StoresService(): D2StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => _stores.flatMap((s) => s.items),
     getStoresStream,
-    getItemAcrossStores,
     updateCharacters,
     reloadStores,
-    refreshRatingsData,
     touch() {
       store.dispatch(update({ stores: _stores }));
     }
   };
 
   return service;
-
-  /**
-   * Find an item among all stores that matches the params provided.
-   */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
-      i: DimItem
-    ) => boolean;
-    for (const store of _stores) {
-      const result = store.items.find(predicate);
-      if (result) {
-        return result;
-      }
-    }
-    return undefined;
-  }
 
   /**
    * Update the high level character information for all the stores
@@ -185,22 +158,17 @@ function makeD2StoresService(): D2StoreServiceType {
    * Returns a promise for a fresh view of the stores and their items.
    */
   async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
-    // Save a snapshot of all the items before we update
-    const previousItems = NewItemsService.buildItemSet(_stores);
-
     resetIdTracker();
 
     try {
-      const [defs, buckets, newItems, , profileInfo] = await Promise.all([
+      const [defs, buckets, , , profileInfo] = await Promise.all([
         getDefinitions(),
         getBuckets(),
-        NewItemsService.loadNewItems(account),
+        store.dispatch(loadNewItems(account)),
         store.dispatch(loadItemInfos(account)),
         getStores(account)
       ]);
       console.time('Process inventory');
-
-      NewItemsService.applyRemovedNewItems(newItems);
 
       // TODO: components may be hidden (privacy)
 
@@ -222,14 +190,7 @@ function makeD2StoresService(): D2StoreServiceType {
         profileInfo.characterCollectibles
       );
 
-      const vault = processVault(
-        defs,
-        buckets,
-        profileInfo,
-        mergedCollectibles,
-        previousItems,
-        newItems
-      );
+      const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
 
       const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
         processCharacter(
@@ -238,15 +199,9 @@ function makeD2StoresService(): D2StoreServiceType {
           characterId,
           profileInfo,
           mergedCollectibles,
-          previousItems,
-          newItems,
           lastPlayedDate
         )
       );
-
-      // Save the list of new item IDs
-      NewItemsService.applyRemovedNewItems(newItems);
-      NewItemsService.saveNewItems(newItems, account);
 
       const stores = [...characters, vault];
       _stores = stores;
@@ -259,7 +214,9 @@ function makeD2StoresService(): D2StoreServiceType {
 
       store.dispatch(cleanInfos(stores));
 
-      stores.forEach((s) => updateBasePower(account, stores, s, defs));
+      for (const s of stores) {
+        updateBasePower(account, stores, s, defs);
+      }
 
       // Let our styling know how many characters there are
       // TODO: this should be an effect on the stores component
@@ -269,14 +226,19 @@ function makeD2StoresService(): D2StoreServiceType {
       console.timeEnd('Process inventory');
 
       console.time('Inventory state update');
-      store.dispatch(update({ stores, buckets, newItems, profileResponse: profileInfo }));
+      store.dispatch(update({ stores, buckets, profileResponse: profileInfo }));
       console.timeEnd('Inventory state update');
 
       return stores;
     } catch (e) {
       console.error('Error loading stores', e);
       reportException('d2stores', e);
-      showNotification(bungieErrorToaster(e));
+      if (_stores.length > 0) {
+        // don't replace their inventory with the error, just notify
+        showNotification(bungieErrorToaster(e));
+      } else {
+        store.dispatch(error(e));
+      }
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
@@ -296,8 +258,6 @@ function makeD2StoresService(): D2StoreServiceType {
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
     },
-    previousItems: Set<string>,
-    newItems: Set<string>,
     lastPlayedDate: Date
   ): D2Store {
     const character = profileInfo.characters.data![characterId];
@@ -315,15 +275,19 @@ function makeD2StoresService(): D2StoreServiceType {
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
-    let items = characterInventory.concat(Object.values(characterEquipment));
+    const items = characterInventory.slice();
+    for (const k in characterEquipment) {
+      items.push(characterEquipment[k]);
+    }
+
     if (store.current) {
-      items = items.concat(
-        Object.values(profileInventory).filter((i) => {
-          const bucket = buckets.byHash[i.bucketHash];
-          // items that can be stored in a vault
-          return bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders');
-        })
-      );
+      for (const i of profileInventory) {
+        const bucket = buckets.byHash[i.bucketHash];
+        // items that can be stored in a vault
+        if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
+          items.push(i);
+        }
+      }
     }
 
     const processedItems = processItems(
@@ -332,8 +296,6 @@ function makeD2StoresService(): D2StoreServiceType {
       store,
       items,
       itemComponents,
-      previousItems,
-      newItems,
       mergedCollectibles,
       uninstancedItemObjectives
     );
@@ -355,9 +317,7 @@ function makeD2StoresService(): D2StoreServiceType {
     profileInfo: DestinyProfileResponse,
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
-    },
-    previousItems: Set<string>,
-    newItems: Set<string>
+    }
   ): D2Vault {
     const profileInventory = profileInfo.profileInventory.data
       ? profileInfo.profileInventory.data.items
@@ -369,19 +329,21 @@ function makeD2StoresService(): D2StoreServiceType {
 
     const store = makeVault(defs, profileCurrencies);
 
-    const items = Object.values(profileInventory).filter((i) => {
+    const items: DestinyItemComponent[] = [];
+    for (const i of profileInventory) {
       const bucket = buckets.byHash[i.bucketHash];
       // items that cannot be stored in the vault, and are therefore *in* a vault
-      return bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders';
-    });
+      if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+        items.push(i);
+      }
+    }
+
     const processedItems = processItems(
       defs,
       buckets,
       store,
       items,
       itemComponents,
-      previousItems,
-      newItems,
       mergedCollectibles
     );
     store.items = processedItems;
@@ -504,13 +466,6 @@ function makeD2StoresService(): D2StoreServiceType {
       }
     });
     activeStore.vault = vault; // god help me
-  }
-
-  function refreshRatingsData() {
-    if ($featureFlags.reviewsEnabled) {
-      store.dispatch(clearRatings());
-      store.dispatch(fetchRatings(_stores));
-    }
   }
 }
 

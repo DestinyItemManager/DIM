@@ -45,7 +45,7 @@
       "version": "detect"
     }
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "@typescript-eslint/tslint", "lodash"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint", "lodash"],
   "rules": {
     "no-console": "off",
     "no-empty": "off",
@@ -111,12 +111,6 @@
         "varsIgnorePattern": "(^_|[iI]gnored)",
         "argsIgnorePattern": "(^_|[iI]gnored)",
         "ignoreRestSiblings": true
-      }
-    ],
-    "@typescript-eslint/tslint/config": [
-      "error",
-      {
-        "lintFile": "./tslint.json"
       }
     ]
   }

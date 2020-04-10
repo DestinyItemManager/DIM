@@ -167,7 +167,8 @@ module.exports = (env) => {
                     env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
                 },
                 localsConvention: 'camelCaseOnly',
-                sourceMap: true
+                sourceMap: true,
+                esModule: true
               }
             },
             'postcss-loader',

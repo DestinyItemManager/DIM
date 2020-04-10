@@ -437,7 +437,22 @@ const S8Sources: { [key: string]: number[] } = {
     561808153, // Mantle of Efrideet
     2620437164, // Mark of Remembrance
     1313767877, // Radegast's Iron Sash
-    2500327265 // Radegast's Iron Sash
+    2500327265, // Radegast's Iron Sash
+    63725907, // Iron Remembrance Plate
+    92135663, // Iron Remembrance Vest
+    167461728, // Iron Remembrance Gloves
+    713182381, // Iron Remembrance Gauntlets
+    1425558127, // Iron Remembrance Greaves
+    1882457108, // Iron Remembrance Helm
+    2614190248, // Iron Remembrance Vestments
+    2758933481, // Iron Remembrance Hood
+    2845071512, // Iron Remembrance Casque
+    3115791898, // Iron Remembrance Legs
+    3308875113, // Iron Remembrance Grips
+    3600816955, // Iron Remembrance Strides
+    21320325, // Bond of Remembrance
+    1339294334, // Cloak of Remembrance
+    2310625418 // Mark of Remembrance
   ],
   blackarmory: [
     4064641551, // Annealed Shaper Bond

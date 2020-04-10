@@ -78,3 +78,23 @@ $header-height: 44px;
     outline: none;
   }
 }
+
+// Apply spacing between children
+@mixin vertical-space-children($space) {
+  > * {
+    margin-bottom: $space;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Apply spacing between children
+@mixin horizontal-space-children($space) {
+  > * {
+    margin-right: $space;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

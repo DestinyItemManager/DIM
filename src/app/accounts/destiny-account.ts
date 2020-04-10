@@ -9,7 +9,6 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { router } from '../router';
@@ -110,8 +109,6 @@ export async function getDestinyAccountsForBungieAccount(
     }
     return platforms;
   } catch (e) {
-    // TODO: show a full-page error, or show a diagnostics page, rather than a popup
-    showNotification(bungieErrorToaster(e));
     reportException('getDestinyAccountsForBungieAccount', e);
     throw e;
   }
@@ -157,6 +154,8 @@ async function generatePlatforms(
     })
     .concat(
       // Profiles with errors could be D1 accounts
+      // Consider both D1 and D2 accounts with errors, save profile errors and show on page
+      // unless it's a specific error like DestinyAccountNotFound
       accounts.profilesWithErrors.flatMap((errorProfile) => {
         const destinyAccount = errorProfile.infoCard;
         const account: DestinyAccount = {
@@ -168,8 +167,19 @@ async function generatePlatforms(
           platforms: [destinyAccount.membershipType],
           lastPlayed: new Date()
         };
-        // D1 was only available for PS/Xbox
-        return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
+
+        if (
+          errorProfile.errorCode === PlatformErrorCodes.DestinyAccountNotFound ||
+          errorProfile.errorCode === PlatformErrorCodes.DestinyLegacyPlatformInaccessible
+        ) {
+          // If the error positively identifies this as not being a D2 account, only look for D1 accounts
+          return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
+        } else {
+          // Otherwise, this could be a D2 account while the API is having trouble.
+          return couldBeD1Account(destinyAccount)
+            ? [account, findD1Characters(account)]
+            : [account];
+        }
       })
     );
 
@@ -201,7 +211,15 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     }
     console.error('Error getting D1 characters for', account, e);
     reportException('findD1Characters', e);
-    return null;
+
+    // Return the account as if it had succeeded so it shows up in the menu
+    return {
+      ...account,
+      destinyVersion: 1,
+      // D1 didn't support cross-save!
+      platforms: [account.originalPlatformType],
+      lastPlayed: new Date(0)
+    };
   }
 }
 
