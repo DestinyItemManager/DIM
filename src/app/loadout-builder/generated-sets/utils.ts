@@ -113,6 +113,13 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
   return comparators;
 }
 
+/**
+ * This function checks if the first valid set in an ArmorSet slot all the mods in
+ * seasonalMods. Currently it does not care for the element affinity or the armour
+ * of the mod, as that can be switched in game.
+ *
+ * The mods passed in should only be seasonal mods.
+ */
 function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[]) {
   if (seasonalMods.length > 5) {
     return false;

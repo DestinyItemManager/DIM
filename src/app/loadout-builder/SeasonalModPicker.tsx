@@ -6,7 +6,7 @@ import { LockedModBase } from './types';
 import { t } from 'app/i18next-t';
 
 /**
- * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
+ * A list of seasonal mods for use in PerkPicker.
  */
 export default function SeasonalModPicker({
   defs,
