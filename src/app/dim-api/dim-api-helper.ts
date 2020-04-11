@@ -10,6 +10,8 @@ export const API_KEY =
     ? $DIM_API_KEY
     : localStorage.getItem('dimApiKey')!;
 
+const localStorageKey = 'dimApiToken';
+
 /**
  * Call one of the unauthenticated DIM APIs.
  */
@@ -61,24 +63,39 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
+
+  const headers = {
+    Authorization: `Bearer ${token.accessToken}`,
+    'X-API-Key': API_KEY
+  };
+  if (config.body) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: config.body
-        ? {
-            Authorization: `Bearer ${token.accessToken}`,
-            'X-API-Key': API_KEY,
-            'Content-Type': 'application/json'
-          }
-        : {
-            Authorization: `Bearer ${token.accessToken}`,
-            'X-API-Key': API_KEY
-          }
+      headers
     })
   );
 
-  return response.json() as Promise<T>;
+  if (response.status === 401) {
+    // Delete our token
+    localStorage.removeItem(localStorageKey);
+  }
+  if (response.ok) {
+    return response.json();
+  }
+
+  try {
+    const responseData = await response.json();
+    if (responseData.error) {
+      throw new Error(`${responseData.error}: ${responseData.message}`);
+    }
+  } catch {}
+
+  throw new Error('Failed to call DIM API: ' + response.status);
 }
 
 export interface DimAuthToken {
@@ -89,8 +106,6 @@ export interface DimAuthToken {
   /** A UTC epoch milliseconds timestamp representing when the token was acquired. */
   inception: number;
 }
-
-const localStorageKey = 'dimApiToken';
 
 /**
  * Get all token information from saved storage.

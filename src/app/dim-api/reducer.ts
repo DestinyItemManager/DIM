@@ -533,7 +533,7 @@ function compactUpdate(
  */
 function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateResult[]) {
   return produce(state, (draft) => {
-    const total = Math.min(state.updateInProgressWatermark, results.length);
+    const total = Math.min(state.updateInProgressWatermark, results?.length || 0);
 
     for (let i = 0; i < total; i++) {
       const update = state.updateQueue[i];
