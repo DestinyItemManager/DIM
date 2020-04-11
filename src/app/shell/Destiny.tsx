@@ -69,16 +69,20 @@ class Destiny extends React.Component<Props> {
     }
 
     if (profileError) {
+      const isManifestError = profileError.name === 'ManifestError';
       const token = getToken()!;
       return (
         <div className="dim-page">
           <ErrorPanel
-            title={t('Accounts.ErrorLoadInventory')}
+            title={
+              isManifestError ? t('Accounts.ErrorLoadManifest') : t('Accounts.ErrorLoadInventory')
+            }
             error={profileError}
             showTwitters={true}
             showReload={true}
           >
-            {account.destinyVersion === 1 &&
+            {!isManifestError &&
+              account.destinyVersion === 1 &&
               profileError.code === PlatformErrorCodes.DestinyUnexpectedError && (
                 <p>
                   <ExternalLink

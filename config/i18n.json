@@ -10,12 +10,13 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1",
-    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingTitle": "Account Not Found",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
     "UnlinkTwitchButton": "Unlink Twitch",
-    "ErrorLoadInventory": "Unable to load your Destiny profile"
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie"
   },
   "Activities": {
     "Activities": "Activities",
@@ -145,7 +146,7 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps -- check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
