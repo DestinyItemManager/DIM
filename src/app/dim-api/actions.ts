@@ -124,6 +124,14 @@ export function loadGlobalSettings(): ThunkResult {
   };
 }
 
+/**
+ * Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
+ * Double the wait time, starting with 10 seconds, until we reach 5 minutes.
+ */
+function getBackoffWaitTime(backoff: number) {
+  return Math.min(5 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 5000);
+}
+
 // Backoff multiplier
 let getProfileBackoff = 0;
 let waitingForApiPermission = false;
@@ -219,10 +227,9 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         console.error('[loadDimApiData] Unable to get profile from DIM API', e);
 
-        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
-        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        // Wait, with exponential backoff
         getProfileBackoff++;
-        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, getProfileBackoff) * 2500);
+        const waitTime = getBackoffWaitTime(getProfileBackoff);
         console.log('[loadDimApiData] Waiting', waitTime, 'ms before re-attempting profile fetch');
         await delay(waitTime);
 
@@ -291,10 +298,9 @@ export function flushUpdates(): ThunkResult<any> {
         }
         console.error('[flushUpdates] Unable to save updates to DIM API', e);
 
-        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
-        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        // Wait, with exponential backoff
         flushUpdatesBackoff++;
-        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, flushUpdatesBackoff) * 2500);
+        const waitTime = getBackoffWaitTime(getProfileBackoff);
         console.log('[flushUpdates] Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
