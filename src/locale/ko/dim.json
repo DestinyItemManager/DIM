@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "데스티니 프로필 불러오기 실패",
+    "ErrorLoading": "Bungie.net에서 데스티니 프로필 불러오기 실패",
+    "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
+    "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Bungie.net에 Twitch 계정을 연결하면 데스티니 1 계정을 사용할 수 없습니다.",
+    "UnlinkTwitchButton": "Twitch 연결 해제",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
+  },
+  "ErrorPanel": {
+    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 컴패니언 앱이 동작하는지 확인하세요."
   },
   "FarmingMode": {
     "D2Desc": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
@@ -800,7 +809,7 @@
       "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저에서 구글 드라이브에 로그인할 경우 모든 브라우저에서 데이터가 공유됩니다. 이 데이터는 Bungie 계정마다 저장됩니다. 로그인하시는데 문제가 있으시다면 브라우저에서 서드파티 쿠키를 허용해주세요.",
       "IndexedDBStorage": "로컬 저장소는 정보를 이 브라우저에만 저장할 것입니다. 브라우저 데이터를 삭제하면 이 정보도 같이 삭제됩니다."
     },
-    "DimApiFinePrint": "DIM은 태그, 로드아웃, 설정을 DIM 서버에 저장하고 다른 버전의 DIM과 동기화합니다.",
+    "DimApiFinePrint": "DIM이 태그, 로드아웃, 설정을 DIM 서버에 저장하고 다른 버전의 DIM과 동기화합니다.",
     "DimSyncEnabled": "DIM 동기화 활성화됨",
     "Disabled": "꺼짐",
     "DriveLogout": "구글 드라이브 로그아웃",
@@ -901,8 +910,7 @@
     "DestinySets": "Destiny Sets에서 더욱 많은 아이템 세트를 확인하세요.",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
-    "Vendors": "상인",
-    "Year2Mods": "2년 차 개조 부품"
+    "Vendors": "상인"
   },
   "Views": {
     "About": {

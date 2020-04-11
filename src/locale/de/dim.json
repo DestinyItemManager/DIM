@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Laden des Destiny Profils nicht möglich",
+    "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
+    "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
+    "MissingTitle": "Account nicht gefunden",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Wenn du dein Twitch-Konto mit Bungie.net verknüpfst, werden deine D1-Konten nicht mehr funktionieren.",
+    "UnlinkTwitchButton": "Twitch Konto trennen",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Ein Fehler ist aufgetreten"
+  },
+  "ErrorPanel": {
+    "Description": "Dies ist wahrscheinlich ein Problem, das alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert."
   },
   "FarmingMode": {
     "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
@@ -901,8 +910,7 @@
     "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Engram": "Belohnungs-Engramm",
     "FilterToUnacquired": "Nur nicht erworbene Elemente anzeigen",
-    "Vendors": "Händler",
-    "Year2Mods": "Jahr 2 Mods"
+    "Vendors": "Händler"
   },
   "Views": {
     "About": {

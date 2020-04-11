@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Unable to load Destiny profile",
+    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingTitle": "Account Not Found",
     "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
+    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Coś poszło nie tak"
+  },
+  "ErrorPanel": {
+    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
@@ -901,8 +910,7 @@
     "DestinySets": "Przeglądaj więcej zestawów przedmiotów na Destiny Sets",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
-    "Vendors": "Sprzedawcy",
-    "Year2Mods": "Modyfikacje z 2 Roku"
+    "Vendors": "Sprzedawcy"
   },
   "Views": {
     "About": {

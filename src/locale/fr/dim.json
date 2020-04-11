@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Impossible de charger votre profile Destiny",
+    "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
+    "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
+    "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Lier votre compte Twitch à votre compte Bungie.net empêchera vos comptes D1 de fonctionner.",
+    "UnlinkTwitchButton": "Dissocier Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
+  },
+  "ErrorPanel": {
+    "Description": "Il s'agit probablement d'un problème qui affecte toutes les applications tierces - vérifiez si Bungie.net ou l'application compagnon fonctionne."
   },
   "FarmingMode": {
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
@@ -901,8 +910,7 @@
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
-    "Vendors": "Marchands",
-    "Year2Mods": "Mods de l'année 2"
+    "Vendors": "Marchands"
   },
   "Views": {
     "About": {

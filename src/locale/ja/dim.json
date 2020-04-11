@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Unable to load Destiny profile",
+    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingTitle": "Account Not Found",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
+    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
+  },
+  "ErrorPanel": {
+    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIMは、アイテムタイプごとに必ず一つの空きスペースがあることを確認することで、アイテムがポストマスターに行くのを防いでいる {{store}}。スペースを空けるためにアイテムを保管庫に移動しています。",
@@ -901,8 +910,7 @@
     "DestinySets": "Destiny Setsでアイテムセットをもっと見る",
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未読アイテムのみ表示する",
-    "Vendors": "ベンダー",
-    "Year2Mods": "2年目の改造パーツ"
+    "Vendors": "ベンダー"
   },
   "Views": {
     "About": {

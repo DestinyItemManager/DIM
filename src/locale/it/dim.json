@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Impossibile caricare profilo di Destiny",
+    "ErrorLoading": "Impossibile caricare gli account Destiny da Bungie.net",
+    "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
+    "MissingTitle": "Account Non Trovato",
     "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Collegando il tuo account Twitch a Bungie.net, i tuoi account di Destiny 1 smetteranno di funzionare.",
+    "UnlinkTwitchButton": "Scollega Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
+  },
+  "ErrorPanel": {
+    "Description": "È probabile che questo sia un problema riguardante tutte le applicazioni di terze parti - controlla se Bungie.net o la Companion App funzionano."
   },
   "FarmingMode": {
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
@@ -901,8 +910,7 @@
     "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
-    "Vendors": "Mercanti",
-    "Year2Mods": "Modifiche anno 2"
+    "Vendors": "Mercanti"
   },
   "Views": {
     "About": {

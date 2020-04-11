@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "No se pudo el cargar perfil de Destiny",
+    "ErrorLoading": "No se pudieron cargar cuentas de Destiny desde Bungie.net",
+    "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
+    "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Vincular tu cuenta de Twitch a Bungie.net causará que tus cuentas de Destiny 1 dejen de funcionar.",
+    "UnlinkTwitchButton": "Desvincular Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Algo salió mal"
+  },
+  "ErrorPanel": {
+    "Description": "Esto es probablemente un problema que afecte a todas las aplicaciones de terceros - comprueba si Bungie.net o la Aplicación del Aompañante funcionan."
   },
   "FarmingMode": {
     "D2Desc": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
@@ -901,8 +910,7 @@
     "DestinySets": "Ve más sets de objetos en Destiny Sets",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
-    "Vendors": "Vendedores",
-    "Year2Mods": "Mods Año 2"
+    "Vendors": "Vendedores"
   },
   "Views": {
     "About": {

@@ -5,10 +5,16 @@
   },
   "Accounts": {
     "Blizzard": "ПК",
+    "ErrorLoadInventory": "Unable to load Destiny profile",
+    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingTitle": "Account Not Found",
     "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
     "PlayStation": "PS4",
     "Stadia": "Google Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
+    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "Xbox One"
   },
   "Activities": {
@@ -135,6 +141,9 @@
   },
   "ErrorBoundary": {
     "Title": "Что-то пошло не так"
+  },
+  "ErrorPanel": {
+    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
@@ -901,8 +910,7 @@
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
     "FilterToUnacquired": "Только отсутствующие в Коллекции",
-    "Vendors": "Вендоры",
-    "Year2Mods": "Моды второго года игры"
+    "Vendors": "Вендоры"
   },
   "Views": {
     "About": {
