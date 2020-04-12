@@ -62,7 +62,6 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         : state;
     }
     case getType(actions.loadFromIDB):
-      console.log('load from IDB', action.payload);
       return state.loaded
         ? state
         : {
@@ -77,6 +76,8 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         ...state,
         accountsError: action.payload
       };
+    case getType(actions.loggedOut):
+      return initialState;
 
     default:
       return state;

@@ -10,3 +10,5 @@ export const setCurrentAccount = createAction('accounts/SET_CURRENT_ACCOUNT')<
 export const loadFromIDB = createAction('accounts/LOAD_FROM_IDB')<DestinyAccount[]>();
 
 export const error = createAction('accounts/ERROR')<DimError>();
+
+export const loggedOut = createAction('accounts/LOG_OUT')();

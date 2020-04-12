@@ -1,16 +1,15 @@
 import React from 'react';
-import { removeToken } from '../bungie-api/oauth-tokens';
 import './Account.scss';
 import { DestinyAccount } from './destiny-account';
 import { UISref } from '@uirouter/react';
-import { router } from '../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { connect } from 'react-redux';
 import Account from './Account';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
+import { logOut } from './platforms';
 
 interface ProvidedProps {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
@@ -28,19 +27,14 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
+function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Props) {
   if (!currentAccount) {
     return null;
   }
 
   const sortedAccounts = _.sortBy(accounts, (a) => -(a.lastPlayed?.getTime() || 0));
-
-  const logOut = () => {
-    removeToken();
-    router.stateService.go('login', { reauth: true });
-  };
 
   return (
     <div className="account-select">
@@ -58,7 +52,7 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
           />
         </UISref>
       ))}
-      <div className="account log-out" onClick={logOut}>
+      <div className="account log-out" onClick={() => dispatch(logOut())}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
