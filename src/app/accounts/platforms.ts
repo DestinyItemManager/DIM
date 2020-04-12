@@ -12,6 +12,10 @@ import { goToLoginPage } from '../bungie-api/authenticated-fetch';
 import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 import { ThunkResult } from 'app/store/reducers';
 import { dedupePromise } from 'app/utils/util';
+import { router } from '../router';
+import { removeToken } from '../bungie-api/oauth-tokens';
+import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { del } from 'idb-keyval';
 
 const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch, getState) => {
@@ -29,7 +33,11 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
       }
     }
 
-    if (!getState().accounts.loadedFromIDB && !getState().accounts.loaded && realAccountsPromise) {
+    if (
+      (!getState().accounts.loadedFromIDB || accountsSelector(getState()).length === 0) &&
+      !getState().accounts.loaded &&
+      realAccountsPromise
+    ) {
       // Fall back to Bungie.net
       try {
         await realAccountsPromise;
@@ -127,5 +135,15 @@ function loadActivePlatform(): ThunkResult<DestinyAccount | undefined> {
     );
 
     return active ?? _.maxBy(accounts, (account) => account.lastPlayed);
+  };
+}
+
+export function logOut(): ThunkResult {
+  return async (dispatch) => {
+    removeToken();
+    deleteDimApiToken();
+    dispatch(actions.loggedOut());
+    del('accounts'); // remove saved accounts from IDB
+    router.stateService.go('login', { reauth: true });
   };
 }

@@ -82,7 +82,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   if (response.status === 401) {
     // Delete our token
-    localStorage.removeItem(localStorageKey);
+    deleteDimApiToken();
   }
   if (response.ok) {
     return response.json();
@@ -120,6 +120,10 @@ function getToken(): DimAuthToken | undefined {
  */
 function setToken(token: DimAuthToken) {
   localStorage.setItem(localStorageKey, JSON.stringify(token));
+}
+
+export function deleteDimApiToken() {
+  localStorage.removeItem(localStorageKey);
 }
 
 export interface AuthTokenRequest {
