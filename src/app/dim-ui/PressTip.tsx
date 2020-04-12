@@ -190,7 +190,8 @@ export default class PressTip extends React.Component<Props, State> {
           const options = popperOptions();
 
           this.popper = createPopper(this.ref.current, this.tooltipContents.current, options);
-          this.popper.update(); // helps fix arrow position
+          this.popper?.update();
+          setTimeout(() => this.popper?.update(), 0); // helps fix arrow position
         }
       }
     } else {

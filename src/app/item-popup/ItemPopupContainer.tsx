@@ -272,7 +272,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
         const options = popperOptions(boundarySelector);
 
         this.popper = createPopper(element, this.popupRef.current, options);
-        this.popper.update(); // helps fix arrow position
+        this.popper?.update();
+        setTimeout(() => this.popper?.update(), 0); // helps fix arrow position
       }
     }
   };
