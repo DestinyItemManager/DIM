@@ -1,5 +1,7 @@
 ## Next
 
+## 6.6.0 <span className="changelog-date">(2020-04-12)</span>
+
 * Better handling of logging out and into a different Bungie.net account.
 * Improved error handling for Bungie.net and DIM Sync issues.
 
