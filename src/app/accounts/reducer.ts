@@ -62,7 +62,6 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         : state;
     }
     case getType(actions.loadFromIDB):
-      console.log('load from IDB', action.payload);
       return state.loaded
         ? state
         : {

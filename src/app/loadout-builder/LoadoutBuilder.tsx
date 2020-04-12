@@ -36,6 +36,7 @@ import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -138,7 +139,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
-      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined,
+      selectedStoreId: getCurrentStore(props.stores)?.id,
       assumeMasterwork: false
     };
   }
@@ -151,7 +152,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         }
 
         if (!this.state.selectedStoreId) {
-          this.onCharacterChanged(stores.find((s) => s.current)!.id);
+          this.onCharacterChanged(getCurrentStore(stores)!.id);
         }
       }),
 
