@@ -1,5 +1,8 @@
 ## Next
 
+* Better handling of logging out and into a different Bungie.net account.
+* Improved error handling for Bungie.net and DIM Sync issues.
+
 ## 6.5.0 <span className="changelog-date">(2020-04-10)</span>
 
 * Improved overall performance and memory usage of DIM - as the game grows, so has DIM's memory usage. If your browser was crashing before, give it a try now.
