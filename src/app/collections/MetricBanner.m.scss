@@ -1,0 +1,27 @@
+@import '../variables.scss';
+
+.icon {
+  position: absolute;
+  top: -1px;
+  width: 18px;
+  height: 53px;
+}
+
+.bannerIcon {
+  position: absolute;
+  width: 18px;
+}
+
+.scopeIcon {
+  position: absolute;
+  width: 16px;
+  left: 1px;
+  top: 16px;
+}
+
+.metricIcon {
+  position: absolute;
+  width: 16px;
+  left: 1px;
+  top: 29px;
+}

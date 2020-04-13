@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+  width: min-content;
+}
+
+.banner {
+  position: absolute;
+  top: -1px;
+  right: 4px;
+  left: auto;
+}
+
+.value {
+  position: absolute;
+  right: 25px;
+  top: 27px;
+  width: 50%;
+  text-align: right;
+}
