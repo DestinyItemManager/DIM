@@ -12,6 +12,7 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import { percent } from '../shell/filters';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
 
 export default function Objective({
   defs,
@@ -42,6 +43,8 @@ export default function Objective({
   const complete = objective.complete || (objective as any).isComplete;
 
   const progressDescription =
+    // D1 display description
+    (objectiveDef as any).displayDescription ||
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
     t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
@@ -60,10 +63,7 @@ export default function Objective({
     );
   }
 
-  const isBoolean =
-    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-    (completionValue === 1 &&
-      (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete));
+  const isBoolean = isBooleanObjective(objectiveDef, completionValue);
 
   const classes = clsx('objective-row', {
     'objective-complete': complete,
@@ -105,7 +105,7 @@ export function ObjectiveValue({
 }: {
   objectiveDef: DestinyObjectiveDefinition | undefined;
   progress: number;
-  completionValue: number;
+  completionValue?: number;
 }) {
   const valueStyle = objectiveDef
     ? (progress < completionValue
@@ -118,10 +118,15 @@ export function ObjectiveValue({
   switch (valueStyle) {
     case DestinyUnlockValueUIStyle.DateTime:
       return <>{new Date(progress).toLocaleString()}</>;
+    case DestinyUnlockValueUIStyle.Percentage:
+      if (completionValue === 100) {
+        return <>{100 * (progress / completionValue) + '%'}</>;
+      }
+      break;
     case DestinyUnlockValueUIStyle.ExplicitPercentage:
       return <>{progress + '%'}</>;
     case DestinyUnlockValueUIStyle.FractionFloat:
-      return <>{100 * progress + '%'}</>;
+      return <>{100 * (progress * completionValue) + '%'}</>;
     case DestinyUnlockValueUIStyle.Multiplier:
       return <>{progress.toLocaleString() + '𝗑'}</>;
     case DestinyUnlockValueUIStyle.RawFloat:
@@ -130,18 +135,18 @@ export function ObjectiveValue({
       return <>{duration(progress)}</>;
     case DestinyUnlockValueUIStyle.Checkbox:
       return <></>;
-    default:
-      return completionValue === 0 ||
-        (objectiveDef?.allowOvercompletion && completionValue === 1) ? (
-        <>{progress.toLocaleString()}</>
-      ) : (
-        <>
-          {progress.toLocaleString()}
-          <wbr />/<wbr />
-          {completionValue.toLocaleString()}
-        </>
-      );
   }
+
+  // Default
+  return completionValue === 0 || (objectiveDef?.allowOvercompletion && completionValue === 1) ? (
+    <>{progress.toLocaleString()}</>
+  ) : (
+    <>
+      {progress.toLocaleString()}
+      <wbr />/<wbr />
+      {completionValue.toLocaleString()}
+    </>
+  );
 }
 
 function duration(d: number) {

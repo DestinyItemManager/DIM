@@ -103,7 +103,7 @@ const baseConversionTable: {
  * and returns a localized string-to-icon conversion table
  *           "[Rocket Launcher]" -> <svg>
  */
-const generateConversionTable = _.once((defs) => {
+const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
   // loop through conversionTable entries to update them with manifest string info
   baseConversionTable.forEach((iconEntry) => {
     const objectiveDef = defs.Objective.get(iconEntry.objectiveHash);

@@ -49,7 +49,7 @@ export default function Metric({ metricHash, defs, profileResponse }: Props) {
         <div className={styles.value}>
           <ObjectiveValue
             objectiveDef={objectiveDef}
-            progress={metric.objectiveProgress.progress}
+            progress={metric.objectiveProgress.progress || 0}
           />
         </div>
       </div>

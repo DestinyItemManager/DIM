@@ -143,7 +143,7 @@ export interface DimItem {
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */
-  objectives: DimObjective[] | null;
+  objectives: DestinyObjectiveProgress[] | null;
   /** Is this an engram? */
   isEngram: boolean;
   /** The reference hash for lore attached to this item (D2 only). */
@@ -303,27 +303,6 @@ export interface D1Stat extends DimStat {
     min: number;
     range: string;
   };
-}
-
-export interface DimObjective {
-  /** Localized display of the objective status. */
-  displayName: string;
-  /** Localized description of the objective. */
-  description?: string;
-  /** Current value. */
-  progress: number;
-  /** Value at which this objective would be considered "complete". */
-  completionValue: number;
-  /** Is this complete? */
-  complete: boolean;
-  /** Is this a checkbox? */
-  boolean: boolean;
-  /** The actual string to display for the objective value (e.g "5/10" or "50%") */
-  display?: string;
-  /** Override display styles for objectives, such as 'trials' or 'integer' */
-  // TODO: fold 'boolean' into this
-  displayStyle: string | null;
-  objectiveHash: number;
 }
 
 export interface DimFlavorObjective {
