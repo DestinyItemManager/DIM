@@ -41,3 +41,17 @@
 .icon {
   left: 8px;
 }
+
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    filter: invert(0.7);
+    height: 15px;
+    margin: 0 3px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

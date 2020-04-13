@@ -288,7 +288,8 @@ function makeMilestonePursuitItem(
         display: `${progress.toLocaleString()}/${completionValue.toLocaleString()}`,
         /** Override display styles for objectives, such as 'trials' or 'integer' */
         // TODO: fold 'boolean' into this
-        displayStyle: null
+        displayStyle: null,
+        objectiveHash: objective.objectiveHash
       };
     });
 

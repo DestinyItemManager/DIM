@@ -86,7 +86,8 @@ export function buildObjectives(
         complete,
         boolean: booleanValue,
         displayStyle,
-        display
+        display,
+        objectiveHash: objective.objectiveHash
       };
     });
 }

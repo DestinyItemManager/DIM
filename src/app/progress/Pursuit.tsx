@@ -11,6 +11,7 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
 import { settingsSelector } from 'app/settings/reducer';
+import { ObjectiveValue } from './Objective';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -48,11 +49,12 @@ function Pursuit({ item, isNew, searchHidden, defs }: Props) {
     ? item.objectives.filter((o) => o.displayStyle !== 'integer')
     : [];
 
-  const showObjectiveDetail = nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean;
+  const firstObjective = nonIntegerObjectives.length > 0 ? nonIntegerObjectives[0] : undefined;
+  const showObjectiveDetail = nonIntegerObjectives.length === 1 && !firstObjective!.boolean;
 
   const showObjectiveProgress =
     nonIntegerObjectives.length > 1 ||
-    (nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean);
+    (nonIntegerObjectives.length === 1 && !firstObjective!.boolean);
 
   return (
     <ItemPopupTrigger item={item}>
@@ -64,14 +66,14 @@ function Pursuit({ item, isNew, searchHidden, defs }: Props) {
         >
           <div className="milestone-icon">
             <PursuitItem item={item} isNew={isNew} ref={ref} />
-            {!item.complete && !expired && showObjectiveProgress && (
+            {!item.complete && !expired && showObjectiveProgress && firstObjective && (
               <span>
                 {item.objectives && showObjectiveDetail ? (
-                  <>
-                    {nonIntegerObjectives[0].progress.toLocaleString()}
-                    <wbr />/<wbr />
-                    {nonIntegerObjectives[0].completionValue.toLocaleString()}
-                  </>
+                  <ObjectiveValue
+                    objectiveDef={defs.Objective.get(firstObjective.objectiveHash)}
+                    progress={firstObjective.progress}
+                    completionValue={firstObjective.completionValue}
+                  />
                 ) : (
                   percent(item.percentComplete)
                 )}

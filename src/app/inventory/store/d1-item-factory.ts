@@ -752,7 +752,8 @@ function buildTrials(trials): DimObjective[] {
       progress: current,
       completionValue: max,
       complete: bool ? current >= max : false,
-      boolean: bool
+      boolean: bool,
+      objectiveHash: -1
     };
   }
 
@@ -782,7 +783,8 @@ function buildObjectives(objectives, objectiveDefs): DimObjective[] | null {
       complete: objective.isComplete,
       boolean: def.completionValue === 1,
       display: `${objective.progress}/${def.completionValue}`,
-      displayStyle: null
+      displayStyle: null,
+      objectiveHash: objective.objectiveHash
     };
   });
 }

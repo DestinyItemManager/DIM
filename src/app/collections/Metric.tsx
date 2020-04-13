@@ -9,6 +9,8 @@ import _ from 'lodash';
 import styles from './Metric.m.scss';
 import clsx from 'clsx';
 import MetricBanner from './MetricBanner';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { ObjectiveValue } from 'app/progress/Objective';
 
 interface Props {
   metricHash: number;
@@ -32,6 +34,8 @@ export default function Metric({ metricHash, defs, profileResponse }: Props) {
 
   const masterwork = metric.objectiveProgress.complete;
 
+  const objectiveDef = defs.Objective.get(metric.objectiveProgress.objectiveHash);
+
   return (
     <div className={styles.metric}>
       <MetricBanner
@@ -43,11 +47,20 @@ export default function Metric({ metricHash, defs, profileResponse }: Props) {
       <div className={clsx(styles.header, { [styles.masterworked]: masterwork })}>
         <div className={styles.name}>{name}</div>
         <div className={styles.value}>
-          {(metric.objectiveProgress.progress || 0).toLocaleString()}
+          <ObjectiveValue
+            objectiveDef={objectiveDef}
+            progress={metric.objectiveProgress.progress}
+          />
         </div>
       </div>
 
-      <div>{description && <p>{description}</p>}</div>
+      <div>
+        {description && (
+          <p className={styles.description}>
+            <RichDestinyText text={description} defs={defs} />
+          </p>
+        )}
+      </div>
     </div>
   );
 }
