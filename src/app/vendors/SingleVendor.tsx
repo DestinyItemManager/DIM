@@ -25,6 +25,7 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -193,7 +194,7 @@ class SingleVendor extends React.Component<Props, State> {
       if (!characterId) {
         const stores = this.props.stores;
         if (stores) {
-          characterId = stores.find((s) => s.current)!.id;
+          characterId = getCurrentStore(stores)!.id;
         }
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, vendorHash);

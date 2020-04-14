@@ -29,6 +29,7 @@ import Raids from './Raids';
 import Hammer from 'react-hammerjs';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSubscription } from 'app/utils/hooks';
+import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -121,8 +122,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   };
 
   const selectedStore = selectedStoreId
-    ? stores.find((s) => s.id === selectedStoreId)!
-    : stores.find((s) => s.current)!;
+    ? getStore(stores, selectedStoreId)!
+    : getCurrentStore(stores)!;
 
   if (!defs || !buckets) {
     return null;

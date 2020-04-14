@@ -9,6 +9,7 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import { DimStore } from '../inventory/store-types';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 
 const loadoutTypes = [
   'Class',
@@ -184,7 +185,7 @@ function fillLoadoutFromEquipped(
   const dimStore =
     (loadout.classType !== DestinyClass.Unknown &&
       stores.find((s) => s.classType === loadout.classType)) ||
-    stores.find((s) => s.current)!;
+    getCurrentStore(stores)!;
 
   const items = dimStore.items.filter(
     (item) => item.equipped && item.canBeInLoadout() && fromEquippedTypes.includes(item.type)

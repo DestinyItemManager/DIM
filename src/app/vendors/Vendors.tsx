@@ -47,6 +47,7 @@ import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -136,7 +137,7 @@ class Vendors extends React.Component<Props, State> {
     let characterId: string = selectedStoreId || transition!.params().characterId;
     if (!characterId) {
       if (stores.length) {
-        characterId = stores.find((s) => s.current)!.id;
+        characterId = getCurrentStore(stores)!.id;
       }
     }
 

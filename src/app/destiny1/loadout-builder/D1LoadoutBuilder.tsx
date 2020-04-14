@@ -42,6 +42,7 @@ import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import { dimVendorService, Vendor } from '../vendors/vendor.service';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 
 interface StoreProps {
   account: DestinyAccount;
@@ -606,7 +607,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   };
 
   private getSelectedCharacter = () =>
-    this.state.selectedCharacter || this.props.stores.find((s) => s.current)!;
+    this.state.selectedCharacter || getCurrentStore(this.props.stores)!;
 
   private calculateSets = () => {
     const active = this.getSelectedCharacter();
