@@ -1,11 +1,12 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
-import { StoreServiceType, DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { showNotification } from '../notifications/notifications';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
+import { getVault } from 'app/inventory/stores-helpers';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
@@ -48,7 +49,12 @@ export async function makeRoomForPostmaster(
   });
   // TODO: it'd be nice if this were a loadout option
   try {
-    await moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService);
+    await moveItemsToVault(
+      store.getStoresService().getStores(),
+      store,
+      itemsToMove,
+      dimItemService
+    );
     showNotification({
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
@@ -186,7 +192,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
 
 // cribbed from D1FarmingService, but modified
 async function moveItemsToVault(
-  storeService: StoreServiceType,
+  stores: DimStore[],
   store: DimStore,
   items: DimItem[],
   dimItemService: ItemServiceType
@@ -197,13 +203,11 @@ async function moveItemsToVault(
 
   for (const item of items) {
     // Move a single item. We reevaluate the vault each time in case things have changed.
-    const vault = storeService.getVault()!;
+    const vault = getVault(stores)!;
     const vaultSpaceLeft = vault.spaceLeftForItem(item);
     if (vaultSpaceLeft <= 1) {
       // If we're down to one space, try putting it on other characters
-      const otherStores = storeService
-        .getStores()
-        .filter((store) => !store.isVault && store.id !== store.id);
+      const otherStores = stores.filter((store) => !store.isVault && store.id !== store.id);
       const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
       if (otherStoresWithSpace.length) {

@@ -1,4 +1,4 @@
-import { DimStore, StoreServiceType } from 'app/inventory/store-types';
+import { DimStore } from 'app/inventory/store-types';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { queuedAction } from 'app/inventory/action-queue';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -12,7 +12,7 @@ import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
 import copy from 'fast-copy';
 import { loadoutFromAllItems } from './loadout-utils';
-import { getItemAcrossStores } from 'app/inventory/stores-helpers';
+import { getItemAcrossStores, getVault, getStore } from 'app/inventory/stores-helpers';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -237,7 +237,11 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
         .flat()
         .map((i) => getLoadoutItem(i, store))
     );
-    await clearSpaceAfterLoadout(storeService.getStore(store.id)!, allItems, storeService);
+    await clearSpaceAfterLoadout(
+      storeService.getStores(),
+      storeService.getStore(store.id)!,
+      allItems
+    );
   }
 
   return scope;
@@ -362,11 +366,7 @@ function getLoadoutItem(pseudoItem: LoadoutItem, store: DimStore): DimItem | nul
   return item;
 }
 
-function clearSpaceAfterLoadout(
-  store: DimStore,
-  items: DimItem[],
-  storesService: StoreServiceType
-) {
+function clearSpaceAfterLoadout(stores: DimStore[], store: DimStore, items: DimItem[]) {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {};
@@ -409,7 +409,7 @@ function clearSpaceAfterLoadout(
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   });
 
-  return clearItemsOffCharacter(store, itemsToRemove, reservations, storesService);
+  return clearItemsOffCharacter(stores, store, itemsToRemove, reservations);
 }
 
 /**
@@ -418,21 +418,19 @@ function clearSpaceAfterLoadout(
  * Shows a warning if there isn't any space.
  */
 export async function clearItemsOffCharacter(
+  stores: DimStore[],
   store: DimStore,
   items: DimItem[],
-  reservations: MoveReservations,
-  storesService: StoreServiceType
+  reservations: MoveReservations
 ) {
   for (const item of items) {
     try {
       // Move a single item. We reevaluate each time in case something changed.
-      const vault = storesService.getVault()!;
+      const vault = getVault(stores)!;
       const vaultSpaceLeft = vault.spaceLeftForItem(item);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
-        const otherStores = storesService
-          .getStores()
-          .filter((s) => !s.isVault && s.id !== store.id);
+        const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
         const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
         if (otherStoresWithSpace.length) {
@@ -445,7 +443,7 @@ export async function clearItemsOffCharacter(
               'to',
               otherStoresWithSpace[0].name,
               'from',
-              storesService.getStore(item.owner)!.name
+              getStore(stores, item.owner)!.name
             );
           }
           await dimItemService.moveTo(
@@ -471,7 +469,7 @@ export async function clearItemsOffCharacter(
           'to',
           vault.name,
           'from',
-          storesService.getStore(item.owner)!.name
+          getStore(stores, item.owner)!.name
         );
       }
       await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);

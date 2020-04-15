@@ -20,7 +20,7 @@ export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
 /**
  * Get the Vault from a list of stores.
  */
-export const getVault = (stores: DimStore[]) =>
+export const getVault = (stores: DimStore[]): DimVault | undefined =>
   stores.find((s) => s.isVault) as DimVault | undefined;
 
 /**

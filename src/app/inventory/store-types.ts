@@ -22,8 +22,6 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault> {
   getStores(): StoreType[];
   /** Get a store by character ID. */
   getStore(id: string): StoreType | undefined;
-  /** Get the vault. */
-  getVault(): VaultType | undefined;
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
   /** Refresh just character info (current light/stats, etc.) */

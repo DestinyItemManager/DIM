@@ -32,7 +32,7 @@ import {
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
 import { itemInfosSelector } from './selectors';
-import { getStore, getItemAcrossStores, getCurrentStore } from './stores-helpers';
+import { getStore, getItemAcrossStores, getCurrentStore, getVault } from './stores-helpers';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -419,7 +419,7 @@ function ItemService(): ItemServiceType {
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {
-    return moveToStore(item, item.getStoresService().getVault()!, false, amount);
+    return moveToStore(item, getVault(item.getStoresService().getStores())!, false, amount);
   }
 
   async function moveToStore(
@@ -658,7 +658,7 @@ function ItemService(): ItemServiceType {
         }
       | undefined;
 
-    const vault = item.getStoresService().getVault()!;
+    const vault = getVault(item.getStoresService().getStores())!;
 
     // Iterate through other stores from least recently played to most recently played.
     // The concept is that we prefer filling up the least-recently-played character before even

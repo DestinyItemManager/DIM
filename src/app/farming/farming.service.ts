@@ -5,7 +5,7 @@ import { D1StoresService } from '../inventory/d1-stores';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getBuckets } from '../destiny1/d1-buckets';
 import { refresh } from '../shell/refresh';
-import { D1Store, StoreServiceType, DimStore } from '../inventory/store-types';
+import { D1Store, DimStore } from '../inventory/store-types';
 import * as actions from './actions';
 import rxStore from '../store/store';
 import { InventoryBucket } from '../inventory/inventory-buckets';
@@ -14,6 +14,7 @@ import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 import { settingsSelector } from 'app/settings/reducer';
 import { itemInfosSelector } from 'app/inventory/selectors';
+import { getVault } from 'app/inventory/stores-helpers';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -129,7 +130,7 @@ async function farmItems(store: D1Store) {
     return;
   }
 
-  return moveItemsToVault(store, toMove, [], D1StoresService);
+  return moveItemsToVault(store.getStoresService().getStores(), store, toMove, []);
 }
 
 // Ensure that there's one open space in each category that could
@@ -137,15 +138,15 @@ async function farmItems(store: D1Store) {
 async function makeRoomForItems(store: D1Store) {
   const buckets = await getBuckets();
   const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
-  makeRoomForItemsInBuckets(store, makeRoomBuckets, D1StoresService);
+  makeRoomForItemsInBuckets(store.getStoresService().getStores(), store, makeRoomBuckets);
 }
 
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
 export async function makeRoomForItemsInBuckets(
+  stores: DimStore[],
   store: DimStore,
-  makeRoomBuckets: InventoryBucket[],
-  storeService: StoreServiceType
+  makeRoomBuckets: InventoryBucket[]
 ) {
   // If any category is full, we'll move one aside
   const itemsToMove: DimItem[] = [];
@@ -157,7 +158,7 @@ export async function makeRoomForItemsInBuckets(
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
         moveAsideCandidates,
         store,
-        storeService.getVault()!,
+        getVault(stores)!,
         itemInfos
       );
       // We'll move the first one to the vault
@@ -172,14 +173,14 @@ export async function makeRoomForItemsInBuckets(
     return;
   }
 
-  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, storeService);
+  return moveItemsToVault(stores, store, itemsToMove, makeRoomBuckets);
 }
 
 async function moveItemsToVault(
+  stores: DimStore[],
   store: DimStore,
   items: DimItem[],
-  makeRoomBuckets: InventoryBucket[],
-  storesService: StoreServiceType
+  makeRoomBuckets: InventoryBucket[]
 ) {
   const reservations: MoveReservations = {};
   // reserve one space in the active character
@@ -188,5 +189,5 @@ async function moveItemsToVault(
     reservations[store.id][bucket.type!] = 1;
   });
 
-  return clearItemsOffCharacter(store, items, reservations, storesService);
+  return clearItemsOffCharacter(stores, store, items, reservations);
 }
