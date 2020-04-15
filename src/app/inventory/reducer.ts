@@ -102,6 +102,13 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
+    case getType(actions.touch):
+      return {
+        ...state,
+        // Make a new array to break change detection for the root stores components
+        stores: [...state.stores]
+      };
+
     // Buckets
     // TODO: only need to do this once, on loading a new platform.
     case getType(actions.setBuckets):
@@ -209,7 +216,7 @@ function updateInventory(
   // TODO: mark DimItem, DimStore properties as Readonly
   const newState = {
     ...state,
-    stores: [...stores],
+    stores,
     newItems: computeNewItems(state.stores, state.newItems, stores),
     profileError: undefined
   };

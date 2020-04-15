@@ -19,6 +19,12 @@ export const update = createAction('inventory/UPDATE')<{
 }>();
 
 /**
+ * Force stores to be updated to reflect a change. This is a hack that should go
+ * away as we normalize inventory state.
+ */
+export const touch = createAction('inventory/TOUCH')();
+
+/**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const error = createAction('inventory/ERROR')<DimError>();
