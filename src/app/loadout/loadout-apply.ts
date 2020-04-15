@@ -184,7 +184,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
         const equipItems = _.compact(
           dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
         );
-        return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
+        return dimItemService.equipItems(getStore(storeService.getStores(), owner)!, equipItems);
       }
     );
     await Promise.all(dequips);
@@ -237,11 +237,8 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
         .flat()
         .map((i) => getLoadoutItem(i, store))
     );
-    await clearSpaceAfterLoadout(
-      storeService.getStores(),
-      storeService.getStore(store.id)!,
-      allItems
-    );
+    const stores = storeService.getStores();
+    await clearSpaceAfterLoadout(stores, getStore(stores, store.id)!, allItems);
   }
 
   return scope;
