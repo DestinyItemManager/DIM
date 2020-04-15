@@ -87,8 +87,6 @@ function makeD2StoresService(): D2StoreServiceType {
 
   const service = {
     getStores: () => _stores,
-    getStore: (id: string) => _stores.find((s) => s.id === id),
-    getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
     getStoresStream,
     updateCharacters,
     reloadStores,
