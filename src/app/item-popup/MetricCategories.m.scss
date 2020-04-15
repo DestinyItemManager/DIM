@@ -1,0 +1,23 @@
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.icon {
+  height: 15px;
+  width: 15px;
+  margin-right: 2px;
+}

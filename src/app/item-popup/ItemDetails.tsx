@@ -20,6 +20,8 @@ import { ActivityModifier } from 'app/progress/ActivityModifier';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
+import MetricCategories from './MetricCategories';
+import EmblemPreview from './EmblemPreview';
 
 interface ProvidedProps {
   item: DimItem;
@@ -53,8 +55,25 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {item.itemCategoryHashes.includes(19) && (
-        <BungieImage className="item-details" src={item.secondaryIcon} width="237" height="48" />
+      {!item.stats && defs && item.isDestiny2() && item.collectibleHash !== null && (
+        <div className="item-details">
+          {defs.Collectible.get(item.collectibleHash).sourceString}
+        </div>
+      )}
+
+      {defs && item.itemCategoryHashes.includes(19) && (
+        <div className="item-details">
+          <EmblemPreview item={item} defs={defs} />
+        </div>
+      )}
+
+      {defs && item.availableMetricCategoryNodeHashes && (
+        <div className="item-details">
+          <MetricCategories
+            availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
+            defs={defs}
+          />
+        </div>
       )}
 
       {item.isDestiny2() &&
@@ -176,8 +195,6 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           )}
         </div>
       )}
-
-      {/* TODO: show source info via collections */}
     </div>
   );
 }
