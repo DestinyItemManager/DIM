@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import { percent } from '../shell/filters';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
+import '../item-popup/ItemObjectives.scss';
 
 export default function Objective({
   defs,

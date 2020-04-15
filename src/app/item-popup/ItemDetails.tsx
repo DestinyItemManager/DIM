@@ -7,7 +7,6 @@ import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemStats from './ItemStats';
-import ItemObjectives from './ItemObjectives';
 import ItemTalentGrid from './ItemTalentGrid';
 import { AppIcon, faCheck } from '../shell/icons';
 import ItemDescription from './ItemDescription';
@@ -24,6 +23,7 @@ import MetricCategories from './MetricCategories';
 import EmblemPreview from './EmblemPreview';
 import { destinyVersionSelector } from 'app/accounts/reducer';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import Objective from 'app/progress/Objective';
 
 interface ProvidedProps {
   item: DimItem;
@@ -136,10 +136,16 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && <ItemObjectives itemHash={item.hash} objectives={item.objectives} defs={defs} />}
+      {defs && item.objectives && (
+        <div className="item-details">
+          {item.objectives.map((objective) => (
+            <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+          ))}
+        </div>
+      )}
 
       {item.isDestiny2() && item.flavorObjective && (
-        <div className="item-objectives item-details">
+        <div className="item-details">
           <div className="flavor-objective">
             <BungieImage src={item.flavorObjective.icon} />
             <span>

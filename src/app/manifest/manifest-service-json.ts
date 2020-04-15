@@ -129,18 +129,6 @@ class ManifestService {
     return this.manifestPromise;
   }
 
-  getRecord(db: object, table: string, id: number): object | null {
-    const dbTable = db[table];
-    if (!dbTable) {
-      throw new Error(`Table ${table} does not exist in the manifest`);
-    }
-    return dbTable[id];
-  }
-
-  getAllRecords(db: object, table: string): object {
-    return db[table];
-  }
-
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest(tableWhitelist: string[]) {
     try {
