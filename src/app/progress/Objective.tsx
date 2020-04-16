@@ -47,7 +47,9 @@ export default function Objective({
     // D1 display description
     (objectiveDef as any).displayDescription ||
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
-    t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
+    complete
+      ? t('Objectives.Complete')
+      : t('Objectives.Incomplete');
 
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (

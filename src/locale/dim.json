@@ -890,11 +890,6 @@
     "TagItems": "Tag Items",
     "UnlockAll": "Unlock Items"
   },
-  "TrialsCard": {
-    "FiveWins": "5 Win Reward (Armor)",
-    "Flawless": "Flawless",
-    "SevenWins": "7 Win Reward (Weapon)"
-  },
   "Triumphs": {
     "HideCompleted": "Hide Completed",
     "RevealRedacted": "Reveal Redacted"
