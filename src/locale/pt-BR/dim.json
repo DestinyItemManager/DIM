@@ -5,7 +5,8 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Não foi possível carregar o perfil do Destiny",
+    "ErrorLoadInventory": "Não foi possível carregar seus personagens e inventário de Destiny",
+    "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
     "MissingTitle": "Conta não encontrada",
@@ -143,7 +144,7 @@
     "Title": "Algo deu errado"
   },
   "ErrorPanel": {
-    "Description": "Este problema afeta todos os apps de terceiros - verifique se a Bungie.net ou o app Companion funciona."
+    "Description": "Este problema possivelmente afeta todos as aplicações de terceiro. Verifique se a Bungie.net carrega ou se o app Destiny 2 Companion funciona como o esperado."
   },
   "FarmingMode": {
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",

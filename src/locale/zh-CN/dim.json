@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load Destiny profile",
-    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
@@ -143,7 +144,7 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",

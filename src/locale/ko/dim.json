@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "데스티니 프로필 불러오기 실패",
-    "ErrorLoading": "Bungie.net에서 데스티니 프로필 불러오기 실패",
+    "ErrorLoadInventory": "데스티니 캐릭터와 소지품 불러오기 실패",
+    "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
+    "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
     "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
@@ -143,7 +144,7 @@
     "Title": "문제가 발생했습니다"
   },
   "ErrorPanel": {
-    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 컴패니언 앱이 동작하는지 확인하세요."
+    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 데스티니 가디언즈 컴패니언 앱이 동작하는지 확인하세요."
   },
   "FarmingMode": {
     "D2Desc": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
@@ -352,7 +353,7 @@
     "moon": "달",
     "nessus": "네소스",
     "strikes": "공격전",
-    "tangled": "뒤엉킨 해안",
+    "tangled": "해안",
     "titan": "타이탄"
   },
   "Header": {

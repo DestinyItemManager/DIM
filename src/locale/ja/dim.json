@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load Destiny profile",
-    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
@@ -143,7 +144,7 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIMは、アイテムタイプごとに必ず一つの空きスペースがあることを確認することで、アイテムがポストマスターに行くのを防いでいる {{store}}。スペースを空けるためにアイテムを保管庫に移動しています。",

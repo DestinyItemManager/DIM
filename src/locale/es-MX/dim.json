@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "No se pudo el cargar perfil de Destiny",
-    "ErrorLoading": "No se pudieron cargar cuentas de Destiny desde Bungie.net",
+    "ErrorLoadInventory": "No se pudieron cargar tus personajes de Destiny y tu inventario",
+    "ErrorLoadManifest": "No se pudo cargar información de la base de datos de Destiny desde Bungie",
+    "ErrorLoading": "No se pudieron cargr cuentas de Destiny desde Bungie.net",
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
@@ -143,7 +144,7 @@
     "Title": "Algo salió mal"
   },
   "ErrorPanel": {
-    "Description": "Esto es probablemente un problema que afecte a todas las aplicaciones de terceros - comprueba si Bungie.net o la Aplicación del Aompañante funcionan."
+    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona."
   },
   "FarmingMode": {
     "D2Desc": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",

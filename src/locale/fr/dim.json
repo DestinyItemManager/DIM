@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Impossible de charger votre profile Destiny",
-    "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
+    "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny",
+    "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
+    "ErrorLoading": "Impossible de charger vos comptes Destiny depuis Bungie.net",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
@@ -143,7 +144,7 @@
     "Title": "Une erreur s'est produite"
   },
   "ErrorPanel": {
-    "Description": "Il s'agit probablement d'un problème qui affecte toutes les applications tierces - vérifiez si Bungie.net ou l'application compagnon fonctionne."
+    "Description": "Ce problème affecte probablement toutes les applications tiers. Vérifiez si Bungie.net charge, ou si l'application compagnon de Destiny 2 fonctionne."
   },
   "FarmingMode": {
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",

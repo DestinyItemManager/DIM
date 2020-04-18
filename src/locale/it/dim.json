@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Impossibile caricare profilo di Destiny",
-    "ErrorLoading": "Impossibile caricare gli account Destiny da Bungie.net",
+    "ErrorLoadInventory": "Impossibile caricare i tuoi personaggi di Destiny e l'inventario",
+    "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
+    "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
     "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
     "MissingTitle": "Account Non Trovato",
     "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
@@ -143,7 +144,7 @@
     "Title": "Qualcosa è andato storto"
   },
   "ErrorPanel": {
-    "Description": "È probabile che questo sia un problema riguardante tutte le applicazioni di terze parti - controlla se Bungie.net o la Companion App funzionano."
+    "Description": "È probabile che questo sia un problema che riguarda tutte le applicazioni di terze parti. Controlla se Bungie.net o la Destiny 2 Companion App funzionano."
   },
   "FarmingMode": {
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
