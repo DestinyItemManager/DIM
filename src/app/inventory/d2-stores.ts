@@ -5,7 +5,6 @@ import {
   DestinyCollectiblesComponent,
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
-  DestinyGameVersions,
   DestinyCollectibleComponent,
   DestinyItemComponent
 } from 'bungie-api-ts/destiny2';
@@ -28,7 +27,6 @@ import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
 import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
-import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
@@ -215,7 +213,7 @@ function makeD2StoresService(): D2StoreServiceType {
       store.dispatch(cleanInfos(stores));
 
       for (const s of stores) {
-        updateBasePower(account, stores, s, defs);
+        updateBasePower(stores, s, defs);
       }
 
       // Let our styling know how many characters there are
@@ -381,12 +379,7 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   // Add a fake stat for "max base power"
-  function updateBasePower(
-    account: DestinyAccount,
-    stores: D2Store[],
-    store: D2Store,
-    defs: D2ManifestDefinitions
-  ) {
+  function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxLightItemSet(stores, store));
@@ -397,58 +390,35 @@ function makeD2StoresService(): D2StoreServiceType {
             (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
         )
       );
-      const maxPossibleBasePower = getCurrentMaxBasePower(account);
 
       store.stats.maxGearPower = {
-        id: -3,
+        hash: -3,
         name: t('Stats.MaxGearPower'),
         hasClassified,
         description: def.displayProperties.description,
-        value: maxPowerString(maxBasePower, hasClassified),
-        icon: helmetIcon,
-        tiers: [maxBasePower],
-        tierMax: maxPossibleBasePower
+        value: maxBasePower,
+        icon: helmetIcon
       };
 
       const artifactPower = getArtifactBonus(store);
       store.stats.powerModifier = {
-        id: -2,
+        hash: -2,
         name: t('Stats.PowerModifier'),
         hasClassified: false,
         description: def.displayProperties.description,
         value: artifactPower,
-        icon: xpIcon,
-        tiers: [maxBasePower],
-        tierMax: maxPossibleBasePower
+        icon: xpIcon
       };
 
       store.stats.maxTotalPower = {
-        id: -1,
+        hash: -1,
         name: t('Stats.MaxTotalPower'),
         hasClassified,
         description: def.displayProperties.description,
-        value: maxPowerString(maxBasePower, hasClassified, artifactPower),
-        icon: bungieNetPath(def.displayProperties.icon),
-        tiers: [maxBasePower],
-        tierMax: maxPossibleBasePower
+        value: maxBasePower + artifactPower,
+        icon: bungieNetPath(def.displayProperties.icon)
       };
     }
-  }
-
-  function getCurrentMaxBasePower(account: DestinyAccount) {
-    if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return D2SeasonInfo[D2CalculatedSeason].maxPower || D2SeasonInfo[D2CurrentSeason].maxPower;
-    }
-    if (DestinyGameVersions.DLC2 & account.versionsOwned) {
-      return D2SeasonInfo[D2SeasonEnum.WARMIND].maxPower;
-    }
-    if (DestinyGameVersions.DLC1 & account.versionsOwned) {
-      return D2SeasonInfo[D2SeasonEnum.CURSE_OF_OSIRIS].maxPower;
-    }
-    if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
-      return D2SeasonInfo[D2SeasonEnum.RED_WAR].maxPower;
-    }
-    return D2SeasonInfo[D2SeasonEnum.FORSAKEN].maxPower;
   }
 
   // TODO: vault counts are silly and convoluted. We really need an
@@ -470,16 +440,7 @@ function makeD2StoresService(): D2StoreServiceType {
 }
 
 /** Get the bonus power from the Seasonal Artifact */
-export function getArtifactBonus(store: DimStore) {
+export function getArtifactBonus(store: DimStore): number {
   const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
   return artifact?.primStat?.value || 0;
-}
-
-/** The string form of power, with annotations to show has classified and seasonal artifact */
-export function maxPowerString(maxBasePower: number, hasClassified: boolean, powerModifier = 0) {
-  if (powerModifier > 0) {
-    maxBasePower += powerModifier;
-  }
-  const asterisk = hasClassified ? '*' : '';
-  return `${maxBasePower}${asterisk}`;
 }

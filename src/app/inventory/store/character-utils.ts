@@ -1,7 +1,7 @@
 import intellectIcon from 'images/intellect.png';
 import disciplineIcon from 'images/discipline.png';
 import strengthIcon from 'images/strength.png';
-import { D1CharacterStat } from '../store-types';
+import { DimCharacterStat } from '../store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 // Cooldowns
@@ -77,7 +77,23 @@ export function getBonus(light: number, type: string): number {
   return 0;
 }
 
-const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
+export const statsWithTiers = [
+  1735777505, // Discipline
+  144602215, // Intellect
+  4244567218 // Strength
+];
+export function getD1CharacterStatTiers(stat: DimCharacterStat) {
+  if (!statsWithTiers.includes(stat.hash)) {
+    return [];
+  }
+  const tiers = new Array(5);
+  let remaining = stat.value;
+  for (let t = 0; t < 5; t++) {
+    remaining -= tiers[t] = remaining > 60 ? 60 : remaining;
+  }
+  return tiers;
+}
+
 const stats = [
   'STAT_INTELLECT',
   'STAT_DISCIPLINE',
@@ -91,70 +107,55 @@ const stats = [
  * Compute character-level stats (int, dis, str).
  */
 export function getCharacterStatsData(statDefs, data) {
-  const ret: { [statHash: string]: D1CharacterStat } = {};
+  const ret: { [statHash: string]: DimCharacterStat } = {};
   stats.forEach((statId) => {
-    const stat = data.stats[statId];
-    if (!stat) {
+    const rawStat = data.stats[statId];
+    if (!rawStat) {
       return;
     }
 
-    const statHash: D1CharacterStat = {
-      id: statId,
-      value: stat.value
+    const stat: DimCharacterStat = {
+      hash: rawStat.statHash,
+      value: rawStat.value,
+      name: '',
+      description: ''
     };
 
-    statHash.id = statId;
     switch (statId) {
       case 'STAT_INTELLECT':
-        statHash.name = 'Intellect';
-        statHash.effect = 'Super';
-        statHash.icon = intellectIcon;
+        stat.effect = 'Super';
+        stat.icon = intellectIcon;
         break;
       case 'STAT_DISCIPLINE':
-        statHash.name = 'Discipline';
-        statHash.effect = 'Grenade';
-        statHash.icon = disciplineIcon;
+        stat.effect = 'Grenade';
+        stat.icon = disciplineIcon;
         break;
       case 'STAT_STRENGTH':
-        statHash.name = 'Strength';
-        statHash.effect = 'Melee';
-        statHash.icon = strengthIcon;
+        stat.effect = 'Melee';
+        stat.icon = strengthIcon;
         break;
     }
 
-    const statDef = statDefs.get(stat.statHash);
+    const statDef = statDefs.get(stat.hash);
     if (statDef) {
-      statHash.name = statDef.statName; // localized name
+      stat.name = statDef.statName; // localized name
+      stat.description = statDef.statDescription;
     }
 
-    if (statsWithTiers.has(statId)) {
-      statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
-      statHash.tier = Math.floor(statHash.normalized / 60);
-      statHash.tierMax = 60;
-      statHash.tiers = [];
-      statHash.remaining = statHash.value;
-      for (let t = 0; t < 5; t++) {
-        statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
-      }
+    if (statsWithTiers.includes(stat.hash)) {
+      const tier = Math.floor(Math.min(300, stat.value) / 60);
       if (data.peerView) {
-        statHash.cooldown = getAbilityCooldown(
-          data.peerView.equipment[0].itemHash,
-          statId,
-          statHash.tier
-        );
+        stat.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, tier);
       }
-      statHash.percentage = Number((100 * statHash.normalized) / 300).toFixed();
-    } else {
-      statHash.percentage = Number((100 * statHash.value) / 10).toFixed();
     }
 
-    ret[statId] = statHash;
+    ret[stat.hash] = stat;
   });
   return ret;
 }
 
 // following code is from https://github.com/DestinyTrialsReport
-export function getAbilityCooldown(subclass, ability, tier) {
+export function getAbilityCooldown(subclass: number, ability: string, tier: number) {
   switch (ability) {
     case 'STAT_INTELLECT':
       switch (subclass) {

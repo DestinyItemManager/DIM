@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2Store, D1Store, D2CharacterStat } from './store-types';
+import { DimCharacterStat, DimStore } from './store-types';
 import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -7,17 +7,11 @@ import './dimStats.scss';
 import { percent } from '../shell/filters';
 import _ from 'lodash';
 import { armorStats } from './store/stats';
+import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
 
 interface Props {
-  stats?: D1Store['stats'] | D2Store['stats'];
+  stats?: DimStore['stats'];
   destinyVersion: 1 | 2;
-}
-
-function isD1Stats(
-  _stats: D1Store['stats'] | D2Store['stats'],
-  destinyVersion: 1 | 2
-): _stats is D1Store['stats'] {
-  return destinyVersion === 1;
 }
 
 export default class CharacterStats extends React.PureComponent<Props> {
@@ -28,13 +22,11 @@ export default class CharacterStats extends React.PureComponent<Props> {
       return null;
     }
 
-    // TODO: Remove tooltip from stats definitions
-
-    if (isD1Stats(stats, destinyVersion)) {
-      const statList = [stats.STAT_INTELLECT, stats.STAT_DISCIPLINE, stats.STAT_STRENGTH];
+    if (destinyVersion === 1) {
+      const statList = statsWithTiers.map((h) => stats[h]);
       const tooltips = statList.map((stat) => {
         if (stat) {
-          const tier = stat.tier || 0;
+          const tier = Math.floor(Math.min(300, stat.value) / 60);
           // t('Stats.TierProgress_Max')
           const next = t('Stats.TierProgress', {
             context: tier === 5 ? 'Max' : '',
@@ -57,36 +49,36 @@ export default class CharacterStats extends React.PureComponent<Props> {
       return (
         <div className="stat-bars">
           {statList.map((stat, index) => (
-            <PressTip key={stat.name || stat.id} tooltip={tooltips[index]}>
+            <PressTip key={stat.hash} tooltip={tooltips[index]}>
               <div className="stat">
                 <img src={stat.icon} alt={stat.name} />
-                {stat.tiers &&
-                  stat.tiers.map((n, index) => (
-                    <div key={index} className="bar">
-                      <div
-                        className={clsx('progress', {
-                          complete: destinyVersion === 2 || n / stat.tierMax! === 1
-                        })}
-                        style={{ width: percent(n / stat.tierMax!) }}
-                      />
-                    </div>
-                  ))}
+                {getD1CharacterStatTiers(stat).map((n, index) => (
+                  <div key={index} className="bar">
+                    <div
+                      className={clsx('progress', {
+                        complete: n / 60 === 1
+                      })}
+                      style={{ width: percent(n / 60) }}
+                    />
+                  </div>
+                ))}
               </div>
             </PressTip>
           ))}
         </div>
       );
     } else {
-      const powerInfos = [
-        { stat: stats.maxTotalPower, tooltip: t('Stats.MaxTotalPower') },
-        { stat: stats.maxGearPower, tooltip: t('Stats.MaxGearPower') },
-        { stat: stats.powerModifier, tooltip: t('Stats.PowerModifier') }
-      ];
+      const powerTooltip = (stat: DimCharacterStat): string =>
+        `${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
+      const powerInfos = _.compact([
+        stats.maxTotalPower,
+        stats.maxGearPower,
+        stats.powerModifier
+      ]).map((stat) => ({ stat, tooltip: powerTooltip(stat) }));
 
-      const statTooltip = (stat: D2CharacterStat): string =>
-        `${stat.name}: ${stat.value} / ${stat.tierMax}
-${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
-
+      const statTooltip = (stat: DimCharacterStat): string =>
+        `${stat.name}: ${stat.value}
+${stat.description}`;
       const statInfos = armorStats
         .map((h) => stats[h])
         .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
@@ -98,10 +90,13 @@ ${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''
               {stats.map(
                 ({ stat, tooltip }) =>
                   stat && (
-                    <PressTip key={stat.id} tooltip={tooltip}>
+                    <PressTip key={stat.hash} tooltip={tooltip}>
                       <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
                         <img src={stat.icon} alt={stat.name} />
-                        {stat.tiers && <div>{stat.value}</div>}
+                        <div>
+                          {stat.value}
+                          {stat.hasClassified && <sup>*</sup>}
+                        </div>
                       </div>
                     </PressTip>
                   )

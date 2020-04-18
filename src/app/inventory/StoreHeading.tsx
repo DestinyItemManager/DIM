@@ -108,7 +108,9 @@ export default class StoreHeading extends React.Component<Props, State> {
               </div>
               <div className="bottom">
                 <div className="race-gender">{store.genderRace}</div>
-                {store.isDestiny1() && <div className="level">{store.level}</div>}
+                {store.isDestiny1() && store.level < 40 && (
+                  <div className="level">{store.level}</div>
+                )}
               </div>
             </div>
             {loadoutButton}

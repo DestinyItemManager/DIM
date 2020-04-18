@@ -87,7 +87,15 @@ export interface DimStore<Item = DimItem> {
   /** Is this the vault? */
   isVault: boolean;
   /** Character stats. */
-  stats: {};
+  stats: {
+    /** average of your highest simultaneously equippable gear */
+    maxGearPower?: DimCharacterStat;
+    /** currently represents the power level bonus provided by the Seasonal Artifact */
+    powerModifier?: DimCharacterStat;
+    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
+    maxTotalPower?: DimCharacterStat;
+    [hash: number]: DimCharacterStat;
+  };
   /** Character progression. */
   progression: null | {
     progressions: DestinyProgression[];
@@ -166,51 +174,26 @@ export interface D2Vault extends D2Store {
   }[];
 }
 
-export interface D2CharacterStat {
+/** A character-level stat. */
+export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
-  id: number;
+  hash: number;
   /** The localized name of the stat. */
   name: string;
-  /** The localized description of the stat. */
-  description: string;
-  /** The current value of the stat. */
-  value: number | string;
-  /** An icon associated with the stat. */
-  icon: string;
-  /** The size of one "tier" of the stat (for D1 stats) */
-  tierMax?: number;
-  /** The stat divided into tiers. Each element is how full that tier is. */
-  tiers?: number[] | string[];
-  /** Whether this stat is inaccurate because it relies on classified items (like base power). */
-  hasClassified?: boolean;
-}
-
-export interface D1CharacterStat {
-  /** Stat identifier (e.g. "STAT_INTELLECT") */
-  id: string;
-  /** The localized name of the stat. */
-  name?: string;
   /** An icon associated with the stat. */
   icon?: string;
   /** The current value of the stat. */
   value: number;
 
+  /** The localized description of the stat. */
+  description: string;
+  /** Whether this stat is inaccurate because it relies on classified items (like base power). */
+  hasClassified?: boolean;
+
   /** A localized description of this stat's effect. */
   effect?: string;
-  /** The stat value, clamped to <300. TODO: what is this? */
-  normalized?: number;
-  /** Which tier (out of 5) has been activated. */
-  tier?: number;
-  /** The size of one "tier" of the stat (for D1 stats) */
-  tierMax?: number;
-  /** The stat divided into tiers. Each element is how full that tier is. */
-  tiers?: number[];
-  /** TODO: remove this and normalized */
-  remaining?: number;
   /** Cooldown time for the associated ability. */
   cooldown?: string;
-  /** Percentage of maximum stat value. */
-  percentage?: string;
 }
 
 export interface D1Progression extends DestinyProgression {
@@ -226,9 +209,6 @@ export interface D1Progression extends DestinyProgression {
  * A D1 character. Use this when you need D1-specific properties or D1-specific items.
  */
 export interface D1Store extends DimStore<D1Item> {
-  stats: {
-    [hash: string]: D1CharacterStat;
-  };
   progression: null | {
     progressions: D1Progression[];
   };
@@ -250,15 +230,6 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  stats: {
-    /** average of your highest simultaneously equippable gear */
-    maxGearPower?: D2CharacterStat;
-    /** currently represents the power level bonus provided by the Seasonal Artifact */
-    powerModifier?: D2CharacterStat;
-    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
-    maxTotalPower?: D2CharacterStat;
-    [statHash: number]: D2CharacterStat;
-  };
   updateCharacterInfo(
     defs: D2ManifestDefinitions,
     bStore: DestinyCharacterComponent

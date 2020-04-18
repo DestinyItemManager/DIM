@@ -79,7 +79,7 @@ export function getSetBucketsStep(
     item: D1Item;
     bonusType: string;
   }[] = bestArmor.Artifact || [];
-  const setMap = {};
+  const setMap: { [setHash: number]: SetType } = {};
   const tiersSet = new Set<string>();
   const combos =
     helms.length *
@@ -128,22 +128,25 @@ export function getSetBucketsStep(
                           Ghost: ghosts[gh]
                         },
                         stats: {
-                          STAT_INTELLECT: {
+                          144602215: {
+                            hash: 144602215,
                             value: 0,
-                            tier: 0,
                             name: 'Intellect',
+                            description: '',
                             icon: intellectIcon
                           },
-                          STAT_DISCIPLINE: {
+                          1735777505: {
+                            hash: 1735777505,
                             value: 0,
-                            tier: 0,
                             name: 'Discipline',
+                            description: '',
                             icon: disciplineIcon
                           },
-                          STAT_STRENGTH: {
+                          4244567218: {
+                            hash: 4244567218,
                             value: 0,
-                            tier: 0,
                             name: 'Strength',
+                            description: '',
                             icon: strengthIcon
                           }
                         },
@@ -154,7 +157,9 @@ export function getSetBucketsStep(
                       const pieces = Object.values(set.armor);
                       set.setHash = genSetHash(pieces);
                       calcArmorStats(pieces, set.stats, scaleType);
-                      const tiersString = `${set.stats.STAT_INTELLECT.tier}/${set.stats.STAT_DISCIPLINE.tier}/${set.stats.STAT_STRENGTH.tier}`;
+                      const tiersString = `${tierValue(set.stats[144602215].value)}/${tierValue(
+                        set.stats[1735777505].value
+                      )}/${tierValue(set.stats[4244567218].value)}`;
 
                       tiersSet.add(tiersString);
 
@@ -265,4 +270,8 @@ export function getSetBucketsStep(
   });
 
   // reset: lockedchanged, excludedchanged, perkschanged, hassets
+}
+
+function tierValue(value: number) {
+  return Math.floor(Math.min(300, value) / 60);
 }

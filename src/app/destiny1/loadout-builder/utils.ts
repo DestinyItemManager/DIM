@@ -53,22 +53,6 @@ function getBestItem(
   };
 }
 
-function fillTier(stat) {
-  stat.tier = Math.min((stat.value / 60) >> 0, 5);
-  stat.value = stat.value % 60;
-  stat.tiers = [0, 0, 0, 0, 0];
-  stat.tierMax = 60;
-
-  for (let tier = 0; tier < 5; tier++) {
-    if (tier < stat.tier) {
-      stat.tiers[tier] = 60;
-    } else if (tier === stat.tier) {
-      stat.tiers[tier] = stat.value;
-      break;
-    }
-  }
-}
-
 export function calcArmorStats(
   pieces: {
     item: D1ItemWithNormalStats;
@@ -84,26 +68,22 @@ export function calcArmorStats(
 
     const scaleType = armor.item.tier === 'Rare' ? 'base' : scaleTypeArg;
 
-    stats.STAT_INTELLECT.value += int[scaleType];
-    stats.STAT_DISCIPLINE.value += dis[scaleType];
-    stats.STAT_STRENGTH.value += str[scaleType];
+    stats[144602215].value += int[scaleType];
+    stats[1735777505].value += dis[scaleType];
+    stats[4244567218].value += str[scaleType];
 
     switch (armor.bonusType) {
       case 'int':
-        stats.STAT_INTELLECT.value += int.bonus;
+        stats[144602215].value += int.bonus;
         break;
       case 'dis':
-        stats.STAT_DISCIPLINE.value += dis.bonus;
+        stats[1735777505].value += dis.bonus;
         break;
       case 'str':
-        stats.STAT_STRENGTH.value += str.bonus;
+        stats[4244567218].value += str.bonus;
         break;
     }
   }
-
-  fillTier(stats.STAT_INTELLECT);
-  fillTier(stats.STAT_DISCIPLINE);
-  fillTier(stats.STAT_STRENGTH);
 }
 
 export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorTypes]: string } {
