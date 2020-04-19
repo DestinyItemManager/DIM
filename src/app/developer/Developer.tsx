@@ -184,7 +184,11 @@ export default class Developer extends React.Component<{}, State> {
   private getDimApiKey = async (e) => {
     e.preventDefault();
     const { apiKey, dimAppName } = this.state;
-    const app = await registerApp(dimAppName!, apiKey!);
-    this.setState({ dimApiKey: app.dimApiKey });
+    try {
+      const app = await registerApp(dimAppName!, apiKey!);
+      this.setState({ dimApiKey: app.dimApiKey });
+    } catch (e) {
+      alert(e.message);
+    }
   };
 }
