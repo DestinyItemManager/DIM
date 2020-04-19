@@ -482,15 +482,12 @@ export function makeItem(
 
   // Compute complete / completion percentage
   if (createdItem.objectives) {
-    // Counter objectives for the new emblems shouldn't count.
-    const realObjectives = createdItem.objectives.filter((o) => o.displayStyle !== 'integer');
-
-    const length = realObjectives.length;
+    const length = createdItem.objectives.length;
     if (length > 0) {
-      createdItem.complete = realObjectives.every((o) => o.complete);
+      createdItem.complete = createdItem.objectives.every((o) => o.complete);
       createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
-          return Math.min(1, objective.progress / objective.completionValue) / length;
+          return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
         } else {
           return 0;
         }

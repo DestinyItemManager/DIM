@@ -11,6 +11,8 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
 import { settingsSelector } from 'app/settings/reducer';
+import { ObjectiveValue } from './Objective';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -44,15 +46,17 @@ type Props = ProvidedProps & StoreProps;
 function Pursuit({ item, isNew, searchHidden, defs }: Props) {
   const expired = showPursuitAsExpired(item);
 
-  const nonIntegerObjectives = item.objectives
-    ? item.objectives.filter((o) => o.displayStyle !== 'integer')
-    : [];
+  const objectives = item.objectives || [];
 
-  const showObjectiveDetail = nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean;
+  const firstObjective = objectives.length > 0 ? objectives[0] : undefined;
+  const firstObjectiveDef = firstObjective && defs.Objective.get(firstObjective.objectiveHash);
+  const isBoolean =
+    firstObjective &&
+    firstObjectiveDef &&
+    isBooleanObjective(firstObjectiveDef, firstObjective.completionValue);
+  const showObjectiveDetail = objectives.length === 1 && !isBoolean;
 
-  const showObjectiveProgress =
-    nonIntegerObjectives.length > 1 ||
-    (nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean);
+  const showObjectiveProgress = objectives.length > 1 || (objectives.length === 1 && !isBoolean);
 
   return (
     <ItemPopupTrigger item={item}>
@@ -63,15 +67,15 @@ function Pursuit({ item, isNew, searchHidden, defs }: Props) {
           onClick={onClick}
         >
           <div className="milestone-icon">
-            <PursuitItem item={item} isNew={isNew} ref={ref} />
-            {!item.complete && !expired && showObjectiveProgress && (
+            <PursuitItem item={item} isNew={isNew} ref={ref} defs={defs} />
+            {!item.complete && !expired && showObjectiveProgress && firstObjective && (
               <span>
                 {item.objectives && showObjectiveDetail ? (
-                  <>
-                    {nonIntegerObjectives[0].progress.toLocaleString()}
-                    <wbr />/<wbr />
-                    {nonIntegerObjectives[0].completionValue.toLocaleString()}
-                  </>
+                  <ObjectiveValue
+                    objectiveDef={defs.Objective.get(firstObjective.objectiveHash)}
+                    progress={firstObjective.progress || 0}
+                    completionValue={firstObjective.completionValue}
+                  />
                 ) : (
                   percent(item.percentComplete)
                 )}

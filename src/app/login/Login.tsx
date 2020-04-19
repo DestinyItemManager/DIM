@@ -58,7 +58,7 @@ export default function Login({ transition }: { transition: Transition }) {
             {t('Views.Login.Auth')}
           </a>
         </p>
-        <p className="help">
+        <div className="help">
           <input
             type="checkbox"
             id="apiPermissionGranted"
@@ -70,7 +70,7 @@ export default function Login({ transition }: { transition: Transition }) {
             {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
           </label>
           <div className="fineprint">{t('Storage.DimApiFinePrint')}</div>
-        </p>
+        </div>
         <p className="help">
           <a
             rel="noopener noreferrer"

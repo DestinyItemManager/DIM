@@ -2,10 +2,10 @@ import {
   DestinyItemComponent,
   DestinyItemObjectivesComponent,
   DestinyObjectiveProgress,
+  DestinyObjectiveDefinition,
   DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
-import { DimObjective, DimFlavorObjective } from '../item-types';
-import { t } from 'app/i18next-t';
+import { DimFlavorObjective } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
@@ -24,7 +24,7 @@ export function buildObjectives(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): DimObjective[] | null {
+): DestinyObjectiveProgress[] | null {
   const objectives =
     item.itemInstanceId && objectivesMap[item.itemInstanceId]
       ? objectivesMap[item.itemInstanceId].objectives
@@ -37,58 +37,7 @@ export function buildObjectives(
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-  return objectives
-    .filter((o) => o.visible && defs.Objective.get(o.objectiveHash))
-    .map((objective) => {
-      const def = defs.Objective.get(objective.objectiveHash);
-
-      let complete = false;
-      let booleanValue = false;
-      let display = `${(
-        objective.progress || 0
-      ).toLocaleString()}/${objective.completionValue.toLocaleString()}`;
-      let displayStyle: string | null;
-      switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
-        case DestinyUnlockValueUIStyle.Integer:
-          display = `${objective.progress || 0}`;
-          displayStyle = 'integer';
-          break;
-        case DestinyUnlockValueUIStyle.Multiplier:
-          display = `${((objective.progress || 0) / objective.completionValue).toLocaleString()}x`;
-          displayStyle = 'integer';
-          break;
-        case DestinyUnlockValueUIStyle.DateTime: {
-          const date = new Date(0);
-          date.setUTCSeconds(objective.progress || 0);
-          display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-          displayStyle = 'integer';
-          break;
-        }
-        case DestinyUnlockValueUIStyle.Checkbox:
-        case DestinyUnlockValueUIStyle.Automatic:
-          displayStyle = null;
-          booleanValue = objective.completionValue === 1;
-          complete = objective.complete;
-          break;
-        default:
-          displayStyle = null;
-          complete = objective.complete;
-      }
-
-      return {
-        displayName:
-          def.displayProperties.name ||
-          def.progressDescription ||
-          (objective.complete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
-        description: def.displayProperties.description,
-        progress: objective.progress || 0,
-        completionValue: objective.completionValue,
-        complete,
-        boolean: booleanValue,
-        displayStyle,
-        display
-      };
-    });
+  return objectives.filter((o) => o.visible && defs.Objective.get(o.objectiveHash));
 }
 
 /**
@@ -124,4 +73,15 @@ export function buildFlavorObjective(
         ? (flavorObjective.progress || 0) / flavorObjective.completionValue
         : (def.valueStyle === 6 || def.valueStyle === 0 ? flavorObjective.progress : 0) || 0
   };
+}
+
+export function isBooleanObjective(
+  objectiveDef: DestinyObjectiveDefinition,
+  completionValue: number
+) {
+  return (
+    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
+    (completionValue === 1 &&
+      (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
+  );
 }

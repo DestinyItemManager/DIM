@@ -56,7 +56,7 @@ const baseConversionTable: {
 }[] = [
   // Damage Types
   { objectiveHash: 2178780271, unicode: '', substring: null, icon: dmgArc       },
-  { objectiveHash:  400711454, unicode: '', substring: null, icon: dmgVoid      },
+  { objectiveHash: 3286925104, unicode: '', substring: null, icon: dmgVoid      },
   { objectiveHash: 2994623161, unicode: '', substring: null, icon: dmgSolar     },
   { objectiveHash: 1554970245, unicode: '', substring: null, icon: dmgKinetic   },
   // Precision
@@ -103,7 +103,7 @@ const baseConversionTable: {
  * and returns a localized string-to-icon conversion table
  *           "[Rocket Launcher]" -> <svg>
  */
-const generateConversionTable = _.once((defs) => {
+const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
   // loop through conversionTable entries to update them with manifest string info
   baseConversionTable.forEach((iconEntry) => {
     const objectiveDef = defs.Objective.get(iconEntry.objectiveHash);

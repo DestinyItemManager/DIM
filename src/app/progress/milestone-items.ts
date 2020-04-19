@@ -2,7 +2,6 @@ import { D2Item } from 'app/inventory/item-types';
 import { ItemProto } from 'app/inventory/store/d2-item-factory';
 import {
   DestinyAmmunitionType,
-  DestinyUnlockValueUIStyle,
   DestinyMilestone,
   DestinyClass,
   DestinyMilestoneDefinition,
@@ -33,7 +32,7 @@ export function milestoneToItems(
       availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
     );
   } else if (milestone.activities?.length) {
-    const item = activityMilestoneToItem(defs, buckets, milestoneDef, milestone);
+    const item = activityMilestoneToItem(buckets, milestoneDef, milestone);
     return item ? [item] : [];
   } else if (milestone.rewards) {
     // Weekly Clan Milestones
@@ -92,8 +91,7 @@ function availableQuestToItem(
     milestone,
     milestoneDef,
     displayProperties,
-    objectives,
-    defs
+    objectives
   );
 
   if (questRewards) {
@@ -111,7 +109,6 @@ function availableQuestToItem(
 }
 
 function activityMilestoneToItem(
-  defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   milestoneDef: DestinyMilestoneDefinition,
   milestone: DestinyMilestone
@@ -126,8 +123,7 @@ function activityMilestoneToItem(
     milestone,
     milestoneDef,
     milestoneDef.displayProperties,
-    objectives,
-    defs
+    objectives
   );
 
   if (milestone.rewards) {
@@ -240,6 +236,7 @@ function makeFakePursuitItem(
     ammoType: DestinyAmmunitionType.None,
     source: null,
     collectibleState: null,
+    collectibleHash: null,
     missingSockets: false
   });
 
@@ -251,8 +248,7 @@ function makeMilestonePursuitItem(
   milestone: DestinyMilestone,
   milestoneDef: DestinyMilestoneDefinition,
   displayProperties: DestinyDisplayPropertiesDefinition,
-  objectives: DestinyObjectiveProgress[],
-  defs: D2ManifestDefinitions
+  objectives: DestinyObjectiveProgress[]
 ) {
   const dimItem = makeFakePursuitItem(
     buckets,
@@ -262,40 +258,12 @@ function makeMilestonePursuitItem(
   );
 
   if (objectives) {
-    dimItem.objectives = objectives.map((objective) => {
-      const objectiveDef = defs.Objective.get(objective.objectiveHash);
-      const complete = objective.complete || (objective as any).isComplete;
-      const displayName =
-        objectiveDef.progressDescription ||
-        t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
-
-      const progress = objective.progress || 0;
-      const completionValue =
-        objective.completionValue !== undefined
-          ? objective.completionValue
-          : objectiveDef.completionValue;
-      const isBoolean =
-        objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-        (completionValue === 1 && !objectiveDef.allowOvercompletion);
-
-      return {
-        displayName,
-        description: objectiveDef.displayProperties.description,
-        progress,
-        completionValue,
-        complete,
-        boolean: isBoolean,
-        display: `${progress.toLocaleString()}/${completionValue.toLocaleString()}`,
-        /** Override display styles for objectives, such as 'trials' or 'integer' */
-        // TODO: fold 'boolean' into this
-        displayStyle: null
-      };
-    });
+    dimItem.objectives = objectives;
 
     const length = dimItem.objectives.length;
     dimItem.percentComplete = _.sumBy(dimItem.objectives, (objective) => {
       if (objective.completionValue) {
-        return Math.min(1, objective.progress / objective.completionValue) / length;
+        return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
       } else {
         return 0;
       }

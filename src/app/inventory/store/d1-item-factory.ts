@@ -7,7 +7,7 @@ import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definit
 import { getBuckets, vaultTypes } from '../../destiny1/d1-buckets';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
-import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
+import { D1Item, D1TalentGrid, D1GridNode, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1StoresService } from '../d1-stores';
 import {
@@ -424,11 +424,9 @@ function makeItem(
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
   }
-  try {
-    createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
-  } catch (e) {
-    console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
-  }
+
+  createdItem.objectives = item.objectives?.length > 0 ? item.objectives : null;
+
   if (createdItem.talentGrid && createdItem.infusable) {
     try {
       createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
@@ -447,7 +445,9 @@ function makeItem(
       createdItem.objectives.every((o) => o.complete);
     createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
-        return Math.min(1, objective.progress / objective.completionValue) / objectives.length;
+        return (
+          Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
+        );
       } else {
         return 0;
       }
@@ -470,21 +470,6 @@ function makeItem(
     createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)
   ) {
     createdItem.equippingLabel = undefined;
-  }
-
-  // do specific things for specific items
-  if (createdItem.hash === 491180618) {
-    // Trials Cards
-    createdItem.objectives = buildTrials(owner.advisors.activities.trials);
-    const best = owner.advisors.activities.trials.extended.highestWinRank;
-    createdItem.complete = owner.advisors.activities.trials.completion.success;
-    createdItem.percentComplete = createdItem.complete
-      ? 1
-      : best >= 7
-      ? 0.66
-      : best >= 5
-      ? 0.33
-      : 0;
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -731,60 +716,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       totalXPRequired <= totalXP &&
       _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
   };
-}
-
-function buildTrials(trials): DimObjective[] {
-  const flawless = trials.completion.success;
-  trials = trials.extended;
-  function buildObjective(
-    name: string,
-    current: number,
-    max: number,
-    bool: boolean,
-    style?: string
-  ): DimObjective {
-    // t('TrialsCard.FiveWins')
-    // t('TrialsCard.SevenWins')
-    // t('TrialsCard.Flawless')
-    return {
-      displayStyle: style || null,
-      displayName: name !== 'Wins' && name !== 'Losses' ? t(`TrialsCard.${name}`) : '',
-      progress: current,
-      completionValue: max,
-      complete: bool ? current >= max : false,
-      boolean: bool
-    };
-  }
-
-  return [
-    buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins, false, 'trials'),
-    buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
-    buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
-    buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
-    buildObjective('Flawless', flawless, 1, true)
-  ];
-}
-
-function buildObjectives(objectives, objectiveDefs): DimObjective[] | null {
-  if (!objectives || !objectives.length) {
-    return null;
-  }
-
-  return (objectives as any[]).map((objective) => {
-    const def = objectiveDefs.get(objective.objectiveHash);
-
-    return {
-      displayName:
-        def.displayDescription ||
-        (objective.isComplete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
-      progress: objective.progress,
-      completionValue: def.completionValue,
-      complete: objective.isComplete,
-      boolean: def.completionValue === 1,
-      display: `${objective.progress}/${def.completionValue}`,
-      displayStyle: null
-    };
-  });
 }
 
 function getItemYear(item) {

@@ -149,19 +149,24 @@ async function getDefinitionsUncached() {
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = {
-      get(name: number) {
-        return D2ManifestService.getRecord(db, table, name);
+      get(id: number) {
+        const dbTable = db[table];
+        if (!dbTable) {
+          throw new Error(`Table ${table} does not exist in the manifest`);
+        }
+        return dbTable[id];
       },
       getAll() {
-        return D2ManifestService.getAllRecords(db, table);
+        return db[table];
       }
     };
   });
   // Resources that need to be fully loaded (because they're iterated over)
   eagerTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
-    defs[tableShort] = D2ManifestService.getAllRecords(db, table);
+    defs[tableShort] = db[table];
   });
+
   store.dispatch(setD2Manifest(defs as D2ManifestDefinitions));
   D2ManifestService.loaded = true;
   return defs as D2ManifestDefinitions;

@@ -7,7 +7,6 @@ import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemStats from './ItemStats';
-import ItemObjectives from './ItemObjectives';
 import ItemTalentGrid from './ItemTalentGrid';
 import { AppIcon, faCheck } from '../shell/icons';
 import ItemDescription from './ItemDescription';
@@ -22,6 +21,9 @@ import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import MetricCategories from './MetricCategories';
 import EmblemPreview from './EmblemPreview';
+import { destinyVersionSelector } from 'app/accounts/reducer';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import Objective from 'app/progress/Objective';
 
 interface ProvidedProps {
   item: DimItem;
@@ -29,15 +31,22 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  defs?: D2ManifestDefinitions;
+  defs: D2ManifestDefinitions | D1ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    defs: state.manifest.d2Manifest
+    defs:
+      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!
   };
+}
+
+function isD2Manifest(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions
+): defs is D2ManifestDefinitions {
+  return defs.isDestiny2();
 }
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
@@ -55,19 +64,19 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {!item.stats && defs && item.isDestiny2() && item.collectibleHash !== null && (
+      {!item.stats && item.isDestiny2() && item.collectibleHash !== null && isD2Manifest(defs) && (
         <div className="item-details">
           {defs.Collectible.get(item.collectibleHash).sourceString}
         </div>
       )}
 
-      {defs && item.itemCategoryHashes.includes(19) && (
+      {isD2Manifest(defs) && item.itemCategoryHashes.includes(19) && (
         <div className="item-details">
           <EmblemPreview item={item} defs={defs} />
         </div>
       )}
 
-      {defs && item.availableMetricCategoryNodeHashes && (
+      {isD2Manifest(defs) && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
@@ -108,7 +117,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {item.isDestiny2() && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
+      {item.isDestiny2() && isD2Manifest(defs) && item.energy && defs && (
+        <EnergyMeter item={item} defs={defs} />
+      )}
       {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
@@ -125,10 +136,16 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      <ItemObjectives itemHash={item.hash} objectives={item.objectives} defs={defs} />
+      {defs && item.objectives && (
+        <div className="item-details">
+          {item.objectives.map((objective) => (
+            <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+          ))}
+        </div>
+      )}
 
       {item.isDestiny2() && item.flavorObjective && (
-        <div className="item-objectives item-details">
+        <div className="item-details">
           <div className="flavor-objective">
             <BungieImage src={item.flavorObjective.icon} />
             <span>
@@ -147,22 +164,28 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
-        <div className="item-details">
-          <div>{t('MovePopup.Rewards')}</div>
-          {item.pursuit.rewards.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} defs={defs} />
-          ))}
-        </div>
-      )}
+      {isD2Manifest(defs) &&
+        item.isDestiny2() &&
+        item.pursuit &&
+        item.pursuit.rewards.length !== 0 && (
+          <div className="item-details">
+            <div>{t('MovePopup.Rewards')}</div>
+            {item.pursuit.rewards.map((reward) => (
+              <Reward key={reward.itemHash} reward={reward} defs={defs} />
+            ))}
+          </div>
+        )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
-        <div className="item-details">
-          {item.pursuit.modifierHashes.map((modifierHash) => (
-            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
-          ))}
-        </div>
-      )}
+      {isD2Manifest(defs) &&
+        item.isDestiny2() &&
+        item.pursuit &&
+        item.pursuit.modifierHashes.length !== 0 && (
+          <div className="item-details">
+            {item.pursuit.modifierHashes.map((modifierHash) => (
+              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+            ))}
+          </div>
+        )}
 
       {!extraInfo.mod && extraInfo.collectible && (
         <div className="item-details">

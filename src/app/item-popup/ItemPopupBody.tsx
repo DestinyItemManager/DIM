@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
-import ItemOverview from './ItemDetails';
+import ItemDetails from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import clsx from 'clsx';
 import ItemReviews from '../item-review/ItemReviews';
@@ -47,7 +47,7 @@ export default function ItemPopupBody({
     {
       tab: ItemPopupTab.Overview,
       title: t('MovePopup.OverviewTab'),
-      component: <ItemOverview item={item} extraInfo={extraInfo} />
+      component: <ItemDetails item={item} extraInfo={extraInfo} />
     }
   ];
   if ($featureFlags.reviewsEnabled && item.reviewable) {
