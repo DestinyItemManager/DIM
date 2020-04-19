@@ -30,6 +30,7 @@ import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedSeasonalMod from './LockedSeasonalMod';
+import ModPicker from './ModPicker';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -76,6 +77,7 @@ function LockArmorAndPerks({
   onSeasonalModsChanged
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
+  const [filterModsOpen, setFilterModsOpen] = useState(false);
 
   /**
    * Lock currently equipped items on a character
@@ -209,6 +211,36 @@ function LockArmorAndPerks({
                 onRemove={removeLockedItemType}
               />
             ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
+          </button>
+          {filterPerksOpen &&
+            ReactDOM.createPortal(
+              <PerkPicker
+                classType={selectedStore.classType}
+                items={items}
+                lockedMap={lockedMap}
+                onClose={() => setFilterPerksOpen(false)}
+                onPerksSelected={onLockedMapChanged}
+              />,
+              document.body
+            )}
+        </div>
+      </div>
+      <div className={styles.area}>
+        {(Boolean(flatLockedMap.mod?.length) || Boolean(lockedSeasonalMods.length)) && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
+              <LockedItem
+                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
+                lockedItem={lockedItem}
+                defs={defs}
+                onRemove={removeLockedItemType}
+              />
+            ))}
             {lockedSeasonalMods.map((item) => (
               <LockedSeasonalMod
                 key={item.mod.hash}
@@ -224,17 +256,16 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
-            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
+          <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
+            <AppIcon icon={addIcon} /> {t('Mod Picker')}
           </button>
-          {filterPerksOpen &&
+          {filterModsOpen &&
             ReactDOM.createPortal(
-              <PerkPicker
+              <ModPicker
                 classType={selectedStore.classType}
-                items={items}
                 lockedMap={lockedMap}
                 lockedSeasonalMods={lockedSeasonalMods}
-                onClose={() => setFilterPerksOpen(false)}
+                onClose={() => setFilterModsOpen(false)}
                 onPerksSelected={onLockedMapChanged}
                 onSeasonalModsChanged={onSeasonalModsChanged}
               />,

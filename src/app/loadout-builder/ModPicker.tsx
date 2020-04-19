@@ -4,27 +4,26 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { LockableBuckets, LockedItemType, BurnItem, LockedMap, ItemsByBucket } from './types';
+import { LockableBuckets, LockedItemType, LockedMap, LockedModBase } from './types';
 import _ from 'lodash';
-import { t } from 'app/i18next-t';
-import PerksForBucket from './PerksForBucket';
 import {
   removeLockedItem,
   lockedItemsEqual,
   addLockedItem,
-  isLoadoutBuilderItem,
-  filterPlugs
+  isLoadoutBuilderItem
 } from './generated-sets/utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
+import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
+import { specialtyModSocketHashes } from 'app/utils/item-utils';
+import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import PickerHeader from './PickerHeader';
 import PickerFooter from './PickerFooter';
@@ -36,35 +35,12 @@ export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
   compareBy((i) => i.displayProperties.name)
 );
 
-const burns: BurnItem[] = [
-  {
-    dmg: 'arc',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeArc'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
-    }
-  },
-  {
-    dmg: 'solar',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeSolar'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
-    }
-  },
-  {
-    dmg: 'void',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeVoid'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'
-    }
-  }
-];
-
 interface ProvidedProps {
-  items: ItemsByBucket;
   lockedMap: LockedMap;
+  lockedSeasonalMods: LockedModBase[];
   classType: DestinyClass;
   onPerksSelected(perks: LockedMap): void;
+  onSeasonalModsChanged(mods: LockedModBase[]): void;
   onClose(): void;
 }
 
@@ -73,9 +49,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  perks: Readonly<{
-    [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
-  }>;
   mods: Readonly<{
     [bucketHash: number]: readonly {
       item: DestinyInventoryItemDefinition;
@@ -88,47 +61,6 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  // Get a list of lockable perks by bucket.
-  const perksSelector = createSelector(
-    storesSelector,
-    (_: RootState, props: ProvidedProps) => props.classType,
-    (stores, classType) => {
-      const perks: { [bucketHash: number]: DestinyInventoryItemDefinition[] } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (
-            !item ||
-            !item.isDestiny2() ||
-            !item.sockets ||
-            !isLoadoutBuilderItem(item) ||
-            !(item.classType === DestinyClass.Unknown || item.classType === classType)
-          ) {
-            continue;
-          }
-          if (!perks[item.bucket.hash]) {
-            perks[item.bucket.hash] = [];
-          }
-          // build the filtered unique perks item picker
-          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-            socket.plugOptions.forEach((option) => {
-              perks[item.bucket.hash].push(option.plugItem);
-            });
-          });
-        }
-      }
-
-      // sort exotic perks first, then by index
-      Object.keys(perks).forEach((bucket) => {
-        const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[bucket]);
-        bucketPerks.sort((a, b) => b.index - a.index);
-        bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
-        perks[bucket] = bucketPerks;
-      });
-
-      return perks;
-    }
-  );
-
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,
@@ -201,7 +133,6 @@ function mapStateToProps() {
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: state.inventory.buckets!,
     language: settingsSelector(state).language,
-    perks: perksSelector(state, props),
     mods: unlockedPlugsSelector(state, props),
     defs: state.manifest.d2Manifest!
   });
@@ -211,15 +142,17 @@ interface State {
   query: string;
   height?: number;
   selectedPerks: LockedMap;
+  selectedSeasonalMods: LockedModBase[];
 }
 
 /**
  * A sheet that allows picking a perk.
  */
-class PerkPicker extends React.Component<Props, State> {
+class ModPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
-    selectedPerks: copy(this.props.lockedMap)
+    selectedPerks: copy(this.props.lockedMap),
+    selectedSeasonalMods: copy(this.props.lockedSeasonalMods)
   };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
@@ -240,18 +173,8 @@ class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      defs,
-      perks,
-      mods,
-      buckets,
-      items,
-      language,
-      onClose,
-      isPhonePortrait,
-      lockedMap
-    } = this.props;
-    const { query, height, selectedPerks } = this.state;
+    const { defs, mods, buckets, language, onClose, isPhonePortrait, lockedMap } = this.props;
+    const { query, height, selectedPerks, selectedSeasonalMods } = this.state;
 
     const order = Object.values(LockableBuckets);
 
@@ -259,16 +182,6 @@ class PerkPicker extends React.Component<Props, State> {
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
       ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
       : new RegExp(escapeRegExp(query), 'i');
-
-    const queryFilteredPerks = query.length
-      ? _.mapValues(perks, (bucketPerks) =>
-          bucketPerks.filter(
-            (perk) =>
-              regexp.test(perk.displayProperties.name) ||
-              regexp.test(perk.displayProperties.description)
-          )
-        )
-      : perks;
 
     const queryFilteredMods = query.length
       ? _.mapValues(mods, (bucketMods) =>
@@ -280,9 +193,14 @@ class PerkPicker extends React.Component<Props, State> {
         )
       : mods;
 
-    const queryFilteredBurns = query.length
-      ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
-      : burns;
+    const queryFilteredSeasonalMods = _.uniqBy(
+      Object.values(queryFilteredMods).flatMap((bucktedMods) =>
+        bucktedMods
+          .filter(({ item }) => specialtyModSocketHashes.includes(item.plug.plugCategoryHash))
+          .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
+      ),
+      ({ mod }) => mod.hash
+    );
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
@@ -315,23 +233,12 @@ class PerkPicker extends React.Component<Props, State> {
         sheetClassName="item-picker"
       >
         <div ref={this.itemContainer} style={{ height }}>
-          {order.map(
-            (bucketId) =>
-              ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
-                (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
-                <PerksForBucket
-                  key={bucketId}
-                  defs={defs}
-                  bucket={buckets.byHash[bucketId]}
-                  mods={queryFilteredMods[bucketId]}
-                  perks={queryFilteredPerks[bucketId]}
-                  burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
-                  locked={selectedPerks[bucketId] || []}
-                  items={items[bucketId]}
-                  onPerkSelected={(perk) => this.onPerkSelected(perk, buckets.byHash[bucketId])}
-                />
-              )
-          )}
+          <SeasonalModPicker
+            mods={queryFilteredSeasonalMods}
+            defs={defs}
+            locked={selectedSeasonalMods}
+            onSeasonalModSelected={this.onSeasonalModSelected}
+          />
         </div>
       </Sheet>
     );
@@ -358,9 +265,26 @@ class PerkPicker extends React.Component<Props, State> {
     }
   };
 
+  private onSeasonalModSelected = (item: LockedModBase) => {
+    const { selectedSeasonalMods } = this.state;
+
+    if (selectedSeasonalMods.some((li) => li.mod.hash === item.mod.hash)) {
+      this.setState({
+        selectedSeasonalMods: selectedSeasonalMods.filter(
+          (existing) => existing.mod.hash !== item.mod.hash
+        )
+      });
+    } else {
+      this.setState({
+        selectedSeasonalMods: [...selectedSeasonalMods, item]
+      });
+    }
+  };
+
   private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
     this.props.onPerksSelected(this.state.selectedPerks);
+    this.props.onSeasonalModsChanged(this.state.selectedSeasonalMods);
     onClose();
   };
 
@@ -372,4 +296,4 @@ class PerkPicker extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps>(mapStateToProps)(PerkPicker);
+export default connect<StoreProps>(mapStateToProps)(ModPicker);

@@ -7,8 +7,6 @@ interface CssExports {
   'selectedPerk': string;
   'selectedPerks': string;
   'submitButton': string;
-  'tab': string;
-  'tabs': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
