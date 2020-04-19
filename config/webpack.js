@@ -127,12 +127,18 @@ module.exports = (env) => {
 
       rules: [
         {
-          test: /\.js$/,
+          // All files with a '.js', '.ts' or '.tsx' extension will be handled by 'babel-loader'.
+          test: /\.(j|t)sx?$/,
           exclude: [/node_modules/, /browsercheck\.js$/],
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true
-          }
+          use: [
+            'thread-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            }
+          ]
         },
         {
           test: /\.html$/,
@@ -195,18 +201,6 @@ module.exports = (env) => {
         {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
-        },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
-        {
-          test: /\.tsx?$/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true
-              }
-            }
-          ]
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
