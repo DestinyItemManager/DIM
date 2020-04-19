@@ -6,15 +6,6 @@ module.exports = function(api) {
     '@babel/plugin-syntax-dynamic-import',
     ['@babel/plugin-proposal-optional-chaining', { loose: true }],
     ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: true }],
-    '@babel/proposal-class-properties',
-    '@babel/proposal-object-rest-spread',
-    [
-      'const-enum',
-      {
-        transform: 'constObject'
-      }
-    ],
-    ['@babel/plugin-transform-typescript', { isTSX: true }],
     [
       '@babel/plugin-transform-runtime',
       {
