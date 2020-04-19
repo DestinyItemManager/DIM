@@ -121,7 +121,7 @@ export default function InventoryItem({
       {item.isDestiny2 && item.isDestiny2() && item.plug?.costElementIcon && (
         <>
           <div
-            style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
+            style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
             className="energyCostOverlay"
           />
           <div className="energyCost">{item.plug.energyCost}</div>

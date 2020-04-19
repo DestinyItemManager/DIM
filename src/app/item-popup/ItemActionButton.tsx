@@ -28,7 +28,7 @@ export default function ItemActionButton({
       className={clsx(styles.button, className)}
       title={title}
       onClick={onClick}
-      style={icon ? { backgroundImage: `url(${icon})` } : undefined}
+      style={icon ? { backgroundImage: `url("${icon}")` } : undefined}
     >
       <span>{label}</span>
     </div>

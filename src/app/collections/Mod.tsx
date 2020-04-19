@@ -38,7 +38,7 @@ export default function Mod({ item, defs, allowFilter, innerRef, onClick, childr
       {costElementIcon && (
         <>
           <div
-            style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+            style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
             className="energyCostOverlay"
           />
           <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
