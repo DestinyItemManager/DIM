@@ -320,6 +320,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     if (item.isDestiny1()) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
+    if (item.isDestiny2()) {
+      row['Armor2.0'] = Boolean(item.energy);
+    }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
     if (item.isDestiny1()) {
