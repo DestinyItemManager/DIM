@@ -551,7 +551,8 @@ function searchFilters(
     filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
-        query = '-tag:archive';
+        // By default, show anything that doesn't have the archive tag
+        return (item: DimItem) => getTag(item, itemInfos) !== 'archive';
       }
 
       // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
