@@ -60,7 +60,7 @@ const baseConversionTable: {
   { objectiveHash: 2994623161, unicode: '', substring: null, icon: dmgSolar     },
   { objectiveHash: 1554970245, unicode: '', substring: null, icon: dmgKinetic   },
   // Precision
-  { objectiveHash:  437290134, unicode: '', substring: null, icon: headshot     },
+  { objectiveHash: 2258255959, unicode: '', substring: null, icon: headshot     },
   // Abilities
   { objectiveHash:  314405660, unicode: '', substring: null, icon: melee        },
   { objectiveHash: 3711356257, unicode: '', substring: null, icon: grenade      },
