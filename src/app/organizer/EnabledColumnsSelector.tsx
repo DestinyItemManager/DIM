@@ -15,6 +15,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
  *
  * TODO: Convert to including drag and drop functionality so that columns can be reordered.
  */
+// TODO: Save to settings
 function EnabledColumnsSelector({
   columns,
   enabledColumns,

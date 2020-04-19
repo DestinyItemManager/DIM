@@ -1,22 +1,9 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import {
-  useTable,
-  Column,
-  useSortBy,
-  ColumnInstance,
-  UseSortByColumnProps,
-  useRowSelect,
-  Row,
-  TableInstance,
-  UseRowSelectInstanceProps,
-  UseSortByColumnOptions,
-  Cell
-} from 'react-table';
 import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
-import { SelectionTreeNode } from './ItemTypeSelector';
+import { ItemCategoryTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
 import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
@@ -45,6 +32,7 @@ import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject } from 'app/utils/empty';
+import { ColumnSort, Row, ColumnDefinition } from './table-types';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
@@ -64,7 +52,7 @@ const initialState = {
 const getRowID = (item: DimItem) => item.id;
 
 interface ProvidedProps {
-  selection: SelectionTreeNode[];
+  categories: ItemCategoryTreeNode[];
 }
 
 interface StoreProps {
@@ -100,21 +88,23 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-interface DimColumnExtras {
-  /** An optional filter expression that would limit results to those matching this item. */
-  filter?(item: DimItem): string;
-}
+// Functions:
+// Sort
+// Select/multiselect
+// shift-click filtering
+// get selected items
+// cell display
+// table width
+// enabled columns?
 
-/** The type of our react-table columns */
-export type DimColumn = Column<DimItem> & UseSortByColumnOptions<DimItem> & DimColumnExtras;
-type DimColumnInstance = ColumnInstance<DimItem> & UseSortByColumnProps<DimItem> & DimColumnExtras;
-type DimCell = Cell<DimItem> & {
-  column: DimColumnInstance;
-};
+  // TODO: drop wishlist columns if no wishlist loaded
+  // TODO: d1/d2 columns
+  // TODO: stat ranges
+  // TODO: special stat display? recoil, bars, etc
 
 function ItemTable({
   items,
-  selection,
+  categories,
   itemInfos,
   ratings,
   wishList,
@@ -125,17 +115,20 @@ function ItemTable({
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
 
-  const terminal = Boolean(_.last(selection)?.terminal);
-  const classCategoryHash =
-    selection.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+  // TODO: useDispatch
+  const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([]);
+  const [selection, setSelection] = useState<string[]>([]);
+  // Track the last selection for shift-selecting
+  //const lastSelectedIndex = useRef<number>(null);
 
+  // Narrow items to selection
+  const terminal = Boolean(_.last(categories)?.terminal);
   items = useMemo(() => {
-    const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
     return terminal
       ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
       : [];
-  }, [items, terminal, selection]);
+  }, [items, terminal, categories]);
 
   // TODO: save in settings
   const [enabledColumns, setEnabledColumns] = useState([
@@ -154,56 +147,39 @@ function ItemTable({
     'notes'
   ]);
 
-  const shiftHeld = useShiftHeld();
+  // TODO: hide columns if all undefined
 
-  // TODO: drop wishlist columns if no wishlist loaded
-  // TODO: d1/d2 columns
-  // TODO: stat ranges
-  // TODO: special stat display? recoil, bars, etc
-
+  // TODO: trim columns based on enabledColumns
   // TODO: really gotta pass these in... need to figure out data dependencies
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
-  const columns: DimColumn[] = useMemo(
+  const columns: ColumnDefinition[] = useMemo(
     () => getColumns(items, defs, itemInfos, ratings, wishList),
     [wishList, items, itemInfos, ratings, defs]
   );
 
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    setHiddenColumns,
-    selectedFlatRows
-  } = useTable(
-    {
-      columns,
-      data: items,
-      initialState,
-      getRowID,
-      // TODO: probably should reset on query changes too?
-      getResetSelectedRowPathsDeps: () => [selection]
-    } as any,
-    useSortBy,
-    useRowSelect
-  ) as TableInstance<DimItem> & UseRowSelectInstanceProps<DimItem>;
+  // process items into Rows
+  const rows: Row[] = useMemo(() => {
+    const unsortedRows: Row[] = items.map((item) => {
+      item,
+      values: columns.reduce((memo,col) => memo[col.id] = {}, {})
+    });
 
-  const hiddenColumns: string[] = useMemo(
-    () =>
-      columns
-        .flatMap((c) => {
-          if (c.id && !enabledColumns.includes(c.id)) {
-            const subColumnIds = c.columns?.map((sub) => sub.id) || [];
-            return [c.id, ...subColumnIds];
-          }
-        })
-        .filter(isDefined),
-    [columns, enabledColumns]
-  );
+    // TODO: sort
 
-  useEffect(() => setHiddenColumns(hiddenColumns), [setHiddenColumns, hiddenColumns]);
+    return rows;
+  }, [columns, items]);
+
+  // sort rows
+  // render
+
+  const classCategoryHash =
+  categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+
+  const shiftHeld = useShiftHeld();
+
+  // TODO inefficient
+  const selectedFlatRows = selection.map((s) => items.find((i) => s === i.id)!);
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
@@ -217,7 +193,7 @@ function ItemTable({
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
-    const items = selectedFlatRows?.map((d) => d.original);
+    const items = selectedFlatRows;
 
     const state = selectedTag === 'lock';
     try {
@@ -251,7 +227,7 @@ function ItemTable({
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
    */
   const narrowQueryFunction = (
-    row: Row<DimItem>,
+    row: Row,
     cell: DimCell
   ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
     cell.column.filter
@@ -293,6 +269,7 @@ function ItemTable({
     }
   };
 
+  // TODO: css grid, floating header
   return (
     <>
       <EnabledColumnsSelector
@@ -309,11 +286,10 @@ function ItemTable({
         onMoveSelectedItems={onMoveSelectedItems}
       />
       <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
-        <table className={styles.table} {...getTableProps()}>
+        <table className={styles.table}>
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: DimColumnInstance) => (
+              <tr>
+                {columns.headers.map((column: DimColumnInstance) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     className={styles[column.id]}
@@ -325,13 +301,12 @@ function ItemTable({
                   </th>
                 ))}
               </tr>
-            ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
+          <tbody>
             {rows.map((row) => {
-              prepareRow(row);
+              // TODO: row component
               return (
-                <tr {...row.getRowProps()}>
+                <tr>
                   {row.cells.map((cell: DimCell) => (
                     <td
                       {...cell.getCellProps()}
