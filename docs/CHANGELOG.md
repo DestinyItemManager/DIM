@@ -1,5 +1,9 @@
 ## Next
 
+* Emblems now show a preview of their equipped stat tracker, and show which types of stat tracker the emblem can use.
+* Certain stat trackers (under "Metrics" in "Collections") had the wrong display value, like KDA. These have been fixed.
+* Loadout Optimizer now allows you to select seasonal mods independent of the gear they go on - it'll try to slot them into any gear.
+
 ## 6.6.0 <span className="changelog-date">(2020-04-12)</span>
 
 * Better handling of logging out and into a different Bungie.net account.
