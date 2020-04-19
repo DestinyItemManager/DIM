@@ -1,36 +1,16 @@
 import { ReactStateDeclaration } from '@uirouter/react';
+import Vendors from './Vendors';
+import SingleVendor from './SingleVendor';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny2.vendors.**',
-    url: '/vendors?characterId',
-    lazyLoad: async () => {
-      const module = await import(/* webpackChunkName: "vendors" */ './Vendors');
-      return {
-        states: [
-          {
-            name: 'destiny2.vendors',
-            url: '/vendors?characterId',
-            component: module.default
-          }
-        ]
-      };
-    }
+    name: 'destiny2.vendors',
+    component: Vendors,
+    url: '/vendors?characterId'
   },
   {
-    name: 'destiny2.vendor.**',
-    url: '/vendor/:id?characterId',
-    lazyLoad: async () => {
-      const module = await import(/* webpackChunkName: "single-vendor" */ './SingleVendor');
-      return {
-        states: [
-          {
-            name: 'destiny2.vendor',
-            url: '/vendor/:id?characterId',
-            component: module.default
-          }
-        ]
-      };
-    }
+    name: 'destiny2.vendor',
+    component: SingleVendor,
+    url: '/vendors/:id?characterId'
   }
 ];
