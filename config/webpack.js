@@ -19,6 +19,7 @@ const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const _ = require('lodash');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -128,11 +129,9 @@ module.exports = (env) => {
 
       rules: [
         {
-          // All files with a '.js', '.ts' or '.tsx' extension will be handled by 'babel-loader'.
-          test: /\.(j|t)sx?$/,
+          test: /\.js$/,
           exclude: [/node_modules/, /browsercheck\.js$/],
           use: [
-            'thread-loader',
             {
               loader: 'babel-loader',
               options: {
@@ -221,6 +220,23 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
+        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
+        {
+          test: /\.tsx?$/,
+          use: _.compact([
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            },
+            env.dev
+              ? null
+              : {
+                  loader: 'ts-loader'
+                }
+          ])
+        },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
@@ -271,10 +287,6 @@ module.exports = (env) => {
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
 
       new NotifyPlugin('DIM', !env.dev),
-
-      new ForkTsCheckerWebpackPlugin({
-        eslint: true
-      }),
 
       new MiniCssExtractPlugin({
         filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
@@ -414,6 +426,13 @@ module.exports = (env) => {
   }
 
   if (env.dev) {
+    // In dev we use babel to compile TS, and fork off a separate typechecker
+    config.plugins.push(
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      })
+    );
+
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',
