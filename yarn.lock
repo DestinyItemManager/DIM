@@ -2811,10 +2811,10 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
-bungie-api-ts@^2.0.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-2.5.0.tgz#cb4204e62670f405af150469448dc552c1757b3d"
-  integrity sha512-/KLLIg5M63Wamp6yyMvw4LtdTOJybFpllI8rIYSqZ3vlG5EtcoY1jQ16J5VfLZHGxacarlpG+8QB+8bW34S4gw==
+bungie-api-ts@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-3.0.0.tgz#ecc689fb8f996cbd0d3f5bc24e0b798b1a44a9f6"
+  integrity sha512-grFlz4G1prx3NnFwl/ZXUD/25cqh5hs1PhN64DaNbD2qVhneuAOCXCR6Pl8VQLX4UNnhVyhgfROdMnoAjchWmw==
 
 bytes@3.0.0:
   version "3.0.0"
