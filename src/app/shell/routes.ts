@@ -1,16 +1,36 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import About from './About';
-import Privacy from './Privacy';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'about',
-    component: About,
-    url: '/about'
+    name: 'about.**',
+    url: '/about',
+    lazyLoad: async () => {
+      const module = await import(/* webpackChunkName: "about" */ './About');
+      return {
+        states: [
+          {
+            name: 'about',
+            url: '/about',
+            component: module.default
+          }
+        ]
+      };
+    }
   },
   {
-    name: 'privacy',
-    component: Privacy,
-    url: '/privacy'
+    name: 'privacy.**',
+    url: '/privacy',
+    lazyLoad: async () => {
+      const module = await import(/* webpackChunkName: "privacy" */ './Privacy');
+      return {
+        states: [
+          {
+            name: 'privacy',
+            url: '/privacy',
+            component: module.default
+          }
+        ]
+      };
+    }
   }
 ];

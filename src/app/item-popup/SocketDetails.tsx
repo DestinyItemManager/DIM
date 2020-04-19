@@ -19,7 +19,7 @@ import styles from './SocketDetails.m.scss';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
-import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 import { emptySet } from 'app/utils/empty';

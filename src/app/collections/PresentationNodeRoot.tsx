@@ -13,6 +13,7 @@ import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record, { getRecordComponent } from './Record';
 import { getMetricComponent } from './Metric';
+import { itemsForPlugSet } from './plugset-helpers';
 
 interface Props {
   presentationNodeHash: number;
@@ -243,16 +244,4 @@ export function countCollectibles(
     });
     return ret;
   }
-}
-
-export function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
-  return (
-    (profileResponse.profilePlugSets.data &&
-      profileResponse.profilePlugSets.data.plugs[plugSetHash]) ||
-    []
-  ).concat(
-    Object.values(profileResponse.characterPlugSets.data || {})
-      .filter((d) => d.plugs?.[plugSetHash])
-      .flatMap((d) => d.plugs[plugSetHash])
-  );
 }
