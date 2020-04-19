@@ -16,7 +16,8 @@ import {
   ItemsByBucket,
   LockedMap,
   MinMaxIgnored,
-  LockedModBase
+  LockedArmor2ModMap,
+  ModPickerCategories
 } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
@@ -64,7 +65,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   lockedMap: LockedMap;
-  lockedSeasonalMods: LockedModBase[];
+  lockedArmor2Mods: LockedArmor2ModMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
@@ -143,7 +144,15 @@ class LoadoutBuilder extends React.Component<Props, State> {
         Intellect: { min: 0, max: 10, ignored: false },
         Strength: { min: 0, max: 10, ignored: false }
       },
-      lockedSeasonalMods: [],
+      lockedArmor2Mods: {
+        [ModPickerCategories.general]: [],
+        [ModPickerCategories.helmet]: [],
+        [ModPickerCategories.gauntlets]: [],
+        [ModPickerCategories.chest]: [],
+        [ModPickerCategories.leg]: [],
+        [ModPickerCategories.classitem]: [],
+        [ModPickerCategories.seasonal]: []
+      },
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
@@ -185,7 +194,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
     } = this.props;
     const {
       lockedMap,
-      lockedSeasonalMods,
+      lockedArmor2Mods,
       selectedStoreId,
       statFilters,
       minimumPower,
@@ -215,7 +224,13 @@ class LoadoutBuilder extends React.Component<Props, State> {
     const enabledStats = this.getEnabledStats(statFilters);
     try {
       filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
-      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
+      const result = this.processMemoized(
+        filteredItems,
+        lockedMap,
+        lockedArmor2Mods,
+        store.id,
+        assumeMasterwork
+      );
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -223,7 +238,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
         processedSets,
         minimumPower,
         lockedMap,
-        lockedSeasonalMods,
+        lockedArmor2Mods,
         statFilters,
         statOrder,
         enabledStats
@@ -259,9 +274,9 @@ class LoadoutBuilder extends React.Component<Props, State> {
           items={filteredItems}
           selectedStore={store}
           lockedMap={lockedMap}
-          lockedSeasonalMods={lockedSeasonalMods}
+          lockedArmor2Mods={lockedArmor2Mods}
           onLockedMapChanged={this.onLockedMapChanged}
-          onSeasonalModsChanged={this.onSeasonalModsChanged}
+          onArmor2ModsChanged={this.onArmor2ModsChanged}
         />
       </div>
     );
@@ -340,8 +355,8 @@ class LoadoutBuilder extends React.Component<Props, State> {
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
 
-  private onSeasonalModsChanged = (lockedSeasonalMods: LockedModBase[]) =>
-    this.setState({ lockedSeasonalMods });
+  private onArmor2ModsChanged = (lockedArmor2Mods: LockedArmor2ModMap) =>
+    this.setState({ lockedArmor2Mods });
 
   private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
     this.setState({ assumeMasterwork });
