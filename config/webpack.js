@@ -389,8 +389,8 @@ module.exports = (env) => {
       new LodashModuleReplacementPlugin({
         collections: true,
         memoizing: true,
-        shorthands: false,
-        flattening: false
+        shorthands: true,
+        flattening: true
       }),
 
       new webpack.WatchIgnorePlugin([/scss\.d\.ts$/])
@@ -434,7 +434,7 @@ module.exports = (env) => {
     // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']
+        cleanOnceBeforeBuildPatterns: ['node_modules/.cache']
       }),
 
       // Tell React we're in Production mode

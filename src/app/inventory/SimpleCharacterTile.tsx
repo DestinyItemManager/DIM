@@ -19,9 +19,9 @@ export default function SimpleCharacterTile({
           destiny2: character.isDestiny2()
         })}
       >
-        <div className="background" style={{ backgroundImage: `url(${character.background})` }} />
+        <div className="background" style={{ backgroundImage: `url("${character.background}")` }} />
         <div className="details">
-          <div className="emblem" style={{ backgroundImage: `url(${character.icon})` }} />
+          <div className="emblem" style={{ backgroundImage: `url("${character.icon}")` }} />
           <div className="character-text">
             <div className="top">
               <div className="class">{character.className}</div>
