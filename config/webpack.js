@@ -18,6 +18,7 @@ const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -102,7 +103,7 @@ module.exports = (env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk !== 'browsercheck';
+          return chunk.name !== 'browsercheck';
         },
         automaticNameDelimiter: '-'
       },
@@ -149,7 +150,25 @@ module.exports = (env) => {
           }
         },
         {
-          test: /\.(jpg|gif|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          // Optimize SVGs - mostly for destiny-icons.
+          test: /\.svg$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 5 * 1024, // only inline if less than 5kb
+                name: ASSET_NAME_PATTERN,
+                // Use smaller data URIs
+                generator: (content) => svgToMiniDataURI(content.toString())
+              }
+            },
+            {
+              loader: 'svgo-loader'
+            }
+          ]
+        },
+        {
+          test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb

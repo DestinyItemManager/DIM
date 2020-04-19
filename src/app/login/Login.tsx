@@ -5,7 +5,9 @@ import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
-import { dimApiHelpLink } from 'app/storage/DimApiSettings';
+
+const dimApiHelpLink =
+  'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 export default function Login({ transition }: { transition: Transition }) {
   const authorizationState = uuidv4();
