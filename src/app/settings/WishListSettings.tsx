@@ -8,7 +8,6 @@ import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import {
   wishListsEnabledSelector,
-  loadWishListAndInfoFromIndexedDB,
   wishListsSelector,
   wishListsLastFetchedSelector
 } from '../wishlists/reducer';
@@ -55,7 +54,7 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.dispatch(loadWishListAndInfoFromIndexedDB());
+    this.props.dispatch(fetchWishList());
   }
 
   render() {

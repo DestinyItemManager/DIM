@@ -2,14 +2,13 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { getInventoryWishListRolls } from './wishlists';
-import { RootState, ThunkResult } from '../store/reducers';
+import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { observeStore } from '../utils/redux-utils';
-import { set, get } from 'idb-keyval';
+import { set } from 'idb-keyval';
 import { WishListAndInfo } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
-import { fetchWishList } from './wishlist-fetch';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 
@@ -83,36 +82,4 @@ export function saveWishListToIndexedDB() {
       }
     }
   );
-}
-
-export function loadWishListAndInfoFromIndexedDB(): ThunkResult {
-  return async (dispatch, getState) => {
-    if (getState().wishLists.loaded) {
-      return;
-    }
-
-    const wishListState = await get<WishListsState>('wishlist');
-
-    if (getState().wishLists.loaded) {
-      return;
-    }
-
-    // easing the transition from the old state (just an array) to the new state
-    // (object containing an array)
-    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
-      dispatch(
-        actions.loadWishLists({
-          wishList: {
-            title: undefined,
-            description: undefined,
-            wishListRolls: wishListState.wishListAndInfo.wishListRolls
-          },
-          lastFetched: wishListState.lastFetched
-        })
-      );
-    }
-
-    // Refresh the wish list from source if necessary
-    dispatch(fetchWishList());
-  };
 }

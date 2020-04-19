@@ -10,7 +10,6 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { connect } from 'react-redux';
-import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
 import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { ThunkDispatchProp, RootState } from 'app/store/reducers';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
@@ -19,6 +18,7 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon, banIcon } from './icons';
+import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -45,10 +45,10 @@ class Destiny extends React.Component<Props> {
     if (!account) {
       return;
     }
-    if ($featureFlags.wishLists) {
-      dispatch(loadWishListAndInfoFromIndexedDB());
+    if ($featureFlags.wishLists && account.destinyVersion === 2) {
+      dispatch(fetchWishList());
     }
-    if ($featureFlags.vendorEngrams) {
+    if ($featureFlags.vendorEngrams && account.destinyVersion === 2) {
       dispatch(loadVendorDropsFromIndexedDB());
     }
   }
