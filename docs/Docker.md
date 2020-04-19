@@ -21,7 +21,6 @@ Run the following commands from the DIM cloned directory on your machine:
 * `ctrl+c` to stop
 * `docker-compose up -d` to start in detached mode
 * `docker-compose stop` to stop detached mode
-* `docker-compose build` to re-build if the compose files change
 
 ### Tips and How-To's
 
