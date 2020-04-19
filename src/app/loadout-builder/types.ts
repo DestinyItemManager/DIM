@@ -41,10 +41,12 @@ export interface LockedPerk {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
 }
-export interface LockedMod {
-  type: 'mod';
+export interface LockedModBase {
   mod: DestinyInventoryItemDefinition;
   plugSetHash: number;
+}
+export interface LockedMod extends LockedModBase {
+  type: 'mod';
   bucket: InventoryBucket;
 }
 export interface LockedBurn {
@@ -60,8 +62,10 @@ export interface LockedExclude {
 
 export type LockedItemType = LockedItemCase | LockedPerk | LockedMod | LockedBurn | LockedExclude;
 
-/** A map from bucket to the list of locked and excluded perks, items, and burns. */
-export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType[] | undefined }>;
+/** A map from bucketHash or seasonal to the list of locked and excluded perks, items, and burns. */
+export type LockedMap = Readonly<{
+  [bucketHash: number]: readonly LockedItemType[] | undefined;
+}>;
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.

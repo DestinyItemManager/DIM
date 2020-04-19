@@ -12,7 +12,14 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, ItemsByBucket, LockedMap, MinMaxIgnored } from './types';
+import {
+  ArmorSet,
+  StatTypes,
+  ItemsByBucket,
+  LockedMap,
+  MinMaxIgnored,
+  LockedModBase
+} from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
@@ -58,6 +65,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   lockedMap: LockedMap;
+  lockedSeasonalMods: LockedModBase[];
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
@@ -136,6 +144,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         Intellect: { min: 0, max: 10, ignored: false },
         Strength: { min: 0, max: 10, ignored: false }
       },
+      lockedSeasonalMods: [],
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
@@ -177,6 +186,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     } = this.props;
     const {
       lockedMap,
+      lockedSeasonalMods,
       selectedStoreId,
       statFilters,
       minimumPower,
@@ -214,6 +224,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         processedSets,
         minimumPower,
         lockedMap,
+        lockedSeasonalMods,
         statFilters,
         statOrder,
         enabledStats
@@ -249,7 +260,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           items={filteredItems}
           selectedStore={store}
           lockedMap={lockedMap}
+          lockedSeasonalMods={lockedSeasonalMods}
           onLockedMapChanged={this.onLockedMapChanged}
+          onSeasonalModsChanged={this.onSeasonalModsChanged}
         />
       </div>
     );
@@ -327,6 +340,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onSeasonalModsChanged = (lockedSeasonalMods: LockedModBase[]) =>
+    this.setState({ lockedSeasonalMods });
 
   private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
     this.setState({ assumeMasterwork });

@@ -3,6 +3,7 @@
 interface CssExports {
   'armorIcon': string;
   'footer': string;
+  'seasonalFooterIndicator': string;
   'selectedPerk': string;
   'selectedPerks': string;
   'submitButton': string;
