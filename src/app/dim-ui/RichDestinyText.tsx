@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
+import richTexts from 'data/d2/objective-richTexts.json';
+
 import dmgArc from 'destiny-icons/weapons/damage_arc.svg';
 import dmgVoid from 'destiny-icons/weapons/damage_void.svg';
 import dmgSolar from 'destiny-icons/weapons/damage_solar.svg';
@@ -55,47 +57,57 @@ const baseConversionTable: {
   icon: string;
 }[] = [
   // Damage Types
-  { objectiveHash: 2178780271, unicode: '', substring: null, icon: dmgArc       },
-  { objectiveHash: 3286925104, unicode: '', substring: null, icon: dmgVoid      },
-  { objectiveHash: 2994623161, unicode: '', substring: null, icon: dmgSolar     },
-  { objectiveHash: 1554970245, unicode: '', substring: null, icon: dmgKinetic   },
+  { objectiveHash: richTexts['[Arc]'],   unicode: '', substring: null, icon: dmgArc     },
+  { objectiveHash: richTexts['[Void]'],  unicode: '', substring: null, icon: dmgVoid    },
+  { objectiveHash: richTexts['[Solar]'], unicode: '', substring: null, icon: dmgSolar   },
+  { objectiveHash: richTexts['[Kill]'],  unicode: '', substring: null, icon: dmgKinetic },
   // Precision
-  { objectiveHash: 2258255959, unicode: '', substring: null, icon: headshot     },
+  { objectiveHash: richTexts['[Headshot]'], unicode: '', substring: null, icon: headshot },
   // Abilities
-  { objectiveHash:  314405660, unicode: '', substring: null, icon: melee        },
-  { objectiveHash: 3711356257, unicode: '', substring: null, icon: grenade      },
+  { objectiveHash: richTexts['[Melee]'],   unicode: '', substring: null, icon: melee   },
+  { objectiveHash: richTexts['[Grenade]'], unicode: '', substring: null, icon: grenade },
   // All Rifle-class
-  { objectiveHash:  532914921, unicode: '', substring: null, icon: autoRifle    },
-  { objectiveHash: 2161000034, unicode: '', substring: null, icon: pulseRifle   },
-  { objectiveHash: 2062881933, unicode: '', substring: null, icon: scoutRifle   },
-  { objectiveHash: 3527067345, unicode: '', substring: null, icon: sniperRifle  },
-  { objectiveHash: 3296270292, unicode: '', substring: null, icon: fusionRifle  },
-  { objectiveHash: 3080184954, unicode: '', substring: null, icon: traceRifle   },
-  { objectiveHash: 3373536132, unicode: '', substring: null, icon: lFusionRifle },
+  { objectiveHash: richTexts['[Auto Rifle]'],   unicode: '', substring: null, icon: autoRifle   },
+  { objectiveHash: richTexts['[Pulse Rifle]'],  unicode: '', substring: null, icon: pulseRifle  },
+  { objectiveHash: richTexts['[Scout Rifle]'],  unicode: '', substring: null, icon: scoutRifle  },
+  { objectiveHash: richTexts['[Sniper Rifle]'], unicode: '', substring: null, icon: sniperRifle },
+  { objectiveHash: richTexts['[Fusion Rifle]'], unicode: '', substring: null, icon: fusionRifle },
+  { objectiveHash: richTexts['[Trace Rifle]'],  unicode: '', substring: null, icon: traceRifle  },
+  {
+    objectiveHash: richTexts['[Linear Fusion Rifle]'],
+    unicode: '',
+    substring: null,
+    icon: lFusionRifle
+  },
   // Remaining weapons, that are not heavy
-  { objectiveHash:   53304862, unicode: '', substring: null, icon: handCannon   },
-  { objectiveHash:  635284441, unicode: '', substring: null, icon: shotgun      },
-  { objectiveHash: 2722409947, unicode: '', substring: null, icon: smg          },
-  { objectiveHash: 1242546978, unicode: '', substring: null, icon: bow          },
-  { objectiveHash:  299893109, unicode: '', substring: null, icon: sidearm      },
-  { objectiveHash: 2258101260, unicode: '', substring: null, icon: gLauncherFF  },
+  { objectiveHash: richTexts['[Hand Cannon]'], unicode: '', substring: null, icon: handCannon   },
+  { objectiveHash: richTexts['[Shotgun]'],     unicode: '', substring: null, icon: shotgun      },
+  { objectiveHash: richTexts['[SMG]'],         unicode: '', substring: null, icon: smg          },
+  { objectiveHash: richTexts['[Bow]'],         unicode: '', substring: null, icon: bow          },
+  { objectiveHash: richTexts['[Sidearm]'],     unicode: '', substring: null, icon: sidearm      },
+  { objectiveHash: richTexts[''],             unicode: '', substring: null, icon: gLauncherFF },
   // Heavy Weapons
-  { objectiveHash: 2152699013, unicode: '', substring: null, icon: gLauncher    },
-  { objectiveHash: 2203404732, unicode: '', substring: null, icon: rLauncher    },
-  { objectiveHash: 1788114534, unicode: '', substring: null, icon: machinegun   },
-  { objectiveHash:  989767424, unicode: '', substring: null, icon: sword        },
+  {
+    objectiveHash: richTexts['[Grenade Launcher]'],
+    unicode: '',
+    substring: null,
+    icon: gLauncher
+  },
+  { objectiveHash: richTexts['[Rocket Launcher]'], unicode: '', substring: null, icon: rLauncher  },
+  { objectiveHash: richTexts['[Machine Gun]'],     unicode: '', substring: null, icon: machinegun },
+  { objectiveHash: richTexts['[Sword]'],           unicode: '', substring: null, icon: sword      },
   // Artifacts that can be picked up and used as weapons
-  { objectiveHash: 4231452845, unicode: '', substring: null, icon: scorchCannon },
+  { objectiveHash: richTexts[''], unicode: '', substring: null, icon: scorchCannon },
   // Gambit - Blockers
-  { objectiveHash:  276438067, unicode: '', substring: null, icon: smlBlocker   },
-  { objectiveHash: 3792840449, unicode: '', substring: null, icon: medBlocker   },
-  { objectiveHash: 2031240843, unicode: '', substring: null, icon: lrgBlocker   },
+  { objectiveHash: richTexts['[Small Blocker]'],  unicode: '', substring: null, icon: smlBlocker },
+  { objectiveHash: richTexts['[Medium Blocker]'], unicode: '', substring: null, icon: medBlocker },
+  { objectiveHash: richTexts['[Large Blocker]'],  unicode: '', substring: null, icon: lrgBlocker },
   // Quest Markers
-  { objectiveHash: 3915460773, unicode: '', substring: null, icon: questMarker  },
+  { objectiveHash: richTexts['[Quest]'], unicode: '', substring: null, icon: questMarker },
   // Breakers
-  { objectiveHash: 3068403538, unicode: '', substring: null, icon: overload     },
-  { objectiveHash: 2678922819, unicode: '', substring: null, icon: pierce       },
-  { objectiveHash: 3879088617, unicode: '', substring: null, icon: stagger      }
+  { objectiveHash: richTexts['[Disruption]'],      unicode: '', substring: null, icon: overload },
+  { objectiveHash: richTexts['[Shield-Piercing]'], unicode: '', substring: null, icon: pierce   },
+  { objectiveHash: richTexts['[Stagger]'],         unicode: '', substring: null, icon: stagger  }
 ];
 
 /**
