@@ -23,6 +23,6 @@ test('bungie net path ', () => {
 
 test('bungie background direct link ', () => {
   let testString: BungieImagePath = '~test';
-  const data = { backgroundImage: `url(test)` };
+  const data = { backgroundImage: `url("test")` };
   expect(bungieBackgroundStyle(testString)).toStrictEqual(data);
 });

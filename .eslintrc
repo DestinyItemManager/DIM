@@ -83,6 +83,8 @@
     "lodash/chaining": ["error", "never"],
     "lodash/identity-shorthand": ["error", "never"],
     "lodash/matches-shorthand": ["error", "never"],
+    "lodash/matches-prop-shorthand": ["error", "never"],
+    "lodash/prop-shorthand": ["error", "never"],
     "lodash/prefer-compact": "error",
     "lodash/prefer-filter": "error",
     "lodash/prefer-find": "error",

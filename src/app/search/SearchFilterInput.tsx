@@ -12,6 +12,7 @@ import Textarea from 'textcomplete/lib/textarea';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 
 interface ProvidedProps {
   alwaysShowClearButton?: boolean;
@@ -213,31 +214,35 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         {
           words: this.props.searchConfig.keywords,
           match: /\b([\w:"']{3,})$/i,
-          search(term: string, callback) {
+          search(term: string, callback: (terms: string[]) => void) {
             if (term) {
-              let words = term.includes(':') // with a colon, only match from beginning
+              let words: string[] = term.includes(':') // with a colon, only match from beginning
                 ? // ("stat:" matches "stat:" but not "basestat:")
                   this.words.filter((word: string) => word.startsWith(term.toLowerCase()))
                 : // ("stat" matches "stat:" and "basestat:")
                   this.words.filter((word: string) => word.includes(term.toLowerCase()));
 
-              words = _.sortBy(words, [
-                // tags are UGC and therefore important
-                (word: string) => !word.startsWith('tag:'),
-                // prioritize is: & not: because a pair takes up only 2 slots at the top,
-                // vs filters that end in like 8 statnames
-                (word: string) => !(word.startsWith('is:') || word.startsWith('not:')),
-                // sort incomplete terms (ending with ':') to the front
-                (word: string) => !word.endsWith(':'),
-                // sort more-basic incomplete terms (fewer colons) to the front
-                (word: string) => word.split(':').length,
-                // prioritize strings we are typing the beginning of
-                (word: string) => word.indexOf(term.toLowerCase()) !== 0,
-                // prioritize words with less left to type
-                (word: string) => word.length - (term.length + word.indexOf(term.toLowerCase())),
-                // push math operators to the front for things like "masterwork:"
-                (word: string) => !mathCheck.test(word)
-              ]);
+              words = words.sort(
+                chainComparator(
+                  // tags are UGC and therefore important
+                  compareBy((word: string) => !word.startsWith('tag:')),
+                  // prioritize is: & not: because a pair takes up only 2 slots at the top,
+                  // vs filters that end in like 8 statnames
+                  compareBy((word: string) => !(word.startsWith('is:') || word.startsWith('not:'))),
+                  // sort incomplete terms (ending with ':') to the front
+                  compareBy((word: string) => !word.endsWith(':')),
+                  // sort more-basic incomplete terms (fewer colons) to the front
+                  compareBy((word: string) => word.split(':').length),
+                  // prioritize strings we are typing the beginning of
+                  compareBy((word: string) => word.indexOf(term.toLowerCase()) !== 0),
+                  // prioritize words with less left to type
+                  compareBy(
+                    (word: string) => word.length - (term.length + word.indexOf(term.toLowerCase()))
+                  ),
+                  // push math operators to the front for things like "masterwork:"
+                  compareBy((word: string) => !mathCheck.test(word))
+                )
+              );
               if (filterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {

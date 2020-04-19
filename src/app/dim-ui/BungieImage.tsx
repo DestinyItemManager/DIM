@@ -24,7 +24,7 @@ export default React.memo(function BungieImage(
  * Produce a style object that sets the background image to an image on bungie.net.
  */
 export function bungieBackgroundStyle(src: BungieImagePath) {
-  return { backgroundImage: `url(${bungieNetPath(src)})` };
+  return { backgroundImage: `url("${bungieNetPath(src)}")` };
 }
 
 /**

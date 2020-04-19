@@ -283,7 +283,7 @@ async function applyLoadoutItems(
               store,
               amount: store.amountOfItem(pseudoItem)
             })),
-            'amount'
+            (v) => v.amount
           ).reverse();
 
           let totalAmount = amountAlreadyHave;
