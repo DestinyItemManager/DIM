@@ -434,7 +434,7 @@ module.exports = (env) => {
     // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']
+        cleanOnceBeforeBuildPatterns: ['node_modules/.cache']
       }),
 
       // Tell React we're in Production mode

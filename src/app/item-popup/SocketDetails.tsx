@@ -274,7 +274,7 @@ export const SocketDetailsMod = React.memo(
         {costElementIcon && (
           <>
             <div
-              style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+              style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
               className="energyCostOverlay"
             />
             <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
