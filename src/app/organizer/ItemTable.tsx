@@ -120,6 +120,8 @@ function ItemTable({
   }, [items, terminal, categories]);
 
   // TODO: save in settings
+  // TODO: separate settings for armor & weapons?
+  // TODO: reorder
   const [enabledColumns, setEnabledColumns] = useState([
     'selection',
     'icon',
@@ -146,11 +148,16 @@ function ItemTable({
     [wishList, items, itemInfos, ratings, defs]
   );
 
+  // TODO: "Stats" as a column
+  const filteredColumns = _.compact(
+    enabledColumns.map((id) => columns.find((column) => column.id === id))
+  );
+
   // process items into Rows
   const rows: Row[] = useMemo(() => {
     const unsortedRows: Row[] = items.map((item) => ({
       item,
-      values: columns.reduce((memo, col) => {
+      values: filteredColumns.reduce((memo, col) => {
         memo[col.id] = col.value(item);
         return memo;
       }, {})
@@ -159,7 +166,7 @@ function ItemTable({
     // TODO: sort
 
     return unsortedRows;
-  }, [columns, items]);
+  }, [filteredColumns, items]);
 
   // sort rows
   // render
@@ -261,8 +268,8 @@ function ItemTable({
     }
   };
 
-  const gridSpec = `min-content ${columns
-    .map((c) => c.gridWidth ?? 'minmax(min-content, 1fr)')
+  const gridSpec = `min-content ${filteredColumns
+    .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
 
   // TODO: css grid, floating header
@@ -281,58 +288,56 @@ function ItemTable({
         onTagSelectedItems={onTagSelectedItems}
         onMoveSelectedItems={onMoveSelectedItems}
       />
-      <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
-        <div className={styles.table} style={{ gridTemplateColumns: gridSpec }} role="table">
+      <div
+        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
+        style={{ gridTemplateColumns: gridSpec }}
+        role="table"
+      >
+        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+          <input type="checkbox" />
+        </div>
+        {filteredColumns.map((column: ColumnDefinition) => (
           <div
-            className={clsx(styles.selection, styles.header)}
+            key={column.id}
+            className={clsx(styles[column.id], styles.header)}
             role="columnheader"
             aria-sort="none"
           >
-            <input type="checkbox" />
-          </div>
-          {columns.map((column: ColumnDefinition) => (
-            <div
-              key={column.id}
-              className={clsx(styles[column.id], styles.header)}
-              role="columnheader"
-              aria-sort="none"
-            >
-              {column.Header}
+            <div>
               {!column.noSort && (
                 <AppIcon
                   icon={column.defaultSort === SortDirection.DESC ? faCaretUp : faCaretDown}
                 />
               )}
+              {column.Header}
             </div>
-          ))}
-          {rows.map((row, i) => (
-            // TODO: row component
-            <React.Fragment key={row.item.id}>
+          </div>
+        ))}
+        {rows.map((row, i) => (
+          // TODO: row component
+          <React.Fragment key={row.item.id}>
+            <div
+              className={clsx(styles.selection, {
+                [styles.alternateRow]: i % 2
+              })}
+              role="cell"
+            >
+              <input type="checkbox" />
+            </div>
+            {filteredColumns.map((column: ColumnDefinition) => (
               <div
-                className={clsx(styles.selection, {
+                key={column.id}
+                onClick={narrowQueryFunction(row, column)}
+                className={clsx(styles[column.id], column.filter && styles.hasFilter, {
                   [styles.alternateRow]: i % 2
                 })}
                 role="cell"
               >
-                <input type="checkbox" />
+                {column.Cell ? column.Cell(row.values[column.id], row.item) : row.values[column.id]}
               </div>
-              {columns.map((column: ColumnDefinition) => (
-                <div
-                  key={column.id}
-                  onClick={narrowQueryFunction(row, column)}
-                  className={clsx(styles[column.id], column.filter && styles.hasFilter, {
-                    [styles.alternateRow]: i % 2
-                  })}
-                  role="cell"
-                >
-                  {column.Cell
-                    ? column.Cell(row.values[column.id], row.item)
-                    : row.values[column.id]}
-                </div>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
+            ))}
+          </React.Fragment>
+        ))}
       </div>
     </>
   );

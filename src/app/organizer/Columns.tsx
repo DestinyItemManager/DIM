@@ -261,12 +261,16 @@ export function getColumns(
       Header: 'Archetype',
       value: (item) =>
         !item.isExotic && item.isDestiny2() && !item.energy
-          ? item.sockets?.categories[0]?.sockets[0]?.plug?.plugItem.displayProperties.name
+          ? item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
+              ?.plugItem.displayProperties.name
           : undefined,
       Cell: (_, item) =>
         !item.isExotic && item.isDestiny2() && !item.energy ? (
           <div>
-            {[item.sockets?.categories[0]?.sockets[0]?.plug!].map((p) => (
+            {[
+              item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
+                ?.plug!
+            ].map((p) => (
               <PressTip
                 key={p.plugItem.hash}
                 tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
@@ -287,6 +291,7 @@ export function getColumns(
       Header: 'Perks',
       value: () => 0, // TODO: figure out a way to sort perks
       Cell: (_, item) => {
+        // TODO: Group by socket
         const plugItems =
           item.isDestiny2() && !item.energy
             ? item.sockets?.categories[0]?.sockets
@@ -394,13 +399,15 @@ export function getColumns(
     {
       id: 'notes',
       Header: 'Notes',
-      value: (item) => getNotes(item, itemInfos)
+      value: (item) => getNotes(item, itemInfos),
+      gridWidth: '1fr'
     },
     items[0]?.bucket.inWeapons &&
       hasWishList && {
         id: 'wishListNote',
         Header: 'Wish List Note',
-        value: (item) => wishList?.[item.id]?.notes
+        value: (item) => wishList?.[item.id]?.notes,
+        gridWidth: '1fr'
       }
   ]);
 

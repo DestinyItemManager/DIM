@@ -15,7 +15,6 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
 import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import styles from './Organizer.m.scss';
 import Compare from 'app/compare/Compare';
 import { router } from 'app/router';
 
@@ -61,7 +60,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   };
 
   if (isPhonePortrait) {
-    return <div className={styles.page}>This view isn't great on mobile.</div>;
+    return <div>This view isn't great on mobile.</div>;
   }
 
   if (!stores.length) {
@@ -69,7 +68,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   }
 
   return (
-    <div className={styles.page}>
+    <div>
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
         <ItemTable categories={selection} />
