@@ -30,7 +30,7 @@ export interface ColumnDefinition {
   /** A generator for search terms matching this item. Default: No filtering. */
   filter?(value: Value, item: DimItem): string;
   /** A custom sort function. Default: Something reasonable. */
-  sort?(firstValue: Value, secondValue: Value): number;
+  sort?(firstValue: Value, secondValue: Value): 0 | 1 | -1;
 }
 
 export interface Row {

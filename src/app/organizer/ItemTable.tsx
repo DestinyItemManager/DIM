@@ -32,7 +32,8 @@ import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject } from 'app/utils/empty';
-import { Row, ColumnDefinition, SortDirection } from './table-types';
+import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
+import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -105,7 +106,10 @@ function ItemTable({
   // TODO: maybe implement my own table component
 
   // TODO: useDispatch
-  //const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([]);
+  // TODO: different for weapons and armor?
+  const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
+    { columnId: 'name', sort: SortDirection.ASC }
+  ]);
   //const [selection, setSelection] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   //const lastSelectedIndex = useRef<number>(null);
@@ -164,9 +168,21 @@ function ItemTable({
     }));
 
     // TODO: sort
+    const comparator = chainComparator<Row>(
+      ...columnSorts.map((sorter) => {
+        const column = filteredColumns.find((c) => c.id === sorter.columnId);
+        if (column) {
+          const compare = column.sort
+            ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
+            : compareBy((row: Row) => row.values[column.id]);
+          return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+        }
+        return compareBy(() => 0);
+      })
+    );
 
-    return unsortedRows;
-  }, [filteredColumns, items]);
+    return unsortedRows.sort(comparator);
+  }, [filteredColumns, items, columnSorts]);
 
   // sort rows
   // render
@@ -272,6 +288,28 @@ function ItemTable({
     .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
 
+  // TODO: this is garbage
+  // TODO: useReducer
+  // TODO: replace on click, append on shift-click
+  const toggleColumnSort = (column: ColumnDefinition) => () => {
+    const existingSort = columnSorts.find((c) => c.columnId === column.id);
+    if (existingSort) {
+      console.log(
+        existingSort.sort,
+        existingSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+      );
+      setColumnSorts([
+        {
+          columnId: column.id,
+          sort: existingSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+        }
+      ]);
+    } else {
+      console.log('no existing sort', columnSorts, column.id);
+      setColumnSorts([{ columnId: column.id, sort: column.defaultSort || SortDirection.ASC }]);
+    }
+  };
+
   // TODO: css grid, floating header
   return (
     <>
@@ -303,10 +341,14 @@ function ItemTable({
             role="columnheader"
             aria-sort="none"
           >
-            <div>
-              {!column.noSort && (
+            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
                 <AppIcon
-                  icon={column.defaultSort === SortDirection.DESC ? faCaretUp : faCaretDown}
+                  icon={
+                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                      ? faCaretUp
+                      : faCaretDown
+                  }
                 />
               )}
               {column.Header}
