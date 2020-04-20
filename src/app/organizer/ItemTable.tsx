@@ -32,7 +32,7 @@ import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject } from 'app/utils/empty';
-import { ColumnSort, Row, ColumnDefinition } from './table-types';
+import { Row, ColumnDefinition, SortDirection } from './table-types';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -261,6 +261,10 @@ function ItemTable({
     }
   };
 
+  const gridSpec = `min-content ${columns
+    .map((c) => c.gridWidth ?? 'minmax(min-content, 1fr)')
+    .join(' ')}`;
+
   // TODO: css grid, floating header
   return (
     <>
@@ -278,36 +282,57 @@ function ItemTable({
         onMoveSelectedItems={onMoveSelectedItems}
       />
       <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
+        <div className={styles.table} style={{ gridTemplateColumns: gridSpec }} role="table">
+          <div
+            className={clsx(styles.selection, styles.header)}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <input type="checkbox" />
+          </div>
+          {columns.map((column: ColumnDefinition) => (
+            <div
+              key={column.id}
+              className={clsx(styles[column.id], styles.header)}
+              role="columnheader"
+              aria-sort="none"
+            >
+              {column.Header}
+              {!column.noSort && (
+                <AppIcon
+                  icon={column.defaultSort === SortDirection.DESC ? faCaretUp : faCaretDown}
+                />
+              )}
+            </div>
+          ))}
+          {rows.map((row, i) => (
+            // TODO: row component
+            <React.Fragment key={row.item.id}>
+              <div
+                className={clsx(styles.selection, {
+                  [styles.alternateRow]: i % 2
+                })}
+                role="cell"
+              >
+                <input type="checkbox" />
+              </div>
               {columns.map((column: ColumnDefinition) => (
-                <th key={column.id} className={styles[column.id]}>
-                  {column.Header}
-                  {true && <AppIcon icon={true ? faCaretUp : faCaretDown} />}
-                </th>
+                <div
+                  key={column.id}
+                  onClick={narrowQueryFunction(row, column)}
+                  className={clsx(styles[column.id], column.filter && styles.hasFilter, {
+                    [styles.alternateRow]: i % 2
+                  })}
+                  role="cell"
+                >
+                  {column.Cell
+                    ? column.Cell(row.values[column.id], row.item)
+                    : row.values[column.id]}
+                </div>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              // TODO: row component
-              <tr key={row.item.id}>
-                {columns.map((column: ColumnDefinition) => (
-                  <td
-                    key={column.id}
-                    onClick={narrowQueryFunction(row, column)}
-                    className={clsx(styles[column.id], column.filter && styles.hasFilter)}
-                  >
-                    {column.Cell
-                      ? column.Cell(row.values[column.id], row.item)
-                      : row.values[column.id]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </>
   );

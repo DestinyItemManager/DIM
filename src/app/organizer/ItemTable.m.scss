@@ -1,58 +1,37 @@
 @import '../variables';
 
 .tableContainer {
-  width: 100%;
-  overflow-x: auto;
 }
 
 .table {
   min-width: 100%;
-  border-spacing: 0;
+  display: grid;
 
-  td,
-  th {
+  > div {
     padding: 4px 6px;
     vertical-align: top;
     text-align: left;
-  }
-
-  th {
-    vertical-align: bottom !important;
-  }
-
-  td {
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 6px);
   }
+}
 
-  thead {
-    img {
-      height: 16px;
-      width: 16px;
-      vertical-align: bottom;
-    }
+.header {
+  vertical-align: bottom;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background: #313233;
+  position: sticky;
+  top: $header-height;
 
-    tr:first-child {
-      td,
-      th {
-        text-align: center;
-      }
-    }
-
-    tr:last-child {
-      td,
-      th {
-        border-bottom: 1px solid #ddd;
-      }
-    }
+  img {
+    height: 16px;
+    width: 16px;
+    vertical-align: bottom;
   }
+}
 
-  tbody {
-    tr {
-      &:nth-child(2n) {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    }
-  }
+.alternateRow {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .mods,
@@ -68,16 +47,13 @@
 
 .notes,
 .wishListNote {
-  width: 10%;
 }
 
 .archetype {
-  width: 1px;
   white-space: nowrap;
 }
 
 .mods {
-  width: 100px;
 }
 
 .selection,
@@ -93,7 +69,6 @@
 .year,
 .season,
 .event {
-  width: 1px;
 }
 
 .selection {

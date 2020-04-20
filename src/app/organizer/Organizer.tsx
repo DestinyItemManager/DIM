@@ -17,6 +17,7 @@ import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import styles from './Organizer.m.scss';
 import Compare from 'app/compare/Compare';
+import { router } from 'app/router';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -52,6 +53,13 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
 
   const [selection, setSelection] = useState<ItemCategoryTreeNode[]>([]);
 
+  const onSelection = (newSelection: ItemCategoryTreeNode[]) => {
+    router.stateService.go('destiny2.organizer', {
+      selection: selection.map((s) => s.id).join(',')
+    });
+    setSelection(newSelection);
+  };
+
   if (isPhonePortrait) {
     return <div className={styles.page}>This view isn't great on mobile.</div>;
   }
@@ -63,7 +71,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   return (
     <div className={styles.page}>
       <ErrorBoundary name="Organizer">
-        <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
+        <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
         <ItemTable categories={selection} />
         <Spreadsheets />
         <Compare />
