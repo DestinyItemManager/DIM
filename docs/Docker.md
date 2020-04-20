@@ -21,9 +21,48 @@ Run the following commands from the DIM cloned directory on your machine:
 * `ctrl+c` to stop
 * `docker-compose up -d` to start in detached mode
 * `docker-compose stop` to stop detached mode
-* `docker-compose build` to re-build if the compose files change
 
-### Tips and How-To's
+### Tips and Troubleshooting
 
-- when using docker for your development platform, you will need to install new node dependencies from within a running container. This can be done by
-running `docker-compose exec yarn install nameofdependency webpack`
+You can get an interactive terminal with `docker-compose exec webpack bash`.
+
+## Commit hook won't run
+
+If you `git commit` inside the container, you may see:
+
+    Can't find Husky, skipping pre-commit hook
+    You can reinstall it using 'npm install husky --save-dev' or delete this hook
+    Can't find Husky, skipping prepare-commit-msg hook
+    You can reinstall it using 'npm install husky --save-dev' or delete this hook
+
+This can be fixed with the suggested commands.
+
+## No editor on system
+
+When using `git commit`, you may encounter:
+
+    error: cannot run editor: No such file or directory
+    error: unable to start editor 'editor'
+
+This means that `git` cannot launch a text-editor for you to customize your commit-message with. A quick workaround is to use the `-m` flag, ex:
+
+    git commit -m "This is my commit message"
+
+For an interactive editor, try:
+
+    apt-get update
+    apt-get install nano
+
+This will install the `nano` editor. Another option is `vim`.
+
+## Node modules
+
+If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `yarn install NameOfTheDependency` as normal.
+
+## Container terminates unexpectedly
+
+On Windows, you may see the error:
+
+    dim-webpack | error Command failed with exit code 137.
+
+This may indicate that the Docker VM which hosts containers has run out of memory, and a higher setting is needed.
