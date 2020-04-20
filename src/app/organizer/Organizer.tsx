@@ -9,7 +9,7 @@ import { queueAction } from 'app/inventory/action-queue';
 import { refresh$ } from 'app/shell/refresh';
 import { Loading } from 'app/dim-ui/Loading';
 import { storesSelector } from 'app/inventory/selectors';
-import ItemTypeSelector, { SelectionTreeNode } from './ItemTypeSelector';
+import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
@@ -50,7 +50,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
     refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
   );
 
-  const [selection, setSelection] = useState<SelectionTreeNode[]>([]);
+  const [selection, setSelection] = useState<ItemCategoryTreeNode[]>([]);
 
   if (isPhonePortrait) {
     return <div className={styles.page}>This view isn't great on mobile.</div>;
@@ -64,7 +64,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
     <div className={styles.page}>
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
-        <ItemTable selection={selection} />
+        <ItemTable categories={selection} />
         <Spreadsheets />
         <Compare />
       </ErrorBoundary>

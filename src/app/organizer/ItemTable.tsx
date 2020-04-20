@@ -34,22 +34,11 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject } from 'app/utils/empty';
 import { ColumnSort, Row, ColumnDefinition } from './table-types';
 
-// TODO maybe move this to utils?
-function isDefined<T>(val: T | undefined): val is T {
-  return val !== undefined;
-}
-
 const categoryToClass = {
   23: DestinyClass.Hunter,
   22: DestinyClass.Titan,
   21: DestinyClass.Warlock
 };
-
-const initialState = {
-  sortBy: [{ id: 'name' }]
-};
-
-const getRowID = (item: DimItem) => item.id;
 
 interface ProvidedProps {
   categories: ItemCategoryTreeNode[];
@@ -97,10 +86,10 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 // table width
 // enabled columns?
 
-  // TODO: drop wishlist columns if no wishlist loaded
-  // TODO: d1/d2 columns
-  // TODO: stat ranges
-  // TODO: special stat display? recoil, bars, etc
+// TODO: drop wishlist columns if no wishlist loaded
+// TODO: d1/d2 columns
+// TODO: stat ranges
+// TODO: special stat display? recoil, bars, etc
 
 function ItemTable({
   items,
@@ -116,8 +105,8 @@ function ItemTable({
   // TODO: maybe implement my own table component
 
   // TODO: useDispatch
-  const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([]);
-  const [selection, setSelection] = useState<string[]>([]);
+  //const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([]);
+  //const [selection, setSelection] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   //const lastSelectedIndex = useRef<number>(null);
 
@@ -159,27 +148,30 @@ function ItemTable({
 
   // process items into Rows
   const rows: Row[] = useMemo(() => {
-    const unsortedRows: Row[] = items.map((item) => {
+    const unsortedRows: Row[] = items.map((item) => ({
       item,
-      values: columns.reduce((memo,col) => memo[col.id] = {}, {})
-    });
+      values: columns.reduce((memo, col) => {
+        memo[col.id] = col.value(item);
+        return memo;
+      }, {})
+    }));
 
     // TODO: sort
 
-    return rows;
+    return unsortedRows;
   }, [columns, items]);
 
   // sort rows
   // render
 
   const classCategoryHash =
-  categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
   const shiftHeld = useShiftHeld();
 
   // TODO inefficient
-  const selectedFlatRows = selection.map((s) => items.find((i) => s === i.id)!);
+  const selectedFlatRows: DimItem[] = []; //selection.map((s) => items.find((i) => s === i.id)!);
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
@@ -228,12 +220,12 @@ function ItemTable({
    */
   const narrowQueryFunction = (
     row: Row,
-    cell: DimCell
+    column: ColumnDefinition
   ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
-    cell.column.filter
+    column.filter
       ? (e) => {
           if (e.shiftKey) {
-            const filter = cell.column.filter!(row.original);
+            const filter = column.filter!(row.values[column.id], row.item);
             if (filter !== undefined) {
               dispatch(toggleSearchQueryComponent(filter));
             }
@@ -243,7 +235,7 @@ function ItemTable({
 
   const onMoveSelectedItems = (store: DimStore) => {
     if (selectedFlatRows?.length) {
-      const items = selectedFlatRows?.map((d) => d.original);
+      const items = selectedFlatRows;
       const loadoutItems: DimItem[] = [];
 
       for (const item of items) {
@@ -264,7 +256,7 @@ function ItemTable({
 
   const onTagSelectedItems = (tagInfo: TagInfo) => {
     if (tagInfo.type && selectedFlatRows?.length) {
-      const items = selectedFlatRows.map((d) => d.original);
+      const items = selectedFlatRows;
       dispatch(bulkTagItems(items, tagInfo.type));
     }
   };
@@ -288,40 +280,32 @@ function ItemTable({
       <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
         <table className={styles.table}>
           <thead>
-              <tr>
-                {columns.headers.map((column: DimColumnInstance) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={styles[column.id]}
-                  >
-                    {column.render('Header')}
-                    {column.isSorted && (
-                      <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
-                    )}
-                  </th>
-                ))}
-              </tr>
+            <tr>
+              {columns.map((column: ColumnDefinition) => (
+                <th key={column.id} className={styles[column.id]}>
+                  {column.Header}
+                  {true && <AppIcon icon={true ? faCaretUp : faCaretDown} />}
+                </th>
+              ))}
+            </tr>
           </thead>
           <tbody>
-            {rows.map((row) => {
+            {rows.map((row) => (
               // TODO: row component
-              return (
-                <tr>
-                  {row.cells.map((cell: DimCell) => (
-                    <td
-                      {...cell.getCellProps()}
-                      onClick={narrowQueryFunction(row, cell)}
-                      className={clsx(
-                        styles[cell.column.id],
-                        cell.column.filter && styles.hasFilter
-                      )}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+              <tr key={row.item.id}>
+                {columns.map((column: ColumnDefinition) => (
+                  <td
+                    key={column.id}
+                    onClick={narrowQueryFunction(row, column)}
+                    className={clsx(styles[column.id], column.filter && styles.hasFilter)}
+                  >
+                    {column.Cell
+                      ? column.Cell(row.values[column.id], row.item)
+                      : row.values[column.id]}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

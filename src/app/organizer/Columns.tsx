@@ -90,12 +90,11 @@ export function getColumns(
       const statHash = parseInt(statHashStr, 10);
       return {
         id: `stat_${statHash}`,
-        Header: () =>
-          statInfo.displayProperties.hasIcon ? (
-            <BungieImage src={statInfo.displayProperties.icon} />
-          ) : (
-            statInfo.displayProperties.name
-          ),
+        Header: statInfo.displayProperties.hasIcon ? (
+          <BungieImage src={statInfo.displayProperties.icon} />
+        ) : (
+          statInfo.displayProperties.name
+        ),
         statHash,
         value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
         Cell: (_, item) => <CompareStat item={item} stat={statInfo} />,
@@ -150,14 +149,14 @@ export function getColumns(
     },
     {
       id: 'power',
-      Header: () => <AppIcon icon={powerIndicatorIcon} />,
+      Header: <AppIcon icon={powerIndicatorIcon} />,
       value: (item) => item.primStat?.value,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`
     },
     {
       id: 'locked',
-      Header: () => <AppIcon icon={lockIcon} />,
+      Header: <AppIcon icon={lockIcon} />,
       value: (i) => i.locked,
       Cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
