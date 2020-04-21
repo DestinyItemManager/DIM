@@ -40,7 +40,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = StoreProps & ThunkDispatchProp;
 
-export const dimApiHelpLink =
+const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
