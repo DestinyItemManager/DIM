@@ -5,9 +5,10 @@ import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
-import { wishListsSelector } from './reducer';
+import { wishListsSelector, WishListsState } from './reducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
+import { get } from 'idb-keyval';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -19,6 +20,8 @@ function hoursAgo(dateToCheck?: Date): number {
 
 export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
+    await dispatch(loadWishListAndInfoFromIndexedDB());
+
     if (newWishlistSource) {
       dispatch(setSetting('wishListSource', newWishlistSource));
     }
@@ -80,6 +83,35 @@ export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): Thu
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportFailed')
       });
+    }
+  };
+}
+
+function loadWishListAndInfoFromIndexedDB(): ThunkResult {
+  return async (dispatch, getState) => {
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    const wishListState = await get<WishListsState>('wishlist');
+
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    // easing the transition from the old state (just an array) to the new state
+    // (object containing an array)
+    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
+      dispatch(
+        loadWishLists({
+          wishList: {
+            title: undefined,
+            description: undefined,
+            wishListRolls: wishListState.wishListAndInfo.wishListRolls
+          },
+          lastFetched: wishListState.lastFetched
+        })
+      );
     }
   };
 }
