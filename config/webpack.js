@@ -16,7 +16,10 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const _ = require('lodash');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -128,10 +131,14 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /browsercheck\.js$/],
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true
-          }
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            }
+          ]
         },
         {
           test: /\.html$/,
@@ -213,20 +220,22 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
-          use: [
+          use: _.compact([
             {
               loader: 'babel-loader',
               options: {
                 cacheDirectory: true
               }
             },
-            {
-              loader: 'ts-loader'
-            }
-          ]
+            env.dev
+              ? null
+              : {
+                  loader: 'ts-loader'
+                }
+          ])
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -417,10 +426,25 @@ module.exports = (env) => {
   }
 
   if (env.dev) {
+    // In dev we use babel to compile TS, and fork off a separate typechecker
+    config.plugins.push(
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      })
+    );
+
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',
+        excludeWarnings: false,
         alwaysNotify: true,
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+      })
+    );
+    config.plugins.push(
+      new ForkTsCheckerNotifierWebpackPlugin({
+        title: 'DIM TypeScript',
+        excludeWarnings: false,
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
     );

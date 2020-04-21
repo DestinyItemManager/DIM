@@ -1,4 +1,4 @@
-import _, { Dictionary } from 'lodash';
+import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
@@ -465,7 +465,9 @@ function generateMixesFromPerksOrStats(
 }
 
 function getBaseStatValues(
-  stats: Dictionary<DimStat>,
+  stats: {
+    [index: string]: DimStat;
+  },
   item: DimItem,
   assumeMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number }

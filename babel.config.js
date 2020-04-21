@@ -40,7 +40,19 @@ module.exports = function(api) {
       '@babel/plugin-transform-react-inline-elements'
     );
   } else {
-    plugins.push('react-hot-loader/babel');
+    // In dev, compile TS with babel
+    plugins.push(
+      'react-hot-loader/babel',
+      '@babel/proposal-class-properties',
+      '@babel/proposal-object-rest-spread',
+      [
+        'const-enum',
+        {
+          transform: 'constObject'
+        }
+      ],
+      ['@babel/plugin-transform-typescript', { isTSX: true }]
+    );
   }
 
   return {
