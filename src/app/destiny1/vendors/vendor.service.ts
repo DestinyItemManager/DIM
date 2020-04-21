@@ -15,6 +15,7 @@ import { handleLocalStorageFullError } from '../../compatibility';
 import store from '../../store/store';
 import { BehaviorSubject, ConnectableObservable, Observable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, tap, filter, map } from 'rxjs/operators';
+import { getVault } from 'app/inventory/stores-helpers';
 
 /*
 const allVendors = [
@@ -606,7 +607,7 @@ function VendorService(): VendorServiceType {
         case 2534352370:
         case 3159615086:
         case 2749350776:
-          totalCoins[currencyHash] = D1StoresService.getVault()!.currencies.find(
+          totalCoins[currencyHash] = getVault(stores)!.currencies.find(
             (c) => c.itemHash === currencyHash
           )!.quantity;
           break;

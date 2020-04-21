@@ -90,5 +90,5 @@ async function makeRoomForItems(store: D2Store) {
   const makeRoomBuckets = Object.values(buckets.byHash).filter(
     (b) => b.category === BucketCategory.Equippable && b.type
   );
-  return makeRoomForItemsInBuckets(store, makeRoomBuckets, D2StoresService);
+  return makeRoomForItemsInBuckets(store.getStoresService().getStores(), store, makeRoomBuckets);
 }
