@@ -36,6 +36,18 @@ import stagger from 'destiny-icons/breakers/stagger.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 
+import superVTitan from 'destiny-icons/supers/void_titan.svg';
+import superATitan from 'destiny-icons/supers/arc_titan.svg';
+import superSTitan from 'destiny-icons/supers/solar_titan.svg';
+
+import superVHunter from 'destiny-icons/supers/void_hunter.svg';
+import superAHunter from 'destiny-icons/supers/arc_hunter.svg';
+import superSHunter from 'destiny-icons/supers/solar_hunter.svg';
+
+import superVWarlock from 'destiny-icons/supers/void_warlock.svg';
+// import superAWarlock from 'destiny-icons/supers/arc_warlock.svg';
+import superSWarlock from 'destiny-icons/supers/solar_warlock.svg';
+
 // matches a bracketed thing in the string, or certain private unicode characters
 const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
 
@@ -48,47 +60,58 @@ const baseConversionTable: {
   icon: string;
 }[] = [
   // Damage Types
-  { unicode: '', icon: dmgArc,       objectiveHash: rT['[Arc]']                 },
-  { unicode: '', icon: dmgVoid,      objectiveHash: rT['[Void]']                },
-  { unicode: '', icon: dmgSolar,     objectiveHash: rT['[Solar]']               },
-  { unicode: '', icon: dmgKinetic,   objectiveHash: rT['[Kill]']                },
+  { unicode: '', icon: dmgArc,       objectiveHash: rT['[Arc]']                        },
+  { unicode: '', icon: dmgVoid,      objectiveHash: rT['[Void]']                       },
+  { unicode: '', icon: dmgSolar,     objectiveHash: rT['[Solar]']                      },
+  { unicode: '', icon: dmgKinetic,   objectiveHash: rT['[Kill]']                       },
   // Precision
-  { unicode: '', icon: headshot,     objectiveHash: rT['[Headshot]']            },
+  { unicode: '', icon: headshot,     objectiveHash: rT['[Headshot]']                   },
   // Abilities
-  { unicode: '', icon: melee,        objectiveHash: rT['[Melee]']               },
-  { unicode: '', icon: grenade,      objectiveHash: rT['[Grenade]']             },
+  { unicode: '', icon: melee,        objectiveHash: rT['[Melee]']                      },
+  { unicode: '', icon: grenade,      objectiveHash: rT['[Grenade]']                    },
   // All Rifle-class
-  { unicode: '', icon: autoRifle,    objectiveHash: rT['[Auto Rifle]']          },
-  { unicode: '', icon: pulseRifle,   objectiveHash: rT['[Pulse Rifle]']         },
-  { unicode: '', icon: scoutRifle,   objectiveHash: rT['[Scout Rifle]']         },
-  { unicode: '', icon: sniperRifle,  objectiveHash: rT['[Sniper Rifle]']        },
-  { unicode: '', icon: fusionRifle,  objectiveHash: rT['[Fusion Rifle]']        },
-  { unicode: '', icon: traceRifle,   objectiveHash: rT['[Trace Rifle]']         },
-  { unicode: '', icon: lFusionRifle, objectiveHash: rT['[Linear Fusion Rifle]'] },
+  { unicode: '', icon: autoRifle,    objectiveHash: rT['[Auto Rifle]']                 },
+  { unicode: '', icon: pulseRifle,   objectiveHash: rT['[Pulse Rifle]']                },
+  { unicode: '', icon: scoutRifle,   objectiveHash: rT['[Scout Rifle]']                },
+  { unicode: '', icon: sniperRifle,  objectiveHash: rT['[Sniper Rifle]']               },
+  { unicode: '', icon: fusionRifle,  objectiveHash: rT['[Fusion Rifle]']               },
+  { unicode: '', icon: traceRifle,   objectiveHash: rT['[Trace Rifle]']                },
+  { unicode: '', icon: lFusionRifle, objectiveHash: rT['[Linear Fusion Rifle]']        },
   // Remaining weapons, that are not heavy
-  { unicode: '', icon: handCannon,   objectiveHash: rT['[Hand Cannon]']         },
-  { unicode: '', icon: shotgun,      objectiveHash: rT['[Shotgun]']             },
-  { unicode: '', icon: smg,          objectiveHash: rT['[SMG]']                 },
-  { unicode: '', icon: bow,          objectiveHash: rT['[Bow]']                 },
-  { unicode: '', icon: sidearm,      objectiveHash: rT['[Sidearm]']             },
-  { unicode: '', icon: gLauncherFF,  objectiveHash: rT['']                     },
+  { unicode: '', icon: handCannon,   objectiveHash: rT['[Hand Cannon]']                },
+  { unicode: '', icon: shotgun,      objectiveHash: rT['[Shotgun]']                    },
+  { unicode: '', icon: smg,          objectiveHash: rT['[SMG]']                        },
+  { unicode: '', icon: bow,          objectiveHash: rT['[Bow]']                        },
+  { unicode: '', icon: sidearm,      objectiveHash: rT['[Sidearm]']                    },
+  { unicode: '', icon: gLauncherFF,  objectiveHash: rT['']                            },
   // Heavy Weapons
-  { unicode: '', icon: gLauncher,    objectiveHash: rT['[Grenade Launcher]']    },
-  { unicode: '', icon: rLauncher,    objectiveHash: rT['[Rocket Launcher]']     },
-  { unicode: '', icon: machinegun,   objectiveHash: rT['[Machine Gun]']         },
-  { unicode: '', icon: sword,        objectiveHash: rT['[Sword]']               },
+  { unicode: '', icon: gLauncher,    objectiveHash: rT['[Grenade Launcher]']            },
+  { unicode: '', icon: rLauncher,    objectiveHash: rT['[Rocket Launcher]']             },
+  { unicode: '', icon: machinegun,   objectiveHash: rT['[Machine Gun]']                 },
+  { unicode: '', icon: sword,        objectiveHash: rT['[Sword]']                       },
   // Artifacts that can be picked up and used as weapons
-  { unicode: '', icon: scorchCannon, objectiveHash: rT['']                     },
+  { unicode: '', icon: scorchCannon, objectiveHash: rT['']                             },
   // Gambit - Blockers
-  { unicode: '', icon: smlBlocker,   objectiveHash: rT['[Small Blocker]']       },
-  { unicode: '', icon: medBlocker,   objectiveHash: rT['[Medium Blocker]']      },
-  { unicode: '', icon: lrgBlocker,   objectiveHash: rT['[Large Blocker]']       },
+  { unicode: '', icon: smlBlocker,   objectiveHash: rT['[Small Blocker]']               },
+  { unicode: '', icon: medBlocker,   objectiveHash: rT['[Medium Blocker]']              },
+  { unicode: '', icon: lrgBlocker,   objectiveHash: rT['[Large Blocker]']               },
   // Quest Markers
-  { unicode: '', icon: questMarker,  objectiveHash: rT['[Quest]']               },
+  { unicode: '', icon: questMarker,  objectiveHash: rT['[Quest]']                       },
   // Breakers
-  { unicode: '', icon: overload,     objectiveHash: rT['[Disruption]']          },
-  { unicode: '', icon: pierce,       objectiveHash: rT['[Shield-Piercing]']     },
-  { unicode: '', icon: stagger,      objectiveHash: rT['[Stagger]']             }
+  { unicode: '', icon: overload,     objectiveHash: rT['[Disruption]']                  },
+  { unicode: '', icon: pierce,       objectiveHash: rT['[Shield-Piercing]']             },
+  { unicode: '', icon: stagger,      objectiveHash: rT['[Stagger]']                     },
+  // Supers
+  { unicode: '', icon: superVTitan,   objectiveHash: rT['[Titan: Sentinel Super]']      },
+  { unicode: '', icon: superATitan,   objectiveHash: rT['[Titan: Striker Super]']       },
+  { unicode: '', icon: superSTitan,   objectiveHash: rT['[Titan: Sunbreaker Super]']    },
+  { unicode: '', icon: superVHunter,  objectiveHash: rT['[Hunter: Nightstalker Super]'] },
+  { unicode: '', icon: superAHunter,  objectiveHash: rT['[Hunter: Arcstrider Super]']   },
+  { unicode: '', icon: superSHunter,  objectiveHash: rT['[Hunter: Gunslinger Super]']   },
+  { unicode: '', icon: superVWarlock, objectiveHash: rT['[Warlock: Voidwalker Super]']  },
+  { unicode: '', icon: superSWarlock, objectiveHash: rT['[Warlock: Dawnblade Super]']   }
+
+
 ].map((c) => ({ ...c, substring: null }));
 
 /**
