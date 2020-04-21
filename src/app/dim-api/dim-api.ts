@@ -2,18 +2,20 @@ import { unauthenticatedApi, authenticatedApi } from './dim-api-helper';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import {
   ProfileResponse,
-  GlobalSettings,
   ProfileUpdate,
   ProfileUpdateRequest,
-  ProfileUpdateResult,
   DestinyVersion,
-  AuditLogEntry,
-  ExportResponse
+  ExportResponse,
+  PlatformInfoResponse,
+  ImportResponse,
+  ProfileUpdateResponse,
+  AuditLogResponse,
+  DeleteAllResponse
 } from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
 export async function getGlobalSettings() {
-  const response = await unauthenticatedApi<{ settings: GlobalSettings }>(
+  const response = await unauthenticatedApi<PlatformInfoResponse>(
     {
       url: '/platform_info',
       method: 'GET'
@@ -41,10 +43,7 @@ export async function getDimApiProfile(account?: DestinyAccount) {
 }
 
 export async function importData(data: DimData) {
-  const response = await authenticatedApi<{
-    loadouts: number;
-    tags: number;
-  }>({
+  const response = await authenticatedApi<ImportResponse>({
     url: '/import',
     method: 'POST',
     body: data
@@ -70,7 +69,7 @@ export async function postUpdates(
       : {
           updates
         };
-  const response = await authenticatedApi<{ results: ProfileUpdateResult[] }>({
+  const response = await authenticatedApi<ProfileUpdateResponse>({
     url: '/profile',
     method: 'POST',
     body: request
@@ -79,7 +78,7 @@ export async function postUpdates(
 }
 
 export async function getAuditLog() {
-  const response = await authenticatedApi<{ log: AuditLogEntry[] }>({
+  const response = await authenticatedApi<AuditLogResponse>({
     url: '/audit',
     method: 'GET'
   });
@@ -87,13 +86,7 @@ export async function getAuditLog() {
 }
 
 export async function deleteAllData() {
-  const response = await authenticatedApi<{
-    deleted: {
-      settings: number;
-      loadouts: number;
-      tags: number;
-    };
-  }>({
+  const response = await authenticatedApi<DeleteAllResponse>({
     url: '/delete_all_data',
     method: 'POST'
   });
