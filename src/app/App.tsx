@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import clsx from 'clsx';
@@ -11,6 +11,11 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
+import { Loading } from './dim-ui/Loading';
+import { Switch, Route } from 'react-router';
+
+// TODO: may not be worth it to load this lazy!
+const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
 
 interface Props {
   language: string;
@@ -50,7 +55,16 @@ class App extends React.Component<Props> {
       >
         <ClickOutsideRoot>
           <Header />
-          <UIView />
+          <Suspense fallback={<Loading />}>
+            <Switch>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route>
+                <UIView />
+              </Route>
+            </Switch>
+          </Suspense>
           <NotificationsContainer />
           <ActivityTracker />
           {$featureFlags.colorA11y && <ColorA11y />}

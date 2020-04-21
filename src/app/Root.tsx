@@ -9,6 +9,7 @@ import store from './store/store';
 import makeRouter from './router.config';
 import { setRouter } from './router';
 import { DndProvider } from 'react-dnd';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 class Root extends React.Component {
   router: UIRouterReact;
@@ -21,13 +22,15 @@ class Root extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <DndProvider backend={HTML5Backend}>
-          <UIRouter router={this.router}>
-            <App />
-          </UIRouter>
-        </DndProvider>
-      </Provider>
+      <Router>
+        <Provider store={store}>
+          <DndProvider backend={HTML5Backend}>
+            <UIRouter router={this.router}>
+              <App />
+            </UIRouter>
+          </DndProvider>
+        </Provider>
+      </Router>
     );
   }
 }
