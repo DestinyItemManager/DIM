@@ -400,10 +400,7 @@ class Compare extends React.Component<Props, State> {
         buttonLabel: <>{[exampleItemElementIcon, exampleItemModSlot]}</>,
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
-            ? allArmors
-                .filter(hasEnergy)
-                .filter(matchingModSlot)
-                .filter(matchesExample('element'))
+            ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
             : []
       },
 

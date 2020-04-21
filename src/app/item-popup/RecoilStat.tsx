@@ -19,9 +19,9 @@ export default function RecoilStat({ value }: { value: number }) {
       <circle r={1} cx={1} cy={1} fill="#333" />
       {Math.abs(direction) > 0.1 ? (
         <path
-          d={`M1,1 L${1 + xSpreadMore},${1 - ySpreadMore} A1,1 0 0,${
-            direction < 0 ? '1' : '0'
-          } ${1 + xSpreadLess},${1 - ySpreadLess} Z`}
+          d={`M1,1 L${1 + xSpreadMore},${1 - ySpreadMore} A1,1 0 0,${direction < 0 ? '1' : '0'} ${
+            1 + xSpreadLess
+          },${1 - ySpreadLess} Z`}
           fill="#FFF"
         />
       ) : (

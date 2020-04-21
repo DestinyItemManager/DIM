@@ -189,8 +189,9 @@ export function filterGeneratedSets(
     matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedSeasonalMods));
 
     console.info(
-      `Filtered out ${setsBeforeFilter -
-        matchedSets.length} sets based on seasonal mod requirements`
+      `Filtered out ${
+        setsBeforeFilter - matchedSets.length
+      } sets based on seasonal mod requirements`
     );
   }
 

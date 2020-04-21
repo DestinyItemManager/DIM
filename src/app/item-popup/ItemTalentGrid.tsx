@@ -66,11 +66,9 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
   return (
     <svg
       preserveAspectRatio="xMaxYMin meet"
-      viewBox={`0 0 ${(numColumns * totalNodeSize - nodePadding) * scaleFactor} ${(numRows *
-        totalNodeSize -
-        nodePadding) *
-        scaleFactor +
-        1}`}
+      viewBox={`0 0 ${(numColumns * totalNodeSize - nodePadding) * scaleFactor} ${
+        (numRows * totalNodeSize - nodePadding) * scaleFactor + 1
+      }`}
       className="talent-grid"
       height={(numRows * totalNodeSize - nodePadding) * scaleFactor}
       width={(numColumns * totalNodeSize - nodePadding) * scaleFactor}
@@ -88,8 +86,9 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
             }
           >
             <g
-              transform={`translate(${(node.column - hiddenColumns) * totalNodeSize},${node.row *
-                totalNodeSize})`}
+              transform={`translate(${(node.column - hiddenColumns) * totalNodeSize},${
+                node.row * totalNodeSize
+              })`}
               className={clsx('talent-node', {
                 'talent-node-activated': node.activated,
                 'talent-node-showxp': isD1GridNode(node) && !node.activated && node.xpRequired,
