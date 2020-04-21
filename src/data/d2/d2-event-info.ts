@@ -41,7 +41,7 @@ export const D2EventInfo = {
   6: {
     name: 'Guardian Games',
     shortname: 'games',
-    sources: [3388021959],
+    sources: [611838069, 3388021959],
     engram: []
   }
 };
@@ -64,5 +64,6 @@ export const D2SourcesToEvent = {
   1677921161: D2EventEnum.FESTIVAL_OF_THE_LOST,
   3190938946: D2EventEnum.FESTIVAL_OF_THE_LOST,
   2187511136: D2EventEnum.REVELRY,
+  611838069: D2EventEnum.GUARDIAN_GAMES,
   3388021959: D2EventEnum.GUARDIAN_GAMES
 };
