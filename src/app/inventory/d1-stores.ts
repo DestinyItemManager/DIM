@@ -13,18 +13,17 @@ import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems, error } from './actions';
+import { update, loadNewItems, error, touch } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
 import { getActivePlatform } from 'app/accounts/platforms';
+import { storesSelector } from './selectors';
 
 export const D1StoresService = StoreService();
 
 function StoreService(): D1StoreServiceType {
-  let _stores: D1Store[] = [];
-
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
@@ -51,12 +50,12 @@ function StoreService(): D1StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getStores: () => _stores,
+    getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
     updateCharacters,
     reloadStores,
     touch() {
-      store.dispatch(update({ stores: _stores }));
+      store.dispatch(touch());
     }
   };
 
@@ -69,14 +68,13 @@ function StoreService(): D1StoreServiceType {
    */
   function updateCharacters(account: DestinyAccount = getActivePlatform()!) {
     return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
-      _stores.forEach((dStore) => {
+      storesSelector(store.getState()).forEach((dStore) => {
         if (!dStore.isVault) {
           const bStore = bungieStores.find((s) => s.id === dStore.id)!;
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
       service.touch();
-      return _stores;
     });
   }
 
@@ -141,8 +139,6 @@ function StoreService(): D1StoreServiceType {
         return Promise.all([buckets, processStorePromises]);
       })
       .then(([buckets, stores]) => {
-        _stores = stores;
-
         if ($featureFlags.reviewsEnabled) {
           store.dispatch(fetchRatings(stores));
         }
@@ -161,7 +157,7 @@ function StoreService(): D1StoreServiceType {
       .catch((e) => {
         console.error('Error loading stores', e);
         reportException('D1StoresService', e);
-        if (_stores.length > 0) {
+        if (storesSelector(store.getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));
         } else {

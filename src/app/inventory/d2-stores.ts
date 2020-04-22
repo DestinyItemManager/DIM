@@ -25,7 +25,7 @@ import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems, error } from './actions';
+import { update, loadNewItems, error, touch } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
@@ -34,6 +34,7 @@ import { getActivePlatform } from 'app/accounts/platforms';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import { storesSelector } from './selectors';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -57,8 +58,6 @@ export const D2StoresService = makeD2StoresService();
  * consolidate them, or at least organize them better.
  */
 function makeD2StoresService(): D2StoreServiceType {
-  let _stores: D2Store[] = [];
-
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
@@ -86,12 +85,12 @@ function makeD2StoresService(): D2StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getStores: () => _stores,
+    getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
     updateCharacters,
     reloadStores,
     touch() {
-      store.dispatch(update({ stores: _stores }));
+      store.dispatch(touch());
     }
   };
 
@@ -102,12 +101,10 @@ function makeD2StoresService(): D2StoreServiceType {
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  async function updateCharacters(
-    account: DestinyAccount = getActivePlatform()!
-  ): Promise<D2Store[]> {
+  async function updateCharacters(account: DestinyAccount = getActivePlatform()!): Promise<void> {
     const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
     // TODO: create a new store
-    _stores.forEach((dStore) => {
+    storesSelector(store.getState()).forEach((dStore) => {
       if (!dStore.isVault) {
         const bStore = profileInfo.characters.data?.[dStore.id];
         if (bStore) {
@@ -116,7 +113,6 @@ function makeD2StoresService(): D2StoreServiceType {
       }
     });
     service.touch();
-    return _stores;
   }
 
   /**
@@ -200,7 +196,6 @@ function makeD2StoresService(): D2StoreServiceType {
       );
 
       const stores = [...characters, vault];
-      _stores = stores;
 
       updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
@@ -215,10 +210,11 @@ function makeD2StoresService(): D2StoreServiceType {
       }
 
       // Let our styling know how many characters there are
-      // TODO: this should be an effect on the stores component
+      // TODO: this should be an effect on the stores component, except it's also
+      // used on D1 activities page
       document
         .querySelector('html')!
-        .style.setProperty('--num-characters', String(_stores.length - 1));
+        .style.setProperty('--num-characters', String(stores.length - 1));
       console.timeEnd('Process inventory');
 
       console.time('Inventory state update');
@@ -229,7 +225,7 @@ function makeD2StoresService(): D2StoreServiceType {
     } catch (e) {
       console.error('Error loading stores', e);
       reportException('d2stores', e);
-      if (_stores.length > 0) {
+      if (storesSelector(store.getState()).length > 0) {
         // don't replace their inventory with the error, just notify
         showNotification(bungieErrorToaster(e));
       } else {
@@ -381,7 +377,7 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxLightItemSet(stores, store));
-      const hasClassified = _stores.some((s) =>
+      const hasClassified = stores.some((s) =>
         s.items.some(
           (i) =>
             i.classified &&

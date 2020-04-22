@@ -23,7 +23,7 @@ export interface StoreServiceType<StoreType = DimStore> {
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
   /** Refresh just character info (current light/stats, etc.) */
-  updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
+  updateCharacters(account?: DestinyAccount): Promise<void>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
 
