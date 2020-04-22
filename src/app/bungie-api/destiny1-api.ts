@@ -7,9 +7,6 @@ import { DestinyManifest, ServerResponse, PlatformErrorCodes } from 'bungie-api-
 import { D1Store, DimStore } from '../inventory/store-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D1Item, DimItem } from '../inventory/item-types';
-import reduxStore from '../store/store';
-import { charactersUpdated } from 'app/inventory/actions';
-import { makeD1CharacterInfo } from 'app/inventory/d2-stores';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -184,11 +181,6 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
     })
   );
   const data = response.Response;
-
-  // TODO: does this work?
-  const defs = reduxStore.getState().manifest.d1Manifest!;
-  reduxStore.dispatch(charactersUpdated([makeD1CharacterInfo(defs, store.id, data)]));
-
   return items.filter((i) => {
     const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
     return item?.equipStatus === 1;

@@ -241,13 +241,22 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
     ...state,
     stores: state.stores.map((store) => {
       const character = characters.find((c) => c.characterId === store.id);
-      return character
-        ? // Have to make it into a full object again. TODO: un-object-ify this
-          Object.assign(Object.create(store.isDestiny2() ? D1StoreProto : D1StoreProto), {
-            ...store,
-            ...character
-          })
-        : store;
+      if (!character) {
+        return store;
+      }
+      const { characterId, ...characterInfo } = character;
+      return Object.assign(
+        // Have to make it into a full object again. TODO: un-object-ify this
+        Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto),
+        {
+          ...store,
+          ...characterInfo,
+          stats: {
+            ...store.stats,
+            ...characterInfo.stats
+          }
+        }
+      );
     })
   };
 }

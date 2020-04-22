@@ -46,6 +46,8 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
  * items in the stores.
  *
  * This works on both D1 and D2.
+ *
+ * TODO: Instead of this, update per-character after equip/dequip
  */
 export function updateCharacters(): ThunkResult {
   return async (dispatch, getState) => {
@@ -79,28 +81,21 @@ export function updateCharacters(): ThunkResult {
         : [];
     } else {
       const profileInfo = await d1GetCharacters(account);
-      characters = profileInfo.map((character) =>
-        makeD1CharacterInfo(getState().manifest.d1Manifest!, character.id, character.base)
-      );
+      characters = profileInfo.map((character) => ({
+        characterId: character.id,
+        level: character.base.characterLevel,
+        powerLevel: character.base.characterBase.powerLevel,
+        percentToNextLevel: character.base.percentToNextLevel / 100,
+        background: bungieNetPath(character.base.backgroundPath),
+        icon: bungieNetPath(character.base.emblemPath),
+        stats: getD1CharacterStatsData(
+          getState().manifest.d1Manifest!,
+          character.base.characterBase
+        )
+      }));
     }
 
     dispatch(charactersUpdated(characters));
-  };
-}
-
-export function makeD1CharacterInfo(
-  defs: D1ManifestDefinitions,
-  characterId: string,
-  character: any
-) {
-  return {
-    characterId: characterId,
-    level: character.characterLevel,
-    powerLevel: character.characterBase.powerLevel,
-    percentToNextLevel: character.percentToNextLevel / 100,
-    background: bungieNetPath(character.backgroundPath),
-    icon: bungieNetPath(character.emblemPath),
-    stats: getD1CharacterStatsData(defs, character.characterBase)
   };
 }
 
