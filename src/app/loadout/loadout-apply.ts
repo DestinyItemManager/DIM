@@ -13,6 +13,7 @@ import { savePreviousLoadout } from './actions';
 import copy from 'fast-copy';
 import { loadoutFromAllItems } from './loadout-utils';
 import { getItemAcrossStores, getVault, getStore } from 'app/inventory/stores-helpers';
+import { updateCharacters } from 'app/inventory/d2-stores';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -228,7 +229,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
   // is fixed on Bungie's end. When that happens, just remove this call.
   if (scope.successfulItems.length > 0) {
-    await storeService.updateCharacters();
+    await (reduxStore.dispatch(updateCharacters()) as any);
   }
 
   if (loadout.clearSpace) {

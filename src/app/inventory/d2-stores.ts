@@ -30,11 +30,58 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
-import { getActivePlatform } from 'app/accounts/platforms';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { storesSelector } from './selectors';
+import { ThunkResult } from 'app/store/reducers';
+import { currentAccountSelector } from 'app/accounts/reducer';
+
+import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
+
+/**
+ * Update the high level character information for all the stores
+ * (level, power, stats, etc.). This does not update the
+ * items in the stores.
+ *
+ * This works on both D1 and D2.
+ */
+export function updateCharacters(): ThunkResult {
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState());
+    if (!account) {
+      return;
+    }
+
+    const defs =
+      account.destinyVersion === 2
+        ? getState().manifest.d2Manifest
+        : getState().manifest.d1Manifest;
+
+    if (!defs) {
+      return;
+    }
+
+    const profileInfo = (await (account.destinyVersion === 2
+      ? getCharacters(account)
+      : d1GetCharacters(account))) as DestinyProfileResponse;
+
+    // TODO: dispatch an action!
+    storesSelector(getState()).forEach((dStore) => {
+      if (!dStore.isVault) {
+        const bStore =
+          account.destinyVersion === 2
+            ? profileInfo.characters.data?.[dStore.id]
+            : (profileInfo as any).find((s) => s.id === dStore.id)!;
+        if (bStore) {
+          dStore.updateCharacterInfo(defs, bStore);
+        }
+      }
+    });
+
+    dispatch(touch());
+  };
+}
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -87,30 +134,10 @@ function makeD2StoresService(): D2StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
-    updateCharacters,
     reloadStores
   };
 
   return service;
-
-  /**
-   * Update the high level character information for all the stores
-   * (level, light, int/dis/str, etc.). This does not update the
-   * items in the stores - to do that, call reloadStores.
-   */
-  async function updateCharacters(account: DestinyAccount = getActivePlatform()!): Promise<void> {
-    const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
-    // TODO: create a new store
-    storesSelector(store.getState()).forEach((dStore) => {
-      if (!dStore.isVault) {
-        const bStore = profileInfo.characters.data?.[dStore.id];
-        if (bStore) {
-          dStore.updateCharacterInfo(defs, bStore);
-        }
-      }
-    });
-    store.dispatch(touch());
-  }
 
   /**
    * Set the current account, and get a stream of stores updates.
