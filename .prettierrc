@@ -6,5 +6,6 @@
     {
       "files": "*.html"
     }
-  ]
+  ],
+  "trailingComma": "none"
 }

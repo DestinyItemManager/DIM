@@ -149,14 +149,16 @@ export default function RichDestinyText({
 }): React.ReactElement {
   return (
     <>
-      {// don't bother processing without d2 defs
-      !defs || defs.isDestiny1()
-        ? text
-        : // split into segments, filter out empty, try replacing each piece with an icon if one matches
-          text
-            .split(iconPlaceholder)
-            .filter(Boolean)
-            .map((t) => replaceWithIcon(generateConversionTable(defs), t))}
+      {
+        // don't bother processing without d2 defs
+        !defs || defs.isDestiny1()
+          ? text
+          : // split into segments, filter out empty, try replacing each piece with an icon if one matches
+            text
+              .split(iconPlaceholder)
+              .filter(Boolean)
+              .map((t) => replaceWithIcon(generateConversionTable(defs), t))
+      }
     </>
   );
 }

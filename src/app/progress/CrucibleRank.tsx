@@ -27,9 +27,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
 
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
-  const streakCheckboxes = Array(5)
-    .fill(true)
-    .fill(false, streak.stepIndex);
+  const streakCheckboxes = Array(5).fill(true).fill(false, streak.stepIndex);
 
   // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;
@@ -94,8 +92,9 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
             transform="rotate(-90)"
             className="crucible-rank-progress"
             strokeWidth="3"
-            strokeDasharray={`${(circumference * progress.progressToNextLevel) /
-              progress.nextLevelAt} ${circumference}`}
+            strokeDasharray={`${
+              (circumference * progress.progressToNextLevel) / progress.nextLevelAt
+            } ${circumference}`}
             stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${progressionDef.color.blue})`}
           />
         )}
@@ -107,8 +106,9 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
             transform="rotate(-90)"
             className="crucible-rank-total-progress"
             strokeWidth="3"
-            strokeDasharray={`${(circumference2 * progress.currentProgress) /
-              rankTotal} ${circumference2}`}
+            strokeDasharray={`${
+              (circumference2 * progress.currentProgress) / rankTotal
+            } ${circumference2}`}
           />
         )}
         <image xlinkHref={bungieNetPath(step.icon)} width="40" height="40" x="7" y="7" />

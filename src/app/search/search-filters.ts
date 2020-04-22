@@ -548,7 +548,7 @@ function searchFilters(
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
+    filterFunction: memoizeOne(function (query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
         // By default, show anything that doesn't have the archive tag

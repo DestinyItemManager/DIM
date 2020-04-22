@@ -118,7 +118,7 @@
     "node-sass": "^4.9.0",
     "notify-webpack-plugin": "^2.0.0",
     "postcss-loader": "^3.0.0",
-    "prettier": "^1.18.2",
+    "prettier": "^2.0.4",
     "pretty-quick": "^2.0.0",
     "raw-loader": "^4.0.0",
     "sass-loader": "^8.0.0",
