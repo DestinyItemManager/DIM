@@ -115,7 +115,7 @@ module.exports = (env) => {
           terserOptions: {
             ecma: 8,
             module: true,
-            compress: { warnings: false, passes: 3, toplevel: true },
+            compress: { unsafe_arrows: true, warnings: false, passes: 5, toplevel: true },
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true }
           },
