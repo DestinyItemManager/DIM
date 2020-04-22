@@ -88,10 +88,7 @@ function makeD2StoresService(): D2StoreServiceType {
     getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
     updateCharacters,
-    reloadStores,
-    touch() {
-      store.dispatch(touch());
-    }
+    reloadStores
   };
 
   return service;
@@ -112,7 +109,7 @@ function makeD2StoresService(): D2StoreServiceType {
         }
       }
     });
-    service.touch();
+    store.dispatch(touch());
   }
 
   /**

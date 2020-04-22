@@ -53,10 +53,7 @@ function StoreService(): D1StoreServiceType {
     getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
     updateCharacters,
-    reloadStores,
-    touch() {
-      store.dispatch(touch());
-    }
+    reloadStores
   };
 
   return service;
@@ -74,7 +71,7 @@ function StoreService(): D1StoreServiceType {
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
-      service.touch();
+      store.dispatch(touch());
     });
   }
 

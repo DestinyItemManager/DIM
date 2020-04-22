@@ -44,6 +44,7 @@ import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { touch } from 'app/inventory/actions';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
@@ -241,7 +242,7 @@ function ItemTable({
     } finally {
       // Touch the stores service to update state
       if (items.length) {
-        items[0].getStoresService().touch();
+        dispatch(touch());
       }
     }
   });
