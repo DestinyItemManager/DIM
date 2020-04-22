@@ -109,6 +109,9 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         stores: [...state.stores]
       };
 
+    case getType(actions.charactersUpdated):
+      return updateCharacters(state, action.payload);
+
     // Buckets
     // TODO: only need to do this once, on loading a new platform.
     case getType(actions.setBuckets):
@@ -227,6 +230,19 @@ function updateInventory(
     newState.profileResponse = profileResponse;
   }
   return newState;
+}
+
+/**
+ * Merge in new top-level character info (stats, etc)
+ */
+function updateCharacters(state: InventoryState, characters: actions.CharacterInfo[]) {
+  return {
+    ...state,
+    stores: state.stores.map((store) => {
+      const character = characters.find((c) => c.characterId === store.id);
+      return character ? { ...store, ...character } : store;
+    })
+  };
 }
 
 function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {

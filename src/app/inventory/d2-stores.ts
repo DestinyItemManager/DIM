@@ -18,14 +18,14 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../utils/exceptions';
 import { getLight } from '../loadout/loadout-utils';
 import { resetIdTracker, processItems } from './store/d2-item-factory';
-import { makeVault, makeCharacter } from './store/d2-store-factory';
+import { makeVault, makeCharacter, getCharacterStatsData } from './store/d2-store-factory';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems, error, touch } from './actions';
+import { update, loadNewItems, error, charactersUpdated, CharacterInfo } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
@@ -36,8 +36,9 @@ import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { storesSelector } from './selectors';
 import { ThunkResult } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
-
+import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 
 /**
  * Update the high level character information for all the stores
@@ -62,24 +63,44 @@ export function updateCharacters(): ThunkResult {
       return;
     }
 
-    const profileInfo = (await (account.destinyVersion === 2
-      ? getCharacters(account)
-      : d1GetCharacters(account))) as DestinyProfileResponse;
+    let characters: CharacterInfo[] = [];
+    if (account.destinyVersion === 2) {
+      const profileInfo = await getCharacters(account);
+      characters = profileInfo.characters.data
+        ? Object.values(profileInfo.characters.data).map((character) => ({
+            characterId: character.characterId,
+            level: character.levelProgression.level,
+            powerLevel: character.light,
+            background: bungieNetPath(character.emblemBackgroundPath),
+            icon: bungieNetPath(character.emblemPath),
+            stats: getCharacterStatsData(getState().manifest.d2Manifest!, character.stats),
+            color: character.emblemColor
+          }))
+        : [];
+    } else {
+      const profileInfo = await d1GetCharacters(account);
+      characters = profileInfo.map((character) =>
+        makeD1CharacterInfo(getState().manifest.d1Manifest!, character.id, character.base)
+      );
+    }
 
-    // TODO: dispatch an action!
-    storesSelector(getState()).forEach((dStore) => {
-      if (!dStore.isVault) {
-        const bStore =
-          account.destinyVersion === 2
-            ? profileInfo.characters.data?.[dStore.id]
-            : (profileInfo as any).find((s) => s.id === dStore.id)!;
-        if (bStore) {
-          dStore.updateCharacterInfo(defs, bStore);
-        }
-      }
-    });
+    dispatch(charactersUpdated(characters));
+  };
+}
 
-    dispatch(touch());
+export function makeD1CharacterInfo(
+  defs: D1ManifestDefinitions,
+  characterId: string,
+  character: any
+) {
+  return {
+    characterId: characterId,
+    level: character.characterLevel,
+    powerLevel: character.characterBase.powerLevel,
+    percentToNextLevel: character.percentToNextLevel / 100,
+    background: bungieNetPath(character.backgroundPath),
+    icon: bungieNetPath(character.emblemPath),
+    stats: getD1CharacterStatsData(defs, character.characterBase)
   };
 }
 

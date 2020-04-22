@@ -32,6 +32,7 @@ export const moveItemTo = queuedAction(
         item = await movePromise;
 
         if (reload) {
+          // TODO: only reload the character that changed?
           // Refresh light levels and such
           await (rxStore.dispatch(updateCharacters()) as any);
         }

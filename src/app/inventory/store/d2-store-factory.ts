@@ -1,14 +1,13 @@
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
-  DestinyStatDefinition,
   DestinyClass,
   DestinyGender
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
-import { D2ManifestDefinitions, DefinitionTable } from '../../destiny2/d2-definitions';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
@@ -117,19 +116,6 @@ const StoreProto = {
     }
   },
 
-  updateCharacterInfo(
-    this: D2Store,
-    defs: D2ManifestDefinitions,
-    character: DestinyCharacterComponent
-  ) {
-    this.level = character.levelProgression.level; // Maybe?
-    this.powerLevel = character.light;
-    this.background = bungieNetPath(character.emblemBackgroundPath);
-    this.icon = bungieNetPath(character.emblemPath);
-    this.stats = { ...this.stats, ...getCharacterStatsData(defs.Stat, character.stats) };
-    this.color = character.emblemColor;
-  },
-
   // Remove an item from this store. Returns whether it actually removed anything.
   removeItem(this: D2Store, item: D2Item) {
     // Completely remove the source item
@@ -208,7 +194,7 @@ export function makeCharacter(
     percentToNextLevel:
       character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
     powerLevel: character.light,
-    stats: getCharacterStatsData(defs.Stat, character.stats),
+    stats: getCharacterStatsData(defs, character.stats),
     classType: classy.classType,
     className,
     gender: genderLocalizedName,
@@ -292,7 +278,7 @@ export function makeVault(
  * Compute character-level stats.
  */
 export function getCharacterStatsData(
-  statDefs: DefinitionTable<DestinyStatDefinition>,
+  defs: D2ManifestDefinitions,
   stats: {
     [key: number]: number;
   }
@@ -304,7 +290,7 @@ export function getCharacterStatsData(
 
   // Fill in missing stats
   statWhitelist.forEach((statHash) => {
-    const def = statDefs.get(statHash);
+    const def = defs.Stat.get(statHash);
     const value = stats[statHash] || 0;
     const stat: DimCharacterStat = {
       hash: statHash,

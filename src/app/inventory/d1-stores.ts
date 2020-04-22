@@ -52,28 +52,10 @@ function StoreService(): D1StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
-    updateCharacters,
     reloadStores
   };
 
   return service;
-
-  /**
-   * Update the high level character information for all the stores
-   * (level, light, int/dis/str, etc.). This does not update the
-   * items in the stores - to do that, call reloadStores.
-   */
-  function updateCharacters(account: DestinyAccount = getActivePlatform()!) {
-    return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
-      storesSelector(store.getState()).forEach((dStore) => {
-        if (!dStore.isVault) {
-          const bStore = bungieStores.find((s) => s.id === dStore.id)!;
-          dStore.updateCharacterInfo(defs, bStore.base);
-        }
-      });
-      store.dispatch(touch());
-    });
-  }
 
   /**
    * Set the current account, and get a stream of stores updates.

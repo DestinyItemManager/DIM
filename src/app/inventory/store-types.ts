@@ -92,12 +92,6 @@ export interface DimStore<Item = DimItem> {
     progressions: DestinyProgression[];
   };
 
-  /** Apply updated character info. */
-  updateCharacterInfo(
-    defs: D1ManifestDefinitions | D2ManifestDefinitions,
-    bStore: any
-  ): Promise<DimStore[]>;
-
   /**
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
@@ -204,8 +198,6 @@ export interface D1Store extends DimStore<D1Item> {
   // TODO: shape?
   advisors: any;
 
-  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
-  updateCharacterInfoFromEquip(characterInfo): void;
   /** Which faction is this character currently aligned with? */
   factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
@@ -218,9 +210,5 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  updateCharacterInfo(
-    defs: D2ManifestDefinitions,
-    bStore: DestinyCharacterComponent
-  ): Promise<D2Store[]>;
   getStoresService(): D1StoreServiceType;
 }
