@@ -127,7 +127,9 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
       if (item.quality?.min) {
         return item.quality.min;
       }
-      const dtrRating = getRating(item, store.getState().reviews.ratings);
+      const dtrRating = $featureFlags.reviewsEnabled
+        ? getRating(item, store.getState().reviews.ratings)
+        : undefined;
       return dtrRating?.overallScore;
     })
   ),

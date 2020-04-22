@@ -125,8 +125,12 @@ class Compare extends React.Component<Props, State> {
       reverseComparator(
         chainComparator(
           compareBy((item: DimItem) => {
-            const dtrRating = getRating(item, ratings);
-            const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+            const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
+            const showRating =
+              $featureFlags.reviewsEnabled &&
+              dtrRating &&
+              shouldShowRating(dtrRating) &&
+              dtrRating.overallScore;
 
             const stat =
               item.primStat && sortedHash === item.primStat.statHash

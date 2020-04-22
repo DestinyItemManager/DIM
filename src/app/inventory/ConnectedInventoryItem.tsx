@@ -37,8 +37,10 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item } = props;
 
   const settings = settingsSelector(state);
-  const dtrRating = getRating(item, ratingsSelector(state));
-  const showRating = shouldShowRating(dtrRating);
+  const dtrRating = $featureFlags.reviewsEnabled
+    ? getRating(item, ratingsSelector(state))
+    : undefined;
+  const showRating = $featureFlags.reviewsEnabled && shouldShowRating(dtrRating);
   const itemInfos = itemInfosSelector(state);
 
   return {

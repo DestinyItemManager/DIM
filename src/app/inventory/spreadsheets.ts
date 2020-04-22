@@ -335,15 +335,18 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
-    const dtrRating = getDtrRating(item);
+    if ($featureFlags.reviewsEnabled) {
+      const dtrRating = getDtrRating(item);
 
-    if (dtrRating?.overallScore) {
-      row['DTR Rating'] = dtrRating.overallScore;
-      row['# of Reviews'] = dtrRating.ratingCount;
-    } else {
-      row['DTR Rating'] = 'N/A';
-      row['# of Reviews'] = 'N/A';
+      if (dtrRating?.overallScore) {
+        row['DTR Rating'] = dtrRating.overallScore;
+        row['# of Reviews'] = dtrRating.ratingCount;
+      } else {
+        row['DTR Rating'] = 'N/A';
+        row['# of Reviews'] = 'N/A';
+      }
     }
+
     if (item.isDestiny1()) {
       row['% Quality'] = item.quality ? item.quality.min : 0;
     }
@@ -451,12 +454,14 @@ function downloadWeapons(
 
     const dtrRating = getDtrRating(item);
 
-    if (dtrRating?.overallScore) {
-      row['DTR Rating'] = dtrRating.overallScore;
-      row['# of Reviews'] = dtrRating.ratingCount;
-    } else {
-      row['DTR Rating'] = 'N/A';
-      row['# of Reviews'] = 'N/A';
+    if ($featureFlags.reviewsEnabled) {
+      if (dtrRating?.overallScore) {
+        row['DTR Rating'] = dtrRating.overallScore;
+        row['# of Reviews'] = dtrRating.ratingCount;
+      } else {
+        row['DTR Rating'] = 'N/A';
+        row['# of Reviews'] = 'N/A';
+      }
     }
 
     const stats = {
