@@ -39,7 +39,7 @@ const factionBadges = {
 
 // Prototype for Store objects - add methods to this to add them to all
 // stores.
-const StoreProto = {
+export const StoreProto = {
   /**
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
@@ -196,7 +196,7 @@ export function makeCharacter(
     background: `https://www.bungie.net/${character.backgroundPath}`,
     level: character.characterLevel,
     powerLevel: character.characterBase.powerLevel,
-    stats: getCharacterStatsData(defs.Stat, character.characterBase),
+    stats: getCharacterStatsData(defs, character.characterBase),
     classType: character.characterBase.classType,
     className,
     gender,

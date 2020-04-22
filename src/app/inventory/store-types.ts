@@ -1,13 +1,10 @@
 import {
   DestinyClass,
   DestinyProgression,
-  DestinyCharacterComponent,
   DestinyFactionDefinition,
   DestinyColor,
   DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';

@@ -16,7 +16,8 @@ import { set } from 'idb-keyval';
 import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-
+import { StoreProto as D2StoreProto } from './store/d2-store-factory';
+import { StoreProto as D1StoreProto } from './store/d1-store-factory';
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
  * We specifically watch the legacy state, not the new one.
@@ -240,7 +241,13 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
     ...state,
     stores: state.stores.map((store) => {
       const character = characters.find((c) => c.characterId === store.id);
-      return character ? { ...store, ...character } : store;
+      return character
+        ? // Have to make it into a full object again. TODO: un-object-ify this
+          Object.assign(Object.create(store.isDestiny2() ? D1StoreProto : D1StoreProto), {
+            ...store,
+            ...character
+          })
+        : store;
     })
   };
 }
