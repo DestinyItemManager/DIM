@@ -279,26 +279,33 @@ function ItemTable({
     .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
 
-  // TODO: this is garbage
-  // TODO: useReducer
-  // TODO: replace on click, append on shift-click
+  /**
+   * Toggle sorting of columns. If shift is held, adds this column to the sort.
+   */
   const toggleColumnSort = (column: ColumnDefinition) => () => {
-    const existingSort = columnSorts.find((c) => c.columnId === column.id);
-    if (existingSort) {
-      console.log(
-        existingSort.sort,
-        existingSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
-      );
-      setColumnSorts([
-        {
-          columnId: column.id,
-          sort: existingSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+    setColumnSorts((sorts) => {
+      const newColumnSorts = shiftHeld ? sorts : sorts.filter((s) => s.columnId === column.id);
+      let found = false;
+      let index = 0;
+      for (const columnSort of newColumnSorts) {
+        if (columnSort.columnId === column.id) {
+          newColumnSorts[index] = {
+            ...columnSort,
+            sort: columnSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+          };
+          found = true;
+          break;
         }
-      ]);
-    } else {
-      console.log('no existing sort', columnSorts, column.id);
-      setColumnSorts([{ columnId: column.id, sort: column.defaultSort || SortDirection.ASC }]);
-    }
+        index++;
+      }
+      if (!found) {
+        newColumnSorts.push({
+          columnId: column.id,
+          sort: column.defaultSort || SortDirection.ASC
+        });
+      }
+      return newColumnSorts;
+    });
   };
 
   /**

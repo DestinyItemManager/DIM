@@ -391,7 +391,7 @@ function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem 
           (p) => item.isExotic || !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
         );
         return (
-          <div className={clsx(styles.modPerks)}>
+          <div key={socket.socketIndex} className={clsx(styles.modPerks)}>
             {plugOptions.map(
               (p: DimPlug) =>
                 item.isDestiny2() && (

@@ -112,13 +112,11 @@ export const getSelectionTree = memoizeOne(
             {
               id: 'machinegun',
               itemCategoryHash: 12,
-              subCategories: [power],
               terminal: true
             },
             {
               id: 'rocketlauncher',
               itemCategoryHash: 13,
-              subCategories: [power],
               terminal: true
             },
             {
@@ -130,7 +128,6 @@ export const getSelectionTree = memoizeOne(
             {
               id: 'sword',
               itemCategoryHash: 54,
-              subCategories: [power],
               terminal: true
             },
             {
