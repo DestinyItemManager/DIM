@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
@@ -93,6 +93,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 // TODO: d1/d2 columns
 // TODO: stat ranges
 // TODO: special stat display? recoil, bars, etc
+// TODO: some basic optimization
 
 function ItemTable({
   items,
@@ -105,9 +106,9 @@ function ItemTable({
   dispatch
 }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
-  // TODO: maybe implement my own table component
 
   // TODO: useDispatch
+  // TODO: save in settings
   // TODO: different for weapons and armor?
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC }
@@ -128,7 +129,7 @@ function ItemTable({
 
   // TODO: save in settings
   // TODO: separate settings for armor & weapons?
-  // TODO: reorder
+  // TODO: reorder by dragging
   const [enabledColumns, setEnabledColumns] = useState([
     'selection',
     'icon',
@@ -155,9 +156,11 @@ function ItemTable({
     [wishList, items, itemInfos, ratings, defs]
   );
 
-  // TODO: "Stats" as a column
+  // This needs work for sure
   const filteredColumns = _.compact(
-    enabledColumns.map((id) => columns.find((column) => column.id === id))
+    enabledColumns.flatMap((id) =>
+      columns.filter((column) => id === (column.columnGroup ? column.columnGroup.id : column.id))
+    )
   );
 
   // process items into Rows
@@ -192,18 +195,23 @@ function ItemTable({
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
   const shiftHeld = useShiftHeld();
+
+  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = useCallback(
+    (item) => {
+      const { checked, id } = item;
+      setEnabledColumns((columns) =>
+        checked ? [...columns, id] : columns.filter((c) => c !== id)
+      );
+    },
+    [setEnabledColumns]
+  );
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
   }
-
-  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = (item) => {
-    const { checked, id } = item;
-    setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
-  };
 
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
@@ -350,7 +358,7 @@ function ItemTable({
   return (
     <>
       <EnabledColumnsSelector
-        columns={columns.filter((c) => c.id !== 'selection')}
+        columns={columns}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
         forClass={classIfAny}
@@ -398,7 +406,7 @@ function ItemTable({
                   }
                 />
               )}
-              {column.Header}
+              {column.header}
             </div>
           </div>
         ))}
@@ -427,7 +435,7 @@ function ItemTable({
                 })}
                 role="cell"
               >
-                {column.Cell ? column.Cell(row.values[column.id], row.item) : row.values[column.id]}
+                {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
               </div>
             ))}
           </React.Fragment>

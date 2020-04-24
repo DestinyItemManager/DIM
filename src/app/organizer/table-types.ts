@@ -8,6 +8,14 @@ export const enum SortDirection {
 
 type Value = string | number | boolean | undefined;
 
+/**
+ * Columns can optionally belong to a column group - if so, they're shown/hidden as a group.
+ */
+export interface ColumnGroup {
+  id: string;
+  header: React.ReactNode;
+}
+
 // TODO: column groupings?
 // TODO: custom configs like the total column?
 export interface ColumnDefinition {
@@ -22,11 +30,13 @@ export interface ColumnDefinition {
   /** A CSS grid expression for the width of the cell. Default: min-content. */
   gridWidth?: string;
   /** Header renderer */
-  Header: React.ReactNode;
+  header: React.ReactNode;
+  /** Columns can optionally belong to a column group - if so, they're shown/hidden as a group. */
+  columnGroup?: ColumnGroup;
   /** The raw value of the column for this item. */
   value(item: DimItem): Value;
   /** Renderer for the cell. Default: value */
-  Cell?(value: Value, item: DimItem): React.ReactNode;
+  cell?(value: Value, item: DimItem): React.ReactNode;
   /** A generator for search terms matching this item. Default: No filtering. */
   filter?(value: Value, item: DimItem): string;
   /** A custom sort function. Default: Something reasonable. */

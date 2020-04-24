@@ -15,7 +15,7 @@ import { ColumnDefinition } from './table-types';
  * TODO: Convert to including drag and drop functionality so that columns can be reordered.
  */
 // TODO: Save to settings
-function EnabledColumnsSelector({
+export default React.memo(function EnabledColumnsSelector({
   columns,
   enabledColumns,
   forClass,
@@ -26,30 +26,32 @@ function EnabledColumnsSelector({
   forClass: DestinyClass;
   onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
 }) {
-  const items: DropDownItem[] = [];
+  const items: { [id: string]: DropDownItem } = {};
 
   for (const column of columns) {
-    const { id, Header } = column;
-    const content = _.isFunction(Header) ? Header({} as any) : Header;
+    const id = column.columnGroup ? column.columnGroup.id : column.id;
+    const header = column.columnGroup ? column.columnGroup.header : column.header;
+    if (id === 'selection') {
+      continue;
+    }
+
     const checked = enabledColumns.includes(id) || false;
 
-    if (id && content) {
-      items.push({
+    if (!(id in items)) {
+      items[id] = {
         id,
-        content,
+        content: header,
         checked,
         onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked })
-      });
+      };
     }
   }
 
   return (
     <DropDown
       buttonText={t('Organizer.EnabledColumns')}
-      dropDownItems={items}
+      dropDownItems={Object.values(items)}
       forClass={forClass}
     />
   );
-}
-
-export default EnabledColumnsSelector;
+});
