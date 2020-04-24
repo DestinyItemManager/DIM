@@ -261,13 +261,13 @@ export function getColumns(
           ? item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
               ?.plugItem.displayProperties.name
           : undefined,
-      Cell: (_, item) =>
+      Cell: (_val, item) =>
         !item.isExotic && item.isDestiny2() && !item.energy ? (
           <div>
-            {[
+            {_.compact([
               item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
                 ?.plug!
-            ].map((p) => (
+            ]).map((p) => (
               <PressTip
                 key={p.plugItem.hash}
                 tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}

@@ -17,6 +17,7 @@ import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import { router } from 'app/router';
+import styles from './Organizer.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -68,7 +69,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   }
 
   return (
-    <div>
+    <div className={styles.organizer}>
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
         <ItemTable categories={selection} />

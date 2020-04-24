@@ -406,7 +406,7 @@ function ItemTable({
             >
               <input
                 type="checkbox"
-                title={t('ItemTable.SelectItem', { name: row.item.name })}
+                title={t('Organizer.SelectItem', { name: row.item.name })}
                 checked={selectedItemIds.includes(row.item.id)}
                 onChange={(e) => selectItem(e, row.item)}
               />

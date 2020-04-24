@@ -3,6 +3,7 @@
 .table {
   min-width: 100%;
   display: grid;
+  margin: 8px 0 !important;
 
   > div {
     padding: 4px 8px;
@@ -59,8 +60,9 @@
 }
 
 .selection {
-  padding-left: 2px !important;
+  padding-left: 8px !important;
   padding-right: 2px !important;
+  cursor: pointer;
 }
 
 .rating {
