@@ -58,3 +58,9 @@ export function getItemAcrossStores<Item extends DimItem, Store extends DimStore
   }
   return undefined;
 }
+
+/** Get the bonus power from the Seasonal Artifact */
+export function getArtifactBonus(store: DimStore) {
+  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+  return artifact?.primStat?.value || 0;
+}
