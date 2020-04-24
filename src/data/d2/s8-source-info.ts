@@ -433,6 +433,21 @@ const S8Sources: { [key: string]: number[] } = {
     3646911172, // Iron Truage Vest
     130221063, // Iron Truage Vestments
     738836759, // Iron Truage Vestments
+    423204919, // Iron Truage Hood (s9)
+    1604601714, // Iron Truage Vestments (s9)
+    3791686334, // Iron Truage Gloves (s9)
+    4211068696, // Iron Truage Legs (s9)
+    2241419267, // Timur's Iron Bond (s9)
+    1105558158, // Iron Truage Helm (s9)
+    1313089081, // Iron Truage Plate (s9)
+    2555322239, // Iron Truage Gauntlets (s9)
+    1476572353, // Iron Truage Greaves (s9)
+    2627255028, // Radegast's Iron Sash (s9)
+    3292445816, // Iron Truage Casque (s9)
+    1181560527, // Iron Truage Vest (s9)
+    3756249289, // Iron Truage Grips (s9)
+    4048191131, // Iron Truage Boots (s9)
+    2853073502, // Mantle of Efrideet (s9)
     1452894389, // Mantle of Efrideet
     561808153, // Mantle of Efrideet
     2620437164, // Mark of Remembrance
