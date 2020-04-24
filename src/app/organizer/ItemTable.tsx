@@ -34,6 +34,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
+import { touch } from 'app/inventory/actions';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -61,6 +62,7 @@ function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
   );
+
   // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
@@ -110,10 +112,11 @@ function ItemTable({
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC }
   ]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
 
+  // TODO: filter here, or in the mapState function?
   // Narrow items to selection
   const terminal = Boolean(_.last(categories)?.terminal);
   items = useMemo(() => {
@@ -193,9 +196,6 @@ function ItemTable({
 
   const shiftHeld = useShiftHeld();
 
-  // TODO inefficient
-  const selectedFlatRows: DimItem[] = []; //selection.map((s) => items.find((i) => s === i.id)!);
-
   if (!terminal) {
     return <div>No items match the current filters.</div>;
   }
@@ -208,11 +208,11 @@ function ItemTable({
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
-    const items = selectedFlatRows;
+    const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
 
     const state = selectedTag === 'lock';
     try {
-      for (const item of items) {
+      for (const item of selectedItems) {
         await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
@@ -221,8 +221,8 @@ function ItemTable({
       showNotification({
         type: 'success',
         title: state
-          ? t('Filter.LockAllSuccess', { num: items.length })
-          : t('Filter.UnlockAllSuccess', { num: items.length })
+          ? t('Filter.LockAllSuccess', { num: selectedItems.length })
+          : t('Filter.UnlockAllSuccess', { num: selectedItems.length })
       });
     } catch (e) {
       showNotification({
@@ -232,8 +232,8 @@ function ItemTable({
       });
     } finally {
       // Touch the stores service to update state
-      if (items.length) {
-        items[0].getStoresService().touch();
+      if (selectedItems.length) {
+        dispatch(touch());
       }
     }
   });
@@ -257,20 +257,11 @@ function ItemTable({
       : undefined;
 
   const onMoveSelectedItems = (store: DimStore) => {
-    if (selectedFlatRows?.length) {
-      const items = selectedFlatRows;
-      const loadoutItems: DimItem[] = [];
-
-      for (const item of items) {
-        if (!loadoutItems[item.type]) {
-          loadoutItems[item.type] = [];
-        }
-        loadoutItems[item.type].push(item);
-      }
-
+    if (selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
       const loadout = newLoadout(
         t('Organizer.BulkMoveLoadoutName'),
-        items.map((i) => convertToLoadoutItem(i, false))
+        selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
       applyLoadout(store, loadout, true);
@@ -278,9 +269,9 @@ function ItemTable({
   };
 
   const onTagSelectedItems = (tagInfo: TagInfo) => {
-    if (tagInfo.type && selectedFlatRows?.length) {
-      const items = selectedFlatRows;
-      dispatch(bulkTagItems(items, tagInfo.type));
+    if (tagInfo.type && selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+      dispatch(bulkTagItems(selectedItems, tagInfo.type));
     }
   };
 
@@ -314,10 +305,10 @@ function ItemTable({
    * Select all items, or if any are selected, clear the selection.
    */
   const selectAllItems: React.ChangeEventHandler<HTMLInputElement> = () => {
-    if (selectedItems.length === 0) {
-      setSelectedItems(rows.map((r) => r.item.id));
+    if (selectedItemIds.length === 0) {
+      setSelectedItemIds(rows.map((r) => r.item.id));
     } else {
-      setSelectedItems([]);
+      setSelectedItemIds([]);
     }
   };
 
@@ -327,6 +318,7 @@ function ItemTable({
   const selectItem = (e: React.ChangeEvent<HTMLInputElement>, item: DimItem) => {
     const checked = e.target.checked;
 
+    let changingIds = [item.id];
     if (shiftHeld && lastSelectedId.current) {
       let startIndex = rows.findIndex((r) => r.item.id === lastSelectedId.current);
       let endIndex = rows.findIndex((r) => r.item === item);
@@ -335,20 +327,13 @@ function ItemTable({
         startIndex = endIndex;
         endIndex = tmp;
       }
+      changingIds = rows.slice(startIndex, endIndex + 1).map((r) => r.item.id);
+    }
 
-      //const startChecked = selectedItems.includes(lastSelectedId.current);
-      const changingIds = rows.slice(startIndex, endIndex + 1).map((r) => r.item.id);
-      if (checked) {
-        setSelectedItems((selected) => _.uniq([...selected, ...changingIds]));
-      } else {
-        setSelectedItems((selected) => selected.filter((i) => !changingIds.includes(i)));
-      }
+    if (checked) {
+      setSelectedItemIds((selected) => _.uniq([...selected, ...changingIds]));
     } else {
-      if (checked) {
-        setSelectedItems((selected) => [...selected, item.id]);
-      } else {
-        setSelectedItems((selected) => selected.filter((i) => i != item.id));
-      }
+      setSelectedItemIds((selected) => selected.filter((i) => !changingIds.includes(i)));
     }
 
     lastSelectedId.current = item.id;
@@ -364,7 +349,7 @@ function ItemTable({
         forClass={classIfAny}
       />
       <ItemActions
-        itemsAreSelected={Boolean(selectedFlatRows.length)}
+        itemsAreSelected={Boolean(selectedItemIds.length)}
         onLock={onLock}
         stores={stores}
         onTagSelectedItems={onTagSelectedItems}
@@ -380,10 +365,11 @@ function ItemTable({
             name="selectAll"
             title="Select All"
             type="checkbox"
-            checked={selectedItems.length === rows.length}
+            checked={selectedItemIds.length === rows.length}
             ref={(el) =>
               el &&
-              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
+              (el.indeterminate =
+                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
             }
             onChange={selectAllItems}
           />
@@ -421,7 +407,7 @@ function ItemTable({
               <input
                 type="checkbox"
                 title={t('ItemTable.SelectItem', { name: row.item.name })}
-                checked={selectedItems.includes(row.item.id)}
+                checked={selectedItemIds.includes(row.item.id)}
                 onChange={(e) => selectItem(e, row.item)}
               />
             </div>
