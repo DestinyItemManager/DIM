@@ -37,6 +37,7 @@ import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { ColumnDefinition, SortDirection } from './table-types';
 import { TagValue } from '@destinyitemmanager/dim-api-types';
+import clsx from 'clsx';
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
 // TODO: stat ranges
@@ -183,9 +184,7 @@ export function getColumns(
               icon={value ? thumbsUpIcon : thumbsDownIcon}
               className={value ? styles.positive : styles.negative}
             />
-          ) : (
-            undefined
-          ),
+          ) : undefined,
         sort: compareBy((wishList) => (wishList === undefined ? 0 : wishList === true ? -1 : 1))
       },
     {
@@ -210,9 +209,7 @@ export function getColumns(
             <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
             {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
           </>
-        ) : (
-          undefined
-        ),
+        ) : undefined,
       defaultSort: SortDirection.DESC
     },
     /*
@@ -282,44 +279,15 @@ export function getColumns(
               </PressTip>
             ))}
           </div>
-        ) : (
-          undefined
-        )
+        ) : undefined
     },
     {
       id: 'perks',
       Header: 'Perks',
       value: () => 0, // TODO: figure out a way to sort perks
-      Cell: (_, item) => {
-        // TODO: Group by socket
-        const plugItems =
-          item.isDestiny2() && !item.energy
-            ? item.sockets?.categories[0]?.sockets
-                .flatMap((s) => s.plugOptions)
-                .filter(
-                  (p) =>
-                    item.isExotic ||
-                    !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-                ) || []
-            : [];
-        return (
-          <div className={styles.modPerks}>
-            {item.isDestiny2() &&
-              plugItems.map((p: DimPlug) => (
-                <PressTip
-                  key={p.plugItem.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk}>
-                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                    {p.plugItem.displayProperties.name}
-                  </div>
-                </PressTip>
-              ))}
-          </div>
-        );
-      },
-      noSort: true
+      Cell: (_, item) => <PerksCell defs={defs} item={item} />,
+      noSort: true,
+      gridWidth: 'max-content'
     },
     {
       id: 'mods',
@@ -412,4 +380,35 @@ export function getColumns(
   ]);
 
   return columns;
+}
+
+function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem }) {
+  const sockets = (item.isDestiny2() && !item.energy && item.sockets?.categories[0]?.sockets) || [];
+  return (
+    <>
+      {sockets.map((socket) => {
+        const plugOptions = socket.plugOptions.filter(
+          (p) => item.isExotic || !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
+        );
+        return (
+          <div className={clsx(styles.modPerks)}>
+            {plugOptions.map(
+              (p: DimPlug) =>
+                item.isDestiny2() && (
+                  <PressTip
+                    key={p.plugItem.hash}
+                    tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                  >
+                    <div className={styles.modPerk}>
+                      <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                      {p.plugItem.displayProperties.name}
+                    </div>
+                  </PressTip>
+                )
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
 }

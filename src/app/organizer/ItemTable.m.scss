@@ -106,10 +106,23 @@
   color: #d14334;
 }
 
+.perks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, min-content);
+  gap: 8px;
+  &.header {
+    display: block;
+  }
+}
+
 .modPerks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: minmax(150px, 1fr);
   gap: 4px;
+  .perks & {
+    border-left: 2px solid #888;
+    padding-left: 4px;
+  }
 }
 
 .modPerk {
