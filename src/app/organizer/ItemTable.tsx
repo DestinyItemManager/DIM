@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
@@ -110,9 +110,9 @@ function ItemTable({
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC }
   ]);
-  //const [selection, setSelection] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   // Track the last selection for shift-selecting
-  //const lastSelectedIndex = useRef<number>(null);
+  const lastSelectedId = useRef<string | null>(null);
 
   // Narrow items to selection
   const terminal = Boolean(_.last(categories)?.terminal);
@@ -310,6 +310,50 @@ function ItemTable({
     }
   };
 
+  /**
+   * Select all items, or if any are selected, clear the selection.
+   */
+  const selectAllItems: React.ChangeEventHandler<HTMLInputElement> = () => {
+    if (selectedItems.length === 0) {
+      setSelectedItems(rows.map((r) => r.item.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  /**
+   * Select and unselect items. Supports shift-held range selection.
+   */
+  const selectItem = (e: React.ChangeEvent<HTMLInputElement>, item: DimItem) => {
+    const checked = e.target.checked;
+
+    if (shiftHeld && lastSelectedId.current) {
+      let startIndex = rows.findIndex((r) => r.item.id === lastSelectedId.current);
+      let endIndex = rows.findIndex((r) => r.item === item);
+      if (startIndex > endIndex) {
+        const tmp = startIndex;
+        startIndex = endIndex;
+        endIndex = tmp;
+      }
+
+      //const startChecked = selectedItems.includes(lastSelectedId.current);
+      const changingIds = rows.slice(startIndex, endIndex + 1).map((r) => r.item.id);
+      if (checked) {
+        setSelectedItems((selected) => _.uniq([...selected, ...changingIds]));
+      } else {
+        setSelectedItems((selected) => selected.filter((i) => !changingIds.includes(i)));
+      }
+    } else {
+      if (checked) {
+        setSelectedItems((selected) => [...selected, item.id]);
+      } else {
+        setSelectedItems((selected) => selected.filter((i) => i != item.id));
+      }
+    }
+
+    lastSelectedId.current = item.id;
+  };
+
   // TODO: css grid, floating header
   return (
     <>
@@ -332,7 +376,17 @@ function ItemTable({
         role="table"
       >
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-          <input type="checkbox" />
+          <input
+            name="selectAll"
+            title="Select All"
+            type="checkbox"
+            checked={selectedItems.length === rows.length}
+            ref={(el) =>
+              el &&
+              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
+            }
+            onChange={selectAllItems}
+          />
         </div>
         {filteredColumns.map((column: ColumnDefinition) => (
           <div
@@ -364,7 +418,12 @@ function ItemTable({
               })}
               role="cell"
             >
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                title={t('ItemTable.SelectItem', { name: row.item.name })}
+                checked={selectedItems.includes(row.item.id)}
+                onChange={(e) => selectItem(e, row.item)}
+              />
             </div>
             {filteredColumns.map((column: ColumnDefinition) => (
               <div
