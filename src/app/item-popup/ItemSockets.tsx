@@ -18,6 +18,7 @@ import BestRatedIcon from './BestRatedIcon';
 import ReactDOM from 'react-dom';
 import SocketDetails from './SocketDetails';
 import { LockedItemType } from 'app/loadout-builder/types';
+import { emptySet } from 'app/utils/empty';
 
 interface ProvidedProps {
   item: D2Item;
@@ -39,9 +40,11 @@ interface StoreProps {
 const EMPTY = [];
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  const reviewResponse = getReviews(item, state);
+  const reviewResponse = $featureFlags.reviewsEnabled ? getReviews(item, state) : undefined;
   const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
-  const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
+  const bestPerks = $featureFlags.reviewsEnabled
+    ? ratePerks(item, reviews as D2ItemUserReview[])
+    : emptySet<number>();
   return {
     wishListsEnabled: wishListsEnabledSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],

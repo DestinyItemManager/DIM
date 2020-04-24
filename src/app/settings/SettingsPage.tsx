@@ -35,6 +35,7 @@ import Spreadsheets from './Spreadsheets';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { clearRatings } from 'app/item-review/actions';
 import { fetchRatings } from 'app/item-review/destiny-tracker.service';
+import { emptyArray } from 'app/utils/empty';
 
 interface StoreProps {
   settings: Settings;
@@ -46,7 +47,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    reviewModeOptions: reviewModesSelector(state)
+    reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray()
   };
 }
 
@@ -487,8 +488,10 @@ class SettingsPage extends React.Component<Props> {
     e.preventDefault();
     this.onChange(e);
 
-    this.props.dispatch(clearRatings());
-    this.props.dispatch(fetchRatings());
+    if ($featureFlags.reviewsEnabled) {
+      this.props.dispatch(clearRatings());
+      this.props.dispatch(fetchRatings());
+    }
 
     return false;
   };

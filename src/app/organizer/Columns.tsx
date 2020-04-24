@@ -224,7 +224,7 @@ export function getColumns(
       // TODO: boolean renderer
       Cell: ({ cell: { value } }) => (value ? <AppIcon icon={faCheck} /> : null)
     },
-    {
+    $featureFlags.reviewsEnabled && {
       id: 'rating',
       Header: 'Rating',
       accessor: (item) => ratings && getRating(item, ratings)?.overallScore,

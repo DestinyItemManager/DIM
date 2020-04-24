@@ -44,6 +44,7 @@ import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { emptyObject } from 'app/utils/empty';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
@@ -90,7 +91,7 @@ function mapStateToProps() {
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
-      ratings: ratingsSelector(state),
+      ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait
     };

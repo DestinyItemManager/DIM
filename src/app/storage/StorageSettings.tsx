@@ -38,7 +38,7 @@ declare global {
 
 const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const supportsExport = !iOS;
-const canClearIgnoredUsers = $DIM_FLAVOR === 'dev';
+const canClearIgnoredUsers = $featureFlags.reviewsEnabled && $DIM_FLAVOR === 'dev';
 
 interface State {
   quota?: { quota: number; usage: number };
