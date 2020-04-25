@@ -86,6 +86,8 @@ export async function setItemLockState(
   } else if (item.isDestiny1()) {
     await d1SetItemState(item, store, state, type);
   }
+
+  // TODO: dispatch an action to mutate the item!
 }
 
 export const dimItemService = ItemService();

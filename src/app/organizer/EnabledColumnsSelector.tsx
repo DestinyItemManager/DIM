@@ -1,10 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import { DimItem } from 'app/inventory/item-types';
-import { Column } from 'react-table';
 import DropDown, { DropDownItem } from './DropDown';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { ColumnDefinition } from './table-types';
 
 /**
  * Component for selection of which columns are displayed in the organizer table.
@@ -15,41 +14,44 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
  *
  * TODO: Convert to including drag and drop functionality so that columns can be reordered.
  */
-function EnabledColumnsSelector({
+// TODO: Save to settings
+export default React.memo(function EnabledColumnsSelector({
   columns,
   enabledColumns,
   forClass,
   onChangeEnabledColumn
 }: {
-  columns: Column<DimItem>[];
+  columns: ColumnDefinition[];
   enabledColumns: string[];
   forClass: DestinyClass;
   onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
 }) {
-  const items: DropDownItem[] = [];
+  const items: { [id: string]: DropDownItem } = {};
 
   for (const column of columns) {
-    const { id, Header } = column;
-    const content = _.isFunction(Header) ? Header({} as any) : Header;
-    const checked = enabledColumns.includes(id!) || false;
+    const id = column.columnGroup ? column.columnGroup.id : column.id;
+    const header = column.columnGroup ? column.columnGroup.header : column.header;
+    if (id === 'selection') {
+      continue;
+    }
 
-    if (id && content) {
-      items.push({
+    const checked = enabledColumns.includes(id) || false;
+
+    if (!(id in items)) {
+      items[id] = {
         id,
-        content,
+        content: header,
         checked,
         onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked })
-      });
+      };
     }
   }
 
   return (
     <DropDown
       buttonText={t('Organizer.EnabledColumns')}
-      dropDownItems={items}
+      dropDownItems={Object.values(items)}
       forClass={forClass}
     />
   );
-}
-
-export default EnabledColumnsSelector;
+});
