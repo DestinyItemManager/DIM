@@ -43,7 +43,7 @@ export function SelectableMod({
   defs: D2ManifestDefinitions;
   bucket: InventoryBucket;
   selected: boolean;
-  unselectable?: boolean;
+  unselectable: boolean;
   onLockedPerk?(perk: LockedItemType): void;
 }) {
   const handleClick = (e) => {
@@ -86,12 +86,11 @@ export function SelectableArmor2Mod({
   category: number | 'seasonal';
   defs: D2ManifestDefinitions;
   selected: boolean;
-  unselectable?: boolean;
+  unselectable: boolean;
   onLockedArmor2Mod(mod: LockedArmor2Mod): void;
 }) {
-  const handleClick = (e) => {
-    e.preventDefault();
-    onLockedArmor2Mod({ mod, category });
+  const handleClick = () => {
+    !unselectable && onLockedArmor2Mod({ mod, category });
   };
 
   return (

@@ -11,7 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, Armor2ModPlugCategories } from 'app/utils/item-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -113,6 +113,11 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
   return comparators;
 }
 
+const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
+  item.isDestiny2() &&
+  item.energy &&
+  mod.mod.plug.energyCost.energyType === item.energy?.energyType;
+
 /**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
  * seasonalMods. Currently it does not care for the element affinity or the armour
@@ -133,7 +138,7 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
       // Not currently checking energy of mod and armour matches.
-      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash)) {
+      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash) && doEnergiesMatch(mod, item)) {
         if (!modArrays[item.bucket.hash]) {
           modArrays[item.bucket.hash] = [];
         }
@@ -165,6 +170,9 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[
   return false;
 }
 
+const doEnergiesClash = (mods: readonly LockedArmor2Mod[], item: DimItem): boolean =>
+  Boolean(mods?.length && !mods.every((mod) => doEnergiesMatch(mod, item)));
+
 /**
  * Filter sets down based on stat filters, locked perks, etc.
  */
@@ -179,21 +187,61 @@ export function filterGeneratedSets(
 ) {
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
-  if (minimumPower > 0) {
-    matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
-  }
+  matchedSets = matchedSets.filter((set) => {
+    if (set.maxPower < minimumPower) {
+      return false;
+    }
 
-  if (lockedArmor2Mods.seasonal?.length) {
-    const setsBeforeFilter = matchedSets.length;
-    // Filter so that every mod slots into some item
-    matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedArmor2Mods.seasonal!));
-
-    console.info(
-      `Filtered out ${
-        setsBeforeFilter - matchedSets.length
-      } sets based on seasonal mod requirements`
+    const firstValidSetArmor2Count = set.firstValidSet.reduce(
+      (total, item) => (item.isDestiny2() && item.energy ? total + 1 : total),
+      0
     );
-  }
+
+    if (
+      lockedArmor2Mods.seasonal &&
+      (firstValidSetArmor2Count < lockedArmor2Mods.seasonal.length ||
+        !canAllModsBeUsed(set, lockedArmor2Mods.seasonal))
+    ) {
+      return false;
+    }
+
+    const generalMods = lockedArmor2Mods[Armor2ModPlugCategories.general];
+    if (generalMods && firstValidSetArmor2Count < generalMods.length) {
+      return false;
+    }
+
+    const helmet = set.firstValidSet[0];
+    const helmetMods = lockedArmor2Mods[Armor2ModPlugCategories.helmet] || [];
+    if (doEnergiesClash(helmetMods, helmet)) {
+      return false;
+    }
+
+    const arms = set.firstValidSet[1];
+    const armMods = lockedArmor2Mods[Armor2ModPlugCategories.gauntlets] || [];
+    if (doEnergiesClash(armMods, arms)) {
+      return false;
+    }
+
+    const chest = set.firstValidSet[2];
+    const chestMods = lockedArmor2Mods[Armor2ModPlugCategories.chest] || [];
+    if (doEnergiesClash(chestMods, chest)) {
+      return false;
+    }
+
+    const legs = set.firstValidSet[3];
+    const legMods = lockedArmor2Mods[Armor2ModPlugCategories.leg] || [];
+    if (doEnergiesClash(legMods, legs)) {
+      return false;
+    }
+
+    const classItem = set.firstValidSet[4];
+    const classMods = lockedArmor2Mods[Armor2ModPlugCategories.classitem] || [];
+    if (doEnergiesClash(classMods, classItem)) {
+      return false;
+    }
+
+    return true;
+  });
 
   matchedSets = matchedSets.sort(
     chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))

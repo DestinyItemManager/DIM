@@ -2,7 +2,7 @@ import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { LockedArmor2Mod, LockedArmor2ModMap } from './types';
 import _ from 'lodash';
@@ -235,6 +235,8 @@ class ModPicker extends React.Component<Props, State> {
               locked={lockedArmor2Mods[category]}
               title={Armor2ModPlugCategoriesTitles[category]}
               category={category}
+              maximumSelectable={category === Armor2ModPlugCategories.general ? 5 : 2}
+              energyMustMatch={true}
               onModSelected={this.onModSelected}
             />
           ))}
@@ -242,8 +244,9 @@ class ModPicker extends React.Component<Props, State> {
             mods={queryFilteredSeasonalMods}
             defs={defs}
             locked={lockedArmor2Mods.seasonal}
-            title="Seasonal"
+            title="LB.Seasonal"
             category="seasonal"
+            maximumSelectable={5}
             onModSelected={this.onModSelected}
           />
         </div>
@@ -259,7 +262,7 @@ class ModPicker extends React.Component<Props, State> {
         lockedArmor2Mods: {
           ...lockedArmor2Mods,
           [item.category]: lockedArmor2Mods[item.category]?.filter(
-            (li) => li.mod.hash === item.mod.hash
+            (li) => li.mod.hash !== item.mod.hash
           )
         }
       });
