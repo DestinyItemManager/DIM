@@ -16,7 +16,7 @@ import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
-import { specialtyModSocketHashes } from 'app/utils/item-utils';
+import { specialtyModSocketHashes, isArmor2Mod } from 'app/utils/item-utils';
 import ModPickerSection from './ModPickerSection';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import PickerHeader from './PickerHeader';
@@ -53,20 +53,14 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: Readonly<{
-    [bucketHash: number]: readonly {
-      item: DestinyInventoryItemDefinition;
-      // plugSet this mod appears in
-      plugSetHash: number;
-    }[];
-  }>;
+  mods: DestinyInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
-  const unlockedPlugsSelector = createSelector(
+  const unlockedModsSelector = createSelector(
     profileResponseSelector,
     storesSelector,
     (state: RootState) => state.manifest.d2Manifest!,
@@ -74,7 +68,7 @@ function mapStateToProps() {
     (profileResponse, stores, defs, classType): StoreProps['mods'] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse) {
-        return {};
+        return [];
       }
 
       // 1. loop through all items, build up a map of mod sockets by bucket
@@ -107,29 +101,25 @@ function mapStateToProps() {
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods
-      return _.mapValues(plugSets, (sets) => {
-        const unlockedPlugs: { [itemHash: number]: number } = {};
+      const allMods = Object.values(plugSets).flatMap((sets) => {
+        const unlockedPlugs: number[] = [];
+
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
             if (plugIsInsertable(plugSetItem)) {
-              unlockedPlugs[plugSetItem.plugItemHash] = plugSetHash;
+              unlockedPlugs.push(plugSetItem.plugItemHash);
             }
           }
         }
-        return Object.entries(unlockedPlugs)
-          .map(([i, plugSetHash]) => ({
-            item: defs.InventoryItem.get(parseInt(i, 10)),
-            plugSetHash
-          }))
-          .filter(
-            (i) =>
-              i.item.inventory.tierType !== TierType.Common &&
-              (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
-              i.item.collectibleHash
-          )
-          .sort((a, b) => sortMods(a.item, b.item));
+
+        return unlockedPlugs
+          .map((i) => defs.InventoryItem.get(i))
+          .filter((item) => isArmor2Mod(item) && item.collectibleHash)
+          .sort((a, b) => sortMods(a, b));
       });
+
+      return _.uniqBy(allMods, (mod) => mod.hash);
     }
   );
 
@@ -137,7 +127,7 @@ function mapStateToProps() {
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: state.inventory.buckets!,
     language: settingsSelector(state).language,
-    mods: unlockedPlugsSelector(state, props),
+    mods: unlockedModsSelector(state, props),
     defs: state.manifest.d2Manifest!
   });
 }
@@ -191,33 +181,21 @@ class ModPicker extends React.Component<Props, State> {
       : new RegExp(escapeRegExp(query), 'i');
 
     const queryFilteredMods = query.length
-      ? _.mapValues(mods, (bucketMods) =>
-          bucketMods.filter(
-            (mod) =>
-              regexp.test(mod.item.displayProperties.name) ||
-              regexp.test(mod.item.displayProperties.description)
-          )
+      ? mods.filter(
+          (mod) =>
+            regexp.test(mod.displayProperties.name) ||
+            regexp.test(mod.displayProperties.description)
         )
       : mods;
 
     const getByPlugCategoryHash = (plugCategoryHash: number) =>
-      _.uniqBy(
-        Object.values(queryFilteredMods).flatMap((bucktedMods) =>
-          bucktedMods
-            .filter(({ item }) => item.plug.plugCategoryHash === plugCategoryHash)
-            .map(({ item }) => ({ mod: item, category: item.plug.plugCategoryHash }))
-        ),
-        ({ mod }) => mod.hash
-      );
+      queryFilteredMods
+        .filter((mod) => mod.plug.plugCategoryHash === plugCategoryHash)
+        .map((mod) => ({ mod, category: plugCategoryHash }));
 
-    const queryFilteredSeasonalMods = _.uniqBy(
-      Object.values(queryFilteredMods).flatMap((bucktedMods) =>
-        bucktedMods
-          .filter(({ item }) => specialtyModSocketHashes.includes(item.plug.plugCategoryHash))
-          .map(({ item }) => ({ mod: item, category: 'seasonal' as 'seasonal' }))
-      ),
-      ({ mod }) => mod.hash
-    );
+    const queryFilteredSeasonalMods = queryFilteredMods
+      .filter((mod) => specialtyModSocketHashes.includes(mod.plug.plugCategoryHash))
+      .map((mod) => ({ mod, category: 'seasonal' as 'seasonal' }));
 
     const footer = Object.values(lockedArmor2Mods).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
