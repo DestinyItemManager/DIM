@@ -3,30 +3,36 @@ import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { LockableBuckets, LockedItemType, LockedMap, LockedModBase } from './types';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { LockedArmor2Mod, LockedArmor2ModMap } from './types';
 import _ from 'lodash';
-import {
-  removeLockedItem,
-  lockedItemsEqual,
-  addLockedItem,
-  isLoadoutBuilderItem
-} from './generated-sets/utils';
+import { isLoadoutBuilderItem } from './generated-sets/utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
-import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
 import { specialtyModSocketHashes } from 'app/utils/item-utils';
-import SeasonalModPicker from './SeasonalModPicker';
+import ModPickerSection from './ModPickerSection';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import PickerHeader from './PickerHeader';
-import PickerFooter from './PickerFooter';
+import ModPickerFooter from './ModPickerFooter';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
+import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+
+const Armor2ModPlugCategoriesTitles = {
+  [Armor2ModPlugCategories.general]: 'LB.General',
+  [Armor2ModPlugCategories.helmet]: 'LB.Helmet',
+  [Armor2ModPlugCategories.gauntlets]: 'LB.Gauntlets',
+  [Armor2ModPlugCategories.chest]: 'LB.Chest',
+  [Armor2ModPlugCategories.leg]: 'LB.Leg',
+  [Armor2ModPlugCategories.classitem]: 'LB.ClassItem',
+  ['seasonal']: 'LB.Season'
+};
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -36,11 +42,9 @@ export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
 );
 
 interface ProvidedProps {
-  lockedMap: LockedMap;
-  lockedSeasonalMods: LockedModBase[];
+  lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
-  onPerksSelected(perks: LockedMap): void;
-  onSeasonalModsChanged(mods: LockedModBase[]): void;
+  onArmor2ModsChanged(mods: LockedArmor2ModMap): void;
   onClose(): void;
 }
 
@@ -141,8 +145,7 @@ function mapStateToProps() {
 interface State {
   query: string;
   height?: number;
-  selectedPerks: LockedMap;
-  selectedSeasonalMods: LockedModBase[];
+  lockedArmor2Mods: LockedArmor2ModMap;
 }
 
 /**
@@ -151,8 +154,7 @@ interface State {
 class ModPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
-    selectedPerks: copy(this.props.lockedMap),
-    selectedSeasonalMods: copy(this.props.lockedSeasonalMods)
+    lockedArmor2Mods: copy(this.props.lockedArmor2Mods)
   };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
@@ -173,10 +175,15 @@ class ModPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, mods, buckets, language, onClose, isPhonePortrait, lockedMap } = this.props;
-    const { query, height, selectedPerks, selectedSeasonalMods } = this.state;
+    const { defs, mods, language, onClose, isPhonePortrait } = this.props;
+    const { query, height, lockedArmor2Mods } = this.state;
 
-    const order = Object.values(LockableBuckets);
+    const order = [...Object.values(Armor2ModPlugCategories), 'seasonal' as 'seasonal'].map(
+      (category) => ({
+        category,
+        nameTranslation: Armor2ModPlugCategoriesTitles[category]
+      })
+    );
 
     // Only some languages effectively use the \b regex word boundary
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -193,25 +200,34 @@ class ModPicker extends React.Component<Props, State> {
         )
       : mods;
 
+    const getByPlugCategoryHash = (plugCategoryHash: number) =>
+      _.uniqBy(
+        Object.values(queryFilteredMods).flatMap((bucktedMods) =>
+          bucktedMods
+            .filter(({ item }) => item.plug.plugCategoryHash === plugCategoryHash)
+            .map(({ item }) => ({ mod: item, category: item.plug.plugCategoryHash }))
+        ),
+        ({ mod }) => mod.hash
+      );
+
     const queryFilteredSeasonalMods = _.uniqBy(
       Object.values(queryFilteredMods).flatMap((bucktedMods) =>
         bucktedMods
           .filter(({ item }) => specialtyModSocketHashes.includes(item.plug.plugCategoryHash))
-          .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
+          .map(({ item }) => ({ mod: item, category: 'seasonal' as 'seasonal' }))
       ),
       ({ mod }) => mod.hash
     );
 
-    const footer = Object.values(selectedPerks).some((f) => Boolean(f?.length))
+    const footer = Object.values(lockedArmor2Mods).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
-          <PickerFooter
+          <ModPickerFooter
             defs={defs}
-            bucketOrder={order}
-            buckets={buckets}
+            categoryOrder={order}
+            lockedArmor2Mods={lockedArmor2Mods}
             isPhonePortrait={isPhonePortrait}
-            selectedPerks={lockedMap}
             onSubmit={(e) => this.onSubmit(e, onClose)}
-            onPerkSelected={this.onPerkSelected}
+            onModSelected={this.onModSelected}
           />
         )
       : undefined;
@@ -222,7 +238,7 @@ class ModPicker extends React.Component<Props, State> {
         header={
           <PickerHeader
             buckets={this.props.buckets}
-            bucketOrder={order}
+            categoryOrder={order}
             query={query}
             scrollToBucket={this.scrollToBucket}
             onSearchChange={(e) => this.setState({ query: e.currentTarget.value })}
@@ -233,64 +249,60 @@ class ModPicker extends React.Component<Props, State> {
         sheetClassName="item-picker"
       >
         <div ref={this.itemContainer} style={{ height }}>
-          <SeasonalModPicker
+          {Object.values(Armor2ModPlugCategories).map((category) => (
+            <ModPickerSection
+              key={category}
+              mods={getByPlugCategoryHash(category)}
+              defs={defs}
+              locked={lockedArmor2Mods[category]}
+              title={Armor2ModPlugCategoriesTitles[category]}
+              category={category}
+              onModSelected={this.onModSelected}
+            />
+          ))}
+          <ModPickerSection
             mods={queryFilteredSeasonalMods}
             defs={defs}
-            locked={selectedSeasonalMods}
-            onSeasonalModSelected={this.onSeasonalModSelected}
+            locked={lockedArmor2Mods.seasonal}
+            title="Seasonal"
+            category="seasonal"
+            onModSelected={this.onModSelected}
           />
         </div>
       </Sheet>
     );
   }
 
-  private onPerkSelected = (item: LockedItemType, bucket: InventoryBucket) => {
-    const { selectedPerks } = this.state;
+  private onModSelected = (item: LockedArmor2Mod) => {
+    const { lockedArmor2Mods } = this.state;
 
-    const perksForBucket = selectedPerks[bucket.hash];
-    if (perksForBucket?.some((li) => lockedItemsEqual(li, item))) {
+    if (lockedArmor2Mods[item.category]?.some((li) => li.mod.hash === item.mod.hash)) {
       this.setState({
-        selectedPerks: {
-          ...selectedPerks,
-          [bucket.hash]: removeLockedItem(item, selectedPerks[bucket.hash])
+        lockedArmor2Mods: {
+          ...lockedArmor2Mods,
+          [item.category]: lockedArmor2Mods[item.category]?.filter(
+            (li) => li.mod.hash === item.mod.hash
+          )
         }
       });
     } else {
       this.setState({
-        selectedPerks: {
-          ...selectedPerks,
-          [bucket.hash]: addLockedItem(item, selectedPerks[bucket.hash])
+        lockedArmor2Mods: {
+          ...lockedArmor2Mods,
+          [item.category]: [...(lockedArmor2Mods[item.category] || []), item]
         }
-      });
-    }
-  };
-
-  private onSeasonalModSelected = (item: LockedModBase) => {
-    const { selectedSeasonalMods } = this.state;
-
-    if (selectedSeasonalMods.some((li) => li.mod.hash === item.mod.hash)) {
-      this.setState({
-        selectedSeasonalMods: selectedSeasonalMods.filter(
-          (existing) => existing.mod.hash !== item.mod.hash
-        )
-      });
-    } else {
-      this.setState({
-        selectedSeasonalMods: [...selectedSeasonalMods, item]
       });
     }
   };
 
   private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    this.props.onPerksSelected(this.state.selectedPerks);
-    this.props.onSeasonalModsChanged(this.state.selectedSeasonalMods);
+    this.props.onArmor2ModsChanged(this.state.lockedArmor2Mods);
     onClose();
   };
 
-  private scrollToBucket = (bucketIdOrSeasonal: number | string) => {
-    const elementId =
-      bucketIdOrSeasonal === 'seasonal' ? bucketIdOrSeasonal : `perk-bucket-${bucketIdOrSeasonal}`;
+  private scrollToBucket = (categoryOrSeasonal: number | string) => {
+    const elementId = `mod-picker-section-${categoryOrSeasonal}`;
     const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };

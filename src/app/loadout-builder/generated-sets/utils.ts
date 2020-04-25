@@ -1,4 +1,4 @@
-import { LockableBuckets, LockedModBase } from './../types';
+import { LockableBuckets, LockedArmor2Mod, LockedArmor2ModMap } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
@@ -120,7 +120,7 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
  *
  * The mods passed in should only be seasonal mods.
  */
-function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[]) {
+function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[]) {
   if (seasonalMods.length > 5) {
     return false;
   }
@@ -172,7 +172,7 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
-  lockedSeasonalMods: readonly LockedModBase[],
+  lockedArmor2Mods: LockedArmor2ModMap,
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
@@ -183,10 +183,10 @@ export function filterGeneratedSets(
     matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
   }
 
-  if (lockedSeasonalMods.length) {
+  if (lockedArmor2Mods.seasonal?.length) {
     const setsBeforeFilter = matchedSets.length;
     // Filter so that every mod slots into some item
-    matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedSeasonalMods));
+    matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedArmor2Mods.seasonal!));
 
     console.info(
       `Filtered out ${

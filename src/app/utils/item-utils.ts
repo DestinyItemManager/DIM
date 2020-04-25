@@ -1,4 +1,8 @@
-import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import {
+  DamageType,
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition
+} from 'bungie-api-ts/destiny2';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 
 import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
@@ -21,6 +25,15 @@ export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
   [DestinyEnergyType.Void]: 'void'
+};
+
+export const Armor2ModPlugCategories = {
+  general: 2487827355,
+  helmet: 2912171003,
+  gauntlets: 3422420680,
+  chest: 1526202480,
+  leg: 2111701510,
+  classitem: 912441879
 };
 
 export const getItemDamageShortName: (item: DimItem) => string | undefined = (item) =>
@@ -78,3 +91,7 @@ export const getSpecialtySocketMetadata: (item: DimItem) => ModMetadata | undefi
 /** this returns a string for easy printing purposes. '' if not found */
 export const getItemSpecialtyModSlotDisplayName: (item: DimItem) => string = (item) =>
   getSpecialtySocket(item)?.plug!.plugItem.itemTypeDisplayName || '';
+
+export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
+  Object.values(Armor2ModPlugCategories).includes(item.plug.plugCategoryHash) ||
+  specialtyModSocketHashes.includes(item.plug.plugCategoryHash);

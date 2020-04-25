@@ -27,7 +27,8 @@ import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import PickerHeader from './PickerHeader';
-import PickerFooter from './PickerFooter';
+import PerkPickerFooter from './PerkPickerFooter';
+import { isArmor2Mod } from 'app/utils/item-utils';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -190,7 +191,8 @@ function mapStateToProps() {
             (i) =>
               i.item.inventory.tierType !== TierType.Common &&
               (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
-              i.item.collectibleHash
+              i.item.collectibleHash &&
+              !isArmor2Mod(i.item)
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });
@@ -286,7 +288,7 @@ class PerkPicker extends React.Component<Props, State> {
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
-          <PickerFooter
+          <PerkPickerFooter
             defs={defs}
             bucketOrder={order}
             buckets={buckets}

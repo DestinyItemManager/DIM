@@ -6,7 +6,8 @@ import styles from './PickerHeader.m.scss';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 
 interface Props {
-  bucketOrder: number[];
+  bucketOrder?: number[];
+  categoryOrder?: { category: number | 'seasonal'; nameTranslation: string }[];
   buckets: InventoryBuckets;
   isPhonePortrait: boolean;
   query: string;
@@ -15,7 +16,15 @@ interface Props {
 }
 
 function PickerHeader(props: Props) {
-  const { bucketOrder, buckets, isPhonePortrait, query, onSearchChange, scrollToBucket } = props;
+  const {
+    bucketOrder,
+    categoryOrder,
+    buckets,
+    isPhonePortrait,
+    query,
+    onSearchChange,
+    scrollToBucket
+  } = props;
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
@@ -41,15 +50,21 @@ function PickerHeader(props: Props) {
         </div>
       </div>
       <div className={styles.tabs}>
-        {bucketOrder.map((bucketId) => (
+        {bucketOrder?.map((bucketId) => (
           <div key={bucketId} className={styles.tab} onClick={() => scrollToBucket(bucketId)}>
             <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
             {buckets.byHash[bucketId].name}
           </div>
         ))}
-        <div className={styles.tab} onClick={() => scrollToBucket('seasonal')}>
-          {t('LB.Season')}
-        </div>
+        {categoryOrder?.map((category) => (
+          <div
+            key={category.category}
+            className={styles.tab}
+            onClick={() => scrollToBucket(category.category)}
+          >
+            {t(category.nameTranslation)}
+          </div>
+        ))}
       </div>
     </div>
   );
