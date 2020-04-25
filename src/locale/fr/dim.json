@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Ce pré set contient des objets de marchand",
     "Current": "Actuel",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Mode de processing"
     },
     "Scaled": "Échelonné",
+    "Season": "Season",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
     "ShowGear": "Armure de {{class}}",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Sélectionné dans l'organisateur",
     "BulkTag": "Ajouter une balise",
     "EnabledColumns": "Colonnes activées",
-    "Organizer": "Organisateur"
+    "Organizer": "Organisateur",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Contrats",
@@ -889,11 +892,6 @@
     "TagItem": "Ajouter une balise à l'objet",
     "TagItems": "Ajouter une balise aux objets",
     "UnlockAll": "Déverrouillez les objets"
-  },
-  "TrialsCard": {
-    "FiveWins": "Récompense à 5 Victoires (Armure)",
-    "Flawless": "Sans Défaite",
-    "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
   "Triumphs": {
     "HideCompleted": "Cache complété",

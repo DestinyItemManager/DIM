@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
+    "ChooseAPerk": "Wähle einen Perk",
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Dieses Loadout enthält Items von Händlern",
     "Current": "Aktuelles",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Berechnung"
     },
     "Scaled": "Skaliert",
+    "Season": "Saison",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
     "ShowGear": "{{class}} Rüstung",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Im Planer ausgewählt",
     "BulkTag": "Markierung",
     "EnabledColumns": "Aktivierte Spalten",
-    "Organizer": "Planer"
+    "Organizer": "Planer",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Beutezüge",
@@ -889,11 +892,6 @@
     "TagItem": "Item markieren",
     "TagItems": "Markiere Items",
     "UnlockAll": "Entsperre Items"
-  },
-  "TrialsCard": {
-    "FiveWins": "5 Siege Belohnung (Rüstung)",
-    "Flawless": "Makellos",
-    "SevenWins": "7 Siege Belohnung (Waffe)"
   },
   "Triumphs": {
     "HideCompleted": "Abgeschlossene verbergen",

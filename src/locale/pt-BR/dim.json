@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Opções avançadas",
+    "ChooseAPerk": "Escolha um perk",
     "ClearLocked": "Limpar itens travados",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Modo de processamento"
     },
     "Scaled": "Nivelado",
+    "Season": "Temporada",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
     "ShowGear": "Armadura de {{class}}",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Selecionado no Organizador",
     "BulkTag": "Tag",
     "EnabledColumns": "Colunas Habilitadas",
-    "Organizer": "Organizador"
+    "Organizer": "Organizador",
+    "SelectItem": "Selecionar ou desmarcar {{name}}"
   },
   "Progress": {
     "Bounties": "Contratos",
@@ -889,11 +892,6 @@
     "TagItem": "Marcar item",
     "TagItems": "Marcar itens",
     "UnlockAll": "Destravar itens"
-  },
-  "TrialsCard": {
-    "FiveWins": "Recompensa de 5 vitórias (armadura)",
-    "Flawless": "Vitória perfeita",
-    "SevenWins": "Recompensa de 7 vitórias (arma)"
   },
   "Triumphs": {
     "HideCompleted": "Ocultar Concluído",

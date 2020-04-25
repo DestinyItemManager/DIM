@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "高級選項",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "清除鎖定",
     "ContainsVendorItems": "該配裝包含商販物品.",
     "Current": "當前",
@@ -490,6 +491,7 @@
       "ProcessingMode": "處理模式"
     },
     "Scaled": "縮放",
+    "Season": "Season",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
     "ShowGear": "{{class}} 防具",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "已在管理器中選中",
     "BulkTag": "標籤",
     "EnabledColumns": "已啟用的列",
-    "Organizer": "管理器"
+    "Organizer": "管理器",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "賞金單",
@@ -889,11 +892,6 @@
     "TagItem": "標記物品",
     "TagItems": "標記物品",
     "UnlockAll": "解鎖物品"
-  },
-  "TrialsCard": {
-    "FiveWins": "五連勝獎勵 (防具)",
-    "Flawless": "完美無瑕",
-    "SevenWins": "七連勝獎勵 (武器)"
   },
   "Triumphs": {
     "HideCompleted": "隱藏已完成",

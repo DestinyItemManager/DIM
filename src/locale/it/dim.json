@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
+    "ChooseAPerk": "Scegli un perk",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Procedura"
     },
     "Scaled": "In Scala",
+    "Season": "Stagione",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
     "ShowGear": "Armatura per {{class}}",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Seleziona in Gestore Deposito",
     "BulkTag": "Etichetta",
     "EnabledColumns": "Colonne Abilitate",
-    "Organizer": "Gestione Deposito"
+    "Organizer": "Gestione Deposito",
+    "SelectItem": "Seleziona o deleseziona {{name}}"
   },
   "Progress": {
     "Bounties": "Taglie",
@@ -889,11 +892,6 @@
     "TagItem": "Etichetta Oggetto",
     "TagItems": "Etichetta Oggetti",
     "UnlockAll": "Sblocca Oggetti"
-  },
-  "TrialsCard": {
-    "FiveWins": "Ricompensa 5 Vittorie (Armatura)",
-    "Flawless": "Vittoria Impeccabile",
-    "SevenWins": "Ricompensa 7 Vittorie (Arma)"
   },
   "Triumphs": {
     "HideCompleted": "Nascondi Completati",

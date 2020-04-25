@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
+    "ChooseAPerk": "Elige una ventaja",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Esta equipación contiene objetos de vendedores",
     "Current": "Actual",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Modo de procesamiento"
     },
     "Scaled": "Escalado",
+    "Season": "Temporada",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
     "ShowGear": "{{class}} Armadura",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Seleccionado en el Organizador",
     "BulkTag": "Etiqueta",
     "EnabledColumns": "Columnas Habilitadas",
-    "Organizer": "Organizador"
+    "Organizer": "Organizador",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Contratos",
@@ -889,11 +892,6 @@
     "TagItem": "Etiqueta de objeto",
     "TagItems": "Etiquetar objetos",
     "UnlockAll": "Desbloquear objetos"
-  },
-  "TrialsCard": {
-    "FiveWins": "Recompensa de 5 victorias (Armadura)",
-    "Flawless": "Impecable",
-    "SevenWins": "Recompensa de 7 victorias (Arma)"
   },
   "Triumphs": {
     "HideCompleted": "Esconder Completados",
