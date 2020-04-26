@@ -32,7 +32,7 @@ export default React.memo(function EnabledColumnsSelector({
   for (const column of columns) {
     const id = getColumnSelectionId(column);
     const header = column.columnGroup ? column.columnGroup.header : column.header;
-    if (id === 'selection') {
+    if (id === 'selection' || column.noHide) {
       continue;
     }
 

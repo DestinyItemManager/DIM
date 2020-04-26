@@ -210,11 +210,6 @@ function ItemTable({
     },
     [setEnabledColumns, columns]
   );
-
-  if (!terminal) {
-    return <div>No items match the current filters.</div>;
-  }
-
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
@@ -258,6 +253,15 @@ function ItemTable({
     column.filter
       ? (e) => {
           if (e.shiftKey) {
+            console.log(e, e.target, e.currentTarget);
+            if ((e.target as Element).hasAttribute('data-perk-name')) {
+              dispatch(
+                toggleSearchQueryComponent(
+                  column.filter!((e.target as Element).getAttribute('data-perk-name')!, row.item)
+                )
+              );
+              return;
+            }
             const filter = column.filter!(row.values[column.id], row.item);
             if (filter !== undefined) {
               dispatch(toggleSearchQueryComponent(filter));
@@ -432,9 +436,13 @@ function ItemTable({
               <div
                 key={column.id}
                 onClick={narrowQueryFunction(row, column)}
-                className={clsx(styles[column.id], column.filter && styles.hasFilter, {
-                  [styles.alternateRow]: i % 2
-                })}
+                className={clsx(
+                  styles[column.id],
+                  column.filter ? styles.hasFilter : styles.noFilter,
+                  {
+                    [styles.alternateRow]: i % 2
+                  }
+                )}
                 role="cell"
               >
                 {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
