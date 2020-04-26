@@ -266,16 +266,16 @@ export function filterGeneratedSets(
       return false;
     }
 
-    const doEnergiesClash = (mods?: readonly LockedArmor2Mod[], item: DimItem): boolean =>
+    const doEnergiesClash = (item: DimItem, mods?: readonly LockedArmor2Mod[]): boolean =>
       Boolean(mods?.length && !mods.every((mod) => doEnergiesMatch(mod, item)));
 
     // ensure all the mods match their respective energy type in on the armour piece
     if (
-      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.helmet], set.firstValidSet[0]) || //helmets
-      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.gauntlets], set.firstValidSet[1]) || //arms
-      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.chest], set.firstValidSet[2]) || //chest
-      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.leg], set.firstValidSet[3]) || //legs
-      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.classitem], set.firstValidSet[4]) //classitem
+      doEnergiesClash(set.firstValidSet[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet]) || //helmets
+      doEnergiesClash(set.firstValidSet[1], lockedArmor2Mods[Armor2ModPlugCategories.gauntlets]) || //arms
+      doEnergiesClash(set.firstValidSet[2], lockedArmor2Mods[Armor2ModPlugCategories.chest]) || //chest
+      doEnergiesClash(set.firstValidSet[3], lockedArmor2Mods[Armor2ModPlugCategories.leg]) || //legs
+      doEnergiesClash(set.firstValidSet[4], lockedArmor2Mods[Armor2ModPlugCategories.classitem]) //classitem
     ) {
       return false;
     }
