@@ -132,6 +132,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, min-content);
   gap: 8px;
+  align-items: flex-start;
   &.header {
     display: block;
   }

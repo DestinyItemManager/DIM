@@ -23,7 +23,7 @@ export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
   [DestinyEnergyType.Void]: 'void'
 };
 
-export const getItemDamageShortName: (item: DimItem) => string | undefined = (item) =>
+export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.isDestiny2() && item.energy
     ? energyNamesByEnum[item.element?.enumValue ?? -1]
     : damageNamesByEnum[item.element?.enumValue ?? -1];
@@ -57,7 +57,7 @@ export const specialtyModSocketHashes = Object.values(modMetadataBySlotTag)
   .flat();
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (item) =>
+export const getSpecialtySocket = (item: DimItem): DimSocket | undefined =>
   (item.isDestiny2() &&
     item.bucket?.sort === 'Armor' &&
     item.sockets?.sockets.find((socket) =>
@@ -66,15 +66,15 @@ export const getSpecialtySocket: (item: DimItem) => DimSocket | undefined = (ite
   undefined;
 
 /** just gives you the hash that defines what socket a plug can fit into */
-export const getSpecialtySocketCategoryHash: (item: DimItem) => number | undefined = (item) =>
+export const getSpecialtySocketCategoryHash = (item: DimItem): number | undefined =>
   getSpecialtySocket(item)?.socketDefinition.singleInitialItemHash;
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadata: (item: DimItem) => ModMetadata | undefined = (item) =>
+export const getSpecialtySocketMetadata = (item: DimItem): ModMetadata | undefined =>
   modMetadataIndexedByEmptySlotHash[
     getSpecialtySocket(item)?.socketDefinition.singleInitialItemHash || -99999999
   ];
 
 /** this returns a string for easy printing purposes. '' if not found */
-export const getItemSpecialtyModSlotDisplayName: (item: DimItem) => string = (item) =>
-  getSpecialtySocket(item)?.plug!.plugItem.itemTypeDisplayName || '';
+export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>
+  getSpecialtySocket(item)?.plug?.plugItem.itemTypeDisplayName || '';

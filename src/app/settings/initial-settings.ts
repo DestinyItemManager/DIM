@@ -7,14 +7,15 @@ export interface Settings extends DimApiSettings {
   readonly customTotalStatsByClass: KeyedStatHashLists;
 
   /** Selected columns for the Vault Organizer */
-  readonly organizerColumns: string[];
+  readonly organizerColumnsWeapons: string[];
+  readonly organizerColumnsArmor: string[];
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
   customTotalStatsByClass: {},
-  organizerColumns: [
+  organizerColumnsWeapons: [
     'icon',
     'name',
     'dmg',
@@ -22,10 +23,23 @@ export const initialSettingsState: Settings = {
     'locked',
     'tag',
     'wishList',
-    'rating',
     'archetype',
     'perks',
+    'notes'
+  ],
+  organizerColumnsArmor: [
+    'icon',
+    'name',
+    'power',
+    'dmg',
+    'energy',
+    'locked',
+    'tag',
+    'modslot',
+    'perks',
     'mods',
+    'stats',
+    'customstat',
     'notes'
   ]
 };

@@ -164,6 +164,13 @@ export function getColumns(
       filter: (name) => `name:"${name}"`
     },
     {
+      id: 'power',
+      header: <AppIcon icon={powerIndicatorIcon} />,
+      value: (item) => item.primStat?.value,
+      defaultSort: SortDirection.DESC,
+      filter: (value) => `power:>=${value}`
+    },
+    {
       id: 'dmg',
       header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
       value: (item) => item.element?.displayProperties.name,
@@ -176,13 +183,6 @@ export function getColumns(
       value: (item) => item.isDestiny2() && item.energy?.energyCapacity,
       defaultSort: SortDirection.DESC,
       filter: (value) => `energycapacity>=:${value}`
-    },
-    {
-      id: 'power',
-      header: <AppIcon icon={powerIndicatorIcon} />,
-      value: (item) => item.primStat?.value,
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `power:>=${value}`
     },
     {
       id: 'locked',

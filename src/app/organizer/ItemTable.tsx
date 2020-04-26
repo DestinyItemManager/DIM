@@ -67,19 +67,22 @@ function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
   );
-
   // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
+    const items = allItemsSelector(state).filter(searchFilter);
+    const isArmor = items[0]?.bucket.inArmor;
     return {
-      items: allItemsSelector(state).filter(searchFilter),
+      items,
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
       ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
-      enabledColumns: settingsSelector(state).organizerColumns,
+      enabledColumns: settingsSelector(state)[
+        isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
+      ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
     };
   };
@@ -122,6 +125,8 @@ function ItemTable({
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
+
+  const isArmor = items[0]?.bucket.inArmor;
 
   // TODO: filter here, or in the mapState function?
   // Narrow items to selection
@@ -181,7 +186,7 @@ function ItemTable({
     ({ checked, id }: { checked: boolean; id: string }) => {
       dispatch(
         setSetting(
-          'organizerColumns',
+          isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons',
           _.uniq(
             _.compact(
               columns.map((c) => {
@@ -197,7 +202,7 @@ function ItemTable({
         )
       );
     },
-    [dispatch, columns, enabledColumns]
+    [dispatch, columns, enabledColumns, isArmor]
   );
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
