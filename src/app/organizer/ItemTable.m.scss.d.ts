@@ -4,6 +4,7 @@ interface CssExports {
   'alternateRow': string;
   'archetype': string;
   'dmg': string;
+  'energy': string;
   'hasFilter': string;
   'header': string;
   'icon': string;
