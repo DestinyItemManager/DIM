@@ -1,5 +1,7 @@
 ## Next
 
+## 6.8.0 <span className="changelog-date">(2020-04-26)</span>
+
 * Added "armor 2.0" column to spreadsheet exports.
 * Fixed a bug that could affect the display of percentage-based objectives.
 
