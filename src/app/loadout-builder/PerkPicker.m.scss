@@ -9,6 +9,29 @@
   }
 }
 
+.selectedPerks {
+  composes: flexWrap from '../dim-ui/common.m.scss';
+  flex: 1;
+  align-items: center;
+}
+
+.selectedPerk {
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  img {
+    height: 32px;
+    width: 32px;
+  }
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
 .tabs {
   composes: move-popup-tabs from global;
   margin-top: 4px;
@@ -33,29 +56,6 @@
       margin-bottom: 4px;
     }
   }
-}
-
-.selectedPerks {
-  composes: flexWrap from '../dim-ui/common.m.scss';
-  flex: 1;
-  align-items: center;
-}
-
-.selectedPerk {
-  cursor: pointer;
-  height: 32px;
-  width: 32px;
-  img {
-    height: 32px;
-    width: 32px;
-  }
-}
-
-.submitButton {
-  composes: dim-button from global;
-  padding-right: 16px;
-  padding-left: 16px;
-  margin-right: 8px;
 }
 
 .armorIcon {

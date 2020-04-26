@@ -11,7 +11,7 @@ interface Props {
   scrollToBucket(bucketOrSeasonal: number | string): void;
 }
 
-function PickerHeader(props: Props) {
+function ModPickerHeader(props: Props) {
   const { categoryOrder, isPhonePortrait, query, onSearchChange, scrollToBucket } = props;
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
@@ -53,4 +53,4 @@ function PickerHeader(props: Props) {
   );
 }
 
-export default PickerHeader;
+export default ModPickerHeader;

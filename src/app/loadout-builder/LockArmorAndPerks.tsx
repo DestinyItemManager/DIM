@@ -250,14 +250,6 @@ function LockArmorAndPerks({
       <div className={styles.area}>
         {(Boolean(flatLockedMap.mod?.length) || Boolean(flatLockedArmor2Mods.length)) && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
-              <LockedItem
-                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
-                lockedItem={lockedItem}
-                defs={defs}
-                onRemove={removeLockedItemType}
-              />
-            ))}
             {flatLockedArmor2Mods.map((item) => (
               <LockedArmor2ModIcon
                 key={item.mod.hash}
