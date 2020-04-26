@@ -147,7 +147,7 @@ export function getColumns(
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick}>
-              <BungieImage src={value} className={styles.icon} />
+              <BungieImage src={value} />
             </div>
           )}
         </ItemPopupTrigger>
@@ -243,14 +243,12 @@ export function getColumns(
       defaultSort: SortDirection.DESC,
       filter: (value) => `rating:>=${value}`
     },
-    /*
     {
       id: 'tier',
       header: 'Tier',
       value: (i) => i.tier,
-      sort: compareBy((item) => rarity(item))
+      filter: (value) => `is:${value}`
     },
-    */
     {
       id: 'source',
       header: 'Source',
@@ -289,7 +287,7 @@ export function getColumns(
         value && <SpecialtyModSlotIcon className={styles.modSlot} item={item} />,
       filter: (value) => `modslot:${value}`
     },
-    {
+    items[0]?.bucket.inWeapons && {
       id: 'archetype',
       header: 'Archetype',
       value: (item) =>
@@ -409,7 +407,7 @@ export function getColumns(
       id: 'notes',
       header: 'Notes',
       value: (item) => getNotes(item, itemInfos),
-      gridWidth: '1fr',
+      gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:"${value}"`
     },
     items[0]?.bucket.inWeapons &&
@@ -417,7 +415,7 @@ export function getColumns(
         id: 'wishListNote',
         header: 'Wish List Note',
         value: (item) => wishList?.[item.id]?.notes,
-        gridWidth: '1fr',
+        gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`
       }
   ]);

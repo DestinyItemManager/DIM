@@ -420,13 +420,10 @@ function ItemTable({
               <div
                 key={column.id}
                 onClick={narrowQueryFunction(row, column)}
-                className={clsx(
-                  styles[column.id],
-                  column.filter ? styles.hasFilter : styles.noFilter,
-                  {
-                    [styles.alternateRow]: i % 2
-                  }
-                )}
+                className={clsx(styles[column.id], {
+                  [styles.hasFilter]: column.filter,
+                  [styles.alternateRow]: i % 2
+                })}
                 role="cell"
               >
                 {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}

@@ -15,7 +15,6 @@ interface CssExports {
   'mods': string;
   'name': string;
   'negative': string;
-  'noFilter': string;
   'perks': string;
   'positive': string;
   'power': string;
