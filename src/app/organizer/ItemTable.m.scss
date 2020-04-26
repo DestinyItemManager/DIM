@@ -9,6 +9,7 @@
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 6px);
     transition: opacity 200ms;
+    background-color: #313233;
   }
 }
 
@@ -39,7 +40,7 @@
 }
 
 .alternateRow {
-  background-color: #464748;
+  background-color: #464748 !important;
 }
 
 .mods,
@@ -64,6 +65,14 @@
   padding-left: 8px !important;
   padding-right: 2px !important;
   cursor: pointer;
+  width: 20px;
+  left: 0;
+  position: sticky;
+  top: $header-height + 30px;
+  &.header {
+    top: $header-height;
+  }
+  z-index: 1;
 }
 
 .rating {
@@ -82,6 +91,14 @@
 .icon {
   padding-top: 4px !important;
   width: calc(var(--item-size) * 0.75);
+  left: 30px;
+  position: sticky;
+  top: $header-height + 30px;
+  &.header {
+    top: $header-height;
+    padding-top: 0;
+  }
+  z-index: 1;
   img {
     display: block;
     width: calc(var(--item-size) * 0.75);
@@ -89,9 +106,6 @@
     box-sizing: border-box;
     pointer-events: none;
     border: 1px solid #ddd;
-  }
-  &.header {
-    padding-top: 0;
   }
 }
 
