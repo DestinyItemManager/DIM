@@ -235,7 +235,7 @@ class ModPicker extends React.Component<Props, State> {
               title={Armor2ModPlugCategoriesTitles[category]}
               category={category}
               maximumSelectable={category === Armor2ModPlugCategories.general ? 5 : 2}
-              energyMustMatch={true}
+              energyMustMatch={category !== Armor2ModPlugCategories.general}
               onModSelected={this.onModSelected}
             />
           ))}

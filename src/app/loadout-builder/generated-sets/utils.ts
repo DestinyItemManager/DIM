@@ -126,24 +126,23 @@ const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
 
 /**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
- * seasonalMods. Currently it does not care for the element affinity or the armour
- * of the mod, as that can be switched in game.
+ * seasonalMods.
  *
  * The mods passed in should only be seasonal mods.
  */
-function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[]) {
+function canAllSeasonalModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[]) {
   if (seasonalMods.length > 5) {
     return false;
   }
 
   const modArrays = {};
 
+  // Build up an array of possible mods for each item in the set.
   for (const mod of seasonalMods) {
     for (const item of set.firstValidSet) {
       const itemModCategories =
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
-      // Not currently checking energy of mod and armour matches.
       if (itemModCategories.includes(mod.mod.plug.plugCategoryHash) && doEnergiesMatch(mod, item)) {
         if (!modArrays[item.bucket.hash]) {
           modArrays[item.bucket.hash] = [];
@@ -154,6 +153,7 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[
     }
   }
 
+  // From the possible mods try and find a combination that includes all seasonal mods
   for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
     for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
       for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
@@ -174,6 +174,59 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[
   }
 
   return false;
+}
+
+/**
+ * Checks that all the general mods can fit in a set, including the energy specific ones
+ * i.e. Void Resist ect
+ */
+function canAllGeneralModsBeUsed(generalMods: readonly LockedArmor2Mod[], set: ArmorSet): boolean {
+  let armour2Count = set.firstValidSet.filter((item) => item.isDestiny2() && item.energy).length;
+
+  if (generalMods && armour2Count < generalMods.length) {
+    return false;
+  }
+
+  const generalModsByEnergyType = _.keyBy(
+    _.groupBy(generalMods, (mod) => mod.mod.plug.energyCost.energyType),
+    (group) => group[0].mod.plug.energyCost.energyType
+  );
+
+  const armourByEnergyType = _.keyBy(
+    _.groupBy(set.firstValidSet, (item) => item.isDestiny2() && item.energy?.energyType),
+    (group) => {
+      const item = group[0];
+      return (item.isDestiny2() && item.energy?.energyType) || -1;
+    }
+  );
+
+  const energyOrder = [
+    DestinyEnergyType.Void,
+    DestinyEnergyType.Thermal,
+    DestinyEnergyType.Arc,
+    DestinyEnergyType.Any
+  ];
+
+  //This checks that if there are energy specific mods, they have a corrersponding armour piece
+  //  and that after those have been slotted, there are enough pieces to fit the general ones.
+  for (const energyType of energyOrder) {
+    if (generalModsByEnergyType[energyType]) {
+      if (
+        energyType === DestinyEnergyType.Any ||
+        (armourByEnergyType[energyType] &&
+          generalModsByEnergyType[energyType].length <= armourByEnergyType[energyType].length)
+      ) {
+        armour2Count -= generalModsByEnergyType[energyType].length;
+        if (armour2Count < 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -203,13 +256,13 @@ export function filterGeneratedSets(
     if (
       lockedArmor2Mods.seasonal &&
       (firstValidSetArmor2Count < lockedArmor2Mods.seasonal.length ||
-        !canAllModsBeUsed(set, lockedArmor2Mods.seasonal))
+        !canAllSeasonalModsBeUsed(set, lockedArmor2Mods.seasonal))
     ) {
       return false;
     }
 
     const generalMods = lockedArmor2Mods[Armor2ModPlugCategories.general];
-    if (generalMods && firstValidSetArmor2Count < generalMods.length) {
+    if (generalMods && !canAllGeneralModsBeUsed(generalMods, set)) {
       return false;
     }
 
