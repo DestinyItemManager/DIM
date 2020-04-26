@@ -26,7 +26,6 @@ import RatingIcon from 'app/inventory/RatingIcon';
 import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import CompareStat from 'app/compare/CompareStat';
 import { StatInfo } from 'app/compare/Compare';
 import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
 import PressTip from 'app/dim-ui/PressTip';
@@ -42,6 +41,13 @@ import clsx from 'clsx';
 // TODO: d1/d2 columns
 // TODO: stat ranges
 // TODO: special stat display? recoil, bars, etc
+
+/**
+ * Get the ID used to select whether this column is shown or not.
+ */
+export function getColumnSelectionId(column: ColumnDefinition) {
+  return column.columnGroup ? column.columnGroup.id : column.id;
+}
 
 /**
  * This function generates the columns.
@@ -112,7 +118,6 @@ export function getColumns(
           statHash,
           columnGroup: statsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
-          cell: (_, item) => <CompareStat item={item} stat={statInfo} />,
           defaultSort: statInfo.lowerBetter ? SortDirection.DESC : SortDirection.ASC
         };
       }
@@ -313,20 +318,22 @@ export function getColumns(
               .flatMap((s) => s.plugOptions) || []
           : [];
         return (
-          <div className={styles.modPerks}>
-            {item.isDestiny2() &&
-              plugItems.map((p: DimPlug) => (
-                <PressTip
-                  key={p.plugItem.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk}>
-                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                    {p.plugItem.displayProperties.name}
-                  </div>
-                </PressTip>
-              ))}
-          </div>
+          plugItems.length > 0 && (
+            <div className={styles.modPerks}>
+              {item.isDestiny2() &&
+                plugItems.map((p: DimPlug) => (
+                  <PressTip
+                    key={p.plugItem.hash}
+                    tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                  >
+                    <div className={styles.modPerk}>
+                      <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                      {p.plugItem.displayProperties.name}
+                    </div>
+                  </PressTip>
+                ))}
+            </div>
+          )
         );
       },
       noSort: true
@@ -397,6 +404,9 @@ export function getColumns(
 
 function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem }) {
   const sockets = (item.isDestiny2() && !item.energy && item.sockets?.categories[0]?.sockets) || [];
+  if (!sockets.length) {
+    return null;
+  }
   return (
     <>
       {sockets.map((socket) => {
@@ -404,22 +414,24 @@ function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem 
           (p) => item.isExotic || !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
         );
         return (
-          <div key={socket.socketIndex} className={clsx(styles.modPerks)}>
-            {plugOptions.map(
-              (p: DimPlug) =>
-                item.isDestiny2() && (
-                  <PressTip
-                    key={p.plugItem.hash}
-                    tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                  >
-                    <div className={styles.modPerk}>
-                      <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                      {p.plugItem.displayProperties.name}
-                    </div>
-                  </PressTip>
-                )
-            )}
-          </div>
+          plugOptions.length > 0 && (
+            <div key={socket.socketIndex} className={clsx(styles.modPerks)}>
+              {plugOptions.map(
+                (p: DimPlug) =>
+                  item.isDestiny2() && (
+                    <PressTip
+                      key={p.plugItem.hash}
+                      tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                    >
+                      <div className={styles.modPerk}>
+                        <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                        {p.plugItem.displayProperties.name}
+                      </div>
+                    </PressTip>
+                  )
+              )}
+            </div>
+          )
         );
       })}
     </>

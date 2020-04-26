@@ -4,6 +4,7 @@ import DropDown, { DropDownItem } from './DropDown';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition } from './table-types';
+import { getColumnSelectionId } from './Columns';
 
 /**
  * Component for selection of which columns are displayed in the organizer table.
@@ -29,7 +30,7 @@ export default React.memo(function EnabledColumnsSelector({
   const items: { [id: string]: DropDownItem } = {};
 
   for (const column of columns) {
-    const id = column.columnGroup ? column.columnGroup.id : column.id;
+    const id = getColumnSelectionId(column);
     const header = column.columnGroup ? column.columnGroup.header : column.header;
     if (id === 'selection') {
       continue;

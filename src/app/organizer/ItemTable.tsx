@@ -27,7 +27,7 @@ import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
 import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { getColumns } from './Columns';
+import { getColumns, getColumnSelectionId } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
@@ -149,8 +149,6 @@ function ItemTable({
   // TODO: hide columns if all undefined
 
   // TODO: trim columns based on enabledColumns
-  // TODO: really gotta pass these in... need to figure out data dependencies
-  // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: ColumnDefinition[] = useMemo(
     () => getColumns(items, defs, itemInfos, ratings, wishList),
     [wishList, items, itemInfos, ratings, defs]
@@ -158,9 +156,7 @@ function ItemTable({
 
   // This needs work for sure
   const filteredColumns = _.compact(
-    enabledColumns.flatMap((id) =>
-      columns.filter((column) => id === (column.columnGroup ? column.columnGroup.id : column.id))
-    )
+    enabledColumns.flatMap((id) => columns.filter((column) => id === getColumnSelectionId(column)))
   );
 
   // process items into Rows
@@ -173,7 +169,6 @@ function ItemTable({
       }, {})
     }));
 
-    // TODO: sort
     const comparator = chainComparator<Row>(
       ...columnSorts.map((sorter) => {
         const column = filteredColumns.find((c) => c.id === sorter.columnId);
@@ -190,23 +185,30 @@ function ItemTable({
     return unsortedRows.sort(comparator);
   }, [filteredColumns, items, columnSorts]);
 
-  // sort rows
-  // render
-
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
   const shiftHeld = useShiftHeld();
 
-  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = useCallback(
-    (item) => {
-      const { checked, id } = item;
-      setEnabledColumns((columns) =>
-        checked ? [...columns, id] : columns.filter((c) => c !== id)
+  const onChangeEnabledColumn = useCallback(
+    ({ checked, id }: { checked: boolean; id: string }) => {
+      setEnabledColumns((enabledColumns) =>
+        _.uniq(
+          _.compact(
+            columns.map((c) => {
+              const cId = getColumnSelectionId(c);
+              if (cId === id) {
+                return checked ? cId : undefined;
+              } else {
+                return enabledColumns.includes(cId) ? cId : undefined;
+              }
+            })
+          )
+        )
       );
     },
-    [setEnabledColumns]
+    [setEnabledColumns, columns]
   );
 
   if (!terminal) {
