@@ -10,10 +10,10 @@ import clsx from 'clsx';
  * which tells which item category to filter with, as well as what sub-categories
  * can still be drilled down into.
  */
-export interface SelectionTreeNode {
+export interface ItemCategoryTreeNode {
   id: string;
   itemCategoryHash: number;
-  subCategories?: SelectionTreeNode[];
+  subCategories?: ItemCategoryTreeNode[];
   /** A terminal node can have items displayed for it. It may still have other drilldowns available. */
   terminal?: boolean;
 }
@@ -22,13 +22,14 @@ export interface SelectionTreeNode {
  * Generate a tree of all the drilldown options for item filtering. This tree is
  * used to generate the list of selected subcategories.
  */
+// TODO: save to URL params
 export const getSelectionTree = memoizeOne(
-  (defs: D2ManifestDefinitions): SelectionTreeNode => {
+  (defs: D2ManifestDefinitions): ItemCategoryTreeNode => {
     const armorCategory = defs.ItemCategory.get(20);
 
     // Each class has the same armor
     const armorCategories = armorCategory.groupedCategoryHashes.map(
-      (categoryHash): SelectionTreeNode => {
+      (categoryHash): ItemCategoryTreeNode => {
         const category = defs.ItemCategory.get(categoryHash);
         return {
           id: category.originBucketIdentifier,
@@ -111,13 +112,11 @@ export const getSelectionTree = memoizeOne(
             {
               id: 'machinegun',
               itemCategoryHash: 12,
-              subCategories: [power],
               terminal: true
             },
             {
               id: 'rocketlauncher',
               itemCategoryHash: 13,
-              subCategories: [power],
               terminal: true
             },
             {
@@ -129,7 +128,6 @@ export const getSelectionTree = memoizeOne(
             {
               id: 'sword',
               itemCategoryHash: 54,
-              subCategories: [power],
               terminal: true
             },
             {
@@ -200,12 +198,12 @@ export default function ItemTypeSelector({
   onSelection
 }: {
   defs: D2ManifestDefinitions;
-  selection: SelectionTreeNode[];
-  onSelection(selection: SelectionTreeNode[]): void;
+  selection: ItemCategoryTreeNode[];
+  onSelection(selection: ItemCategoryTreeNode[]): void;
 }) {
   selection = selection.length ? selection : [getSelectionTree(defs)];
 
-  const handleSelection = (depth: number, subCategory: SelectionTreeNode) =>
+  const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
     onSelection([..._.take(selection, depth + 1), subCategory]);
 
   return (

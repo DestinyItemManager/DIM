@@ -4,7 +4,7 @@ import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
-export enum UiWishListRoll {
+export const enum UiWishListRoll {
   Good = 1,
   Bad
 }

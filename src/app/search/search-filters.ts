@@ -1119,20 +1119,26 @@ function searchFilters(
         return compareByOperator(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        return predicate.length !== 0 && dtrRating?.overallScore;
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          return predicate.length !== 0 && dtrRating?.overallScore;
+        }
       },
       randomroll(item: D2Item) {
         return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return showRating && compareByOperator(dtrRating?.overallScore, predicate);
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+          return showRating && compareByOperator(dtrRating?.overallScore, predicate);
+        }
       },
       ratingcount(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
+        }
       },
       vendor(item: D1Item, predicate: string) {
         if (!item) {

@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
+    "ChooseAPerk": "특성 선택",
     "ClearLocked": "잠금 해제",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
@@ -490,6 +491,7 @@
       "ProcessingMode": "처리 모드"
     },
     "Scaled": "확대 됨",
+    "Season": "시즌",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
     "ShowGear": "{{class}} 방어구",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "정리 도구에서 선택됨",
     "BulkTag": "태그",
     "EnabledColumns": "활성화된 열",
-    "Organizer": "정리 도구"
+    "Organizer": "정리 도구",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "현상금",
@@ -889,11 +892,6 @@
     "TagItem": "태그 추가",
     "TagItems": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"
-  },
-  "TrialsCard": {
-    "FiveWins": "5승 보상(방어구)",
-    "Flawless": "무결점",
-    "SevenWins": "7승 보상(무기)"
   },
   "Triumphs": {
     "HideCompleted": "완료 항목 숨기기",

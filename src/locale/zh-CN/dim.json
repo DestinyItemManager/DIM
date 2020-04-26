@@ -5,17 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
-    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
-    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
-    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
-    "MissingTitle": "Account Not Found",
+    "ErrorLoadInventory": "无法加载你的命运角色和背包",
+    "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
+    "ErrorLoading": "无法从 Bungie.net 加载命运账户",
+    "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
+    "MissingTitle": "找不到账户",
     "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
-    "UnlinkTwitchButton": "Unlink Twitch",
+    "UnlinkTwitch": "将你的 Twitch 账户连接到 Bungie.net 会导致你的《命运 1》账户停止工作。",
+    "UnlinkTwitchButton": "取消 Twitch 连接",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -144,7 +144,7 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。"
   },
   "FarmingMode": {
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "高级选项",
+    "ChooseAPerk": "选择一个特性",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -490,6 +491,7 @@
       "ProcessingMode": "处理模式"
     },
     "Scaled": "缩放",
+    "Season": "赛季",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
     "ShowGear": "{{class}} 防具",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "已在管理器中选中",
     "BulkTag": "标签",
     "EnabledColumns": "已启用的列",
-    "Organizer": "管理器"
+    "Organizer": "管理器",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "赏金单",
@@ -889,11 +892,6 @@
     "TagItem": "标记物品",
     "TagItems": "标记物品",
     "UnlockAll": "解锁物品"
-  },
-  "TrialsCard": {
-    "FiveWins": "五连胜奖励 (防具)",
-    "Flawless": "完美无瑕",
-    "SevenWins": "七连胜奖励 (武器)"
   },
   "Triumphs": {
     "HideCompleted": "隐藏已完成",

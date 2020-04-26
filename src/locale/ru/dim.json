@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "Очистить выбранное",
     "ContainsVendorItems": "Этот набор содержит предметы вендоров",
     "Current": "Текущий",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Режим обработки"
     },
     "Scaled": "Масштабированный",
+    "Season": "Season",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
     "ShowGear": "{{class}} Броня",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Выбранный в Органайзере",
     "BulkTag": "Тег",
     "EnabledColumns": "Включенные столбцы",
-    "Organizer": "Органайзер"
+    "Organizer": "Органайзер",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Контракты",
@@ -889,11 +892,6 @@
     "TagItem": "Тег",
     "TagItems": "Отметить предметы",
     "UnlockAll": "Разблокировать всё"
-  },
-  "TrialsCard": {
-    "FiveWins": "Награда за 5 побед (Броня)",
-    "Flawless": "Безупречная",
-    "SevenWins": "Награда за 7 побед (Оружие)"
   },
   "Triumphs": {
     "HideCompleted": "Скрыть выполненное",

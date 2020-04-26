@@ -712,7 +712,8 @@
     "EnabledColumns": "Enabled Columns",
     "BulkMove": "Move To",
     "BulkTag": "Tag",
-    "BulkMoveLoadoutName": "Selected in Organizer"
+    "BulkMoveLoadoutName": "Selected in Organizer",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Bounties",

@@ -21,7 +21,7 @@ import { resetIdTracker, processItems } from './store/d2-item-factory';
 import { makeVault, makeCharacter, getCharacterStatsData } from './store/d2-store-factory';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
-import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
+import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
@@ -470,10 +470,4 @@ function makeD2StoresService(): D2StoreServiceType {
     });
     activeStore.vault = vault; // god help me
   }
-}
-
-/** Get the bonus power from the Seasonal Artifact */
-export function getArtifactBonus(store: DimStore): number {
-  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
-  return artifact?.primStat?.value || 0;
 }

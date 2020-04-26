@@ -11,7 +11,7 @@ import { accountsSelector } from 'app/accounts/reducer';
 import { DestinyAccount, PLATFORM_LABEL_TO_MEMBERSHIP_TYPE } from 'app/accounts/destiny-account';
 
 /** This is the enum loadouts have been stored with - it does not align with DestinyClass */
-enum LoadoutClass {
+const enum LoadoutClass {
   any = -1,
   warlock = 0,
   titan = 1,

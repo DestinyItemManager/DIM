@@ -53,7 +53,7 @@ import PressTip from '../dim-ui/PressTip';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
-import { getArtifactBonus } from 'app/inventory/d2-stores';
+import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';

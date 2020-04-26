@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+import { emptySet, emptyArray } from 'app/utils/empty';
 
 interface ProvidedProps {
   item: DimItem;
@@ -22,11 +23,12 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   // TODO: selector!
-  const reviewResponse = getReviews(item, state);
-  const reviews = reviewResponse ? reviewResponse.reviews : [];
-  const bestPerks = item.isDestiny1()
-    ? ratePerks(item, reviews as D1ItemUserReview[])
-    : new Set<number>();
+  const reviewResponse = $featureFlags.reviewsEnabled ? getReviews(item, state) : undefined;
+  const reviews = reviewResponse ? reviewResponse.reviews : emptyArray();
+  const bestPerks =
+    $featureFlags.reviewsEnabled && item.isDestiny1()
+      ? ratePerks(item, reviews as D1ItemUserReview[])
+      : emptySet<number>();
   return {
     bestPerks
   };

@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "ロックを解除",
     "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
     "Current": "現在",
@@ -490,6 +491,7 @@
       "ProcessingMode": "処理モード"
     },
     "Scaled": "縮尺",
+    "Season": "Season",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
     "ShowGear": "{{class}} アーマー",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "主催者で選択",
     "BulkTag": "タグ",
     "EnabledColumns": "有効な列",
-    "Organizer": "主催者"
+    "Organizer": "主催者",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "バウンティ",
@@ -889,11 +892,6 @@
     "TagItem": "アイテムをタグする",
     "TagItems": "アイテムをタグする",
     "UnlockAll": "アイテムのロックを解除"
-  },
-  "TrialsCard": {
-    "FiveWins": "5勝目の報酬 (防具)",
-    "Flawless": "完全勝利",
-    "SevenWins": "7勝目の報酬 (武器)"
   },
   "Triumphs": {
     "HideCompleted": "達成済みを非表示",

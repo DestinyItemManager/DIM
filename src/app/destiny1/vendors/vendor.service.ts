@@ -578,7 +578,7 @@ function VendorService(): VendorServiceType {
   }
 
   async function fulfillRatingsRequest() {
-    if (service.vendorsLoaded && _ratingsRequested) {
+    if ($featureFlags.reviewsEnabled && service.vendorsLoaded && _ratingsRequested) {
       // TODO: Throttle this. Right now we reload this on every page
       // view and refresh of the vendors page.
       store.dispatch(updateVendorRankings(service.vendors));

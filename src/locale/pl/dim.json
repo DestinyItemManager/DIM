@@ -443,6 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
+    "ChooseAPerk": "Choose a perk",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
@@ -490,6 +491,7 @@
       "ProcessingMode": "Tryb przetwarzania"
     },
     "Scaled": "Skalowany",
+    "Season": "Season",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
     "ShowGear": "Pancerz {{class}}",
@@ -705,7 +707,8 @@
     "BulkMoveLoadoutName": "Wybrane w organizatorze",
     "BulkTag": "Tag",
     "EnabledColumns": "Włączone kolumny",
-    "Organizer": "Organizator"
+    "Organizer": "Organizator",
+    "SelectItem": "Select or unselect {{name}}"
   },
   "Progress": {
     "Bounties": "Zlecenia",
@@ -889,11 +892,6 @@
     "TagItem": "Otaguj przedmiot",
     "TagItems": "Otaguj przedmioty",
     "UnlockAll": "Odblokuj Przedmioty"
-  },
-  "TrialsCard": {
-    "FiveWins": "Nagroda za 5 wygranych (Zbroja)",
-    "Flawless": "Bez skazy",
-    "SevenWins": "Nagroda za 7 wygranych (Zbroja)"
   },
   "Triumphs": {
     "HideCompleted": "Ukryj zakończone",

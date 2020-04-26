@@ -9,14 +9,15 @@ import { queueAction } from 'app/inventory/action-queue';
 import { refresh$ } from 'app/shell/refresh';
 import { Loading } from 'app/dim-ui/Loading';
 import { storesSelector } from 'app/inventory/selectors';
-import ItemTypeSelector, { SelectionTreeNode } from './ItemTypeSelector';
+import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
 import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import styles from './Organizer.m.scss';
 import Compare from 'app/compare/Compare';
+import { router } from 'app/router';
+import styles from './Organizer.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -50,10 +51,17 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
     refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
   );
 
-  const [selection, setSelection] = useState<SelectionTreeNode[]>([]);
+  const [selection, setSelection] = useState<ItemCategoryTreeNode[]>([]);
+
+  const onSelection = (newSelection: ItemCategoryTreeNode[]) => {
+    router.stateService.go('destiny2.organizer', {
+      selection: selection.map((s) => s.id).join(',')
+    });
+    setSelection(newSelection);
+  };
 
   if (isPhonePortrait) {
-    return <div className={styles.page}>This view isn't great on mobile.</div>;
+    return <div>This view isn't great on mobile.</div>;
   }
 
   if (!stores.length) {
@@ -61,10 +69,10 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   }
 
   return (
-    <div className={styles.page}>
+    <div className={styles.organizer}>
       <ErrorBoundary name="Organizer">
-        <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
-        <ItemTable selection={selection} />
+        <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
+        <ItemTable categories={selection} />
         <Spreadsheets />
         <Compare />
       </ErrorBoundary>

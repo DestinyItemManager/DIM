@@ -1,22 +1,9 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import {
-  useTable,
-  Column,
-  useSortBy,
-  ColumnInstance,
-  UseSortByColumnProps,
-  useRowSelect,
-  Row,
-  TableInstance,
-  UseRowSelectInstanceProps,
-  UseSortByColumnOptions,
-  Cell
-} from 'react-table';
 import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
-import { SelectionTreeNode } from './ItemTypeSelector';
+import { ItemCategoryTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
 import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
@@ -44,12 +31,10 @@ import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { emptyObject } from 'app/utils/empty';
+import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
+import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { touch } from 'app/inventory/actions';
-
-// TODO maybe move this to utils?
-function isDefined<T>(val: T | undefined): val is T {
-  return val !== undefined;
-}
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -57,14 +42,8 @@ const categoryToClass = {
   21: DestinyClass.Warlock
 };
 
-const initialState = {
-  sortBy: [{ id: 'name' }]
-};
-
-const getRowID = (item: DimItem) => item.id;
-
 interface ProvidedProps {
-  selection: SelectionTreeNode[];
+  categories: ItemCategoryTreeNode[];
 }
 
 interface StoreProps {
@@ -83,6 +62,7 @@ function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
   );
+
   // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
@@ -91,7 +71,7 @@ function mapStateToProps() {
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
-      ratings: ratingsSelector(state),
+      ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait
     };
@@ -100,21 +80,24 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-interface DimColumnExtras {
-  /** An optional filter expression that would limit results to those matching this item. */
-  filter?(item: DimItem): string;
-}
+// Functions:
+// Sort
+// Select/multiselect
+// shift-click filtering
+// get selected items
+// cell display
+// table width
+// enabled columns?
 
-/** The type of our react-table columns */
-export type DimColumn = Column<DimItem> & UseSortByColumnOptions<DimItem> & DimColumnExtras;
-type DimColumnInstance = ColumnInstance<DimItem> & UseSortByColumnProps<DimItem> & DimColumnExtras;
-type DimCell = Cell<DimItem> & {
-  column: DimColumnInstance;
-};
+// TODO: drop wishlist columns if no wishlist loaded
+// TODO: d1/d2 columns
+// TODO: stat ranges
+// TODO: special stat display? recoil, bars, etc
+// TODO: some basic optimization
 
 function ItemTable({
   items,
-  selection,
+  categories,
   itemInfos,
   ratings,
   wishList,
@@ -123,21 +106,30 @@ function ItemTable({
   dispatch
 }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
-  // TODO: maybe implement my own table component
 
-  const terminal = Boolean(_.last(selection)?.terminal);
-  const classCategoryHash =
-    selection.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+  // TODO: useDispatch
+  // TODO: save in settings
+  // TODO: different for weapons and armor?
+  const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
+    { columnId: 'name', sort: SortDirection.ASC }
+  ]);
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
+  // Track the last selection for shift-selecting
+  const lastSelectedId = useRef<string | null>(null);
 
+  // TODO: filter here, or in the mapState function?
+  // Narrow items to selection
+  const terminal = Boolean(_.last(categories)?.terminal);
   items = useMemo(() => {
-    const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
     return terminal
       ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
       : [];
-  }, [items, terminal, selection]);
+  }, [items, terminal, categories]);
 
   // TODO: save in settings
+  // TODO: separate settings for armor & weapons?
+  // TODO: reorder by dragging
   const [enabledColumns, setEnabledColumns] = useState([
     'selection',
     'icon',
@@ -154,74 +146,81 @@ function ItemTable({
     'notes'
   ]);
 
-  const shiftHeld = useShiftHeld();
+  // TODO: hide columns if all undefined
 
-  // TODO: drop wishlist columns if no wishlist loaded
-  // TODO: d1/d2 columns
-  // TODO: stat ranges
-  // TODO: special stat display? recoil, bars, etc
-
+  // TODO: trim columns based on enabledColumns
   // TODO: really gotta pass these in... need to figure out data dependencies
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
-  const columns: DimColumn[] = useMemo(
+  const columns: ColumnDefinition[] = useMemo(
     () => getColumns(items, defs, itemInfos, ratings, wishList),
     [wishList, items, itemInfos, ratings, defs]
   );
 
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    setHiddenColumns,
-    selectedFlatRows
-  } = useTable(
-    {
-      columns,
-      data: items,
-      initialState,
-      getRowID,
-      // TODO: probably should reset on query changes too?
-      getResetSelectedRowPathsDeps: () => [selection]
-    } as any,
-    useSortBy,
-    useRowSelect
-  ) as TableInstance<DimItem> & UseRowSelectInstanceProps<DimItem>;
-
-  const hiddenColumns: string[] = useMemo(
-    () =>
-      columns
-        .flatMap((c) => {
-          if (c.id && !enabledColumns.includes(c.id)) {
-            const subColumnIds = c.columns?.map((sub) => sub.id) || [];
-            return [c.id, ...subColumnIds];
-          }
-        })
-        .filter(isDefined),
-    [columns, enabledColumns]
+  // This needs work for sure
+  const filteredColumns = _.compact(
+    enabledColumns.flatMap((id) =>
+      columns.filter((column) => id === (column.columnGroup ? column.columnGroup.id : column.id))
+    )
   );
 
-  useEffect(() => setHiddenColumns(hiddenColumns), [setHiddenColumns, hiddenColumns]);
+  // process items into Rows
+  const rows: Row[] = useMemo(() => {
+    const unsortedRows: Row[] = items.map((item) => ({
+      item,
+      values: filteredColumns.reduce((memo, col) => {
+        memo[col.id] = col.value(item);
+        return memo;
+      }, {})
+    }));
+
+    // TODO: sort
+    const comparator = chainComparator<Row>(
+      ...columnSorts.map((sorter) => {
+        const column = filteredColumns.find((c) => c.id === sorter.columnId);
+        if (column) {
+          const compare = column.sort
+            ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
+            : compareBy((row: Row) => row.values[column.id]);
+          return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+        }
+        return compareBy(() => 0);
+      })
+    );
+
+    return unsortedRows.sort(comparator);
+  }, [filteredColumns, items, columnSorts]);
+
+  // sort rows
+  // render
+
+  const classCategoryHash =
+    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+
+  const shiftHeld = useShiftHeld();
+
+  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = useCallback(
+    (item) => {
+      const { checked, id } = item;
+      setEnabledColumns((columns) =>
+        checked ? [...columns, id] : columns.filter((c) => c !== id)
+      );
+    },
+    [setEnabledColumns]
+  );
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
   }
 
-  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = (item) => {
-    const { checked, id } = item;
-    setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
-  };
-
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
-    const items = selectedFlatRows?.map((d) => d.original);
+    const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
 
     const state = selectedTag === 'lock';
     try {
-      for (const item of items) {
+      for (const item of selectedItems) {
         await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
@@ -230,8 +229,8 @@ function ItemTable({
       showNotification({
         type: 'success',
         title: state
-          ? t('Filter.LockAllSuccess', { num: items.length })
-          : t('Filter.UnlockAllSuccess', { num: items.length })
+          ? t('Filter.LockAllSuccess', { num: selectedItems.length })
+          : t('Filter.UnlockAllSuccess', { num: selectedItems.length })
       });
     } catch (e) {
       showNotification({
@@ -241,7 +240,7 @@ function ItemTable({
       });
     } finally {
       // Touch the stores service to update state
-      if (items.length) {
+      if (selectedItems.length) {
         dispatch(touch());
       }
     }
@@ -251,13 +250,13 @@ function ItemTable({
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
    */
   const narrowQueryFunction = (
-    row: Row<DimItem>,
-    cell: DimCell
+    row: Row,
+    column: ColumnDefinition
   ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
-    cell.column.filter
+    column.filter
       ? (e) => {
           if (e.shiftKey) {
-            const filter = cell.column.filter!(row.original);
+            const filter = column.filter!(row.values[column.id], row.item);
             if (filter !== undefined) {
               dispatch(toggleSearchQueryComponent(filter));
             }
@@ -266,20 +265,11 @@ function ItemTable({
       : undefined;
 
   const onMoveSelectedItems = (store: DimStore) => {
-    if (selectedFlatRows?.length) {
-      const items = selectedFlatRows?.map((d) => d.original);
-      const loadoutItems: DimItem[] = [];
-
-      for (const item of items) {
-        if (!loadoutItems[item.type]) {
-          loadoutItems[item.type] = [];
-        }
-        loadoutItems[item.type].push(item);
-      }
-
+    if (selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
       const loadout = newLoadout(
         t('Organizer.BulkMoveLoadoutName'),
-        items.map((i) => convertToLoadoutItem(i, false))
+        selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
       applyLoadout(store, loadout, true);
@@ -287,68 +277,169 @@ function ItemTable({
   };
 
   const onTagSelectedItems = (tagInfo: TagInfo) => {
-    if (tagInfo.type && selectedFlatRows?.length) {
-      const items = selectedFlatRows.map((d) => d.original);
-      dispatch(bulkTagItems(items, tagInfo.type));
+    if (tagInfo.type && selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+      dispatch(bulkTagItems(selectedItems, tagInfo.type));
     }
   };
 
+  const gridSpec = `min-content ${filteredColumns
+    .map((c) => c.gridWidth ?? 'min-content')
+    .join(' ')}`;
+
+  /**
+   * Toggle sorting of columns. If shift is held, adds this column to the sort.
+   */
+  const toggleColumnSort = (column: ColumnDefinition) => () => {
+    setColumnSorts((sorts) => {
+      const newColumnSorts = shiftHeld ? sorts : sorts.filter((s) => s.columnId === column.id);
+      let found = false;
+      let index = 0;
+      for (const columnSort of newColumnSorts) {
+        if (columnSort.columnId === column.id) {
+          newColumnSorts[index] = {
+            ...columnSort,
+            sort: columnSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+          };
+          found = true;
+          break;
+        }
+        index++;
+      }
+      if (!found) {
+        newColumnSorts.push({
+          columnId: column.id,
+          sort: column.defaultSort || SortDirection.ASC
+        });
+      }
+      return newColumnSorts;
+    });
+  };
+
+  /**
+   * Select all items, or if any are selected, clear the selection.
+   */
+  const selectAllItems: React.ChangeEventHandler<HTMLInputElement> = () => {
+    if (selectedItemIds.length === 0) {
+      setSelectedItemIds(rows.map((r) => r.item.id));
+    } else {
+      setSelectedItemIds([]);
+    }
+  };
+
+  /**
+   * Select and unselect items. Supports shift-held range selection.
+   */
+  const selectItem = (e: React.ChangeEvent<HTMLInputElement>, item: DimItem) => {
+    const checked = e.target.checked;
+
+    let changingIds = [item.id];
+    if (shiftHeld && lastSelectedId.current) {
+      let startIndex = rows.findIndex((r) => r.item.id === lastSelectedId.current);
+      let endIndex = rows.findIndex((r) => r.item === item);
+      if (startIndex > endIndex) {
+        const tmp = startIndex;
+        startIndex = endIndex;
+        endIndex = tmp;
+      }
+      changingIds = rows.slice(startIndex, endIndex + 1).map((r) => r.item.id);
+    }
+
+    if (checked) {
+      setSelectedItemIds((selected) => _.uniq([...selected, ...changingIds]));
+    } else {
+      setSelectedItemIds((selected) => selected.filter((i) => !changingIds.includes(i)));
+    }
+
+    lastSelectedId.current = item.id;
+  };
+
+  // TODO: css grid, floating header
   return (
     <>
       <EnabledColumnsSelector
-        columns={columns.filter((c) => c.id !== 'selection')}
+        columns={columns}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
         forClass={classIfAny}
       />
       <ItemActions
-        itemsAreSelected={Boolean(selectedFlatRows.length)}
+        itemsAreSelected={Boolean(selectedItemIds.length)}
         onLock={onLock}
         stores={stores}
         onTagSelectedItems={onTagSelectedItems}
         onMoveSelectedItems={onMoveSelectedItems}
       />
-      <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
-        <table className={styles.table} {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: DimColumnInstance) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={styles[column.id]}
-                  >
-                    {column.render('Header')}
-                    {column.isSorted && (
-                      <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
-                    )}
-                  </th>
-                ))}
-              </tr>
+      <div
+        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
+        style={{ gridTemplateColumns: gridSpec }}
+        role="table"
+      >
+        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+          <input
+            name="selectAll"
+            title="Select All"
+            type="checkbox"
+            checked={selectedItemIds.length === rows.length}
+            ref={(el) =>
+              el &&
+              (el.indeterminate =
+                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+            }
+            onChange={selectAllItems}
+          />
+        </div>
+        {filteredColumns.map((column: ColumnDefinition) => (
+          <div
+            key={column.id}
+            className={clsx(styles[column.id], styles.header)}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                <AppIcon
+                  icon={
+                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                      ? faCaretUp
+                      : faCaretDown
+                  }
+                />
+              )}
+              {column.header}
+            </div>
+          </div>
+        ))}
+        {rows.map((row, i) => (
+          // TODO: row component
+          <React.Fragment key={row.item.id}>
+            <div
+              className={clsx(styles.selection, {
+                [styles.alternateRow]: i % 2
+              })}
+              role="cell"
+            >
+              <input
+                type="checkbox"
+                title={t('Organizer.SelectItem', { name: row.item.name })}
+                checked={selectedItemIds.includes(row.item.id)}
+                onChange={(e) => selectItem(e, row.item)}
+              />
+            </div>
+            {filteredColumns.map((column: ColumnDefinition) => (
+              <div
+                key={column.id}
+                onClick={narrowQueryFunction(row, column)}
+                className={clsx(styles[column.id], column.filter && styles.hasFilter, {
+                  [styles.alternateRow]: i % 2
+                })}
+                role="cell"
+              >
+                {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+              </div>
             ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell: DimCell) => (
-                    <td
-                      {...cell.getCellProps()}
-                      onClick={narrowQueryFunction(row, cell)}
-                      className={clsx(
-                        styles[cell.column.id],
-                        cell.column.filter && styles.hasFilter
-                      )}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+          </React.Fragment>
+        ))}
       </div>
     </>
   );
