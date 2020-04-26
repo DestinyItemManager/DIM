@@ -5,10 +5,27 @@ import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 export interface Settings extends DimApiSettings {
   /** list of stat hashes of interest, keyed by class enum */
   readonly customTotalStatsByClass: KeyedStatHashLists;
+
+  /** Selected columns for the Vault Organizer */
+  readonly organizerColumns: string[];
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
-  customTotalStatsByClass: {}
+  customTotalStatsByClass: {},
+  organizerColumns: [
+    'icon',
+    'name',
+    'dmg',
+    'power',
+    'locked',
+    'tag',
+    'wishList',
+    'rating',
+    'archetype',
+    'perks',
+    'mods',
+    'notes'
+  ]
 };

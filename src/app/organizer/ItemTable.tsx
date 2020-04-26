@@ -35,6 +35,8 @@ import { emptyObject } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { touch } from 'app/inventory/actions';
+import { settingsSelector } from 'app/settings/reducer';
+import { setSetting } from 'app/settings/actions';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -56,6 +58,7 @@ interface StoreProps {
     [key: string]: InventoryWishListRoll;
   };
   isPhonePortrait: boolean;
+  enabledColumns: string[];
 }
 
 function mapStateToProps() {
@@ -73,7 +76,8 @@ function mapStateToProps() {
       itemInfos: itemInfosSelector(state),
       ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
-      isPhonePortrait: state.shell.isPhonePortrait
+      isPhonePortrait: state.shell.isPhonePortrait,
+      enabledColumns: settingsSelector(state).organizerColumns
     };
   };
 }
@@ -94,6 +98,8 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 // TODO: stat ranges
 // TODO: special stat display? recoil, bars, etc
 // TODO: some basic optimization
+// TODO: separate settings for armor & weapons?
+// TODO: Indicate equipped/owner? Not sure it's necessary.
 
 function ItemTable({
   items,
@@ -103,13 +109,9 @@ function ItemTable({
   wishList,
   defs,
   stores,
+  enabledColumns,
   dispatch
 }: Props) {
-  // TODO: Indicate equipped/owner? Not sure it's necessary.
-
-  // TODO: useDispatch
-  // TODO: save in settings
-  // TODO: different for weapons and armor?
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC }
   ]);
@@ -127,28 +129,7 @@ function ItemTable({
       : [];
   }, [items, terminal, categories]);
 
-  // TODO: save in settings
-  // TODO: separate settings for armor & weapons?
-  // TODO: reorder by dragging
-  const [enabledColumns, setEnabledColumns] = useState([
-    'selection',
-    'icon',
-    'name',
-    'dmg',
-    'power',
-    'locked',
-    'tag',
-    'wishList',
-    'rating',
-    'archetype',
-    'perks',
-    'mods',
-    'notes'
-  ]);
-
   // TODO: hide columns if all undefined
-
-  // TODO: trim columns based on enabledColumns
   const columns: ColumnDefinition[] = useMemo(
     () => getColumns(items, defs, itemInfos, ratings, wishList),
     [wishList, items, itemInfos, ratings, defs]
@@ -193,22 +174,25 @@ function ItemTable({
 
   const onChangeEnabledColumn = useCallback(
     ({ checked, id }: { checked: boolean; id: string }) => {
-      setEnabledColumns((enabledColumns) =>
-        _.uniq(
-          _.compact(
-            columns.map((c) => {
-              const cId = getColumnSelectionId(c);
-              if (cId === id) {
-                return checked ? cId : undefined;
-              } else {
-                return enabledColumns.includes(cId) ? cId : undefined;
-              }
-            })
+      dispatch(
+        setSetting(
+          'organizerColumns',
+          _.uniq(
+            _.compact(
+              columns.map((c) => {
+                const cId = getColumnSelectionId(c);
+                if (cId === id) {
+                  return checked ? cId : undefined;
+                } else {
+                  return enabledColumns.includes(cId) ? cId : undefined;
+                }
+              })
+            )
           )
         )
       );
     },
-    [setEnabledColumns, columns]
+    [dispatch, columns, enabledColumns]
   );
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
