@@ -37,6 +37,7 @@ import { compareBy, chainComparator, reverseComparator } from 'app/utils/compara
 import { touch } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
+import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -59,6 +60,7 @@ interface StoreProps {
   };
   isPhonePortrait: boolean;
   enabledColumns: string[];
+  customTotalStatsByClass: KeyedStatHashLists;
 }
 
 function mapStateToProps() {
@@ -77,7 +79,8 @@ function mapStateToProps() {
       ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
-      enabledColumns: settingsSelector(state).organizerColumns
+      enabledColumns: settingsSelector(state).organizerColumns,
+      customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
     };
   };
 }
@@ -110,6 +113,7 @@ function ItemTable({
   defs,
   stores,
   enabledColumns,
+  customTotalStatsByClass,
   dispatch
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -129,10 +133,15 @@ function ItemTable({
       : [];
   }, [items, terminal, categories]);
 
+  const classCategoryHash =
+    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+
   // TODO: hide columns if all undefined
   const columns: ColumnDefinition[] = useMemo(
-    () => getColumns(items, defs, itemInfos, ratings, wishList),
-    [wishList, items, itemInfos, ratings, defs]
+    () =>
+      getColumns(items, defs, itemInfos, ratings, wishList, customTotalStatsByClass[classIfAny]),
+    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny]
   );
 
   // This needs work for sure
@@ -165,10 +174,6 @@ function ItemTable({
 
     return unsortedRows.sort(comparator);
   }, [filteredColumns, items, columnSorts]);
-
-  const classCategoryHash =
-    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
   const shiftHeld = useShiftHeld();
 

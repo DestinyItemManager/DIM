@@ -38,6 +38,7 @@ import { ColumnDefinition, SortDirection, ColumnGroup } from './table-types';
 import { TagValue } from '@destinyitemmanager/dim-api-types';
 import clsx from 'clsx';
 import { statHashByName } from 'app/search/search-filter-hashes';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
 // TODO: stat ranges
@@ -63,7 +64,8 @@ export function getColumns(
   ratings: { [key: string]: DtrRating },
   wishList: {
     [key: string]: InventoryWishListRoll;
-  }
+  },
+  customTotalStat: number[]
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 
@@ -356,8 +358,7 @@ export function getColumns(
       },
       noSort: true
     },
-    ...statColumns, // TODO: column groups!
-    /*
+    ...statColumns,
     items[0]?.bucket.inArmor && {
       id: 'customstat',
       header: (
@@ -366,10 +367,10 @@ export function getColumns(
           <StatTotalToggle forClass={items[0]?.classType} readOnly={true} />
         </>
       ),
-      value: (item) => customStatTotal(),
-      cell: (_, item: D2Item) => <GetItemCustomTotal item={item} forClass={items[0]?.classType} />
+      value: (item) =>
+        _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.value : 0)),
+      defaultSort: SortDirection.DESC
     },
-    */
     ...baseStatColumns,
     {
       id: 'masterworkTier',
