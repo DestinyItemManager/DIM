@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 
-import styles from './PickerFooter.m.scss';
+import styles from './ModPickerFooter.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -27,7 +27,7 @@ function ModPickerFooter(props: Props) {
           {t('LoadoutBuilder.SelectPerks')}
         </button>
       </div>
-      <div className={styles.selectedPerks}>
+      <div className={styles.selectedMods}>
         {categoryOrder.map(
           (category) =>
             lockedArmor2Mods[category.category] && (

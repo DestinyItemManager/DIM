@@ -19,7 +19,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import { specialtyModSocketHashes, isArmor2Mod } from 'app/utils/item-utils';
 import ModPickerSection from './ModPickerSection';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import PickerHeader from './PickerHeader';
+import ModPickerHeader from './ModPickerHeader';
 import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
@@ -214,8 +214,7 @@ class ModPicker extends React.Component<Props, State> {
       <Sheet
         onClose={onClose}
         header={
-          <PickerHeader
-            buckets={this.props.buckets}
+          <ModPickerHeader
             categoryOrder={order}
             query={query}
             scrollToBucket={this.scrollToBucket}

@@ -1,14 +1,10 @@
 import React, { ChangeEvent } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, searchIcon } from 'app/shell/icons';
-import ArmorBucketIcon from './ArmorBucketIcon';
-import styles from './PickerHeader.m.scss';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import styles from './ModPickerHeader.m.scss';
 
 interface Props {
-  bucketOrder?: number[];
   categoryOrder?: { category: number | 'seasonal'; nameTranslation: string }[];
-  buckets: InventoryBuckets;
   isPhonePortrait: boolean;
   query: string;
   onSearchChange(event: ChangeEvent<HTMLInputElement>): void;
@@ -16,15 +12,7 @@ interface Props {
 }
 
 function PickerHeader(props: Props) {
-  const {
-    bucketOrder,
-    categoryOrder,
-    buckets,
-    isPhonePortrait,
-    query,
-    onSearchChange,
-    scrollToBucket
-  } = props;
+  const { categoryOrder, isPhonePortrait, query, onSearchChange, scrollToBucket } = props;
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
@@ -50,12 +38,6 @@ function PickerHeader(props: Props) {
         </div>
       </div>
       <div className={styles.tabs}>
-        {bucketOrder?.map((bucketId) => (
-          <div key={bucketId} className={styles.tab} onClick={() => scrollToBucket(bucketId)}>
-            <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
-            {buckets.byHash[bucketId].name}
-          </div>
-        ))}
         {categoryOrder?.map((category) => (
           <div
             key={category.category}

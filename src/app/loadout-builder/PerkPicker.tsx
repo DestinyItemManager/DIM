@@ -15,7 +15,12 @@ import {
   isLoadoutBuilderItem,
   filterPlugs
 } from './generated-sets/utils';
+import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
+import styles from './PerkPicker.m.scss';
+import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
+import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
+import ArmorBucketIcon from './ArmorBucketIcon';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
@@ -23,11 +28,9 @@ import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import PickerHeader from './PickerHeader';
-import PerkPickerFooter from './PerkPickerFooter';
 import { isArmor2Mod } from 'app/utils/item-utils';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
@@ -242,20 +245,53 @@ class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      defs,
-      perks,
-      mods,
-      buckets,
-      items,
-      language,
-      onClose,
-      isPhonePortrait,
-      lockedMap
-    } = this.props;
+    const { defs, perks, mods, buckets, items, language, onClose, isPhonePortrait } = this.props;
     const { query, height, selectedPerks } = this.state;
 
     const order = Object.values(LockableBuckets);
+
+    // On iOS at least, focusing the keyboard pushes the content off the screen
+    const autoFocus =
+      !this.props.isPhonePortrait &&
+      !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
+    const header = (
+      <div>
+        <h1>{t('LB.ChooseAPerk')}</h1>
+        <div className="item-picker-search">
+          <div className="search-filter" role="search">
+            <AppIcon icon={searchIcon} />
+            <input
+              className="filter-input"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              autoFocus={autoFocus}
+              placeholder="Search perk name and description"
+              type="text"
+              name="filter"
+              value={query}
+              onChange={(e) => this.setState({ query: e.currentTarget.value })}
+            />
+          </div>
+        </div>
+        <div className={styles.tabs}>
+          {order.map((bucketId) => (
+            <div
+              key={bucketId}
+              className={styles.tab}
+              onClick={() => this.scrollToBucket(bucketId)}
+            >
+              <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
+              {buckets.byHash[bucketId].name}
+            </div>
+          ))}
+          <div className={styles.tab} onClick={() => this.scrollToBucket('seasonal')}>
+            {t('LB.Season')}
+          </div>
+        </div>
+      </div>
+    );
 
     // Only some languages effectively use the \b regex word boundary
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -288,34 +324,60 @@ class PerkPicker extends React.Component<Props, State> {
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
-          <PerkPickerFooter
-            defs={defs}
-            bucketOrder={order}
-            buckets={buckets}
-            isPhonePortrait={isPhonePortrait}
-            selectedPerks={lockedMap}
-            onSubmit={(e) => this.onSubmit(e, onClose)}
-            onPerkSelected={this.onPerkSelected}
-          />
+          <div className={styles.footer}>
+            <div>
+              <button className={styles.submitButton} onClick={(e) => this.onSubmit(e, onClose)}>
+                {!isPhonePortrait && '⏎ '}
+                {t('LoadoutBuilder.SelectPerks')}
+              </button>
+            </div>
+            <div className={styles.selectedPerks}>
+              {order.map(
+                (bucketHash) =>
+                  selectedPerks[bucketHash] && (
+                    <React.Fragment key={bucketHash}>
+                      <ArmorBucketIcon
+                        bucket={buckets.byHash[bucketHash]}
+                        className={styles.armorIcon}
+                      />
+                      {selectedPerks[bucketHash]!.map((lockedItem) => (
+                        <LockedItemIcon
+                          key={
+                            (lockedItem.type === 'mod' && lockedItem.mod.hash) ||
+                            (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
+                            (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
+                            'unknown'
+                          }
+                          defs={defs}
+                          lockedItem={lockedItem}
+                          onClick={() => {
+                            if (lockedItem.bucket) {
+                              this.onPerkSelected(lockedItem, lockedItem.bucket);
+                            }
+                          }}
+                        />
+                      ))}
+                    </React.Fragment>
+                  )
+              )}
+              <GlobalHotkeys
+                hotkeys={[
+                  {
+                    combo: 'enter',
+                    description: t('LoadoutBuilder.SelectPerks'),
+                    callback: (event) => {
+                      this.onSubmit(event, onClose);
+                    }
+                  }
+                ]}
+              />
+            </div>
+          </div>
         )
       : undefined;
 
     return (
-      <Sheet
-        onClose={onClose}
-        header={
-          <PickerHeader
-            buckets={this.props.buckets}
-            bucketOrder={order}
-            query={query}
-            scrollToBucket={this.scrollToBucket}
-            onSearchChange={(e) => this.setState({ query: e.currentTarget.value })}
-            isPhonePortrait={this.props.isPhonePortrait}
-          />
-        }
-        footer={footer}
-        sheetClassName="item-picker"
-      >
+      <Sheet onClose={onClose} header={header} footer={footer} sheetClassName="item-picker">
         <div ref={this.itemContainer} style={{ height }}>
           {order.map(
             (bucketId) =>
@@ -375,3 +437,42 @@ class PerkPicker extends React.Component<Props, State> {
 }
 
 export default connect<StoreProps>(mapStateToProps)(PerkPicker);
+
+function LockedItemIcon({
+  lockedItem,
+  defs,
+  onClick
+}: {
+  lockedItem: LockedItemType;
+  defs: D2ManifestDefinitions;
+  onClick(e: React.MouseEvent): void;
+}) {
+  switch (lockedItem.type) {
+    case 'mod':
+      return (
+        <SocketDetailsMod itemDef={lockedItem.mod} defs={defs} className={styles.selectedPerk} />
+      );
+    case 'perk':
+      return (
+        <BungieImageAndAmmo
+          onClick={onClick}
+          className={styles.selectedPerk}
+          hash={lockedItem.perk.hash}
+          title={lockedItem.perk.displayProperties.name}
+          src={lockedItem.perk.displayProperties.icon}
+        />
+      );
+    case 'burn':
+      return (
+        <div
+          className={styles.selectedPerk}
+          title={lockedItem.burn.displayProperties.name}
+          onClick={onClick}
+        >
+          <img src={lockedItem.burn.displayProperties.icon} />
+        </div>
+      );
+  }
+
+  return null;
+}

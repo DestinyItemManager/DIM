@@ -9,20 +9,10 @@
   }
 }
 
-.selectedPerks {
+.selectedMods {
   composes: flexWrap from '../dim-ui/common.m.scss';
   flex: 1;
   align-items: center;
-}
-
-.selectedPerk {
-  cursor: pointer;
-  height: 32px;
-  width: 32px;
-  img {
-    height: 32px;
-    width: 32px;
-  }
 }
 
 .submitButton {
@@ -30,18 +20,4 @@
   padding-right: 16px;
   padding-left: 16px;
   margin-right: 8px;
-}
-
-.armorIcon {
-  height: 18px;
-  width: 18px;
-  margin-left: 8px;
-  margin-right: 4px;
-  padding-left: 8px;
-  border-left: 1px solid #999;
-  &:first-child {
-    margin-left: 0;
-    padding-left: 0;
-    border-left: none;
-  }
 }
