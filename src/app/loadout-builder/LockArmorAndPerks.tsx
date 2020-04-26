@@ -201,8 +201,7 @@ function LockArmorAndPerks({
       <div className={styles.area}>
         {(Boolean(flatLockedMap.perk?.length) ||
           Boolean(flatLockedMap.mod?.length) ||
-          Boolean(flatLockedMap.burn?.length) ||
-          Boolean(flatLockedArmor2Mods.length)) && (
+          Boolean(flatLockedMap.burn?.length)) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
@@ -248,7 +247,7 @@ function LockArmorAndPerks({
         </div>
       </div>
       <div className={styles.area}>
-        {(Boolean(flatLockedMap.mod?.length) || Boolean(flatLockedArmor2Mods.length)) && (
+        {Boolean(flatLockedArmor2Mods.length) && (
           <div className={styles.itemGrid}>
             {flatLockedArmor2Mods.map((item) => (
               <LockedArmor2ModIcon
