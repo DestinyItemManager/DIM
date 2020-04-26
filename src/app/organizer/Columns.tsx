@@ -284,9 +284,9 @@ export function getColumns(
       id: 'modslot',
       header: 'Mod Slot',
       // TODO: only show if there are mod slots
-      value: getItemSpecialtyModSlotDisplayName, //
+      value: getItemSpecialtyModSlotDisplayName,
       cell: (value, item) =>
-        value && <SpecialtyModSlotIcon className={styles.modSlot} item={item} />,
+        value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
       filter: (value) => `modslot:${value}`
     },
     items[0]?.bucket.inWeapons && {
