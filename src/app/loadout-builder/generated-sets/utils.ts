@@ -113,10 +113,16 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
   return comparators;
 }
 
+/**
+ * Checks that:
+ *   1. The armour piece is Armour 2.0
+ *   2. The mod matches the Armour energy OR the mod has the any Energy type
+ */
 const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.isDestiny2() &&
   item.energy &&
-  mod.mod.plug.energyCost.energyType === item.energy?.energyType;
+  (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+    mod.mod.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
@@ -170,9 +176,6 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[
   return false;
 }
 
-const doEnergiesClash = (mods: readonly LockedArmor2Mod[], item: DimItem): boolean =>
-  Boolean(mods?.length && !mods.every((mod) => doEnergiesMatch(mod, item)));
-
 /**
  * Filter sets down based on stat filters, locked perks, etc.
  */
@@ -210,33 +213,17 @@ export function filterGeneratedSets(
       return false;
     }
 
-    const helmet = set.firstValidSet[0];
-    const helmetMods = lockedArmor2Mods[Armor2ModPlugCategories.helmet] || [];
-    if (doEnergiesClash(helmetMods, helmet)) {
-      return false;
-    }
+    const doEnergiesClash = (mods?: readonly LockedArmor2Mod[], item: DimItem): boolean =>
+      Boolean(mods?.length && !mods.every((mod) => doEnergiesMatch(mod, item)));
 
-    const arms = set.firstValidSet[1];
-    const armMods = lockedArmor2Mods[Armor2ModPlugCategories.gauntlets] || [];
-    if (doEnergiesClash(armMods, arms)) {
-      return false;
-    }
-
-    const chest = set.firstValidSet[2];
-    const chestMods = lockedArmor2Mods[Armor2ModPlugCategories.chest] || [];
-    if (doEnergiesClash(chestMods, chest)) {
-      return false;
-    }
-
-    const legs = set.firstValidSet[3];
-    const legMods = lockedArmor2Mods[Armor2ModPlugCategories.leg] || [];
-    if (doEnergiesClash(legMods, legs)) {
-      return false;
-    }
-
-    const classItem = set.firstValidSet[4];
-    const classMods = lockedArmor2Mods[Armor2ModPlugCategories.classitem] || [];
-    if (doEnergiesClash(classMods, classItem)) {
+    // ensure all the mods match their respective energy type in on the armour piece
+    if (
+      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.helmet], set.firstValidSet[0]) || //helmets
+      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.gauntlets], set.firstValidSet[1]) || //arms
+      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.chest], set.firstValidSet[2]) || //chest
+      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.leg], set.firstValidSet[3]) || //legs
+      doEnergiesClash(lockedArmor2Mods[Armor2ModPlugCategories.classitem], set.firstValidSet[4]) //classitem
+    ) {
       return false;
     }
 

@@ -1,5 +1,14 @@
 @import '../variables.scss';
 
+.footer {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+
+  > * {
+    margin-right: 4px;
+  }
+}
+
 .tabs {
   composes: move-popup-tabs from global;
   margin-top: 4px;
@@ -23,15 +32,6 @@
       margin-right: 0;
       margin-bottom: 4px;
     }
-  }
-}
-
-.footer {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
-
-  > * {
-    margin-right: 4px;
   }
 }
 

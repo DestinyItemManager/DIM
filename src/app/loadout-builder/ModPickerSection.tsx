@@ -4,6 +4,7 @@ import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { LockedArmor2Mod } from './types';
 import { t } from 'app/i18next-t';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export default function ModPickerSection({
   defs,
@@ -37,8 +38,8 @@ export default function ModPickerSection({
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
       if (
-        item.mod.plug.energyCost.energyType === 0 ||
-        locked?.every((locked) => locked.mod.plug.energyCost.energyType === 0)
+        item.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+        locked?.every((locked) => locked.mod.plug.energyCost.energyType === DestinyEnergyType.Any)
       ) {
         return false;
       }
