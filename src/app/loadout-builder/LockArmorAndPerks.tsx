@@ -270,7 +270,7 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
-            <AppIcon icon={addIcon} /> {t('Mod Picker')}
+            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
           </button>
           {filterModsOpen &&
             ReactDOM.createPortal(

@@ -286,9 +286,6 @@ class PerkPicker extends React.Component<Props, State> {
               {buckets.byHash[bucketId].name}
             </div>
           ))}
-          <div className={styles.tab} onClick={() => this.scrollToBucket('seasonal')}>
-            {t('LB.Season')}
-          </div>
         </div>
       </div>
     );

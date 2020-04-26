@@ -19,7 +19,7 @@ function PickerHeader(props: Props) {
 
   return (
     <div>
-      <h1>{t('LB.ChooseAPerk')}</h1>
+      <h1>{t('LB.ChooseAMod')}</h1>
       <div className="item-picker-search">
         <div className="search-filter" role="search">
           <AppIcon icon={searchIcon} />
@@ -29,7 +29,7 @@ function PickerHeader(props: Props) {
             autoCorrect="off"
             autoCapitalize="off"
             autoFocus={autoFocus}
-            placeholder="Search perk name and description"
+            placeholder={t('LB.SearchAMod')}
             type="text"
             name="filter"
             value={query}
@@ -44,6 +44,7 @@ function PickerHeader(props: Props) {
             className={styles.tab}
             onClick={() => scrollToBucket(category.category)}
           >
+            {/* t('LB.Helmet') t('LB.Gauntlets') t('LB.Chest') t('LB.Legs') t('LB.ClassItem') t('LB.General') t('LB.Seasonal') */}
             {t(category.nameTranslation)}
           </div>
         ))}
