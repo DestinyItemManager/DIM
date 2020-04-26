@@ -145,7 +145,14 @@ function ItemTable({
   // TODO: hide columns if all undefined
   const columns: ColumnDefinition[] = useMemo(
     () =>
-      getColumns(items, defs, itemInfos, ratings, wishList, customTotalStatsByClass[classIfAny]),
+      getColumns(
+        items,
+        defs,
+        itemInfos,
+        ratings,
+        wishList,
+        customTotalStatsByClass[classIfAny] ?? []
+      ),
     [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny]
   );
 
