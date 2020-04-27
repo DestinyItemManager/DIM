@@ -38,6 +38,7 @@ import { ThunkResult } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
+import { getArtifactBonus } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores
