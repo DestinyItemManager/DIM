@@ -3,6 +3,7 @@ import disciplineIcon from 'images/discipline.png';
 import strengthIcon from 'images/strength.png';
 import { DimCharacterStat } from '../store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 
 // Cooldowns
 const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -106,7 +107,7 @@ const stats = [
 /**
  * Compute character-level stats (int, dis, str).
  */
-export function getCharacterStatsData(statDefs, data) {
+export function getCharacterStatsData(defs: D1ManifestDefinitions, data) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   stats.forEach((statId) => {
     const rawStat = data.stats[statId];
@@ -136,7 +137,7 @@ export function getCharacterStatsData(statDefs, data) {
         break;
     }
 
-    const statDef = statDefs.get(stat.hash);
+    const statDef = defs.Stat.get(stat.hash);
     if (statDef) {
       stat.name = statDef.statName; // localized name
       stat.description = statDef.statDescription;

@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { moveItemNotification } from './MoveNotifications';
 import { getStore } from './stores-helpers';
+import rxStore from '../store/store';
+import { updateCharacters } from './d2-stores';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -102,7 +104,7 @@ export default queuedAction(
 
         const reload = item.equipped || equip;
         if (reload) {
-          await item.getStoresService().updateCharacters();
+          await (rxStore.dispatch(updateCharacters()) as any);
         }
 
         item.updateManualMoveTimestamp();

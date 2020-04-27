@@ -20,6 +20,7 @@ import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
+import { touch } from 'app/inventory/actions';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -49,11 +50,13 @@ interface StoreProps {
 type DispatchProps = {
   setSearchQuery(query: string): void;
   bulkTagItems(items: DimItem[], tag: TagValue): void;
+  touchStores(): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
   setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
-  bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any)
+  bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
+  touchStores: touch
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -123,7 +126,7 @@ class SearchFilter extends React.Component<Props, State> {
         } finally {
           // Touch the stores service to update state
           if (lockables.length) {
-            lockables[0].getStoresService().touch();
+            this.props.touchStores();
           }
         }
       } else {

@@ -1,13 +1,10 @@
 import {
   DestinyClass,
   DestinyProgression,
-  DestinyCharacterComponent,
   DestinyFactionDefinition,
   DestinyColor,
   DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
@@ -22,13 +19,8 @@ export interface StoreServiceType<StoreType = DimStore> {
   getStores(): StoreType[];
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Refresh just character info (current light/stats, etc.) */
-  updateCharacters(account?: DestinyAccount): Promise<void>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
-
-  /** Tell Redux things have changed. Temporary bridge for Redux. */
-  touch(): void;
 }
 
 /**
@@ -97,12 +89,6 @@ export interface DimStore<Item = DimItem> {
     progressions: DestinyProgression[];
   };
 
-  /** Apply updated character info. */
-  updateCharacterInfo(
-    defs: D1ManifestDefinitions | D2ManifestDefinitions,
-    bStore: any
-  ): Promise<DimStore[]>;
-
   /**
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
@@ -133,9 +119,6 @@ export interface DimStore<Item = DimItem> {
 
   /** The stores service associated with this store. */
   getStoresService(): StoreServiceType;
-
-  /** A temporary way of telling Redux that something about the stores has changed. */
-  touch(): void;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -212,8 +195,6 @@ export interface D1Store extends DimStore<D1Item> {
   // TODO: shape?
   advisors: any;
 
-  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
-  updateCharacterInfoFromEquip(characterInfo): void;
   /** Which faction is this character currently aligned with? */
   factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
@@ -226,9 +207,5 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  updateCharacterInfo(
-    defs: D2ManifestDefinitions,
-    bStore: DestinyCharacterComponent
-  ): Promise<D2Store[]>;
   getStoresService(): D1StoreServiceType;
 }

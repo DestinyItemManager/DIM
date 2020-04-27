@@ -18,24 +18,85 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../utils/exceptions';
 import { getLight } from '../loadout/loadout-utils';
 import { resetIdTracker, processItems } from './store/d2-item-factory';
-import { makeVault, makeCharacter } from './store/d2-store-factory';
+import { makeVault, makeCharacter, getCharacterStatsData } from './store/d2-store-factory';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems, error, touch } from './actions';
+import { update, loadNewItems, error, charactersUpdated, CharacterInfo } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
-import { getActivePlatform } from 'app/accounts/platforms';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { storesSelector } from './selectors';
-import { getArtifactBonus } from './stores-helpers';
+import { ThunkResult } from 'app/store/reducers';
+import { currentAccountSelector } from 'app/accounts/reducer';
+import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
+import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
+
+/**
+ * Update the high level character information for all the stores
+ * (level, power, stats, etc.). This does not update the
+ * items in the stores.
+ *
+ * This works on both D1 and D2.
+ *
+ * TODO: Instead of this, update per-character after equip/dequip
+ */
+export function updateCharacters(): ThunkResult {
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState());
+    if (!account) {
+      return;
+    }
+
+    const defs =
+      account.destinyVersion === 2
+        ? getState().manifest.d2Manifest
+        : getState().manifest.d1Manifest;
+
+    if (!defs) {
+      return;
+    }
+
+    let characters: CharacterInfo[] = [];
+    if (account.destinyVersion === 2) {
+      const profileInfo = await getCharacters(account);
+      characters = profileInfo.characters.data
+        ? Object.values(profileInfo.characters.data).map((character) => ({
+            characterId: character.characterId,
+            level: character.levelProgression.level,
+            powerLevel: character.light,
+            background: bungieNetPath(character.emblemBackgroundPath),
+            icon: bungieNetPath(character.emblemPath),
+            stats: getCharacterStatsData(getState().manifest.d2Manifest!, character.stats),
+            color: character.emblemColor
+          }))
+        : [];
+    } else {
+      const profileInfo = await d1GetCharacters(account);
+      characters = profileInfo.map((character) => ({
+        characterId: character.id,
+        level: character.base.characterLevel,
+        powerLevel: character.base.characterBase.powerLevel,
+        percentToNextLevel: character.base.percentToNextLevel / 100,
+        background: bungieNetPath(character.base.backgroundPath),
+        icon: bungieNetPath(character.base.emblemPath),
+        stats: getD1CharacterStatsData(
+          getState().manifest.d1Manifest!,
+          character.base.characterBase
+        )
+      }));
+    }
+
+    dispatch(charactersUpdated(characters));
+  };
+}
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -88,33 +149,10 @@ function makeD2StoresService(): D2StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
-    updateCharacters,
-    reloadStores,
-    touch() {
-      store.dispatch(touch());
-    }
+    reloadStores
   };
 
   return service;
-
-  /**
-   * Update the high level character information for all the stores
-   * (level, light, int/dis/str, etc.). This does not update the
-   * items in the stores - to do that, call reloadStores.
-   */
-  async function updateCharacters(account: DestinyAccount = getActivePlatform()!): Promise<void> {
-    const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
-    // TODO: create a new store
-    storesSelector(store.getState()).forEach((dStore) => {
-      if (!dStore.isVault) {
-        const bStore = profileInfo.characters.data?.[dStore.id];
-        if (bStore) {
-          dStore.updateCharacterInfo(defs, bStore);
-        }
-      }
-    });
-    service.touch();
-  }
 
   /**
    * Set the current account, and get a stream of stores updates.

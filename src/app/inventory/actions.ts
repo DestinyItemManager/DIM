@@ -1,9 +1,9 @@
 import { createAction } from 'typesafe-actions';
-import { DimStore } from './store-types';
+import { DimStore, DimCharacterStat } from './store-types';
 import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { TagValue } from './dim-item-info';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyColor } from 'bungie-api-ts/destiny2';
 import { ThunkResult } from 'app/store/reducers';
 import { get } from 'idb-keyval';
 import { DestinyAccount } from 'app/accounts/destiny-account';
@@ -17,6 +17,24 @@ export const update = createAction('inventory/UPDATE')<{
   buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
 }>();
+
+export interface CharacterInfo {
+  characterId: string;
+  level: number;
+  powerLevel: number;
+  background: string;
+  icon: string;
+  stats: {
+    [hash: number]: DimCharacterStat;
+  };
+  percentToNextLevel?: number;
+  color?: DestinyColor;
+}
+
+/**
+ * Update just the stats of the characters, no inventory.
+ */
+export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterInfo[]>();
 
 /**
  * Force stores to be updated to reflect a change. This is a hack that should go
