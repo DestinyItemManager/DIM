@@ -33,6 +33,7 @@ import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
 import { itemInfosSelector } from './selectors';
 import { getStore, getItemAcrossStores, getCurrentStore, getVault } from './stores-helpers';
+import { touch } from './actions';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -253,7 +254,7 @@ function ItemService(): ItemServiceType {
       });
     }
 
-    storeService.touch();
+    reduxStore.dispatch(touch());
 
     return item;
   }

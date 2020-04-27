@@ -1,5 +1,10 @@
 ## Next
 
+## 6.8.0 <span className="changelog-date">(2020-04-26)</span>
+
+* Added "armor 2.0" column to spreadsheet exports.
+* Fixed a bug that could affect the display of percentage-based objectives.
+
 ## 6.7.0 <span className="changelog-date">(2020-04-19)</span>
 
 * Emblems now show a preview of their equipped stat tracker, and show which types of stat tracker the emblem can use.

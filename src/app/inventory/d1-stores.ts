@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
-import { getCharacters, getStores } from '../bungie-api/destiny1-api';
+import { getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { getBuckets } from '../destiny1/d1-buckets';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
@@ -13,12 +13,11 @@ import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import store from '../store/store';
-import { update, loadNewItems, error, touch } from './actions';
+import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { getActivePlatform } from 'app/accounts/platforms';
 import { storesSelector } from './selectors';
 
 export const D1StoresService = StoreService();
@@ -52,31 +51,10 @@ function StoreService(): D1StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
-    updateCharacters,
-    reloadStores,
-    touch() {
-      store.dispatch(touch());
-    }
+    reloadStores
   };
 
   return service;
-
-  /**
-   * Update the high level character information for all the stores
-   * (level, light, int/dis/str, etc.). This does not update the
-   * items in the stores - to do that, call reloadStores.
-   */
-  function updateCharacters(account: DestinyAccount = getActivePlatform()!) {
-    return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
-      storesSelector(store.getState()).forEach((dStore) => {
-        if (!dStore.isVault) {
-          const bStore = bungieStores.find((s) => s.id === dStore.id)!;
-          dStore.updateCharacterInfo(defs, bStore.base);
-        }
-      });
-      service.touch();
-    });
-  }
 
   /**
    * Set the current account, and get a stream of stores updates.

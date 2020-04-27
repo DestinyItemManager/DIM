@@ -11,6 +11,8 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { moveItemNotification } from './MoveNotifications';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import { getVault } from './stores-helpers';
+import { updateCharacters } from './d2-stores';
+import rxStore from '../store/store';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -30,8 +32,9 @@ export const moveItemTo = queuedAction(
         item = await movePromise;
 
         if (reload) {
+          // TODO: only reload the character that changed?
           // Refresh light levels and such
-          await item.getStoresService().updateCharacters();
+          await (rxStore.dispatch(updateCharacters()) as any);
         }
 
         item.updateManualMoveTimestamp();

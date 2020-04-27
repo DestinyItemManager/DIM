@@ -181,7 +181,6 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
     })
   );
   const data = response.Response;
-  store.updateCharacterInfoFromEquip(data.summary);
   return items.filter((i) => {
     const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
     return item?.equipStatus === 1;

@@ -16,7 +16,8 @@ import { set } from 'idb-keyval';
 import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-
+import { StoreProto as D2StoreProto } from './store/d2-store-factory';
+import { StoreProto as D1StoreProto } from './store/d1-store-factory';
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
  * We specifically watch the legacy state, not the new one.
@@ -108,6 +109,9 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         // Make a new array to break change detection for the root stores components
         stores: [...state.stores]
       };
+
+    case getType(actions.charactersUpdated):
+      return updateCharacters(state, action.payload);
 
     // Buckets
     // TODO: only need to do this once, on loading a new platform.
@@ -227,6 +231,34 @@ function updateInventory(
     newState.profileResponse = profileResponse;
   }
   return newState;
+}
+
+/**
+ * Merge in new top-level character info (stats, etc)
+ */
+function updateCharacters(state: InventoryState, characters: actions.CharacterInfo[]) {
+  return {
+    ...state,
+    stores: state.stores.map((store) => {
+      const character = characters.find((c) => c.characterId === store.id);
+      if (!character) {
+        return store;
+      }
+      const { characterId, ...characterInfo } = character;
+      return Object.assign(
+        // Have to make it into a full object again. TODO: un-object-ify this
+        Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto),
+        {
+          ...store,
+          ...characterInfo,
+          stats: {
+            ...store.stats,
+            ...characterInfo.stats
+          }
+        }
+      );
+    })
+  };
 }
 
 function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {

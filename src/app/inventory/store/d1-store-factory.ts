@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { count } from '../../utils/util';
 import { getCharacterStatsData } from './character-utils';
-import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
+import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { t } from 'app/i18next-t';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -39,7 +39,7 @@ const factionBadges = {
 
 // Prototype for Store objects - add methods to this to add them to all
 // stores.
-const StoreProto = {
+export const StoreProto = {
   /**
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
@@ -84,19 +84,6 @@ const StoreProto = {
       const stackSpace = existingAmount > 0 ? maxStackSize - (existingAmount % maxStackSize) : 0;
       return Math.max(openStacks * maxStackSize + stackSpace, 0);
     }
-  },
-
-  updateCharacterInfoFromEquip(this: D1Store, characterInfo) {
-    getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
-  },
-
-  updateCharacterInfo(this: D1Store, defs: D1ManifestDefinitions, characterInfo) {
-    this.level = characterInfo.characterLevel;
-    this.percentToNextLevel = characterInfo.percentToNextLevel / 100;
-    this.powerLevel = characterInfo.characterBase.powerLevel;
-    this.background = `https://www.bungie.net/${characterInfo.backgroundPath}`;
-    this.icon = `https://www.bungie.net/${characterInfo.emblemPath}`;
-    this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
   },
 
   // Remove an item from this store. Returns whether it actually removed anything.
@@ -209,7 +196,7 @@ export function makeCharacter(
     background: `https://www.bungie.net/${character.backgroundPath}`,
     level: character.characterLevel,
     powerLevel: character.characterBase.powerLevel,
-    stats: getCharacterStatsData(defs.Stat, character.characterBase),
+    stats: getCharacterStatsData(defs, character.characterBase),
     classType: character.characterBase.classType,
     className,
     gender,
