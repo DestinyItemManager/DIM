@@ -29,6 +29,16 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 
+const Armor2ModPlugCategoriesTitles = {
+  [ModPickerCategories.general]: t('LB.General'),
+  [ModPickerCategories.helmet]: t('LB.Helmet'),
+  [ModPickerCategories.gauntlets]: t('LB.Gauntlets'),
+  [ModPickerCategories.chest]: t('LB.Chest'),
+  [ModPickerCategories.leg]: t('LB.Legs'),
+  [ModPickerCategories.classitem]: t('LB.ClassItem'),
+  [ModPickerCategories.seasonal]: t('LB.Seasonal')
+};
+
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
   compareBy((i) => i.plug.energyCost?.energyType),
@@ -162,16 +172,6 @@ class ModPicker extends React.Component<Props, State> {
   render() {
     const { defs, mods, language, onClose, isPhonePortrait } = this.props;
     const { query, height, lockedArmor2Mods } = this.state;
-
-    const Armor2ModPlugCategoriesTitles = {
-      [ModPickerCategories.general]: t('LB.General'),
-      [ModPickerCategories.helmet]: t('LB.Helmet'),
-      [ModPickerCategories.gauntlets]: t('LB.Gauntlets'),
-      [ModPickerCategories.chest]: t('LB.Chest'),
-      [ModPickerCategories.leg]: t('LB.Legs'),
-      [ModPickerCategories.classitem]: t('LB.ClassItem'),
-      [ModPickerCategories.seasonal]: t('LB.Seasonal')
-    };
 
     const order = [...Object.values(ModPickerCategories)].map((category) => ({
       category,
