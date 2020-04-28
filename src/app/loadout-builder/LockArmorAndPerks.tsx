@@ -13,7 +13,8 @@ import {
   LockedMap,
   LockedMod,
   LockedArmor2ModMap,
-  LockedArmor2Mod
+  LockedArmor2Mod,
+  ModPickerCategories
 } from './types';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -32,7 +33,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import ModPicker from './ModPicker';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -183,11 +183,10 @@ function LockArmorAndPerks({
     _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
-  const modOrder = [...Object.values(Armor2ModPlugCategories), 'seasonal'];
-  const flatLockedArmor2Mods: LockedArmor2Mod[] = _.flatMap(
-    modOrder,
-    (category) => lockedArmor2Mods[category]
-  ).filter(Boolean);
+  const modOrder = Object.values(ModPickerCategories);
+  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
+    .flatMap((category) => lockedArmor2Mods[category])
+    .filter(Boolean);
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);

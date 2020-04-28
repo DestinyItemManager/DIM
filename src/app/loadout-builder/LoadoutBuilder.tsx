@@ -18,7 +18,9 @@ import {
   ItemsByBucket,
   LockedMap,
   MinMaxIgnored,
-  LockedArmor2ModMap
+  LockedArmor2ModMap,
+  ModPickerCategories,
+  LockedArmor2Mod
 } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
@@ -144,7 +146,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         Intellect: { min: 0, max: 10, ignored: false },
         Strength: { min: 0, max: 10, ignored: false }
       },
-      lockedArmor2Mods: {},
+      lockedArmor2Mods: {
+        [ModPickerCategories.general]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.helmet]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.gauntlets]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.chest]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.leg]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.classitem]: new Array<LockedArmor2Mod>(),
+        [ModPickerCategories.seasonal]: new Array<LockedArmor2Mod>()
+      },
       minimumPower: 750,
       query: '',
       statOrder: statKeys,

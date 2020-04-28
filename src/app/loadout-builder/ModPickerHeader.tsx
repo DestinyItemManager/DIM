@@ -4,7 +4,7 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import styles from './ModPickerHeader.m.scss';
 
 interface Props {
-  categoryOrder?: { category: number | 'seasonal'; nameTranslation: string }[];
+  categoryOrder?: { category: number | 'seasonal'; translatedName: string }[];
   isPhonePortrait: boolean;
   query: string;
   onSearchChange(event: ChangeEvent<HTMLInputElement>): void;
@@ -45,7 +45,7 @@ function ModPickerHeader(props: Props) {
             onClick={() => scrollToBucket(category.category)}
           >
             {/* t('LB.Helmet') t('LB.Gauntlets') t('LB.Chest') t('LB.Legs') t('LB.ClassItem') t('LB.General') t('LB.Seasonal') */}
-            {t(category.nameTranslation)}
+            {t(category.translatedName)}
           </div>
         ))}
       </div>

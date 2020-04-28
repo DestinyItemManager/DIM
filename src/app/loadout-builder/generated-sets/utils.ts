@@ -26,6 +26,13 @@ const unwantedSockets = new Set([
   2457930460 // Empty masterwork slot
 ]);
 
+const energyOrder = [
+  DestinyEnergyType.Void,
+  DestinyEnergyType.Thermal,
+  DestinyEnergyType.Arc,
+  DestinyEnergyType.Any
+];
+
 /**
  *  Filter out plugs that we don't want to show in the perk picker.
  */
@@ -187,25 +194,15 @@ function canAllGeneralModsBeUsed(generalMods: readonly LockedArmor2Mod[], set: A
     return false;
   }
 
-  const generalModsByEnergyType = _.keyBy(
-    _.groupBy(generalMods, (mod) => mod.mod.plug.energyCost.energyType),
-    (group) => group[0].mod.plug.energyCost.energyType
+  const generalModsByEnergyType = _.groupBy(
+    generalMods,
+    (mod) => mod.mod.plug.energyCost.energyType
   );
 
-  const armourByEnergyType = _.keyBy(
-    _.groupBy(set.firstValidSet, (item) => item.isDestiny2() && item.energy?.energyType),
-    (group) => {
-      const item = group[0];
-      return (item.isDestiny2() && item.energy?.energyType) || -1;
-    }
+  const armourByEnergyType = _.groupBy(
+    set.firstValidSet,
+    (item) => item.isDestiny2() && item.energy?.energyType
   );
-
-  const energyOrder = [
-    DestinyEnergyType.Void,
-    DestinyEnergyType.Thermal,
-    DestinyEnergyType.Arc,
-    DestinyEnergyType.Any
-  ];
 
   //This checks that if there are energy specific mods, they have a corrersponding armour piece
   //  and that after those have been slotted, there are enough pieces to fit the general ones.

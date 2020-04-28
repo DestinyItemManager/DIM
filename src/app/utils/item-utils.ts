@@ -34,7 +34,7 @@ export const Armor2ModPlugCategories = {
   chest: 1526202480,
   leg: 2111701510,
   classitem: 912441879
-};
+} as const;
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.isDestiny2() && item.energy
@@ -93,5 +93,6 @@ export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>
   getSpecialtySocket(item)?.plug?.plugItem.itemTypeDisplayName || '';
 
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
-  Object.values(Armor2ModPlugCategories).includes(item.plug.plugCategoryHash) ||
-  specialtyModSocketHashes.includes(item.plug.plugCategoryHash);
+  Object.values(Armor2ModPlugCategories).some(
+    (category) => category === item.plug.plugCategoryHash
+  ) || specialtyModSocketHashes.includes(item.plug.plugCategoryHash);

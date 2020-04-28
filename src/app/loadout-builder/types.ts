@@ -1,3 +1,4 @@
+import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { DimItem } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -65,15 +66,19 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
+export const ModPickerCategories = { ...Armor2ModPlugCategories, seasonal: 'seasonal' } as const;
+export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
+
 export interface LockedArmor2Mod {
   mod: DestinyInventoryItemDefinition;
-  category: number | 'seasonal';
+  category: ModPickerCategory;
 }
 
-export type LockedArmor2ModMap = Readonly<{
-  [categoryHash: number]: readonly LockedArmor2Mod[] | undefined;
-  seasonal?: readonly LockedArmor2Mod[];
-}>;
+export type LockedArmor2ModMap = Readonly<
+  {
+    [T in ModPickerCategory]: LockedArmor2Mod[];
+  }
+>;
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.

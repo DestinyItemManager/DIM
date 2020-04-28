@@ -4,7 +4,12 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { LockedArmor2Mod, LockedArmor2ModMap } from './types';
+import {
+  LockedArmor2Mod,
+  LockedArmor2ModMap,
+  ModPickerCategories,
+  ModPickerCategory
+} from './types';
 import _ from 'lodash';
 import { isLoadoutBuilderItem } from './generated-sets/utils';
 import copy from 'fast-copy';
@@ -22,7 +27,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import ModPickerHeader from './ModPickerHeader';
 import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { t } from 'app/i18next-t';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -106,7 +111,7 @@ function mapStateToProps() {
         return unlockedPlugs
           .map((i) => defs.InventoryItem.get(i))
           .filter((item) => isArmor2Mod(item) && item.collectibleHash)
-          .sort((a, b) => sortMods(a, b));
+          .sort(sortMods);
       });
 
       return _.uniqBy(allMods, (mod) => mod.hash);
@@ -159,21 +164,19 @@ class ModPicker extends React.Component<Props, State> {
     const { query, height, lockedArmor2Mods } = this.state;
 
     const Armor2ModPlugCategoriesTitles = {
-      [Armor2ModPlugCategories.general]: 'LB.General',
-      [Armor2ModPlugCategories.helmet]: 'LB.Helmet',
-      [Armor2ModPlugCategories.gauntlets]: 'LB.Gauntlets',
-      [Armor2ModPlugCategories.chest]: 'LB.Chest',
-      [Armor2ModPlugCategories.leg]: 'LB.Legs',
-      [Armor2ModPlugCategories.classitem]: 'LB.ClassItem',
-      ['seasonal']: 'LB.Seasonal'
+      [ModPickerCategories.general]: t('LB.General'),
+      [ModPickerCategories.helmet]: t('LB.Helmet'),
+      [ModPickerCategories.gauntlets]: t('LB.Gauntlets'),
+      [ModPickerCategories.chest]: t('LB.Chest'),
+      [ModPickerCategories.leg]: t('LB.Legs'),
+      [ModPickerCategories.classitem]: t('LB.ClassItem'),
+      [ModPickerCategories.seasonal]: t('LB.Seasonal')
     };
 
-    const order = [...Object.values(Armor2ModPlugCategories), 'seasonal' as 'seasonal'].map(
-      (category) => ({
-        category,
-        nameTranslation: Armor2ModPlugCategoriesTitles[category]
-      })
-    );
+    const order = [...Object.values(ModPickerCategories)].map((category) => ({
+      category,
+      translatedName: Armor2ModPlugCategoriesTitles[category]
+    }));
 
     // Only some languages effectively use the \b regex word boundary
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -188,14 +191,20 @@ class ModPicker extends React.Component<Props, State> {
         )
       : mods;
 
-    const getByPlugCategoryHash = (plugCategoryHash: number) =>
-      queryFilteredMods
-        .filter((mod) => mod.plug.plugCategoryHash === plugCategoryHash)
-        .map((mod) => ({ mod, category: plugCategoryHash }));
+    const getByModCategoryType = (category: ModPickerCategory) => {
+      if (category === ModPickerCategories.seasonal) {
+        return queryFilteredMods
+          .filter((mod) => specialtyModSocketHashes.includes(mod.plug.plugCategoryHash))
+          .map((mod) => ({ mod, category }));
+      }
 
-    const queryFilteredSeasonalMods = queryFilteredMods
-      .filter((mod) => specialtyModSocketHashes.includes(mod.plug.plugCategoryHash))
-      .map((mod) => ({ mod, category: 'seasonal' as 'seasonal' }));
+      return queryFilteredMods
+        .filter((mod) => mod.plug.plugCategoryHash === category)
+        .map((mod) => ({ mod, category }));
+    };
+
+    const isGeneralOrSeasonal = (category: ModPickerCategory) =>
+      category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
 
     const footer = Object.values(lockedArmor2Mods).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
@@ -226,28 +235,19 @@ class ModPicker extends React.Component<Props, State> {
         sheetClassName="item-picker"
       >
         <div ref={this.itemContainer} style={{ height }}>
-          {Object.values(Armor2ModPlugCategories).map((category) => (
+          {Object.values(ModPickerCategories).map((category) => (
             <ModPickerSection
               key={category}
-              mods={getByPlugCategoryHash(category)}
+              mods={getByModCategoryType(category)}
               defs={defs}
               locked={lockedArmor2Mods[category]}
               title={Armor2ModPlugCategoriesTitles[category]}
               category={category}
-              maximumSelectable={category === Armor2ModPlugCategories.general ? 5 : 2}
-              energyMustMatch={category !== Armor2ModPlugCategories.general}
+              maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
+              energyMustMatch={!isGeneralOrSeasonal(category)}
               onModSelected={this.onModSelected}
             />
           ))}
-          <ModPickerSection
-            mods={queryFilteredSeasonalMods}
-            defs={defs}
-            locked={lockedArmor2Mods.seasonal}
-            title="LB.Seasonal"
-            category="seasonal"
-            maximumSelectable={5}
-            onModSelected={this.onModSelected}
-          />
         </div>
       </Sheet>
     );

@@ -9,7 +9,7 @@ import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  categoryOrder: { category: number | 'seasonal'; nameTranslation: string }[];
+  categoryOrder: { category: number | 'seasonal'; translatedName: string }[];
   isPhonePortrait: boolean;
   lockedArmor2Mods: LockedArmor2ModMap;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;

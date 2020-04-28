@@ -2,8 +2,7 @@ import React from 'react';
 import { SelectableArmor2Mod } from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { LockedArmor2Mod } from './types';
-import { t } from 'app/i18next-t';
+import { LockedArmor2Mod, ModPickerCategory } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export default function ModPickerSection({
@@ -20,7 +19,7 @@ export default function ModPickerSection({
   mods: readonly LockedArmor2Mod[];
   locked?: readonly LockedArmor2Mod[];
   title: string;
-  category: number | string;
+  category: ModPickerCategory;
   maximumSelectable: number;
   energyMustMatch?: boolean;
   onModSelected(mod: LockedArmor2Mod);
@@ -59,7 +58,7 @@ export default function ModPickerSection({
 
   return (
     <div className={styles.bucket} id={`mod-picker-section-${category}`}>
-      <h3>{t(title)}</h3>
+      <h3>{title}</h3>
       <div className={styles.perks}>
         {mods.map((item) => (
           <SelectableArmor2Mod

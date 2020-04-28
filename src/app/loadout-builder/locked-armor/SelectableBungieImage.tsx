@@ -2,7 +2,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedItemType, BurnItem, LockedArmor2Mod } from '../types';
+import { LockedItemType, BurnItem, LockedArmor2Mod, ModPickerCategory } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -83,7 +83,7 @@ export function SelectableArmor2Mod({
   onLockedArmor2Mod
 }: {
   mod: DestinyInventoryItemDefinition;
-  category: number | 'seasonal';
+  category: ModPickerCategory;
   defs: D2ManifestDefinitions;
   selected: boolean;
   unselectable: boolean;
