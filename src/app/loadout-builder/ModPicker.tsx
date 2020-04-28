@@ -191,17 +191,14 @@ class ModPicker extends React.Component<Props, State> {
         )
       : mods;
 
-    const getByModCategoryType = (category: ModPickerCategory) => {
-      if (category === ModPickerCategories.seasonal) {
-        return queryFilteredMods
-          .filter((mod) => specialtyModSocketHashes.includes(mod.plug.plugCategoryHash))
-          .map((mod) => ({ mod, category }));
-      }
-
-      return queryFilteredMods
-        .filter((mod) => mod.plug.plugCategoryHash === category)
+    const getByModCategoryType = (category: ModPickerCategory) =>
+      queryFilteredMods
+        .filter((mod) =>
+          category === ModPickerCategories.seasonal
+            ? specialtyModSocketHashes.includes(mod.plug.plugCategoryHash)
+            : mod.plug.plugCategoryHash === category
+        )
         .map((mod) => ({ mod, category }));
-    };
 
     const isGeneralOrSeasonal = (category: ModPickerCategory) =>
       category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
