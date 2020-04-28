@@ -264,7 +264,7 @@ module.exports = (env) => {
         }
       ],
 
-      noParse: function(path) {
+      noParse: function (path) {
         return false;
       }
     },
@@ -388,7 +388,7 @@ module.exports = (env) => {
         // Notifications for item moves
         '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
-        '$featureFlags.organizer': JSON.stringify(env.dev),
+        '$featureFlags.organizer': JSON.stringify(!env.release),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the new DIM API

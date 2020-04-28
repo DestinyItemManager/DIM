@@ -27,7 +27,7 @@ import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
 import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { getColumns } from './Columns';
+import { getColumns, getColumnSelectionId } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
@@ -35,6 +35,9 @@ import { emptyObject } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { touch } from 'app/inventory/actions';
+import { settingsSelector } from 'app/settings/reducer';
+import { setSetting } from 'app/settings/actions';
+import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -56,24 +59,31 @@ interface StoreProps {
     [key: string]: InventoryWishListRoll;
   };
   isPhonePortrait: boolean;
+  enabledColumns: string[];
+  customTotalStatsByClass: KeyedStatHashLists;
 }
 
 function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
   );
-
   // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
+    const items = allItemsSelector(state).filter(searchFilter);
+    const isArmor = items[0]?.bucket.inArmor;
     return {
-      items: allItemsSelector(state).filter(searchFilter),
+      items,
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
       ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
-      isPhonePortrait: state.shell.isPhonePortrait
+      isPhonePortrait: state.shell.isPhonePortrait,
+      enabledColumns: settingsSelector(state)[
+        isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
+      ],
+      customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
     };
   };
 }
@@ -94,6 +104,8 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 // TODO: stat ranges
 // TODO: special stat display? recoil, bars, etc
 // TODO: some basic optimization
+// TODO: separate settings for armor & weapons?
+// TODO: Indicate equipped/owner? Not sure it's necessary.
 
 function ItemTable({
   items,
@@ -103,19 +115,18 @@ function ItemTable({
   wishList,
   defs,
   stores,
+  enabledColumns,
+  customTotalStatsByClass,
   dispatch
 }: Props) {
-  // TODO: Indicate equipped/owner? Not sure it's necessary.
-
-  // TODO: useDispatch
-  // TODO: save in settings
-  // TODO: different for weapons and armor?
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC }
   ]);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
+
+  const isArmor = items[0]?.bucket.inArmor;
 
   // TODO: filter here, or in the mapState function?
   // Narrow items to selection
@@ -127,40 +138,27 @@ function ItemTable({
       : [];
   }, [items, terminal, categories]);
 
-  // TODO: save in settings
-  // TODO: separate settings for armor & weapons?
-  // TODO: reorder by dragging
-  const [enabledColumns, setEnabledColumns] = useState([
-    'selection',
-    'icon',
-    'name',
-    'dmg',
-    'power',
-    'locked',
-    'tag',
-    'wishList',
-    'rating',
-    'archetype',
-    'perks',
-    'mods',
-    'notes'
-  ]);
+  const classCategoryHash =
+    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
   // TODO: hide columns if all undefined
-
-  // TODO: trim columns based on enabledColumns
-  // TODO: really gotta pass these in... need to figure out data dependencies
-  // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: ColumnDefinition[] = useMemo(
-    () => getColumns(items, defs, itemInfos, ratings, wishList),
-    [wishList, items, itemInfos, ratings, defs]
+    () =>
+      getColumns(
+        items,
+        defs,
+        itemInfos,
+        ratings,
+        wishList,
+        customTotalStatsByClass[classIfAny] ?? []
+      ),
+    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny]
   );
 
   // This needs work for sure
   const filteredColumns = _.compact(
-    enabledColumns.flatMap((id) =>
-      columns.filter((column) => id === (column.columnGroup ? column.columnGroup.id : column.id))
-    )
+    enabledColumns.flatMap((id) => columns.filter((column) => id === getColumnSelectionId(column)))
   );
 
   // process items into Rows
@@ -173,7 +171,6 @@ function ItemTable({
       }, {})
     }));
 
-    // TODO: sort
     const comparator = chainComparator<Row>(
       ...columnSorts.map((sorter) => {
         const column = filteredColumns.find((c) => c.id === sorter.columnId);
@@ -190,29 +187,30 @@ function ItemTable({
     return unsortedRows.sort(comparator);
   }, [filteredColumns, items, columnSorts]);
 
-  // sort rows
-  // render
-
-  const classCategoryHash =
-    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
-
   const shiftHeld = useShiftHeld();
 
-  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = useCallback(
-    (item) => {
-      const { checked, id } = item;
-      setEnabledColumns((columns) =>
-        checked ? [...columns, id] : columns.filter((c) => c !== id)
+  const onChangeEnabledColumn = useCallback(
+    ({ checked, id }: { checked: boolean; id: string }) => {
+      dispatch(
+        setSetting(
+          isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons',
+          _.uniq(
+            _.compact(
+              columns.map((c) => {
+                const cId = getColumnSelectionId(c);
+                if (cId === id) {
+                  return checked ? cId : undefined;
+                } else {
+                  return enabledColumns.includes(cId) ? cId : undefined;
+                }
+              })
+            )
+          )
+        )
       );
     },
-    [setEnabledColumns]
+    [dispatch, columns, enabledColumns, isArmor]
   );
-
-  if (!terminal) {
-    return <div>No items match the current filters.</div>;
-  }
-
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
@@ -256,6 +254,15 @@ function ItemTable({
     column.filter
       ? (e) => {
           if (e.shiftKey) {
+            console.log(e, e.target, e.currentTarget);
+            if ((e.target as Element).hasAttribute('data-perk-name')) {
+              dispatch(
+                toggleSearchQueryComponent(
+                  column.filter!((e.target as Element).getAttribute('data-perk-name')!, row.item)
+                )
+              );
+              return;
+            }
             const filter = column.filter!(row.values[column.id], row.item);
             if (filter !== undefined) {
               dispatch(toggleSearchQueryComponent(filter));
@@ -430,7 +437,8 @@ function ItemTable({
               <div
                 key={column.id}
                 onClick={narrowQueryFunction(row, column)}
-                className={clsx(styles[column.id], column.filter && styles.hasFilter, {
+                className={clsx(styles[column.id], {
+                  [styles.hasFilter]: column.filter,
                   [styles.alternateRow]: i % 2
                 })}
                 role="cell"

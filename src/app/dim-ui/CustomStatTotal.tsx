@@ -7,7 +7,6 @@ import styles from './CustomStatTotal.m.scss';
 import { armorStats } from 'app/inventory/store/stats';
 import { DestinyStatDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { setSetting } from '../settings/actions';
-import { D2Item } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import { settingsSelector } from 'app/settings/reducer';
 
@@ -18,44 +17,23 @@ interface ProvidedProps {
   forClass?: DestinyClass;
   readOnly?: boolean;
 }
-interface StoreDefs {
+interface StoreProps {
   defs: D2ManifestDefinitions;
-}
-interface StoreStats {
   customTotalStatsByClass: KeyedStatHashLists;
 }
-type StoreDefsAndStats = StoreDefs & StoreStats;
 
 const mapDispatchToProps = {
   setSetting
 };
 type DispatchProps = typeof mapDispatchToProps;
 
-type ToggleProps = ProvidedProps & StoreDefsAndStats & DispatchProps;
-type TotalProps = { item: D2Item } & ProvidedProps & StoreDefsAndStats;
+type ToggleProps = ProvidedProps & StoreProps & DispatchProps;
 
 function mapStateToProps() {
-  return (state: RootState): StoreDefsAndStats => ({
+  return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest!,
     customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
   });
-}
-
-function GetItemCustomTotalPreConnect({
-  item,
-  forClass = DestinyClass.Unknown,
-  customTotalStatsByClass
-}: TotalProps) {
-  const collectedStats =
-    item.stats?.filter((s) => customTotalStatsByClass[forClass]?.includes(s.statHash)) ?? [];
-
-  return (
-    <>
-      {collectedStats.length && collectedStats.length === customTotalStatsByClass[forClass]?.length
-        ? collectedStats.reduce((a, b) => a + b.base, 0)
-        : '--'}
-    </>
-  );
 }
 
 function StatTotalTogglePreConnect({
@@ -103,14 +81,10 @@ function StatTotalTogglePreConnect({
   );
 }
 
-export const StatTotalToggle = connect<StoreDefsAndStats, DispatchProps>(
+export const StatTotalToggle = connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(StatTotalTogglePreConnect);
-
-export const GetItemCustomTotal = connect<StoreDefsAndStats>(mapStateToProps)(
-  GetItemCustomTotalPreConnect
-);
 
 /**
  * this check shouldn't be necessary :|
@@ -124,7 +98,7 @@ function StatToggleButton({
   readOnly = false
 }: {
   stat: DestinyStatDefinition;
-  setSetting;
+  setSetting: DispatchProps['setSetting'];
   currentSettings: KeyedStatHashLists;
   currentClass: DestinyClass;
   readOnly: boolean;

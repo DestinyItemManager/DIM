@@ -4,6 +4,7 @@ interface CssExports {
   'alternateRow': string;
   'archetype': string;
   'dmg': string;
+  'energy': string;
   'hasFilter': string;
   'header': string;
   'icon': string;
@@ -11,8 +12,9 @@ interface CssExports {
   'locked': string;
   'modPerk': string;
   'modPerks': string;
-  'modSlot': string;
   'mods': string;
+  'modslot': string;
+  'modslotIcon': string;
   'name': string;
   'negative': string;
   'perks': string;
