@@ -66,6 +66,7 @@ function ItemActions({
           dropDownItems={moveItems}
         />
       </span>
+      <span>Tip: Hold the Shift key and click on a cell</span>
     </div>
   );
 }

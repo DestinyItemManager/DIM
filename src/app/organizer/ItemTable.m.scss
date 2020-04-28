@@ -7,7 +7,8 @@
 
   > div {
     padding: 4px 8px;
-    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 6px);
+    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
+    background-color: #313233;
   }
 }
 
@@ -38,12 +39,11 @@
 }
 
 .alternateRow {
-  background-color: #464748;
+  background-color: #464748 !important;
 }
 
 .mods,
-.perks,
-.archetype {
+.perks {
   padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
 }
 
@@ -63,6 +63,14 @@
   padding-left: 8px !important;
   padding-right: 2px !important;
   cursor: pointer;
+  width: 20px;
+  left: 0;
+  position: sticky;
+  top: $header-height + 30px;
+  &.header {
+    top: $header-height;
+  }
+  z-index: 1;
 }
 
 .rating {
@@ -74,13 +82,29 @@
 .locked,
 .tag,
 .wishList,
+.energy,
 .dmg {
   text-align: center !important;
+}
+
+.dmg {
+  padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px) !important;
+  &.header {
+    padding-top: 4px !important;
+  }
 }
 
 .icon {
   padding-top: 4px !important;
   width: calc(var(--item-size) * 0.75);
+  left: 30px;
+  position: sticky;
+  top: $header-height + 30px;
+  &.header {
+    top: $header-height;
+    padding-top: 0;
+  }
+  z-index: 1;
   img {
     display: block;
     width: calc(var(--item-size) * 0.75);
@@ -88,9 +112,6 @@
     box-sizing: border-box;
     pointer-events: none;
     border: 1px solid #ddd;
-  }
-  &.header {
-    padding-top: 0;
   }
 }
 
@@ -112,6 +133,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, min-content);
   gap: 8px;
+  align-items: flex-start;
   &.header {
     display: block;
   }
@@ -140,7 +162,11 @@
   }
 }
 
-.modSlot {
+.modslot {
+  display: flex;
+  justify-content: center;
+}
+.modslotIcon {
   height: 24px;
   width: 24px;
 }
@@ -148,9 +174,8 @@
 // Indicate cells that can be filtered on shift-click
 .shiftHeld {
   .hasFilter {
-    background-color: #6666ff;
     &:hover {
-      background-color: #3333ff;
+      background-color: #999;
     }
   }
 }
