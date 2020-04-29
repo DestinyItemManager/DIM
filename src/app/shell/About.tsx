@@ -48,8 +48,6 @@ export default function About() {
     };
   }, []);
 
-  console.log('Render');
-
   const token = getToken();
   return (
     <div className="dim-page dim-static-page">

@@ -19,9 +19,11 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon, banIcon } from './icons';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 interface ProvidedProps {
-  account: DestinyAccount;
+  destinyVersion: DestinyVersion;
+  platformMembershipId: string;
 }
 
 interface StoreProps {

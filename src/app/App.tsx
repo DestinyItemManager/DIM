@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import clsx from 'clsx';
 import ActivityTracker from './dim-ui/ActivityTracker';
@@ -13,6 +12,14 @@ import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
 import { Loading } from './dim-ui/Loading';
 import { Switch, Route } from 'react-router';
+import routes from './routes';
+import Privacy from './shell/Privacy';
+import WhatsNew from './whats-new/WhatsNew';
+import Developer from './developer/Developer';
+import SettingsPage from './settings/SettingsPage';
+import Destiny from './shell/Destiny';
+import GDriveRevisions from './storage/GDriveRevisions';
+import AuditLog from './settings/AuditLog';
 
 // TODO: may not be worth it to load this lazy!
 const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
@@ -41,6 +48,7 @@ class App extends React.Component<Props> {
     testFeatureCompatibility();
   }
 
+  // TODO: Get rid of account-in-url?
   render() {
     return (
       <div
@@ -57,12 +65,41 @@ class App extends React.Component<Props> {
           <Header />
           <Suspense fallback={<Loading />}>
             <Switch>
-              <Route path="/about">
+              <Route path={routes.about()} exact>
                 <About />
               </Route>
-              <Route>
-                <UIView />
+              <Route path={routes.privacy()} exact>
+                <Privacy />
               </Route>
+              <Route path={routes.whatsNew()} exact>
+                <WhatsNew />
+              </Route>
+              <Route path={routes.login()} exact>
+                <WhatsNew />
+              </Route>
+              <Route path={routes.settings.gdriveRevisions()} exact>
+                <GDriveRevisions />
+              </Route>
+              <Route path={routes.settings.auditLog()} exact>
+                <AuditLog />
+              </Route>
+              <Route path={routes.settings()}>
+                <SettingsPage />
+              </Route>
+              <Route
+                path={[routes.d1(':platformMembershipId'), routes.d2(':platformMembershipId')]}
+                render={({ match }) => (
+                  <Destiny
+                    destinyVersion={match.path.endsWith('d2') ? 2 : 1}
+                    platformMembershipId={match.params.platformMembershipId}
+                  />
+                )}
+              />
+              {$DIM_FLAVOR === 'dev' && (
+                <Route path={routes.developer()} exact>
+                  <Developer />
+                </Route>
+              )}
             </Switch>
           </Suspense>
           <NotificationsContainer />
