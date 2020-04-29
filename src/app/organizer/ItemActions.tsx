@@ -42,7 +42,7 @@ function ItemActions({
         name="lock"
         onClick={onLock}
       >
-        Lock <AppIcon icon={lockIcon} />
+        {t('Organizer.Lock')} <AppIcon icon={lockIcon} />
       </button>
       <button
         className={`dim-button ${styles.actionButton}`}
@@ -50,7 +50,7 @@ function ItemActions({
         name="unlock"
         onClick={onLock}
       >
-        Unlock <AppIcon icon={lockIcon} />
+        {t('Organizer.Unlock')} <AppIcon icon={lockIcon} />
       </button>
       <span className={styles.actionButton}>
         <DropDown
@@ -66,7 +66,7 @@ function ItemActions({
           dropDownItems={moveItems}
         />
       </span>
-      <span>Tip: Hold the Shift key and click on a cell</span>
+      <span> {t('Organizer.ShiftTip')}</span>
     </div>
   );
 }

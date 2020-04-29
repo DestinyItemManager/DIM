@@ -395,7 +395,7 @@ function ItemTable({
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
           <input
             name="selectAll"
-            title="Select All"
+            title={t('Organizer.SelectAll')}
             type="checkbox"
             checked={selectedItemIds.length === rows.length}
             ref={(el) =>
@@ -414,6 +414,7 @@ function ItemTable({
             aria-sort="none"
           >
             <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {column.header}
               {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
                 <AppIcon
                   icon={
@@ -423,7 +424,6 @@ function ItemTable({
                   }
                 />
               )}
-              {column.header}
             </div>
           </div>
         ))}

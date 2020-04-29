@@ -61,7 +61,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   };
 
   if (isPhonePortrait) {
-    return <div>This view isn't great on mobile.</div>;
+    return <div>{t('Organizer.NoMobile')}</div>;
   }
 
   if (!stores.length) {
