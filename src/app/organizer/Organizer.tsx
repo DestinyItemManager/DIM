@@ -18,6 +18,7 @@ import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import { router } from 'app/router';
 import styles from './Organizer.m.scss';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   account: DestinyAccount;
