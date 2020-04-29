@@ -54,6 +54,8 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 // TODO: just default booleans to this
 const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
+const modSocketCategories = [2685412949, 590099826];
+
 /**
  * This function generates the columns.
  */
@@ -333,15 +335,16 @@ export function getColumns(
       value: () => 0,
       cell: (_, item) => {
         const plugItems = item.isDestiny2()
-          ? item.sockets?.categories[1]?.sockets
-              .filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
+          ? item.sockets?.categories
+              .find((c) => modSocketCategories.includes(c.category.hash))
+              ?.sockets.filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
               .flatMap((s) => s.plugOptions) || []
           : [];
         return (
           plugItems.length > 0 && (
             <div className={styles.modPerks}>
               {item.isDestiny2() &&
-                plugItems.map((p: DimPlug) => (
+                plugItems.map((p) => (
                   <PressTip
                     key={p.plugItem.hash}
                     tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}

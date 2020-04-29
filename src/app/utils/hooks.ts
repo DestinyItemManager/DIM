@@ -20,11 +20,9 @@ export function useShiftHeld() {
   const [shiftHeld, setShiftHeld] = useState(false);
   useEffect(() => {
     const shiftTrue = (e) => {
-      console.log('shiftTrue', e.shiftKey);
       e.shiftKey && setShiftHeld(true);
     };
     const shiftFalse = (e) => {
-      console.log('shiftFalse', e.shiftKey);
       !e.shiftKey && setShiftHeld(false);
     };
     document.addEventListener('keydown', shiftTrue);
