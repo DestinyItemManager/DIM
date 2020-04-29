@@ -39,10 +39,7 @@ import { TagValue } from '@destinyitemmanager/dim-api-types';
 import clsx from 'clsx';
 import { statHashByName } from 'app/search/search-filter-hashes';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-// TODO: drop wishlist columns if no wishlist loaded
-// TODO: d1/d2 columns
-// TODO: stat ranges
-// TODO: special stat display? recoil, bars, etc
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -67,13 +64,13 @@ export function getColumns(
   wishList: {
     [key: string]: InventoryWishListRoll;
   },
-  customTotalStat: number[]
+  customTotalStat: number[],
+  loadouts: Loadout[]
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 
   // TODO: most of these are constant and can be hoisted?
   // TODO: localize headers
-  // TODO: bring back tier and custom stat
 
   const statHashes: {
     [statHash: number]: StatInfo;
@@ -406,6 +403,24 @@ export function getColumns(
       id: 'masterworkStat',
       header: 'Masterwork Stat',
       value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined)
+    },
+    {
+      id: 'loadouts',
+      header: 'Loadouts',
+      value: () => 0,
+      cell: (_, item) => {
+        const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
+        return (
+          inloadouts.length > 0 && (
+            <div>
+              {inloadouts.map((loadout) => (
+                <div key={loadout.id}>{loadout.name}</div>
+              ))}
+            </div>
+          )
+        );
+      },
+      noSort: true
     },
     {
       id: 'notes',

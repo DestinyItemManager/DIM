@@ -31,13 +31,15 @@ import { getColumns, getColumnSelectionId } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { setItemLockState } from 'app/inventory/item-move-service';
-import { emptyObject } from 'app/utils/empty';
+import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { touch } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/reducer';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -61,16 +63,29 @@ interface StoreProps {
   isPhonePortrait: boolean;
   enabledColumns: string[];
   customTotalStatsByClass: KeyedStatHashLists;
+  loadouts: Loadout[];
 }
 
 function mapStateToProps() {
-  const allItemsSelector = createSelector(storesSelector, (stores) =>
-    stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
+  const itemsSelector = createSelector(
+    storesSelector,
+    searchFilterSelector,
+    (_, props: ProvidedProps) => props.categories,
+    (stores, searchFilter, categories) => {
+      const items = stores.flatMap((s) =>
+        s.items.filter((i) => i.comparable && i.primStat && searchFilter(i))
+      );
+      const terminal = Boolean(_.last(categories)?.terminal);
+      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+      return terminal
+        ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
+        : emptyArray<DimItem>();
+    }
   );
+
   // TODO: make the table a subcomponent so it can take the subtype as an argument?
-  return (state: RootState): StoreProps => {
-    const searchFilter = searchFilterSelector(state);
-    const items = allItemsSelector(state).filter(searchFilter);
+  return (state: RootState, props: ProvidedProps): StoreProps => {
+    const items = itemsSelector(state, props);
     const isArmor = items[0]?.bucket.inArmor;
     return {
       items,
@@ -83,7 +98,8 @@ function mapStateToProps() {
       enabledColumns: settingsSelector(state)[
         isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
       ],
-      customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
+      customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
+      loadouts: loadoutsSelector(state)
     };
   };
 }
@@ -91,20 +107,12 @@ function mapStateToProps() {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 // Functions:
-// Sort
-// Select/multiselect
-// shift-click filtering
-// get selected items
-// cell display
-// table width
-// enabled columns?
-
+// TODO: better display for nothing matching
+// TODO: sticky toolbar
 // TODO: drop wishlist columns if no wishlist loaded
-// TODO: d1/d2 columns
-// TODO: stat ranges
+// TODO: d1 support?
 // TODO: special stat display? recoil, bars, etc
 // TODO: some basic optimization
-// TODO: separate settings for armor & weapons?
 // TODO: Indicate equipped/owner? Not sure it's necessary.
 
 function ItemTable({
@@ -117,6 +125,7 @@ function ItemTable({
   stores,
   enabledColumns,
   customTotalStatsByClass,
+  loadouts,
   dispatch
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -130,13 +139,13 @@ function ItemTable({
 
   // TODO: filter here, or in the mapState function?
   // Narrow items to selection
-  const terminal = Boolean(_.last(categories)?.terminal);
   items = useMemo(() => {
+    const terminal = Boolean(_.last(categories)?.terminal);
     const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
     return terminal
       ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
-      : [];
-  }, [items, terminal, categories]);
+      : emptyArray();
+  }, [items, categories]);
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -151,9 +160,10 @@ function ItemTable({
         itemInfos,
         ratings,
         wishList,
-        customTotalStatsByClass[classIfAny] ?? []
+        customTotalStatsByClass[classIfAny] ?? [],
+        loadouts
       ),
-    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny]
+    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny, loadouts]
   );
 
   // This needs work for sure
