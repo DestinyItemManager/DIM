@@ -77,6 +77,7 @@ class App extends React.Component<Props> {
               <Route path={routes.login()} exact>
                 <WhatsNew />
               </Route>
+              {/* TODO: sub-switch? */}
               <Route path={routes.settings.gdriveRevisions()} exact>
                 <GDriveRevisions />
               </Route>
@@ -100,6 +101,7 @@ class App extends React.Component<Props> {
                   <Developer />
                 </Route>
               )}
+              <Route>NO MATCH! (redirect to home?)</Route>
             </Switch>
           </Suspense>
           <NotificationsContainer />

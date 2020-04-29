@@ -123,7 +123,7 @@ function mapStateToProps() {
 /**
  * The Loadout Optimizer screen
  */
-export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
+class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private subscriptions = new Subscriptions();
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);

@@ -1,5 +1,4 @@
 import { UIRouterReact, servicesPlugin, pushStateLocationPlugin } from '@uirouter/react';
-import { states } from './routes';
 import { dimNeedsUpdate } from './register-service-worker';
 import { reloadDIM } from './whats-new/WhatsNewLink';
 

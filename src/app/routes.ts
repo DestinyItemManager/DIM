@@ -38,6 +38,7 @@ const routes = {
     progress: addPath(d2Route, '/progress'),
     collections: addPath(d2Route, '/collections'),
     loadoutBuilder: addPath(d2Route, '/optimizer'),
+    organizer: addPath(d2Route, '/organizer'),
     vendors: addPath(d2Route, '/vendors'),
     singleVendor: (platformMembershipId: string, vendorId: string) =>
       d2Route(platformMembershipId) + `/vendors/${vendorId}`
