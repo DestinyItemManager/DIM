@@ -1,6 +1,13 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
+import {
+  ArmorSet,
+  LockedItemType,
+  StatTypes,
+  LockedMap,
+  LockedArmor2ModMap,
+  LockedArmor2Mod
+} from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -14,6 +21,8 @@ import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
+import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { DimItem } from 'app/inventory/item-types';
 
 interface Props {
   set: ArmorSet;
@@ -24,6 +33,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
+  lockedArmor2Mods: LockedArmor2ModMap;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -41,6 +51,7 @@ function GeneratedSet({
   defs,
   enabledStats,
   forwardedRef,
+  lockedArmor2Mods,
   addLockedItem,
   removeLockedItem
 }: Props) {
@@ -60,6 +71,23 @@ function GeneratedSet({
 
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
+
+  const setKey = JSON.stringify(set.firstValidSet.map((item) => item.hash));
+  function getModsForPiece(item: DimItem) {
+    const mods: LockedArmor2Mod[] = [];
+    const modCategories = [...Object.values(Armor2ModPlugCategories), 'seasonal'];
+    for (const category of modCategories) {
+      const modList: LockedArmor2Mod[] | undefined = lockedArmor2Mods[category];
+      if (modList) {
+        for (const mod of modList) {
+          if (mod.setAssignments?.get(setKey) === item.hash) {
+            mods.push(mod);
+          }
+        }
+      }
+    }
+    return mods;
+  }
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
@@ -110,11 +138,13 @@ function GeneratedSet({
           <GeneratedSetItem
             key={item.index}
             item={item}
+            defs={defs}
             itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
             locked={lockedMap[item.bucket.hash]}
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
             statValues={set.firstValidSetStatChoices[index]}
+            lockedMods={getModsForPiece(item)}
           />
         ))}
       </div>

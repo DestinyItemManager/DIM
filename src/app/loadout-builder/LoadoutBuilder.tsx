@@ -310,6 +310,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               defs={defs}
               statOrder={statOrder}
               enabledStats={enabledStats}
+              lockedArmor2Mods={lockedArmor2Mods}
             />
           )}
         </PageWithMenu.Contents>

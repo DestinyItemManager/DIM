@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { newLoadout } from 'app/loadout/loadout-utils';
@@ -26,6 +26,7 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
+  lockedArmor2Mods: LockedArmor2ModMap;
   onLockedMapChanged(lockedMap: Props['lockedMap']): void;
 }
 
@@ -94,7 +95,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
       isPhonePortrait,
       combos,
       combosWithoutCaps,
-      enabledStats
+      enabledStats,
+      lockedArmor2Mods
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
@@ -147,6 +149,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             defs={defs}
             statOrder={statOrder}
             enabledStats={enabledStats}
+            lockedArmor2Mods={lockedArmor2Mods}
           />
         ) : sets.length > 0 ? (
           <WindowScroller ref={this.windowScroller}>
@@ -172,6 +175,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     defs={defs}
                     statOrder={statOrder}
                     enabledStats={enabledStats}
+                    lockedArmor2Mods={lockedArmor2Mods}
                   />
                 )}
                 scrollTop={scrollTop}
