@@ -223,7 +223,12 @@ class LoadoutBuilder extends React.Component<Props, State> {
     let processError;
     const enabledStats = this.getEnabledStats(statFilters);
     try {
-      filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
+      filteredItems = this.filterItemsMemoized(
+        items[store.classType],
+        lockedMap,
+        lockedArmor2Mods,
+        filter
+      );
       const result = this.processMemoized(
         filteredItems,
         lockedMap,
@@ -238,7 +243,6 @@ class LoadoutBuilder extends React.Component<Props, State> {
         processedSets,
         minimumPower,
         lockedMap,
-        lockedArmor2Mods,
         statFilters,
         statOrder,
         enabledStats
@@ -315,6 +319,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
               defs={defs}
               statOrder={statOrder}
               enabledStats={enabledStats}
+              lockedArmor2Mods={lockedArmor2Mods}
             />
           )}
         </PageWithMenu.Contents>
