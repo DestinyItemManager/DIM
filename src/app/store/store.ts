@@ -29,4 +29,11 @@ const store = createStore<RootState, any, {}, {}>(
   composeEnhancers(applyMiddleware(routerMiddleware(history), thunk))
 );
 
+// Allow hot-reloading reducers
+if (module.hot) {
+  module.hot.accept('./reducers', () => {
+    store.replaceReducer(allReducers(history));
+  });
+}
+
 export default store;
