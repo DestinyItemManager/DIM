@@ -199,7 +199,7 @@
     "textcomplete": "^0.18.0",
     "typesafe-actions": "5.1.0",
     "ua-parser-js": "^0.7.17",
-    "uuid": "^7.0.2",
+    "uuid": "^8.0.0",
     "valid-url": "^1.0.9",
     "voca": "^1.4.0",
     "workbox-cacheable-response": "^5.1.1",
