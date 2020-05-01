@@ -173,7 +173,7 @@ class ModPicker extends React.Component<Props, State> {
     const { defs, mods, language, onClose, isPhonePortrait } = this.props;
     const { query, height, lockedArmor2Mods } = this.state;
 
-    const order = [...Object.values(ModPickerCategories)].map((category) => ({
+    const order = Object.values(ModPickerCategories).map((category) => ({
       category,
       translatedName: Armor2ModPlugCategoriesTitles[category]
     }));

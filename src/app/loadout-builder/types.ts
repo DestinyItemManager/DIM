@@ -74,11 +74,9 @@ export interface LockedArmor2Mod {
   category: ModPickerCategory;
 }
 
-export type LockedArmor2ModMap = Readonly<
-  {
-    [T in ModPickerCategory]: LockedArmor2Mod[];
-  }
->;
+export type LockedArmor2ModMap = {
+  [T in ModPickerCategory]: LockedArmor2Mod[];
+};
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
