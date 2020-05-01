@@ -22,6 +22,7 @@ import GDriveRevisions from './storage/GDriveRevisions';
 import AuditLog from './settings/AuditLog';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import Login from './login/Login';
 
 // TODO: may not be worth it to load this lazy!
 const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
@@ -92,7 +93,7 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
               <WhatsNew />
             </Route>
             <Route path={routes.login()} exact>
-              <WhatsNew />
+              <Login />
             </Route>
             {/* TODO: sub-switch? */}
             <Route path={routes.settings.gdriveRevisions()} exact>

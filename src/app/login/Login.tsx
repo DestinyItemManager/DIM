@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Transition } from '@uirouter/react';
 import { t } from 'app/i18next-t';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
+import { useParams } from 'react-router';
 
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
-export default function Login({ transition }: { transition: Transition }) {
+export default function Login() {
+  const { reauth } = useParams<{ reauth?: string }>();
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();
-  const reauth = transition.params().reauth;
 
   const isStandalone =
     (window.navigator as any).standalone === true ||

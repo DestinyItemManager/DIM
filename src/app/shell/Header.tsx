@@ -3,15 +3,12 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import Link from './Link';
-import { router } from '../router';
 import './header.scss';
 import logo from 'images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
-import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
 import { Subscriptions } from '../utils/rx-utils';
@@ -25,70 +22,13 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
+import { Link, NavLink } from 'react-router-dom';
 import _ from 'lodash';
 import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-
-const destiny1Links = [
-  {
-    state: 'destiny1.inventory',
-    text: 'Header.Inventory', // t('Header.Inventory')
-    hotkey: 'i'
-  },
-  {
-    state: 'destiny1.loadout-builder',
-    text: 'LB.LB', // t('LB.LB')
-    hotkey: 'o'
-  },
-  {
-    state: 'destiny1.vendors',
-    text: 'Vendors.Vendors', // t('Vendors.Vendors')
-    hotkey: 'v'
-  },
-  {
-    state: 'destiny1.record-books',
-    text: 'RecordBooks.RecordBooks' // t('RecordBooks.RecordBooks')
-  },
-  {
-    state: 'destiny1.activities',
-    text: 'Activities.Activities' // t('Activities.Activities')
-  }
-];
-
-const destiny2Links = [
-  {
-    state: 'destiny2.inventory',
-    text: 'Header.Inventory', // t('Header.Inventory')
-    hotkey: 'i'
-  },
-  {
-    state: 'destiny2.progress',
-    text: 'Progress.Progress', // t('Progress.Progress')
-    hotkey: 'p'
-  },
-  {
-    state: 'destiny2.vendors',
-    text: 'Vendors.Vendors', // t('Vendors.Vendors')
-    hotkey: 'v'
-  },
-  {
-    state: 'destiny2.collections',
-    text: 'Vendors.Collections', // t('Vendors.Collections')
-    hotkey: 'c'
-  },
-  {
-    state: 'destiny2.loadoutbuilder',
-    text: 'LB.LB', // t('LB.LB')
-    hotkey: 'b'
-  }
-];
-
-if ($featureFlags.organizer) {
-  destiny2Links.push({
-    state: 'destiny2.organizer',
-    text: 'Organizer.Organizer', // t('Organizer.Organizer')
-    hotkey: 'o'
-  });
-}
+import vendorEngramSvg from '../../images/engram.svg';
+import { accountRoute } from 'app/routes';
+import { withRouter, RouteComponentProps } from 'react-router';
+import styles from './Header.m.scss';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -97,7 +37,7 @@ interface StoreProps {
   vendorEngramDropActive: boolean;
 }
 
-type Props = StoreProps & ThunkDispatchProp;
+type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -135,15 +75,6 @@ class Header extends React.PureComponent<Props, State> {
       installPrompt$.subscribe((installPromptEvent) => this.setState({ installPromptEvent }))
     );
 
-    this.unregisterTransitionHooks = [
-      router.transitionService.onBefore({}, () => {
-        this.setState({ dropdownOpen: false });
-        if (this.searchFilter.current) {
-          this.searchFilter.current.clearFilter();
-        }
-      })
-    ];
-
     this.updateVendorEngrams(this.props.account || undefined);
   }
 
@@ -153,11 +84,27 @@ class Header extends React.PureComponent<Props, State> {
     this.stopPollingVendorEngrams();
   }
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.setState({ dropdownOpen: false });
+      if (this.searchFilter.current) {
+        this.searchFilter.current.clearFilter();
+      }
+    }
+
+    if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
+      this.searchFilter.current.focusFilterInput();
+    }
+
+    if (prevProps.account?.destinyVersion !== this.props.account?.destinyVersion) {
+      this.updateVendorEngrams(this.props.account || undefined);
+    }
+  }
+
   render() {
-    const { account, vendorEngramDropActive } = this.props;
+    const { account, vendorEngramDropActive, history } = this.props;
     const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
-    // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
 
     const isStandalone =
@@ -167,7 +114,9 @@ class Header extends React.PureComponent<Props, State> {
     // Generic links about DIM
     const dimLinks = (
       <>
-        <Link state="about" text={t('Header.About')} />
+        <NavLink to="/about" className="link">
+          {t('Header.About')}
+        </NavLink>
         <WhatsNewLink />
         {bugReportLink && (
           <ExternalLink className="link" href={bugReport}>
@@ -182,33 +131,89 @@ class Header extends React.PureComponent<Props, State> {
       </>
     );
 
-    const links = account ? (account.destinyVersion === 1 ? destiny1Links : destiny2Links) : [];
+    let links: {
+      to: string;
+      text: string;
+      hotkey?: string;
+      badge?: React.ReactNode;
+    }[] = [];
+    if (account) {
+      const path = accountRoute(account);
+
+      links =
+        account.destinyVersion === 2
+          ? _.compact([
+              {
+                to: `${path}/inventory`,
+                text: t('Header.Inventory'),
+                hotkey: 'i'
+              },
+              {
+                to: `${path}/progress`,
+                text: t('Progress.Progress'),
+                hotkey: 'p'
+              },
+              {
+                to: `${path}/vendors`,
+                text: t('Vendors.Vendors'),
+                hotkey: 'v',
+                badge: vendorEngramDropActive && (
+                  <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
+                )
+              },
+              {
+                to: `${path}/collections`,
+                text: t('Vendors.Collections'),
+                hotkey: 'c'
+              },
+              {
+                to: `${path}/optimizer`,
+                text: t('LB.LB'),
+                hotkey: 'b'
+              },
+              $featureFlags.organizer && {
+                to: `${path}/organizer`,
+                text: t('Organizer.Organizer'),
+                hotkey: 'o'
+              }
+            ])
+          : [
+              {
+                to: `${path}/inventory`,
+                text: t('Header.Inventory'),
+                hotkey: 'i'
+              },
+              {
+                to: `${path}/optimizer`,
+                text: t('LB.LB'),
+                hotkey: 'o'
+              },
+              {
+                to: `${path}/vendors`,
+                text: t('Vendors.Vendors'),
+                hotkey: 'v'
+              },
+              {
+                to: `${path}/record-books`,
+                text: t('RecordBooks.RecordBooks')
+              },
+              {
+                to: `${path}/activities`,
+                text: t('Activities.Activities')
+              }
+            ];
+    }
+
+    const linkNodes = links.map((link) => (
+      <NavLink className="link" key={link.to} to={link.to}>
+        {link.badge}
+        {link.text}
+      </NavLink>
+    ));
 
     // Links about the current Destiny version
-    const destinyLinks = (
-      <>
-        {links.map((link) => (
-          <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
-        ))}
-      </>
-    );
-
-    const reverseDestinyLinks = (
-      <>
-        {links
-          .slice()
-          .reverse()
-          .map((link) => (
-            <Link
-              key={link.state}
-              account={account}
-              state={link.state}
-              text={t(link.text)}
-              showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
-            />
-          ))}
-      </>
-    );
+    const destinyLinks = <>{linkNodes}</>;
+    const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
     const hotkeys = [
       {
@@ -221,8 +226,8 @@ class Header extends React.PureComponent<Props, State> {
           (link) =>
             link.hotkey && {
               combo: link.hotkey,
-              description: t(link.text),
-              callback: () => router.stateService.go(link.state, account)
+              description: link.text,
+              callback: () => history.push(link.to)
             }
         )
       )
@@ -232,6 +237,8 @@ class Header extends React.PureComponent<Props, State> {
       /iPad|iPhone|iPod/.test(navigator.userAgent) &&
       !window.MSStream &&
       (window.navigator as any).standalone !== true;
+
+    console.log('Render');
 
     return (
       <header id="header" className={showSearch ? 'search-expanded' : ''}>
@@ -260,7 +267,9 @@ class Header extends React.PureComponent<Props, State> {
               >
                 {destinyLinks}
                 <hr />
-                <Link state="settings" text={t('Settings.Settings')} />
+                <NavLink className="link" to="/settings">
+                  {t('Settings.Settings')}
+                </NavLink>
                 {installPromptEvent ? (
                   <a className="link" onClick={this.installDim}>
                     {t('Header.InstallDIM')}
@@ -281,7 +290,7 @@ class Header extends React.PureComponent<Props, State> {
             </CSSTransition>
           )}
         </TransitionGroup>
-        <UISref to="default-account">
+        <Link to="/">
           <img
             className={clsx('logo', 'link', $DIM_FLAVOR)}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
@@ -289,7 +298,7 @@ class Header extends React.PureComponent<Props, State> {
             alt="DIM"
             aria-label="dim"
           />
-        </UISref>
+        </Link>
         <div className="header-links">{reverseDestinyLinks}</div>
         <span className="header-right">
           {account && (
@@ -298,11 +307,9 @@ class Header extends React.PureComponent<Props, State> {
             </span>
           )}
           <Refresh />
-          <UISref to="settings">
-            <a className="link" title={t('Settings.Settings')}>
-              <AppIcon icon={settingsIcon} />
-            </a>
-          </UISref>
+          <Link className="link" to="/settings" title={t('Settings.Settings')}>
+            <AppIcon icon={settingsIcon} />
+          </Link>
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
@@ -319,16 +326,6 @@ class Header extends React.PureComponent<Props, State> {
           )}
       </header>
     );
-  }
-
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
-      this.searchFilter.current.focusFilterInput();
-    }
-
-    if (prevProps.account?.destinyVersion !== this.props.account?.destinyVersion) {
-      this.updateVendorEngrams(this.props.account || undefined);
-    }
   }
 
   private updateVendorEngrams = (account = this.props.account) => {
@@ -384,4 +381,4 @@ class Header extends React.PureComponent<Props, State> {
   };
 }
 
-export default connect(mapStateToProps)(Header);
+export default withRouter(connect(mapStateToProps)(Header));
