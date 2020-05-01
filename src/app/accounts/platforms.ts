@@ -9,7 +9,12 @@ import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../bungie-api/authenticated-fetch';
-import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
+import {
+  accountsSelector,
+  currentAccountSelector,
+  loadAccountsFromIndexedDB,
+  accountsLoadedSelector
+} from './reducer';
 import { ThunkResult } from 'app/store/reducers';
 import { dedupePromise } from 'app/utils/util';
 import { router } from '../router';
@@ -33,11 +38,7 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
       }
     }
 
-    if (
-      (!getState().accounts.loadedFromIDB || accountsSelector(getState()).length === 0) &&
-      !getState().accounts.loaded &&
-      realAccountsPromise
-    ) {
+    if (!accountsLoadedSelector(getState()) && realAccountsPromise) {
       // Fall back to Bungie.net
       try {
         await realAccountsPromise;

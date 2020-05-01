@@ -1,3 +1,8 @@
+import { DestinyAccount } from './accounts/destiny-account';
+
+export const accountRoute = (account: DestinyAccount) =>
+  `/${account.membershipId}/d${account.destinyVersion}`;
+
 /**
  * A little helper that takes a path constructor and a suffix and returns a path constructor that
  * adds the suffix.
@@ -26,6 +31,7 @@ const routes = {
     gdriveRevisions: addPath(settingsRoute, '/gdrive-revisions'),
     auditLog: addPath(settingsRoute, '/audit')
   }),
+  account: (account: DestinyAccount) => `/${account.membershipId}/d${account.destinyVersion}`,
   d1: Object.assign(d1Route, {
     inventory: addPath(d1Route, '/inventory'),
     recordBooks: addPath(d1Route, '/record-books'),

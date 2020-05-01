@@ -20,10 +20,10 @@ import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { accountsSelector } from 'app/accounts/reducer';
+import { accountsSelector, accountsLoadedSelector } from 'app/accounts/reducer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { AccountContext } from './context';
-import { Switch, Route, useRouteMatch } from 'react-router';
+import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import Inventory from 'app/inventory/Inventory';
 import Progress from 'app/progress/Progress';
 import LoadoutBuilder from 'app/loadout-builder/LoadoutBuilder';
@@ -35,7 +35,8 @@ import Organizer from 'app/organizer/Organizer';
 import SingleVendor from 'app/vendors/SingleVendor';
 import Activities from 'app/destiny1/activities/Activities';
 import Collections from 'app/collections/Collections';
-import DefaultAccount from './DefaultAccount';
+import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
+import { Loading } from 'app/dim-ui/Loading';
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -43,6 +44,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
+  accountsLoaded: boolean;
   account?: DestinyAccount;
   profileError?: DimError;
   d2Manifest?: D2ManifestDefinitions;
@@ -51,6 +53,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
+    accountsLoaded: accountsLoadedSelector(state),
     account: accountsSelector(state).find(
       (account) =>
         account.membershipId === props.platformMembershipId &&
@@ -67,9 +70,27 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Props) {
+function Destiny({
+  accountsLoaded,
+  account,
+  d1Manifest,
+  d2Manifest,
+  dispatch,
+  profileError
+}: Props) {
   useEffect(() => {
-    const { account, dispatch } = this.props;
+    if (!accountsLoaded) {
+      dispatch(getPlatforms());
+    }
+  }, [dispatch, accountsLoaded]);
+
+  useEffect(() => {
+    if (account) {
+      dispatch(setActivePlatform(account));
+    }
+  }, [account, dispatch]);
+
+  useEffect(() => {
     if (!account) {
       return;
     }
@@ -79,12 +100,12 @@ function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Pr
     if ($featureFlags.vendorEngrams && account.destinyVersion === 2) {
       dispatch(loadVendorDropsFromIndexedDB());
     }
-  }, [dispatch]);
+  }, [dispatch, account]);
 
-  const { path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
 
   if (!account) {
-    return (
+    return accountsLoaded ? (
       <div className="dim-page">
         <ErrorPanel
           title={t('Accounts.MissingTitle')}
@@ -92,6 +113,8 @@ function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Pr
           showTwitters={true}
         />
       </div>
+    ) : (
+      <Loading />
     );
   }
 
@@ -151,13 +174,13 @@ function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Pr
     }
   });
 
-  console.log('Render Destiny');
+  console.log('Render Destiny', path, url);
   const contents = (
     <>
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
-            <Inventory />
+            <Inventory account={account} />
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/progress`} exact>
@@ -204,8 +227,7 @@ function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Pr
             </Route>
           )}
           <Route>
-            {/* TODO: Should we have a 404 page?? or just redirect to inventory */}
-            <DefaultAccount />
+            <Redirect to={`${url}/inventory`} />
           </Route>
         </Switch>
       </div>

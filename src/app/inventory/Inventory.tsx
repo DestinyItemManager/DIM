@@ -20,12 +20,17 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import { storesLoadedSelector } from './selectors';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
   storesLoaded: boolean;
 }
 
-function mapStateToProps(state: RootState): Partial<Props> {
+type Props = ProvidedProps & StoreProps;
+
+function mapStateToProps(state: RootState): StoreProps {
   return {
     storesLoaded: storesLoadedSelector(state)
   };
@@ -84,4 +89,4 @@ class Inventory extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Inventory);
+export default connect<StoreProps>(mapStateToProps)(Inventory);

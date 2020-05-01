@@ -21,11 +21,12 @@ import Destiny from './shell/Destiny';
 import GDriveRevisions from './storage/GDriveRevisions';
 import AuditLog from './settings/AuditLog';
 import DefaultAccount from './shell/DefaultAccount';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // TODO: may not be worth it to load this lazy!
 const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
 
-interface Props {
+interface StoreProps {
   language: string;
   showReviews: boolean;
   itemQuality: boolean;
@@ -33,7 +34,7 @@ interface Props {
   charColMobile: number;
 }
 
-function mapStateToProps(state: RootState): Props {
+function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     language: settings.language,
@@ -44,12 +45,15 @@ function mapStateToProps(state: RootState): Props {
   };
 }
 
+type Props = StoreProps;
+
 function App({ language, charColMobile, showReviews, itemQuality, showNewItems }: Props) {
   useEffect(() => {
     testFeatureCompatibility();
   }, []);
 
   // TODO: uhhh but if we don't render the routes how will these go anywhere???
+  /*
   if (!token) {
     return <Redirect login />;
   }
@@ -57,6 +61,11 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
   if (!apikeys) {
     return <Redirect developer />;
   }
+  */
+
+  // TODO: some sort of <RequireAccount> wrapper that shows loading then loads account?
+  // TODO: make the loading component something that adds/removes classes from a single loading component?
+  //       drive a message through redux?
 
   return (
     <div
@@ -96,11 +105,11 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
               <SettingsPage />
             </Route>
             <Route
-              path={[routes.d1(':platformMembershipId'), routes.d2(':platformMembershipId')]}
+              path="/:membershipId(\d+)/d:destinyVersion(1|2)"
               render={({ match }) => (
                 <Destiny
-                  destinyVersion={match.path.endsWith('d2') ? 2 : 1}
-                  platformMembershipId={match.params.platformMembershipId}
+                  destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                  platformMembershipId={match.params.membershipId}
                 />
               )}
             />
@@ -186,4 +195,4 @@ function ColorA11y() {
   return null;
 }
 
-export default connect<Props>(mapStateToProps)(App);
+export default connect<StoreProps>(mapStateToProps)(App);

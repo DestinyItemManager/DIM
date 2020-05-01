@@ -21,6 +21,10 @@ export const destinyVersionSelector = (state: RootState) => {
   return currentAccount?.destinyVersion || 2;
 };
 
+/** Are the accounts loaded enough to use? */
+export const accountsLoadedSelector = (state: RootState) =>
+  state.accounts.loaded || (state.accounts.loadedFromIDB && accountsSelector(state).length > 0);
+
 export interface AccountsState {
   readonly accounts: readonly DestinyAccount[];
   // TODO: just the ID?
