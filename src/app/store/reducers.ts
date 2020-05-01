@@ -1,6 +1,4 @@
 import { combineReducers, AnyAction, Reducer } from 'redux';
-import { connectRouter, RouterState } from 'connected-react-router';
-import { History, LocationState } from 'history';
 import { settings } from '../settings/reducer';
 import { AccountsState, accounts, currentAccountSelector } from '../accounts/reducer';
 import { InventoryState, inventory } from '../inventory/reducer';
@@ -18,7 +16,6 @@ import { Settings } from 'app/settings/initial-settings';
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
 export interface RootState {
-  readonly history: RouterState;
   readonly settings: Settings;
   readonly accounts: AccountsState;
   readonly inventory: InventoryState;
@@ -37,9 +34,8 @@ export type ThunkDispatchProp = {
   dispatch: ThunkDispatch<RootState, {}, AnyAction>;
 };
 
-const reducer = (history: History<LocationState>): Reducer<RootState> => (state, action) => {
+const reducer: Reducer<RootState> = (state, action) => {
   const combinedReducers = combineReducers({
-    history: connectRouter(history),
     settings,
     accounts,
     inventory,
