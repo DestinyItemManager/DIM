@@ -14,7 +14,7 @@ export default function makeRouter() {
   }
 
   // Register the initial (eagerly loaded) states
-  states.forEach((state) => router.stateRegistry.register(state));
+  //states.forEach((state) => router.stateRegistry.register(state));
 
   // Global config for router
   router.urlService.rules.initial({ state: 'default-account' });

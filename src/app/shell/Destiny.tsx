@@ -35,6 +35,7 @@ import Organizer from 'app/organizer/Organizer';
 import SingleVendor from 'app/vendors/SingleVendor';
 import Activities from 'app/destiny1/activities/Activities';
 import Collections from 'app/collections/Collections';
+import DefaultAccount from './DefaultAccount';
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -202,6 +203,10 @@ function Destiny({ account, d1Manifest, d2Manifest, dispatch, profileError }: Pr
               <Activities account={account} />
             </Route>
           )}
+          <Route>
+            {/* TODO: Should we have a 404 page?? or just redirect to inventory */}
+            <DefaultAccount />
+          </Route>
         </Switch>
       </div>
       <GlobalHotkeys hotkeys={hotkeys} />

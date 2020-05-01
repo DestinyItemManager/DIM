@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Header from './shell/Header';
 import clsx from 'clsx';
 import ActivityTracker from './dim-ui/ActivityTracker';
@@ -20,6 +20,7 @@ import SettingsPage from './settings/SettingsPage';
 import Destiny from './shell/Destiny';
 import GDriveRevisions from './storage/GDriveRevisions';
 import AuditLog from './settings/AuditLog';
+import DefaultAccount from './shell/DefaultAccount';
 
 // TODO: may not be worth it to load this lazy!
 const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
@@ -43,77 +44,88 @@ function mapStateToProps(state: RootState): Props {
   };
 }
 
-class App extends React.Component<Props> {
-  componentDidMount() {
+function App({ language, charColMobile, showReviews, itemQuality, showNewItems }: Props) {
+  useEffect(() => {
     testFeatureCompatibility();
+  }, []);
+
+  // TODO: uhhh but if we don't render the routes how will these go anywhere???
+  if (!token) {
+    return <Redirect login />;
   }
 
-  // TODO: Get rid of account-in-url?
-  render() {
-    return (
-      <div
-        key={`lang-${this.props.language}`}
-        className={clsx(`lang-${this.props.language}`, `char-cols-${this.props.charColMobile}`, {
-          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-          itemQuality: this.props.itemQuality,
-          'show-new-items': this.props.showNewItems,
-          'ms-edge': /Edge/.test(navigator.userAgent),
-          ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-        })}
-      >
-        <ClickOutsideRoot>
-          <Header />
-          <Suspense fallback={<Loading />}>
-            <Switch>
-              <Route path={routes.about()} exact>
-                <About />
-              </Route>
-              <Route path={routes.privacy()} exact>
-                <Privacy />
-              </Route>
-              <Route path={routes.whatsNew()} exact>
-                <WhatsNew />
-              </Route>
-              <Route path={routes.login()} exact>
-                <WhatsNew />
-              </Route>
-              {/* TODO: sub-switch? */}
-              <Route path={routes.settings.gdriveRevisions()} exact>
-                <GDriveRevisions />
-              </Route>
-              <Route path={routes.settings.auditLog()} exact>
-                <AuditLog />
-              </Route>
-              <Route path={routes.settings()}>
-                <SettingsPage />
-              </Route>
-              <Route
-                path={[routes.d1(':platformMembershipId'), routes.d2(':platformMembershipId')]}
-                render={({ match }) => (
-                  <Destiny
-                    destinyVersion={match.path.endsWith('d2') ? 2 : 1}
-                    platformMembershipId={match.params.platformMembershipId}
-                  />
-                )}
-              />
-              {$DIM_FLAVOR === 'dev' && (
-                <Route path={routes.developer()} exact>
-                  <Developer />
-                </Route>
-              )}
-              <Route>NO MATCH! (redirect to home?)</Route>
-            </Switch>
-          </Suspense>
-          <NotificationsContainer />
-          <ActivityTracker />
-          {$featureFlags.colorA11y && <ColorA11y />}
-          <HotkeysCheatSheet />
-        </ClickOutsideRoot>
-      </div>
-    );
+  if (!apikeys) {
+    return <Redirect developer />;
   }
+
+  return (
+    <div
+      key={`lang-${language}`}
+      className={clsx(`lang-${language}`, `char-cols-${charColMobile}`, {
+        'show-reviews': $featureFlags.reviewsEnabled && showReviews,
+        itemQuality: itemQuality,
+        'show-new-items': showNewItems,
+        'ms-edge': /Edge/.test(navigator.userAgent),
+        ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+      })}
+    >
+      <ClickOutsideRoot>
+        <Header />
+        <Suspense fallback={<Loading />}>
+          <Switch>
+            <Route path={routes.about()} exact>
+              <About />
+            </Route>
+            <Route path={routes.privacy()} exact>
+              <Privacy />
+            </Route>
+            <Route path={routes.whatsNew()} exact>
+              <WhatsNew />
+            </Route>
+            <Route path={routes.login()} exact>
+              <WhatsNew />
+            </Route>
+            {/* TODO: sub-switch? */}
+            <Route path={routes.settings.gdriveRevisions()} exact>
+              <GDriveRevisions />
+            </Route>
+            <Route path={routes.settings.auditLog()} exact>
+              <AuditLog />
+            </Route>
+            <Route path={routes.settings()}>
+              <SettingsPage />
+            </Route>
+            <Route
+              path={[routes.d1(':platformMembershipId'), routes.d2(':platformMembershipId')]}
+              render={({ match }) => (
+                <Destiny
+                  destinyVersion={match.path.endsWith('d2') ? 2 : 1}
+                  platformMembershipId={match.params.platformMembershipId}
+                />
+              )}
+            />
+            {$DIM_FLAVOR === 'dev' && (
+              <Route path={routes.developer()} exact>
+                <Developer />
+              </Route>
+            )}
+            <Route>
+              <DefaultAccount />
+            </Route>
+          </Switch>
+        </Suspense>
+        <NotificationsContainer />
+        <ActivityTracker />
+        {$featureFlags.colorA11y && <ColorA11y />}
+        <HotkeysCheatSheet />
+      </ClickOutsideRoot>
+    </div>
+  );
 }
 
+/**
+ * For some reason this gets messed up if it's defined in a different file.
+ */
 function ColorA11y() {
   if ($featureFlags.colorA11y) {
     return (

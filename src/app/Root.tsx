@@ -5,11 +5,11 @@ import { Provider } from 'react-redux';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import App from './App';
-import store from './store/store';
+import store, { history } from './store/store';
 import makeRouter from './router.config';
 import { setRouter } from './router';
 import { DndProvider } from 'react-dnd';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 
 class Root extends React.Component {
   router: UIRouterReact;
@@ -22,15 +22,15 @@ class Root extends React.Component {
 
   render() {
     return (
-      <Router>
-        <Provider store={store}>
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
           <DndProvider backend={HTML5Backend}>
             <UIRouter router={this.router}>
               <App />
             </UIRouter>
           </DndProvider>
-        </Provider>
-      </Router>
+        </ConnectedRouter>
+      </Provider>
     );
   }
 }

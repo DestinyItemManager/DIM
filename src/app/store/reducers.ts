@@ -1,4 +1,6 @@
 import { combineReducers, AnyAction, Reducer } from 'redux';
+import { connectRouter, RouterState } from 'connected-react-router';
+import { History, LocationState } from 'history';
 import { settings } from '../settings/reducer';
 import { AccountsState, accounts, currentAccountSelector } from '../accounts/reducer';
 import { InventoryState, inventory } from '../inventory/reducer';
@@ -16,6 +18,7 @@ import { Settings } from 'app/settings/initial-settings';
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
 export interface RootState {
+  readonly history: RouterState;
   readonly settings: Settings;
   readonly accounts: AccountsState;
   readonly inventory: InventoryState;
@@ -34,22 +37,23 @@ export type ThunkDispatchProp = {
   dispatch: ThunkDispatch<RootState, {}, AnyAction>;
 };
 
-const combinedReducers = combineReducers({
-  settings,
-  accounts,
-  inventory,
-  reviews,
-  shell,
-  loadouts,
-  wishLists,
-  farming,
-  manifest,
-  vendorDrops,
-  // Dummy reducer to get the types to work
-  dimApi: (state: DimApiState = dimApiInitialState) => state
-});
+const reducer = (history: History<LocationState>): Reducer<RootState> => (state, action) => {
+  const combinedReducers = combineReducers({
+    history: connectRouter(history),
+    settings,
+    accounts,
+    inventory,
+    reviews,
+    shell,
+    loadouts,
+    wishLists,
+    farming,
+    manifest,
+    vendorDrops,
+    // Dummy reducer to get the types to work
+    dimApi: (state: DimApiState = dimApiInitialState) => state
+  });
 
-const reducer: Reducer<RootState> = (state, action) => {
   const intermediateState = combinedReducers(state, action);
 
   // Run the DIM API reducer last, and provide the current account along with it
