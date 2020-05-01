@@ -45,7 +45,7 @@ export default function GeneratedSetItem({
   defs: D2ManifestDefinitions;
   statValues: number[];
   itemOptions: DimItem[];
-  lockedMods: LockedArmor2Mod[];
+  lockedMods?: LockedArmor2Mod[];
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }) {

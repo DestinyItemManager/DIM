@@ -1,13 +1,6 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import {
-  ArmorSet,
-  LockedItemType,
-  StatTypes,
-  LockedMap,
-  LockedArmor2ModMap,
-  LockedArmor2Mod
-} from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -21,8 +14,7 @@ import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
-import { DimItem } from 'app/inventory/item-types';
+import { assignModsToArmorSet } from './mod-utils';
 
 interface Props {
   set: ArmorSet;
@@ -72,22 +64,7 @@ function GeneratedSet({
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
 
-  const setKey = JSON.stringify(set.firstValidSet.map((item) => item.hash));
-  function getModsForPiece(item: DimItem) {
-    const mods: LockedArmor2Mod[] = [];
-    const modCategories = [...Object.values(Armor2ModPlugCategories), 'seasonal'];
-    for (const category of modCategories) {
-      const modList: LockedArmor2Mod[] | undefined = lockedArmor2Mods[category];
-      if (modList) {
-        for (const mod of modList) {
-          if (mod.setAssignments?.get(setKey) === item.hash) {
-            mods.push(mod);
-          }
-        }
-      }
-    }
-    return mods;
-  }
+  const assignedMods = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
@@ -144,7 +121,7 @@ function GeneratedSet({
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
             statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={getModsForPiece(item)}
+            lockedMods={assignedMods[item.hash]}
           />
         ))}
       </div>

@@ -11,15 +11,6 @@ const energyOrder = [
   DestinyEnergyType.Any
 ];
 
-function addModSetAssignment(mod: LockedArmor2Mod, set: ArmorSet, assigned: DimItem) {
-  const setKey = JSON.stringify(set.firstValidSet.map((item) => item.hash));
-  if (!mod.setAssignments) {
-    mod.setAssignments = new Map();
-  }
-
-  mod.setAssignments.set(setKey, assigned.hash);
-}
-
 /**
  * Checks that:
  *   1. The armour piece is Armour 2.0
@@ -32,21 +23,93 @@ const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
     mod.mod.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
+ * Checks that all the general mods can fit in a set, including the energy specific ones
+ * i.e. Void Resist ect
+ */
+function assignGeneralMods(
+  setToMatch: readonly DimItem[],
+  generalMods: LockedArmor2Mod[],
+  assignments: Map<number, LockedArmor2Mod[]>
+): void {
+  const armour2Items = setToMatch.filter((item) => item.isDestiny2() && item.energy);
+  if (generalMods && armour2Items.length < generalMods.length) {
+    return;
+  }
+
+  const generalModsByEnergyType = _.groupBy(
+    generalMods,
+    (mod) => mod.mod.plug.energyCost.energyType
+  );
+
+  const armourByEnergyType = _.groupBy(
+    setToMatch,
+    (item) => item.isDestiny2() && item.energy?.energyType
+  );
+
+  let piecesLeft = [...setToMatch];
+  for (const energyType of energyOrder) {
+    if (generalModsByEnergyType[energyType]) {
+      for (let i = 0; i < generalModsByEnergyType[energyType].length; i++) {
+        if (
+          energyType !== DestinyEnergyType.Any &&
+          armourByEnergyType[energyType] &&
+          armourByEnergyType[energyType].length > i
+        ) {
+          const piece = armourByEnergyType[energyType][i];
+          assignments[piece.hash] = [
+            ...assignments[piece.hash],
+            generalModsByEnergyType[energyType][i]
+          ];
+          piecesLeft = piecesLeft.filter((item) => item !== piece);
+        } else if (energyType === DestinyEnergyType.Any && piecesLeft.length) {
+          assignments[piecesLeft[0].hash] = [
+            ...assignments[piecesLeft[0].hash],
+            generalModsByEnergyType[energyType][i]
+          ];
+          piecesLeft = piecesLeft.filter((item) => item !== piecesLeft[0]);
+        }
+      }
+    }
+  }
+}
+
+function assignModsForSlot(
+  item: DimItem,
+  mods: LockedArmor2Mod[],
+  assignments: Map<number, LockedArmor2Mod[]>
+): void {
+  const energiesMatch = Boolean(!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item)));
+
+  if (energiesMatch) {
+    assignments[item.hash] = [...assignments[item.hash], ...mods];
+  }
+}
+
+/**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
  * seasonalMods.
  *
  * The mods passed in should only be seasonal mods.
  */
-function canAllSeasonalModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedArmor2Mod[]) {
-  if (seasonalMods.length > 5) {
-    return false;
+function assignAllSeasonalMods(
+  setToMatch: readonly DimItem[],
+  seasonalMods: readonly LockedArmor2Mod[],
+  assignments: Map<number, LockedArmor2Mod[]>
+): void {
+  const firstValidSetArmor2Count = setToMatch.reduce(
+    (total, item) => (item.isDestiny2() && item.energy ? total + 1 : total),
+    0
+  );
+
+  if (!seasonalMods || seasonalMods.length > 5 || seasonalMods.length > firstValidSetArmor2Count) {
+    return;
   }
 
   const modArrays = {};
 
   // Build up an array of possible mods for each item in the set.
   for (const mod of seasonalMods) {
-    for (const item of set.firstValidSet) {
+    for (const item of setToMatch) {
       const itemModCategories =
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
@@ -73,128 +136,60 @@ function canAllSeasonalModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedAr
             if (containsAllLocked) {
               for (let i = 0; i < setMods.length; i++) {
                 if (setMods[i]) {
-                  addModSetAssignment(setMods[i], set, set.firstValidSet[i]);
+                  assignModsForSlot(setToMatch[i], [setMods[i]], assignments);
                 }
               }
-              return true;
             }
           }
         }
       }
     }
   }
-
-  return false;
 }
 
-/**
- * Checks that all the general mods can fit in a set, including the energy specific ones
- * i.e. Void Resist ect
- */
-function canAllGeneralModsBeUsed(generalMods: readonly LockedArmor2Mod[], set: ArmorSet): boolean {
-  const armour2Items = set.firstValidSet.filter((item) => item.isDestiny2() && item.energy);
-  let armour2Count = armour2Items.length;
+export function assignModsToArmorSet(
+  setToMatch: readonly DimItem[],
+  lockedArmor2Mods: LockedArmor2ModMap
+): Map<number, LockedArmor2Mod[]> {
+  const assignments = new Map<number, LockedArmor2Mod[]>();
 
-  if (generalMods && armour2Count < generalMods.length) {
-    return false;
+  for (const item of setToMatch) {
+    assignments[item.hash] = new Array<LockedArmor2Mod>();
   }
 
-  const generalModsByEnergyType = _.groupBy(
-    generalMods,
-    (mod) => mod.mod.plug.energyCost.energyType
+  assignGeneralMods(setToMatch, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
+
+  assignModsForSlot(setToMatch[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet], assignments);
+  assignModsForSlot(
+    setToMatch[1],
+    lockedArmor2Mods[Armor2ModPlugCategories.gauntlets],
+    assignments
+  );
+  assignModsForSlot(setToMatch[2], lockedArmor2Mods[Armor2ModPlugCategories.chest], assignments);
+  assignModsForSlot(setToMatch[3], lockedArmor2Mods[Armor2ModPlugCategories.leg], assignments);
+  assignModsForSlot(
+    setToMatch[4],
+    lockedArmor2Mods[Armor2ModPlugCategories.classitem],
+    assignments
   );
 
-  const armourByEnergyType = _.groupBy(
-    set.firstValidSet,
-    (item) => item.isDestiny2() && item.energy?.energyType
-  );
+  assignAllSeasonalMods(setToMatch, lockedArmor2Mods.seasonal, assignments);
 
-  //This checks that if there are energy specific mods, they have a corrersponding armour piece
-  //  and that after those have been slotted, there are enough pieces to fit the general ones.
-  for (const energyType of energyOrder) {
-    if (generalModsByEnergyType[energyType]) {
-      if (
-        energyType === DestinyEnergyType.Any ||
-        (armourByEnergyType[energyType] &&
-          generalModsByEnergyType[energyType].length <= armourByEnergyType[energyType].length)
-      ) {
-        armour2Count -= generalModsByEnergyType[energyType].length;
-        if (armour2Count < 0) {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
-  }
-
-  let piecesLeft = [...set.firstValidSet];
-  for (const energyType of energyOrder) {
-    if (generalModsByEnergyType[energyType]) {
-      for (let i = 0; i < generalModsByEnergyType[energyType].length; i++) {
-        if (energyType !== DestinyEnergyType.Any) {
-          const piece = armourByEnergyType[energyType][i];
-          addModSetAssignment(generalModsByEnergyType[energyType][i], set, piece);
-          piecesLeft = piecesLeft.filter((item) => item !== piece);
-        } else {
-          addModSetAssignment(generalModsByEnergyType[energyType][i], set, piecesLeft[0]);
-          piecesLeft = piecesLeft.filter((item) => item !== piecesLeft[0]);
-        }
-      }
-    }
-  }
-
-  return true;
+  return assignments;
 }
 
 export function canFirstValidSetTakeMods(set: ArmorSet, lockedArmor2Mods: LockedArmor2ModMap) {
-  const firstValidSetArmor2Count = set.firstValidSet.reduce(
-    (total, item) => (item.isDestiny2() && item.energy ? total + 1 : total),
-    0
-  );
+  const modAssignments = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
 
-  if (
-    lockedArmor2Mods.seasonal &&
-    (firstValidSetArmor2Count < lockedArmor2Mods.seasonal.length ||
-      !canAllSeasonalModsBeUsed(set, lockedArmor2Mods.seasonal))
-  ) {
-    return false;
+  let assignmentCount = 0;
+  for (const slotAssignments of Object.values(modAssignments)) {
+    assignmentCount += slotAssignments.length;
   }
 
-  const generalMods = lockedArmor2Mods[Armor2ModPlugCategories.general];
-  if (generalMods && !canAllGeneralModsBeUsed(generalMods, set)) {
-    return false;
+  let modCount = 0;
+  for (const slotMods of Object.values(lockedArmor2Mods)) {
+    modCount += slotMods.length;
   }
 
-  const energiesMatches = (item: DimItem, mods?: readonly LockedArmor2Mod[]): boolean =>
-    Boolean(!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item)));
-
-  // ensure all the mods match their respective energy type in on the armour piece
-  if (
-    energiesMatches(set.firstValidSet[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet]) && //helmets
-    energiesMatches(set.firstValidSet[1], lockedArmor2Mods[Armor2ModPlugCategories.gauntlets]) && //arms
-    energiesMatches(set.firstValidSet[2], lockedArmor2Mods[Armor2ModPlugCategories.chest]) && //chest
-    energiesMatches(set.firstValidSet[3], lockedArmor2Mods[Armor2ModPlugCategories.leg]) && //legs
-    energiesMatches(set.firstValidSet[4], lockedArmor2Mods[Armor2ModPlugCategories.classitem]) //classitem
-  ) {
-    lockedArmor2Mods[Armor2ModPlugCategories.helmet]?.forEach((mod) =>
-      addModSetAssignment(mod, set, set.firstValidSet[0])
-    );
-    lockedArmor2Mods[Armor2ModPlugCategories.gauntlets]?.forEach((mod) =>
-      addModSetAssignment(mod, set, set.firstValidSet[1])
-    );
-    lockedArmor2Mods[Armor2ModPlugCategories.chest]?.forEach((mod) =>
-      addModSetAssignment(mod, set, set.firstValidSet[2])
-    );
-    lockedArmor2Mods[Armor2ModPlugCategories.leg]?.forEach((mod) =>
-      addModSetAssignment(mod, set, set.firstValidSet[3])
-    );
-    lockedArmor2Mods[Armor2ModPlugCategories.classitem]?.forEach((mod) =>
-      addModSetAssignment(mod, set, set.firstValidSet[4])
-    );
-  } else {
-    return false;
-  }
-
-  return true;
+  return assignmentCount === modCount;
 }
