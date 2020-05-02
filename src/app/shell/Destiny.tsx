@@ -174,7 +174,6 @@ function Destiny({
     }
   });
 
-  console.log('Render Destiny', path, url);
   const contents = (
     <>
       <div id="content">

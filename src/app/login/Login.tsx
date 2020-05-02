@@ -10,6 +10,7 @@ const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 export default function Login() {
+  // TODO: this isn't really the parameter - we need to parse the query string
   const { reauth } = useParams<{ reauth?: string }>();
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);

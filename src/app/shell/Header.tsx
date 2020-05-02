@@ -37,6 +37,8 @@ interface StoreProps {
   vendorEngramDropActive: boolean;
 }
 
+// TODO: finally time to hack apart the header styles!
+
 type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -237,8 +239,6 @@ class Header extends React.PureComponent<Props, State> {
       /iPad|iPhone|iPod/.test(navigator.userAgent) &&
       !window.MSStream &&
       (window.navigator as any).standalone !== true;
-
-    console.log('Render');
 
     return (
       <header id="header" className={showSearch ? 'search-expanded' : ''}>
