@@ -50,7 +50,7 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
     case getType(actions.loadWishLists):
       return {
         ...state,
-        wishListAndInfo: action.payload.wishListAndInfo,
+        wishListAndInfo: { ...initialState.wishListAndInfo, ...action.payload.wishListAndInfo },
         loaded: true,
         lastFetched: action.payload.lastFetched || new Date()
       };
@@ -60,9 +60,11 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
         wishListAndInfo: {
           title: undefined,
           description: undefined,
-          wishListRolls: []
+          wishListRolls: [],
+          source: ''
         },
-        lastFetched: undefined
+        lastFetched: undefined,
+        wishListSource: undefined
       };
     }
     default:
