@@ -163,7 +163,7 @@ class WishListSettings extends React.Component<Props, State> {
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        this.props.dispatch(transformAndStoreWishList(wishListAndInfo));
+        this.props.dispatch(transformAndStoreWishList('', wishListAndInfo));
         ga('send', 'event', 'WishList', 'From File');
       }
     };
