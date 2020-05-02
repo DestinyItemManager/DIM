@@ -87,7 +87,7 @@
       "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
       "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
     },
-    "Rating": "평가"
+    "Rating": "평점"
   },
   "Cooldown": {
     "Grenade": "수류탄 재사용 대기시간: {{cooldown}}",
@@ -580,7 +580,7 @@
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "아이템 레벨 올리기",
     "LoadoutName": "로드아웃 이름",
-    "Loadouts": "로드아웃들",
+    "Loadouts": "로드아웃",
     "MakeRoom": "우편 담당자를 위한 공간 생성",
     "MakeRoomDone": "{{store}}에서 1개의 아이템을 옮김으로써 우편 담당자 아이템 1개를 위한 공간을 만들었습니다.",
     "MakeRoomDone_female": "{{store}}에서 1개의 아이템을 옮김으로써 우편 담당자 아이템 1개를 위한 공간을 만들었습니다.",
@@ -706,9 +706,43 @@
     "BulkMove": "이동",
     "BulkMoveLoadoutName": "정리 도구에서 선택됨",
     "BulkTag": "태그",
+    "Columns": {
+      "Archetype": "아키타입",
+      "BaseStats": "기본 스탯",
+      "CustomTotal": "사용자 정의 총합",
+      "Damage": "피해 유형",
+      "Element": "원소",
+      "Energy": "에너지",
+      "Event": "이벤트",
+      "Icon": "아이콘",
+      "KillTracker": "처치 추적기",
+      "Loadouts": "로드아웃",
+      "MasterworkStat": "걸작 스탯",
+      "MasterworkTier": "걸작 단계",
+      "ModSlot": "개조 부품 소켓",
+      "Mods": "개조 부품",
+      "Name": "이름",
+      "Notes": "메모",
+      "Perks": "특성",
+      "Rating": "평점",
+      "Reacquireable": "재습득 가능",
+      "Season": "시즌",
+      "Source": "출처",
+      "Stats": "스탯",
+      "Tag": "태그",
+      "Tier": "등급",
+      "WishList": "희망 아이템 목록",
+      "WishListNotes": "희망 아이템 목록 메모",
+      "Year": "연도"
+    },
     "EnabledColumns": "활성화된 열",
+    "Lock": "잠금",
+    "NoMobile": "모바일에서는 보기 힘듭니다.",
     "Organizer": "정리 도구",
-    "SelectItem": "Select or unselect {{name}}"
+    "SelectAll": "모두 선택",
+    "SelectItem": "{{name}} 선택 혹은 선택 해제",
+    "ShiftTip": "팁: 쉬프트 키를 누르고 셀을 클릭하세요",
+    "Unlock": "잠금 해제"
   },
   "Progress": {
     "Bounties": "현상금",
