@@ -50,7 +50,7 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
     case getType(actions.loadWishLists):
       return {
         ...state,
-        wishListAndInfo: action.payload.wishList,
+        wishListAndInfo: action.payload.wishListAndInfo,
         loaded: true,
         lastFetched: action.payload.lastFetched || new Date()
       };

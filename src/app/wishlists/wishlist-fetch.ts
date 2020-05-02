@@ -9,6 +9,7 @@ import { wishListsSelector, WishListsState } from './reducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { get } from 'idb-keyval';
+import { settingsReady } from 'app/settings/settings';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -24,6 +25,8 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
     if (newWishlistSource) {
       dispatch(setSetting('wishListSource', newWishlistSource));
+    } else {
+      await settingsReady;
     }
 
     const wishListSource = settingsSelector(getState()).wishListSource;
@@ -62,7 +65,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists({ wishList: wishListAndInfo }));
+      dispatch(loadWishLists({ wishListAndInfo }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
@@ -99,19 +102,6 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       return;
     }
 
-    // easing the transition from the old state (just an array) to the new state
-    // (object containing an array)
-    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
-      dispatch(
-        loadWishLists({
-          wishList: {
-            title: undefined,
-            description: undefined,
-            wishListRolls: wishListState.wishListAndInfo.wishListRolls
-          },
-          lastFetched: wishListState.lastFetched
-        })
-      );
-    }
+    dispatch(loadWishLists(wishListState));
   };
 }
