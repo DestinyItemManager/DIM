@@ -90,17 +90,15 @@ function Destiny({
     }
   }, [account, dispatch]);
 
+  const isD2 = account?.destinyVersion === 2;
   useEffect(() => {
-    if (!account) {
-      return;
-    }
-    if ($featureFlags.wishLists && account.destinyVersion === 2) {
+    if ($featureFlags.wishLists && isD2) {
       dispatch(fetchWishList());
     }
-    if ($featureFlags.vendorEngrams && account.destinyVersion === 2) {
+    if ($featureFlags.vendorEngrams && isD2) {
       dispatch(loadVendorDropsFromIndexedDB());
     }
-  }, [dispatch, account]);
+  }, [dispatch, isD2]);
 
   const { path, url } = useRouteMatch();
 

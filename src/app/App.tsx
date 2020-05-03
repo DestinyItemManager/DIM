@@ -12,7 +12,6 @@ import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
 import { Loading } from './dim-ui/Loading';
 import { Switch, Route } from 'react-router';
-import routes from './routes';
 import Privacy from './shell/Privacy';
 import WhatsNew from './whats-new/WhatsNew';
 import Developer from './developer/Developer';
@@ -89,26 +88,25 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
         <Header />
         <Suspense fallback={<Loading />}>
           <Switch>
-            <Route path={'/about'} exact>
+            <Route path="/about" exact>
               <About />
             </Route>
-            <Route path={'/privacy'} exact>
+            <Route path="/privacy" exact>
               <Privacy />
             </Route>
-            <Route path={'/whats-new'} exact>
+            <Route path="/whats-new" exact>
               <WhatsNew />
             </Route>
-            <Route path={'/login'} exact>
+            <Route path="/login" exact>
               <Login />
             </Route>
-            {/* TODO: sub-switch? */}
-            <Route path={routes.settings.gdriveRevisions()} exact>
+            <Route path="/settings/gdrive-revisions" exact>
               <GDriveRevisions />
             </Route>
-            <Route path={routes.settings.auditLog()} exact>
+            <Route path="/settings/gdrive-revisions" exact>
               <AuditLog />
             </Route>
-            <Route path={routes.settings()}>
+            <Route path="/settings">
               <SettingsPage />
             </Route>
             <Route
@@ -121,7 +119,7 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
               )}
             />
             {$DIM_FLAVOR === 'dev' && (
-              <Route path={routes.developer()} exact>
+              <Route path="/developer" exact>
                 <Developer />
               </Route>
             )}
