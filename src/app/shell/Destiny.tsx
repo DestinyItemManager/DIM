@@ -24,19 +24,41 @@ import { accountsSelector, accountsLoadedSelector } from 'app/accounts/reducer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { AccountContext } from './context';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
-import Inventory from 'app/inventory/Inventory';
-import Progress from 'app/progress/Progress';
-import LoadoutBuilder from 'app/loadout-builder/LoadoutBuilder';
-import D1LoadoutBuilder from 'app/destiny1/loadout-builder/D1LoadoutBuilder';
-import Vendors from 'app/vendors/Vendors';
-import D1Vendors from 'app/destiny1/vendors/D1Vendors';
-import RecordBooks from 'app/destiny1/record-books/RecordBooks';
-import Organizer from 'app/organizer/Organizer';
-import SingleVendor from 'app/vendors/SingleVendor';
-import Activities from 'app/destiny1/activities/Activities';
-import Collections from 'app/collections/Collections';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import { Loading } from 'app/dim-ui/Loading';
+
+// TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
+const Inventory = React.lazy(() =>
+  import(/* webpackChunkName: "inventory" */ 'app/inventory/Inventory')
+);
+const Progress = React.lazy(() =>
+  import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
+);
+const LoadoutBuilder = React.lazy(() =>
+  import(/* webpackChunkName: "optimizer" */ 'app/loadout-builder/LoadoutBuilder')
+);
+const D1LoadoutBuilder = React.lazy(() =>
+  import(/* webpackChunkName: "d1optimizer" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
+);
+const Vendors = React.lazy(() => import(/* webpackChunkName: "vendors" */ 'app/vendors/Vendors'));
+const D1Vendors = React.lazy(() =>
+  import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
+);
+const RecordBooks = React.lazy(() =>
+  import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
+);
+const Organizer = React.lazy(() =>
+  import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
+);
+const SingleVendor = React.lazy(() =>
+  import(/* webpackChunkName: "singleVendor" */ 'app/vendors/SingleVendor')
+);
+const Activities = React.lazy(() =>
+  import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
+);
+const Collections = React.lazy(() =>
+  import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
+);
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;

@@ -12,22 +12,30 @@ import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
 import { Loading } from './dim-ui/Loading';
 import { Switch, Route } from 'react-router';
-import Privacy from './shell/Privacy';
-import WhatsNew from './whats-new/WhatsNew';
-import Developer from './developer/Developer';
-import SettingsPage from './settings/SettingsPage';
-import Destiny from './shell/Destiny';
-import GDriveRevisions from './storage/GDriveRevisions';
-import AuditLog from './settings/AuditLog';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import Login from './login/Login';
 import ScrollToTop from './shell/ScrollToTop';
 import GATracker from './shell/GATracker';
 import SneakyUpdates from './shell/SneakyUpdates';
+import About from './shell/About';
+import Destiny from './shell/Destiny';
+import Privacy from './shell/Privacy';
 
-// TODO: may not be worth it to load this lazy!
-const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
+// TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
+const WhatsNew = React.lazy(() =>
+  import(/* webpackChunkName: "whatsnew" */ './whats-new/WhatsNew')
+);
+const Developer = React.lazy(() =>
+  import(/* webpackChunkName: "developer" */ './developer/Developer')
+);
+const SettingsPage = React.lazy(() =>
+  import(/* webpackChunkName: "settings" */ './settings/SettingsPage')
+);
+const GDriveRevisions = React.lazy(() =>
+  import(/* webpackChunkName: "gdrive" */ './storage/GDriveRevisions')
+);
+const AuditLog = React.lazy(() => import(/* webpackChunkName: "audit" */ './settings/AuditLog'));
 
 interface StoreProps {
   language: string;
