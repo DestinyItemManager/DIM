@@ -27,11 +27,6 @@ if (!$featureFlags.respectDNT || (dnt != '1' && dnt != 'yes')) {
   if (token && token.bungieMembershipId) {
     ga('set', 'userId', token.bungieMembershipId);
   }
-
-  // If we're hooked into the router, let it send pageviews instead
-  if (!$featureFlags.googleAnalyticsForRouter) {
-    ga('send', 'pageview');
-  }
 } else {
   // Fake "ga" function so code that depends on it still works
   window.ga = window.ga || function () {};

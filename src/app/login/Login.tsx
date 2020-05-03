@@ -4,14 +4,15 @@ import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
-import { useParams } from 'react-router';
+import { useLocation } from 'react-router';
+import { parse } from 'simple-query-string';
 
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 export default function Login() {
-  // TODO: this isn't really the parameter - we need to parse the query string
-  const { reauth } = useParams<{ reauth?: string }>();
+  const { search } = useLocation();
+  const { reauth } = parse(search);
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();

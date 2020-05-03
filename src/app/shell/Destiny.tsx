@@ -199,14 +199,18 @@ function Destiny({
             )}
           </Route>
           {account.destinyVersion === 2 && (
-            <Route path={`${path}/organizer`}>
+            <Route path={`${path}/organizer`} exact>
               <Organizer />
             </Route>
           )}
           {account.destinyVersion === 2 && (
-            <Route path={`${path}/vendors/:vendorId`} exact>
-              <SingleVendor account={account} />
-            </Route>
+            <Route
+              path={`${path}/vendors/:vendorId`}
+              exact
+              render={({ match }) => (
+                <SingleVendor account={account} vendorHash={match.params.vendorId} />
+              )}
+            />
           )}
           <Route path={`${path}/vendors`} exact>
             {account.destinyVersion === 2 ? (

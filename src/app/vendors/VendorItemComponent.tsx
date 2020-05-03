@@ -4,7 +4,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import clsx from 'clsx';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyItemQuantity, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import { UISref } from '@uirouter/react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
@@ -14,6 +13,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
+import { Link } from 'react-router-dom';
 
 export default function VendorItemComponent({
   item,
@@ -27,13 +27,13 @@ export default function VendorItemComponent({
   if (item.displayTile) {
     return (
       <div className={styles.vendorItem}>
-        <UISref to="destiny2.vendor" params={{ id: item.previewVendorHash }}>
+        <Link to={`vendor/${item.previewVendorHash}`}>
           <BungieImage
             className={styles.tile}
             title={item.displayProperties.name}
             src={item.displayProperties.icon}
           />
-        </UISref>
+        </Link>
         {item.displayProperties.name}
       </div>
     );

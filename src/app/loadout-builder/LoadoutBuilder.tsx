@@ -1,4 +1,3 @@
-import { UIViewInjectedProps } from '@uirouter/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -123,7 +122,7 @@ function mapStateToProps() {
 /**
  * The Loadout Optimizer screen
  */
-class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
+class LoadoutBuilder extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);

@@ -23,6 +23,9 @@ import AuditLog from './settings/AuditLog';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import Login from './login/Login';
+import ScrollToTop from './shell/ScrollToTop';
+import GATracker from './shell/GATracker';
+import SneakyUpdates from './shell/SneakyUpdates';
 
 // TODO: may not be worth it to load this lazy!
 const About = React.lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
@@ -63,7 +66,7 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
     return <Redirect developer />;
   }
   */
-
+  // TODO: if no account, redirect to login. if no devkeys, redirect to developer
   // TODO: some sort of <RequireAccount> wrapper that shows loading then loads account?
   // TODO: make the loading component something that adds/removes classes from a single loading component?
   //       drive a message through redux?
@@ -79,20 +82,23 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
         ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
       })}
     >
+      <ScrollToTop />
+      <GATracker />
+      <SneakyUpdates />
       <ClickOutsideRoot>
         <Header />
         <Suspense fallback={<Loading />}>
           <Switch>
-            <Route path={routes.about()} exact>
+            <Route path={'/about'} exact>
               <About />
             </Route>
-            <Route path={routes.privacy()} exact>
+            <Route path={'/privacy'} exact>
               <Privacy />
             </Route>
-            <Route path={routes.whatsNew()} exact>
+            <Route path={'/whats-new'} exact>
               <WhatsNew />
             </Route>
-            <Route path={routes.login()} exact>
+            <Route path={'/login'} exact>
               <Login />
             </Route>
             {/* TODO: sub-switch? */}
