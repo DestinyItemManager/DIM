@@ -116,17 +116,17 @@ class Header extends React.PureComponent<Props, State> {
     // Generic links about DIM
     const dimLinks = (
       <>
-        <NavLink to="/about" className="link">
+        <NavLink to="/about" className="link menuItem">
           {t('Header.About')}
         </NavLink>
         <WhatsNewLink />
         {bugReportLink && (
-          <ExternalLink className="link" href={bugReport}>
+          <ExternalLink className="link menuItem" href={bugReport}>
             {t('Header.ReportBug')}
           </ExternalLink>
         )}
         {isStandalone && (
-          <a className="link" onClick={() => window.location.reload()}>
+          <a className="link menuItem" onClick={() => window.location.reload()}>
             {t('Header.ReloadApp')}
           </a>
         )}
@@ -207,7 +207,7 @@ class Header extends React.PureComponent<Props, State> {
     }
 
     const linkNodes = links.map((link) => (
-      <NavLink className="link" key={link.to} to={link.to}>
+      <NavLink className="link menuItem" key={link.to} to={link.to}>
         {link.badge}
         {link.text}
       </NavLink>
@@ -244,7 +244,7 @@ class Header extends React.PureComponent<Props, State> {
       <header id="header" className={showSearch ? 'search-expanded' : ''}>
         <GlobalHotkeys hotkeys={hotkeys}>
           <a
-            className="menu link"
+            className="menu link menuItem"
             ref={this.dropdownToggler}
             onClick={this.toggleDropdown}
             role="button"
@@ -267,7 +267,7 @@ class Header extends React.PureComponent<Props, State> {
               >
                 {destinyLinks}
                 <hr />
-                <NavLink className="link" to="/settings">
+                <NavLink className="link menuItem" to="/settings">
                   {t('Settings.Settings')}
                 </NavLink>
                 {installPromptEvent ? (
@@ -277,7 +277,7 @@ class Header extends React.PureComponent<Props, State> {
                 ) : (
                   iosPwaAvailable && (
                     <a
-                      className="link"
+                      className="link menuItem"
                       onClick={() => this.setState({ promptIosPwa: true, dropdownOpen: false })}
                     >
                       {t('Header.InstallDIM')}
@@ -290,9 +290,9 @@ class Header extends React.PureComponent<Props, State> {
             </CSSTransition>
           )}
         </TransitionGroup>
-        <Link to="/">
+        <Link to="/" className="link menuItem logoLink">
           <img
-            className={clsx('logo', 'link', $DIM_FLAVOR)}
+            className={clsx('logo', $DIM_FLAVOR)}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
             src={logo}
             alt="DIM"
@@ -300,20 +300,20 @@ class Header extends React.PureComponent<Props, State> {
           />
         </Link>
         <div className="header-links">{reverseDestinyLinks}</div>
-        <span className="header-right">
+        <div className="header-right">
           {account && (
-            <span className={clsx('search-link', { show: showSearch })}>
+            <span className={clsx('search-link menuItem', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
           <Refresh />
-          <Link className="link" to="/settings" title={t('Settings.Settings')}>
+          <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
             <AppIcon icon={settingsIcon} />
           </Link>
-          <span className="link search-button" onClick={this.toggleSearch}>
+          <span className="link search-button menuItem" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-        </span>
+        </div>
         {promptIosPwa &&
           ReactDOM.createPortal(
             <Sheet

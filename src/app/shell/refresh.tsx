@@ -43,7 +43,7 @@ export default function Refresh() {
 
   return (
     <a
-      className={clsx('link', { disabled })}
+      className={clsx('link menuItem', { disabled })}
       onClick={refresh}
       title={t('Header.Refresh')}
       role="button"

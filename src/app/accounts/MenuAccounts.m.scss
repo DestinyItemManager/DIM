@@ -6,6 +6,10 @@
   flex-direction: column;
   justify-content: flex-end;
   padding-bottom: 1em;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 .logout {

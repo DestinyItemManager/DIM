@@ -50,7 +50,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (dimNeedsUpdate) {
       return (
-        <a className="link" onClick={reloadDIM}>
+        <a className="link menuItem" onClick={reloadDIM}>
           <AppIcon className="upgrade" icon={updateIcon} />
           {t('Header.UpgradeDIM')}
         </a>
@@ -59,7 +59,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (alerts.length) {
       return (
-        <NavLink to="/whats-new" className="link">
+        <NavLink to="/whats-new" className="link menuItem">
           <span className={`badge-new bungie-alert-${alerts[0].type}`} />{' '}
           {t('Header.BungieNetAlert')}
         </NavLink>
@@ -68,14 +68,14 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (showChangelog) {
       return (
-        <NavLink to="/whats-new" className="link">
+        <NavLink to="/whats-new" className="link menuItem">
           <span className="badge-new" /> {t('Header.WhatsNew')}
         </NavLink>
       );
     }
 
     return (
-      <NavLink to="/whats-new" className="link">
+      <NavLink to="/whats-new" className="link menuItem">
         {t('Header.WhatsNew')}
       </NavLink>
     );
