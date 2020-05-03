@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
-import { router } from '../router';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
 import { dataStats } from './data-stats';

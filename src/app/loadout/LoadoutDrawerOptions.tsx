@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { Loadout } from './loadout-types';
-import { router } from '../router';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export default function LoadoutDrawerOptions({

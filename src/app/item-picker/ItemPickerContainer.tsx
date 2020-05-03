@@ -1,6 +1,5 @@
 import React from 'react';
 import { Subscriptions } from '../utils/rx-utils';
-import { router } from '../router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
 

@@ -23,7 +23,6 @@ import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { Subscriptions } from '../utils/rx-utils';
 import { connect } from 'react-redux';
-import { router } from '../router';
 import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { storesSelector } from 'app/inventory/selectors';

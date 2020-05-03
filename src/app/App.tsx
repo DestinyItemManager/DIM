@@ -65,6 +65,7 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
     return <Redirect developer />;
   }
   */
+  // TODO: use redux state to trigger login
   // TODO: if no account, redirect to login. if no devkeys, redirect to developer
   // TODO: some sort of <RequireAccount> wrapper that shows loading then loads account?
   // TODO: make the loading component something that adds/removes classes from a single loading component?

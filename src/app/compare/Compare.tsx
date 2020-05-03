@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { DimItem, DimStat, D2Item } from '../inventory/item-types';
-import { router } from '../router';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';

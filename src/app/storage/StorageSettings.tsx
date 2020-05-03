@@ -26,7 +26,6 @@ import { dataStats } from './data-stats';
 import { initSettings } from '../settings/settings';
 import { percent } from '../shell/filters';
 import { reportException } from '../utils/exceptions';
-import { router } from '../router';
 import { t } from 'app/i18next-t';
 import { exportBackupData } from './export-data';
 
