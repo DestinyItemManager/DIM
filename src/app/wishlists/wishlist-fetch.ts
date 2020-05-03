@@ -2,13 +2,14 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists } from './actions';
+import { loadWishLists, clearWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector, WishListsState } from './reducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { get } from 'idb-keyval';
+import { settingsReady } from 'app/settings/settings';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -24,18 +25,29 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
     if (newWishlistSource) {
       dispatch(setSetting('wishListSource', newWishlistSource));
+    } else {
+      await settingsReady;
     }
 
     const wishListSource = settingsSelector(getState()).wishListSource;
 
     if (!wishListSource) {
+      // Clear out any stored wish list if settings has flipped to "no wish list"
+      dispatch(clearWishLists());
       return;
     }
 
     const wishListLastUpdated = wishListsSelector(getState()).lastFetched;
+    const existingWishListSource = wishListsSelector(getState()).wishListAndInfo.source;
 
     // Don't throttle updates if we're changing source
-    if (!newWishlistSource && hoursAgo(wishListLastUpdated) < 24) {
+    if (
+      !newWishlistSource &&
+      hoursAgo(wishListLastUpdated) < 24 &&
+      // Allow changes to settings to cause wish list updates - if the source is different
+      // from the existing source we'll continue to load even if we're within the window
+      (existingWishListSource === undefined || existingWishListSource === wishListSource)
+    ) {
       return;
     }
 
@@ -52,17 +64,20 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListAndInfo));
+      dispatch(transformAndStoreWishList(wishListSource, wishListAndInfo));
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }
   };
 }
 
-export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
+export function transformAndStoreWishList(
+  wishListSource: string,
+  wishListAndInfo: WishListAndInfo
+): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists({ wishList: wishListAndInfo }));
+      dispatch(loadWishLists({ wishListAndInfo, wishListSource }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
@@ -99,19 +114,6 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       return;
     }
 
-    // easing the transition from the old state (just an array) to the new state
-    // (object containing an array)
-    if (Array.isArray(wishListState?.wishListAndInfo?.wishListRolls)) {
-      dispatch(
-        loadWishLists({
-          wishList: {
-            title: undefined,
-            description: undefined,
-            wishListRolls: wishListState.wishListAndInfo.wishListRolls
-          },
-          lastFetched: wishListState.lastFetched
-        })
-      );
-    }
+    dispatch(loadWishLists(wishListState));
   };
 }
