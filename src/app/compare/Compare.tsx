@@ -30,13 +30,14 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
+import { RouteComponentProps, withRouter } from 'react-router';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
   defs?: D2ManifestDefinitions;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & RouteComponentProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -75,7 +76,6 @@ class Compare extends React.Component<Props, State> {
     sortBetterFirst: true
   };
   private subscriptions = new Subscriptions();
-  private listener: Function;
 
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
@@ -85,10 +85,6 @@ class Compare extends React.Component<Props, State> {
   );
 
   componentDidMount() {
-    this.listener = router.transitionService.onExit({}, () => {
-      this.cancel();
-    });
-
     this.subscriptions.add(
       CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
@@ -99,8 +95,13 @@ class Compare extends React.Component<Props, State> {
     );
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.cancel();
+    }
+  }
+
   componentWillUnmount() {
-    this.listener();
     this.subscriptions.unsubscribe();
     CompareService.dialogOpen = false;
   }
@@ -683,4 +684,4 @@ function isDimStat(stat: DimStat | any): stat is DimStat {
   return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 
-export default connect<StoreProps>(mapStateToProps)(Compare);
+export default withRouter(connect<StoreProps>(mapStateToProps)(Compare));

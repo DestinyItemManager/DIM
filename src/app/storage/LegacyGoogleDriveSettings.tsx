@@ -8,6 +8,7 @@ import { dataStats } from './data-stats';
 import { AppIcon, signOutIcon, signInIcon, restoreIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 declare global {
   interface Window {
@@ -15,7 +16,7 @@ declare global {
   }
 }
 
-interface Props {
+interface Props extends RouteComponentProps {
   onImportData(data: object): Promise<any>;
 }
 
@@ -26,7 +27,7 @@ interface State {
   };
 }
 
-export default class LegacyGoogleDriveSettings extends React.Component<Props, State> {
+class LegacyGoogleDriveSettings extends React.Component<Props, State> {
   state: State = {
     adapterStats: {}
   };
@@ -35,10 +36,8 @@ export default class LegacyGoogleDriveSettings extends React.Component<Props, St
   componentDidMount() {
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
-        if (router.globals.params.gdrive === 'true') {
-          this.forceSync(undefined).then(() =>
-            router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
-          );
+        if (this.props.location.search.includes('gdrive=true')) {
+          this.forceSync(undefined, false).then(() => this.props.history.replace('/settings'));
         }
         this.updateGoogleDriveInfo();
       }),
@@ -181,3 +180,5 @@ export default class LegacyGoogleDriveSettings extends React.Component<Props, St
     this.setState({ driveInfo });
   };
 }
+
+export default withRouter(LegacyGoogleDriveSettings);

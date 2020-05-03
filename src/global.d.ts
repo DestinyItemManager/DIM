@@ -18,8 +18,6 @@ declare const $featureFlags: {
   debugSync: boolean;
   /** Enable color-blind a11y */
   colorA11y: boolean;
-  /** Debug ui-router */
-  debugRouter: boolean;
   /** Debug Service Worker */
   debugSW: boolean;
   /** Send exception reports to Sentry.io */

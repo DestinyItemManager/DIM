@@ -17,7 +17,11 @@ import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import styles from './Organizer.m.scss';
+<<<<<<< HEAD
 import { t } from 'app/i18next-t';
+=======
+import { useHistory } from 'react-router';
+>>>>>>> Remove the rest
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -51,11 +55,11 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
     refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
   );
 
+  const history = useHistory();
   const [selection, setSelection] = useState<ItemCategoryTreeNode[]>([]);
-
   const onSelection = (newSelection: ItemCategoryTreeNode[]) => {
-    router.stateService.go('destiny2.organizer', {
-      selection: selection.map((s) => s.id).join(',')
+    history.push({
+      search: `selection=${selection.map((s) => s.id).join(',')}`
     });
     setSelection(newSelection);
   };

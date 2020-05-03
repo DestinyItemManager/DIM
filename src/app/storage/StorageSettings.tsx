@@ -28,6 +28,7 @@ import { percent } from '../shell/filters';
 import { reportException } from '../utils/exceptions';
 import { t } from 'app/i18next-t';
 import { exportBackupData } from './export-data';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 declare global {
   interface Window {
@@ -48,7 +49,7 @@ interface State {
   };
 }
 
-export default class StorageSettings extends React.Component<{}, State> {
+class StorageSettings extends React.Component<RouteComponentProps, State> {
   state: State = {
     browserMayClearData: true,
     adapterStats: {}
@@ -70,10 +71,8 @@ export default class StorageSettings extends React.Component<{}, State> {
     }
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
-        if (router.globals.params.gdrive === 'true') {
-          this.forceSync(undefined, false).then(() =>
-            router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
-          );
+        if (this.props.location.search.includes('gdrive=true')) {
+          this.forceSync(undefined, false).then(() => this.props.history.replace('/settings'));
         }
         this.updateGoogleDriveInfo();
       }),
@@ -145,9 +144,9 @@ export default class StorageSettings extends React.Component<{}, State> {
                       <button className="dim-button" onClick={this.driveLogout}>
                         <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                       </button>{' '}
-                      <button className="dim-button" onClick={this.goToRevisions}>
+                      <Link className="dim-button" to="/settings/gdrive-revisions">
                         <AppIcon icon={uploadIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
-                      </button>
+                      </Link>
                     </>
                   ) : (
                     <button className="dim-button" onClick={this.driveSync}>
@@ -234,12 +233,6 @@ export default class StorageSettings extends React.Component<{}, State> {
   private exportData = (e) => {
     e.preventDefault();
     SyncService.get().then(exportBackupData);
-    return false;
-  };
-
-  private goToRevisions = (e) => {
-    e.preventDefault();
-    router.stateService.go('gdrive-revisions');
     return false;
   };
 
@@ -341,3 +334,5 @@ export default class StorageSettings extends React.Component<{}, State> {
     this.setState({ driveInfo });
   };
 }
+
+export default withRouter(StorageSettings);
