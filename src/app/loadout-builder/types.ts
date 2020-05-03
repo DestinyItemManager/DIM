@@ -72,8 +72,6 @@ export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPicke
 export interface LockedArmor2Mod {
   mod: DestinyInventoryItemDefinition;
   category: ModPickerCategory;
-  // A map of strings identifying a set to the piece the mod slots into
-  setAssignments?: Map<string, number>;
 }
 
 export type LockedArmor2ModMap = {

@@ -23,13 +23,13 @@ const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
     mod.mod.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
- * Checks that all the general mods can fit in a set, including the energy specific ones
+ * Assignes the general mods to armour pieces in assignments, including the energy specific ones
  * i.e. Void Resist ect
  */
 function assignGeneralMods(
   setToMatch: readonly DimItem[],
   generalMods: LockedArmor2Mod[],
-  assignments: Map<number, LockedArmor2Mod[]>
+  assignments: Record<number, LockedArmor2Mod[]>
 ): void {
   const armour2Items = setToMatch.filter((item) => item.isDestiny2() && item.energy);
   if (generalMods && armour2Items.length < generalMods.length) {
@@ -73,10 +73,13 @@ function assignGeneralMods(
   }
 }
 
+/**
+ * If the energies match, this will assign the mods to the item in assignments.
+ */
 function assignModsForSlot(
   item: DimItem,
   mods: LockedArmor2Mod[],
-  assignments: Map<number, LockedArmor2Mod[]>
+  assignments: Record<number, LockedArmor2Mod[]>
 ): void {
   const energiesMatch = Boolean(!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item)));
 
@@ -86,15 +89,12 @@ function assignModsForSlot(
 }
 
 /**
- * This function checks if the first valid set in an ArmorSet slot all the mods in
- * seasonalMods.
- *
- * The mods passed in should only be seasonal mods.
+ * Checks to see if the passed in seasonal mods can be assigned to the armour set.
  */
 function assignAllSeasonalMods(
   setToMatch: readonly DimItem[],
   seasonalMods: readonly LockedArmor2Mod[],
-  assignments: Map<number, LockedArmor2Mod[]>
+  assignments: Record<number, LockedArmor2Mod[]>
 ): void {
   const firstValidSetArmor2Count = setToMatch.reduce(
     (total, item) => (item.isDestiny2() && item.energy ? total + 1 : total),
@@ -150,8 +150,8 @@ function assignAllSeasonalMods(
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
-): Map<number, LockedArmor2Mod[]> {
-  const assignments = new Map<number, LockedArmor2Mod[]>();
+): Record<number, LockedArmor2Mod[]> {
+  const assignments: Record<number, LockedArmor2Mod[]> = {};
 
   for (const item of setToMatch) {
     assignments[item.hash] = new Array<LockedArmor2Mod>();
