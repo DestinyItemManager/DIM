@@ -53,7 +53,7 @@ export async function unauthenticatedApi<T>(
  */
 export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> {
   if (!API_KEY) {
-    globalHistory?.push('developer');
+    globalHistory?.push('/developer');
     throw new Error('No DIM API key configured');
   }
 
@@ -152,7 +152,7 @@ const refreshToken = dedupePromise(async () => {
     return authToken;
   } catch (e) {
     if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
-      globalHistory?.push('developer');
+      globalHistory?.push('/developer');
       throw new Error('DIM API Key Incorrect');
     }
     throw e;
