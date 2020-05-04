@@ -509,6 +509,14 @@
     "ShowGear": "{{class}} Armor",
     "Vendor": "Include Vendor items"
   },
+  "Loading": {
+    "Code": "Loading DIM code...",
+    "Profile": "Loading Destiny profile...",
+    "Accounts": "Loading Destiny accounts...",
+    "FilterHelp": "Loading search help...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Vendors": "Loading Destiny vendors..."
+  },
   "LoadoutBuilder": {
     "AltPerkKey": "Choose this perk to get the stats displayed",
     "AssumeMasterwork": "Assume Masterworked",
@@ -649,9 +657,9 @@
     "WeaponsOnly": "Weapons"
   },
   "Manifest": {
-    "Download": "Downloading latest Destiny info database from Bungie",
+    "Download": "Downloading latest Destiny info database from Bungie...",
     "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
-    "Load": "Loading Destiny info database",
+    "Load": "Loading Destiny info database...",
     "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },

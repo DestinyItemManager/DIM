@@ -8,7 +8,6 @@ import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
 import Catalysts from './Catalysts';
-import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
@@ -18,6 +17,7 @@ import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import { useSubscription } from 'app/utils/hooks';
 import { useParams } from 'react-router';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -74,17 +74,12 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
     : undefined;
 
   if (!profileResponse || !defs || !buckets) {
-    return (
-      <div className="vendor d2-vendors dim-page">
-        <Loading />
-      </div>
-    );
+    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   const badgesRootNodeHash =
     profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
-  console.log(profileResponse, profileResponse.metrics?.data);
 
   return (
     <div className="vendor d2-vendors dim-page">

@@ -18,7 +18,6 @@ import { RootState } from '../../store/reducers';
 import { storesSelector } from '../../inventory/selectors';
 import { currentAccountSelector } from '../../accounts/reducer';
 import { D1StoresService } from '../../inventory/d1-stores';
-import { Loading } from '../../dim-ui/Loading';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
@@ -43,6 +42,7 @@ import { dimVendorService, Vendor } from '../vendors/vendor.service';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface StoreProps {
   account: DestinyAccount;
@@ -205,7 +205,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     } = this.state;
 
     if (!stores.length || !buckets || !defs) {
-      return <Loading />;
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const active = this.getSelectedCharacter();

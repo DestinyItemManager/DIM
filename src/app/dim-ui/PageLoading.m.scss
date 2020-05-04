@@ -1,16 +1,23 @@
 .pageLoading {
   position: relative;
 }
+
+.pageLoadingEnter {
+  opacity: 0;
+}
+.pageLoadingEnter.pageLoadingEnterActive {
+  opacity: 1;
+  transition: opacity 100ms ease-in 500ms;
+}
+
 .pageLoadingExit {
   > section {
     transform: scale(1);
-    opacity: 1;
   }
 }
 .pageLoadingExit.pageLoadingExitActive {
   > section {
-    transform: scale(1.2);
     opacity: 0;
-    transition: all 300ms ease-out;
+    transition: all 100ms ease-out;
   }
 }

@@ -15,42 +15,8 @@
   z-index: 100;
 }
 
-$loadingTextDuration: 200ms;
-$loadingTextDistance: 10px;
-.loading-text-container {
-  width: 300px;
-  height: 3em;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-.loading-text {
-  position: absolute;
-  font-size: 16px;
-}
-.loading-text-enter {
-  transform: translateY(-$loadingTextDistance);
-  opacity: 0;
-}
-.loading-text-enter.loading-text-enter-active {
-  transform: translateY(0);
-  opacity: 1;
-  transition: all $loadingTextDuration ease-in;
-}
-.loading-text-exit {
-  transform: translateY(0);
-  opacity: 1;
-}
-.loading-text-exit.loading-text-exit-active {
-  transform: translateY($loadingTextDistance);
-  opacity: 0;
-  transition: all $loadingTextDuration ease-out;
-}
-
 $square-size: 40px;
-$initialDelay: 0s;
+$initialDelay: 1s;
 $sequenceDelay: 0.1s;
 $logoDuration: 4s;
 $logoDelay: 1s;
@@ -104,6 +70,15 @@ $image: (
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes logo-animation-pop {
   0% {
     transform: scale(0) rotate(-45deg);
@@ -123,4 +98,40 @@ $image: (
   100% {
     transform: scale(0) rotate(-45deg);
   }
+}
+
+$loadingTextDuration: 200ms;
+$loadingTextDistance: 10px;
+.loading-text-container {
+  width: 300px;
+  height: 3em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0;
+  animation: 500ms linear $initialDelay forwards fade-in;
+}
+.loading-text {
+  position: absolute;
+  font-size: 16px;
+}
+.loading-text-enter {
+  transform: translateY(-$loadingTextDistance);
+  opacity: 0;
+}
+.loading-text-enter.loading-text-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all $loadingTextDuration ease-in;
+}
+.loading-text-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+.loading-text-exit.loading-text-exit-active {
+  transform: translateY($loadingTextDistance);
+  opacity: 0;
+  transition: all $loadingTextDuration ease-out;
 }

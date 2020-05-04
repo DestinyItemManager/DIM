@@ -111,7 +111,7 @@ class ManifestService {
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest(tableWhitelist: string[]) {
-    store.dispatch(loadingStart(`${t('Manifest.Load')}...`));
+    store.dispatch(loadingStart(t('Manifest.Load')));
     try {
       console.time('Load manifest');
       const manifest = await this.loadManifest(tableWhitelist);
@@ -146,7 +146,7 @@ class ManifestService {
       error.name = 'ManifestError';
       throw error;
     } finally {
-      store.dispatch(loadingEnd(`${t('Manifest.Load')}...`));
+      store.dispatch(loadingEnd(t('Manifest.Load')));
       console.timeEnd('Load manifest');
     }
   }
@@ -196,7 +196,7 @@ class ManifestService {
     },
     tableWhitelist: string[]
   ): Promise<object> {
-    store.dispatch(loadingStart(`${t('Manifest.Download')}...`));
+    store.dispatch(loadingStart(t('Manifest.Download')));
     try {
       const manifest = {};
       const futures = tableWhitelist

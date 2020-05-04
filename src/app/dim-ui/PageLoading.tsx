@@ -20,6 +20,8 @@ function mapStateToProps(state: RootState): StoreProps {
 type Props = StoreProps & ThunkDispatchProp;
 
 const transitionClasses = {
+  enter: styles.pageLoadingEnter,
+  enterActive: styles.pageLoadingEnterActive,
   exit: styles.pageLoadingExit,
   exitActive: styles.pageLoadingExitActive
 };
@@ -30,8 +32,8 @@ const transitionClasses = {
 function PageLoading({ message }: Props) {
   return (
     <TransitionGroup component={null}>
-      {message && (
-        <CSSTransition classNames={transitionClasses} timeout={{ exit: 300 }}>
+      {message !== undefined && (
+        <CSSTransition classNames={transitionClasses} timeout={{ enter: 600, exit: 300 }}>
           <div className={clsx('dim-page', styles.pageLoading)}>
             <Loading message={message} />
           </div>

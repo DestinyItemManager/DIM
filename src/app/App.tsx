@@ -24,6 +24,7 @@ import Developer from './developer/Developer';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
+import { t } from './i18next-t';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -88,7 +89,7 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
         <Header />
         <PageLoading />
         <ErrorBoundary name="DIM Code">
-          <Suspense fallback={<ShowPageLoading message="Loading DIM code..." />}>
+          <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             <Switch>
               <Route path="/about" exact>
                 <About />

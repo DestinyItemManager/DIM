@@ -121,7 +121,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
         />
       </div>
     ) : (
-      <ShowPageLoading message="Loading Destiny accounts..." />
+      <ShowPageLoading message={t('Loading.Accounts')} />
     );
   }
 

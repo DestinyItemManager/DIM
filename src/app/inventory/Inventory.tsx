@@ -19,6 +19,7 @@ import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import { storesLoadedSelector } from './selectors';
 import { useSubscription } from 'app/utils/hooks';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -55,7 +56,7 @@ function Inventory({ storesLoaded, account }: Props) {
   }, [account, storesLoaded]);
 
   if (!storesLoaded) {
-    return <ShowPageLoading message="Loading Destiny profile..." />;
+    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   return (
