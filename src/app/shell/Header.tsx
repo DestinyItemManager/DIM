@@ -258,7 +258,7 @@ class Header extends React.PureComponent<Props, State> {
         </GlobalHotkeys>
         <TransitionGroup>
           {dropdownOpen && (
-            <CSSTransition clsx="dropdown" timeout={{ enter: 500, exit: 500 }}>
+            <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
               <ClickOutside
                 key="dropdown"
                 className="dropdown"

@@ -20,7 +20,7 @@ export default function ManifestProgress({ destinyVersion }: { destinyVersion: n
   return (
     <TransitionGroup component={null}>
       {(!loaded || error) && statusText && (
-        <CSSTransition clsx="manifest" timeout={{ enter: 300, exit: 300 }}>
+        <CSSTransition classNames="manifest" timeout={{ enter: 300, exit: 300 }}>
           <div className="manifest-progress">
             {!error && <AppIcon icon={refreshIcon} spinning={true} />}
             <div> {statusText}</div>
