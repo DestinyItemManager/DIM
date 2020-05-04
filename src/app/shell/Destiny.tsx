@@ -208,7 +208,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/organizer`} exact>
-              <Organizer />
+              <Organizer account={account} />
             </Route>
           )}
           {account.destinyVersion === 2 && (

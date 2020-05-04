@@ -24,7 +24,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  account?: DestinyAccount;
   stores: DimStore[];
   defs: D2ManifestDefinitions;
   isPhonePortrait: boolean;
