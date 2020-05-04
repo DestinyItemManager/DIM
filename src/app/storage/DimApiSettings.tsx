@@ -135,8 +135,8 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {$featureFlags.dimApi && apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.AuditLogLabel')}</label>
-          <Link to={(location) => `${location.pathname}/audit`}>
-            <a className="dim-button">{t('Storage.AuditLog')}</a>
+          <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
+            {t('Storage.AuditLog')}
           </Link>
         </div>
       )}

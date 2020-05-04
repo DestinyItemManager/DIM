@@ -20,7 +20,7 @@ import { dedupePromise } from 'app/utils/util';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { del } from 'idb-keyval';
-import { globalHistory } from 'app/shell/CaptureRouter';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch, getState) => {

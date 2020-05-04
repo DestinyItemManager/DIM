@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .settings {
   font-size: 14px;
   max-width: 500px;
@@ -76,6 +78,9 @@
 
   .examples {
     margin: 0 0 4px 0;
+    display: flex;
+    flex-direction: row;
+    @include horizontal-space-children(4px);
   }
 
   .radioOptions {

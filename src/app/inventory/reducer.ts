@@ -195,9 +195,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       };
 
     case getType(setCurrentAccount):
-      return {
-        ...initialState
-      };
+      return initialState;
 
     default:
       return state;

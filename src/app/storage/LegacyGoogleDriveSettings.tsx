@@ -37,7 +37,7 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
         if (this.props.location.search.includes('gdrive=true')) {
-          this.forceSync(undefined, false).then(() => this.props.history.replace('/settings'));
+          this.forceSync(undefined).then(() => this.props.history.replace('/settings'));
         }
         this.updateGoogleDriveInfo();
       }),

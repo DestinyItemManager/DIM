@@ -14,7 +14,7 @@ import { removeToken } from '../bungie-api/oauth-tokens';
 import { showNotification } from '../notifications/notifications';
 import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
-import { globalHistory } from 'app/shell/CaptureRouter';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 

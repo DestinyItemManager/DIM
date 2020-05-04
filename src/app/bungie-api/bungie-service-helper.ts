@@ -9,7 +9,7 @@ import { stringify } from 'simple-query-string';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { delay } from 'app/utils/util';
-import { globalHistory } from 'app/shell/CaptureRouter';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;

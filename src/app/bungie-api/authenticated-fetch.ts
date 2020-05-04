@@ -9,7 +9,7 @@ import {
 } from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { t } from 'app/i18next-t';
-import { globalHistory } from 'app/shell/CaptureRouter';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 let cache: Promise<Tokens> | null = null;
 

@@ -112,10 +112,10 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
             <Route path="/settings/gdrive-revisions" exact>
               <GDriveRevisions />
             </Route>
-            <Route path="/settings/gdrive-revisions" exact>
+            <Route path="/settings/audit" exact>
               <AuditLog />
             </Route>
-            <Route path="/settings">
+            <Route path="/settings" exact>
               <SettingsPage />
             </Route>
             <Route

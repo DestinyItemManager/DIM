@@ -18,11 +18,8 @@ import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon, banIcon } from './icons';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { accountsSelector, accountsLoadedSelector } from 'app/accounts/reducer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { AccountContext } from './context';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import { Loading } from 'app/dim-ui/Loading';
@@ -69,8 +66,6 @@ interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
   profileError?: DimError;
-  d2Manifest?: D2ManifestDefinitions;
-  d1Manifest?: D1ManifestDefinitions;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -81,9 +76,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
         account.membershipId === props.platformMembershipId &&
         account.destinyVersion === props.destinyVersion
     ),
-    profileError: state.inventory.profileError,
-    d2Manifest: state.manifest.d2Manifest,
-    d1Manifest: state.manifest.d1Manifest
+    profileError: state.inventory.profileError
   };
 }
 
@@ -92,14 +85,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({
-  accountsLoaded,
-  account,
-  d1Manifest,
-  d2Manifest,
-  dispatch,
-  profileError
-}: Props) {
+function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -194,7 +180,7 @@ function Destiny({
     }
   });
 
-  const contents = (
+  return (
     <>
       <div id="content">
         <Switch>
@@ -260,31 +246,6 @@ function Destiny({
       <MoveAmountPopupContainer />
       <ManifestProgress destinyVersion={account.destinyVersion} />
     </>
-  );
-  return account.destinyVersion === 2 ? (
-    d2Manifest ? (
-      <AccountContext.Provider
-        value={{
-          account,
-          manifest: d2Manifest
-        }}
-      >
-        {contents}
-      </AccountContext.Provider>
-    ) : (
-      contents
-    )
-  ) : d1Manifest ? (
-    <AccountContext.Provider
-      value={{
-        account,
-        manifest: d1Manifest
-      }}
-    >
-      {contents}
-    </AccountContext.Provider>
-  ) : (
-    contents
   );
 }
 
