@@ -101,7 +101,7 @@ $image: (
 }
 
 $loadingTextDuration: 200ms;
-$loadingTextDistance: 10px;
+$loadingTextDistance: 16px;
 .loading-text-container {
   width: 300px;
   height: 3em;
@@ -124,7 +124,7 @@ $loadingTextDistance: 10px;
 .loading-text-enter.loading-text-enter-active {
   transform: translateY(0);
   opacity: 1;
-  transition: all $loadingTextDuration ease-in;
+  transition: all $loadingTextDuration ease-out;
 }
 .loading-text-exit {
   transform: translateY(0);

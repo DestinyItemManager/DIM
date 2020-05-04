@@ -27,8 +27,6 @@ import store from 'app/store/store';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/reducer';
 
-throw new Error('WHoops');
-
 polyfill({
   holdToDrag: 300,
   dragImageCenterOnTouch: true
