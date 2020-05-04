@@ -256,7 +256,7 @@ class Header extends React.PureComponent<Props, State> {
             <MenuBadge />
           </a>
         </GlobalHotkeys>
-        <TransitionGroup>
+        <TransitionGroup component={null}>
           {dropdownOpen && (
             <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
               <ClickOutside

@@ -49,7 +49,6 @@ function Inventory({ storesLoaded, account }: Props) {
   useEffect(() => {
     const storesService = getStoresService(account);
     if (!storesLoaded) {
-      console.log('loading stores for', account);
       // TODO: Dispatch an action to load stores instead
       storesService.getStoresStream(account);
     }
