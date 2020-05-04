@@ -8,22 +8,18 @@ import { t } from 'app/i18next-t';
 import { DestinyManifest, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { settingsSelector } from 'app/settings/reducer';
 import store from 'app/store/store';
 import { emptyObject, emptyArray } from 'app/utils/empty';
+import { loadingStart, loadingEnd } from 'app/shell/actions';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
 
+// TODO: replace this with a redux action!
+
 // Testing flags
 const alwaysLoadRemote = false;
-
-export interface ManifestServiceState {
-  loaded: boolean;
-  error?: Error;
-  statusText?: string;
-}
 
 type Mutable<T> = { -readonly [P in keyof T]: Mutable<T[P]> };
 /** Functions that can reduce the size of a table after it's downloaded but before it's saved to cache. */
@@ -65,12 +61,6 @@ const tableTrimmers = {
 
 class ManifestService {
   version: string | null = null;
-  state: ManifestServiceState = {
-    loaded: false
-  };
-  state$ = new BehaviorSubject<ManifestServiceState>(this.state);
-  /** A signal for when we've loaded a new remote manifest. */
-  newManifest$ = new Subject();
 
   /**
    * This tells users to reload the app. It fires no more
@@ -109,20 +99,10 @@ class ManifestService {
     readonly getManifestApi: () => Promise<DestinyManifest>
   ) {}
 
-  set loaded(loaded: boolean) {
-    this.setState({ loaded, error: undefined });
-  }
-
-  set statusText(statusText: string) {
-    this.setState({ statusText });
-  }
-
   getManifest(tableWhitelist: string[]): Promise<object> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
-
-    this.loaded = false;
 
     this.manifestPromise = this.doGetManifest(tableWhitelist);
 
@@ -131,6 +111,7 @@ class ManifestService {
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest(tableWhitelist: string[]) {
+    store.dispatch(loadingStart(`${t('Manifest.Load')}...`));
     try {
       console.time('Load manifest');
       const manifest = await this.loadManifest(tableWhitelist);
@@ -140,7 +121,6 @@ class ManifestService {
       return manifest;
     } catch (e) {
       let message = e.message || e;
-      const statusText = t('Manifest.Error', { error: message });
 
       if (e instanceof TypeError || e.status === -1) {
         message = navigator.onLine
@@ -158,14 +138,15 @@ class ManifestService {
         await this.deleteManifestFile();
       }
 
+      const statusText = t('Manifest.Error', { error: message });
       this.manifestPromise = null;
-      this.setState({ error: e, statusText });
       console.error('Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
-      const error = new Error(message);
+      const error = new Error(statusText);
       error.name = 'ManifestError';
       throw error;
     } finally {
+      store.dispatch(loadingEnd(`${t('Manifest.Load')}...`));
       console.timeEnd('Load manifest');
     }
   }
@@ -215,27 +196,26 @@ class ManifestService {
     },
     tableWhitelist: string[]
   ): Promise<object> {
-    this.statusText = `${t('Manifest.Download')}...`;
+    store.dispatch(loadingStart(`${t('Manifest.Download')}...`));
+    try {
+      const manifest = {};
+      const futures = tableWhitelist
+        .map((t) => `Destiny${t}Definition`)
+        .map(async (table) => {
+          // Adding a cache buster "?dim" to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+          const response = await fetch(`https://www.bungie.net${components[table]}?dim`);
+          const body = await (response.ok ? response.json() : Promise.reject(response));
+          manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
+        });
 
-    const manifest = {};
-    const futures = tableWhitelist
-      .map((t) => `Destiny${t}Definition`)
-      .map(async (table) => {
-        // Adding a cache buster "?dim" to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
-        const response = await fetch(`https://www.bungie.net${components[table]}?dim`);
-        const body = await (response.ok ? response.json() : Promise.reject(response));
-        manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
-      });
+      await Promise.all(futures);
 
-    await Promise.all(futures);
-
-    this.statusText = `${t('Manifest.Build')}...`;
-
-    // We intentionally don't wait on this promise
-    this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
-
-    this.newManifest$.next();
-    return manifest;
+      // We intentionally don't wait on this promise
+      this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
+      return manifest;
+    } finally {
+      store.dispatch(loadingEnd(`${t('Manifest.Download')}...`));
+    }
   }
 
   // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
@@ -273,7 +253,6 @@ class ManifestService {
       throw new Error('Testing - always load remote');
     }
 
-    this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     const currentWhitelist = JSON.parse(
       localStorage.getItem(this.localStorageKey + '-whitelist') || '[]'
@@ -290,11 +269,6 @@ class ManifestService {
       await this.deleteManifestFile();
       throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
-  }
-
-  private setState(newState: Partial<ManifestServiceState>) {
-    this.state = { ...this.state, ...newState };
-    this.state$.next(this.state);
   }
 }
 

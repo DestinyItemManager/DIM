@@ -1,0 +1,16 @@
+.pageLoading {
+  position: relative;
+}
+.pageLoadingExit {
+  > section {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.pageLoadingExit.pageLoadingExitActive {
+  > section {
+    transform: scale(1.2);
+    opacity: 0;
+    transition: all 300ms ease-out;
+  }
+}

@@ -10,7 +10,6 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
-import { Loading } from './dim-ui/Loading';
 import { Switch, Route } from 'react-router';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
@@ -23,6 +22,8 @@ import Destiny from './shell/Destiny';
 import Privacy from './shell/Privacy';
 import Developer from './developer/Developer';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
+import PageLoading from './dim-ui/PageLoading';
+import ShowPageLoading from './dim-ui/ShowPageLoading';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -85,8 +86,9 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
       <SneakyUpdates />
       <ClickOutsideRoot>
         <Header />
+        <PageLoading />
         <ErrorBoundary name="DIM Code">
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<ShowPageLoading message="Loading DIM code..." />}>
             <Switch>
               <Route path="/about" exact>
                 <About />

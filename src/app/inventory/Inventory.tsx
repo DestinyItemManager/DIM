@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { Loading } from '../dim-ui/Loading';
 import Stores from './Stores';
 import { D1StoresService } from './d1-stores';
 import { D2StoresService } from './d2-stores';
@@ -19,6 +18,7 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import { storesLoadedSelector } from './selectors';
 import { useSubscription } from 'app/utils/hooks';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -55,7 +55,7 @@ function Inventory({ storesLoaded, account }: Props) {
   }, [account, storesLoaded]);
 
   if (!storesLoaded) {
-    return <Loading />;
+    return <ShowPageLoading message="Loading Destiny profile..." />;
   }
 
   return (

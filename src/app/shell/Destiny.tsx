@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import ManifestProgress from './ManifestProgress';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
@@ -22,7 +21,7 @@ import { accountsSelector, accountsLoadedSelector } from 'app/accounts/reducer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
-import { Loading } from 'app/dim-ui/Loading';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -122,7 +121,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
         />
       </div>
     ) : (
-      <Loading />
+      <ShowPageLoading message="Loading Destiny accounts..." />
     );
   }
 
@@ -246,7 +245,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
-      <ManifestProgress destinyVersion={account.destinyVersion} />
     </>
   );
 }

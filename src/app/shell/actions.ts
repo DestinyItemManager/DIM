@@ -18,3 +18,10 @@ export const setSearchQuery = createAction(
 export const toggleSearchQueryComponent = createAction('shell/TOGGLE_SEARCH_QUERY_COMPONENT')<
   string
 >();
+
+/**
+ * Signifies that there is a page-wide loading state, with a message.
+ * These shouldn't be used directly - use loadingStart and loadingEnd.
+ */
+export const loadingStart = createAction('shell/LOADING')<string>();
+export const loadingEnd = createAction('shell/LOADING_DONE')<string>();
