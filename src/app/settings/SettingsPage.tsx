@@ -257,7 +257,7 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="items">
               <h2>{t('Settings.Items')}</h2>
-              <div className="examples sub-bucket">
+              <div className="examples">
                 <InventoryItem
                   item={(fakeWeapon as any) as DimItem}
                   isNew={true}

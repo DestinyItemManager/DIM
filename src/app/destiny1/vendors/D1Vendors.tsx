@@ -1,6 +1,5 @@
 import React from 'react';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../../dim-ui/Loading';
 import { Subscriptions } from '../../utils/rx-utils';
 import { refresh$ } from '../../shell/refresh';
@@ -24,7 +23,7 @@ interface State {
 /**
  * The "All Vendors" page for D1 that shows all the rotating vendors.
  */
-export default class D1Vendors extends React.Component<Props & UIViewInjectedProps, State> {
+export default class D1Vendors extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   constructor(props: Props) {

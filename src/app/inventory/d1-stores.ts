@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
 import { getStores } from '../bungie-api/destiny1-api';
@@ -17,7 +17,7 @@ import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
-import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
+import { take, switchMap, publishReplay, merge } from 'rxjs/operators';
 import { storesSelector } from './selectors';
 
 export const D1StoresService = StoreService();
@@ -34,8 +34,6 @@ function StoreService(): D1StoreServiceType {
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
   const storesStream = accountStream.pipe(
-    // Only emit when the account changes
-    distinctUntilChanged(compareAccounts),
     // But also re-emit the current value of the account stream
     // whenever the force reload triggers
     merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),

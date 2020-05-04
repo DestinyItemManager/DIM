@@ -8,8 +8,8 @@ import {
   removeAccessToken
 } from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { router } from '../router';
 import { t } from 'app/i18next-t';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 let cache: Promise<Tokens> | null = null;
 
@@ -203,8 +203,8 @@ export function goToLoginPage() {
       !localStorage.getItem('oauthClientId') ||
       !localStorage.getItem('oauthClientSecret'))
   ) {
-    router.stateService.go('developer');
+    globalHistory?.push('/developer');
   } else {
-    router.stateService.go('login');
+    globalHistory?.push('/login');
   }
 }

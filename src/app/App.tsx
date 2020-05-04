@@ -1,5 +1,4 @@
-import React from 'react';
-import { UIView } from '@uirouter/react';
+import React, { Suspense, useEffect } from 'react';
 import Header from './shell/Header';
 import clsx from 'clsx';
 import ActivityTracker from './dim-ui/ActivityTracker';
@@ -11,8 +10,37 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
+import { Loading } from './dim-ui/Loading';
+import { Switch, Route } from 'react-router';
+import DefaultAccount from './shell/DefaultAccount';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import Login from './login/Login';
+import ScrollToTop from './shell/ScrollToTop';
+import GATracker from './shell/GATracker';
+import SneakyUpdates from './shell/SneakyUpdates';
+import About from './shell/About';
+import Destiny from './shell/Destiny';
+import Privacy from './shell/Privacy';
+import Developer from './developer/Developer';
+import ErrorBoundary from './dim-ui/ErrorBoundary';
 
-interface Props {
+const WhatsNew = React.lazy(() =>
+  import(/* webpackChunkName: "settings" */ './whats-new/WhatsNew')
+);
+
+// These three are all from the same chunk
+const SettingsPage = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage
+}));
+const GDriveRevisions = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components'))
+    .GDriveRevisions
+}));
+const AuditLog = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog
+}));
+
+interface StoreProps {
   language: string;
   showReviews: boolean;
   itemQuality: boolean;
@@ -20,7 +48,7 @@ interface Props {
   charColMobile: number;
 }
 
-function mapStateToProps(state: RootState): Props {
+function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     language: settings.language,
@@ -31,36 +59,88 @@ function mapStateToProps(state: RootState): Props {
   };
 }
 
-class App extends React.Component<Props> {
-  componentDidMount() {
-    testFeatureCompatibility();
-  }
+type Props = StoreProps;
 
-  render() {
-    return (
-      <div
-        key={`lang-${this.props.language}`}
-        className={clsx(`lang-${this.props.language}`, `char-cols-${this.props.charColMobile}`, {
-          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-          itemQuality: this.props.itemQuality,
-          'show-new-items': this.props.showNewItems,
-          'ms-edge': /Edge/.test(navigator.userAgent),
-          ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-        })}
-      >
-        <ClickOutsideRoot>
-          <Header />
-          <UIView />
-          <NotificationsContainer />
-          <ActivityTracker />
-          {$featureFlags.colorA11y && <ColorA11y />}
-          <HotkeysCheatSheet />
-        </ClickOutsideRoot>
-      </div>
-    );
-  }
+function App({ language, charColMobile, showReviews, itemQuality, showNewItems }: Props) {
+  useEffect(() => {
+    testFeatureCompatibility();
+  }, []);
+
+  // TODO: use redux state to trigger login
+  // TODO: if no account, redirect to login. if no devkeys, redirect to developer
+
+  return (
+    <div
+      key={`lang-${language}`}
+      className={clsx(`lang-${language}`, `char-cols-${charColMobile}`, {
+        'show-reviews': $featureFlags.reviewsEnabled && showReviews,
+        itemQuality: itemQuality,
+        'show-new-items': showNewItems,
+        'ms-edge': /Edge/.test(navigator.userAgent),
+        ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+      })}
+    >
+      <ScrollToTop />
+      <GATracker />
+      <SneakyUpdates />
+      <ClickOutsideRoot>
+        <Header />
+        <ErrorBoundary name="DIM Code">
+          <Suspense fallback={<Loading />}>
+            <Switch>
+              <Route path="/about" exact>
+                <About />
+              </Route>
+              <Route path="/privacy" exact>
+                <Privacy />
+              </Route>
+              <Route path="/whats-new" exact>
+                <WhatsNew />
+              </Route>
+              <Route path="/login" exact>
+                <Login />
+              </Route>
+              <Route path="/settings/gdrive-revisions" exact>
+                <GDriveRevisions />
+              </Route>
+              <Route path="/settings/audit" exact>
+                <AuditLog />
+              </Route>
+              <Route path="/settings" exact>
+                <SettingsPage />
+              </Route>
+              <Route
+                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                render={({ match }) => (
+                  <Destiny
+                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                    platformMembershipId={match.params.membershipId}
+                  />
+                )}
+              />
+              {$DIM_FLAVOR === 'dev' && (
+                <Route path="/developer" exact>
+                  <Developer />
+                </Route>
+              )}
+              <Route>
+                <DefaultAccount />
+              </Route>
+            </Switch>
+          </Suspense>
+        </ErrorBoundary>
+        <NotificationsContainer />
+        <ActivityTracker />
+        {$featureFlags.colorA11y && <ColorA11y />}
+        <HotkeysCheatSheet />
+      </ClickOutsideRoot>
+    </div>
+  );
 }
 
+/**
+ * For some reason this gets messed up if it's defined in a different file.
+ */
 function ColorA11y() {
   if ($featureFlags.colorA11y) {
     return (
@@ -121,4 +201,4 @@ function ColorA11y() {
   return null;
 }
 
-export default connect<Props>(mapStateToProps)(App);
+export default connect<StoreProps>(mapStateToProps)(App);

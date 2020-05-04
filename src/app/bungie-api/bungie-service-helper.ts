@@ -6,10 +6,10 @@ import { getActivePlatform } from '../accounts/platforms';
 import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
-import { router } from '../router';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { delay } from 'app/utils/util';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -190,7 +190,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     case PlatformErrorCodes.ApiKeyMissingFromRequest:
     case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
       if ($DIM_FLAVOR === 'dev') {
-        router.stateService.go('developer');
+        globalHistory?.push('/developer');
         throw error(t('BungieService.DevVersion'), errorCode);
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);

@@ -34,22 +34,22 @@ export type ThunkDispatchProp = {
   dispatch: ThunkDispatch<RootState, {}, AnyAction>;
 };
 
-const combinedReducers = combineReducers({
-  settings,
-  accounts,
-  inventory,
-  reviews,
-  shell,
-  loadouts,
-  wishLists,
-  farming,
-  manifest,
-  vendorDrops,
-  // Dummy reducer to get the types to work
-  dimApi: (state: DimApiState = dimApiInitialState) => state
-});
-
 const reducer: Reducer<RootState> = (state, action) => {
+  const combinedReducers = combineReducers({
+    settings,
+    accounts,
+    inventory,
+    reviews,
+    shell,
+    loadouts,
+    wishLists,
+    farming,
+    manifest,
+    vendorDrops,
+    // Dummy reducer to get the types to work
+    dimApi: (state: DimApiState = dimApiInitialState) => state
+  });
+
   const intermediateState = combinedReducers(state, action);
 
   // Run the DIM API reducer last, and provide the current account along with it

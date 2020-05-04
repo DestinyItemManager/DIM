@@ -371,10 +371,6 @@ module.exports = (env) => {
         '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
-        // Whether to log page views for router events
-        '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
-        // Debug ui-router
-        '$featureFlags.debugRouter': JSON.stringify(false),
         // Debug Service Worker
         '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta only

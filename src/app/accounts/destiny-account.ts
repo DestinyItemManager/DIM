@@ -11,10 +11,10 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { reportException } from '../utils/exceptions';
 import { removeToken } from '../bungie-api/oauth-tokens';
-import { router } from '../router';
 import { showNotification } from '../notifications/notifications';
 import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
+import { globalHistory } from 'app/shell/CaptureHistory';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 
@@ -105,7 +105,7 @@ export async function getDestinyAccountsForBungieAccount(
         title: t('Accounts.NoCharacters')
       });
       removeToken();
-      router.stateService.go('login', { reauth: true });
+      globalHistory?.push('/login?reauth=true');
     }
     return platforms;
   } catch (e) {

@@ -1,77 +1,60 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { refreshIcon, AppIcon } from '../shell/icons';
 import { initSettings } from '../settings/settings';
+import { useHistory } from 'react-router';
 
-interface State {
-  revisions?: any;
-}
+export default function GDriveRevisions() {
+  const [revisions, setRevisions] = useState<GDriveRevision[]>();
+  const history = useHistory();
 
-export default class GDriveRevisions extends React.Component<UIViewInjectedProps, State> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  useEffect(() => {
+    SyncService.GoogleDriveStorage.getRevisions().then(setRevisions);
+  }, []);
 
-  componentDidMount() {
-    this.getRevisions();
-  }
+  const onRestoreSuccess = () => history.push('/settings');
 
-  render() {
-    const { revisions } = this.state;
+  const header = <p>{t('Storage.RevisionsDescription')}</p>;
 
-    const header = <p>{t('Storage.RevisionsDescription')}</p>;
-
-    if (!revisions) {
-      return (
-        <div className="dim-page">
-          {header}
-          <AppIcon icon={refreshIcon} spinning={true} />
-        </div>
-      );
-    }
-
+  if (!revisions) {
     return (
       <div className="dim-page">
         {header}
-        <table className="gdrive-revisions">
-          <thead>
-            <tr>
-              <th className="revision-date">Date</th>
-              <th className="revision-controls" />
-            </tr>
-          </thead>
-          <tbody>
-            {revisions
-              .slice(0)
-              .reverse()
-              .map((revision) => (
-                <GDriveRevisionComponent
-                  key={revision.id}
-                  revision={revision}
-                  onRestoreSuccess={this.onRestoreSuccess}
-                />
-              ))}
-          </tbody>
-        </table>
+        <AppIcon icon={refreshIcon} spinning={true} />
       </div>
     );
   }
 
-  private async getRevisions() {
-    const revisions = await SyncService.GoogleDriveStorage.getRevisions();
-    this.setState({ revisions });
-  }
-
-  private onRestoreSuccess = () => {
-    this.props.transition!.router.stateService.go('settings');
-  };
+  return (
+    <div className="dim-page">
+      {header}
+      <table className="gdrive-revisions">
+        <thead>
+          <tr>
+            <th className="revision-date">Date</th>
+            <th className="revision-controls" />
+          </tr>
+        </thead>
+        <tbody>
+          {revisions
+            .slice(0)
+            .reverse()
+            .map((revision) => (
+              <GDriveRevisionComponent
+                key={revision.id}
+                revision={revision}
+                onRestoreSuccess={onRestoreSuccess}
+              />
+            ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 class GDriveRevisionComponent extends React.Component<

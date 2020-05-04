@@ -5,12 +5,12 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
-import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { Link } from 'react-router-dom';
 
 const itemSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.typeName),
@@ -111,14 +111,14 @@ export default function VendorItems({
                 </PressTip>
               )}
               {rewardVendorHash && rewardItem && (
-                <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
+                <Link to={`vendors/${rewardVendorHash}`}>
                   <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage
                       className="item-img transparent"
                       src={rewardItem.displayProperties.icon}
                     />
                   </div>
-                </UISref>
+                </Link>
               )}
             </div>
           </div>

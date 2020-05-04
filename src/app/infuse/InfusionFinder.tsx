@@ -3,7 +3,6 @@ import './InfusionFinder.scss';
 import { DimItem } from '../inventory/item-types';
 import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../utils/rx-utils';
-import { router } from '../router';
 import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon, faRandom, faEquals, faArrowCircleDown } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -30,6 +29,7 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { settingsSelector } from 'app/settings/reducer';
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { LoadoutItem } from 'app/loadout/loadout-types';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -69,7 +69,7 @@ const mapDispatchToProps = {
 };
 type DispatchProps = typeof mapDispatchToProps;
 
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & DispatchProps & RouteComponentProps;
 
 interface State {
   query?: DimItem;
@@ -83,7 +83,6 @@ interface State {
 class InfusionFinder extends React.Component<Props, State> {
   state: State = { direction: InfuseDirection.INFUSE, filter: '' };
   private subscriptions = new Subscriptions();
-  private unregisterTransitionHook?: Function;
   private itemContainer = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
@@ -124,25 +123,23 @@ class InfusionFinder extends React.Component<Props, State> {
         }
       })
     );
-    this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
 
     if (this.itemContainer.current) {
       this.setState({ height: this.itemContainer.current.clientHeight });
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props) {
     if (this.itemContainer.current && !this.state.height) {
       this.setState({ height: this.itemContainer.current.clientHeight });
+    }
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.onClose();
     }
   }
 
   componentWillUnmount() {
     this.subscriptions.unsubscribe();
-    if (this.unregisterTransitionHook) {
-      this.unregisterTransitionHook();
-      this.unregisterTransitionHook = undefined;
-    }
   }
 
   render() {
@@ -378,10 +375,9 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(InfusionFinder);
+export default withRouter(
+  connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(InfusionFinder)
+);
 
 /**
  * Can source be infused into target?
