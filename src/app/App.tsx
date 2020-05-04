@@ -22,6 +22,7 @@ import About from './shell/About';
 import Destiny from './shell/Destiny';
 import Privacy from './shell/Privacy';
 import Developer from './developer/Developer';
+import ErrorBoundary from './dim-ui/ErrorBoundary';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "settings" */ './whats-new/WhatsNew')
@@ -97,48 +98,50 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
       <SneakyUpdates />
       <ClickOutsideRoot>
         <Header />
-        <Suspense fallback={<Loading />}>
-          <Switch>
-            <Route path="/about" exact>
-              <About />
-            </Route>
-            <Route path="/privacy" exact>
-              <Privacy />
-            </Route>
-            <Route path="/whats-new" exact>
-              <WhatsNew />
-            </Route>
-            <Route path="/login" exact>
-              <Login />
-            </Route>
-            <Route path="/settings/gdrive-revisions" exact>
-              <GDriveRevisions />
-            </Route>
-            <Route path="/settings/audit" exact>
-              <AuditLog />
-            </Route>
-            <Route path="/settings" exact>
-              <SettingsPage />
-            </Route>
-            <Route
-              path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-              render={({ match }) => (
-                <Destiny
-                  destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                  platformMembershipId={match.params.membershipId}
-                />
-              )}
-            />
-            {$DIM_FLAVOR === 'dev' && (
-              <Route path="/developer" exact>
-                <Developer />
+        <ErrorBoundary name="DIM Code">
+          <Suspense fallback={<Loading />}>
+            <Switch>
+              <Route path="/about" exact>
+                <About />
               </Route>
-            )}
-            <Route>
-              <DefaultAccount />
-            </Route>
-          </Switch>
-        </Suspense>
+              <Route path="/privacy" exact>
+                <Privacy />
+              </Route>
+              <Route path="/whats-new" exact>
+                <WhatsNew />
+              </Route>
+              <Route path="/login" exact>
+                <Login />
+              </Route>
+              <Route path="/settings/gdrive-revisions" exact>
+                <GDriveRevisions />
+              </Route>
+              <Route path="/settings/audit" exact>
+                <AuditLog />
+              </Route>
+              <Route path="/settings" exact>
+                <SettingsPage />
+              </Route>
+              <Route
+                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                render={({ match }) => (
+                  <Destiny
+                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                    platformMembershipId={match.params.membershipId}
+                  />
+                )}
+              />
+              {$DIM_FLAVOR === 'dev' && (
+                <Route path="/developer" exact>
+                  <Developer />
+                </Route>
+              )}
+              <Route>
+                <DefaultAccount />
+              </Route>
+            </Switch>
+          </Suspense>
+        </ErrorBoundary>
         <NotificationsContainer />
         <ActivityTracker />
         {$featureFlags.colorA11y && <ColorA11y />}
