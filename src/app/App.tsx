@@ -66,21 +66,8 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
     testFeatureCompatibility();
   }, []);
 
-  // TODO: uhhh but if we don't render the routes how will these go anywhere???
-  /*
-  if (!token) {
-    return <Redirect login />;
-  }
-
-  if (!apikeys) {
-    return <Redirect developer />;
-  }
-  */
   // TODO: use redux state to trigger login
   // TODO: if no account, redirect to login. if no devkeys, redirect to developer
-  // TODO: some sort of <RequireAccount> wrapper that shows loading then loads account?
-  // TODO: make the loading component something that adds/removes classes from a single loading component?
-  //       drive a message through redux?
 
   return (
     <div
