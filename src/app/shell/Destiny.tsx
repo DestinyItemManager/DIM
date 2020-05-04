@@ -32,12 +32,17 @@ const Progress = React.lazy(() =>
   import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
 );
 const LoadoutBuilder = React.lazy(() =>
-  import(/* webpackChunkName: "optimizer" */ 'app/loadout-builder/LoadoutBuilder')
+  import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilder')
 );
 const D1LoadoutBuilder = React.lazy(() =>
-  import(/* webpackChunkName: "d1optimizer" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
+  import(/* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
 );
-const Vendors = React.lazy(() => import(/* webpackChunkName: "vendors" */ 'app/vendors/Vendors'));
+const Vendors = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors
+}));
+const SingleVendor = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor
+}));
 const D1Vendors = React.lazy(() =>
   import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
 );
@@ -46,9 +51,6 @@ const RecordBooks = React.lazy(() =>
 );
 const Organizer = React.lazy(() =>
   import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
-);
-const SingleVendor = React.lazy(() =>
-  import(/* webpackChunkName: "singleVendor" */ 'app/vendors/SingleVendor')
 );
 const Activities = React.lazy(() =>
   import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')

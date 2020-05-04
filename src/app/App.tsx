@@ -21,21 +21,23 @@ import SneakyUpdates from './shell/SneakyUpdates';
 import About from './shell/About';
 import Destiny from './shell/Destiny';
 import Privacy from './shell/Privacy';
+import Developer from './developer/Developer';
 
-// TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "whatsnew" */ './whats-new/WhatsNew')
+  import(/* webpackChunkName: "settings" */ './whats-new/WhatsNew')
 );
-const Developer = React.lazy(() =>
-  import(/* webpackChunkName: "developer" */ './developer/Developer')
-);
-const SettingsPage = React.lazy(() =>
-  import(/* webpackChunkName: "settings" */ './settings/SettingsPage')
-);
-const GDriveRevisions = React.lazy(() =>
-  import(/* webpackChunkName: "gdrive" */ './storage/GDriveRevisions')
-);
-const AuditLog = React.lazy(() => import(/* webpackChunkName: "audit" */ './settings/AuditLog'));
+
+// These three are all from the same chunk
+const SettingsPage = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage
+}));
+const GDriveRevisions = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components'))
+    .GDriveRevisions
+}));
+const AuditLog = React.lazy(async () => ({
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog
+}));
 
 interface StoreProps {
   language: string;
