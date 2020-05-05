@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { AppIcon, powerActionIcon } from '../shell/icons';
+import './StoreHeading.scss';
 
 export default function SimpleCharacterTile({
   character,
