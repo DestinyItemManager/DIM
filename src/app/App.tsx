@@ -25,7 +25,7 @@ import Developer from './developer/Developer';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
 
 const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "settings" */ './whats-new/WhatsNew')
+  import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
 
 // These three are all from the same chunk
