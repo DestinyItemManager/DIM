@@ -22,7 +22,6 @@ function hoursAgo(dateToCheck?: Date): number {
 export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
     await dispatch(loadWishListAndInfoFromIndexedDB());
-
     if (newWishlistSource) {
       dispatch(setSetting('wishListSource', newWishlistSource));
     } else {
