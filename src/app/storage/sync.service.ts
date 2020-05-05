@@ -7,11 +7,12 @@ import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 import { Settings } from 'app/settings/initial-settings';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 export interface DimData {
   // The last selected platform membership ID
   membershipId?: string;
-  destinyVersion?: 1 | 2;
+  destinyVersion?: DestinyVersion;
   // membership IDs of ignored DTR reviewers
   ignoredUsers?: readonly string[];
   // loadout ids

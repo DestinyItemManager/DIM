@@ -16,6 +16,7 @@ import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/s
 import { UserInfoCard } from 'bungie-api-ts/user';
 import { loggedOut } from './actions';
 import { ThunkResult } from 'app/store/reducers';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 
@@ -72,7 +73,7 @@ export interface DestinyAccount {
   /** Destiny platform membership ID. */
   readonly membershipId: string;
   /** Which version of Destiny is this account for? */
-  readonly destinyVersion: 1 | 2;
+  readonly destinyVersion: DestinyVersion;
   /** Which version of Destiny 2 / DLC do they own? (not reliable after Cross-Save) */
   readonly versionsOwned?: DestinyGameVersions;
   /** All the platforms this account plays on (post-Cross-Save) */

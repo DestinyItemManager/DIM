@@ -1,4 +1,9 @@
-import { ProfileUpdate, DeleteLoadoutUpdate, Loadout } from '@destinyitemmanager/dim-api-types';
+import {
+  ProfileUpdate,
+  DeleteLoadoutUpdate,
+  Loadout,
+  DestinyVersion
+} from '@destinyitemmanager/dim-api-types';
 
 // https://stackoverflow.com/questions/51691235/typescript-map-union-type-to-another-union-type
 type AddUpdateInfo<U> = U extends ProfileUpdate
@@ -7,14 +12,14 @@ type AddUpdateInfo<U> = U extends ProfileUpdate
       before?: U['payload'];
       /** The account (if any) this update refers to */
       platformMembershipId?: string;
-      destinyVersion?: 1 | 2;
+      destinyVersion?: DestinyVersion;
     }
   : never;
 
 export interface DeleteLoadoutUpdateWithRollback extends DeleteLoadoutUpdate {
   before: Loadout;
   platformMembershipId: string;
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
 }
 
 /**

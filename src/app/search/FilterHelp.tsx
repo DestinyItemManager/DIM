@@ -5,6 +5,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { t } from 'app/i18next-t';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 const youTubeLink =
   "<a href='https://www.youtube.com/watch?v=TDMiysNXoOo&list=PLwhQ0xgGDsPuKwoA8nBxeb9Gin-UcUf6d' target='_blank' rel='noopener noreferrer'>YouTube</a>";
@@ -15,7 +16,7 @@ function mapStateToProps(state: RootState) {
   };
 }
 
-function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
+function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
   return (
     <div className="dim-page dim-static-page filter-view">
       <div>

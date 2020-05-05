@@ -9,6 +9,7 @@ import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { ConnectableObservable } from 'rxjs';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
@@ -47,7 +48,7 @@ export interface DimStore<Item = DimItem> {
   /** All items, grouped by their bucket. */
   buckets: { [bucketHash: number]: Item[] };
   /** The Destiny version this store came from. */
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   /** An icon (emblem) for the store. */
   icon: string;
   /** Is this the most-recently-played character? */

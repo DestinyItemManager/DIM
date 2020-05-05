@@ -27,7 +27,7 @@ import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { settingsSelector } from 'app/settings/reducer';
-import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { InfuseDirection, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -41,7 +41,7 @@ const itemComparator = chainComparator(
 );
 
 interface ProvidedProps {
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
 }
 
 interface StoreProps {
