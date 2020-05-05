@@ -64,7 +64,8 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
           source: ''
         },
         lastFetched: undefined,
-        wishListSource: undefined
+        wishListSource: undefined,
+        loaded: true
       };
     }
     default:

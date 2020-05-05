@@ -2,7 +2,7 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists, clearWishLists } from './actions';
+import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector, WishListsState } from './reducer';
@@ -32,8 +32,6 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     const wishListSource = settingsSelector(getState()).wishListSource;
 
     if (!wishListSource) {
-      // Clear out any stored wish list if settings has flipped to "no wish list"
-      dispatch(clearWishLists());
       return;
     }
 
