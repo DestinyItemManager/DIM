@@ -9,7 +9,8 @@ import { stringify } from 'simple-query-string';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { delay } from 'app/utils/util';
-import { globalHistory } from 'app/shell/CaptureHistory';
+import store from 'app/store/store';
+import { needsDeveloper } from 'app/accounts/actions';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -190,7 +191,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     case PlatformErrorCodes.ApiKeyMissingFromRequest:
     case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
       if ($DIM_FLAVOR === 'dev') {
-        globalHistory?.push('/developer');
+        store.dispatch(needsDeveloper());
         throw error(t('BungieService.DevVersion'), errorCode);
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);

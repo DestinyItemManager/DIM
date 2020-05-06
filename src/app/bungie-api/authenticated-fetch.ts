@@ -9,7 +9,8 @@ import {
 } from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { t } from 'app/i18next-t';
-import { globalHistory } from 'app/shell/CaptureHistory';
+import store from 'app/store/store';
+import { loggedOut } from 'app/accounts/actions';
 
 let cache: Promise<Tokens> | null = null;
 
@@ -197,14 +198,6 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
 }
 
 export function goToLoginPage() {
-  if (
-    $DIM_FLAVOR === 'dev' &&
-    (!localStorage.getItem('apiKey') ||
-      !localStorage.getItem('oauthClientId') ||
-      !localStorage.getItem('oauthClientSecret'))
-  ) {
-    globalHistory?.push('/developer');
-  } else {
-    globalHistory?.push('/login');
-  }
+  // TODO: pass in dispatch
+  store.dispatch(loggedOut());
 }

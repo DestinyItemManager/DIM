@@ -2,7 +2,8 @@ import { HttpClientConfig } from 'bungie-api-ts/http';
 import { stringify } from 'simple-query-string';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dedupePromise } from 'app/utils/util';
-import { globalHistory } from 'app/shell/CaptureHistory';
+import store from 'app/store/store';
+import { needsDeveloper } from 'app/accounts/actions';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =
@@ -20,7 +21,6 @@ export async function unauthenticatedApi<T>(
   noApiKey?: boolean
 ): Promise<T> {
   if (!noApiKey && !API_KEY) {
-    globalHistory?.push('/developer');
     throw new Error('No DIM API key configured');
   }
 
@@ -53,7 +53,6 @@ export async function unauthenticatedApi<T>(
  */
 export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> {
   if (!API_KEY) {
-    globalHistory?.push('/developer');
     throw new Error('No DIM API key configured');
   }
 
@@ -152,7 +151,7 @@ const refreshToken = dedupePromise(async () => {
     return authToken;
   } catch (e) {
     if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
-      globalHistory?.push('/developer');
+      store.dispatch(needsDeveloper()); // todo: pass in dispatch
       throw new Error('DIM API Key Incorrect');
     }
     throw e;
