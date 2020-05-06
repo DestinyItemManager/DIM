@@ -214,7 +214,7 @@ class ManifestService {
       this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
       return manifest;
     } finally {
-      store.dispatch(loadingEnd(`${t('Manifest.Download')}...`));
+      store.dispatch(loadingEnd(t('Manifest.Download')));
     }
   }
 
