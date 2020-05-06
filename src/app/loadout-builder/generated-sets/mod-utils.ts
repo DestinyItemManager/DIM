@@ -25,6 +25,8 @@ const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
 /**
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones
  * i.e. Void Resist ect
+ *
+ * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
 function assignGeneralMods(
   setToMatch: readonly DimItem[],
@@ -61,7 +63,7 @@ function assignGeneralMods(
           piecesLeft = piecesLeft.filter((item) => item !== piece);
         } else if (energyType === DestinyEnergyType.Any && piecesLeft.length) {
           assignments[piecesLeft[0].hash].push(mod);
-          piecesLeft.slice(0, 1);
+          piecesLeft.shift();
         }
       }
     }
@@ -70,6 +72,8 @@ function assignGeneralMods(
 
 /**
  * If the energies match, this will assign the mods to the item in assignments.
+ *
+ * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
 function assignModsForSlot(
   item: DimItem,
@@ -83,6 +87,8 @@ function assignModsForSlot(
 
 /**
  * Checks to see if the passed in seasonal mods can be assigned to the armour set.
+ *
+ * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
 function assignAllSeasonalMods(
   setToMatch: readonly DimItem[],

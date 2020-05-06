@@ -15,6 +15,7 @@ import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { assignModsToArmorSet } from './mod-utils';
+import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 
 interface Props {
   set: ArmorSet;
@@ -64,6 +65,27 @@ function GeneratedSet({
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
 
+  const displayStats = { ...set.stats };
+
+  // Add general mod vaues for display purposes
+  for (const lockedMod of lockedArmor2Mods[Armor2ModPlugCategories.general]) {
+    for (const stat of lockedMod.mod.investmentStats) {
+      if (stat.statTypeHash === statHashes.Mobility) {
+        displayStats.Mobility += stat.value;
+      } else if (stat.statTypeHash === statHashes.Recovery) {
+        displayStats.Recovery += stat.value;
+      } else if (stat.statTypeHash === statHashes.Resilience) {
+        displayStats.Resilience += stat.value;
+      } else if (stat.statTypeHash === statHashes.Intellect) {
+        displayStats.Intellect += stat.value;
+      } else if (stat.statTypeHash === statHashes.Discipline) {
+        displayStats.Discipline += stat.value;
+      } else if (stat.statTypeHash === statHashes.Strength) {
+        displayStats.Strength += stat.value;
+      }
+    }
+  }
+
   const assignedMods = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
 
   return (
@@ -94,7 +116,7 @@ function GeneratedSet({
                 key={stat}
                 isActive={enabledStats.has(stat)}
                 stat={stats[stat]}
-                value={set.stats[stat]}
+                value={displayStats[stat]}
               />
             ))}
           </span>
