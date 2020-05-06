@@ -109,6 +109,7 @@
     "html-webpack-plugin": "^4.0.1",
     "husky": "^4.0.6",
     "i18next-scanner": "^2.10.2",
+    "identity-obj-proxy": "^3.0.0",
     "imports-loader": "^0.8.0",
     "jest": "^25.1.0",
     "lodash-webpack-plugin": "^0.11.5",
