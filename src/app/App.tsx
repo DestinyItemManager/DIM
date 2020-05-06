@@ -11,7 +11,7 @@ import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
 import { Loading } from './dim-ui/Loading';
-import { Switch, Route } from 'react-router';
+import { Switch, Route, Redirect } from 'react-router';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import Login from './login/Login';
@@ -46,6 +46,9 @@ interface StoreProps {
   itemQuality: boolean;
   showNewItems: boolean;
   charColMobile: number;
+  needsLogin: boolean;
+  reauth: boolean;
+  needsDeveloper: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -55,19 +58,28 @@ function mapStateToProps(state: RootState): StoreProps {
     showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
     showNewItems: settings.showNewItems,
-    charColMobile: settings.charColMobile
+    charColMobile: settings.charColMobile,
+    needsLogin: state.accounts.needsLogin,
+    reauth: state.accounts.reauth,
+    needsDeveloper: state.accounts.needsDeveloper
   };
 }
 
 type Props = StoreProps;
 
-function App({ language, charColMobile, showReviews, itemQuality, showNewItems }: Props) {
+function App({
+  language,
+  charColMobile,
+  showReviews,
+  itemQuality,
+  showNewItems,
+  needsLogin,
+  reauth,
+  needsDeveloper
+}: Props) {
   useEffect(() => {
     testFeatureCompatibility();
   }, []);
-
-  // TODO: use redux state to trigger login
-  // TODO: if no account, redirect to login. if no devkeys, redirect to developer
 
   return (
     <div
@@ -87,46 +99,67 @@ function App({ language, charColMobile, showReviews, itemQuality, showNewItems }
         <Header />
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<Loading />}>
-            <Switch>
-              <Route path="/about" exact>
-                <About />
-              </Route>
-              <Route path="/privacy" exact>
-                <Privacy />
-              </Route>
-              <Route path="/whats-new" exact>
-                <WhatsNew />
-              </Route>
-              <Route path="/login" exact>
-                <Login />
-              </Route>
-              <Route path="/settings/gdrive-revisions" exact>
-                <GDriveRevisions />
-              </Route>
-              <Route path="/settings/audit" exact>
-                <AuditLog />
-              </Route>
-              <Route path="/settings" exact>
-                <SettingsPage />
-              </Route>
-              <Route
-                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                render={({ match }) => (
-                  <Destiny
-                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                    platformMembershipId={match.params.membershipId}
-                  />
-                )}
-              />
-              {$DIM_FLAVOR === 'dev' && (
+            {/* In the force-login or force-developer cases, the app can only navigate to /login or /developer */}
+            {$DIM_FLAVOR === 'dev' && needsDeveloper ? (
+              <Switch>
                 <Route path="/developer" exact>
                   <Developer />
                 </Route>
-              )}
-              <Route>
-                <DefaultAccount />
-              </Route>
-            </Switch>
+                <Route>
+                  <Redirect to={'/developer'} />
+                </Route>
+              </Switch>
+            ) : needsLogin ? (
+              <Switch>
+                <Route path="/login" exact>
+                  <Login />
+                </Route>
+                <Route>
+                  <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
+                </Route>
+              </Switch>
+            ) : (
+              <Switch>
+                <Route path="/about" exact>
+                  <About />
+                </Route>
+                <Route path="/privacy" exact>
+                  <Privacy />
+                </Route>
+                <Route path="/whats-new" exact>
+                  <WhatsNew />
+                </Route>
+                <Route path="/login" exact>
+                  <Login />
+                </Route>
+                <Route path="/settings/gdrive-revisions" exact>
+                  <GDriveRevisions />
+                </Route>
+                <Route path="/settings/audit" exact>
+                  <AuditLog />
+                </Route>
+                <Route path="/settings" exact>
+                  <SettingsPage />
+                </Route>
+                <Route
+                  path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                  render={({ match }) => (
+                    <Destiny
+                      destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                      platformMembershipId={match.params.membershipId}
+                    />
+                  )}
+                />
+                {$DIM_FLAVOR === 'dev' && (
+                  <Route path="/developer" exact>
+                    <Developer />
+                  </Route>
+                )}
+                <Route>
+                  <DefaultAccount />
+                </Route>
+              </Switch>
+            )}
           </Suspense>
         </ErrorBoundary>
         <NotificationsContainer />

@@ -20,7 +20,6 @@ import { dedupePromise } from 'app/utils/util';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { del } from 'idb-keyval';
-import { globalHistory } from 'app/shell/CaptureHistory';
 
 const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch, getState) => {
@@ -102,7 +101,7 @@ export function setActivePlatform(
 function loadPlatforms(membershipId: string): ThunkResult<readonly DestinyAccount[]> {
   return async (dispatch, getState) => {
     try {
-      const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
+      const destinyAccounts = await dispatch(getDestinyAccountsForBungieAccount(membershipId));
       dispatch(actions.accountsLoaded(destinyAccounts));
     } catch (e) {
       if (!accountsSelector(getState()).length) {
@@ -143,8 +142,7 @@ export function logOut(): ThunkResult {
   return async (dispatch) => {
     removeToken();
     deleteDimApiToken();
-    dispatch(actions.loggedOut());
     del('accounts'); // remove saved accounts from IDB
-    globalHistory?.push('/login?reauth=true');
+    dispatch(actions.loggedOut(true));
   };
 }

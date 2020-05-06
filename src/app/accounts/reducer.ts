@@ -8,6 +8,9 @@ import { set, get } from 'idb-keyval';
 import { dedupePromise } from 'app/utils/util';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { deepEqual } from 'fast-equals';
+import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
+import { API_KEY as BUNGIE_API_KEY } from 'app/bungie-api/bungie-api-utils';
+import { hasValidAuthTokens } from 'app/bungie-api/oauth-tokens';
 
 export const accountsSelector = (state: RootState) => state.accounts.accounts;
 
@@ -33,6 +36,13 @@ export interface AccountsState {
   readonly loadedFromIDB: boolean;
 
   readonly accountsError?: DimError;
+
+  /** Do we need the user to log in? */
+  readonly needsLogin: boolean;
+  /** Should we force the auth choice when logging in? */
+  readonly reauth: boolean;
+  /** Do we need the user to input developer info (dev only)? */
+  readonly needsDeveloper: boolean;
 }
 
 export type AccountsAction = ActionType<typeof actions>;
@@ -41,7 +51,14 @@ const initialState: AccountsState = {
   accounts: [],
   currentAccount: -1,
   loaded: false,
-  loadedFromIDB: false
+  loadedFromIDB: false,
+  needsLogin: !hasValidAuthTokens(),
+  reauth: false,
+  needsDeveloper:
+    !DIM_API_KEY ||
+    !BUNGIE_API_KEY ||
+    ($DIM_FLAVOR === 'dev' &&
+      (!localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret')))
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
@@ -81,7 +98,17 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         accountsError: action.payload
       };
     case getType(actions.loggedOut):
-      return initialState;
+      return {
+        ...initialState,
+        reauth: action.payload.reauth,
+        needsLogin: true
+      };
+
+    case getType(actions.needsDeveloper):
+      return {
+        ...state,
+        needsDeveloper: true
+      };
 
     default:
       return state;
