@@ -114,7 +114,7 @@ function GeneratedSet({
             locked={lockedMap[item.bucket.hash]}
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
-            statValues={set.firstValidSetStatChoices[index]}
+            statValues={set.firstValidSetMetadataChoices[index].stats}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { DimItem } from '../inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 export type StatTypes =
@@ -94,12 +94,12 @@ export interface ArmorSet {
     /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
     readonly armor: readonly DimItem[][];
     /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-    readonly statChoices: readonly number[][];
+    readonly metadataChoices: readonly ArmorMetadata[];
   }[];
 
   /** The first (highest-power) valid set from this stat mix. */
   readonly firstValidSet: readonly DimItem[];
-  readonly firstValidSetStatChoices: readonly number[][];
+  readonly firstValidSetMetadataChoices: readonly ArmorMetadata[];
 
   /** The maximum power loadout possible in this stat mix. */
   readonly maxPower: number;
@@ -120,3 +120,9 @@ export const LockableBuckets = {
   classitem: 1585787867,
   ghost: 4023194814
 };
+
+export interface ArmorMetadata {
+  energy?: DestinyEnergyType;
+  seasonalModCategory?: number;
+  stats: number[];
+}

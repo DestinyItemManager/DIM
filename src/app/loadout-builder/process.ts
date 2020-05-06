@@ -6,7 +6,8 @@ import {
   StatTypes,
   LockedItemType,
   ItemsByBucket,
-  LockedMap
+  LockedMap,
+  ArmorMetadata
 } from './types';
 import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
@@ -14,7 +15,7 @@ import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getItemDamageShortName } from 'app/utils/item-utils';
+import { getItemDamageShortName, getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -108,15 +109,15 @@ export function process(
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
-  const keyToStatsCache = new Map<string, number[]>();
-  const keyToStats = (key: string) => {
-    let value = keyToStatsCache.get(key);
+  const keyToMetadataCache = new Map<string, ArmorMetadata>();
+  const keyToMetadata = (key: string) => {
+    const value = keyToMetadataCache.get(key);
     if (value) {
       return value;
     }
-    value = JSON.parse(key) as number[];
-    keyToStatsCache.set(key, value);
-    return value;
+    const metadata = JSON.parse(key) as ArmorMetadata;
+    keyToMetadataCache.set(key, metadata);
+    return metadata;
   };
 
   const helms = multiGroupBy(
@@ -125,7 +126,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.helmet], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.helmet])
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -133,7 +134,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.gauntlets], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.gauntlets])
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -141,7 +142,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.chest], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.chest])
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -149,7 +150,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.leg], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.leg])
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -157,7 +158,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.classitem], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.classitem])
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -166,7 +167,7 @@ export function process(
       filteredItems[LockableBuckets.ghost] || [],
       (i) => !(i.owner === selectedStoreId && i.equipped)
     ),
-    byStatMix(lockedItems[LockableBuckets.ghost], assumeMasterwork)
+    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.ghost])
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -174,7 +175,7 @@ export function process(
 
   // Get the keys of the object, sorted by total stats descending
   const makeKeys = (obj: { [key: string]: DimItem[] }) =>
-    _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k)));
+    _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToMetadata(k)?.stats));
 
   const helmsKeys = makeKeys(helms);
   const gauntsKeys = makeKeys(gaunts);
@@ -249,22 +250,22 @@ export function process(
 
               const firstValidSet = getFirstValidSet(armor);
               if (firstValidSet) {
-                const statChoices = [
-                  keyToStats(helmsKey),
-                  keyToStats(gauntsKey),
-                  keyToStats(chestsKey),
-                  keyToStats(legsKey),
-                  keyToStats(classItemsKey),
-                  keyToStats(ghostsKey)
+                const metadataChoices = [
+                  keyToMetadata(helmsKey),
+                  keyToMetadata(gauntsKey),
+                  keyToMetadata(chestsKey),
+                  keyToMetadata(legsKey),
+                  keyToMetadata(classItemsKey),
+                  keyToMetadata(ghostsKey)
                 ];
 
                 const maxPower = getPower(firstValidSet);
 
                 const stats = {};
-                for (const stat of statChoices) {
+                for (const meta of metadataChoices) {
                   let index = 0;
                   for (const key of statKeys) {
-                    stats[key] = Math.min((stats[key] || 0) + stat[index], 100);
+                    stats[key] = Math.min((stats[key] || 0) + meta.stats[index], 100);
                     index++;
                   }
                 }
@@ -281,16 +282,22 @@ export function process(
                   index++;
                 }
 
+                // Also add energy types and seasonal mod categories to the key used
+                // This ensures properly grouped sets
+                for (const meta of metadataChoices) {
+                  tiers = `${tiers},${meta.energy},${meta.seasonalModCategory}`;
+                }
+
                 const existingSetAtTier = groupedSets[tiers];
                 if (existingSetAtTier) {
                   existingSetAtTier.sets.push({
                     armor,
-                    statChoices
+                    metadataChoices
                   });
                   if (maxPower > existingSetAtTier.maxPower) {
                     existingSetAtTier.firstValidSet = firstValidSet;
                     existingSetAtTier.maxPower = maxPower;
-                    existingSetAtTier.firstValidSetStatChoices = statChoices;
+                    existingSetAtTier.firstValidSetMetadataChoices = metadataChoices;
                   }
                 } else {
                   // First of its kind
@@ -298,7 +305,7 @@ export function process(
                     sets: [
                       {
                         armor,
-                        statChoices
+                        metadataChoices
                       }
                     ],
                     stats: stats as {
@@ -306,7 +313,7 @@ export function process(
                     },
                     // TODO: defer calculating first valid set / statchoices / maxpower?
                     firstValidSet,
-                    firstValidSetStatChoices: statChoices,
+                    firstValidSetMetadataChoices: metadataChoices,
                     maxPower
                   };
                 }
@@ -346,14 +353,15 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
   return map;
 }
 
-const emptyStats = [JSON.stringify(new Array(_.size(statHashes)).fill(0))];
+const emptyStats = new Array(_.size(statHashes)).fill(0);
 
 /**
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(lockedItems: readonly LockedItemType[] | undefined, assumeMasterwork: boolean) {
+function byStatMix(assumeMasterwork: boolean, lockedItems?: readonly LockedItemType[]) {
   const lockedModStats: { [statHash: number]: number } = {};
+  // Handle old armour mods
   if (lockedItems) {
     for (const lockedItem of lockedItems) {
       if (lockedItem.type === 'mod') {
@@ -369,15 +377,19 @@ function byStatMix(lockedItems: readonly LockedItemType[] | undefined, assumeMas
     const stats = item.stats;
 
     if (!stats || stats.length < 3) {
-      return emptyStats;
+      return [JSON.stringify({ stats: emptyStats })];
     }
 
-    const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork, lockedModStats);
+    const metadatas: ArmorMetadata[] = generateMixesFromPerksOrStats(
+      item,
+      assumeMasterwork,
+      lockedModStats
+    );
 
-    if (mixes.length === 1) {
-      return mixes.map((m) => JSON.stringify(m));
+    if (metadatas.length === 1) {
+      return metadatas.map((m) => JSON.stringify(m));
     }
-    return _.uniq(mixes.map((m) => JSON.stringify(m)));
+    return _.uniq(metadatas.map((m) => JSON.stringify(m)));
   };
 }
 
@@ -416,16 +428,22 @@ function generateMixesFromPerksOrStats(
   lockedModStats: { [statHash: number]: number },
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
-) {
+): ArmorMetadata[] {
   const stats = item.stats;
 
   if (!stats || stats.length < 3) {
-    return [];
+    return [{ stats: [] }];
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats)
+  const energy = (item.isDestiny2() && item.energy?.energyType) || undefined;
+  const seasonalModCategory = getSpecialtySocketCategoryHash(item);
+  const metas: ArmorMetadata[] = [
+    {
+      energy,
+      seasonalModCategory,
+      stats: getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats)
+    }
   ];
 
   const altPerks: (DimPlug[] | null)[] = [null];
@@ -436,9 +454,9 @@ function generateMixesFromPerksOrStats(
         for (const plug of socket.plugOptions) {
           if (plug !== socket.plug && plug.stats) {
             // Stats without the currently selected plug, with the optional plug
-            const mixNum = mixes.length;
+            const mixNum = metas.length;
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
-              const existingMix = mixes[mixIndex];
+              const existingMix = metas[mixIndex].stats;
               const optionStat = statValues.map((statHash, index) => {
                 const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
                 const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
@@ -450,10 +468,14 @@ function generateMixesFromPerksOrStats(
                 const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
                 altPerks.push(plugs);
                 if (!onMix(optionStat, plugs)) {
-                  return [];
+                  return [{ stats: [] }];
                 }
               }
-              mixes.push(optionStat);
+              metas.push({
+                energy,
+                seasonalModCategory,
+                stats: optionStat
+              });
             }
           }
         }
@@ -461,7 +483,7 @@ function generateMixesFromPerksOrStats(
     }
   }
 
-  return mixes;
+  return metas;
 }
 
 function getBaseStatValues(
