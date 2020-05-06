@@ -50,23 +50,18 @@ function assignGeneralMods(
   for (const energyType of energyOrder) {
     if (generalModsByEnergyType[energyType]) {
       for (let i = 0; i < generalModsByEnergyType[energyType].length; i++) {
+        const mod = generalModsByEnergyType[energyType][i];
         if (
           energyType !== DestinyEnergyType.Any &&
           armourByEnergyType[energyType] &&
-          armourByEnergyType[energyType].length > i
+          i < armourByEnergyType[energyType].length
         ) {
           const piece = armourByEnergyType[energyType][i];
-          assignments[piece.hash] = [
-            ...assignments[piece.hash],
-            generalModsByEnergyType[energyType][i]
-          ];
+          assignments[piece.hash].push(mod);
           piecesLeft = piecesLeft.filter((item) => item !== piece);
         } else if (energyType === DestinyEnergyType.Any && piecesLeft.length) {
-          assignments[piecesLeft[0].hash] = [
-            ...assignments[piecesLeft[0].hash],
-            generalModsByEnergyType[energyType][i]
-          ];
-          piecesLeft = piecesLeft.filter((item) => item !== piecesLeft[0]);
+          assignments[piecesLeft[0].hash].push(mod);
+          piecesLeft.slice(0, 1);
         }
       }
     }
@@ -81,9 +76,7 @@ function assignModsForSlot(
   mods: LockedArmor2Mod[],
   assignments: Record<number, LockedArmor2Mod[]>
 ): void {
-  const energiesMatch = Boolean(!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item)));
-
-  if (energiesMatch) {
+  if (!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.hash] = [...assignments[item.hash], ...mods];
   }
 }
@@ -105,7 +98,7 @@ function assignAllSeasonalMods(
     return;
   }
 
-  const modArrays = {};
+  const modsByArmorBucket = {};
 
   // Build up an array of possible mods for each item in the set.
   for (const mod of seasonalMods) {
@@ -114,24 +107,26 @@ function assignAllSeasonalMods(
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
       if (itemModCategories.includes(mod.mod.plug.plugCategoryHash) && doEnergiesMatch(mod, item)) {
-        if (!modArrays[item.bucket.hash]) {
-          modArrays[item.bucket.hash] = [];
+        if (!modsByArmorBucket[item.bucket.hash]) {
+          modsByArmorBucket[item.bucket.hash] = [];
         }
 
-        modArrays[item.bucket.hash].push(mod);
+        modsByArmorBucket[item.bucket.hash].push(mod);
       }
     }
   }
 
   // From the possible mods try and find a combination that includes all seasonal mods
-  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
-    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
-      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
-        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
-          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
+  for (const helmetMod of modsByArmorBucket[LockableBuckets.helmet] || [null]) {
+    for (const armsMod of modsByArmorBucket[LockableBuckets.gauntlets] || [null]) {
+      for (const chestMod of modsByArmorBucket[LockableBuckets.chest] || [null]) {
+        for (const legsMod of modsByArmorBucket[LockableBuckets.leg] || [null]) {
+          for (const classMod of modsByArmorBucket[LockableBuckets.classitem] || [null]) {
             const setMods = [helmetMod, armsMod, chestMod, legsMod, classMod];
             const applicableMods = setMods.filter(Boolean);
-            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
+            const containsAllLocked =
+              seasonalMods.every((item) => applicableMods.includes(item)) &&
+              _.uniq(applicableMods).length === applicableMods.length;
 
             if (containsAllLocked) {
               for (let i = 0; i < setMods.length; i++) {
