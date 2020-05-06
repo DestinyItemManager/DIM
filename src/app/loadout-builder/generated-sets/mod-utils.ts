@@ -134,6 +134,7 @@ function assignAllSeasonalMods(
                   assignModsForSlot(setToMatch[i], [setMods[i]], assignments);
                 }
               }
+              return;
             }
           }
         }
