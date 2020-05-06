@@ -353,7 +353,7 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
   return map;
 }
 
-const emptyStats = new Array(_.size(statHashes)).fill(0);
+const emptyStats = JSON.stringify({ stats: new Array(_.size(statHashes)).fill(0) });
 
 /**
  * Generate all possible stat mixes this item can contribute from different perk options,
@@ -377,7 +377,7 @@ function byStatMix(assumeMasterwork: boolean, lockedItems?: readonly LockedItemT
     const stats = item.stats;
 
     if (!stats || stats.length < 3) {
-      return [JSON.stringify({ stats: emptyStats })];
+      return [emptyStats];
     }
 
     const metadatas: ArmorMetadata[] = generateMixesFromPerksOrStats(
