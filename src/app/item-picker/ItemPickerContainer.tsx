@@ -1,8 +1,8 @@
 import React from 'react';
 import { Subscriptions } from '../utils/rx-utils';
-import { router } from '../router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 interface State {
   options?: ItemPickerState;
@@ -16,10 +16,9 @@ interface State {
  * single element to help prevent multiple pickers from showing
  * at once and to make the API easier.
  */
-export default class ItemPickerContainer extends React.Component<{}, State> {
+class ItemPickerContainer extends React.Component<RouteComponentProps, State> {
   state: State = { generation: 0 };
   private subscriptions = new Subscriptions();
-  private unregisterTransitionHook?: Function;
 
   componentDidMount() {
     this.subscriptions.add(
@@ -32,15 +31,16 @@ export default class ItemPickerContainer extends React.Component<{}, State> {
         });
       })
     );
-    this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
+  }
+
+  componentDidUpdate(prevProps: RouteComponentProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.onClose();
+    }
   }
 
   componentWillUnmount() {
     this.subscriptions.unsubscribe();
-    if (this.unregisterTransitionHook) {
-      this.unregisterTransitionHook();
-      this.unregisterTransitionHook = undefined;
-    }
   }
 
   render() {
@@ -57,3 +57,5 @@ export default class ItemPickerContainer extends React.Component<{}, State> {
     this.setState({ options: undefined });
   };
 }
+
+export default withRouter(ItemPickerContainer);

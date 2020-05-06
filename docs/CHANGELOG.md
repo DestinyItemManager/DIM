@@ -1,5 +1,10 @@
 ## Next
 
+## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
+
+* In the Loadout Optimizer, mods have been split into their own menu, separate from perks.
+* Fixed a bug where wishlists would ignore settings and load the default wishlist instead.
+
 ## 6.8.0 <span className="changelog-date">(2020-04-26)</span>
 
 * Added "armor 2.0" column to spreadsheet exports.

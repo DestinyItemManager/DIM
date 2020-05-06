@@ -2,8 +2,9 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { Loadout } from './loadout-types';
-import { router } from '../router';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { Prompt } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default function LoadoutDrawerOptions({
   loadout,
@@ -51,8 +52,11 @@ export default function LoadoutDrawerOptions({
     });
   };
 
+  // TODO: make the link to loadout optimizer bring the currently equipped items along in route state
+
   return (
     <div className="loadout-options">
+      <Prompt when={loadout.items.length > 0} message={t('Loadouts.Abandon')} />
       <form onSubmit={saveLoadout}>
         <div className="input-group loadout-name">
           <input
@@ -92,9 +96,9 @@ export default function LoadoutDrawerOptions({
           )}
         </div>
         <div className="input-group">
-          <button className="dim-button" onClick={(e) => goToLoadoutBuilder(e, loadout)}>
+          <Link className="dim-button" to="optimizer">
             {t('LB.LB')}
-          </button>
+          </Link>
         </div>
         <div className="input-group">
           <label>
@@ -105,17 +109,4 @@ export default function LoadoutDrawerOptions({
       </form>
     </div>
   );
-}
-
-function goToLoadoutBuilder(e, loadout?: Loadout) {
-  e.preventDefault();
-  if (!loadout) {
-    return;
-  }
-
-  if (_.size(loadout.items) === 0 || confirm(t('Loadouts.Abandon'))) {
-    router.stateService.go(
-      loadout.destinyVersion === 2 ? 'destiny2.loadoutbuilder' : 'destiny1.loadout-builder'
-    );
-  }
 }

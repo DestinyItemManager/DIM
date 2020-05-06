@@ -318,19 +318,25 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       operators.map((comparison) => `basestat:${stat}:${comparison}`)
     ),
     // keywords for checking which stat is masterworked
-    ...stats.map((stat) => `masterwork:${stat}`),
+    ...(isD2 ? stats.map((stat) => `masterwork:${stat}`) : []),
     // keywords for named seasons. reverse so newest seasons are first
-    ...Object.keys(seasonTags)
-      .reverse()
-      .map((tag) => `season:${tag}`),
+    ...(isD2
+      ? Object.keys(seasonTags)
+          .reverse()
+          .map((tag) => `season:${tag}`)
+      : []),
     // keywords for seasonal mod slots
-    ...modSlotTags.concat(['any', 'none']).map((modSlotName) => `modslot:${modSlotName}`),
-    ...modSlotTags.concat(['any', 'none']).map((modSlotName) => `holdsmod:${modSlotName}`),
+    ...(isD2
+      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `modslot:${modSlotName}`)
+      : []),
+    ...(isD2
+      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `holdsmod:${modSlotName}`)
+      : []),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
-    ...operators.map((comparison) => `energycapacity:${comparison}`),
+    ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
+    ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [

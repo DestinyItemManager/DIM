@@ -11,10 +11,11 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { reportException } from '../utils/exceptions';
 import { removeToken } from '../bungie-api/oauth-tokens';
-import { router } from '../router';
 import { showNotification } from '../notifications/notifications';
 import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
+import { loggedOut } from './actions';
+import { ThunkResult } from 'app/store/reducers';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 
@@ -93,25 +94,27 @@ export interface DestinyAccount {
  *
  * @param bungieMembershipId Bungie.net membership ID
  */
-export async function getDestinyAccountsForBungieAccount(
+export function getDestinyAccountsForBungieAccount(
   bungieMembershipId: string
-): Promise<DestinyAccount[]> {
-  try {
-    const linkedAccounts = await getLinkedAccounts(bungieMembershipId);
-    const platforms = await generatePlatforms(linkedAccounts);
-    if (platforms.length === 0) {
-      showNotification({
-        type: 'warning',
-        title: t('Accounts.NoCharacters')
-      });
-      removeToken();
-      router.stateService.go('login', { reauth: true });
+): ThunkResult<DestinyAccount[]> {
+  return async (dispatch) => {
+    try {
+      const linkedAccounts = await getLinkedAccounts(bungieMembershipId);
+      const platforms = await generatePlatforms(linkedAccounts);
+      if (platforms.length === 0) {
+        showNotification({
+          type: 'warning',
+          title: t('Accounts.NoCharacters')
+        });
+        removeToken();
+        dispatch(loggedOut(true));
+      }
+      return platforms;
+    } catch (e) {
+      reportException('getDestinyAccountsForBungieAccount', e);
+      throw e;
     }
-    return platforms;
-  } catch (e) {
-    reportException('getDestinyAccountsForBungieAccount', e);
-    throw e;
-  }
+  };
 }
 
 /**

@@ -15,7 +15,6 @@ import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { t } from 'app/i18next-t';
 import { Subscriptions } from '../utils/rx-utils';
@@ -48,6 +47,8 @@ import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzServi
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { parse } from 'simple-query-string';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -86,7 +87,7 @@ interface State {
   filterToUnacquired: boolean;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoreProps & RouteComponentProps & ThunkDispatchProp;
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
@@ -121,7 +122,7 @@ class Vendors extends React.Component<Props, State> {
 
   async loadVendors() {
     const { selectedStoreId } = this.state;
-    const { defs, account, transition, stores, dispatch } = this.props;
+    const { defs, account, stores, dispatch, location } = this.props;
     if (this.state.error) {
       this.setState({ error: undefined });
     }
@@ -134,7 +135,7 @@ class Vendors extends React.Component<Props, State> {
       throw new Error('expected defs');
     }
 
-    let characterId: string = selectedStoreId || transition!.params().characterId;
+    let characterId = selectedStoreId || (parse(location.search).characterId as string);
     if (!characterId) {
       if (stores.length) {
         characterId = getCurrentStore(stores)!.id;
@@ -382,4 +383,4 @@ function enhanceOwnedItemsWithPlugSets(
   return allItems;
 }
 
-export default connect<StoreProps>(mapStateToProps)(Vendors);
+export default withRouter(connect<StoreProps>(mapStateToProps)(Vendors));

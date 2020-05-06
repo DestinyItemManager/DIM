@@ -29,23 +29,6 @@ beforeEach(() => {
   stubDimStoreArray[1] = dimStore2;
   stubDimStoreArray[2] = dimStore3;
 });
-
-// Because of how TypeScript interacts with Jest,
-// we have to mock CSS class imports
-jest.mock('./CharacterSelect.m.scss', () => ({
-  __esModule: true,
-  default: {
-    select: 'select',
-    horizontal: 'horizontal',
-    vertical: 'vertical',
-    tile: 'tile',
-    unselected: 'unselected',
-    pager: 'pager',
-    frame: 'frame',
-    track: 'track'
-  }
-}));
-
 it('should render horizontal phone interface ', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect

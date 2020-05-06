@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import BungieImage from '../dim-ui/BungieImage';
 import EnergyMeter from './EnergyMeter';
 import ItemSockets from './ItemSockets';
-import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
@@ -24,6 +23,7 @@ import EmblemPreview from './EmblemPreview';
 import { destinyVersionSelector } from 'app/accounts/reducer';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import Objective from 'app/progress/Objective';
+import { Link } from 'react-router-dom';
 
 interface ProvidedProps {
   item: DimItem;
@@ -158,9 +158,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
-          <UISref to="destiny2.vendor" params={{ id: item.previewVendor }}>
-            <a>{t('ItemService.PreviewVendor', { type: item.typeName })}</a>
-          </UISref>
+          <Link to={`vendors/${item.previewVendor}`}>
+            {t('ItemService.PreviewVendor', { type: item.typeName })}
+          </Link>
         </div>
       )}
 

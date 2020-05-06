@@ -45,7 +45,7 @@ function D1Farming({ store, makeRoomForItems, setSetting }: Props) {
   return (
     <TransitionGroup component={null}>
       {store && (
-        <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
+        <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
           <div id="item-farming">
             <div>
               <p>

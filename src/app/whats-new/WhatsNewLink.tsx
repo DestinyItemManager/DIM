@@ -1,6 +1,5 @@
 import React from 'react';
 import { DimVersions } from './versions';
-import Link from '../shell/Link';
 import { alerts$ } from './BungieAlerts';
 import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import './WhatsNewLink.scss';
@@ -8,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { dimNeedsUpdate$ } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
+import { NavLink } from 'react-router-dom';
 
 interface State {
   dimNeedsUpdate: boolean;
@@ -50,7 +50,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (dimNeedsUpdate) {
       return (
-        <a className="link" onClick={reloadDIM}>
+        <a className="link menuItem" onClick={reloadDIM}>
           <AppIcon className="upgrade" icon={updateIcon} />
           {t('Header.UpgradeDIM')}
         </a>
@@ -59,21 +59,26 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (alerts.length) {
       return (
-        <Link state="whats-new" text={t('Header.BungieNetAlert')}>
-          <span className={`badge-new bungie-alert-${alerts[0].type}`} />
-        </Link>
+        <NavLink to="/whats-new" className="link menuItem">
+          <span className={`badge-new bungie-alert-${alerts[0].type}`} />{' '}
+          {t('Header.BungieNetAlert')}
+        </NavLink>
       );
     }
 
     if (showChangelog) {
       return (
-        <Link state="whats-new" text={t('Header.WhatsNew')}>
-          <span className="badge-new" />
-        </Link>
+        <NavLink to="/whats-new" className="link menuItem">
+          <span className="badge-new" /> {t('Header.WhatsNew')}
+        </NavLink>
       );
     }
 
-    return <Link state="whats-new" text={t('Header.WhatsNew')} />;
+    return (
+      <NavLink to="/whats-new" className="link menuItem">
+        {t('Header.WhatsNew')}
+      </NavLink>
+    );
   }
 }
 

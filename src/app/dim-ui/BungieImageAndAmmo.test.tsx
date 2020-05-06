@@ -2,16 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import BungieImageAndAmmo from './BungieImageAndAmmo';
 
-// Because of how TypeScript interacts with Jest,
-// we have to mock CSS class imports
-jest.mock('./BungieImageAndAmmo.m.scss', () => ({
-  __esModule: true,
-  default: {
-    container: 'container',
-    ammo: 'ammo'
-  }
-}));
-
 it('should have an extra class name ', () => {
   const { container } = render(
     <BungieImageAndAmmo src="/foo.png" hash={143442373} className="test-class-name" />

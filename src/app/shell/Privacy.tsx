@@ -1,7 +1,7 @@
 import React from 'react';
-import { UISref } from '@uirouter/react';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import styles from './Privacy.m.scss';
+import { Link } from 'react-router-dom';
 
 export default function Privacy() {
   return (
@@ -191,10 +191,7 @@ export default function Privacy() {
           <ol>
             <li>
               For additional inquiries about the privacy of your information, you can contact us via
-              any of the means listed on our{' '}
-              <UISref to="about">
-                <a href="#">About page</a>
-              </UISref>
+              any of the means listed on our <Link to="/about">About page</Link>
             </li>
           </ol>
         </li>

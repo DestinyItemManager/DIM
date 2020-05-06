@@ -1,30 +1,9 @@
-import { ReactStateDeclaration } from '@uirouter/react';
-import { states as destiny1States } from './destiny1/routes.lazy';
-import { states as destiny2States } from './destiny2/routes';
-import { defaultAccountRoute } from './shell/default-account.route';
-import { states as whatsNewStates } from './whats-new/routes';
-import { states as builderStates } from './loadout-builder/routes';
-import { states as loginStates } from './login/routes';
-import { states as progressStates } from './progress/routes';
-import { states as vendorsStates } from './vendors/routes';
-import { states as collectionsStates } from './collections/routes';
-import { states as organizerStates } from './organizer/routes';
-import { states as settingsStates } from './settings/routes';
-import { states as shellStates } from './shell/routes';
+import { DestinyAccount } from './accounts/destiny-account';
 
-export const states: ReactStateDeclaration[] = [
-  defaultAccountRoute,
-  ...destiny1States,
-  ...destiny2States,
-  ...whatsNewStates,
-  ...builderStates,
-  ...loginStates,
-  ...progressStates,
-  ...vendorsStates,
-  ...collectionsStates,
-  ...organizerStates,
-  ...settingsStates,
-  ...shellStates,
-  // Only include developer stuff in the bundle in dev
-  ...($DIM_FLAVOR === 'dev' ? require('./developer/routes').states : [])
-];
+/**
+ * This file contains helpers for generating route paths, though generally our
+ * paths are simple.
+ */
+
+export const accountRoute = (account: DestinyAccount) =>
+  `/${account.membershipId}/d${account.destinyVersion}`;

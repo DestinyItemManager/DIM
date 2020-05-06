@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
-import { router } from '../router';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
@@ -19,6 +18,7 @@ import {
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 declare global {
   interface Window {
@@ -33,7 +33,7 @@ interface State {
   };
 }
 
-export default class GoogleDriveSettings extends React.Component<{}, State> {
+class GoogleDriveSettings extends React.Component<RouteComponentProps, State> {
   state: State = {
     adapterStats: {}
   };
@@ -42,10 +42,8 @@ export default class GoogleDriveSettings extends React.Component<{}, State> {
   componentDidMount() {
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
-        if (router.globals.params.gdrive === 'true') {
-          this.forceSync(undefined, false).then(() =>
-            router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
-          );
+        if (this.props.location.search.includes('gdrive=true')) {
+          this.forceSync(undefined, false).then(() => this.props.history.replace('/settings'));
         }
         this.updateGoogleDriveInfo();
       }),
@@ -105,9 +103,9 @@ export default class GoogleDriveSettings extends React.Component<{}, State> {
                   <button className="dim-button" onClick={this.driveLogout}>
                     <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                   </button>{' '}
-                  <button className="dim-button" onClick={this.goToRevisions}>
+                  <Link className="dim-button" to="/settings/gdrive-revisions">
                     <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
-                  </button>
+                  </Link>
                 </>
               ) : (
                 <button className="dim-button" onClick={this.driveSync}>
@@ -167,12 +165,6 @@ export default class GoogleDriveSettings extends React.Component<{}, State> {
     return SyncService.GoogleDriveStorage.revokeDrive();
   };
 
-  private goToRevisions = (e) => {
-    e.preventDefault();
-    router.stateService.go('gdrive-revisions');
-    return false;
-  };
-
   private refreshAdapter = async (adapter: StorageAdapter) => {
     try {
       if (adapter.enabled) {
@@ -210,3 +202,5 @@ export default class GoogleDriveSettings extends React.Component<{}, State> {
     this.setState({ driveInfo });
   };
 }
+
+export default withRouter(GoogleDriveSettings);

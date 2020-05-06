@@ -23,12 +23,12 @@ import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { Subscriptions } from '../utils/rx-utils';
 import { connect } from 'react-redux';
-import { router } from '../router';
 import { setSetting } from '../settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { storesSelector } from 'app/inventory/selectors';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -56,7 +56,7 @@ const mapDispatchToProps = {
 };
 type DispatchProps = typeof mapDispatchToProps;
 
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & DispatchProps & RouteComponentProps;
 
 interface State {
   item?: DimItem;
@@ -139,7 +139,6 @@ class ItemPopupContainer extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private popper?: Instance;
   private popupRef = React.createRef<HTMLDivElement>();
-  private unregisterTransitionHook?: Function;
 
   componentDidMount() {
     this.subscriptions.add(
@@ -160,20 +159,17 @@ class ItemPopupContainer extends React.Component<Props, State> {
         }
       })
     );
-
-    this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
   }
 
   componentWillUnmount() {
     this.subscriptions.unsubscribe();
-    if (this.unregisterTransitionHook) {
-      this.unregisterTransitionHook();
-      this.unregisterTransitionHook = undefined;
-    }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props) {
     this.reposition();
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.onClose();
+    }
   }
 
   render() {
@@ -290,10 +286,9 @@ class ItemPopupContainer extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemPopupContainer);
+export default withRouter(
+  connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemPopupContainer)
+);
 
 /**
  * The passed in item may be old - look through stores to try and find a newer version!

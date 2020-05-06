@@ -44,4 +44,6 @@ export interface WishListAndInfo {
   wishListRolls: WishListRoll[];
   title?: string;
   description?: string;
+  /** The URL we fetched the wish list from */
+  source?: string;
 }

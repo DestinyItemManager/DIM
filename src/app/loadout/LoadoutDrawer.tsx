@@ -7,7 +7,6 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
-import { router } from '../router';
 import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
@@ -32,6 +31,7 @@ import { Loadout, LoadoutItem } from './loadout-types';
 import { saveLoadout } from './loadout-storage';
 import produce from 'immer';
 import memoizeOne from 'memoize-one';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -75,7 +75,7 @@ interface StoreProps {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
 }
 
-type Props = StoreProps & ThunkDispatchProp;
+type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
 
 interface State {
   loadout?: Readonly<Loadout>;
@@ -116,13 +116,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     clashingLoadout: null
   };
   private subscriptions = new Subscriptions();
-  private listener: Function;
 
   componentDidMount() {
-    this.listener = router.transitionService.onExit({}, () => {
-      this.close();
-    });
-
     this.subscriptions.add(
       editLoadout$.subscribe(this.editLoadout),
       addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
@@ -131,8 +126,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.close();
+    }
+  }
+
   componentWillUnmount() {
-    this.listener();
     this.subscriptions.unsubscribe();
   }
 
@@ -558,4 +558,4 @@ class LoadoutDrawer extends React.Component<Props, State> {
   };
 }
 
-export default connect(mapStateToProps)(LoadoutDrawer);
+export default withRouter(connect(mapStateToProps)(LoadoutDrawer));
