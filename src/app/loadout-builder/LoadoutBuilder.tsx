@@ -224,7 +224,13 @@ class LoadoutBuilder extends React.Component<Props, State> {
     const enabledStats = this.getEnabledStats(statFilters);
     try {
       filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
-      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
+      const result = this.processMemoized(
+        filteredItems,
+        lockedMap,
+        lockedArmor2Mods,
+        store.id,
+        assumeMasterwork
+      );
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;

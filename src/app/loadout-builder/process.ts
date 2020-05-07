@@ -7,7 +7,9 @@ import {
   LockedItemType,
   ItemsByBucket,
   LockedMap,
-  ArmorMetadata
+  ArmorMetadata,
+  LockedArmor2Mod,
+  LockedArmor2ModMap
 } from './types';
 import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
@@ -15,7 +17,11 @@ import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getItemDamageShortName, getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
+import {
+  getItemDamageShortName,
+  getSpecialtySocketCategoryHash,
+  Armor2ModPlugCategories
+} from 'app/utils/item-utils';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -102,6 +108,7 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
 export function process(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedArmor2ModMap: LockedArmor2ModMap,
   selectedStoreId: string,
   assumeMasterwork: boolean
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
@@ -126,7 +133,11 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.helmet])
+    byStatMix(
+      assumeMasterwork,
+      lockedItems[LockableBuckets.helmet],
+      lockedArmor2ModMap[Armor2ModPlugCategories.helmet]
+    )
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -134,7 +145,11 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.gauntlets])
+    byStatMix(
+      assumeMasterwork,
+      lockedItems[LockableBuckets.gauntlets],
+      lockedArmor2ModMap[Armor2ModPlugCategories.gauntlets]
+    )
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -142,7 +157,11 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.chest])
+    byStatMix(
+      assumeMasterwork,
+      lockedItems[LockableBuckets.chest],
+      lockedArmor2ModMap[Armor2ModPlugCategories.chest]
+    )
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -150,7 +169,11 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.leg])
+    byStatMix(
+      assumeMasterwork,
+      lockedItems[LockableBuckets.leg],
+      lockedArmor2ModMap[Armor2ModPlugCategories.leg]
+    )
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -158,7 +181,11 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.classitem])
+    byStatMix(
+      assumeMasterwork,
+      lockedItems[LockableBuckets.classitem],
+      lockedArmor2ModMap[Armor2ModPlugCategories.classitem]
+    )
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -359,7 +386,11 @@ const emptyStats = JSON.stringify({ stats: new Array(_.size(statHashes)).fill(0)
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(assumeMasterwork: boolean, lockedItems?: readonly LockedItemType[]) {
+function byStatMix(
+  assumeMasterwork: boolean,
+  lockedItems?: readonly LockedItemType[],
+  lockedArmor2Mods?: LockedArmor2Mod[]
+) {
   const lockedModStats: { [statHash: number]: number } = {};
   // Handle old armour mods
   if (lockedItems) {
@@ -369,6 +400,16 @@ function byStatMix(assumeMasterwork: boolean, lockedItems?: readonly LockedItemT
           lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
           lockedModStats[stat.statTypeHash] += stat.value;
         }
+      }
+    }
+  }
+
+  // Handle armour 2.0 mods
+  if (lockedArmor2Mods) {
+    for (const lockedMod of lockedArmor2Mods) {
+      for (const stat of lockedMod.mod.investmentStats) {
+        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+        lockedModStats[stat.statTypeHash] += stat.value;
       }
     }
   }
