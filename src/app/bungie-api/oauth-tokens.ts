@@ -52,6 +52,23 @@ export function removeToken() {
 }
 
 /**
+ * Returns whether or not we have a token that could be refreshed.
+ */
+export function hasValidAuthTokens() {
+  const token = getToken();
+  if (!token) {
+    return false;
+  }
+
+  // Get a new token from refresh token
+  const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
+  if (!refreshTokenIsValid) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Clear any saved access token information.
  */
 export function removeAccessToken() {
