@@ -1,5 +1,7 @@
 ## Next
 
+* Changed the LO grouping calculation to include both energy and the seasonal mod category
+
 ## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
 
 * In the Loadout Optimizer, mods have been split into their own menu, separate from perks.
