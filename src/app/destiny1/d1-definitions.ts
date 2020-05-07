@@ -87,7 +87,6 @@ async function getUncachedDefinitions() {
       defs[tableShort] = D1ManifestService.getAllRecords(db, table);
     });
     store.dispatch(setD1Manifest(defs as D1ManifestDefinitions));
-    D1ManifestService.loaded = true;
     return defs as D1ManifestDefinitions;
   } catch (e) {
     console.error(e);

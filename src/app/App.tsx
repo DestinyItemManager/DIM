@@ -10,7 +10,6 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
 import { settingsSelector } from './settings/reducer';
-import { Loading } from './dim-ui/Loading';
 import { Switch, Route, Redirect } from 'react-router';
 import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
@@ -23,6 +22,9 @@ import Destiny from './shell/Destiny';
 import Privacy from './shell/Privacy';
 import Developer from './developer/Developer';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
+import PageLoading from './dim-ui/PageLoading';
+import ShowPageLoading from './dim-ui/ShowPageLoading';
+import { t } from './i18next-t';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -97,8 +99,9 @@ function App({
       <SneakyUpdates />
       <ClickOutsideRoot>
         <Header />
+        <PageLoading />
         <ErrorBoundary name="DIM Code">
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             {/* In the force-login or force-developer cases, the app can only navigate to /login or /developer */}
             {$DIM_FLAVOR === 'dev' && needsDeveloper ? (
               <Switch>

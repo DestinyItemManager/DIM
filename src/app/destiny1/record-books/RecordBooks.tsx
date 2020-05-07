@@ -10,7 +10,6 @@ import { D1Store } from '../../inventory/store-types';
 import { storesSelector } from '../../inventory/selectors';
 import { RootState } from '../../store/reducers';
 import { connect } from 'react-redux';
-import { Loading } from '../../dim-ui/Loading';
 import { D1StoresService } from '../../inventory/d1-stores';
 import { refresh$ } from '../../shell/refresh';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
@@ -19,6 +18,7 @@ import { DestinyAccount } from '../../accounts/destiny-account';
 import { Subscriptions } from '../../utils/rx-utils';
 import './record-books.scss';
 import { settingsSelector } from 'app/settings/reducer';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -90,11 +90,7 @@ class RecordBooks extends React.Component<Props> {
     const { defs, stores, hideCompletedRecords } = this.props;
 
     if (!defs || !stores.length) {
-      return (
-        <div className="dim-page">
-          <Loading />
-        </div>
-      );
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const rawRecordBooks = stores[0].advisors.recordBooks;

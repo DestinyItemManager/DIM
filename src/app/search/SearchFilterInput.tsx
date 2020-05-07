@@ -156,7 +156,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
               header={<h1>{t('Header.Filters')}</h1>}
               sheetClassName="filterHelp"
             >
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
                 <LazyFilterHelp />
               </Suspense>
             </Sheet>,

@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { refresh$ } from '../shell/refresh';
@@ -30,6 +29,7 @@ import Hammer from 'react-hammerjs';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSubscription } from 'app/utils/hooks';
 import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -76,11 +76,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   useSubscription(refreshStores);
 
   if (!defs || !profileInfo || !stores.length) {
-    return (
-      <div className="progress-page dim-page">
-        <Loading />
-      </div>
-    );
+    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   // TODO: Searchable (item, description)

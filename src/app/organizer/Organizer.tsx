@@ -7,7 +7,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { useSubscription } from 'app/utils/hooks';
 import { queueAction } from 'app/inventory/action-queue';
 import { refresh$ } from 'app/shell/refresh';
-import { Loading } from 'app/dim-ui/Loading';
 import { storesSelector } from 'app/inventory/selectors';
 import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -18,6 +17,7 @@ import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import styles from './Organizer.m.scss';
 import { t } from 'app/i18next-t';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -57,7 +57,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   }
 
   if (!stores.length) {
-    return <Loading />;
+    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   return (

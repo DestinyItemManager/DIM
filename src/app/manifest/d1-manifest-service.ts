@@ -5,9 +5,9 @@ import { reportException } from '../utils/exceptions';
 import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
 import { showNotification } from '../notifications/notifications';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { settingsSelector } from 'app/settings/reducer';
 import store from 'app/store/store';
+import { loadingEnd, loadingStart } from 'app/shell/actions';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -17,39 +17,17 @@ const alwaysLoadRemote = false;
 
 const manifestLangs = new Set(['en', 'fr', 'es', 'de', 'it', 'ja', 'pt-br']);
 
-export interface ManifestServiceState {
-  loaded: boolean;
-  error?: Error;
-  statusText?: string;
-}
-
 class ManifestService {
   version: string | null = null;
-  state: ManifestServiceState = {
-    loaded: false
-  };
-  state$ = new BehaviorSubject<ManifestServiceState>(this.state);
-  /** A signal for when we've loaded a new remote manifest. */
-  newManifest$ = new Subject();
 
   private manifestPromise: Promise<object> | null = null;
 
   constructor(readonly localStorageKey: string, readonly idbKey: string) {}
 
-  set loaded(loaded: boolean) {
-    this.setState({ loaded, error: undefined });
-  }
-
-  set statusText(statusText: string) {
-    this.setState({ statusText });
-  }
-
   getManifest(): Promise<object> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
-
-    this.loaded = false;
 
     this.manifestPromise = this.doGetManifest();
 
@@ -69,6 +47,7 @@ class ManifestService {
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest() {
+    store.dispatch(loadingStart(t('Manifest.Load')));
     try {
       const manifest = await this.loadManifest();
       if (!manifest.DestinyVendorDefinition) {
@@ -77,7 +56,6 @@ class ManifestService {
       return manifest;
     } catch (e) {
       let message = e.message || e;
-      const statusText = t('Manifest.Error', { error: message });
 
       if (e instanceof TypeError || e.status === -1) {
         message = navigator.onLine
@@ -95,11 +73,13 @@ class ManifestService {
         this.deleteManifestFile();
       }
 
+      const statusText = t('Manifest.Error', { error: message });
       this.manifestPromise = null;
-      this.setState({ error: e, statusText });
       console.error('Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
-      throw new Error(message);
+      throw new Error(statusText);
+    } finally {
+      store.dispatch(loadingEnd(t('Manifest.Load')));
     }
   }
 
@@ -124,17 +104,19 @@ class ManifestService {
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
   private async loadManifestRemote(version: string, path: string): Promise<object> {
-    this.statusText = `${t('Manifest.Download')}...`;
+    store.dispatch(loadingStart(t('Manifest.Download')));
 
-    const response = await fetch(path);
-    const manifest = await (response.ok ? response.json() : Promise.reject(response));
-    this.statusText = `${t('Manifest.Build')}...`;
+    try {
+      const response = await fetch(path);
+      const manifest = await (response.ok ? response.json() : Promise.reject(response));
 
-    // We intentionally don't wait on this promise
-    this.saveManifestToIndexedDB(manifest, version);
+      // We intentionally don't wait on this promise
+      this.saveManifestToIndexedDB(manifest, version);
 
-    this.newManifest$.next();
-    return manifest;
+      return manifest;
+    } finally {
+      store.dispatch(loadingEnd(t('Manifest.Download')));
+    }
   }
 
   // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
@@ -167,7 +149,6 @@ class ManifestService {
       throw new Error('Testing - always load remote');
     }
 
-    this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
       const manifest = await get<object>(this.idbKey);
@@ -178,11 +159,6 @@ class ManifestService {
     } else {
       throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
-  }
-
-  private setState(newState: Partial<ManifestServiceState>) {
-    this.state = { ...this.state, ...newState };
-    this.state$.next(this.state);
   }
 }
 

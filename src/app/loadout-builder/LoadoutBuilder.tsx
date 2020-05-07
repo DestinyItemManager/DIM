@@ -5,7 +5,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
@@ -44,6 +43,7 @@ import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -204,13 +204,13 @@ class LoadoutBuilder extends React.Component<Props, State> {
     } = this.state;
 
     if (!storesLoaded || !defs || !selectedStoreId) {
-      return <Loading />;
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const store = stores.find((s) => s.id === selectedStoreId)!;
 
     if (!items[store.classType]) {
-      return <Loading />;
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const filter = filters.filterFunction(query);

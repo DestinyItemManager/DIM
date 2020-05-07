@@ -41,20 +41,47 @@
       href="/splash/splash-<%= w %>x<%= h %>.png"
     />
     <% }) %>
+    <style>
+      body {
+        background-color: #313233;
+        color: white;
+      }
+
+      #browser-warning {
+        padding: 1em;
+        display: none;
+        font-family: sans-serif;
+      }
+
+      .notloaded {
+        padding: 1em;
+        font-family: sans-serif;
+        font-size: 16px;
+        opacity: 0;
+        margin: 2em;
+        animation: 1s linear 3s forwards fade-in;
+      }
+
+      @keyframes fade-in {
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
   </head>
 
-  <body style="background-color: #313233; color: white;">
+  <body>
     <div id="app">
-      <div class="notloaded" style="padding: 1em; font-family: sans-serif;">
+      <div class="notloaded">
         DIM hasn't loaded. Something may be wrong with it, or with your browser (maybe you have a
         content blocker, or have disabled JavaScript, or your browser is too old). Try force
         reloading to make sure (Ctrl-F5 or Cmd-R).
+        <a href="http://twitter.com/ThisIsDIM">@ThisIsDIM on Twitter</a>
       </div>
     </div>
     <a
       href="https://github.com/DestinyItemManager/DIM/wiki/Supported-Browsers"
       id="browser-warning"
-      style="padding: 1em; display: none; font-family: sans-serif;"
     >
       Your browser is not supported by DIM. Some or all DIM functionality may not work. Please
       switch to a supported browser.
