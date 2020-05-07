@@ -21,6 +21,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { touch } from 'app/inventory/actions';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -37,7 +38,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   isPhonePortrait: boolean;
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   account?: DestinyAccount;
   searchConfig: SearchConfig;
   searchQueryVersion: number;

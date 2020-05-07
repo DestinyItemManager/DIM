@@ -21,6 +21,7 @@ import {
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
@@ -34,7 +35,7 @@ export interface DimItem {
   /** The ID of the store that currently contains this item. */
   owner: string;
   /** The version of Destiny this comes from. */
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   /** The bucket the item is currently in. */
   location: InventoryBucket;
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
