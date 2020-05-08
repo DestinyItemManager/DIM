@@ -82,7 +82,7 @@ function WishListSettings({
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        dispatch(transformAndStoreWishList('', wishListAndInfo));
+        dispatch(transformAndStoreWishList(wishListAndInfo));
         ga('send', 'event', 'WishList', 'From File');
       }
     };
