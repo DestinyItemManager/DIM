@@ -16,6 +16,7 @@ import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import { settingsSelector } from './reducer';
+import { showNotification } from 'app/notifications/notifications';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -59,7 +60,7 @@ function WishListSettings({
     setLiveWishListSource(wishListSource);
   }, [wishListSource]);
 
-  const wishListUpdateEvent = () => {
+  const wishListUpdateEvent = async () => {
     const newWishListSource = liveWishListSource?.trim();
     if (
       newWishListSource &&
@@ -70,19 +71,26 @@ function WishListSettings({
       return;
     }
 
-    dispatch(fetchWishList(newWishListSource));
-
-    ga('send', 'event', 'WishList', 'From URL');
+    try {
+      await dispatch(fetchWishList(newWishListSource));
+      ga('send', 'event', 'WishList', 'From URL');
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportError', { error: e.message })
+      });
+    }
   };
 
   const loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     dispatch(clearWishLists());
 
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        dispatch(transformAndStoreWishList('', wishListAndInfo));
+        dispatch(transformAndStoreWishList(wishListAndInfo));
         ga('send', 'event', 'WishList', 'From File');
       }
     };

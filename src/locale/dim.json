@@ -1020,6 +1020,7 @@
     "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
