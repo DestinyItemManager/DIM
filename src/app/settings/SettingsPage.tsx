@@ -36,16 +36,20 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { clearRatings } from 'app/item-review/actions';
 import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import { emptyArray } from 'app/utils/empty';
+import { storesLoadedSelector } from 'app/inventory/selectors';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface StoreProps {
   settings: Settings;
   isPhonePortrait: boolean;
+  storesLoaded: boolean;
   reviewModeOptions: D2ReviewMode[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
+    storesLoaded: storesLoadedSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray()
   };
@@ -138,7 +142,13 @@ const colorA11yOptions = $featureFlags.colorA11y
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
-function SettingsPage({ settings, isPhonePortrait, reviewModeOptions, dispatch }: Props) {
+function SettingsPage({
+  settings,
+  isPhonePortrait,
+  reviewModeOptions,
+  storesLoaded,
+  dispatch
+}: Props) {
   useEffect(() => {
     getDefinitions();
     dispatch(getPlatforms()).then(() => {
@@ -263,6 +273,10 @@ function SettingsPage({ settings, isPhonePortrait, reviewModeOptions, dispatch }
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') }
   ]);
+
+  if (!storesLoaded) {
+    return <ShowPageLoading message={t('Loading.Profile')} />;
+  }
 
   return (
     <PageWithMenu>
