@@ -443,7 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "高级选项",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "选择一个特性",
+    "ClassItem": "Class Item",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -451,6 +454,9 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
     "FilterSets": "组合过滤",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
       "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示.",
@@ -472,6 +478,7 @@
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
     "LB": "配装优化器",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",
       "HelpScaled": "计算使所有角色都都拥有350防御.",
@@ -483,6 +490,7 @@
     "Locked": "锁定的物品",
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -491,11 +499,20 @@
       "ProcessingMode": "处理模式"
     },
     "Scaled": "缩放",
-    "Season": "赛季",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
     "ShowGear": "{{class}} 防具",
     "Vendor": "包括商贩物品"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "选择这项特性以使状态取消显示",
@@ -519,7 +536,7 @@
     "LimitedCombos": "您有{{combosWithoutCaps, number}} 可能性属性组合, 但是我们只检索了{{combos, number}} 个组合以避免DIM崩溃. 所以, 有些可能性组合没有显示. 锁定一些物品或特性或者拆除一些旧(旧) 装备来减少限制.",
     "LockEquipped": "已装备",
     "LockItem": "锁定物品",
-    "LockPerk": "选择模组或装备特性",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFound": "没有找到配装。请尝试扩大你的过滤器范围。",
     "NumStatMixes": "{{count, number}} 状态混合",
@@ -635,11 +652,10 @@
     "WeaponsOnly": "武器"
   },
   "Manifest": {
-    "Build": "生成命运信息数据库",
-    "Download": "从Bungie下载最新的命运数据",
-    "Error": "命运数据加载错误:\n{{error}}\n请刷新重试.",
-    "Load": "载入保存的命运数据",
-    "Outdated": "过期的命运数据",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie更新了他们的Destiny信息数据库。重新加载DIM以获取最新信息。请注意，在Bungie更新Destiny之后的几个小时内，在DIM中有些操作可能无法实现，因为新数据通过它们的系统传播。"
   },
   "Milestone": {
@@ -1004,6 +1020,7 @@
     "ExternalSource": "可选：提供愿望清单的 URL",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选取任何档案。",
     "ImportSuccess": "愿望单加载了某物品的信息。{{titleAndDescription}}",

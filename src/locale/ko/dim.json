@@ -443,7 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
+    "Chest": "가슴",
+    "ChooseAMod": "개조 부품 선택",
     "ChooseAPerk": "특성 선택",
+    "ClassItem": "직업 아이템",
     "ClearLocked": "잠금 해제",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
@@ -451,6 +454,9 @@
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
     "FilterSets": "필터 조합",
+    "Gauntlets": "건틀릿",
+    "General": "일반",
+    "Helmet": "헬멧",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
       "ChangeNodes": "로드아웃을 생성하려면 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
@@ -472,6 +478,7 @@
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
     "LB": "로드아웃 최적화",
+    "Legs": "다리",
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
       "HelpScaled": "모든 장비가 350 방어라는 가정 하에 로드아웃 계산",
@@ -483,6 +490,7 @@
     "Locked": "잠긴 아이템",
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
+    "ModLockButton": "개조 부품 선택",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
@@ -491,11 +499,20 @@
       "ProcessingMode": "처리 모드"
     },
     "Scaled": "확대 됨",
-    "Season": "시즌",
+    "SearchAMod": "개조 부품이나 설명 검색",
+    "Seasonal": "시즌",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
     "ShowGear": "{{class}} 방어구",
     "Vendor": "상인 아이템 포함"
+  },
+  "Loading": {
+    "Accounts": "데스티니 계정 불러오는 중...",
+    "AuditLog": "DIM 동기화 기록 불러오는 중...",
+    "Code": "DIM 코드 불러오는 중...",
+    "FilterHelp": "검색 도움말 불러오는 중...",
+    "Profile": "데스티니 프로필 불러오는 중...",
+    "Vendors": "데스티니 상인 불러오는 중..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "특성을 선택하여 스탯 표시",
@@ -519,7 +536,7 @@
     "LimitedCombos": "총 {{combosWithoutCaps, number}}개의 능력치 조합이 있으나, DIM이 충돌하는 것을 방지하기 위해 {{combos, number}}개의 조합만 살펴보았습니다. 이로 인해 일부 조합은 표시되지 않습니다. 제한을 푸시려면 특정 아이템이나 특성을 잠그거나, 오래된 방어구를 분해하세요.",
     "LockEquipped": "현재 장비",
     "LockItem": "아이템 잠금",
-    "LockPerk": "개조 부품이나 특성 선택",
+    "LockPerk": "에너지나 특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFound": "빌드가 없습니다. 필터링 조건을 확장해보세요.",
     "NumStatMixes": "스탯 조합 {{count, number}}개",
@@ -569,7 +586,7 @@
     "Create": "로드아웃 생성",
     "Delete": "로드아읏 지우기",
     "DeleteErrorDescription": "{{loadoutName}} 로드아웃을 삭제할 수 없습니다: {{error}}.",
-    "DeleteErrorTitle": "로드아웃 삭제중 오류",
+    "DeleteErrorTitle": "로드아웃 삭제 실패",
     "Edit": "로드아웃 편집",
     "EditLoadoutName": "{{loadoutName}} 로드아웃 수정",
     "FilteredItems": "필터링된 아이템",
@@ -635,11 +652,10 @@
     "WeaponsOnly": "무기"
   },
   "Manifest": {
-    "Build": "데스티니 정보 데이터베이스 구축 중",
-    "Download": "Bungie에서 최신 데스티니 정보 받아오는 중",
-    "Error": "데스티니 정보를 가져오는데 실패했습니다:\n{{error}}\n새로고침 하여 다시 시도하세요.",
-    "Load": "저장된 데스티니 정보를 불러오는 중",
-    "Outdated": "오래된 데스티니 정보",
+    "Download": "Bungie에서 최신 데스티니 정보 데이터베이스 다운로드하는 중...",
+    "Error": "데스티니 정보 데이터베이스 불러오기 실패:\n{{error}}\n재시도하시려면 새로고침하십시오.",
+    "Load": "데스티니 정보 데이터베이스 불러오는 중...",
+    "Outdated": "오래된 데스티니 정보 데이터베이스",
     "OutdatedExplanation": "Bungie가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻으시려면 DIM을 새로고침하세요. Bungie가 데스티니를 업데이트한 후 몇 시간 동안 새 데이터가 시스템에 전파되기 때문에 DIM의 특정 기능이 작동하지 않을 수 있습니다."
   },
   "Milestone": {
@@ -769,7 +785,7 @@
     "CharacterOrder": "캐릭터 정렬 방법",
     "CharacterOrderFixed": "캐릭터 나이 (PC에서 오류가 있음)",
     "CharacterOrderRecent": "최근 캐릭터",
-    "CharacterOrderReversed": "최근의 캐릭터 (역순)",
+    "CharacterOrderReversed": "최근 캐릭터 (역순)",
     "ColorA11y": "색맹 설정",
     "ColumnSize": "아이템 {{num}}개",
     "ColumnSizeAuto": "자동",
@@ -1004,6 +1020,7 @@
     "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
     "Header": "희망 아이템 목록",
     "Import": "희망 아이템 목록 불러오기",
+    "ImportError": "희망 아이템 목록 불러오기 실패: {{error}}",
     "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
