@@ -36,12 +36,8 @@ export default function Raids({
   // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
   const filteredMilestones = allMilestones.filter((milestone) => {
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
-    return (
-      milestoneActivities &&
-      milestoneActivities.some(
-        (activity) =>
-          (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989
-      )
+    return milestoneActivities?.some(
+      (activity) => (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989
     );
   });
 

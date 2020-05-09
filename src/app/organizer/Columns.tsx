@@ -302,8 +302,7 @@ export function getColumns(
         !item.isExotic && item.isDestiny2() && !item.energy ? (
           <div>
             {_.compact([
-              item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
-                ?.plug!
+              item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
             ]).map((p) => (
               <PressTip
                 key={p.plugItem.hash}

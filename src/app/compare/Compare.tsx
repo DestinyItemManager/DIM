@@ -505,8 +505,8 @@ class Compare extends React.Component<Props, State> {
     };
     const exampleItemRpm = getRpm(exampleItem);
     const intrinsic = exampleItem.isDestiny2() && getIntrinsicPerk(exampleItem);
-    const intrinsicName = (intrinsic && intrinsic.displayProperties.name) || t('Compare.Archetype');
-    const intrinsicHash = intrinsic && intrinsic.hash;
+    const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
+    const intrinsicHash = intrinsic?.hash;
 
     // minimum filter: make sure it's all weapons and the same weapon type
     allWeapons = allWeapons

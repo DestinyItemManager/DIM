@@ -94,8 +94,7 @@ export default function GeneratedSetItem({
           <AppIcon icon={faRandom} />
         </button>
       ) : (
-        locked &&
-        locked.some((li) => li.type === 'item') && (
+        locked?.some((li) => li.type === 'item') && (
           <button
             className={styles.swapButton}
             title={t('LoadoutBuilder.UnlockItem')}

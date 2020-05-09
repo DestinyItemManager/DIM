@@ -35,17 +35,13 @@ const TOTAL_STAT_HASH = -1000;
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const value = stat.value;
   const armor2MasterworkSockets =
-    item &&
-    item.isDestiny2() &&
+    item?.isDestiny2() &&
     item.sockets &&
     getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
   const isMasterworkedStat =
-    item &&
-    item.isDestiny2() &&
-    item.masterworkInfo &&
-    stat.statHash === item.masterworkInfo.statHash;
+    item?.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.statValue) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 

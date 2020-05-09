@@ -128,7 +128,7 @@ const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
     }
     // lookup this lang's string for the objective
     const progressDescriptionMatch = objectiveDef.progressDescription.match(iconPlaceholder);
-    const iconString = progressDescriptionMatch && progressDescriptionMatch[0];
+    const iconString = progressDescriptionMatch?.[0];
     // this language's localized replacement, which we will detect and un-replace back into an icon
     iconEntry.substring = iconString;
   });

@@ -58,7 +58,7 @@ export default function ErrorPanel({
   showReload?: boolean;
   children?: React.ReactNode;
 }) {
-  const hasBungieErrorCode = error && error.code && error.code > 0;
+  const hasBungieErrorCode = error?.code && error.code > 0;
 
   return (
     <div>

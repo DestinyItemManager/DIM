@@ -196,12 +196,11 @@ class ItemReviews extends React.Component<Props, State> {
               <div className="community-review--mode">
                 <label htmlFor="reviewMode">{t('DtrReview.ForGameModeLabel')}</label>{' '}
                 <select name="reviewMode" onChange={this.changeMode}>
-                  {reviewModeOptions &&
-                    reviewModeOptions.map((reviewModeOption) => (
-                      <option key={reviewModeOption.mode} value={reviewModeOption.mode}>
-                        {reviewModeOption.description}
-                      </option>
-                    ))}
+                  {reviewModeOptions?.map((reviewModeOption) => (
+                    <option key={reviewModeOption.mode} value={reviewModeOption.mode}>
+                      {reviewModeOption.description}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}

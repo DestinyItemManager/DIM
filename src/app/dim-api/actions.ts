@@ -68,7 +68,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       // Avoid writing back what we just loaded from IDB
-      if (currentState && currentState.profileLoadedFromIndexedDb) {
+      if (currentState?.profileLoadedFromIndexedDb) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
 
