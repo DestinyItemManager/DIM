@@ -66,11 +66,6 @@ export const shell: Reducer<ShellState, ShellAction> = (
     }
 
     case getType(actions.loadingStart): {
-      console.log(
-        'Loading started',
-        _.uniq([...state.loadingMessages, action.payload]),
-        action.payload
-      );
       return {
         ...state,
         loadingMessages: _.uniq([...state.loadingMessages, action.payload])
@@ -78,11 +73,6 @@ export const shell: Reducer<ShellState, ShellAction> = (
     }
 
     case getType(actions.loadingEnd): {
-      console.log(
-        'Loading end',
-        state.loadingMessages.filter((m) => m !== action.payload),
-        action.payload
-      );
       return {
         ...state,
         loadingMessages: state.loadingMessages.filter((m) => m !== action.payload)
