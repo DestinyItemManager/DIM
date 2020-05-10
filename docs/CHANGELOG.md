@@ -1,5 +1,7 @@
 ## Next
 
+## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
+
 ## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
 
 * In the Loadout Optimizer, mods have been split into their own menu, separate from perks.
