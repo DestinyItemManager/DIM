@@ -23,7 +23,7 @@ type Props = ProvidedProps & StoreProps;
 
 function SpecialtyModSlotIcon({ item, className, defs }: Props) {
   const specialtySocket = getSpecialtySocket(item);
-  const emptySlotHash = specialtySocket && specialtySocket.socketDefinition.singleInitialItemHash;
+  const emptySlotHash = specialtySocket?.socketDefinition.singleInitialItemHash;
   const emptySlotIcon = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
   return emptySlotIcon ? (
     <div

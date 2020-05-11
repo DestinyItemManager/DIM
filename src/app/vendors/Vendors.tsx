@@ -223,10 +223,7 @@ class Vendors extends React.Component<Props, State> {
     const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
 
     let vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
-    const currencyLookups =
-      vendorsResponse &&
-      vendorsResponse.currencyLookups.data &&
-      vendorsResponse.currencyLookups.data.itemQuantities;
+    const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
     if (vendorGroups && filterToUnacquired) {
       vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);

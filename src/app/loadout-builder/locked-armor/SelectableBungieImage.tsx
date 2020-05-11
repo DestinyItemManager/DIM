@@ -48,7 +48,7 @@ export function SelectableMod({
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    onLockedPerk && onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
+    onLockedPerk?.({ type: 'mod', mod, plugSetHash, bucket });
   };
 
   const perk = Boolean(mod.perks?.length) && defs.SandboxPerk.get(mod.perks[0].perkHash);

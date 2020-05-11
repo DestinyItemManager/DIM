@@ -194,7 +194,7 @@ function buildDefinedSockets(
 
     for (const index of category.socketIndexes) {
       const s = realSockets[index];
-      if (s && s.plugOptions.length) {
+      if (s?.plugOptions.length) {
         sockets.push(s);
       }
     }

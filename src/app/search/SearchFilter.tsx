@@ -32,7 +32,6 @@ bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
   mobile?: boolean;
-  ref?: React.Ref<SearchFilterInput>;
   onClear?(): void;
 }
 
@@ -90,7 +89,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-class SearchFilter extends React.Component<Props, State> {
+export class SearchFilter extends React.Component<Props, State> {
   state: State = { showSelect: false };
   private input = React.createRef<SearchFilterInput>();
 

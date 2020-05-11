@@ -144,7 +144,7 @@ async function pickLoadoutItem(
   const loadoutClassType = loadout?.classType;
 
   function loadoutHasItem(item: DimItem) {
-    return loadout && loadout.items.some((i) => i.id === item.id && i.hash === i.hash);
+    return loadout?.items.some((i) => i.id === item.id && i.hash === i.hash);
   }
 
   const hasEquippedItem = (itemsByBucket[bucket.hash] || []).some((i) => i.equipped);

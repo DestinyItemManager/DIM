@@ -68,12 +68,7 @@ function buildForsakenKillTracker(
     Boolean(socket.plug?.plugObjectives?.length)
   );
 
-  if (
-    killTrackerSocket &&
-    killTrackerSocket.plug &&
-    killTrackerSocket.plug.plugObjectives &&
-    killTrackerSocket.plug.plugObjectives.length
-  ) {
+  if (killTrackerSocket?.plug?.plugObjectives?.length) {
     const plugObjective = killTrackerSocket.plug.plugObjectives[0];
 
     const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
@@ -101,11 +96,7 @@ function buildForsakenMasterworkStats(
           socket.plug.plugItem.plug.plugCategoryIdentifier.endsWith('_masterwork'))
     )
   );
-  if (
-    masterworkSocket &&
-    masterworkSocket.plug &&
-    masterworkSocket.plug.plugItem.investmentStats.length
-  ) {
+  if (masterworkSocket?.plug?.plugItem.investmentStats.length) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (!createdItem.element && createdItem.bucket?.sort === 'Armor') {
       createdItem.element =

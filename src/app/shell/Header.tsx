@@ -10,11 +10,10 @@ import Refresh from './refresh';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
-import SearchFilter from '../search/SearchFilter';
+import { default as SearchFilter, SearchFilter as SearchFilterClass } from '../search/SearchFilter';
 import { Subscriptions } from '../utils/rx-utils';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
-import SearchFilterInput from '../search/SearchFilterInput';
 import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
@@ -59,7 +58,7 @@ class Header extends React.PureComponent<Props, State> {
   private subscriptions = new Subscriptions();
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLAnchorElement>();
-  private searchFilter = React.createRef<SearchFilterInput>();
+  private searchFilter = React.createRef<SearchFilterClass>();
   private engramRefreshTimer: number;
 
   constructor(props) {
@@ -303,7 +302,11 @@ class Header extends React.PureComponent<Props, State> {
         <div className="header-right">
           {account && (
             <span className={clsx('search-link menuItem', { show: showSearch })}>
-              <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
+              <SearchFilter
+                onClear={this.hideSearch}
+                ref={this.searchFilter as any}
+                mobile={showSearch}
+              />
             </span>
           )}
           <Refresh />
