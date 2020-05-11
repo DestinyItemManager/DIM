@@ -104,6 +104,7 @@ function RangeSelector({
   onChange(value: number): void;
 }) {
   const [value, setValue] = useState(initialValue);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedOnChange = useCallback(_.debounce(onChange, 500), [onChange]);
   const clampedValue = Math.max(min, Math.min(value, max));
   const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback(
