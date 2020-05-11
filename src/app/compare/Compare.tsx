@@ -493,9 +493,7 @@ class Compare extends React.Component<Props, State> {
       return intrinsic?.plug?.plugItem.hash || -99999999;
     };
       */
-    const getIntrinsicPerk: (item: D2Item) => DestinyInventoryItemDefinition | undefined = (
-      item
-    ) => {
+    const getIntrinsicPerk = (item: D2Item): DestinyInventoryItemDefinition | undefined => {
       const intrinsic =
         item.sockets &&
         item.sockets.sockets.find((s) =>
@@ -504,7 +502,7 @@ class Compare extends React.Component<Props, State> {
       return intrinsic?.plug?.plugItem;
     };
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() && getIntrinsicPerk(exampleItem);
+    const intrinsic = exampleItem.isDestiny2() ? getIntrinsicPerk(exampleItem) : undefined;
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
     const intrinsicHash = intrinsic?.hash;
 
