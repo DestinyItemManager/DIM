@@ -70,12 +70,11 @@ export function filterItems(
     }
   });
 
-  // filter to only include items that are in the locked map
-  Object.keys(bucketsToCategories).forEach((bucketStr) => {
-    const bucket = parseInt(bucketStr, 10);
+  // filter to only include items that are in the locked map and items that have the correct energy
+  Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
-    // if there are locked items for this bucket
+
     if (locked?.length || (lockedMods?.length && filteredItems[bucket])) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
