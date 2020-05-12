@@ -52,6 +52,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     const wishListText = await wishListResponse.text();
 
     const wishListAndInfo = toWishList(wishListText);
+    wishListAndInfo.source = wishListSource;
 
     const existingWishLists = wishListsSelector(getState());
 
@@ -61,20 +62,17 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListSource, wishListAndInfo));
+      dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }
   };
 }
 
-export function transformAndStoreWishList(
-  wishListSource: string,
-  wishListAndInfo: WishListAndInfo
-): ThunkResult {
+export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists({ wishListAndInfo, wishListSource }));
+      dispatch(loadWishLists({ wishListAndInfo }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
@@ -111,6 +109,13 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       return;
     }
 
-    dispatch(loadWishLists(wishListState));
+    if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
+      dispatch(
+        loadWishLists({
+          lastFetched: wishListState.lastFetched,
+          wishListAndInfo: wishListState.wishListAndInfo
+        })
+      );
+    }
   };
 }

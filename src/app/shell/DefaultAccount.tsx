@@ -7,9 +7,9 @@ import ErrorPanel from './ErrorPanel';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, accountsLoadedSelector } from 'app/accounts/reducer';
 import { getPlatforms } from 'app/accounts/platforms';
-import { Loading } from 'app/dim-ui/Loading';
 import { accountRoute } from 'app/routes';
 import { Redirect } from 'react-router';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface StoreProps {
   activeAccount?: DestinyAccount;
@@ -53,7 +53,7 @@ function DefaultAccount({ accountsLoaded, activeAccount, accountsError, dispatch
           />
         )
       ) : (
-        <Loading />
+        <ShowPageLoading message={t('Loading.Accounts')} />
       )}
     </div>
   );

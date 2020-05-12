@@ -15,7 +15,6 @@ import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { Loading } from '../dim-ui/Loading';
 import { t } from 'app/i18next-t';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
@@ -49,6 +48,7 @@ import ErrorPanel from 'app/shell/ErrorPanel';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { parse } from 'simple-query-string';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -215,7 +215,7 @@ class Vendors extends React.Component<Props, State> {
     if (!stores.length) {
       return (
         <PageWithMenu>
-          <Loading />
+          <ShowPageLoading message={t('Loading.Profile')} />
         </PageWithMenu>
       );
     }
@@ -223,10 +223,7 @@ class Vendors extends React.Component<Props, State> {
     const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
 
     let vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
-    const currencyLookups =
-      vendorsResponse &&
-      vendorsResponse.currencyLookups.data &&
-      vendorsResponse.currencyLookups.data.itemQuantities;
+    const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
     if (vendorGroups && filterToUnacquired) {
       vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
@@ -279,7 +276,7 @@ class Vendors extends React.Component<Props, State> {
                   />
                 ))
               ) : (
-                <Loading />
+                <ShowPageLoading message={t('Loading.Vendors')} />
               )}
             </div>
           </Hammer>

@@ -10,7 +10,6 @@ import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { loadingTracker } from '../shell/loading-tracker';
-import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -27,6 +26,8 @@ import vendorStyles from './Vendor.m.scss';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { parse } from 'simple-query-string';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -96,11 +97,7 @@ class SingleVendor extends React.Component<Props, State> {
     const { account, buckets, ownedItemHashes, defs, profileResponse, vendorHash } = this.props;
 
     if (!defs || !buckets) {
-      return (
-        <div className="vendor dim-page">
-          <Loading />
-        </div>
-      );
+      return <ShowPageLoading message={t('Manifest.Load')} />;
     }
 
     const vendorDef = defs.Vendor.get(vendorHash);

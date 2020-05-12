@@ -21,6 +21,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { touch } from 'app/inventory/actions';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -31,13 +32,12 @@ bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
   mobile?: boolean;
-  ref?: React.Ref<SearchFilterInput>;
   onClear?(): void;
 }
 
 interface StoreProps {
   isPhonePortrait: boolean;
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   account?: DestinyAccount;
   searchConfig: SearchConfig;
   searchQueryVersion: number;
@@ -89,7 +89,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-class SearchFilter extends React.Component<Props, State> {
+export class SearchFilter extends React.Component<Props, State> {
   state: State = { showSelect: false };
   private input = React.createRef<SearchFilterInput>();
 

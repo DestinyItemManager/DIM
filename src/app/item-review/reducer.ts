@@ -191,8 +191,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
 
 export function shouldShowRating(dtrRating: DtrRating | undefined) {
   return (
-    dtrRating &&
-    dtrRating.overallScore !== undefined &&
+    dtrRating?.overallScore !== undefined &&
     (dtrRating.ratingCount > 2 || dtrRating.highlightedRatingCount > 0)
   );
 }

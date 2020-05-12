@@ -27,7 +27,7 @@ export default function VendorItemComponent({
   if (item.displayTile) {
     return (
       <div className={styles.vendorItem}>
-        <Link to={`vendor/${item.previewVendorHash}`}>
+        <Link to={`vendors/${item.previewVendorHash}`}>
           <BungieImage
             className={styles.tile}
             title={item.displayProperties.name}

@@ -50,6 +50,7 @@ import seasonTags from 'data/d2/season-tags.json';
 import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
 import { getStore } from 'app/inventory/stores-helpers';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -123,14 +124,14 @@ export const searchFilterSelector = createSelector(
  */
 
 export interface SearchConfig {
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   keywords: string[];
   categoryHashFilters: { [key: string]: number };
   keywordToFilter: { [key: string]: string };
 }
 
 /** Builds an object that describes the available search keywords and category mappings. */
-export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
+export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
   const isD1 = destinyVersion === 1;
   const isD2 = destinyVersion === 2;
   const categories = isD1 ? D1Categories : D2Categories;

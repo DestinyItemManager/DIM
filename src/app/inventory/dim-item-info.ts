@@ -17,35 +17,35 @@ import { itemInfosSelector } from './selectors';
 // doesn't delete the translations       t('Tags.Junk') t('Tags.Archive') t('Tags.TagItem')
 export const tagConfig = {
   favorite: {
-    type: 'favorite' as 'favorite',
+    type: 'favorite' as const,
     label: 'Tags.Favorite',
     sortOrder: 0,
     hotkey: 'shift+1',
     icon: heartIcon
   },
   keep: {
-    type: 'keep' as 'keep',
+    type: 'keep' as const,
     label: 'Tags.Keep',
     sortOrder: 1,
     hotkey: 'shift+2',
     icon: tagIcon
   },
   infuse: {
-    type: 'infuse' as 'infuse',
+    type: 'infuse' as const,
     label: 'Tags.Infuse',
     sortOrder: 2,
     hotkey: 'shift+4',
     icon: boltIcon
   },
   junk: {
-    type: 'junk' as 'junk',
+    type: 'junk' as const,
     label: 'Tags.Junk',
     sortOrder: 3,
     hotkey: 'shift+3',
     icon: banIcon
   },
   archive: {
-    type: 'archive' as 'archive',
+    type: 'archive' as const,
     label: 'Tags.Archive',
     sortOrder: 4,
     hotkey: 'shift+5',

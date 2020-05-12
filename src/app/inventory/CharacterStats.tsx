@@ -8,10 +8,11 @@ import { percent } from '../shell/filters';
 import _ from 'lodash';
 import { armorStats } from './store/stats';
 import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 interface Props {
   stats?: DimStore['stats'];
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
 }
 
 export default class CharacterStats extends React.PureComponent<Props> {

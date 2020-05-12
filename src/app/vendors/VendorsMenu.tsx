@@ -22,8 +22,7 @@ export default function VendorsMenu({
         <React.Fragment key={group.def.hash}>
           <PageWithMenu.MenuHeader>{group.def.categoryName}</PageWithMenu.MenuHeader>
           {group.vendors.map((vendor) => {
-            const matchingVendor =
-              vendorEngramDrops && vendorEngramDrops.find((vd) => vd.vendorId === vendor.def.hash);
+            const matchingVendor = vendorEngramDrops?.find((vd) => vd.vendorId === vendor.def.hash);
             const droppingHigh = matchingVendor && isDroppingHigh(matchingVendor);
             return (
               <PageWithMenu.MenuButton

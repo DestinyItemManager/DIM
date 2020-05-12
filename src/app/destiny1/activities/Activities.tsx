@@ -12,9 +12,9 @@ import _ from 'lodash';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1StoresService } from '../../inventory/d1-stores';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import { Loading } from '../../dim-ui/Loading';
 import { connect } from 'react-redux';
 import './activities.scss';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface Skull {
   displayName: string;
@@ -74,11 +74,7 @@ class Activities extends React.Component<Props> {
     const { stores, defs } = this.props;
 
     if (!defs || !stores.length) {
-      return (
-        <div className="activities dim-page">
-          <Loading />
-        </div>
-      );
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const characters = stores.filter((s) => !s.isVault);

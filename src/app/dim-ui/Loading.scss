@@ -1,17 +1,21 @@
+@import '../variables.scss';
+@import 'ceaser-easing';
+
 .dim-loading {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 0;
+  top: $header-height;
   left: 0;
   right: 0;
   bottom: 0;
   overflow: hidden;
-  z-index: 10;
+  z-index: 100;
 }
 
-$square-size: 75px;
+$square-size: 40px;
 $initialDelay: 1s;
 $sequenceDelay: 0.1s;
 $logoDuration: 4s;
@@ -40,7 +44,8 @@ $image: (
   width: 5 * $square-size;
   height: 5 * $square-size;
   position: relative;
-  transform: rotate(45deg) scale(0.5);
+  transform: rotate(45deg);
+  margin: 60px 0;
 }
 
 .logo-square {
@@ -65,6 +70,15 @@ $image: (
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes logo-animation-pop {
   0% {
     transform: scale(0) rotate(-45deg);
@@ -84,4 +98,40 @@ $image: (
   100% {
     transform: scale(0) rotate(-45deg);
   }
+}
+
+$loadingTextDuration: 200ms;
+$loadingTextDistance: 16px;
+.loading-text-container {
+  width: 300px;
+  height: 3em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0;
+  animation: 500ms linear $initialDelay forwards fade-in;
+}
+.loading-text {
+  position: absolute;
+  font-size: 16px;
+}
+.loading-text-enter {
+  transform: translateY(-$loadingTextDistance);
+  opacity: 0;
+}
+.loading-text-enter.loading-text-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all $loadingTextDuration ease-out;
+}
+.loading-text-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+.loading-text-exit.loading-text-exit-active {
+  transform: translateY($loadingTextDistance);
+  opacity: 0;
+  transition: all $loadingTextDuration ease-out;
 }

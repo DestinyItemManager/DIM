@@ -510,6 +510,14 @@
     "ShowGear": "{{class}} Armor",
     "Vendor": "Include Vendor items"
   },
+  "Loading": {
+    "Code": "Loading DIM code...",
+    "Profile": "Loading Destiny profile...",
+    "Accounts": "Loading Destiny accounts...",
+    "FilterHelp": "Loading search help...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Vendors": "Loading Destiny vendors..."
+  },
   "LoadoutBuilder": {
     "AltPerkKey": "Choose this perk to get the stats displayed",
     "AssumeMasterwork": "Assume Masterworked",
@@ -650,11 +658,10 @@
     "WeaponsOnly": "Weapons"
   },
   "Manifest": {
-    "Build": "Building Destiny info database",
-    "Download": "Downloading latest Destiny info from Bungie",
-    "Error": "Error loading Destiny info:\n{{error}}\nReload to retry.",
-    "Load": "Loading saved Destiny info",
-    "Outdated": "Outdated Destiny Info",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },
   "Milestone": {
@@ -1024,6 +1031,7 @@
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
     "ImportFailed": "No wish list information found.",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",

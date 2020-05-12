@@ -443,7 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "Choose a perk",
+    "ClassItem": "Class Item",
     "ClearLocked": "Очистить выбранное",
     "ContainsVendorItems": "Этот набор содержит предметы вендоров",
     "Current": "Текущий",
@@ -451,6 +454,9 @@
     "Exclude": "Исключенные предметы",
     "ExcludeHelp": "Shift + щелчек на предмете (или перетащите его в эту зону), чтобы собрать набор без определенных предметов.",
     "FilterSets": "Наборы фильтров",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "Будет использована броня со всеми этими модулями (\"и\")",
       "ChangeNodes": "Изменяет характеристики Intellect, Discipline, или Strength в игре на отображаемые, чтобы создать каждый набор.",
@@ -472,6 +478,7 @@
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
     "LB": "Конструктор Наборов",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Рассчитать набор на текущих уровнях брони.",
       "HelpScaled": "Рассчитать наборы, как будто у всех предметов 350 защиты.",
@@ -483,6 +490,7 @@
     "Locked": "Заданные Предметы",
     "LockedHelp": "Перетащите любой предмет в этот список, чтобы создать набор с этим предметом. Кликните с зажатым Shift на предмет, чтобы исключить его из списка.",
     "Missing2": "Отсутствуют редкие, легендарные или экзотические предметы, чтобы собрать полный набор!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Быстрый",
       "Full": "Полный",
@@ -491,11 +499,20 @@
       "ProcessingMode": "Режим обработки"
     },
     "Scaled": "Масштабированный",
-    "Season": "Season",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
     "ShowGear": "{{class}} Броня",
     "Vendor": "Включить предметы Вендоров"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Влияет на Статы",
@@ -519,7 +536,7 @@
     "LimitedCombos": "У вас есть {{combosWithoutCaps, number}} возможных комбинаций стата, но мы только смотрели на {{combos, number}} из них, чтобы DIM не крашился. Как результат, некоторые из комбинаций не будут показаны. Заблокируйте несколько предметов или перков или разберите старые, чтобы попасть под этот лимит.",
     "LockEquipped": "Надетое",
     "LockItem": "Фильтр по Предметам",
-    "LockPerk": "Выберите мод или перк",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFound": "Нет подходящих предметов. Попробуйте расширить критерии Подбора по Бонусам, Характеристикам.",
     "NumStatMixes": "{{count, number}} вариант характеристик",
@@ -635,11 +652,10 @@
     "WeaponsOnly": "Оружие"
   },
   "Manifest": {
-    "Build": "Создание локальной базы данных Destiny",
-    "Download": "Загрузка последних данных Destiny от Bungie",
-    "Error": "Ошибка загрузки данных Destiny:\n{{error}}\nПерезагрузите, чтобы повторить попытку.",
-    "Load": "Загрузка сохранённых данных Destiny",
-    "Outdated": "Устаревшие данные Destiny",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie обновила базу данных Destiny. Перезагрузите DIM, чтобы применить изменения. Обратите внимание, что некоторые вещи могут не работать в DIM несколько часов после того, как Bungie обновят Destiny, пока новые данные не распространятся через все их системы."
   },
   "Milestone": {
@@ -1004,6 +1020,7 @@
     "ExternalSource": "При желании, укажите URL [ссылку] списка пожеланий",
     "Header": "Списоу желаний",
     "Import": "Загрузить перк-роллы списка желаний",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "Данные перков списка желаний отсутствуют.",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",

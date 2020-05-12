@@ -5,7 +5,6 @@ import {
   SettingsLogEntry
 } from '@destinyitemmanager/dim-api-types';
 import { getAuditLog } from 'app/dim-api/dim-api';
-import { Loading } from 'app/dim-ui/Loading';
 import { DestinyAccount, PLATFORM_ICONS } from 'app/accounts/destiny-account';
 import { accountsSelector } from 'app/accounts/reducer';
 import { connect } from 'react-redux';
@@ -13,6 +12,7 @@ import { RootState } from 'app/store/reducers';
 import styles from './AuditLog.m.scss';
 import { AppIcon } from 'app/shell/icons';
 import { t } from 'app/i18next-t';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface StoreProps {
   accounts: readonly DestinyAccount[];
@@ -37,7 +37,7 @@ function AuditLog({ accounts }: Props) {
   }, []);
 
   if (auditLog.length === 0) {
-    return <Loading />;
+    return <ShowPageLoading message={t('Loading.AuditLog')} />;
   }
 
   const findAccount = (logEntry: AuditLogEntry) =>

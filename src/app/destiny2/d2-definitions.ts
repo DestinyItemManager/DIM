@@ -168,6 +168,5 @@ async function getDefinitionsUncached() {
   });
 
   store.dispatch(setD2Manifest(defs as D2ManifestDefinitions));
-  D2ManifestService.loaded = true;
   return defs as D2ManifestDefinitions;
 }

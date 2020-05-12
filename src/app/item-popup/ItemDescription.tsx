@@ -51,13 +51,11 @@ function ItemDescription({ item, notes, inventoryWishListRoll, dispatch }: Props
       {item.isDestiny2() && Boolean(item.displaySource?.length) && (
         <div className={styles.officialDescription}>{item.displaySource}</div>
       )}
-      {inventoryWishListRoll &&
-        inventoryWishListRoll.notes &&
-        inventoryWishListRoll.notes.length > 0 && (
-          <div className={styles.wishListNotes}>
-            {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
-          </div>
-        )}
+      {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
+        <div className={styles.wishListNotes}>
+          {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
+        </div>
+      )}
       {notesOpen ? (
         <NotesForm item={item} notes={notes} onSaveNotes={saveNotes} />
       ) : (
