@@ -16,7 +16,7 @@ const energyOrder = [
  *   1. The armour piece is Armour 2.0
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
-const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
+export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.isDestiny2() &&
   item.energy &&
   (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||

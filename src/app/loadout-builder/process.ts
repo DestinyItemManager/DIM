@@ -1,3 +1,4 @@
+import { doEnergiesMatch } from './generated-sets/mod-utils';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
@@ -29,12 +30,21 @@ export const statHashes: { [type in StatTypes]: number } = {
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
 
+const bucketsToCategories = {
+  [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
+  [LockableBuckets.gauntlets]: Armor2ModPlugCategories.gauntlets,
+  [LockableBuckets.chest]: Armor2ModPlugCategories.chest,
+  [LockableBuckets.leg]: Armor2ModPlugCategories.leg,
+  [LockableBuckets.classitem]: Armor2ModPlugCategories.classitem
+};
+
 /**
  * Filter the items map down given the locking and filtering configs.
  */
 export function filterItems(
   items: ItemsByBucket,
   lockedMap: LockedMap,
+  lockedArmor2ModMap: LockedArmor2ModMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -61,13 +71,16 @@ export function filterItems(
   });
 
   // filter to only include items that are in the locked map
-  Object.keys(lockedMap).forEach((bucketStr) => {
+  Object.keys(bucketsToCategories).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
     const locked = lockedMap[bucket];
+    const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
     // if there are locked items for this bucket
-    if (locked?.length && filteredItems[bucket]) {
-      filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-        locked.every((lockedItem) => matchLockedItem(item, lockedItem))
+    if (locked?.length || (lockedMods?.length && filteredItems[bucket])) {
+      filteredItems[bucket] = filteredItems[bucket].filter(
+        (item) =>
+          (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
+          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
       );
     }
   });

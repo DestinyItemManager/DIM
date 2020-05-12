@@ -104,10 +104,9 @@ export default function GeneratedSetItem({
         )
       )}
       <div className={'lockedMods'}>
-        {lockedMods &&
-          lockedMods.map((mod) => (
-            <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
-          ))}
+        {lockedMods?.map((mod) => (
+          <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+        ))}
       </div>
     </div>
   );
