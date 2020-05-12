@@ -11,7 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
-import { canFirstValidSetTakeMods } from './mod-utils';
+import { canSetTakeMods } from './mod-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -128,7 +128,7 @@ export function filterGeneratedSets(
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
   matchedSets = matchedSets.filter(
-    (set) => set.maxPower >= minimumPower && canFirstValidSetTakeMods(set, lockedArmor2Mods)
+    (set) => set.maxPower >= minimumPower && canSetTakeMods(set.firstValidSet, lockedArmor2Mods)
   );
 
   matchedSets = matchedSets.sort(

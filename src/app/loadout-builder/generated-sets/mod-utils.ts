@@ -1,6 +1,6 @@
 import { DimItem } from './../../inventory/item-types';
 import _ from 'lodash';
-import { LockableBuckets, ArmorSet, LockedArmor2ModMap, LockedArmor2Mod } from './../types';
+import { LockableBuckets, LockedArmor2ModMap, LockedArmor2Mod } from './../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { getSpecialtySocketMetadata, Armor2ModPlugCategories } from 'app/utils/item-utils';
 
@@ -180,8 +180,9 @@ export function assignModsToArmorSet(
   return assignments;
 }
 
-export function canFirstValidSetTakeMods(set: ArmorSet, lockedArmor2Mods: LockedArmor2ModMap) {
-  const modAssignments = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
+// Should be in the same order as first valid set
+export function canSetTakeMods(set: readonly DimItem[], lockedArmor2Mods: LockedArmor2ModMap) {
+  const modAssignments = assignModsToArmorSet(set, lockedArmor2Mods);
 
   let assignmentCount = 0;
   for (const slotAssignments of Object.values(modAssignments)) {

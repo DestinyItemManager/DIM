@@ -1,4 +1,4 @@
-import { doEnergiesMatch } from './generated-sets/mod-utils';
+import { doEnergiesMatch, canSetTakeMods } from './generated-sets/mod-utils';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
@@ -283,7 +283,7 @@ export function process(
                 ghosts[ghostsKey]
               ];
 
-              const firstValidSet = getFirstValidSet(armor);
+              const firstValidSet = getFirstValidSet(armor, lockedArmor2ModMap);
               if (firstValidSet) {
                 const statChoices = [
                   keyToStats(helmsKey),
@@ -572,7 +572,7 @@ function getBaseStatValues(
  * items in each slot are already sorted by power. This respects the rule that two exotics
  * cannot be equipped at once.
  */
-function getFirstValidSet(armors: readonly DimItem[][]) {
+function getFirstValidSet(armors: readonly DimItem[][], lockedArmor2ModMap: LockedArmor2ModMap) {
   const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
@@ -592,7 +592,16 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
         exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
       );
       // If we found something for every slot
-      if (firstValid.every(Boolean)) {
+      const filteredFirstValid: DimItem[] = [];
+      for (const item of firstValid) {
+        if (item) {
+          filteredFirstValid.push(item);
+        }
+      }
+      if (
+        filteredFirstValid.length === firstValid.length &&
+        canSetTakeMods(filteredFirstValid, lockedArmor2ModMap)
+      ) {
         return _.compact(firstValid);
       }
       // Put it back on the end
