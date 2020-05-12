@@ -181,7 +181,7 @@ export function assignModsToArmorSet(
 }
 
 // Should be in the same order as first valid set
-export function canSetTakeMods(set: readonly DimItem[], lockedArmor2Mods: LockedArmor2ModMap) {
+export function canSetTakeMods(set: DimItem[], lockedArmor2Mods: LockedArmor2ModMap) {
   const modAssignments = assignModsToArmorSet(set, lockedArmor2Mods);
 
   let assignmentCount = 0;

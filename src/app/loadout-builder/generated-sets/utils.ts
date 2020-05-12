@@ -1,4 +1,3 @@
-import { LockedArmor2ModMap } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
@@ -11,7 +10,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
-import { canSetTakeMods } from './mod-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -120,16 +118,13 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
-  lockedArmor2Mods: LockedArmor2ModMap,
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
 ) {
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
-  matchedSets = matchedSets.filter(
-    (set) => set.maxPower >= minimumPower && canSetTakeMods(set.firstValidSet, lockedArmor2Mods)
-  );
+  matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
 
   matchedSets = matchedSets.sort(
     chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))

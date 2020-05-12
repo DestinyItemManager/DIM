@@ -243,7 +243,6 @@ class LoadoutBuilder extends React.Component<Props, State> {
         processedSets,
         minimumPower,
         lockedMap,
-        lockedArmor2Mods,
         statFilters,
         statOrder,
         enabledStats
