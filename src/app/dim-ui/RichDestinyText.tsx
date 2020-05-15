@@ -5,7 +5,7 @@ import _ from 'lodash';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgArc from 'destiny-icons/weapons/damage_arc.svg';
-import dmgKinetic from 'destiny-icons/weapons/environment_hazard.svg';
+import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import dmgSolar from 'destiny-icons/weapons/damage_solar.svg';
 import dmgVoid from 'destiny-icons/weapons/damage_void.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';

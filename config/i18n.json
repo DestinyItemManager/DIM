@@ -735,6 +735,7 @@
     "Unlock": "Unlock",
     "ShiftTip": "Tip: Hold the Shift key and click on a cell",
     "NoMobile": "This view isn't great on mobile.",
+    "NoItems": "No items selected",
     "Columns": {
       "Stats": "Stats",
       "BaseStats": "Base Stats",

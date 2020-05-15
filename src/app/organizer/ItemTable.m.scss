@@ -3,7 +3,8 @@
 .table {
   min-width: 100%;
   display: grid;
-  margin: 8px 0 !important;
+  margin: 8px 0 16px 0 !important;
+  border-bottom: 1px solid #ddd;
 
   > div {
     padding: 4px 8px;
@@ -178,4 +179,10 @@
       background-color: #999;
     }
   }
+}
+
+.noItems {
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 2em !important;
 }

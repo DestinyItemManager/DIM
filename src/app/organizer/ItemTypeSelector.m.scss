@@ -21,6 +21,9 @@
 .button {
   composes: dim-button from global;
   margin: 2px;
+  > img {
+    filter: invert(1);
+  }
 }
 
 .checked {
