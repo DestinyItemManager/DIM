@@ -427,6 +427,7 @@ function ItemTable({
             </div>
           </div>
         ))}
+        {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
         {rows.map((row, i) => (
           // TODO: row component
           <React.Fragment key={row.item.id}>

@@ -116,6 +116,7 @@ $loadingTextDistance: 16px;
 .loading-text {
   position: absolute;
   font-size: 16px;
+  text-align: center;
 }
 .loading-text-enter {
   transform: translateY(-$loadingTextDistance);

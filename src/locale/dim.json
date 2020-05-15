@@ -754,6 +754,7 @@
     },
     "EnabledColumns": "Enabled Columns",
     "Lock": "Lock",
+    "NoItems": "No items selected",
     "NoMobile": "This view isn't great on mobile.",
     "Organizer": "Organizer",
     "SelectAll": "Select All",
