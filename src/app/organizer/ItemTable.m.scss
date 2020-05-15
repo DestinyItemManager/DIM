@@ -131,9 +131,9 @@
 }
 
 .perks {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 150px);
-  gap: 8px;
+  columns: 2;
+  @include vertical-space-children(4px);
+  column-gap: 8px;
   align-items: flex-start;
   &.header {
     display: block;
@@ -141,6 +141,7 @@
 }
 
 .modPerks {
+  break-inside: avoid;
   display: grid;
   gap: 4px;
   padding-left: 5px;
