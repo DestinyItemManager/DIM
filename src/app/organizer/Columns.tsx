@@ -112,6 +112,15 @@ export function getColumns(
     header: t('Organizer.Columns.BaseStats')
   };
 
+  // Some stat labels are long. This lets us replace them with i18n
+  const statLabels = {
+    4284893193: t('Organizer.Stats.RPM'),
+    4188031367: t('Organizer.Stats.Reload'), // Reload Speed
+    1345609583: t('Organizer.Stats.Aim'), // Aim Assistance
+    2715839340: t('Organizer.Stats.Recoil'), // Recoil Direction
+    1931675084: t('Organizer.Stats.Inventory') // Inventory Size
+  };
+
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.map(
@@ -123,7 +132,7 @@ export function getColumns(
           header: statInfo.displayProperties.hasIcon ? (
             <BungieImage src={statInfo.displayProperties.icon} />
           ) : (
-            statInfo.displayProperties.name
+            statLabels[statHash] || statInfo.displayProperties.name
           ),
           statHash,
           columnGroup: statsGroup,

@@ -758,6 +758,13 @@
     "SelectAll": "Select All",
     "SelectItem": "Select or unselect {{name}}",
     "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "Stats": {
+      "Aim": "Aim",
+      "Inventory": "Inventory",
+      "RPM": "RPM",
+      "Recoil": "Recoil",
+      "Reload": "Reload"
+    },
     "Unlock": "Unlock"
   },
   "Progress": {

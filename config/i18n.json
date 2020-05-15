@@ -763,6 +763,13 @@
       "Loadouts": "Loadouts",
       "Notes": "Notes",
       "WishListNotes": "Wish List Notes"
+    },
+    "Stats": {
+      "RPM": "RPM",
+      "Reload": "Reload",
+      "Aim": "Aim",
+      "Recoil": "Recoil",
+      "Inventory": "Inventory"
     }
   },
   "Progress": {
