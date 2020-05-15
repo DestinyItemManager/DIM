@@ -1,6 +1,7 @@
 ## Next
 
 * Assign and display mods to an armour slot they will fit with in LO
+
 ## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
 
 ## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
