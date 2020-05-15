@@ -25,6 +25,7 @@ interface CssExports {
   'rating': string;
   'selection': string;
   'shiftHeld': string;
+  'sorter': string;
   'table': string;
   'tag': string;
   'wishList': string;

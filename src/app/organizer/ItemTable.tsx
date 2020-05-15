@@ -417,6 +417,7 @@ function ItemTable({
               {column.header}
               {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
                 <AppIcon
+                  className={styles.sorter}
                   icon={
                     columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
                       ? faCaretUp
