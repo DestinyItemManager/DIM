@@ -37,7 +37,6 @@ export const initialSettingsState: Settings = {
     'tag',
     'modslot',
     'perks',
-    'mods',
     'stats',
     'customstat',
     'notes'

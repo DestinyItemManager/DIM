@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
-import { DimItem, DimPlug } from 'app/inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
   AppIcon,
@@ -41,6 +41,7 @@ import { statHashByName } from 'app/search/search-filter-hashes';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { t } from 'app/i18next-t';
+import { emptyArray } from 'app/utils/empty';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -52,7 +53,11 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 // TODO: just default booleans to this
 const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
-const modSocketCategories = [2685412949, 590099826];
+const modSocketCategories = [
+  2685412949,
+  590099826, // Armor mods
+  3301318876 // Ghost perks
+];
 
 /**
  * This function generates the columns.
@@ -320,44 +325,12 @@ export function getColumns(
     },
     {
       id: 'perks',
-      header: t('Organizer.Columns.Perks'),
+      header: t('Organizer.Columns.PerksMods'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_, item) => <PerksCell defs={defs} item={item} />,
       noSort: true,
-      gridWidth: 'max-content',
+      gridWidth: '324px',
       filter: (value) => `perkname:"${value}"`
-    },
-    {
-      id: 'mods',
-      header: t('Organizer.Columns.Mods'),
-      value: () => 0,
-      cell: (_, item) => {
-        const plugItems = item.isDestiny2()
-          ? item.sockets?.categories
-              .find((c) => modSocketCategories.includes(c.category.hash))
-              ?.sockets.filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
-              .flatMap((s) => s.plugOptions) || []
-          : [];
-        return (
-          plugItems.length > 0 && (
-            <div className={styles.modPerks}>
-              {item.isDestiny2() &&
-                plugItems.map((p) => (
-                  <PressTip
-                    key={p.plugItem.hash}
-                    tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                  >
-                    <div className={styles.modPerk}>
-                      <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                      {p.plugItem.displayProperties.name}
-                    </div>
-                  </PressTip>
-                ))}
-            </div>
-          )
-        );
-      },
-      noSort: true
     },
     ...statColumns,
     items[0]?.bucket.inArmor && {
@@ -444,7 +417,20 @@ export function getColumns(
 }
 
 function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem }) {
-  const sockets = (item.isDestiny2() && !item.energy && item.sockets?.categories[0]?.sockets) || [];
+  const sockets =
+    item.isDestiny2() && item.sockets?.categories
+      ? item.sockets?.categories
+          .filter((c) => true || modSocketCategories.includes(c.category.hash))
+          .flatMap((c) => c.sockets)
+          .filter(
+            (s) =>
+              (s.isPerk &&
+                (item.isExotic ||
+                  !s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))) ||
+              s.plug?.plugItem.collectibleHash ||
+              filterPlugs(s)
+          )
+      : emptyArray<DimSocket>();
   if (!sockets.length) {
     return null;
   }
@@ -456,7 +442,12 @@ function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem 
         );
         return (
           plugOptions.length > 0 && (
-            <div key={socket.socketIndex} className={clsx(styles.modPerks)}>
+            <div
+              key={socket.socketIndex}
+              className={clsx(styles.modPerks, {
+                [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1
+              })}
+            >
               {plugOptions.map(
                 (p: DimPlug) =>
                   item.isDestiny2() && (

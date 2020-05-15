@@ -9,6 +9,7 @@ interface CssExports {
   'header': string;
   'icon': string;
   'inlineIcon': string;
+  'isPerk': string;
   'locked': string;
   'modPerk': string;
   'modPerks': string;

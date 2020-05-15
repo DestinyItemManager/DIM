@@ -100,6 +100,7 @@ export const getSelectionTree = memoizeOne(
 
     // TODO: I suppose weapons could have archetype subselection
     // TODO: It'd be great to generate these
+    // TODO: Ghosts??
     return {
       id: 'all',
       itemCategoryHash: 0,
