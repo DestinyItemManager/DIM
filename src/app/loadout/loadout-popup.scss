@@ -108,23 +108,7 @@
   overscroll-behavior: contain;
   cursor: pointer;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-
-    &:horizontal {
-      height: 10px;
-    }
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(228, 228, 228, 0.2);
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e4e4e4;
-    border-radius: 3px;
-  }
+  @include visible-scrollbars;
 
   [role='button'] {
     outline: none;
