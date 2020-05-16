@@ -765,7 +765,8 @@
       "Loadouts": "Loadouts",
       "Notes": "Notes",
       "WishListNotes": "Wish List Notes",
-      "Ghost": "Ghost Tag"
+      "Ghost": "Ghost Tag",
+      "New": "New"
     },
     "Stats": {
       "RPM": "RPM",

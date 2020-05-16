@@ -72,7 +72,8 @@ export function getColumns(
     [key: string]: InventoryWishListRoll;
   },
   customTotalStat: number[],
-  loadouts: Loadout[]
+  loadouts: Loadout[],
+  newItems: Set<string>
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 
@@ -186,14 +187,14 @@ export function getColumns(
       value: (i) => i.name,
       filter: (name) => `name:"${name}"`
     },
-    {
+    !isGhost && {
       id: 'power',
       header: <AppIcon icon={powerIndicatorIcon} />,
       value: (item) => item.primStat?.value,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`
     },
-    {
+    !isGhost && {
       id: 'dmg',
       header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
       value: (item) => item.element?.displayProperties.name,
@@ -222,6 +223,15 @@ export function getColumns(
       cell: (value: TagValue) => <TagIcon tag={value} />,
       sort: compareBy((tag: TagValue) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`
+    },
+    {
+      id: 'new',
+
+      header: t('Organizer.Columns.New'),
+      value: (item) => newItems.has(item.id),
+      cell: booleanCell,
+      defaultSort: SortDirection.DESC,
+      filter: (value) => (value ? 'is:new' : 'not:new')
     },
     isWeapon &&
       hasWishList && {
@@ -254,20 +264,21 @@ export function getColumns(
       cell: booleanCell,
       filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable')
     },
-    $featureFlags.reviewsEnabled && {
-      id: 'rating',
-      header: t('Organizer.Columns.Rating'),
-      value: (item) => ratings && getRating(item, ratings)?.overallScore,
-      cell: (overallScore: number, item) =>
-        overallScore > 0 ? (
-          <>
-            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-            {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
-          </>
-        ) : undefined,
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `rating:>=${value}`
-    },
+    $featureFlags.reviewsEnabled &&
+      firstItem.reviewable && {
+        id: 'rating',
+        header: t('Organizer.Columns.Rating'),
+        value: (item) => ratings && getRating(item, ratings)?.overallScore,
+        cell: (overallScore: number, item) =>
+          overallScore > 0 ? (
+            <>
+              <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
+              {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
+            </>
+          ) : undefined,
+        defaultSort: SortDirection.DESC,
+        filter: (value) => `rating:>=${value}`
+      },
     {
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
@@ -351,10 +362,11 @@ export function getColumns(
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_, item) => <PerksCell defs={defs} item={item} />,
       noSort: true,
-      gridWidth: '324px',
+      gridWidth: 'minmax(324px,1fr)',
       filter: (value) => `perkname:"${value}"`
     },
     ...statColumns,
+    ...baseStatColumns,
     isArmor && {
       id: 'customstat',
       header: (
@@ -364,10 +376,9 @@ export function getColumns(
         </>
       ),
       value: (item) =>
-        _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.value : 0)),
+        _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.base : 0)),
       defaultSort: SortDirection.DESC
     },
-    ...baseStatColumns,
     isWeapon && {
       id: 'masterworkTier',
       header: t('Organizer.Columns.MasterworkTier'),

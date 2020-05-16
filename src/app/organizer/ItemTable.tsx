@@ -64,6 +64,7 @@ interface StoreProps {
   enabledColumns: string[];
   customTotalStatsByClass: KeyedStatHashLists;
   loadouts: Loadout[];
+  newItems: Set<string>;
 }
 
 function mapStateToProps() {
@@ -105,7 +106,8 @@ function mapStateToProps() {
         isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
       ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
-      loadouts: loadoutsSelector(state)
+      loadouts: loadoutsSelector(state),
+      newItems: state.inventory.newItems
     };
   };
 }
@@ -132,6 +134,7 @@ function ItemTable({
   enabledColumns,
   customTotalStatsByClass,
   loadouts,
+  newItems,
   dispatch
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -167,9 +170,20 @@ function ItemTable({
         ratings,
         wishList,
         customTotalStatsByClass[classIfAny] ?? [],
-        loadouts
+        loadouts,
+        newItems
       ),
-    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny, loadouts]
+    [
+      wishList,
+      items,
+      itemInfos,
+      ratings,
+      defs,
+      customTotalStatsByClass,
+      classIfAny,
+      loadouts,
+      newItems
+    ]
   );
 
   // This needs work for sure

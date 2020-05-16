@@ -3,6 +3,7 @@
 interface CssExports {
   'alternateRow': string;
   'archetype': string;
+  'customstat': string;
   'dmg': string;
   'energy': string;
   'hasFilter': string;
@@ -24,6 +25,7 @@ interface CssExports {
   'power': string;
   'rating': string;
   'reacquireable': string;
+  'season': string;
   'selection': string;
   'shiftHeld': string;
   'sorter': string;
@@ -31,6 +33,7 @@ interface CssExports {
   'tag': string;
   'toolbar': string;
   'wishList': string;
+  'year': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
