@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
@@ -159,6 +159,23 @@ function ItemTable({
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (tableRef.current) {
+      // Let our styling know how many characters there are
+      let height = 0;
+      for (const node of tableRef.current.children) {
+        if (node.classList.contains(styles.header)) {
+          height = Math.max(node.clientHeight, height);
+        } else if (height > 0) {
+          break;
+        }
+      }
+
+      document.querySelector('html')!.style.setProperty('--table-header-height', height + 1 + 'px');
+    }
+  });
 
   // TODO: hide columns if all undefined
   const columns: ColumnDefinition[] = useMemo(
@@ -408,6 +425,7 @@ function ItemTable({
       className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
       style={{ gridTemplateColumns: gridSpec }}
       role="table"
+      ref={tableRef}
     >
       <div className={styles.toolbar}>
         <div>

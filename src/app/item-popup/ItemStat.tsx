@@ -164,6 +164,60 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 }
 
 /**
+ * A single stat value, for the table view
+ */
+export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
+  const value = stat.value;
+  const armor2MasterworkSockets =
+    item?.isDestiny2() &&
+    item.sockets &&
+    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
+  const armor2MasterworkValue =
+    armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
+  const isMasterworkedStat =
+    item?.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
+  const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.statValue) || 0;
+  const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
+
+  const moddedStatValue = item && getModdedStatValue(item, stat);
+
+  let baseBar = value;
+
+  if (moddedStatValue) {
+    baseBar -= moddedStatValue;
+  }
+
+  if (masterworkDisplayValue) {
+    baseBar -= masterworkDisplayValue;
+  }
+
+  const segments: [number, string?][] = [[baseBar]];
+
+  if (moddedStatValue) {
+    segments.push([moddedStatValue, styles.moddedStatBar]);
+  }
+
+  if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+  }
+
+  const optionalClasses = {
+    [styles.masterworked]: isMasterworkedStat,
+    [styles.modded]: Boolean(moddedStatValue)
+  };
+
+  return (
+    <>
+      <div className={clsx(styles.value, optionalClasses)}>{value}</div>
+
+      {statsMs.includes(stat.statHash) && (
+        <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
+      )}
+    </>
+  );
+}
+
+/**
  * A special stat row for D1 items that have item quality calculations
  */
 export function D1QualitySummaryStat({ item }: { item: D1Item }) {

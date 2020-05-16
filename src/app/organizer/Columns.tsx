@@ -43,6 +43,7 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { t } from 'app/i18next-t';
 import { emptyArray } from 'app/utils/empty';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
+import { ItemStatValue } from 'app/item-popup/ItemStat';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -139,8 +140,13 @@ export function getColumns(
           statHash,
           columnGroup: statsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
-          defaultSort: statInfo.lowerBetter ? SortDirection.DESC : SortDirection.ASC,
-          filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`
+          cell: (_, item: DimItem) => {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (!stat) {
+              return null;
+            }
+            return <ItemStatValue stat={stat} item={item} />;
+          }
         };
       }
     ),
@@ -152,6 +158,7 @@ export function getColumns(
     id: `base_${column.statHash}`,
     columnGroup: baseStatsGroup,
     value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
+    cell: (value) => value,
     filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`
   }));
 
@@ -173,7 +180,12 @@ export function getColumns(
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick}>
-              <BungieImage src={value} />
+              <BungieImage src={value} className={clsx({ [styles.masterwork]: item.masterwork })} />
+              {item.masterwork && (
+                <div
+                  className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })}
+                />
+              )}
             </div>
           )}
         </ItemPopupTrigger>
