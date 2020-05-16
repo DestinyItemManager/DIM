@@ -53,6 +53,7 @@ export default React.memo(function EnabledColumnsSelector({
       buttonText={t('Organizer.EnabledColumns')}
       dropDownItems={Object.values(items)}
       forClass={forClass}
+      right={true}
     />
   );
 });

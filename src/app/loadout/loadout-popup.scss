@@ -100,15 +100,31 @@
   );
   max-width: 230px;
   box-sizing: border-box;
-  max-height: calc(100vh - #{77px + $header-height});
-  max-height: calc(100vh - #{77px + $header-height} - constant(safe-area-inset-top));
-  max-height: calc(100vh - #{77px + $header-height} - env(safe-area-inset-top));
+  max-height: 60vh;
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
   overscroll-behavior: contain;
   cursor: pointer;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+
+    &:horizontal {
+      height: 10px;
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(228, 228, 228, 0.2);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e4e4e4;
+    border-radius: 3px;
+  }
 
   [role='button'] {
     outline: none;

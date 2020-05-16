@@ -1,8 +1,8 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import styles from './ItemActions.m.scss';
-import { AppIcon, lockIcon } from 'app/shell/icons';
-import DropDown from './DropDown';
+import { AppIcon, lockIcon, stickyNoteIcon } from 'app/shell/icons';
+import DropDown, { DropDownItem } from './DropDown';
 import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
 
@@ -22,21 +22,30 @@ function ItemActions({
   onTagSelectedItems(tagInfo: TagInfo): void;
   onMoveSelectedItems(store: DimStore): void;
 }) {
-  const tagItems = bulkItemTags.map((tagInfo) => ({
+  const tagItems: DropDownItem[] = bulkItemTags.map((tagInfo) => ({
     id: tagInfo.label,
-    content: t(tagInfo.label),
+    content: (
+      <>
+        {tagInfo.icon && <AppIcon icon={tagInfo.icon} />} {t(tagInfo.label)}
+      </>
+    ),
     onItemSelect: () => onTagSelectedItems(tagInfo)
   }));
 
-  const moveItems = stores.map((store) => ({
+  const moveItems: DropDownItem[] = stores.map((store) => ({
     id: store.id,
-    content: store.name,
+    content: (
+      <>
+        <img height="16" width="16" src={store.icon} /> {store.name}
+      </>
+    ),
     onItemSelect: () => onMoveSelectedItems(store)
   }));
 
   return (
     <div className={styles.itemActions}>
       <button
+        type="button"
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="lock"

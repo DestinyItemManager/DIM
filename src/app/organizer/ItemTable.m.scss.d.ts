@@ -28,6 +28,7 @@ interface CssExports {
   'sorter': string;
   'table': string;
   'tag': string;
+  'toolbar': string;
   'wishList': string;
 }
 export const cssExports: CssExports;

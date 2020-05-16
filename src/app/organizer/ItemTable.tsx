@@ -373,95 +373,98 @@ function ItemTable({
 
   // TODO: css grid, floating header
   return (
-    <>
-      <EnabledColumnsSelector
-        columns={columns}
-        enabledColumns={enabledColumns}
-        onChangeEnabledColumn={onChangeEnabledColumn}
-        forClass={classIfAny}
-      />
-      <ItemActions
-        itemsAreSelected={Boolean(selectedItemIds.length)}
-        onLock={onLock}
-        stores={stores}
-        onTagSelectedItems={onTagSelectedItems}
-        onMoveSelectedItems={onMoveSelectedItems}
-      />
-      <div
-        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
-        style={{ gridTemplateColumns: gridSpec }}
-        role="table"
-      >
-        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-          <input
-            name="selectAll"
-            title={t('Organizer.SelectAll')}
-            type="checkbox"
-            checked={selectedItemIds.length === rows.length}
-            ref={(el) =>
-              el &&
-              (el.indeterminate =
-                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
-            }
-            onChange={selectAllItems}
+    <div
+      className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
+      style={{ gridTemplateColumns: gridSpec }}
+      role="table"
+    >
+      <div className={styles.toolbar}>
+        <div>
+          <ItemActions
+            itemsAreSelected={Boolean(selectedItemIds.length)}
+            onLock={onLock}
+            onNote={onNote}
+            stores={stores}
+            onTagSelectedItems={onTagSelectedItems}
+            onMoveSelectedItems={onMoveSelectedItems}
+          />
+          <EnabledColumnsSelector
+            columns={columns}
+            enabledColumns={enabledColumns}
+            onChangeEnabledColumn={onChangeEnabledColumn}
+            forClass={classIfAny}
           />
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => (
-          <div
-            key={column.id}
-            className={clsx(styles[column.id], styles.header)}
-            role="columnheader"
-            aria-sort="none"
-          >
-            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
-              {column.header}
-              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-                <AppIcon
-                  className={styles.sorter}
-                  icon={
-                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                      ? faCaretUp
-                      : faCaretDown
-                  }
-                />
-              )}
-            </div>
+      </div>
+      <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+        <input
+          name="selectAll"
+          title={t('Organizer.SelectAll')}
+          type="checkbox"
+          checked={selectedItemIds.length === rows.length}
+          ref={(el) =>
+            el &&
+            (el.indeterminate =
+              selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+          }
+          onChange={selectAllItems}
+        />
+      </div>
+      {filteredColumns.map((column: ColumnDefinition) => (
+        <div
+          key={column.id}
+          className={clsx(styles[column.id], styles.header)}
+          role="columnheader"
+          aria-sort="none"
+        >
+          <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+            {column.header}
+            {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+              <AppIcon
+                className={styles.sorter}
+                icon={
+                  columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                    ? faCaretUp
+                    : faCaretDown
+                }
+              />
+            )}
           </div>
-        ))}
-        {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
-        {rows.map((row, i) => (
-          // TODO: row component
-          <React.Fragment key={row.item.id}>
+        </div>
+      ))}
+      {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
+      {rows.map((row, i) => (
+        // TODO: row component
+        <React.Fragment key={row.item.id}>
+          <div
+            className={clsx(styles.selection, {
+              [styles.alternateRow]: i % 2
+            })}
+            role="cell"
+          >
+            <input
+              type="checkbox"
+              title={t('Organizer.SelectItem', { name: row.item.name })}
+              checked={selectedItemIds.includes(row.item.id)}
+              onChange={(e) => selectItem(e, row.item)}
+            />
+          </div>
+          {filteredColumns.map((column: ColumnDefinition) => (
             <div
-              className={clsx(styles.selection, {
+              key={column.id}
+              onClick={narrowQueryFunction(row, column)}
+              className={clsx(styles[column.id], {
+                [styles.hasFilter]: column.filter,
                 [styles.alternateRow]: i % 2
               })}
               role="cell"
             >
-              <input
-                type="checkbox"
-                title={t('Organizer.SelectItem', { name: row.item.name })}
-                checked={selectedItemIds.includes(row.item.id)}
-                onChange={(e) => selectItem(e, row.item)}
-              />
+              {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
             </div>
-            {filteredColumns.map((column: ColumnDefinition) => (
-              <div
-                key={column.id}
-                onClick={narrowQueryFunction(row, column)}
-                className={clsx(styles[column.id], {
-                  [styles.hasFilter]: column.filter,
-                  [styles.alternateRow]: i % 2
-                })}
-                role="cell"
-              >
-                {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
-              </div>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-    </>
+          ))}
+        </React.Fragment>
+      ))}
+    </div>
   );
 }
 

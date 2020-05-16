@@ -13,6 +13,23 @@
   }
 }
 
+.toolbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: $header-height;
+  padding: 8px 4px !important;
+  height: 41px - 16px;
+  z-index: 1;
+  > div {
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+    left: 4px;
+    width: 98vw;
+  }
+}
+$toolbarHeight: 41px - 16px + 8px;
+
 // Column headers
 .header {
   vertical-align: bottom;
@@ -20,7 +37,7 @@
   border-bottom: 1px solid #ddd;
   background: #313233;
   position: sticky;
-  top: $header-height;
+  top: $header-height + $toolbarHeight;
   white-space: nowrap;
   padding-top: 4px !important;
 
@@ -71,9 +88,9 @@
   width: 20px;
   left: 0;
   position: sticky;
-  top: $header-height + 30px;
+  top: $header-height + 30px + $toolbarHeight;
   &.header {
-    top: $header-height;
+    top: $header-height + $toolbarHeight;
   }
   z-index: 1;
 }
@@ -104,9 +121,9 @@
   width: calc(var(--item-size) * 0.75);
   left: 30px;
   position: sticky;
-  top: $header-height + 30px;
+  top: $header-height + 30px + $toolbarHeight;
   &.header {
-    top: $header-height;
+    top: $header-height + $toolbarHeight;
     padding-top: 0;
   }
   z-index: 1;
