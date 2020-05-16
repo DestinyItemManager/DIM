@@ -23,6 +23,7 @@ interface CssExports {
   'positive': string;
   'power': string;
   'rating': string;
+  'reacquireable': string;
   'selection': string;
   'shiftHeld': string;
   'sorter': string;
