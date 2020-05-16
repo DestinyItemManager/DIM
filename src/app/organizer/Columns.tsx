@@ -374,7 +374,7 @@ export function getColumns(
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_, item) => <PerksCell defs={defs} item={item} />,
       noSort: true,
-      gridWidth: 'minmax(324px,1fr)',
+      gridWidth: 'minmax(324px,max-content)',
       filter: (value) => `perkname:"${value}"`
     },
     ...statColumns,

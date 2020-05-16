@@ -80,7 +80,7 @@ $toolbarHeight: 41px - 16px + 8px;
   padding-left: 8px !important;
   padding-right: 2px !important;
   cursor: pointer;
-  width: 20px;
+  min-width: 20px;
   left: 0;
   position: sticky;
   top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
@@ -117,7 +117,7 @@ $toolbarHeight: 41px - 16px + 8px;
 
 .icon {
   padding-top: 4px !important;
-  width: calc(var(--item-size) * 0.75);
+  min-width: calc(var(--item-size) * 0.75);
   left: 30px;
   position: sticky;
   top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
