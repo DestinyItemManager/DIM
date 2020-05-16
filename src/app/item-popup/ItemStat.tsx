@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  DimStat,
-  DimItem,
-  D1Stat,
-  D1Item,
-  DimSocketCategory,
-  DimSocket
-} from 'app/inventory/item-types';
+import { DimStat, DimItem, D1Stat, D1Item, DimSocket } from 'app/inventory/item-types';
 import { statsMs, armorStats } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
@@ -239,10 +232,6 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
   );
 }
 
-function getPlugHashesFromCategory(category: DimSocketCategory) {
-  return category.sockets.map((socket) => socket?.plug?.plugItem?.hash || null).filter(Boolean);
-}
-
 /**
  * Gets all sockets that have a plug which doesn't get grouped in the Reusable socket category.
  * The reusable socket category is used in armor 1.0 for perks and stats.
@@ -252,21 +241,11 @@ function getNonReuseableModSockets(item: DimItem) {
     return [];
   }
 
-  const reusableSocketCategory = item.sockets.categories.find(
-    (category) => category.category.categoryStyle === DestinySocketCategoryStyle.Reusable
+  return item.sockets.sockets.filter(
+    (s) =>
+      !s.isPerk &&
+      _.intersection(s?.plug?.plugItem?.itemCategoryHashes || [], modItemCategoryHashes).length > 0
   );
-
-  const reusableSocketHashes =
-    (reusableSocketCategory && getPlugHashesFromCategory(reusableSocketCategory)) || [];
-
-  return item.sockets.sockets.filter((socket) => {
-    const plugItemHash = socket?.plug?.plugItem?.hash || null;
-    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes || [];
-    return (
-      _.intersection(categoryHashes, modItemCategoryHashes).length > 0 &&
-      !reusableSocketHashes.includes(plugItemHash)
-    );
-  });
 }
 
 /**
@@ -274,14 +253,11 @@ function getNonReuseableModSockets(item: DimItem) {
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
-  const modSockets = getNonReuseableModSockets(item).filter((socket) =>
-    Object.keys(socket?.plug?.stats || {}).includes(String(stat.statHash))
+  const modSockets = getNonReuseableModSockets(item).filter(
+    (socket) => socket.plug!.stats && String(stat.statHash) in socket.plug!.stats
   );
 
-  // _.sum returns 0 for empty array
-  return _.sum(
-    modSockets.map((socket) => (socket.plug?.stats ? socket.plug.stats[stat.statHash] : 0))
-  );
+  return _.sumBy(modSockets, (socket) => socket.plug!.stats![stat.statHash]);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
@@ -293,7 +269,9 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) =>
-    _.sumBy(armorStatHashes, (armorStatHash) => socket.plug?.stats?.[armorStatHash] || 0)
+    socket.plug?.stats
+      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plug!.stats![armorStatHash] || 0)
+      : 0
   );
 }
 
