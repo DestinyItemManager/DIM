@@ -72,14 +72,20 @@ function mapStateToProps() {
     searchFilterSelector,
     (_, props: ProvidedProps) => props.categories,
     (stores, searchFilter, categories) => {
-      const items = stores.flatMap((s) =>
-        s.items.filter((i) => i.comparable && i.primStat && searchFilter(i))
-      );
       const terminal = Boolean(_.last(categories)?.terminal);
+      if (!terminal) {
+        return emptyArray<DimItem>();
+      }
       const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-      return terminal
-        ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
-        : emptyArray<DimItem>();
+      const items = stores.flatMap((s) =>
+        s.items.filter(
+          (i) =>
+            i.comparable &&
+            categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
+            searchFilter(i)
+        )
+      );
+      return items;
     }
   );
 

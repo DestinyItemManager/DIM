@@ -32,6 +32,7 @@ import warlock from '../../../destiny-icons/general/class_warlock.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
+import ghost from 'destiny-icons/general/ghost.svg';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -245,6 +246,12 @@ export const getSelectionTree = memoizeOne(
               icon: warlock
             }
           ]
+        },
+        {
+          id: 'ghosts',
+          itemCategoryHash: 39,
+          icon: ghost,
+          terminal: true
         }
       ]
     };

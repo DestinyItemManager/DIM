@@ -42,6 +42,7 @@ import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { t } from 'app/i18next-t';
 import { emptyArray } from 'app/utils/empty';
+import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -153,6 +154,15 @@ export function getColumns(
     filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`
   }));
 
+  const firstItem = items[0];
+  const isGhost =
+    firstItem &&
+    Boolean(
+      firstItem.isDestiny2 && firstItem.isDestiny2() && firstItem.itemCategoryHashes?.includes(39)
+    );
+  const isArmor = firstItem?.bucket.inArmor;
+  const isWeapon = firstItem?.bucket.inWeapons;
+
   const columns: ColumnDefinition[] = _.compact([
     {
       id: 'icon',
@@ -185,14 +195,12 @@ export function getColumns(
     },
     {
       id: 'dmg',
-      header: items[0]?.bucket.inArmor
-        ? t('Organizer.Columns.Element')
-        : t('Organizer.Columns.Damage'),
+      header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
       value: (item) => item.element?.displayProperties.name,
       cell: (_, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
       filter: (_, item) => `is:${getItemDamageShortName(item)}`
     },
-    items[0]?.bucket.inArmor && {
+    isArmor && {
       id: 'energy',
       header: t('Organizer.Columns.Energy'),
       value: (item) => item.isDestiny2() && item.energy?.energyCapacity,
@@ -215,7 +223,7 @@ export function getColumns(
       sort: compareBy((tag: TagValue) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`
     },
-    items[0]?.bucket.inWeapons &&
+    isWeapon &&
       hasWishList && {
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
@@ -295,7 +303,12 @@ export function getColumns(
       value: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : undefined),
       filter: (value) => `event:${value}`
     },
-    items[0]?.bucket.inArmor && {
+    isGhost && {
+      id: 'ghost',
+      header: t('Organizer.Columns.Ghost'),
+      value: (item) => ghostBadgeContent(item).join('')
+    },
+    isArmor && {
       id: 'modslot',
       header: t('Organizer.Columns.ModSlot'),
       // TODO: only show if there are mod slots
@@ -304,7 +317,7 @@ export function getColumns(
         value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
       filter: (value) => `modslot:${value}`
     },
-    items[0]?.bucket.inWeapons && {
+    isWeapon && {
       id: 'archetype',
       header: t('Organizer.Columns.Archetype'),
       value: (item) =>
@@ -342,7 +355,7 @@ export function getColumns(
       filter: (value) => `perkname:"${value}"`
     },
     ...statColumns,
-    items[0]?.bucket.inArmor && {
+    isArmor && {
       id: 'customstat',
       header: (
         <>
@@ -355,19 +368,19 @@ export function getColumns(
       defaultSort: SortDirection.DESC
     },
     ...baseStatColumns,
-    items[0]?.bucket.inWeapons && {
+    isWeapon && {
       id: 'masterworkTier',
       header: t('Organizer.Columns.MasterworkTier'),
       value: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : undefined),
       defaultSort: SortDirection.DESC,
       filter: (value) => `masterwork:>=${value}`
     },
-    items[0]?.bucket.inWeapons && {
+    isWeapon && {
       id: 'masterworkStat',
       header: t('Organizer.Columns.MasterworkStat'),
       value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined)
     },
-    items[0]?.bucket.inWeapons && {
+    isWeapon && {
       id: 'killTracker',
       header: t('Organizer.Columns.KillTracker'),
       value: (item) =>
@@ -412,7 +425,7 @@ export function getColumns(
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:"${value}"`
     },
-    items[0]?.bucket.inWeapons &&
+    isWeapon &&
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
