@@ -34,7 +34,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch } from 'app/inventory/actions';
+import { touch, setItemNote } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
@@ -222,17 +222,16 @@ function ItemTable({
     [dispatch, columns, enabledColumns, isArmor]
   );
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
-  const onLock = loadingTracker.trackPromise(async (e) => {
-    const selectedTag = e.currentTarget.name;
+  const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
     const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
 
-    const state = selectedTag === 'lock';
+    const state = lock;
     try {
       for (const item of selectedItems) {
         await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
-        item.locked = state;
+        item.locked = lock;
       }
       showNotification({
         type: 'success',
@@ -253,6 +252,18 @@ function ItemTable({
       }
     }
   });
+
+  const onNote = (note?: string) => {
+    if (!note) {
+      note = undefined;
+    }
+    if (selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+      for (const item of selectedItems) {
+        dispatch(setItemNote({ itemId: item.id, note }));
+      }
+    }
+  };
 
   /**
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search

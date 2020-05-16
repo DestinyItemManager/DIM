@@ -40,7 +40,7 @@ function DropDown({
   forClass,
   right
 }: {
-  buttonText: string;
+  buttonText: ReactNode;
   buttonDisabled?: boolean;
   dropDownItems: DropDownItem[];
   forClass?: DestinyClass;

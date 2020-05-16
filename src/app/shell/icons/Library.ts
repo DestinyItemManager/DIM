@@ -154,6 +154,7 @@ export {
   faHeart as heartIcon,
   faGlobe as globeIcon,
   faStickyNote as stickyNoteIcon,
+  faArrowRight as moveIcon,
   faMinusSquare,
   faRandom,
   faEquals,

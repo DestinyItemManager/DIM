@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import styles from './ItemActions.m.scss';
-import { AppIcon, lockIcon, stickyNoteIcon } from 'app/shell/icons';
+import { AppIcon, lockIcon, stickyNoteIcon, tagIcon, moveIcon } from 'app/shell/icons';
 import DropDown, { DropDownItem } from './DropDown';
 import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
@@ -13,12 +13,14 @@ function ItemActions({
   stores,
   itemsAreSelected,
   onLock,
+  onNote,
   onTagSelectedItems,
   onMoveSelectedItems
 }: {
   stores: DimStore[];
   itemsAreSelected: boolean;
-  onLock(e): Promise<void>;
+  onLock(locked: boolean): void;
+  onNote(note?: string): void;
   onTagSelectedItems(tagInfo: TagInfo): void;
   onMoveSelectedItems(store: DimStore): void;
 }) {
@@ -42,6 +44,11 @@ function ItemActions({
     onItemSelect: () => onMoveSelectedItems(store)
   }));
 
+  const noted = () => {
+    const note = prompt(t('Organizer.NotePrompt'));
+    onNote(note || undefined);
+  };
+
   return (
     <div className={styles.itemActions}>
       <button
@@ -49,32 +56,49 @@ function ItemActions({
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="lock"
-        onClick={onLock}
+        onClick={() => onLock(true)}
       >
-        {t('Organizer.Lock')} <AppIcon icon={lockIcon} />
+        <AppIcon icon={lockIcon} /> {t('Organizer.Lock')}
       </button>
       <button
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="unlock"
-        onClick={onLock}
+        onClick={() => onLock(false)}
       >
-        {t('Organizer.Unlock')} <AppIcon icon={lockIcon} />
+        <AppIcon icon={lockIcon} /> {t('Organizer.Unlock')}
       </button>
       <span className={styles.actionButton}>
         <DropDown
-          buttonText={t('Organizer.BulkTag')}
+          buttonText={
+            <>
+              <AppIcon icon={tagIcon} /> {t('Organizer.BulkTag')}
+            </>
+          }
           buttonDisabled={!itemsAreSelected}
           dropDownItems={tagItems}
         />
       </span>
       <span className={styles.actionButton}>
         <DropDown
-          buttonText={t('Organizer.BulkMove')}
+          buttonText={
+            <>
+              <AppIcon icon={moveIcon} /> {t('Organizer.BulkMove')}
+            </>
+          }
           buttonDisabled={!itemsAreSelected}
           dropDownItems={moveItems}
         />
       </span>
+      <button
+        type="button"
+        className={`dim-button ${styles.actionButton}`}
+        disabled={!itemsAreSelected}
+        name="note"
+        onClick={noted}
+      >
+        <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
+      </button>
       <span> {t('Organizer.ShiftTip')}</span>
     </div>
   );

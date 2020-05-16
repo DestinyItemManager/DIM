@@ -754,6 +754,8 @@
     "Lock": "Lock",
     "NoItems": "No items selected",
     "NoMobile": "This view isn't great on mobile.",
+    "Note": "Set Note",
+    "NotePrompt": "Note:",
     "Organizer": "Organizer",
     "SelectAll": "Select All",
     "SelectItem": "Select or unselect {{name}}",
