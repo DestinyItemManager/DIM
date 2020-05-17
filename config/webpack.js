@@ -384,7 +384,7 @@ module.exports = (env) => {
         // Notifications for item moves
         '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
-        '$featureFlags.organizer': JSON.stringify(!env.release),
+        '$featureFlags.organizer': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the new DIM API

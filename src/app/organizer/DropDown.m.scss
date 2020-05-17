@@ -2,25 +2,51 @@
 
 .dropDown {
   display: inline-block;
+  position: relative;
 }
 
 .button {
   display: inline-block;
-  margin: 8px 0;
+  > :global(.app-icon) {
+    font-size: 10px;
+    margin-left: 4px;
+  }
 }
 
 .menu {
-  background-color: #313233;
   position: absolute;
-  z-index: 2;
+  z-index: 5;
+  left: 0;
+  max-height: calc(100vh - #{77px + $header-height});
+  max-height: calc(100vh - #{77px + $header-height} - constant(safe-area-inset-top));
+  max-height: calc(100vh - #{77px + $header-height} - env(safe-area-inset-top));
+  overflow: auto;
+  margin-top: 2px;
+  width: max-content;
+
+  &.right {
+    left: initial;
+    right: 0;
+  }
+
+  @include visible-scrollbars;
 }
 
 .checkButton {
   border-radius: 0;
   margin: 0;
+  background-color: black;
+  padding: 8px 12px;
 
   label {
     margin-right: 4px;
+    > :global(.app-icon) {
+      margin-right: 4px;
+    }
+    > img {
+      margin-right: 4px;
+      vertical-align: middle;
+    }
   }
   &:first-child {
     border-radius: 2px 2px 0 0;
@@ -30,7 +56,7 @@
     border-radius: 0 0 2px 2px;
   }
 
-  &:not(:last-child) {
-    border-bottom: 1px solid white;
+  &:hover {
+    background-color: #151515;
   }
 }

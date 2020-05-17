@@ -117,7 +117,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
   );
 }
 
-function ghostBadgeContent(item: DimItem) {
+export function ghostBadgeContent(item: DimItem) {
   const infos = getGhostInfos(item);
 
   const planet = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false))

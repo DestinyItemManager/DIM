@@ -1,51 +1,69 @@
 @import '../variables';
 
+:root {
+  --table-header-height: 30px;
+}
+
 .table {
   min-width: 100%;
   display: grid;
   margin: 8px 0 16px 0 !important;
-  border-bottom: 1px solid #ddd;
 
   > div {
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
     background-color: #313233;
+    border-bottom: 1px solid #3c3c3e;
   }
 }
+
+.toolbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: $header-height;
+  padding: 8px 8px !important;
+  height: 41px - 16px;
+  z-index: 1;
+  border-bottom: none !important;
+  > div {
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+    left: 4px;
+    width: 98vw;
+    @include horizontal-space-children(4px);
+  }
+}
+$toolbarHeight: 41px - 16px + 8px;
 
 // Column headers
 .header {
   vertical-align: bottom;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd !important;
   background: #313233;
   position: sticky;
-  top: $header-height;
+  top: $header-height + $toolbarHeight;
   white-space: nowrap;
   padding-top: 4px !important;
 
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-end !important;
 
   img {
     height: 16px;
     width: 16px;
     vertical-align: bottom;
   }
+}
 
-  :global(.app-icon) {
-    margin-right: 4px;
-  }
+.sorter {
+  margin-left: 2px;
 }
 
 .alternateRow {
   background-color: #464748 !important;
-}
-
-.mods,
-.perks {
-  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
 }
 
 .name {
@@ -63,13 +81,12 @@
 .selection {
   padding-left: 8px !important;
   padding-right: 2px !important;
-  cursor: pointer;
-  width: 20px;
+  min-width: 20px;
   left: 0;
   position: sticky;
-  top: $header-height + 30px;
+  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
   &.header {
-    top: $header-height;
+    top: $header-height + $toolbarHeight;
   }
   z-index: 1;
 }
@@ -84,7 +101,11 @@
 .tag,
 .wishList,
 .energy,
-.dmg {
+.dmg,
+.reacquireable,
+.year,
+.season,
+.customstat {
   text-align: center !important;
 }
 
@@ -95,21 +116,33 @@
   }
 }
 
+.new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  > div {
+    position: static !important;
+  }
+}
+
 .icon {
   padding-top: 4px !important;
-  width: calc(var(--item-size) * 0.75);
+  min-width: calc(var(--item-size) * 0.75);
   left: 30px;
   position: sticky;
-  top: $header-height + 30px;
+  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
   &.header {
-    top: $header-height;
+    top: $header-height + $toolbarHeight;
     padding-top: 0;
   }
   z-index: 1;
+  > div {
+    position: relative;
+  }
   img {
-    display: block;
     width: calc(var(--item-size) * 0.75);
     height: calc(var(--item-size) * 0.75);
+    display: block;
     box-sizing: border-box;
     pointer-events: none;
     border: 1px solid #ddd;
@@ -131,23 +164,27 @@
 }
 
 .perks {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, min-content);
-  gap: 8px;
+  columns: 2;
+  @include vertical-space-children(4px);
+  column-gap: 8px;
   align-items: flex-start;
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
   &.header {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 }
 
 .modPerks {
+  break-inside: avoid;
   display: grid;
-  grid-template-columns: minmax(150px, 1fr);
   gap: 4px;
-  .perks & {
-    border-left: 2px solid #888;
-    padding-left: 4px;
-  }
+  padding-left: 5px;
+}
+
+.isPerk {
+  border-left: 2px solid #888;
+  padding-left: 3px;
 }
 
 .modPerk {
@@ -172,11 +209,20 @@
   width: 24px;
 }
 
+.loadouts {
+  > div {
+    > div {
+      white-space: nowrap;
+    }
+  }
+}
+
 // Indicate cells that can be filtered on shift-click
 .shiftHeld {
   .hasFilter {
     &:hover {
-      background-color: #999;
+      background-color: #999 !important;
+      cursor: pointer;
     }
   }
 }
@@ -185,4 +231,31 @@
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
+}
+
+// TODO: extract into a common component
+
+// Masterwork item image
+.masterwork {
+  border-color: $masterwork-border-color !important;
+}
+
+// The overlay image for masterworks
+.masterworkOverlay {
+  box-sizing: border-box;
+  top: $item-border-width;
+  left: $item-border-width;
+  border-width: 0px;
+  height: calc(var(--item-size) * 0.75 - #{2 * $item-border-width});
+  width: calc(var(--item-size) * 0.75 - #{2 * $item-border-width});
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: calc((var(--item-size) * 0.75 - #{2 * $item-border-width}) * (96 / 90))
+    calc((var(--item-size) * 0.75 - #{2 * $item-border-width}) * (96 / 90));
+
+  background-image: url('../../images/masterwork.png');
+}
+.exotic {
+  background-image: url('../../images/exotic-masterwork.png');
 }

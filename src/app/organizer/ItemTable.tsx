@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect, ReactNode } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
+import { AppIcon, faCaretUp, faCaretDown, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
@@ -34,12 +34,15 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch } from 'app/inventory/actions';
+import { touch, setItemNote } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
+import { StatInfo } from 'app/compare/Compare';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import Dropzone, { DropzoneOptions } from 'react-dropzone';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -64,6 +67,7 @@ interface StoreProps {
   enabledColumns: string[];
   customTotalStatsByClass: KeyedStatHashLists;
   loadouts: Loadout[];
+  newItems: Set<string>;
 }
 
 function mapStateToProps() {
@@ -72,18 +76,23 @@ function mapStateToProps() {
     searchFilterSelector,
     (_, props: ProvidedProps) => props.categories,
     (stores, searchFilter, categories) => {
-      const items = stores.flatMap((s) =>
-        s.items.filter((i) => i.comparable && i.primStat && searchFilter(i))
-      );
       const terminal = Boolean(_.last(categories)?.terminal);
+      if (!terminal) {
+        return emptyArray<DimItem>();
+      }
       const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-      return terminal
-        ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
-        : emptyArray<DimItem>();
+      const items = stores.flatMap((s) =>
+        s.items.filter(
+          (i) =>
+            i.comparable &&
+            categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
+            searchFilter(i)
+        )
+      );
+      return items;
     }
   );
 
-  // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState, props: ProvidedProps): StoreProps => {
     const items = itemsSelector(state, props);
     const isArmor = items[0]?.bucket.inArmor;
@@ -99,21 +108,15 @@ function mapStateToProps() {
         isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
       ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
-      loadouts: loadoutsSelector(state)
+      loadouts: loadoutsSelector(state),
+      newItems: state.inventory.newItems
     };
   };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-// Functions:
-// TODO: better display for nothing matching
-// TODO: sticky toolbar
-// TODO: drop wishlist columns if no wishlist loaded
-// TODO: d1 support?
-// TODO: special stat display? recoil, bars, etc
-// TODO: some basic optimization
-// TODO: Indicate equipped/owner? Not sure it's necessary.
+const MemoRow = React.memo(TableRow);
 
 function ItemTable({
   items,
@@ -126,6 +129,7 @@ function ItemTable({
   enabledColumns,
   customTotalStatsByClass,
   loadouts,
+  newItems,
   dispatch
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -135,67 +139,90 @@ function ItemTable({
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
 
-  const isArmor = items[0]?.bucket.inArmor;
-
-  // TODO: filter here, or in the mapState function?
-  // Narrow items to selection
-  items = useMemo(() => {
-    const terminal = Boolean(_.last(categories)?.terminal);
-    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-    return terminal
-      ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
-      : emptyArray();
-  }, [items, categories]);
-
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
-  // TODO: hide columns if all undefined
+  // Calculate the true height of the table header, for sticky-ness
+  const tableRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (tableRef.current) {
+      let height = 0;
+      for (const node of tableRef.current.children) {
+        if (node.classList.contains(styles.header)) {
+          height = Math.max(node.clientHeight, height);
+        } else if (height > 0) {
+          break;
+        }
+      }
+
+      document.querySelector('html')!.style.setProperty('--table-header-height', height + 1 + 'px');
+    }
+  });
+
+  // Build a list of all the stats relevant to this set of items
+  const statHashes = useMemo(
+    () => buildStatInfo(items, categories),
+    // We happen to know that we only need to recalculate this when the categories change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [categories]
+  );
+
+  const firstItem = items[0];
+  const isWeapon = firstItem?.bucket.inWeapons;
+  const isArmor = firstItem?.bucket.inArmor;
+  const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
+  const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
+
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
-        items,
+        itemType,
+        statHashes,
+        classIfAny,
         defs,
         itemInfos,
         ratings,
         wishList,
-        customTotalStatsByClass[classIfAny] ?? [],
-        loadouts
+        customStatTotal,
+        loadouts,
+        newItems
       ),
-    [wishList, items, itemInfos, ratings, defs, customTotalStatsByClass, classIfAny, loadouts]
+    [
+      wishList,
+      statHashes,
+      itemType,
+      itemInfos,
+      ratings,
+      defs,
+      customStatTotal,
+      classIfAny,
+      loadouts,
+      newItems
+    ]
   );
 
   // This needs work for sure
-  const filteredColumns = _.compact(
-    enabledColumns.flatMap((id) => columns.filter((column) => id === getColumnSelectionId(column)))
+  const filteredColumns = useMemo(
+    () =>
+      _.compact(
+        enabledColumns.flatMap((id) =>
+          columns.filter((column) => id === getColumnSelectionId(column))
+        )
+      ),
+    [columns, enabledColumns]
   );
 
   // process items into Rows
-  const rows: Row[] = useMemo(() => {
-    const unsortedRows: Row[] = items.map((item) => ({
-      item,
-      values: filteredColumns.reduce((memo, col) => {
-        memo[col.id] = col.value(item);
-        return memo;
-      }, {})
-    }));
-
-    const comparator = chainComparator<Row>(
-      ...columnSorts.map((sorter) => {
-        const column = filteredColumns.find((c) => c.id === sorter.columnId);
-        if (column) {
-          const compare = column.sort
-            ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-            : compareBy((row: Row) => row.values[column.id]);
-          return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
-        }
-        return compareBy(() => 0);
-      })
-    );
-
-    return unsortedRows.sort(comparator);
-  }, [filteredColumns, items, columnSorts]);
+  const unsortedRows: Row[] = useMemo(() => buildRows(items, filteredColumns), [
+    filteredColumns,
+    items
+  ]);
+  const rows = useMemo(() => sortRows(unsortedRows, columnSorts, filteredColumns), [
+    unsortedRows,
+    filteredColumns,
+    columnSorts
+  ]);
 
   const shiftHeld = useShiftHeld();
 
@@ -203,7 +230,7 @@ function ItemTable({
     ({ checked, id }: { checked: boolean; id: string }) => {
       dispatch(
         setSetting(
-          isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons',
+          isWeapon ? 'organizerColumnsWeapons' : 'organizerColumnsArmor',
           _.uniq(
             _.compact(
               columns.map((c) => {
@@ -219,20 +246,19 @@ function ItemTable({
         )
       );
     },
-    [dispatch, columns, enabledColumns, isArmor]
+    [dispatch, columns, enabledColumns, isWeapon]
   );
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
-  const onLock = loadingTracker.trackPromise(async (e) => {
-    const selectedTag = e.currentTarget.name;
+  const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
     const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
 
-    const state = selectedTag === 'lock';
+    const state = lock;
     try {
       for (const item of selectedItems) {
         await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
-        item.locked = state;
+        item.locked = lock;
       }
       showNotification({
         type: 'success',
@@ -254,32 +280,46 @@ function ItemTable({
     }
   });
 
+  const onNote = (note?: string) => {
+    if (!note) {
+      note = undefined;
+    }
+    if (selectedItemIds.length) {
+      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+      for (const item of selectedItems) {
+        dispatch(setItemNote({ itemId: item.id, note }));
+      }
+    }
+  };
+
   /**
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
    */
-  const narrowQueryFunction = (
-    row: Row,
-    column: ColumnDefinition
-  ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
-    column.filter
-      ? (e) => {
-          if (e.shiftKey) {
-            console.log(e, e.target, e.currentTarget);
-            if ((e.target as Element).hasAttribute('data-perk-name')) {
-              dispatch(
-                toggleSearchQueryComponent(
-                  column.filter!((e.target as Element).getAttribute('data-perk-name')!, row.item)
-                )
-              );
-              return;
-            }
-            const filter = column.filter!(row.values[column.id], row.item);
-            if (filter !== undefined) {
-              dispatch(toggleSearchQueryComponent(filter));
+  const narrowQueryFunction = useCallback(
+    (
+      row: Row,
+      column: ColumnDefinition
+    ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
+      column.filter
+        ? (e) => {
+            if (e.shiftKey) {
+              if ((e.target as Element).hasAttribute('data-perk-name')) {
+                dispatch(
+                  toggleSearchQueryComponent(
+                    column.filter!((e.target as Element).getAttribute('data-perk-name')!, row.item)
+                  )
+                );
+                return;
+              }
+              const filter = column.filter!(row.values[column.id], row.item);
+              if (filter !== undefined) {
+                dispatch(toggleSearchQueryComponent(filter));
+              }
             }
           }
-        }
-      : undefined;
+        : undefined,
+    [dispatch]
+  );
 
   const onMoveSelectedItems = (store: DimStore) => {
     if (selectedItemIds.length) {
@@ -309,7 +349,9 @@ function ItemTable({
    */
   const toggleColumnSort = (column: ColumnDefinition) => () => {
     setColumnSorts((sorts) => {
-      const newColumnSorts = shiftHeld ? sorts : sorts.filter((s) => s.columnId === column.id);
+      const newColumnSorts = shiftHeld
+        ? Array.from(sorts)
+        : sorts.filter((s) => s.columnId === column.id);
       let found = false;
       let index = 0;
       for (const columnSort of newColumnSorts) {
@@ -349,7 +391,6 @@ function ItemTable({
    */
   const selectItem = (e: React.ChangeEvent<HTMLInputElement>, item: DimItem) => {
     const checked = e.target.checked;
-
     let changingIds = [item.id];
     if (shiftHeld && lastSelectedId.current) {
       let startIndex = rows.findIndex((r) => r.item.id === lastSelectedId.current);
@@ -371,95 +412,268 @@ function ItemTable({
     lastSelectedId.current = item.id;
   };
 
-  // TODO: css grid, floating header
+  // TODO: drive the CSV export off the same column definitions as this table!
+  let downloadAction: ReactNode | null = null;
+  if (categories.length > 1) {
+    const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
+      downloadCsvFiles(stores, itemInfos, type);
+      ga('send', 'event', 'Download CSV', type);
+    };
+
+    if (categories[1].id === 'weapons') {
+      const downloadWeaponCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Weapons');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadWeaponCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
+        </button>
+      );
+    } else if (categories[1].id === 'armor') {
+      const downloadArmorCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Armor');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadArmorCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
+        </button>
+      );
+    } else {
+      const downloadGhostCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Ghost');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadGhostCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
+        </button>
+      );
+    }
+  }
+
+  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      alert(t('Csv.ImportWrongFileType'));
+      return;
+    }
+
+    if (!confirm(t('Csv.ImportConfirm'))) {
+      return;
+    }
+    try {
+      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
+      alert(t('Csv.ImportSuccess', { count: result }));
+    } catch (e) {
+      alert(t('Csv.ImportFailed', { error: e.message }));
+    }
+  };
+
   return (
-    <>
-      <EnabledColumnsSelector
-        columns={columns}
-        enabledColumns={enabledColumns}
-        onChangeEnabledColumn={onChangeEnabledColumn}
-        forClass={classIfAny}
-      />
-      <ItemActions
-        itemsAreSelected={Boolean(selectedItemIds.length)}
-        onLock={onLock}
-        stores={stores}
-        onTagSelectedItems={onTagSelectedItems}
-        onMoveSelectedItems={onMoveSelectedItems}
-      />
-      <div
-        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
-        style={{ gridTemplateColumns: gridSpec }}
-        role="table"
-      >
-        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-          <input
-            name="selectAll"
-            title={t('Organizer.SelectAll')}
-            type="checkbox"
-            checked={selectedItemIds.length === rows.length}
-            ref={(el) =>
-              el &&
-              (el.indeterminate =
-                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
-            }
-            onChange={selectAllItems}
+    <div
+      className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
+      style={{ gridTemplateColumns: gridSpec }}
+      role="table"
+      ref={tableRef}
+    >
+      <div className={styles.toolbar}>
+        <div>
+          <ItemActions
+            itemsAreSelected={Boolean(selectedItemIds.length)}
+            onLock={onLock}
+            onNote={onNote}
+            stores={stores}
+            onTagSelectedItems={onTagSelectedItems}
+            onMoveSelectedItems={onMoveSelectedItems}
+          />
+          <Dropzone onDrop={importCsv} accept=".csv">
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <div className="dim-button">
+                  <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+                </div>
+              </div>
+            )}
+          </Dropzone>
+          {downloadAction}
+          <EnabledColumnsSelector
+            columns={columns}
+            enabledColumns={enabledColumns}
+            onChangeEnabledColumn={onChangeEnabledColumn}
+            forClass={classIfAny}
           />
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => (
-          <div
-            key={column.id}
-            className={clsx(styles[column.id], styles.header)}
-            role="columnheader"
-            aria-sort="none"
-          >
-            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
-              {column.header}
-              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-                <AppIcon
-                  icon={
-                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                      ? faCaretUp
-                      : faCaretDown
-                  }
-                />
-              )}
-            </div>
-          </div>
-        ))}
-        {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
-        {rows.map((row, i) => (
-          // TODO: row component
-          <React.Fragment key={row.item.id}>
-            <div
-              className={clsx(styles.selection, {
-                [styles.alternateRow]: i % 2
-              })}
-              role="cell"
-            >
-              <input
-                type="checkbox"
-                title={t('Organizer.SelectItem', { name: row.item.name })}
-                checked={selectedItemIds.includes(row.item.id)}
-                onChange={(e) => selectItem(e, row.item)}
-              />
-            </div>
-            {filteredColumns.map((column: ColumnDefinition) => (
-              <div
-                key={column.id}
-                onClick={narrowQueryFunction(row, column)}
-                className={clsx(styles[column.id], {
-                  [styles.hasFilter]: column.filter,
-                  [styles.alternateRow]: i % 2
-                })}
-                role="cell"
-              >
-                {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
-              </div>
-            ))}
-          </React.Fragment>
-        ))}
       </div>
+      <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+        <input
+          name="selectAll"
+          title={t('Organizer.SelectAll')}
+          type="checkbox"
+          checked={selectedItemIds.length === rows.length}
+          ref={(el) =>
+            el &&
+            (el.indeterminate =
+              selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+          }
+          onChange={selectAllItems}
+        />
+      </div>
+      {filteredColumns.map((column: ColumnDefinition) => (
+        <div
+          key={column.id}
+          className={clsx(styles[column.id], styles.header)}
+          role="columnheader"
+          aria-sort="none"
+        >
+          <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+            {column.header}
+            {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+              <AppIcon
+                className={styles.sorter}
+                icon={
+                  columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                    ? faCaretUp
+                    : faCaretDown
+                }
+              />
+            )}
+          </div>
+        </div>
+      ))}
+      {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
+      {rows.map((row) => (
+        <React.Fragment key={row.item.id}>
+          <div className={styles.selection} role="cell">
+            <input
+              type="checkbox"
+              title={t('Organizer.SelectItem', { name: row.item.name })}
+              checked={selectedItemIds.includes(row.item.id)}
+              onChange={(e) => selectItem(e, row.item)}
+            />
+          </div>
+          <MemoRow
+            row={row}
+            filteredColumns={filteredColumns}
+            narrowQueryFunction={narrowQueryFunction}
+          />
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Build a list of rows with materialized values.
+ */
+function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
+  const unsortedRows: Row[] = items.map((item) => ({
+    item,
+    values: filteredColumns.reduce((memo, col) => {
+      memo[col.id] = col.value(item);
+      return memo;
+    }, {})
+  }));
+  return unsortedRows;
+}
+
+/**
+ * Sort the rows based on the selected columns.
+ */
+function sortRows(
+  unsortedRows: Row[],
+  columnSorts: ColumnSort[],
+  filteredColumns: ColumnDefinition[]
+) {
+  const comparator = chainComparator<Row>(
+    ...columnSorts.map((sorter) => {
+      const column = filteredColumns.find((c) => c.id === sorter.columnId);
+      if (column) {
+        const compare = column.sort
+          ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
+          : compareBy((row: Row) => row.values[column.id]);
+        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+      }
+      return compareBy(() => 0);
+    })
+  );
+
+  return Array.from(unsortedRows).sort(comparator);
+}
+
+/**
+ * This builds stat infos for all the stats that are relevant to a particular category of items.
+ * It will return the same result for the same category, since all items in a category share stats.
+ */
+function buildStatInfo(
+  items: DimItem[],
+  categories: ItemCategoryTreeNode[]
+): {
+  [statHash: number]: StatInfo;
+} {
+  const terminal = Boolean(_.last(categories)?.terminal);
+  if (!terminal) {
+    return emptyObject();
+  }
+  const statHashes: {
+    [statHash: number]: StatInfo;
+  } = {};
+  for (const item of items) {
+    if (item.stats) {
+      for (const stat of item.stats) {
+        if (statHashes[stat.statHash]) {
+          // TODO: we don't yet use the min and max values
+          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
+          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
+        } else {
+          statHashes[stat.statHash] = {
+            id: stat.statHash,
+            displayProperties: stat.displayProperties,
+            min: stat.value,
+            max: stat.value,
+            enabled: true,
+            lowerBetter: stat.smallerIsBetter,
+            getStat(item) {
+              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
+            }
+          };
+        }
+      }
+    }
+  }
+  return statHashes;
+}
+
+function TableRow({
+  row,
+  filteredColumns,
+  narrowQueryFunction
+}: {
+  row: Row;
+  filteredColumns: ColumnDefinition[];
+  narrowQueryFunction(
+    row: Row,
+    column: ColumnDefinition
+  ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
+}) {
+  return (
+    <>
+      {filteredColumns.map((column: ColumnDefinition) => (
+        <div
+          key={column.id}
+          onClick={narrowQueryFunction(row, column)}
+          className={clsx(styles[column.id], {
+            [styles.hasFilter]: column.filter
+          })}
+          role="cell"
+        >
+          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+        </div>
+      ))}
     </>
   );
 }

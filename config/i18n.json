@@ -734,9 +734,11 @@
     "SelectAll": "Select All",
     "Lock": "Lock",
     "Unlock": "Unlock",
-    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "NoMobile": "This view isn't great on mobile.",
     "NoItems": "No items selected",
+    "Note": "Set Note",
+    "NotePrompt": "Note:",
     "Columns": {
       "Stats": "Stats",
       "BaseStats": "Base Stats",
@@ -756,15 +758,23 @@
       "Event": "Event",
       "ModSlot": "Mod Slot",
       "Archetype": "Archetype",
-      "Perks": "Perks",
-      "Mods": "Mods",
+      "PerksMods": "Perks, Mods & Shaders",
       "CustomTotal": "Custom Total",
       "MasterworkTier": "Masterwork Tier",
       "MasterworkStat": "Masterwork Stat",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
       "Notes": "Notes",
-      "WishListNotes": "Wish List Notes"
+      "WishListNotes": "Wish List Notes",
+      "Ghost": "Ghost Tag",
+      "New": "New"
+    },
+    "Stats": {
+      "RPM": "RPM",
+      "Reload": "Reload",
+      "Aim": "Aim",
+      "Recoil": "Recoil",
+      "Inventory": "Inventory"
     }
   },
   "Progress": {

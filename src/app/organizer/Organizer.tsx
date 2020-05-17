@@ -12,7 +12,6 @@ import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
-import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import styles from './Organizer.m.scss';
@@ -65,7 +64,6 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
         <ItemTable categories={selection} />
-        <Spreadsheets />
         <Compare />
       </ErrorBoundary>
     </div>

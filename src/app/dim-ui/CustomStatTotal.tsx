@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { RootState } from 'app/store/reducers';
@@ -141,9 +141,9 @@ function toggleArrayElement<T>(element: T, arr: T[]) {
 }
 
 /** places a @divider between each element of @arr */
-function addDividers<T, U>(arr: T[], divider: U): (T | U)[] {
+function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
   return arr
-    .map((e) => [e, divider])
+    .map((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
     .flat()
     .slice(0, -1);
 }

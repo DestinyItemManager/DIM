@@ -11,7 +11,20 @@ export function compareBy<T, V>(fn: (arg: T) => V): Comparator<T> {
   return (a, b) => {
     const aVal = fn(a);
     const bVal = fn(b);
-    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+    // Undefined is neither greater than or less than anything. This considers it less than everything.
+    return aVal === undefined
+      ? bVal === undefined
+        ? 0
+        : -1
+      : bVal === undefined
+      ? aVal === undefined
+        ? 0
+        : 1
+      : aVal < bVal
+      ? -1
+      : aVal > bVal
+      ? 1
+      : 0;
   };
 }
 
