@@ -34,6 +34,7 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 interface StoreProps {
   account?: DestinyAccount;
   vendorEngramDropActive: boolean;
+  isPhonePortrait: boolean;
 }
 
 // TODO: finally time to hack apart the header styles!
@@ -43,7 +44,8 @@ type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state),
-    vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh)
+    vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh),
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -103,7 +105,7 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { account, vendorEngramDropActive, history } = this.props;
+    const { account, vendorEngramDropActive, history, isPhonePortrait } = this.props;
     const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -172,11 +174,12 @@ class Header extends React.PureComponent<Props, State> {
                 text: t('LB.LB'),
                 hotkey: 'b'
               },
-              $featureFlags.organizer && {
-                to: `${path}/organizer`,
-                text: t('Organizer.Organizer'),
-                hotkey: 'o'
-              }
+              $featureFlags.organizer &&
+                !isPhonePortrait && {
+                  to: `${path}/organizer`,
+                  text: t('Organizer.Organizer'),
+                  hotkey: 'o'
+                }
             ])
           : [
               {
