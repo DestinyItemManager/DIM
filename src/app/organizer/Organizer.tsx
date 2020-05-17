@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { RootState } from 'app/store/reducers';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { useSubscription } from 'app/utils/hooks';
@@ -36,9 +36,9 @@ function mapStateToProps() {
   });
 }
 
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoreProps;
 
-function Organizer({ account, defs, stores, isPhonePortrait, dispatch }: Props) {
+function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   useEffect(() => {
     if (!stores.length) {
       D2StoresService.getStoresStream(account);

@@ -117,15 +117,11 @@ $toolbarHeight: 41px - 16px + 8px;
 }
 
 .new {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   > div {
     position: static !important;
-  }
-  &.header {
-    position: static;
   }
 }
 
