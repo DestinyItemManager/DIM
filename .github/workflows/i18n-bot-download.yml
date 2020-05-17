@@ -14,7 +14,6 @@ jobs:
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
         with:
-          dryrun_action: true
           upload_sources: false
           upload_translations: false
           download_translations: true
