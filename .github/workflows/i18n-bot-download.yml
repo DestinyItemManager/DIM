@@ -16,6 +16,7 @@ jobs:
           upload_translations: false
           download_translations: true
           create_pull_request: false
+          push_translations: false
           source: src/locale/dim.json
           translation: src/locale/%android_code%/dim.json
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
