@@ -51,14 +51,12 @@ export function getColumnSelectionId(column: ColumnDefinition) {
   return column.columnGroup ? column.columnGroup.id : column.id;
 }
 
-// TODO: just default booleans to this
 const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
 /**
  * This function generates the columns.
  */
 export function getColumns(
-  // TODO: only need list type, stats, classType
   itemsType: 'weapon' | 'armor' | 'ghost',
   statHashes: {
     [statHash: number]: StatInfo;
@@ -75,9 +73,6 @@ export function getColumns(
   newItems: Set<string>
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
-
-  console.time('Compute columns');
-  // TODO: most of these are constant and can be hoisted?
 
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -424,7 +419,6 @@ export function getColumns(
       }
   ]);
 
-  console.timeEnd('Compute columns');
   return columns;
 }
 

@@ -91,7 +91,6 @@ function mapStateToProps() {
     }
   );
 
-  // TODO: make the table a subcomponent so it can take the subtype as an argument?
   return (state: RootState, props: ProvidedProps): StoreProps => {
     const items = itemsSelector(state, props);
     const isArmor = items[0]?.bucket.inArmor;
@@ -114,9 +113,6 @@ function mapStateToProps() {
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-// TODO: drop wishlist columns if no wishlist loaded
-// TODO: d1 support?
 
 const MemoRow = React.memo(TableRow);
 
@@ -145,10 +141,10 @@ function ItemTable({
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
 
+  // Calculate the true height of the table header, for sticky-ness
   const tableRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (tableRef.current) {
-      // Let our styling know how many characters there are
       let height = 0;
       for (const node of tableRef.current.children) {
         if (node.classList.contains(styles.header)) {
@@ -162,46 +158,13 @@ function ItemTable({
     }
   });
 
-  const statHashes: {
-    [statHash: number]: StatInfo;
-  } = useMemo(() => {
-    console.time('Compute stats');
-    const terminal = Boolean(_.last(categories)?.terminal);
-    if (!terminal) {
-      return emptyObject();
-    }
-    const statHashes: {
-      [statHash: number]: StatInfo;
-    } = {};
-    for (const item of items) {
-      if (item.stats) {
-        for (const stat of item.stats) {
-          if (statHashes[stat.statHash]) {
-            statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-            statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-          } else {
-            statHashes[stat.statHash] = {
-              id: stat.statHash,
-              displayProperties: stat.displayProperties,
-              min: stat.value,
-              max: stat.value,
-              enabled: true,
-              lowerBetter: stat.smallerIsBetter,
-              getStat(item) {
-                return item.stats
-                  ? item.stats.find((s) => s.statHash === stat.statHash)
-                  : undefined;
-              }
-            };
-          }
-        }
-      }
-    }
-    console.timeEnd('Compute stats');
-    return statHashes;
+  // Build a list of all the stats relevant to this set of items
+  const statHashes = useMemo(
+    () => buildStatInfo(items, categories),
     // We happen to know that we only need to recalculate this when the categories change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories]);
+    [categories]
+  );
 
   const firstItem = items[0];
   const isWeapon = firstItem?.bucket.inWeapons;
@@ -446,7 +409,6 @@ function ItemTable({
     lastSelectedId.current = item.id;
   };
 
-  // TODO: css grid, floating header
   return (
     <div
       className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
@@ -534,48 +496,81 @@ function ItemTable({
  * Build a list of rows with materialized values.
  */
 function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
-  console.time('Process rows');
-  try {
-    const unsortedRows: Row[] = items.map((item) => ({
-      item,
-      values: filteredColumns.reduce((memo, col) => {
-        memo[col.id] = col.value(item);
-        return memo;
-      }, {})
-    }));
-    return unsortedRows;
-  } finally {
-    console.timeEnd('Process rows');
-  }
+  const unsortedRows: Row[] = items.map((item) => ({
+    item,
+    values: filteredColumns.reduce((memo, col) => {
+      memo[col.id] = col.value(item);
+      return memo;
+    }, {})
+  }));
+  return unsortedRows;
 }
 
 /**
- * Build a sorted list of rows with materialized values.
+ * Sort the rows based on the selected columns.
  */
 function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[]
 ) {
-  console.time('Sort rows');
-  try {
-    const comparator = chainComparator<Row>(
-      ...columnSorts.map((sorter) => {
-        const column = filteredColumns.find((c) => c.id === sorter.columnId);
-        if (column) {
-          const compare = column.sort
-            ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-            : compareBy((row: Row) => row.values[column.id]);
-          return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
-        }
-        return compareBy(() => 0);
-      })
-    );
+  const comparator = chainComparator<Row>(
+    ...columnSorts.map((sorter) => {
+      const column = filteredColumns.find((c) => c.id === sorter.columnId);
+      if (column) {
+        const compare = column.sort
+          ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
+          : compareBy((row: Row) => row.values[column.id]);
+        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+      }
+      return compareBy(() => 0);
+    })
+  );
 
-    return Array.from(unsortedRows).sort(comparator);
-  } finally {
-    console.timeEnd('Sort rows');
+  return Array.from(unsortedRows).sort(comparator);
+}
+
+/**
+ * This builds stat infos for all the stats that are relevant to a particular category of items.
+ * It will return the same result for the same category, since all items in a category share stats.
+ */
+function buildStatInfo(
+  items: DimItem[],
+  categories: ItemCategoryTreeNode[]
+): {
+  [statHash: number]: StatInfo;
+} {
+  const terminal = Boolean(_.last(categories)?.terminal);
+  if (!terminal) {
+    return emptyObject();
   }
+  const statHashes: {
+    [statHash: number]: StatInfo;
+  } = {};
+  for (const item of items) {
+    if (item.stats) {
+      for (const stat of item.stats) {
+        if (statHashes[stat.statHash]) {
+          // TODO: we don't yet use the min and max values
+          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
+          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
+        } else {
+          statHashes[stat.statHash] = {
+            id: stat.statHash,
+            displayProperties: stat.displayProperties,
+            min: stat.value,
+            max: stat.value,
+            enabled: true,
+            lowerBetter: stat.smallerIsBetter,
+            getStat(item) {
+              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
+            }
+          };
+        }
+      }
+    }
+  }
+  return statHashes;
 }
 
 function TableRow({
@@ -590,7 +585,6 @@ function TableRow({
     column: ColumnDefinition
   ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
 }) {
-  console.log('Render row', row.item.name);
   return (
     <>
       {filteredColumns.map((column: ColumnDefinition) => (
