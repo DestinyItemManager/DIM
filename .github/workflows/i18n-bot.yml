@@ -30,3 +30,4 @@ jobs:
           commit_message: "i18n"
           user_email: "destinyitemmanager@gmail.com"
           user_name: "DIM i18n Bot"
+          branch: master
