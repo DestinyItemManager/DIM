@@ -53,8 +53,6 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-rsync');
-  grunt.loadNpmTasks('grunt-crowdin-request');
-  grunt.loadNpmTasks('grunt-sort-json');
 
   grunt.registerMultiTask(
     'precompress',
