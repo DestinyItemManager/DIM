@@ -3,8 +3,6 @@ name: i18n download bot
 on:
   schedule:
     - cron: "0 19 * * SAT"
-  pull_request:
-    branches: [master]
 jobs:
   build:
     runs-on: ubuntu-latest
