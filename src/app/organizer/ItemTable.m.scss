@@ -8,7 +8,6 @@
   min-width: 100%;
   display: grid;
   margin: 8px 0 16px 0 !important;
-  border-bottom: 1px solid #ddd;
 
   > div {
     padding: 4px 8px;
@@ -32,6 +31,7 @@
     position: sticky;
     left: 4px;
     width: 98vw;
+    @include horizontal-space-children(4px);
   }
 }
 $toolbarHeight: 41px - 16px + 8px;

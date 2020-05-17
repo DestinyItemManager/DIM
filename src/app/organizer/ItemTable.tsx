@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect, ReactNode } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
+import { AppIcon, faCaretUp, faCaretDown, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
@@ -41,6 +41,8 @@ import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
 import { StatInfo } from 'app/compare/Compare';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import Dropzone, { DropzoneOptions } from 'react-dropzone';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -301,7 +303,6 @@ function ItemTable({
       column.filter
         ? (e) => {
             if (e.shiftKey) {
-              console.log(e, e.target, e.currentTarget);
               if ((e.target as Element).hasAttribute('data-perk-name')) {
                 dispatch(
                   toggleSearchQueryComponent(
@@ -409,6 +410,67 @@ function ItemTable({
     lastSelectedId.current = item.id;
   };
 
+  // TODO: drive the CSV export off the same column definitions as this table!
+  let downloadAction: ReactNode | null = null;
+  if (categories.length > 1) {
+    const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
+      downloadCsvFiles(stores, itemInfos, type);
+      ga('send', 'event', 'Download CSV', type);
+    };
+
+    if (categories[1].id === 'weapons') {
+      const downloadWeaponCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Weapons');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadWeaponCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
+        </button>
+      );
+    } else if (categories[1].id === 'armor') {
+      const downloadArmorCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Armor');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadArmorCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
+        </button>
+      );
+    } else {
+      const downloadGhostCsv = (e) => {
+        e.preventDefault();
+        downloadCsv('Ghost');
+        return false;
+      };
+      downloadAction = (
+        <button className="dim-button" onClick={downloadGhostCsv}>
+          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
+        </button>
+      );
+    }
+  }
+
+  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      alert(t('Csv.ImportWrongFileType'));
+      return;
+    }
+
+    if (!confirm(t('Csv.ImportConfirm'))) {
+      return;
+    }
+    try {
+      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
+      alert(t('Csv.ImportSuccess', { count: result }));
+    } catch (e) {
+      alert(t('Csv.ImportFailed', { error: e.message }));
+    }
+  };
+
   return (
     <div
       className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
@@ -426,6 +488,17 @@ function ItemTable({
             onTagSelectedItems={onTagSelectedItems}
             onMoveSelectedItems={onMoveSelectedItems}
           />
+          <Dropzone onDrop={importCsv} accept=".csv">
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <div className="dim-button">
+                  <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+                </div>
+              </div>
+            )}
+          </Dropzone>
+          {downloadAction}
           <EnabledColumnsSelector
             columns={columns}
             enabledColumns={enabledColumns}

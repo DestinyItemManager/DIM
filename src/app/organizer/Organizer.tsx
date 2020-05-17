@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { useSubscription } from 'app/utils/hooks';
@@ -12,7 +12,6 @@ import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
-import Spreadsheets from '../settings/Spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import Compare from 'app/compare/Compare';
 import styles from './Organizer.m.scss';
@@ -37,9 +36,9 @@ function mapStateToProps() {
   });
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
+function Organizer({ account, defs, stores, isPhonePortrait, dispatch }: Props) {
   useEffect(() => {
     if (!stores.length) {
       D2StoresService.getStoresStream(account);
@@ -65,7 +64,6 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
         <ItemTable categories={selection} />
-        <Spreadsheets />
         <Compare />
       </ErrorBoundary>
     </div>
