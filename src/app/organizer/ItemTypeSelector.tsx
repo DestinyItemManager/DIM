@@ -60,7 +60,6 @@ const armorHashes = {
  * Generate a tree of all the drilldown options for item filtering. This tree is
  * used to generate the list of selected subcategories.
  */
-// TODO: save to URL params
 export const getSelectionTree = memoizeOne(
   (defs: D2ManifestDefinitions): ItemCategoryTreeNode => {
     const armorCategory = defs.ItemCategory.get(20);
@@ -77,7 +76,6 @@ export const getSelectionTree = memoizeOne(
         };
       }
     );
-    // TODO: should we offer arc/solar/void drilldowns here, or with buttons?
 
     // Each weapon type may be in several subcategories
     const kinetic = {
@@ -99,9 +97,6 @@ export const getSelectionTree = memoizeOne(
       icon: powerWeapon
     };
 
-    // TODO: I suppose weapons could have archetype subselection
-    // TODO: It'd be great to generate these
-    // TODO: Ghosts??
     return {
       id: 'all',
       itemCategoryHash: 0,
