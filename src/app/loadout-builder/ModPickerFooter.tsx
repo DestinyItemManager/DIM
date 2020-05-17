@@ -24,7 +24,7 @@ function ModPickerFooter(props: Props) {
       <div>
         <button className={styles.submitButton} onClick={onSubmit}>
           {!isPhonePortrait && '⏎ '}
-          {t('LB.SelectMods')}
+          {t('LoadoutBuilder.SelectPerks')}
         </button>
       </div>
       <div className={styles.selectedMods}>
@@ -47,7 +47,7 @@ function ModPickerFooter(props: Props) {
           hotkeys={[
             {
               combo: 'enter',
-              description: t('LB.SelectMods'),
+              description: t('LoadoutBuilder.SelectPerks'),
               callback: onSubmit
             }
           ]}

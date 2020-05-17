@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -14,8 +14,6 @@ import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
-import { assignModsToArmorSet } from './mod-utils';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 
 interface Props {
   set: ArmorSet;
@@ -26,7 +24,6 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedArmor2ModMap;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -44,7 +41,6 @@ function GeneratedSet({
   defs,
   enabledStats,
   forwardedRef,
-  lockedArmor2Mods,
   addLockedItem,
   removeLockedItem
 }: Props) {
@@ -64,29 +60,6 @@ function GeneratedSet({
 
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
-
-  const displayStats = { ...set.stats };
-
-  // Add general mod vaues for display purposes
-  for (const lockedMod of lockedArmor2Mods[Armor2ModPlugCategories.general]) {
-    for (const stat of lockedMod.mod.investmentStats) {
-      if (stat.statTypeHash === statHashes.Mobility) {
-        displayStats.Mobility += stat.value;
-      } else if (stat.statTypeHash === statHashes.Recovery) {
-        displayStats.Recovery += stat.value;
-      } else if (stat.statTypeHash === statHashes.Resilience) {
-        displayStats.Resilience += stat.value;
-      } else if (stat.statTypeHash === statHashes.Intellect) {
-        displayStats.Intellect += stat.value;
-      } else if (stat.statTypeHash === statHashes.Discipline) {
-        displayStats.Discipline += stat.value;
-      } else if (stat.statTypeHash === statHashes.Strength) {
-        displayStats.Strength += stat.value;
-      }
-    }
-  }
-
-  const assignedMods = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
@@ -116,7 +89,7 @@ function GeneratedSet({
                 key={stat}
                 isActive={enabledStats.has(stat)}
                 stat={stats[stat]}
-                value={displayStats[stat]}
+                value={set.stats[stat]}
               />
             ))}
           </span>
@@ -137,13 +110,11 @@ function GeneratedSet({
           <GeneratedSetItem
             key={item.index}
             item={item}
-            defs={defs}
             itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
             locked={lockedMap[item.bucket.hash]}
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
             statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={assignedMods[item.hash]}
           />
         ))}
       </div>
