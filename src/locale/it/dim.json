@@ -443,7 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
-    "Chest": "Petto",
+    "Chest": "Torace",
     "ChooseAMod": "Scegli le tue modifiche",
     "ChooseAPerk": "Scegli un perk",
     "ClassItem": "Oggetto di classe",
@@ -456,7 +456,7 @@
     "FilterSets": "Filtra i set",
     "Gauntlets": "Braccia",
     "General": "Generale",
-    "Helmet": "Testa",
+    "Helmet": "Casco",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -501,6 +501,7 @@
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una modifica o descrizione",
     "Seasonal": "Stagionale",
+    "SelectMods": "Seleziona Modifiche",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
     "ShowGear": "Armatura per {{class}}",
@@ -753,6 +754,7 @@
     },
     "EnabledColumns": "Colonne Abilitate",
     "Lock": "Blocca",
+    "NoItems": "Nessun oggetto selezionato",
     "NoMobile": "Questa funzionalità non è ottimizzata per dispositivi mobili.",
     "Organizer": "Gestione Deposito",
     "SelectAll": "Seleziona Tutto",

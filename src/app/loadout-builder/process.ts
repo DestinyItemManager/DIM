@@ -1,3 +1,4 @@
+import { doEnergiesMatch, canSetTakeMods } from './generated-sets/mod-utils';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
@@ -29,12 +30,21 @@ export const statHashes: { [type in StatTypes]: number } = {
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
 
+const bucketsToCategories = {
+  [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
+  [LockableBuckets.gauntlets]: Armor2ModPlugCategories.gauntlets,
+  [LockableBuckets.chest]: Armor2ModPlugCategories.chest,
+  [LockableBuckets.leg]: Armor2ModPlugCategories.leg,
+  [LockableBuckets.classitem]: Armor2ModPlugCategories.classitem
+};
+
 /**
  * Filter the items map down given the locking and filtering configs.
  */
 export function filterItems(
   items: ItemsByBucket,
   lockedMap: LockedMap,
+  lockedArmor2ModMap: LockedArmor2ModMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -60,14 +70,16 @@ export function filterItems(
     }
   });
 
-  // filter to only include items that are in the locked map
-  Object.keys(lockedMap).forEach((bucketStr) => {
-    const bucket = parseInt(bucketStr, 10);
+  // filter to only include items that are in the locked map and items that have the correct energy
+  Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
-    // if there are locked items for this bucket
-    if (locked?.length && filteredItems[bucket]) {
-      filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-        locked.every((lockedItem) => matchLockedItem(item, lockedItem))
+    const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
+
+    if (locked?.length || (lockedMods?.length && filteredItems[bucket])) {
+      filteredItems[bucket] = filteredItems[bucket].filter(
+        (item) =>
+          (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
+          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
       );
     }
   });
@@ -270,7 +282,7 @@ export function process(
                 ghosts[ghostsKey]
               ];
 
-              const firstValidSet = getFirstValidSet(armor);
+              const firstValidSet = getFirstValidSet(armor, lockedArmor2ModMap);
               if (firstValidSet) {
                 const statChoices = [
                   keyToStats(helmsKey),
@@ -559,7 +571,7 @@ function getBaseStatValues(
  * items in each slot are already sorted by power. This respects the rule that two exotics
  * cannot be equipped at once.
  */
-function getFirstValidSet(armors: readonly DimItem[][]) {
+function getFirstValidSet(armors: readonly DimItem[][], lockedArmor2ModMap: LockedArmor2ModMap) {
   const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
@@ -579,7 +591,16 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
         exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
       );
       // If we found something for every slot
-      if (firstValid.every(Boolean)) {
+      const filteredFirstValid: DimItem[] = [];
+      for (const item of firstValid) {
+        if (item) {
+          filteredFirstValid.push(item);
+        }
+      }
+      if (
+        filteredFirstValid.length === firstValid.length &&
+        canSetTakeMods(filteredFirstValid, lockedArmor2ModMap)
+      ) {
         return _.compact(firstValid);
       }
       // Put it back on the end

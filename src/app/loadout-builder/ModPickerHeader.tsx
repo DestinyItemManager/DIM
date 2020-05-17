@@ -45,7 +45,7 @@ function ModPickerHeader(props: Props) {
             onClick={() => scrollToBucket(category.category)}
           >
             {/* t('LB.Helmet') t('LB.Gauntlets') t('LB.Chest') t('LB.Legs') t('LB.ClassItem') t('LB.General') t('LB.Seasonal') */}
-            {t(category.translatedName)}
+            {category.translatedName}
           </div>
         ))}
       </div>
