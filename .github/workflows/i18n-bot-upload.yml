@@ -1,4 +1,6 @@
 # This workflow runs whenever dim.json is updated on the master branch
+# It updates crowdin with new translation strings
+# and notifies the #i18n @i18n in Discord of the new translations.
 name: i18n upload bot
 on:
   push:
@@ -21,3 +23,10 @@ jobs:
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "@710802023544782890 New translations have been added to crowdin."
+          #@710802023544782890 is @i18n
