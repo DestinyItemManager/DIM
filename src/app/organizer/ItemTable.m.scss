@@ -14,6 +14,7 @@
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
     background-color: #313233;
+    border-bottom: 1px solid #3c3c3e;
   }
 }
 
@@ -24,6 +25,7 @@
   padding: 8px 8px !important;
   height: 41px - 16px;
   z-index: 1;
+  border-bottom: none !important;
   > div {
     display: flex;
     flex-direction: row;
@@ -38,7 +40,7 @@ $toolbarHeight: 41px - 16px + 8px;
 .header {
   vertical-align: bottom;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd !important;
   background: #313233;
   position: sticky;
   top: $header-height + $toolbarHeight;
@@ -79,7 +81,6 @@ $toolbarHeight: 41px - 16px + 8px;
 .selection {
   padding-left: 8px !important;
   padding-right: 2px !important;
-  cursor: pointer;
   min-width: 20px;
   left: 0;
   position: sticky;
@@ -112,6 +113,19 @@ $toolbarHeight: 41px - 16px + 8px;
   padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px) !important;
   &.header {
     padding-top: 4px !important;
+  }
+}
+
+.new {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  > div {
+    position: static !important;
+  }
+  &.header {
+    position: static;
   }
 }
 

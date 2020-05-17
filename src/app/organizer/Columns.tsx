@@ -25,7 +25,7 @@ import { compareBy } from 'app/utils/comparators';
 import RatingIcon from 'app/inventory/RatingIcon';
 import { getItemSpecialtyModSlotDisplayName, getItemDamageShortName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
-import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import { DestinyCollectibleState, DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatInfo } from 'app/compare/Compare';
 import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
 import PressTip from 'app/dim-ui/PressTip';
@@ -44,6 +44,7 @@ import { t } from 'app/i18next-t';
 import { emptyArray } from 'app/utils/empty';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -65,7 +66,12 @@ const modSocketCategories = [
  * This function generates the columns.
  */
 export function getColumns(
-  items: DimItem[],
+  // TODO: only need list type, stats, classType
+  itemsType: 'weapon' | 'armor' | 'ghost',
+  statHashes: {
+    [statHash: number]: StatInfo;
+  },
+  classType: DestinyClass,
   defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
   ratings: { [key: string]: DtrRating },
@@ -78,33 +84,8 @@ export function getColumns(
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 
+  console.time('Compute columns');
   // TODO: most of these are constant and can be hoisted?
-
-  const statHashes: {
-    [statHash: number]: StatInfo;
-  } = {};
-  for (const item of items) {
-    if (item.stats) {
-      for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-        } else {
-          statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
-            min: stat.value,
-            max: stat.value,
-            enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            }
-          };
-        }
-      }
-    }
-  }
 
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -162,14 +143,9 @@ export function getColumns(
     filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`
   }));
 
-  const firstItem = items[0];
-  const isGhost =
-    firstItem &&
-    Boolean(
-      firstItem.isDestiny2 && firstItem.isDestiny2() && firstItem.itemCategoryHashes?.includes(39)
-    );
-  const isArmor = firstItem?.bucket.inArmor;
-  const isWeapon = firstItem?.bucket.inWeapons;
+  const isGhost = itemsType === 'ghost';
+  const isArmor = itemsType === 'armor';
+  const isWeapon = itemsType === 'weapon';
 
   const columns: ColumnDefinition[] = _.compact([
     {
@@ -238,10 +214,9 @@ export function getColumns(
     },
     {
       id: 'new',
-
       header: t('Organizer.Columns.New'),
       value: (item) => newItems.has(item.id),
-      cell: booleanCell,
+      cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
       filter: (value) => (value ? 'is:new' : 'not:new')
     },
@@ -276,21 +251,20 @@ export function getColumns(
       cell: booleanCell,
       filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable')
     },
-    $featureFlags.reviewsEnabled &&
-      firstItem.reviewable && {
-        id: 'rating',
-        header: t('Organizer.Columns.Rating'),
-        value: (item) => ratings && getRating(item, ratings)?.overallScore,
-        cell: (overallScore: number, item) =>
-          overallScore > 0 ? (
-            <>
-              <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-              {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
-            </>
-          ) : undefined,
-        defaultSort: SortDirection.DESC,
-        filter: (value) => `rating:>=${value}`
-      },
+    $featureFlags.reviewsEnabled && {
+      id: 'rating',
+      header: t('Organizer.Columns.Rating'),
+      value: (item) => ratings && getRating(item, ratings)?.overallScore,
+      cell: (overallScore: number, item) =>
+        overallScore > 0 ? (
+          <>
+            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
+            {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
+          </>
+        ) : undefined,
+      defaultSort: SortDirection.DESC,
+      filter: (value) => `rating:>=${value}`
+    },
     {
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
@@ -384,7 +358,7 @@ export function getColumns(
       header: (
         <>
           {t('Organizer.Columns.CustomTotal')}
-          <StatTotalToggle forClass={items[0]?.classType} readOnly={true} />
+          <StatTotalToggle forClass={classType} readOnly={true} />
         </>
       ),
       value: (item) =>
@@ -458,6 +432,7 @@ export function getColumns(
       }
   ]);
 
+  console.timeEnd('Compute columns');
   return columns;
 }
 

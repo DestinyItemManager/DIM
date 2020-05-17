@@ -22,6 +22,7 @@ interface CssExports {
   'modslotIcon': string;
   'name': string;
   'negative': string;
+  'new': string;
   'noItems': string;
   'perks': string;
   'positive': string;
