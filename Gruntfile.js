@@ -151,7 +151,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('publish_beta', [
     'sortJSON:all',
-    'crowdin-request:upload',
     'log_beta_version',
     'precompress',
     'rsync:app_content',

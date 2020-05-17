@@ -1,0 +1,23 @@
+# This workflow runs whenever dim.json is updated on the master branch
+name: i18n upload bot
+on:
+  push:
+    paths:
+      - "src/locale/dim.json"
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Upload updated dim.json to crowdin
+        uses: crowdin/github-action@1.0.4
+        with:
+          upload_sources: true
+          upload_translations: false
+          source: src/locale/dim.json
+          translation: src/locale/%android_code%/dim.json
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
