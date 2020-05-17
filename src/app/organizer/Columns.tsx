@@ -1,48 +1,49 @@
-/* eslint-disable react/jsx-key, react/prop-types */
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import BungieImage from 'app/dim-ui/BungieImage';
 import {
   AppIcon,
-  powerIndicatorIcon,
+  faCheck,
   lockIcon,
-  thumbsUpIcon,
+  powerIndicatorIcon,
   thumbsDownIcon,
-  faCheck
+  thumbsUpIcon
 } from 'app/shell/icons';
-import styles from './ItemTable.m.scss';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import _ from 'lodash';
-import { getTag, getNotes, tagConfig, ItemInfos } from 'app/inventory/dim-item-info';
-import TagIcon from 'app/inventory/TagIcon';
-import { source } from 'app/inventory/spreadsheets';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { D2SeasonInfo } from 'app/inventory/d2-season-info';
+import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
+import { DestinyClass, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
+import { getItemDamageShortName, getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+
+import BungieImage from 'app/dim-ui/BungieImage';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { getRating } from 'app/item-review/reducer';
-import { statWhiteList } from 'app/inventory/store/stats';
-import { compareBy } from 'app/utils/comparators';
-import RatingIcon from 'app/inventory/RatingIcon';
-import { getItemSpecialtyModSlotDisplayName, getItemDamageShortName } from 'app/utils/item-utils';
-import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
-import { DestinyCollectibleState, DestinyClass } from 'bungie-api-ts/destiny2';
-import { StatInfo } from 'app/compare/Compare';
-import PressTip from 'app/dim-ui/PressTip';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
-import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { D2SeasonInfo } from 'app/inventory/d2-season-info';
+import { DimItem } from 'app/inventory/item-types';
 import { DtrRating } from 'app/item-review/dtr-api-types';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { ColumnDefinition, SortDirection, ColumnGroup } from './table-types';
-import { TagValue } from '@destinyitemmanager/dim-api-types';
-import clsx from 'clsx';
-import { statHashByName } from 'app/search/search-filter-hashes';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-import { Loadout } from 'app/loadout/loadout-types';
-import { t } from 'app/i18next-t';
-import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
+import { Loadout } from 'app/loadout/loadout-types';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import PressTip from 'app/dim-ui/PressTip';
+import RatingIcon from 'app/inventory/RatingIcon';
+/* eslint-disable react/jsx-key, react/prop-types */
+import React from 'react';
+import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
+import { StatInfo } from 'app/compare/Compare';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import TagIcon from 'app/inventory/TagIcon';
+import { TagValue } from '@destinyitemmanager/dim-api-types';
+import _ from 'lodash';
+import clsx from 'clsx';
+import { compareBy } from 'app/utils/comparators';
+import { getRating } from 'app/item-review/reducer';
+import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
+import { source } from 'app/inventory/spreadsheets';
+import { statHashByName } from 'app/search/search-filter-hashes';
+import { statWhiteList } from 'app/inventory/store/stats';
+import styles from './ItemTable.m.scss';
+import { t } from 'app/i18next-t';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -342,6 +343,15 @@ export function getColumns(
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => `perkname:"${value}"`
     },
+    isWeapon && {
+      id: 'traits',
+      header: t('Organizer.Columns.Traits'),
+      value: () => 0, // TODO: figure out a way to sort perks
+      cell: (_, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
+      noSort: true,
+      gridWidth: 'minmax(180px,max-content)',
+      filter: (value) => `perkname:"${value}"`
+    },
     ...statColumns,
     ...baseStatColumns,
     isArmor && {
@@ -426,7 +436,15 @@ export function getColumns(
   return columns;
 }
 
-function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem }) {
+function PerksCell({
+  defs,
+  item,
+  traitsOnly
+}: {
+  defs: D2ManifestDefinitions;
+  item: DimItem;
+  traitsOnly?: boolean;
+}) {
   if (!item.isDestiny2() || !item.sockets) {
     return null;
   }
@@ -435,12 +453,14 @@ function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem 
       (s) =>
         s.plug &&
         s.plugOptions.length > 0 &&
-        (s.plug.plugItem.collectibleHash ||
+        ((!traitsOnly && s.plug.plugItem.collectibleHash) ||
           (s.isPerk &&
             (item.isExotic ||
-              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))))
+              (!s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY) &&
+                (!traitsOnly || s.plug.plugItem.plug.plugCategoryIdentifier === 'frames')))))
     )
   );
+
   if (!sockets.length) {
     return null;
   }

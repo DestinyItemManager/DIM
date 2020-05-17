@@ -163,15 +163,28 @@ $toolbarHeight: 41px - 16px + 8px;
   color: #d14334;
 }
 
+.perks,
+.traits {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
+}
 .perks {
   columns: 2;
   @include vertical-space-children(4px);
   column-gap: 8px;
-  align-items: flex-start;
-  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
   &.header {
     display: flex;
     flex-direction: column;
+  }
+}
+.traits {
+  visibility: visible;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  .modPerks {
+    flex: 0;
+    min-width: 160px;
+    flex-basis: 160px;
   }
 }
 
@@ -200,13 +213,15 @@ $toolbarHeight: 41px - 16px + 8px;
   }
 }
 
+$modslotSize: 30px;
 .modslot {
   display: flex;
   justify-content: center;
+  padding-top: calc((((var(--item-size) * 0.75) - #{$modslotSize}) / 2) + 4px) !important;
 }
 .modslotIcon {
-  height: 24px;
-  width: 24px;
+  height: $modslotSize;
+  width: $modslotSize;
 }
 
 .loadouts {
