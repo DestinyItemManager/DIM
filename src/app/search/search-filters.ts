@@ -37,7 +37,7 @@ import { DimStore } from '../inventory/store-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { Loadout } from '../loadout/loadout-types';
 import { RootState } from '../store/reducers';
-import S8Sources from 'data/d2/s8-source-info';
+import missingSources from 'data/d2/missing-source-info';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
@@ -1174,7 +1174,7 @@ function searchFilters(
           return (
             (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
             D2Sources[predicate].itemHashes.includes(item.hash) ||
-            (S8Sources[predicate] && S8Sources[predicate].includes(item.hash))
+            (missingSources[predicate] && missingSources[predicate].includes(item.hash))
           );
         } else if (D2EventPredicateLookup[predicate]) {
           return D2EventPredicateLookup[predicate] === item?.event;
