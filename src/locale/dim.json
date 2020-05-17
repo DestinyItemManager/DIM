@@ -443,10 +443,7 @@
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
-    "Chest": "Chest",
-    "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "Choose a perk",
-    "ClassItem": "Class Item",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
@@ -454,9 +451,6 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "FilterSets": "Filter sets",
-    "Gauntlets": "Gauntlets",
-    "General": "General",
-    "Helmet": "Helmet",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
       "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
@@ -478,7 +472,6 @@
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
     "LB": "Loadout Optimizer",
-    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Calculates loadouts at current defense levels.",
       "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
@@ -490,7 +483,6 @@
     "Locked": "Locked Items",
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
-    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -499,8 +491,7 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
-    "SearchAMod": "Search a mod or description",
-    "Seasonal": "Seasonal",
+    "Season": "Season",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
     "ShowGear": "{{class}} Armor",
@@ -536,7 +527,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
-    "LockPerk": "Select energy or perk",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NumStatMixes": "{{count, number}} stat mix",
