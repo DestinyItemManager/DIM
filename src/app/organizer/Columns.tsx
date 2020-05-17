@@ -216,7 +216,7 @@ export function getColumns(
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>
-          value !== null ? (
+          value !== undefined ? (
             <AppIcon
               icon={value ? thumbsUpIcon : thumbsDownIcon}
               className={value ? styles.positive : styles.negative}

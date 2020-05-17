@@ -349,7 +349,9 @@ function ItemTable({
    */
   const toggleColumnSort = (column: ColumnDefinition) => () => {
     setColumnSorts((sorts) => {
-      const newColumnSorts = shiftHeld ? sorts : sorts.filter((s) => s.columnId === column.id);
+      const newColumnSorts = shiftHeld
+        ? Array.from(sorts)
+        : sorts.filter((s) => s.columnId === column.id);
       let found = false;
       let index = 0;
       for (const columnSort of newColumnSorts) {
