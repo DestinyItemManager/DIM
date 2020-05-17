@@ -1,0 +1,36 @@
+# This workflow runs every Saturday @ 1900 UTC (NOON PST)
+name: i18n download bot
+on:
+  schedule:
+    - cron: "0 19 * * SAT"
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+      - name: Download updated i18n files
+        uses: crowdin/github-action@1.0.4
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_translations: true
+          create_pull_request: false
+          source: src/locale/dim.json
+          translation: src/locale/%android_code%/dim.json
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: sort all dim.json
+        run: npx jsonsort src/locale
+      - name: Push changes
+        uses: delphiactual/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_message: "i18n"
+          user_email: "destinyitemmanager@gmail.com"
+          user_name: "DIM i18n Bot"
+          branch: master

@@ -1,0 +1,35 @@
+# This workflow runs whenever dim.json is updated on the master branch
+# It updates crowdin with new translation strings
+# and notifies the #i18n @i18n in Discord of the new translations.
+name: i18n upload bot
+on:
+  push:
+    paths:
+      - "src/locale/dim.json"
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+      - name: Sort dim.json
+        run: npx jsonsort src/locale/dim.json
+      - name: Upload updated dim.json to crowdin
+        uses: crowdin/github-action@1.0.4
+        with:
+          upload_sources: true
+          upload_translations: false
+          source: src/locale/dim.json
+          translation: src/locale/%android_code%/dim.json
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "@710802023544782890 New translations have been added to crowdin."
+          #@710802023544782890 is @i18n
