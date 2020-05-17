@@ -68,9 +68,16 @@ export function calcArmorStats(
 
     const scaleType = armor.item.tier === 'Rare' ? 'base' : scaleTypeArg;
 
-    stats[144602215].value += int[scaleType];
-    stats[1735777505].value += dis[scaleType];
-    stats[4244567218].value += str[scaleType];
+    // Mark of the Sunforged, Stormcaller Bond and Nightstalker cloak have special fixed stats
+    // that do not scale correctly as the scaling is currently implemented.
+    // See https://github.com/DestinyItemManager/DIM/issues/5191 for details
+    if ([2820418554, 2122538507, 2300914892].includes(armor.item.hash)) {
+      stats[144602215].value += int['base'];
+    } else {
+      stats[144602215].value += int[scaleType];
+      stats[1735777505].value += dis[scaleType];
+      stats[4244567218].value += str[scaleType];
+    }
 
     switch (armor.bonusType) {
       case 'int':
