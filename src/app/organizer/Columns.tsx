@@ -114,7 +114,8 @@ export function getColumns(
               return null;
             }
             return <ItemStatValue stat={stat} item={item} />;
-          }
+          },
+          filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`
         };
       }
     ),

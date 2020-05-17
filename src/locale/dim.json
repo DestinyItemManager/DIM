@@ -762,7 +762,7 @@
     "Organizer": "Organizer",
     "SelectAll": "Select All",
     "SelectItem": "Select or unselect {{name}}",
-    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "Stats": {
       "Aim": "Aim",
       "Inventory": "Inventory",
