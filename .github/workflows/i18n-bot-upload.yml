@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Discord notification
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
           args: "@710802023544782890 New translations have been added to crowdin."
