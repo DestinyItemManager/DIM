@@ -159,9 +159,7 @@ function LockArmorAndPerks({
   const onArmor2ModClicked = (item: LockedArmor2Mod) => {
     onArmor2ModsChanged({
       ...lockedArmor2Mods,
-      [item.category]: lockedArmor2Mods[item.category]?.filter(
-        (ex) => ex.mod.hash !== item.mod.hash
-      ),
+      [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
     });
   };
 

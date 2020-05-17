@@ -72,6 +72,7 @@ export const ModPickerCategories = { ...Armor2ModPlugCategories, seasonal: 'seas
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
 export interface LockedArmor2Mod {
+  key: string;
   mod: DestinyInventoryItemDefinition;
   category: ModPickerCategory;
 }
