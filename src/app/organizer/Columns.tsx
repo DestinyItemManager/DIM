@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
   AppIcon,
@@ -27,7 +27,6 @@ import { getItemSpecialtyModSlotDisplayName, getItemDamageShortName } from 'app/
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { DestinyCollectibleState, DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatInfo } from 'app/compare/Compare';
-import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
 import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
@@ -41,7 +40,6 @@ import { statHashByName } from 'app/search/search-filter-hashes';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { t } from 'app/i18next-t';
-import { emptyArray } from 'app/utils/empty';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -55,12 +53,6 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 
 // TODO: just default booleans to this
 const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
-
-const modSocketCategories = [
-  2685412949,
-  590099826, // Armor mods
-  3301318876 // Ghost perks
-];
 
 /**
  * This function generates the columns.
@@ -437,58 +429,51 @@ export function getColumns(
 }
 
 function PerksCell({ defs, item }: { defs: D2ManifestDefinitions; item: DimItem }) {
-  const sockets =
-    item.isDestiny2() && item.sockets?.categories
-      ? item.sockets?.categories
-          .filter((c) => true || modSocketCategories.includes(c.category.hash))
-          .flatMap((c) => c.sockets)
-          .filter(
-            (s) =>
-              (s.isPerk &&
-                (item.isExotic ||
-                  !s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))) ||
-              s.plug?.plugItem.collectibleHash ||
-              filterPlugs(s)
-          )
-      : emptyArray<DimSocket>();
+  if (!item.isDestiny2() || !item.sockets) {
+    return null;
+  }
+  const sockets = item.sockets.categories.flatMap((c) =>
+    c.sockets.filter(
+      (s) =>
+        s.plug &&
+        s.plugOptions.length > 0 &&
+        (s.plug.plugItem.collectibleHash ||
+          (s.isPerk &&
+            (item.isExotic ||
+              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))))
+    )
+  );
   if (!sockets.length) {
     return null;
   }
   return (
     <>
-      {sockets.map((socket) => {
-        const plugOptions = socket.plugOptions.filter(
-          (p) => item.isExotic || !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-        );
-        return (
-          plugOptions.length > 0 && (
-            <div
-              key={socket.socketIndex}
-              className={clsx(styles.modPerks, {
-                [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1
-              })}
-            >
-              {plugOptions.map(
-                (p: DimPlug) =>
-                  item.isDestiny2() && (
-                    <PressTip
-                      key={p.plugItem.hash}
-                      tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                    >
-                      <div
-                        className={styles.modPerk}
-                        data-perk-name={p.plugItem.displayProperties.name}
-                      >
-                        <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                        {p.plugItem.displayProperties.name}
-                      </div>
-                    </PressTip>
-                  )
-              )}
-            </div>
-          )
-        );
-      })}
+      {sockets.map((socket) => (
+        <div
+          key={socket.socketIndex}
+          className={clsx(styles.modPerks, {
+            [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1
+          })}
+        >
+          {socket.plugOptions.map(
+            (p) =>
+              item.isDestiny2() && (
+                <PressTip
+                  key={p.plugItem.hash}
+                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                >
+                  <div
+                    className={styles.modPerk}
+                    data-perk-name={p.plugItem.displayProperties.name}
+                  >
+                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                    {p.plugItem.displayProperties.name}
+                  </div>
+                </PressTip>
+              )
+          )}
+        </div>
+      ))}
     </>
   );
 }
