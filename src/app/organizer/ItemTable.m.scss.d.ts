@@ -36,6 +36,7 @@ interface CssExports {
   'table': string;
   'tag': string;
   'toolbar': string;
+  'traits': string;
   'wishList': string;
   'year': string;
 }
