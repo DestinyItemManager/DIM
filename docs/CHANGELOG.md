@@ -1,7 +1,8 @@
 ## Next
 
 * Added the Organizer page, which lets you see all your items in a table form, which you can sort and filter (try shift-clicking on a cell!). Add and remove columns and bulk-tag your items to help quickly figure out which items you want to keep and which you can get rid of.
-* In Loadout Optimizar, we now assign and display mods in the armor slot they will fit within.
+* In Loadout Optimizer, we now assign and display mods in the armor slot they will fit within.
+* Fixed stat calculations for special Taken King class items in D1.
 
 ## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
 
