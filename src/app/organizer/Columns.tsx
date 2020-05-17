@@ -339,7 +339,7 @@ export function getColumns(
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => `perkname:"${value}"`
     },
-    {
+    isWeapon && {
       id: 'traits',
       header: t('Organizer.Columns.Traits'),
       value: () => 0, // TODO: figure out a way to sort perks
