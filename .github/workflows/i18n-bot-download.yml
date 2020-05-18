@@ -7,8 +7,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: bahmutov/npm-install@v1
+      - name: Checkout DIM
+        uses: actions/checkout@v2
+
+      - name: Install Yarn
+        uses: bahmutov/npm-install@v1
+
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
         with:
@@ -23,9 +27,16 @@ jobs:
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: sort all dim.json
         run: npx jsonsort src/locale
-      - name: Push changes
+
+      - name: Check for new files (DIM)
+        id: porcelain
+        run: echo ::set-output name=porcelain::"$(git status --porcelain)"
+
+      - name: Push changes (DIM)
+        if: steps.porcelain.outputs.porcelain
         uses: delphiactual/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
