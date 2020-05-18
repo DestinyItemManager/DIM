@@ -6,6 +6,7 @@
 * Fixed stat calculations for special Taken King class items in D1.
 
 ## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
+
 * Assign and display mods to an armour slot they will fit with in LO
 
 ## 6.9.0 <span className="changelog-date">(2020-05-03)</span>

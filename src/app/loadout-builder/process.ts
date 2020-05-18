@@ -1,4 +1,4 @@
-import { doEnergiesMatch, canSetTakeMods } from './generated-sets/mod-utils';
+import { doEnergiesMatch } from './generated-sets/mod-utils';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
@@ -75,7 +75,7 @@ export function filterItems(
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
 
-    if (locked?.length || (lockedMods?.length && filteredItems[bucket])) {
+    if (lockedMods?.length || (locked?.length && filteredItems[bucket])) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
@@ -282,7 +282,7 @@ export function process(
                 ghosts[ghostsKey]
               ];
 
-              const firstValidSet = getFirstValidSet(armor, lockedArmor2ModMap);
+              const firstValidSet = getFirstValidSet(armor);
               if (firstValidSet) {
                 const statChoices = [
                   keyToStats(helmsKey),
@@ -571,7 +571,7 @@ function getBaseStatValues(
  * items in each slot are already sorted by power. This respects the rule that two exotics
  * cannot be equipped at once.
  */
-function getFirstValidSet(armors: readonly DimItem[][], lockedArmor2ModMap: LockedArmor2ModMap) {
+function getFirstValidSet(armors: readonly DimItem[][]) {
   const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
@@ -590,17 +590,8 @@ function getFirstValidSet(armors: readonly DimItem[][], lockedArmor2ModMap: Lock
       const firstValid = armors.map((a, i) =>
         exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
       );
-      // If we found something for every slot
-      const filteredFirstValid: DimItem[] = [];
-      for (const item of firstValid) {
-        if (item) {
-          filteredFirstValid.push(item);
-        }
-      }
-      if (
-        filteredFirstValid.length === firstValid.length &&
-        canSetTakeMods(filteredFirstValid, lockedArmor2ModMap)
-      ) {
+
+      if (firstValid.every(Boolean)) {
         return _.compact(firstValid);
       }
       // Put it back on the end

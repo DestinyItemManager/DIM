@@ -16,6 +16,7 @@ import {
   ItemsByBucket,
   LockedMap,
   MinMaxIgnored,
+  LockedModBase,
   LockedArmor2ModMap,
   ModPickerCategories
 } from './types';
@@ -65,6 +66,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   lockedMap: LockedMap;
+  lockedSeasonalMods: LockedModBase[];
   lockedArmor2Mods: LockedArmor2ModMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
@@ -144,6 +146,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
         Intellect: { min: 0, max: 10, ignored: false },
         Strength: { min: 0, max: 10, ignored: false }
       },
+      lockedSeasonalMods: [],
       lockedArmor2Mods: {
         [ModPickerCategories.general]: [],
         [ModPickerCategories.helmet]: [],
@@ -194,6 +197,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
     } = this.props;
     const {
       lockedMap,
+      lockedSeasonalMods,
       lockedArmor2Mods,
       selectedStoreId,
       statFilters,
@@ -243,6 +247,8 @@ class LoadoutBuilder extends React.Component<Props, State> {
         processedSets,
         minimumPower,
         lockedMap,
+        lockedArmor2Mods,
+        lockedSeasonalMods,
         statFilters,
         statOrder,
         enabledStats
@@ -278,8 +284,10 @@ class LoadoutBuilder extends React.Component<Props, State> {
           items={filteredItems}
           selectedStore={store}
           lockedMap={lockedMap}
+          lockedSeasonalMods={lockedSeasonalMods}
           lockedArmor2Mods={lockedArmor2Mods}
           onLockedMapChanged={this.onLockedMapChanged}
+          onSeasonalModsChanged={this.onSeasonalModsChanged}
           onArmor2ModsChanged={this.onArmor2ModsChanged}
         />
       </div>
@@ -359,6 +367,9 @@ class LoadoutBuilder extends React.Component<Props, State> {
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onSeasonalModsChanged = (lockedSeasonalMods: LockedModBase[]) =>
+    this.setState({ lockedSeasonalMods });
 
   private onArmor2ModsChanged = (lockedArmor2Mods: LockedArmor2ModMap) =>
     this.setState({ lockedArmor2Mods });

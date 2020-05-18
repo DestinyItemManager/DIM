@@ -68,25 +68,29 @@ function GeneratedSet({
   const displayStats = { ...set.stats };
 
   // Add general mod vaues for display purposes
-  for (const lockedMod of lockedArmor2Mods[Armor2ModPlugCategories.general]) {
-    for (const stat of lockedMod.mod.investmentStats) {
-      if (stat.statTypeHash === statHashes.Mobility) {
-        displayStats.Mobility += stat.value;
-      } else if (stat.statTypeHash === statHashes.Recovery) {
-        displayStats.Recovery += stat.value;
-      } else if (stat.statTypeHash === statHashes.Resilience) {
-        displayStats.Resilience += stat.value;
-      } else if (stat.statTypeHash === statHashes.Intellect) {
-        displayStats.Intellect += stat.value;
-      } else if (stat.statTypeHash === statHashes.Discipline) {
-        displayStats.Discipline += stat.value;
-      } else if (stat.statTypeHash === statHashes.Strength) {
-        displayStats.Strength += stat.value;
+  if ($featureFlags.armor2ModPicker) {
+    for (const lockedMod of lockedArmor2Mods[Armor2ModPlugCategories.general]) {
+      for (const stat of lockedMod.mod.investmentStats) {
+        if (stat.statTypeHash === statHashes.Mobility) {
+          displayStats.Mobility += stat.value;
+        } else if (stat.statTypeHash === statHashes.Recovery) {
+          displayStats.Recovery += stat.value;
+        } else if (stat.statTypeHash === statHashes.Resilience) {
+          displayStats.Resilience += stat.value;
+        } else if (stat.statTypeHash === statHashes.Intellect) {
+          displayStats.Intellect += stat.value;
+        } else if (stat.statTypeHash === statHashes.Discipline) {
+          displayStats.Discipline += stat.value;
+        } else if (stat.statTypeHash === statHashes.Strength) {
+          displayStats.Strength += stat.value;
+        }
       }
     }
   }
 
-  const assignedMods = assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods);
+  const assignedMods = $featureFlags.armor2ModPicker
+    ? assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods)
+    : {};
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>

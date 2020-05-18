@@ -12,6 +12,7 @@ import {
   LockedPerk,
   LockedMap,
   LockedMod,
+  LockedModBase,
   LockedArmor2ModMap,
   LockedArmor2Mod,
   ModPickerCategories
@@ -38,8 +39,10 @@ interface ProvidedProps {
   selectedStore: DimStore;
   items: ItemsByBucket;
   lockedMap: LockedMap;
+  lockedSeasonalMods: LockedModBase[];
   lockedArmor2Mods: LockedArmor2ModMap;
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
+  onSeasonalModsChanged(mod: LockedModBase[]): void;
   onArmor2ModsChanged(mods: LockedArmor2ModMap): void;
 }
 
@@ -70,12 +73,14 @@ function LockArmorAndPerks({
   selectedStore,
   defs,
   lockedMap,
+  lockedSeasonalMods,
   lockedArmor2Mods,
   items,
   buckets,
   stores,
   isPhonePortrait,
   onLockedMapChanged,
+  onSeasonalModsChanged,
   onArmor2ModsChanged
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
@@ -184,9 +189,9 @@ function LockArmorAndPerks({
   );
 
   const modOrder = Object.values(ModPickerCategories);
-  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
-    .flatMap((category) => lockedArmor2Mods[category])
-    .filter(Boolean);
+  const flatLockedArmor2Mods: LockedArmor2Mod[] = $featureFlags.armor2ModPicker
+    ? modOrder.flatMap((category) => lockedArmor2Mods[category]).filter(Boolean)
+    : [];
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
@@ -200,7 +205,8 @@ function LockArmorAndPerks({
       <div className={styles.area}>
         {(Boolean(flatLockedMap.perk?.length) ||
           Boolean(flatLockedMap.mod?.length) ||
-          Boolean(flatLockedMap.burn?.length)) && (
+          Boolean(flatLockedMap.burn?.length) ||
+          Boolean(lockedSeasonalMods.length)) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
@@ -226,6 +232,18 @@ function LockArmorAndPerks({
                 onRemove={removeLockedItemType}
               />
             ))}
+            {lockedSeasonalMods.map((item) => (
+              <LockedArmor2ModIcon
+                key={item.mod.hash}
+                item={item}
+                defs={defs}
+                onModClicked={() =>
+                  onSeasonalModsChanged(
+                    lockedSeasonalMods.filter((locked) => locked.mod.hash !== item.mod.hash)
+                  )
+                }
+              />
+            ))}
           </div>
         )}
         <div className={styles.buttons}>
@@ -238,42 +256,46 @@ function LockArmorAndPerks({
                 classType={selectedStore.classType}
                 items={items}
                 lockedMap={lockedMap}
+                lockedSeasonalMods={lockedSeasonalMods}
                 onClose={() => setFilterPerksOpen(false)}
                 onPerksSelected={onLockedMapChanged}
+                onSeasonalModsChanged={onSeasonalModsChanged}
               />,
               document.body
             )}
         </div>
       </div>
-      <div className={styles.area}>
-        {Boolean(flatLockedArmor2Mods.length) && (
-          <div className={styles.itemGrid}>
-            {flatLockedArmor2Mods.map((item) => (
-              <LockedArmor2ModIcon
-                key={item.mod.hash}
-                item={item}
-                defs={defs}
-                onModClicked={() => onArmor2ModClicked(item)}
-              />
-            ))}
+      {$featureFlags.armor2ModPicker && (
+        <div className={styles.area}>
+          {Boolean(flatLockedArmor2Mods.length) && (
+            <div className={styles.itemGrid}>
+              {flatLockedArmor2Mods.map((item) => (
+                <LockedArmor2ModIcon
+                  key={item.mod.hash}
+                  item={item}
+                  defs={defs}
+                  onModClicked={() => onArmor2ModClicked(item)}
+                />
+              ))}
+            </div>
+          )}
+          <div className={styles.buttons}>
+            <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
+              <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
+            </button>
+            {filterModsOpen &&
+              ReactDOM.createPortal(
+                <ModPicker
+                  classType={selectedStore.classType}
+                  lockedArmor2Mods={lockedArmor2Mods}
+                  onClose={() => setFilterModsOpen(false)}
+                  onArmor2ModsChanged={onArmor2ModsChanged}
+                />,
+                document.body
+              )}
           </div>
-        )}
-        <div className={styles.buttons}>
-          <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
-            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
-          </button>
-          {filterModsOpen &&
-            ReactDOM.createPortal(
-              <ModPicker
-                classType={selectedStore.classType}
-                lockedArmor2Mods={lockedArmor2Mods}
-                onClose={() => setFilterModsOpen(false)}
-                onArmor2ModsChanged={onArmor2ModsChanged}
-              />,
-              document.body
-            )}
         </div>
-      </div>
+      )}
       <LoadoutBucketDropTarget
         className={styles.area}
         storeIds={storeIds}

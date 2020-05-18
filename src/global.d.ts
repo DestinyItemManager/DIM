@@ -38,6 +38,8 @@ declare const $featureFlags: {
   vendorEngrams: boolean;
   /** Enable the new DIM API */
   dimApi: boolean;
+  /** Enable the Armor 2 Mod Picker */
+  armor2ModPicker: boolean;
 };
 
 declare namespace React {

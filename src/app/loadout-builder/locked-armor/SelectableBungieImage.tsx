@@ -2,7 +2,13 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedItemType, BurnItem, LockedArmor2Mod, ModPickerCategory } from '../types';
+import {
+  LockedItemType,
+  BurnItem,
+  LockedModBase,
+  LockedArmor2Mod,
+  ModPickerCategory
+} from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -35,21 +41,25 @@ export function SelectableMod({
   bucket,
   selected,
   unselectable,
-  onLockedPerk
+  onLockedPerk,
+  onLockedModBase
 }: {
   mod: DestinyInventoryItemDefinition;
   // plugSet this mod appears in
   plugSetHash: number;
   defs: D2ManifestDefinitions;
-  bucket: InventoryBucket;
+  bucket?: InventoryBucket;
   selected: boolean;
-  unselectable: boolean;
+  unselectable?: boolean;
   onLockedPerk?(perk: LockedItemType): void;
+  onLockedModBase?(mod: LockedModBase): void;
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    if (onLockedPerk) {
+    if (bucket && onLockedPerk) {
       onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
+    } else if (onLockedModBase) {
+      onLockedModBase({ mod, plugSetHash });
     }
   };
 

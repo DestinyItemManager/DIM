@@ -42,10 +42,12 @@ export interface LockedPerk {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
 }
-export interface LockedMod {
-  type: 'mod';
+export interface LockedModBase {
   mod: DestinyInventoryItemDefinition;
   plugSetHash: number;
+}
+export interface LockedMod extends LockedModBase {
+  type: 'mod';
   bucket: InventoryBucket;
 }
 export interface LockedBurn {

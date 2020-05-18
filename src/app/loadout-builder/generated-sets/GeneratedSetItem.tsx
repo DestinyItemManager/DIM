@@ -2,11 +2,13 @@ import React, { useMemo } from 'react';
 import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType, LockedArmor2Mod } from '../types';
+import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
+import { lockedItemsEqual } from './utils';
 import { generateMixesFromPerks } from '../process';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -80,6 +82,12 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
+  const onShiftClick = (lockedItem: LockedItemType) => {
+    locked?.some((li) => lockedItemsEqual(lockedItem, li))
+      ? removeLockedItem(lockedItem)
+      : addLockedItem(lockedItem);
+  };
+
   return (
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
@@ -103,11 +111,21 @@ export default function GeneratedSetItem({
           </button>
         )
       )}
-      <div className={'lockedMods'}>
-        {lockedMods?.map((mod) => (
-          <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
-        ))}
-      </div>
+      {!$featureFlags.armor2ModPicker && item.isDestiny2() && (
+        <ItemSockets
+          item={item}
+          minimal={true}
+          classesByHash={classesByHash}
+          onShiftClick={onShiftClick}
+        />
+      )}
+      {$featureFlags.armor2ModPicker && (
+        <div className={'lockedMods'}>
+          {lockedMods?.map((mod) => (
+            <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
