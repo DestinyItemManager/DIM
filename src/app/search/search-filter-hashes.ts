@@ -75,7 +75,8 @@ export const cosmeticTypes = [
   'Horn',
   'Ship',
   'Ships',
-  'ClanBanners'
+  'ClanBanners',
+  'Finishers'
 ];
 
 /** sublime engrams */
