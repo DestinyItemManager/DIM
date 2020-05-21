@@ -863,22 +863,6 @@
       "improved": false
     }
   },
-  "2328497849": {
-    "location": false,
-    "type": {
-      "xp": false,
-      "resource": false,
-      "cache": false,
-      "scanner": false,
-      "glimmer": false,
-      "telemetry": {
-        "arc": false,
-        "void": false,
-        "solar": false
-      },
-      "improved": false
-    }
-  },
   "2404852074": {
     "location": "mercury",
     "type": {
