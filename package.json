@@ -154,7 +154,6 @@
     "@types/react-virtualized": "^9.21.1",
     "@types/valid-url": "^1.0.2",
     "@types/voca": "^1.4.0",
-    "are-you-es5": "^1.2.1",
     "body-scroll-lock": "^3.0.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^3.0.0",
