@@ -3,8 +3,8 @@
     "season": 4,
     "tag": "outlaw",
     "compatibleTags": ["outlaw", "forge"],
-    "thisSlotPlugCategoryHashes": [2149155760, 13646368],
-    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297],
+    "thisSlotPlugCategoryHashes": [13646368, 2149155760],
+    "compatiblePlugCategoryHashes": [13646368, 2149155760, 65589297],
     "emptyModSocketHashes": [2527938402, 3625698764]
   },
   {
@@ -12,15 +12,15 @@
     "tag": "forge",
     "compatibleTags": ["outlaw", "forge"],
     "thisSlotPlugCategoryHashes": [65589297],
-    "compatiblePlugCategoryHashes": [2149155760, 13646368, 65589297],
+    "compatiblePlugCategoryHashes": [13646368, 2149155760, 65589297],
     "emptyModSocketHashes": [720857]
   },
   {
     "season": 7,
     "tag": "opulent",
     "compatibleTags": ["opulent", "undying"],
-    "thisSlotPlugCategoryHashes": [1962317640, 2712224971, 1202876185],
-    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832],
+    "thisSlotPlugCategoryHashes": [1202876185, 1962317640, 2712224971],
+    "compatiblePlugCategoryHashes": [1081029832, 1202876185, 1962317640, 2712224971],
     "emptyModSocketHashes": [4106547009]
   },
   {
@@ -28,7 +28,7 @@
     "tag": "undying",
     "compatibleTags": ["opulent", "undying", "dawn"],
     "thisSlotPlugCategoryHashes": [1081029832],
-    "compatiblePlugCategoryHashes": [1962317640, 2712224971, 1202876185, 1081029832, 208760563],
+    "compatiblePlugCategoryHashes": [1081029832, 1202876185, 1962317640, 208760563, 2712224971],
     "emptyModSocketHashes": [2620967748]
   },
   {
