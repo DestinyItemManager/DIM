@@ -38,4 +38,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "<@&${{ secrets.DISCORD_I18N_ROLE_ID }}> - New translations have been added to Crowdin."
+          args: "<@&622449489008918548> - New translations have been added to Crowdin."
