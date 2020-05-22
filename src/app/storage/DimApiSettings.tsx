@@ -60,14 +60,12 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
 
   const onExportData = async () => {
     setHasBackedUp(true);
-    const data = await ($featureFlags.dimApi && apiPermissionGranted
-      ? exportDimApiData()
-      : SyncService.get());
+    const data = await (apiPermissionGranted ? exportDimApiData() : SyncService.get());
     exportBackupData(data);
   };
 
   const onImportData = async (data: object) => {
-    if ($featureFlags.dimApi && apiPermissionGranted) {
+    if (apiPermissionGranted) {
       if (confirm(t('Storage.ImportConfirmDimApi'))) {
         // TODO: At this point the legacy data is definitely out of sync
         await dispatch(importLegacyData(data, true));
@@ -132,7 +130,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {profileLoadedError && (
         <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}
-      {$featureFlags.dimApi && apiPermissionGranted && (
+      {apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.AuditLogLabel')}</label>
           <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
@@ -140,20 +138,16 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
           </Link>
         </div>
       )}
-      {$featureFlags.dimApi && (
-        <div className="setting horizontal">
-          <label>{t('Storage.DeleteAllDataLabel')}</label>
-          <button className="dim-button" onClick={deleteAllData}>
-            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-          </button>
-        </div>
-      )}
-      {(!$featureFlags.dimApi || !apiPermissionGranted) && <GoogleDriveSettings />}
-      <LocalStorageInfo showDetails={!$featureFlags.dimApi || !apiPermissionGranted} />
+      <div className="setting horizontal">
+        <label>{t('Storage.DeleteAllDataLabel')}</label>
+        <button className="dim-button" onClick={deleteAllData}>
+          <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+        </button>
+      </div>
+      {!apiPermissionGranted && <GoogleDriveSettings />}
+      <LocalStorageInfo showDetails={!apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      {$featureFlags.dimApi && apiPermissionGranted && (
-        <LegacyGoogleDriveSettings onImportData={onImportData} />
-      )}
+      {apiPermissionGranted && <LegacyGoogleDriveSettings onImportData={onImportData} />}
     </section>
   );
 }

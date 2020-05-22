@@ -23,7 +23,7 @@ export const loadoutsSelector = createSelector(
   (state: RootState) => state.loadouts.loadouts,
   apiPermissionGrantedSelector,
   (currentAccount, profile, legacyLoadouts, apiPermissionGranted) =>
-    $featureFlags.dimApi && apiPermissionGranted
+    apiPermissionGranted
       ? profile
         ? Object.values(profile?.loadouts).map((loadout) =>
             convertDimApiLoadoutToLoadout(

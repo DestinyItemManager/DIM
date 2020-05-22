@@ -59,7 +59,7 @@ export function initSettings() {
     store.dispatch(loaded(savedSettings));
     store.dispatch(loadLoadouts(data));
 
-    if (!$featureFlags.dimApi || !apiPermissionGrantedSelector(store.getState())) {
+    if (!apiPermissionGrantedSelector(store.getState())) {
       readyResolve();
     }
     // Start saving settings changes

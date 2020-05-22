@@ -96,23 +96,21 @@ export default function Privacy() {
               </ol>
             </li>
 
-            {$featureFlags.dimApi && (
-              <li>
-                <strong>DIM Sync: Settings (preferences), loadouts, tags and notes.</strong>
-                <ol>
-                  <li>
-                    DIM allows you to connect to DIM Sync, a cloud service operated by the DIM team,
-                    in order to store your data and sync it between instances of DIM or other
-                    Destiny apps. This information is only accessible to you and the DIM team.
-                    Information stored in DIM Sync includes your DIM preferences and settings,
-                    loadouts, any per-item item tags and notes, and a history of actions performed
-                    in DIM Sync (e.g. when you change a tag or save a loadout). Your Bungie.net
-                    authentication information is sent to DIM Sync only in order to verify your
-                    account - it is not saved.
-                  </li>
-                </ol>
-              </li>
-            )}
+            <li>
+              <strong>DIM Sync: Settings (preferences), loadouts, tags and notes.</strong>
+              <ol>
+                <li>
+                  DIM allows you to connect to DIM Sync, a cloud service operated by the DIM team,
+                  in order to store your data and sync it between instances of DIM or other Destiny
+                  apps. This information is only accessible to you and the DIM team. Information
+                  stored in DIM Sync includes your DIM preferences and settings, loadouts, any
+                  per-item item tags and notes, and a history of actions performed in DIM Sync (e.g.
+                  when you change a tag or save a loadout). Your Bungie.net authentication
+                  information is sent to DIM Sync only in order to verify your account - it is not
+                  saved.
+                </li>
+              </ol>
+            </li>
 
             <li>
               <strong>Google Drive: Settings (preferences), loadouts, tags and notes.</strong>

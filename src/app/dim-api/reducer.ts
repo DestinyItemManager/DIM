@@ -123,9 +123,7 @@ export const dimApi = (
   account?: DestinyAccount
 ): DimApiState => {
   if (
-    (!$featureFlags.dimApi ||
-      state.apiPermissionGranted !== true ||
-      !state.globalSettings.dimApiEnabled) &&
+    (state.apiPermissionGranted !== true || !state.globalSettings.dimApiEnabled) &&
     // Let through the ability to change the API permission
     action.type !== getType(actions.setApiPermissionGranted) &&
     // Let through global settings

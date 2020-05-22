@@ -18,7 +18,6 @@ import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
-import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
 import { Settings } from './initial-settings';
@@ -509,7 +508,7 @@ function SettingsPage({
           </section>
 
           <ErrorBoundary name="StorageSettings">
-            {$featureFlags.dimApi ? <DimApiSettings /> : <StorageSettings />}
+            <DimApiSettings />
           </ErrorBoundary>
 
           <Spreadsheets />
