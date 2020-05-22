@@ -97,11 +97,11 @@ export default React.forwardRef(function SearchFilterInput(
     onClear?.();
   }, [debouncedUpdateQuery, onClear]);
 
+  // Add some methods for refs to use
   useImperativeHandle(
     ref,
     () => ({
       focusFilterInput,
-
       clearFilter,
     }),
     [focusFilterInput, clearFilter]
@@ -123,6 +123,7 @@ export default React.forwardRef(function SearchFilterInput(
     }
   };
 
+  // Set up the textcomplete
   useEffect(() => {
     if (!inputElement.current) {
       return;
@@ -212,6 +213,7 @@ export default React.forwardRef(function SearchFilterInput(
     };
   }, [searchConfig.keywords]);
 
+  // Reset live query when search version changes
   useEffect(() => {
     if (searchQuery !== undefined) {
       setLiveQuery(searchQuery);
