@@ -10,9 +10,7 @@ import { initialSettingsState, Settings } from './initial-settings';
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
 export const settingsSelector = (state: RootState) =>
-  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
-    ? state.dimApi.settings
-    : state.settings;
+  apiPermissionGrantedSelector(state) ? state.dimApi.settings : state.settings;
 
 export function defaultItemSize() {
   return 50;

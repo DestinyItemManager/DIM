@@ -174,12 +174,11 @@ class Header extends React.PureComponent<Props, State> {
                 text: t('LB.LB'),
                 hotkey: 'b'
               },
-              $featureFlags.organizer &&
-                !isPhonePortrait && {
-                  to: `${path}/organizer`,
-                  text: t('Organizer.Organizer'),
-                  hotkey: 'o'
-                }
+              !isPhonePortrait && {
+                to: `${path}/organizer`,
+                text: t('Organizer.Organizer'),
+                hotkey: 'o'
+              }
             ])
           : [
               {

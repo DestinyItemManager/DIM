@@ -51,9 +51,7 @@ if ($featureFlags.vendorEngrams) {
 }
 updateCSSVariables();
 
-if ($featureFlags.dimApi) {
-  store.dispatch(loadDimApiData());
-}
+store.dispatch(loadDimApiData());
 
 saveItemInfosOnStateChange();
 

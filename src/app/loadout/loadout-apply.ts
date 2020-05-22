@@ -2,7 +2,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { queuedAction } from 'app/inventory/action-queue';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { showNotification, NotificationType } from 'app/notifications/notifications';
+import { showNotification } from 'app/notifications/notifications';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -45,55 +45,27 @@ export async function applyLoadout(
   const loadoutPromise = applyLoadoutFn(store, loadout, allowUndo);
   loadingTracker.addPromise(loadoutPromise);
 
-  if ($featureFlags.moveNotifications) {
-    showNotification(
-      loadoutNotification(
-        loadout,
-        store,
-        // TODO: allow for an error view function to be passed in
-        // TODO: cancel button!
-        loadoutPromise.then((scope) => {
-          if (scope.failed > 0) {
-            if (scope.failed === scope.total) {
-              throw new Error(t('Loadouts.AppliedError'));
-            } else {
-              throw new Error(
-                t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
-              );
-            }
+  showNotification(
+    loadoutNotification(
+      loadout,
+      store,
+      // TODO: allow for an error view function to be passed in
+      // TODO: cancel button!
+      loadoutPromise.then((scope) => {
+        if (scope.failed > 0) {
+          if (scope.failed === scope.total) {
+            throw new Error(t('Loadouts.AppliedError'));
+          } else {
+            throw new Error(
+              t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
+            );
           }
-        })
-      )
-    );
-  }
+        }
+      })
+    )
+  );
 
-  const scope = await loadoutPromise;
-
-  if (!$featureFlags.moveNotifications) {
-    let value: NotificationType = 'success';
-
-    let message = t('Loadouts.Applied', {
-      // t('Loadouts.Applied_male')
-      // t('Loadouts.Applied_female')
-      // t('Loadouts.Applied_male_plural')
-      // t('Loadouts.Applied_female_plural')
-      count: scope.total,
-      store: store.name,
-      context: store.genderName
-    });
-
-    if (scope.failed > 0) {
-      if (scope.failed === scope.total) {
-        value = 'error';
-        message = t('Loadouts.AppliedError');
-      } else {
-        value = 'warning';
-        message = t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
-      }
-    }
-
-    showNotification({ type: value, title: loadout.name, body: message });
-  }
+  await loadoutPromise;
 }
 
 async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false) {
@@ -216,13 +188,6 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
         item,
         message: t('Loadouts.CouldNotEquip', { itemname: item.name })
       });
-      if (!$featureFlags.moveNotifications) {
-        showNotification({
-          type: 'error',
-          title: loadout.name,
-          body: t('Loadouts.CouldNotEquip', { itemname: item.name })
-        });
-      }
     });
   }
 
@@ -332,13 +297,6 @@ async function applyLoadoutItems(
       level: e.level,
       message: e.message
     });
-    if (!$featureFlags.moveNotifications) {
-      showNotification({
-        type: e.level || 'error',
-        title: item ? item.name : 'Unknown',
-        body: e.message
-      });
-    }
   }
 
   // Keep going

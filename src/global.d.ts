@@ -24,20 +24,12 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
-  /** Use the new React inventory screen. */
-  reactInventory: boolean;
   /** Respect the "do not track" header. */
   respectDNT: boolean;
   /** Community-curated wish lists */
   wishLists: boolean;
-  /** Notifications for item moves */
-  moveNotifications: boolean;
-  /** Item organizer */
-  organizer: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
-  /** Enable the new DIM API */
-  dimApi: boolean;
   /** Enable the Armor 2 Mod Picker */
   armor2ModPicker: boolean;
 };

@@ -40,6 +40,6 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState) =>
-  $featureFlags.dimApi && apiPermissionGrantedSelector(state)
+  apiPermissionGrantedSelector(state)
     ? ((currentProfileSelector(state)?.tags || emptyObject()) as InventoryState['itemInfos'])
     : state.inventory.itemInfos;
