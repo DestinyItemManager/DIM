@@ -30,8 +30,6 @@ declare const $featureFlags: {
   respectDNT: boolean;
   /** Community-curated wish lists */
   wishLists: boolean;
-  /** Item organizer */
-  organizer: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
   /** Enable the new DIM API */

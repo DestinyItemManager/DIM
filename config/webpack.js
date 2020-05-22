@@ -379,8 +379,6 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
-        // Item organizer
-        '$featureFlags.organizer': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the new DIM API
