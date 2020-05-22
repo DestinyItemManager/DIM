@@ -20,7 +20,7 @@ export default React.memo(function EnabledColumnsSelector({
   columns,
   enabledColumns,
   forClass,
-  onChangeEnabledColumn
+  onChangeEnabledColumn,
 }: {
   columns: ColumnDefinition[];
   enabledColumns: string[];
@@ -43,7 +43,7 @@ export default React.memo(function EnabledColumnsSelector({
         id,
         content: header,
         checked,
-        onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked })
+        onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked }),
       };
     }
   }

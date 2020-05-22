@@ -21,7 +21,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     activeAccount: currentAccountSelector(state),
     accountsLoaded: accountsLoadedSelector(state),
-    accountsError: state.accounts.accountsError
+    accountsError: state.accounts.accountsError,
   };
 }
 

@@ -9,7 +9,7 @@ export const D2Categories = {
   Weapons: ['Class', 'Kinetic', 'Energy', 'Power', 'SeasonalArtifacts'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
   General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems', 'Finishers'],
-  Inventory: ['Consumables', 'Modifications', 'Shaders']
+  Inventory: ['Consumables', 'Modifications', 'Shaders'],
 };
 
 // A mapping from the bucket hash to DIM item types
@@ -47,7 +47,7 @@ const bucketToType: { [hash: number]: string | undefined } = {
   1107761855: 'Emotes',
   1345459588: 'Pursuits',
   1506418338: 'SeasonalArtifacts',
-  3683254069: 'Finishers'
+  3683254069: 'Finishers',
 };
 
 const typeToSort: { [type: string]: string } = {};
@@ -74,12 +74,12 @@ async function getBucketsUncached() {
       sort: 'Unknown',
       type: 'Unknown',
       accountWide: false,
-      category: BucketCategory.Item
+      category: BucketCategory.Item,
     },
     setHasUnknown() {
       this.byCategory[this.unknown.sort] = [this.unknown];
       this.byType[this.unknown.type] = this.unknown;
-    }
+    },
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
     const type = bucketToType[def.hash];
@@ -96,7 +96,7 @@ async function getBucketsUncached() {
       accountWide: def.scope === 1,
       category: def.category,
       type,
-      sort
+      sort,
     };
     if (bucket.type) {
       buckets.byType[bucket.type] = bucket;

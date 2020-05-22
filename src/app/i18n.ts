@@ -31,7 +31,7 @@ export function defaultLanguage(): string {
     'ru',
     'ko',
     'zh-cht',
-    'zh-chs'
+    'zh-chs',
   ];
 
   const storedLanguage = localStorage.getItem('dimLanguage');
@@ -66,7 +66,7 @@ export function initi18n(): Promise<never> {
                 return parseInt(val, 10).toLocaleString();
             }
             return val;
-          }
+          },
         },
         backend: {
           loadPath(lng) {
@@ -83,15 +83,15 @@ export function initi18n(): Promise<never> {
               ru,
               ko,
               'zh-cht': zhCHT,
-              'zh-chs': zhCHS
+              'zh-chs': zhCHS,
             }[lng];
             if (!path) {
               throw new Error(`unsupported language ${lng}`);
             }
             return path;
-          }
+          },
         },
-        returnObjects: true
+        returnObjects: true,
       },
       (error) => {
         if (error) {

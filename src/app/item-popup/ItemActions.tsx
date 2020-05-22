@@ -27,7 +27,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     store: storesSelector(state).find((s) => s.id === item.owner),
-    stores: sortedStoresSelector(state)
+    stores: sortedStoresSelector(state),
   };
 }
 
@@ -39,7 +39,7 @@ interface State {
 
 class ItemActions extends React.Component<Props, State> {
   state: State = {
-    amount: this.props.item.amount
+    amount: this.props.item.amount,
   };
 
   private maximumSelector = createSelector(
@@ -109,7 +109,7 @@ class ItemActions extends React.Component<Props, State> {
                 className={clsx(styles.infusePerk, {
                   [styles.destiny2]: item.isDestiny2(),
                   [styles.weapons]: item.bucket.sort === 'Weapons',
-                  [styles.armor]: item.bucket.sort === 'Armor'
+                  [styles.armor]: item.bucket.sort === 'Armor',
                 })}
                 onClick={this.infuse}
                 title={t('Infusion.Infusion')}

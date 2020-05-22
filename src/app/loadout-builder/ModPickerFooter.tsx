@@ -48,8 +48,8 @@ function ModPickerFooter(props: Props) {
             {
               combo: 'enter',
               description: t('LB.SelectMods'),
-              callback: onSubmit
-            }
+              callback: onSubmit,
+            },
           ]}
         />
       </div>

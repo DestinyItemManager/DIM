@@ -13,7 +13,7 @@ import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 export default function LockedItem({
   lockedItem,
   defs,
-  onRemove
+  onRemove,
 }: {
   lockedItem: LockedItemType;
   defs: D2ManifestDefinitions;

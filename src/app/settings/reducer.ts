@@ -26,7 +26,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
     case getType(actions.loaded):
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
 
     case getType(actions.toggleCollapsedSection):
@@ -34,15 +34,15 @@ export const settings: Reducer<Settings, SettingsAction> = (
         ...state,
         collapsedSections: {
           ...state.collapsedSections,
-          [action.payload]: !state.collapsedSections[action.payload]
-        }
+          [action.payload]: !state.collapsedSections[action.payload],
+        },
       };
 
     case getType(actions.setSetting):
       if (state[action.payload.property] !== action.payload.value) {
         return {
           ...state,
-          [action.payload.property]: action.payload.value
+          [action.payload.property]: action.payload.value,
         };
       } else {
         return state;
@@ -56,7 +56,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
         // to the end of the list
         customCharacterSort: state.customCharacterSort
           .filter((id) => !order.includes(id))
-          .concat(order)
+          .concat(order),
       };
     }
 
@@ -64,7 +64,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
     case getType(clearWishLists): {
       return {
         ...state,
-        wishListSource: ''
+        wishListSource: '',
       };
     }
 

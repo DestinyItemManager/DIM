@@ -8,7 +8,7 @@ import {
   LockedArmor2Mod,
   LockedArmor2ModMap,
   ModPickerCategories,
-  ModPickerCategory
+  ModPickerCategory,
 } from './types';
 import _ from 'lodash';
 import { isLoadoutBuilderItem } from './generated-sets/utils';
@@ -36,7 +36,7 @@ const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.chest]: t('LB.Chest'),
   [ModPickerCategories.leg]: t('LB.Legs'),
   [ModPickerCategories.classitem]: t('LB.ClassItem'),
-  [ModPickerCategories.seasonal]: t('LB.Seasonal')
+  [ModPickerCategories.seasonal]: t('LB.Seasonal'),
 };
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
@@ -133,7 +133,7 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     language: settingsSelector(state).language,
     mods: unlockedModsSelector(state, props),
-    defs: state.manifest.d2Manifest!
+    defs: state.manifest.d2Manifest!,
   });
 }
 
@@ -149,7 +149,7 @@ interface State {
 class ModPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
-    lockedArmor2Mods: copy(this.props.lockedArmor2Mods)
+    lockedArmor2Mods: copy(this.props.lockedArmor2Mods),
   };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
@@ -175,7 +175,7 @@ class ModPicker extends React.Component<Props, State> {
 
     const order = Object.values(ModPickerCategories).map((category) => ({
       category,
-      translatedName: Armor2ModPlugCategoriesTitles[category]
+      translatedName: Armor2ModPlugCategoriesTitles[category],
     }));
 
     // Only some languages effectively use the \b regex word boundary
@@ -259,15 +259,15 @@ class ModPicker extends React.Component<Props, State> {
           ...lockedArmor2Mods,
           [item.category]: lockedArmor2Mods[item.category]?.filter(
             (li) => li.mod.hash !== item.mod.hash
-          )
-        }
+          ),
+        },
       });
     } else {
       this.setState({
         lockedArmor2Mods: {
           ...lockedArmor2Mods,
-          [item.category]: [...(lockedArmor2Mods[item.category] || []), item]
-        }
+          [item.category]: [...(lockedArmor2Mods[item.category] || []), item],
+        },
       });
     }
   };

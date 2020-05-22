@@ -12,7 +12,7 @@ import './ItemPopupBody.scss';
 
 export const enum ItemPopupTab {
   Overview,
-  Reviews
+  Reviews,
 }
 
 const spring = { stiffness: 200, damping: 22 };
@@ -25,7 +25,7 @@ export default function ItemPopupBody({
   tab,
   expanded,
   onTabChanged,
-  onToggleExpanded
+  onToggleExpanded,
 }: {
   item: DimItem;
   failureStrings?: string[];
@@ -47,14 +47,14 @@ export default function ItemPopupBody({
     {
       tab: ItemPopupTab.Overview,
       title: t('MovePopup.OverviewTab'),
-      component: <ItemDetails item={item} extraInfo={extraInfo} />
-    }
+      component: <ItemDetails item={item} extraInfo={extraInfo} />,
+    },
   ];
   if ($featureFlags.reviewsEnabled && item.reviewable) {
     tabs.push({
       tab: ItemPopupTab.Reviews,
       title: t('MovePopup.ReviewsTab'),
-      component: <ItemReviews item={item} />
+      component: <ItemReviews item={item} />,
     });
   }
 
@@ -87,7 +87,7 @@ export default function ItemPopupBody({
                   <span
                     key={ta.tab}
                     className={clsx('move-popup-tab', {
-                      selected: tab === ta.tab
+                      selected: tab === ta.tab,
                     })}
                     onClick={() => onTabChanged(ta.tab)}
                   >

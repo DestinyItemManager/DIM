@@ -46,7 +46,7 @@ function GeneratedSet({
   forwardedRef,
   lockedArmor2Mods,
   addLockedItem,
-  removeLockedItem
+  removeLockedItem,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -101,7 +101,7 @@ function GeneratedSet({
               <span>
                 <b>
                   {t('LoadoutBuilder.TierNumber', {
-                    tier: enabledTier
+                    tier: enabledTier,
                   })}
                 </b>
               </span>
@@ -109,7 +109,7 @@ function GeneratedSet({
                 <span className={styles.nonActiveStat}>
                   <b>
                     {` (${t('LoadoutBuilder.TierNumber', {
-                      tier: totalTier
+                      tier: totalTier,
                     })})`}
                   </b>
                 </span>
@@ -158,7 +158,7 @@ function GeneratedSet({
 function Stat({
   stat,
   isActive,
-  value
+  value,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
@@ -170,7 +170,7 @@ function Stat({
     >
       <b>
         {t('LoadoutBuilder.TierNumber', {
-          tier: statTier(value)
+          tier: statTier(value),
         })}
       </b>{' '}
       <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}

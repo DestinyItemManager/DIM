@@ -34,7 +34,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
             progress: tier === 5 ? stat.value : stat.value % 60,
             tier,
             nextTier: tier + 1,
-            statName: stat.name
+            statName: stat.name,
           });
           let cooldown = stat.cooldown || '';
           if (cooldown) {
@@ -57,7 +57,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                   <div key={index} className="bar">
                     <div
                       className={clsx('progress', {
-                        complete: n / 60 === 1
+                        complete: n / 60 === 1,
                       })}
                       style={{ width: percent(n / 60) }}
                     />
@@ -74,7 +74,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       const powerInfos = _.compact([
         stats.maxTotalPower,
         stats.maxGearPower,
-        stats.powerModifier
+        stats.powerModifier,
       ]).map((stat) => ({ stat, tooltip: powerTooltip(stat) }));
 
       const statTooltip = (stat: DimCharacterStat): string =>

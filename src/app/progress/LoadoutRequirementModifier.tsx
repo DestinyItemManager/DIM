@@ -42,7 +42,7 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.GrenadeLauncher]: 153950757,
   [DestinyItemSubType.SubmachineGun]: 3954685534,
   [DestinyItemSubType.TraceRifle]: 2489664120,
-  [DestinyItemSubType.Bow]: 3317538576
+  [DestinyItemSubType.Bow]: 3317538576,
 };
 
 /**
@@ -52,7 +52,7 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
 const equipmentSlotHashToItemCategoryHash = {
   1498876634: 2, // Kinetic
   2465295065: 3, // Energy
-  953998645: 4 // Power
+  953998645: 4, // Power
 };
 
 /**
@@ -65,7 +65,7 @@ const equipmentSlotHashToItemCategoryHash = {
  */
 export default function LoadoutRequirementModifier({
   activity,
-  defs
+  defs,
 }: {
   activity: DestinyMilestoneChallengeActivity;
   defs: D2ManifestDefinitions;
@@ -86,7 +86,7 @@ export default function LoadoutRequirementModifier({
       .displayProperties.name,
     types: req.allowedWeaponSubTypes.map(
       (sub) => defs.ItemCategory.get(itemSubTypeToItemCategoryHash[sub]).displayProperties.name
-    )
+    ),
   }));
 
   const description = (

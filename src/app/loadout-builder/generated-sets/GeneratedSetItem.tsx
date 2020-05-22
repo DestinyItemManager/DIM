@@ -40,7 +40,7 @@ export default function GeneratedSetItem({
   itemOptions,
   lockedMods,
   addLockedItem,
-  removeLockedItem
+  removeLockedItem,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
@@ -53,7 +53,7 @@ export default function GeneratedSetItem({
 }) {
   const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
     item,
-    statValues
+    statValues,
   ]);
 
   const classesByHash = altPerks.reduce(
@@ -75,7 +75,7 @@ export default function GeneratedSetItem({
       const { item } = await showItemPicker({
         prompt: t('LoadoutBuilder.ChooseAlternate'),
         hideStoreEquip: true,
-        filterItems: (item: DimItem) => ids.has(item.id)
+        filterItems: (item: DimItem) => ids.has(item.id),
       });
 
       addLockedItem({ type: 'item', item, bucket: item.bucket });

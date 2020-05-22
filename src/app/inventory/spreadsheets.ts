@@ -39,7 +39,7 @@ const FILTER_NODE_NAMES = [
   'Default Shader',
   'Default Ornament',
   'Empty Mod Socket',
-  'No Projection'
+  'No Projection',
 ];
 
 // ignore raid sources in favor of more detailed sources
@@ -119,7 +119,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
         Papa.parse(file, {
           header: true,
           complete: resolve,
-          error: reject
+          error: reject,
         })
       );
       if (
@@ -149,7 +149,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
                 row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
                 return {
                   tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
-                  itemId: row.Id
+                  itemId: row.Id,
                 };
               }
             })
@@ -164,7 +164,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
           dispatch(
             setItemNote({
               note: row.Notes,
-              itemId: row.Id
+              itemId: row.Id,
             })
           );
         }
@@ -257,7 +257,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, ite
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
-      Notes: getNotes(item, itemInfos)
+      Notes: getNotes(item, itemInfos),
     };
 
     addPerks(row, item, maxPerks);
@@ -291,7 +291,7 @@ export const armorStatHashes = {
   Discipline: 1735777505,
   Intellect: 144602215,
   Strength: 4244567218,
-  Total: -1000
+  Total: -1000,
 };
 
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
@@ -308,7 +308,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Type: item.typeName,
       Source: source(item),
       Equippable: equippable(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo?.statName;
@@ -360,7 +360,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         stats[stat.statHash] = {
           value: stat.value,
           pct,
-          base: 0
+          base: 0,
         };
       });
     } else if (item.isDestiny2() && item.stats) {
@@ -368,7 +368,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         stats[stat.statHash] = {
           value: stat.value,
           base: stat.base,
-          pct: 0
+          pct: 0,
         };
       });
     }
@@ -382,7 +382,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     } else {
       const armorStats = Object.keys(armorStatHashes).map((statName) => ({
         name: statName,
-        stat: stats[armorStatHashes[statName]]
+        stat: stats[armorStatHashes[statName]],
       }));
       armorStats.forEach((stat) => {
         row[stat.name] = stat.stat ? stat.stat.value : 0;
@@ -428,7 +428,7 @@ function downloadWeapons(
       Source: source(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
       Category: item.bucket.type,
-      Element: item.element?.displayProperties.name
+      Element: item.element?.displayProperties.name,
     };
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo?.statName;
@@ -478,7 +478,7 @@ function downloadWeapons(
       accuracy: 0,
       recoil: 0,
       blastRadius: 0,
-      velocity: 0
+      velocity: 0,
     };
 
     if (item.stats) {

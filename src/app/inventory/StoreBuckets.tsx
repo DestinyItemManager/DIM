@@ -12,7 +12,7 @@ export function StoreBuckets({
   bucket,
   stores,
   vault,
-  currentStore
+  currentStore,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
@@ -53,7 +53,7 @@ export function StoreBuckets({
         className={clsx('store-cell', {
           vault: store.isVault,
           postmasterFull:
-            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)
+            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store),
         })}
         style={storeBackgroundColor(store, index)}
       >

@@ -22,7 +22,7 @@ export default function Vendor({
   ownedItemHashes,
   currencyLookups,
   filtering,
-  vendorDrops
+  vendorDrops,
 }: {
   vendor: D2Vendor;
   defs: D2ManifestDefinitions;
@@ -62,7 +62,7 @@ export default function Vendor({
                 <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
                   <img
                     className={clsx(styles.xyzEngram, {
-                      [styles.xyzActiveThrob]: dropActive
+                      [styles.xyzActiveThrob]: dropActive,
                     })}
                     src={vendorEngramSvg}
                     title={vendorLinkTitle}

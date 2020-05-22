@@ -17,7 +17,7 @@ export default function PlugTooltip({
   defs,
   wishListsEnabled,
   inventoryWishListRoll,
-  bestPerks
+  bestPerks,
 }: {
   item: D2Item;
   plug: DimPlug;
@@ -110,7 +110,7 @@ export default function PlugTooltip({
 export function StatValue({
   value,
   statHash,
-  defs
+  defs,
 }: {
   value: number;
   statHash: number;

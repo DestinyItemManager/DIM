@@ -73,7 +73,7 @@ const D1_CONSUMABLE_SORT_ORDER = [
   //
   2575095887, // Splicer Intel Relay
   3815757277, // Splicer Cache Key
-  4244618453 // Splicer Key
+  4244618453, // Splicer Key
 ];
 
 const D1_MATERIAL_SORT_ORDER = [
@@ -101,7 +101,7 @@ const D1_MATERIAL_SORT_ORDER = [
   342707700, // Stolen Rune
   2906158273, // Antiquated Rune
   2620224196, // Stolen Rune (Charging)
-  2906158273 // Antiquated Rune (Charging)
+  2906158273, // Antiquated Rune (Charging)
 ];
 
 // Bucket IDs that'll never be sorted.
@@ -111,7 +111,7 @@ const ITEM_SORT_BLACKLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
-  215593132 // LostItems
+  215593132, // LostItems
 ]);
 
 // TODO: pass in state
@@ -144,7 +144,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
-  default: () => 0
+  default: () => 0,
 };
 
 /**
@@ -226,7 +226,7 @@ export function getColor(value: number, property = 'background-color') {
     color = 190;
   }
   return {
-    [property]: `hsla(${color},65%,50%, 1)`
+    [property]: `hsla(${color},65%,50%, 1)`,
   };
 }
 
@@ -250,7 +250,7 @@ export function dtrRatingColor(value: number, property = 'color') {
     color = 'hsl(190,90%,45%)';
   }
   return {
-    [property]: color
+    [property]: color,
   };
 }
 
@@ -266,14 +266,14 @@ export function storeBackgroundColor(store: DimStore, index = 0, header = false)
       red: color.red * 0.75,
       green: color.green * 0.75,
       blue: color.blue * 0.75,
-      alpha: 1
+      alpha: 1,
     };
   } else if (header) {
     color = {
       red: color.red * 0.25 + 49 * 0.75,
       green: color.green * 0.25 + 50 * 0.75,
       blue: color.blue * 0.25 + 51 * 0.75,
-      alpha: 1
+      alpha: 1,
     };
   }
 
@@ -284,6 +284,6 @@ export function storeBackgroundColor(store: DimStore, index = 0, header = false)
   )}, ${alpha})`;
 
   return {
-    backgroundColor
+    backgroundColor,
   };
 }

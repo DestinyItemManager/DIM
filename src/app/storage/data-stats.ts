@@ -30,6 +30,6 @@ export function dataStats(data) {
     TagNotesD1: taggedItemsD1,
     TagNotesD2: taggedItemsD2,
     Settings: _.size(data['settings-v1.0']),
-    IgnoredUsers: _.size(data.ignoredUsers)
+    IgnoredUsers: _.size(data.ignoredUsers),
   };
 }

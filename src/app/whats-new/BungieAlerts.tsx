@@ -10,7 +10,7 @@ import {
   startWith,
   distinctUntilChanged,
   shareReplay,
-  catchError
+  catchError,
 } from 'rxjs/operators';
 import { useSubscription } from 'app/utils/hooks';
 

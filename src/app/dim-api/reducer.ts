@@ -15,7 +15,7 @@ import {
   Loadout,
   DestinyVersion,
   LoadoutItem,
-  ItemAnnotation
+  ItemAnnotation,
 } from '@destinyitemmanager/dim-api-types';
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
@@ -92,7 +92,7 @@ export const initialState: DimApiState = {
   globalSettings: {
     ...defaultGlobalSettings,
     // 2019-12-17 we've been asked to disable auto-refresh
-    autoRefresh: false
+    autoRefresh: false,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
@@ -106,7 +106,7 @@ export const initialState: DimApiState = {
   profiles: {},
 
   updateQueue: [],
-  updateInProgressWatermark: 0
+  updateInProgressWatermark: 0,
 };
 
 type DimApiAction =
@@ -142,8 +142,8 @@ export const dimApi = (
         globalSettingsLoaded: true,
         globalSettings: {
           ...state.globalSettings,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
 
     case getType(actions.profileLoadedFromIDB): {
@@ -157,17 +157,17 @@ export const dimApi = (
             profileLoadedFromIndexedDb: true,
             settings: {
               ...state.settings,
-              ...action.payload.settings
+              ...action.payload.settings,
             },
             profiles: {
               ...state.profiles,
-              ...action.payload.profiles
+              ...action.payload.profiles,
             },
-            updateQueue: newUpdateQueue
+            updateQueue: newUpdateQueue,
           }
         : {
             ...state,
-            profileLoadedFromIndexedDb: true
+            profileLoadedFromIndexedDb: true,
           };
     }
 
@@ -180,7 +180,7 @@ export const dimApi = (
         profileLastLoaded: Date.now(),
         settings: {
           ...state.settings,
-          ...profileResponse.settings
+          ...profileResponse.settings,
         },
         profiles: account
           ? {
@@ -188,17 +188,17 @@ export const dimApi = (
               // Overwrite just this account's profile
               [makeProfileKeyFromAccount(account)]: {
                 loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
-                tags: _.keyBy(profileResponse.tags || [], (t) => t.id)
-              }
+                tags: _.keyBy(profileResponse.tags || [], (t) => t.id),
+              },
             }
-          : state.profiles
+          : state.profiles,
       };
     }
 
     case getType(actions.profileLoadError): {
       return {
         ...state,
-        profileLoadedError: action.payload
+        profileLoadedError: action.payload,
       };
     }
 
@@ -207,7 +207,7 @@ export const dimApi = (
       return apiPermissionGranted
         ? {
             ...state,
-            apiPermissionGranted
+            apiPermissionGranted,
           }
         : // If we're disabling DIM Sync, reset local state to the initial state, as if we'd never loaded
           {
@@ -215,7 +215,7 @@ export const dimApi = (
             apiPermissionGranted,
             profiles: initialState.profiles,
             settings: initialState.settings,
-            profileLoaded: false
+            profileLoaded: false,
           };
     }
 
@@ -229,7 +229,7 @@ export const dimApi = (
         profiles: initialState.profiles,
         settings: initialState.settings,
         updateQueue: [],
-        updateInProgressWatermark: 0
+        updateInProgressWatermark: 0,
       };
     }
 
@@ -241,7 +241,7 @@ export const dimApi = (
     case getType(actions.flushUpdatesFailed):
       return {
         ...state,
-        updateInProgressWatermark: 0
+        updateInProgressWatermark: 0,
       };
 
     // *** Settings ***
@@ -252,7 +252,7 @@ export const dimApi = (
     case getType(settingsActions.toggleCollapsedSection):
       return changeSetting(state, 'collapsedSections', {
         ...state.settings.collapsedSections,
-        [action.payload]: !state.settings.collapsedSections[action.payload]
+        [action.payload]: !state.settings.collapsedSections[action.payload],
       });
 
     case getType(settingsActions.setCharacterOrder): {
@@ -311,11 +311,11 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
     draft.updateQueue.push({
       action: 'setting',
       payload: {
-        [prop]: value
+        [prop]: value,
       },
       before: {
-        [prop]: beforeValue
-      }
+        [prop]: beforeValue,
+      },
     });
   });
 }
@@ -425,12 +425,12 @@ function compactUpdate(
         const payload = {
           // Merge settings, newer overwriting older
           ...existingUpdate.payload,
-          ...update.payload
+          ...update.payload,
         };
         const before = {
           // Reversed order
           ...update.before,
-          ...existingUpdate.before
+          ...existingUpdate.before,
         };
 
         // Eliminate chains of settings that get back to the initial state
@@ -447,7 +447,7 @@ function compactUpdate(
         combinedUpdate = {
           ...existingUpdate,
           payload,
-          before
+          before,
         };
       }
       break;
@@ -458,7 +458,7 @@ function compactUpdate(
         combinedUpdate = {
           ...existingUpdate,
           // Combine into a unique set
-          payload: Array.from(new Set([...existingUpdate.payload, ...update.payload]))
+          payload: Array.from(new Set([...existingUpdate.payload, ...update.payload])),
         };
       }
       break;
@@ -469,7 +469,7 @@ function compactUpdate(
         combinedUpdate = {
           ...existingUpdate,
           // Loadouts completely overwrite
-          payload: update.payload
+          payload: update.payload,
           // We keep the "before" from the existing update
         };
       } else if (existingUpdate.action === 'delete_loadout') {
@@ -477,7 +477,7 @@ function compactUpdate(
         combinedUpdate = {
           ...update,
           // Before is whatever loadout existed before being deleted.
-          before: existingUpdate.before as Loadout
+          before: existingUpdate.before as Loadout,
         };
       }
       break;
@@ -494,7 +494,7 @@ function compactUpdate(
           // Turn it into a delete loadout
           ...update,
           // Loadouts completely overwrite
-          before: existingUpdate.before
+          before: existingUpdate.before,
           // We keep the "before" from the existing update
         } as DeleteLoadoutUpdateWithRollback;
       } else if (existingUpdate.action === 'delete_loadout') {
@@ -510,9 +510,9 @@ function compactUpdate(
           ...existingUpdate,
           payload: {
             ...existingUpdate.payload,
-            ...update.payload
+            ...update.payload,
           },
-          before: existingUpdate.before
+          before: existingUpdate.before,
         };
       }
       break;
@@ -584,7 +584,7 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
       payload: loadoutId,
       before: loadout,
       platformMembershipId,
-      destinyVersion
+      destinyVersion,
     });
   });
 }
@@ -602,7 +602,7 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
       action: 'loadout',
       payload: newLoadout,
       platformMembershipId: loadout.membershipId,
-      destinyVersion: loadout.destinyVersion || 2
+      destinyVersion: loadout.destinyVersion || 2,
     };
 
     if (loadouts[loadout.id]) {
@@ -631,11 +631,11 @@ function setTag(
     action: 'tag',
     payload: {
       id: itemId,
-      tag: tag ?? null
+      tag: tag ?? null,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
-    destinyVersion: account.destinyVersion
+    destinyVersion: account.destinyVersion,
   };
 
   if (tag) {
@@ -644,7 +644,7 @@ function setTag(
     } else {
       tags[itemId] = {
         id: itemId,
-        tag
+        tag,
       };
     }
   } else {
@@ -672,11 +672,11 @@ function setNote(
     action: 'tag',
     payload: {
       id: itemId,
-      notes: notes && notes.length > 0 ? notes : null
+      notes: notes && notes.length > 0 ? notes : null,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
-    destinyVersion: account.destinyVersion
+    destinyVersion: account.destinyVersion,
   };
 
   if (notes && notes.length > 0) {
@@ -685,7 +685,7 @@ function setNote(
     } else {
       tags[itemId] = {
         id: itemId,
-        notes
+        notes,
       };
     }
   } else {
@@ -715,7 +715,7 @@ function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: Dest
       payload: itemIdsToRemove,
       // "before" isn't really valuable here
       platformMembershipId: account.membershipId,
-      destinyVersion: account.destinyVersion
+      destinyVersion: account.destinyVersion,
     });
   });
 }
@@ -758,13 +758,13 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
     name: dimLoadout.name,
     clearSpace: dimLoadout.clearSpace || false,
     equipped,
-    unequipped
+    unequipped,
   };
 }
 
 function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   const result: LoadoutItem = {
-    hash: item.hash
+    hash: item.hash,
   };
   if (item.id && item.id !== '0') {
     result.id = item.id;
@@ -779,7 +779,7 @@ function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {
   if (!draft.profiles[profileKey]) {
     draft.profiles[profileKey] = {
       loadouts: {},
-      tags: {}
+      tags: {},
     };
   }
   return draft.profiles[profileKey];

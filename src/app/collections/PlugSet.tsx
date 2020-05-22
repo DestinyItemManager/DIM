@@ -39,7 +39,7 @@ export default function PlugSet({
   plugSetCollection,
   items,
   path,
-  onNodePathSelected
+  onNodePathSelected,
 }: Props) {
   const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);

@@ -9,5 +9,5 @@ export const CompareService = {
   }>(),
   addItemsToCompare(additionalItems: DimItem[], showSomeDupes = false) {
     this.compareItems$.next({ additionalItems, showSomeDupes });
-  }
+  },
 };

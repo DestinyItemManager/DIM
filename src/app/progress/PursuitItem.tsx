@@ -34,7 +34,7 @@ function PursuitItem(
     !expired &&
     showProgressBoolean(item.objectives);
   const itemImageStyles = {
-    [styles.tracked]: item.tracked
+    [styles.tracked]: item.tracked,
   };
   return (
     <div
@@ -52,7 +52,7 @@ function PursuitItem(
       {item.maxStackSize > 1 && item.amount > 1 && (
         <div
           className={clsx(styles.amount, {
-            [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize
+            [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize,
           })}
         >
           {item.amount.toString()}

@@ -18,25 +18,25 @@ const twitters = (
       <Timeline
         dataSource={{
           sourceType: 'profile',
-          screenName: 'BungieHelp'
+          screenName: 'BungieHelp',
         }}
         options={{
           dnt: true,
           via: 'BungieHelp',
           username: 'BungieHelp',
-          height: '100%'
+          height: '100%',
         }}
       />
       <Timeline
         dataSource={{
           sourceType: 'profile',
-          screenName: 'ThisIsDIM'
+          screenName: 'ThisIsDIM',
         }}
         options={{
           dnt: true,
           via: 'ThisIsDIM',
           username: 'ThisIsDIM',
-          height: '100%'
+          height: '100%',
         }}
       />
     </React.Suspense>
@@ -49,7 +49,7 @@ export default function ErrorPanel({
   fallbackMessage,
   showTwitters,
   children,
-  showReload
+  showReload,
 }: {
   title?: string;
   error?: DimError;

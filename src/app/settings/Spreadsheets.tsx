@@ -25,7 +25,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     disabled: !storesLoadedSelector(state),
     stores: storesSelector(state),
-    itemInfos: itemInfosSelector(state)
+    itemInfos: itemInfosSelector(state),
   };
 }
 

@@ -12,7 +12,7 @@ const raidOrder = [
   2683538554, // sos
   3181387331, // wish
   1342567285, // scourge
-  2590427074 // crown
+  2590427074, // crown
 ];
 
 /**
@@ -22,7 +22,7 @@ const raidOrder = [
 export default function Raids({
   store,
   defs,
-  profileInfo
+  profileInfo,
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;

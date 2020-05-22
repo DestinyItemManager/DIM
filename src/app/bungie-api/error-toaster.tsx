@@ -26,7 +26,7 @@ export function bungieErrorToaster(e: Error): NotifyInput {
           </ExternalLink>
         </div>
       </>
-    )
+    ),
   };
 }
 
@@ -49,6 +49,6 @@ export function dimErrorToaster(title: string, message: string, e: Error): Notif
           </ExternalLink>
         </div>
       </>
-    )
+    ),
   };
 }

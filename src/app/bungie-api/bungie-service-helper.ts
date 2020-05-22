@@ -78,12 +78,12 @@ export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Requ
     headers: config.body
       ? {
           'X-API-Key': API_KEY,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         }
       : {
-          'X-API-Key': API_KEY
+          'X-API-Key': API_KEY,
         },
-    credentials: skipAuth ? 'omit' : 'include'
+    credentials: skipAuth ? 'omit' : 'include',
   });
 }
 
@@ -176,7 +176,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
         const account = getActivePlatform();
         throw error(
           t('BungieService.NoAccount', {
-            platform: account ? t(`Accounts.${account.platformLabel}`) : 'Unknown'
+            platform: account ? t(`Accounts.${account.platformLabel}`) : 'Unknown',
           }),
           errorCode
         );
@@ -215,7 +215,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     throw error(
       t('BungieService.NetworkError', {
         status: response.status,
-        statusText: response.statusText
+        statusText: response.statusText,
       }),
       errorCode
     );
@@ -242,7 +242,7 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,
-        context: store.genderName
+        context: store.genderName,
       }),
       e.code
     );

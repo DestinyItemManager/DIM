@@ -31,7 +31,7 @@ interface DispatchProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    collapsed: settingsSelector(state).collapsedSections[props.sectionId]
+    collapsed: settingsSelector(state).collapsedSections[props.sectionId],
   };
 }
 
@@ -39,7 +39,7 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
   return {
     toggle: () => {
       dispatch(toggleCollapsedSection(ownProps.sectionId));
-    }
+    },
   };
 }
 
@@ -52,7 +52,7 @@ function InventoryCollapsibleTitle({
   children,
   toggle,
   className,
-  stores
+  stores,
 }: Props) {
   const checkPostmaster = sectionId === 'Postmaster';
 
@@ -60,7 +60,7 @@ function InventoryCollapsibleTitle({
     <>
       <div
         className={clsx('store-row', 'inventory-title', {
-          collapsed
+          collapsed,
         })}
       >
         {stores.map((store, index) => {
@@ -71,7 +71,7 @@ function InventoryCollapsibleTitle({
 
           const data = {
             number: postMasterSpaceUsed,
-            postmasterSize: POSTMASTER_SIZE
+            postmasterSize: POSTMASTER_SIZE,
           };
 
           const text =
@@ -85,7 +85,7 @@ function InventoryCollapsibleTitle({
               className={clsx('title', 'store-cell', className, {
                 collapsed,
                 vault: store.isVault,
-                postmasterFull: showPostmasterFull
+                postmasterFull: showPostmasterFull,
               })}
               style={storeBackgroundColor(store, index)}
             >

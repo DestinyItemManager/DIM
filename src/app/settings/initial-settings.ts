@@ -25,7 +25,7 @@ export const initialSettingsState: Settings = {
     'wishList',
     'archetype',
     'perks',
-    'notes'
+    'notes',
   ],
   organizerColumnsArmor: [
     'icon',
@@ -40,6 +40,6 @@ export const initialSettingsState: Settings = {
     'perks',
     'stats',
     'customstat',
-    'notes'
-  ]
+    'notes',
+  ],
 };

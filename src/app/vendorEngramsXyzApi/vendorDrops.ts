@@ -11,13 +11,13 @@ export interface VendorDropXyz {
 export const enum VendorDropTypeXyz {
   NoData = '0',
   DroppingLow = '1',
-  DroppingHigh = '2'
+  DroppingHigh = '2',
 }
 
 export const enum VendorDropType {
   NoData = 0,
   DroppingLow = 1,
-  DroppingHigh = 2
+  DroppingHigh = 2,
 }
 
 export function toVendorDrop(vendorDropXyz: VendorDropXyz): VendorDrop {
@@ -35,7 +35,7 @@ export function toVendorDrop(vendorDropXyz: VendorDropXyz): VendorDrop {
     shorthand: vendorDropXyz.shorthand,
     nextRefresh: new Date(vendorDropXyz.nextRefresh),
     drop: dropType,
-    interval: Number(vendorDropXyz.interval)
+    interval: Number(vendorDropXyz.interval),
   };
 }
 

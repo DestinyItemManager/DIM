@@ -9,7 +9,7 @@ const itemSortPresets = {
   quality: ['rating', 'name'],
   name: ['name'],
   typeThenPrimary: ['typeName', 'classType', 'primStat', 'name'],
-  typeThenName: ['typeName', 'classType', 'name']
+  typeThenName: ['typeName', 'classType', 'name'],
 };
 
 export const itemSortOrder = (settings: Settings): string[] =>

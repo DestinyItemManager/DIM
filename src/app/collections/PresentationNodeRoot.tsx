@@ -4,7 +4,7 @@ import PresentationNode from './PresentationNode';
 import {
   DestinyProfileResponse,
   DestinyCollectibleState,
-  DestinyRecordState
+  DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { getCollectibleState } from './Collectible';
 import { count } from '../utils/util';
@@ -45,7 +45,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       buckets,
       profileResponse,
       ownedItemHashes,
-      showPlugSets
+      showPlugSets,
     } = this.props;
     const { nodePath } = this.state;
 
@@ -70,7 +70,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       // Emotes
       { hash: 1155321287, displayItem: 3960522253 },
       // Projections
-      { hash: 499268600, displayItem: 2544954628 }
+      { hash: 499268600, displayItem: 2544954628 },
     ];
 
     return (
@@ -121,7 +121,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
   // TODO: onNodeDeselected!
   private onNodePathSelected = (nodePath: number[]): void => {
     this.setState({
-      nodePath
+      nodePath,
     });
   };
 }
@@ -169,8 +169,8 @@ export function countCollectibles(
     return {
       [node]: {
         acquired: acquiredCollectibles,
-        visible: visibleCollectibles
-      }
+        visible: visibleCollectibles,
+      },
     };
   } else if (presentationNodeDef.children.records?.length) {
     const recordDefs = presentationNodeDef.children.records.map((c) =>
@@ -195,8 +195,8 @@ export function countCollectibles(
     return {
       [node]: {
         acquired: acquiredCollectibles,
-        visible: visibleCollectibles
-      }
+        visible: visibleCollectibles,
+      },
     };
   } else if (presentationNodeDef.children.metrics?.length) {
     const metricDefs = presentationNodeDef.children.metrics.map((c) =>
@@ -217,8 +217,8 @@ export function countCollectibles(
     return {
       [node]: {
         acquired,
-        visible
-      }
+        visible,
+      },
     };
   } else {
     // call for all children, then add 'em up
@@ -239,8 +239,8 @@ export function countCollectibles(
     Object.assign(ret, {
       [node]: {
         acquired,
-        visible
-      }
+        visible,
+      },
     });
     return ret;
   }

@@ -59,7 +59,7 @@ const allVendors = [
 
 // Vendors we don't want to load by default
 const vendorBlackList = [
-  2021251983 // Postmaster,
+  2021251983, // Postmaster,
 ];
 
 // Hashes for 'Decode Engram'
@@ -152,7 +152,7 @@ function VendorService(): VendorServiceType {
     totalVendors: 0,
     loadedVendors: 0,
     requestRatings,
-    countCurrencies
+    countCurrencies,
     // TODO: expose getVendor promise, idempotently?
   };
 
@@ -345,7 +345,7 @@ function VendorService(): VendorServiceType {
     const factionsByHash = {
       489342053: 'Future War Cult',
       2397602219: 'Dead Orbit',
-      3197190122: 'New Monarchy'
+      3197190122: 'New Monarchy',
     };
     const factionAlignment = store.factionAlignment();
 
@@ -411,7 +411,7 @@ function VendorService(): VendorServiceType {
                   status: e.status,
                   expires: Date.now() + 60 * 60 * 1000 + (Math.random() - 0.5) * (60 * 60 * 1000),
                   factionLevel: factionLevel(store, vendorDef.summary.factionHash),
-                  factionAligned: factionAligned(store, vendorDef.summary.factionHash)
+                  factionAligned: factionAligned(store, vendorDef.summary.factionHash),
                 };
 
                 return set(key, vendor)
@@ -468,8 +468,8 @@ function VendorService(): VendorServiceType {
         [store.id]: {
           expires: vendor.expires,
           factionLevel: vendor.factionLevel,
-          factionAligned: vendor.factionAligned
-        }
+          factionAligned: vendor.factionAligned,
+        },
       },
       vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
       faction: def.factionHash, // TODO: show rep!
@@ -480,7 +480,7 @@ function VendorService(): VendorServiceType {
       factionLevel: 0,
       factionAligned: false,
       allItems: [],
-      categories: []
+      categories: [],
     };
 
     const saleItems = vendor.saleItemCategories.flatMap((categoryData) => categoryData.saleItems);
@@ -514,7 +514,7 @@ function VendorService(): VendorServiceType {
                       'itemName',
                       'icon',
                       'itemHash'
-                    )
+                    ),
                   }))
                   .filter((c) => c.value > 0),
                 item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
@@ -523,7 +523,7 @@ function VendorService(): VendorServiceType {
                 unlockedByCharacter: unlocked ? [store.id] : [],
                 failureStrings: saleItem.failureIndexes
                   .map((i) => vendorDef.failureStrings[i])
-                  .join('. ')
+                  .join('. '),
               };
             })
           );
@@ -531,7 +531,7 @@ function VendorService(): VendorServiceType {
           return {
             index: category.categoryIndex,
             title: categoryInfo.displayTitle,
-            saleItems: categoryItems
+            saleItems: categoryItems,
           };
         })
       );

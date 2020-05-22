@@ -26,7 +26,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     notes: getNotes(props.item, itemInfosSelector(state)),
-    inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id]
+    inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id],
   };
 }
 

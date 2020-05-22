@@ -52,7 +52,7 @@ export class GoogleDriveStorage implements StorageAdapter {
     discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
     fetch_basic_profile: false, // eslint-disable-line @typescript-eslint/camelcase
     ux_mode: 'redirect', // eslint-disable-line @typescript-eslint/camelcase
-    redirect_uri: `${window.location.origin}/gdrive-return.html` // eslint-disable-line @typescript-eslint/camelcase
+    redirect_uri: `${window.location.origin}/gdrive-return.html`, // eslint-disable-line @typescript-eslint/camelcase
   };
 
   // The Google Drive ID of the file we use to save data.
@@ -92,9 +92,9 @@ export class GoogleDriveStorage implements StorageAdapter {
         method: 'PATCH',
         params: {
           uploadType: 'media',
-          alt: 'json'
+          alt: 'json',
         },
-        body: value
+        body: value,
       });
     } catch (resp) {
       // TODO: error handling
@@ -243,9 +243,9 @@ export class GoogleDriveStorage implements StorageAdapter {
       file = await gapi.client.drive.files.create({
         name: fileName,
         media: {
-          mimeType: 'application/json'
+          mimeType: 'application/json',
         },
-        parents: ['appDataFolder']
+        parents: ['appDataFolder'],
       });
       if ($featureFlags.debugSync) {
         console.log('created file in Google Drive', file);
@@ -300,7 +300,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       const file = await gapi.client.drive.revisions.get({
         fileId,
         revisionId,
-        alt: 'media'
+        alt: 'media',
       });
 
       if (file.status === 200) {
@@ -337,7 +337,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       const fileId = await this.getFileId();
       const resp = await gapi.client.drive.files.get({
         fileId,
-        alt: 'media'
+        alt: 'media',
       });
       return resp.result;
     } catch (e) {
@@ -357,7 +357,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       const fileId = await this.getFileId();
       const resp = await gapi.client.drive.files.get({
         fileId,
-        fields: 'quotaBytesUsed'
+        fields: 'quotaBytesUsed',
       });
       return resp.result;
     } catch (e) {

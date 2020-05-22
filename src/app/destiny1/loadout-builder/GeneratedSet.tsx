@@ -130,7 +130,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
 
   private newLoadout = (set: ArmorSet) => {
     editLoadout(this.makeLoadoutFromSet(set), {
-      showClass: false
+      showClass: false,
     });
   };
   private equipItems = (set: ArmorSet) =>

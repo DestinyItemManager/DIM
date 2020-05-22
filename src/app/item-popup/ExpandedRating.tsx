@@ -17,7 +17,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    dtrRating: getRating(props.item, state.reviews.ratings)
+    dtrRating: getRating(props.item, state.reviews.ratings),
   };
 }
 
@@ -32,7 +32,7 @@ function ExpandedRating({ dtrRating }: Props) {
       <RatingIcon rating={dtrRating.overallScore} uiWishListRoll={undefined} />{' '}
       {t('DtrReview.AverageRating', {
         itemRating: dtrRating.overallScore.toFixed(1),
-        numRatings: dtrRating.ratingCount || 0
+        numRatings: dtrRating.ratingCount || 0,
       })}
     </div>
   );

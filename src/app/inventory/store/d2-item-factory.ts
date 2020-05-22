@@ -12,7 +12,7 @@ import {
   ItemBindStatus,
   ItemLocation,
   ItemState,
-  TransferStatuses
+  TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import { buildFlavorObjective, buildObjectives } from './objectives';
 
@@ -88,7 +88,7 @@ export const ItemProto = {
   },
   getStoresService() {
     return D2StoresService;
-  }
+  },
 };
 
 export function resetIdTracker() {
@@ -190,7 +190,7 @@ export function makeFakeItem(
       state: ItemState.None,
       isWrapper: false,
       tooltipNotificationIndexes: [],
-      metricObjective: {} as DestinyObjectiveProgress
+      metricObjective: {} as DestinyObjectiveProgress,
     },
     undefined,
     mergedCollectibles
@@ -386,11 +386,11 @@ export function makeItem(
         energyCost: itemDef.plug.energyCost.energyCost,
         costElementIcon: defs.Stat.get(
           defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
-        ).displayProperties.icon
+        ).displayProperties.icon,
       },
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
-    availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes
+    availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
   });
 
   createdItem.season = getSeason(createdItem);
@@ -467,7 +467,7 @@ export function makeItem(
       .map(
         (p): DimPerk => ({
           requirement: p.requirementDisplayString,
-          ...defs.SandboxPerk.get(p.perkHash)
+          ...defs.SandboxPerk.get(p.perkHash),
         })
       )
       .filter((p) => p.isDisplayable);
@@ -568,7 +568,7 @@ function buildPursuitInfo(
       expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
       places: [],
       activityTypes: [],
-      modifierHashes: []
+      modifierHashes: [],
     };
   }
   const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
@@ -579,7 +579,7 @@ function buildPursuitInfo(
       activityTypes: [],
       modifierHashes: [],
       ...createdItem.pursuit,
-      rewards
+      rewards,
     };
   }
 }

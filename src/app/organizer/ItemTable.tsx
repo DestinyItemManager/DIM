@@ -47,7 +47,7 @@ import Dropzone, { DropzoneOptions } from 'react-dropzone';
 const categoryToClass = {
   23: DestinyClass.Hunter,
   22: DestinyClass.Titan,
-  21: DestinyClass.Warlock
+  21: DestinyClass.Warlock,
 };
 
 interface ProvidedProps {
@@ -109,7 +109,7 @@ function mapStateToProps() {
       ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
-      newItems: state.inventory.newItems
+      newItems: state.inventory.newItems,
     };
   };
 }
@@ -130,10 +130,10 @@ function ItemTable({
   customTotalStatsByClass,
   loadouts,
   newItems,
-  dispatch
+  dispatch,
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
-    { columnId: 'name', sort: SortDirection.ASC }
+    { columnId: 'name', sort: SortDirection.ASC },
   ]);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // Track the last selection for shift-selecting
@@ -198,7 +198,7 @@ function ItemTable({
       customStatTotal,
       classIfAny,
       loadouts,
-      newItems
+      newItems,
     ]
   );
 
@@ -216,12 +216,12 @@ function ItemTable({
   // process items into Rows
   const unsortedRows: Row[] = useMemo(() => buildRows(items, filteredColumns), [
     filteredColumns,
-    items
+    items,
   ]);
   const rows = useMemo(() => sortRows(unsortedRows, columnSorts, filteredColumns), [
     unsortedRows,
     filteredColumns,
-    columnSorts
+    columnSorts,
   ]);
 
   const shiftHeld = useShiftHeld();
@@ -264,13 +264,13 @@ function ItemTable({
         type: 'success',
         title: state
           ? t('Filter.LockAllSuccess', { num: selectedItems.length })
-          : t('Filter.UnlockAllSuccess', { num: selectedItems.length })
+          : t('Filter.UnlockAllSuccess', { num: selectedItems.length }),
       });
     } catch (e) {
       showNotification({
         type: 'error',
         title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-        body: e.message
+        body: e.message,
       });
     } finally {
       // Touch the stores service to update state
@@ -358,7 +358,7 @@ function ItemTable({
         if (columnSort.columnId === column.id) {
           newColumnSorts[index] = {
             ...columnSort,
-            sort: columnSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+            sort: columnSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC,
           };
           found = true;
           break;
@@ -368,7 +368,7 @@ function ItemTable({
       if (!found) {
         newColumnSorts.push({
           columnId: column.id,
-          sort: column.defaultSort || SortDirection.ASC
+          sort: column.defaultSort || SortDirection.ASC,
         });
       }
       return newColumnSorts;
@@ -576,7 +576,7 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
     values: filteredColumns.reduce((memo, col) => {
       memo[col.id] = col.value(item);
       return memo;
-    }, {})
+    }, {}),
   }));
   return unsortedRows;
 }
@@ -639,7 +639,7 @@ function buildStatInfo(
             lowerBetter: stat.smallerIsBetter,
             getStat(item) {
               return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            }
+            },
           };
         }
       }
@@ -651,7 +651,7 @@ function buildStatInfo(
 function TableRow({
   row,
   filteredColumns,
-  narrowQueryFunction
+  narrowQueryFunction,
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
@@ -667,7 +667,7 @@ function TableRow({
           key={column.id}
           onClick={narrowQueryFunction(row, column)}
           className={clsx(styles[column.id], {
-            [styles.hasFilter]: column.filter
+            [styles.hasFilter]: column.filter,
           })}
           role="cell"
         >

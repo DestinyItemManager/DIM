@@ -18,7 +18,7 @@ import {
   MinMaxIgnored,
   LockedModBase,
   LockedArmor2ModMap,
-  ModPickerCategories
+  ModPickerCategories,
 } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
@@ -32,7 +32,7 @@ import {
   SearchConfig,
   SearchFilters,
   searchConfigSelector,
-  searchFiltersConfigSelector
+  searchFiltersConfigSelector,
 } from 'app/search/search-filters';
 import memoizeOne from 'memoize-one';
 import styles from './LoadoutBuilder.m.scss';
@@ -117,7 +117,7 @@ function mapStateToProps() {
     items: itemsSelector(state),
     defs: state.manifest.d2Manifest,
     searchConfig: searchConfigSelector(state),
-    filters: searchFiltersConfigSelector(state)
+    filters: searchFiltersConfigSelector(state),
   });
 }
 
@@ -144,7 +144,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
         Recovery: { min: 0, max: 10, ignored: false },
         Discipline: { min: 0, max: 10, ignored: false },
         Intellect: { min: 0, max: 10, ignored: false },
-        Strength: { min: 0, max: 10, ignored: false }
+        Strength: { min: 0, max: 10, ignored: false },
       },
       lockedSeasonalMods: [],
       lockedArmor2Mods: {
@@ -154,13 +154,13 @@ class LoadoutBuilder extends React.Component<Props, State> {
         [ModPickerCategories.chest]: [],
         [ModPickerCategories.leg]: [],
         [ModPickerCategories.classitem]: [],
-        [ModPickerCategories.seasonal]: []
+        [ModPickerCategories.seasonal]: [],
       },
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
       selectedStoreId: getCurrentStore(props.stores)?.id,
-      assumeMasterwork: false
+      assumeMasterwork: false,
     };
   }
 
@@ -193,7 +193,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
       items,
       defs,
       searchConfig,
-      filters
+      filters,
     } = this.props;
     const {
       lockedMap,
@@ -204,7 +204,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
       minimumPower,
       query,
       statOrder,
-      assumeMasterwork
+      assumeMasterwork,
     } = this.state;
 
     if (!storesLoaded || !defs || !selectedStoreId) {
@@ -351,9 +351,9 @@ class LoadoutBuilder extends React.Component<Props, State> {
         Recovery: { min: 0, max: 10, ignored: false },
         Discipline: { min: 0, max: 10, ignored: false },
         Intellect: { min: 0, max: 10, ignored: false },
-        Strength: { min: 0, max: 10, ignored: false }
+        Strength: { min: 0, max: 10, ignored: false },
       },
-      minimumPower: 0
+      minimumPower: 0,
     });
   };
 

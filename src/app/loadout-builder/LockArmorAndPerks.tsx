@@ -15,7 +15,7 @@ import {
   LockedModBase,
   LockedArmor2ModMap,
   LockedArmor2Mod,
-  ModPickerCategories
+  ModPickerCategories,
 } from './types';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -62,7 +62,7 @@ function mapStateToProps() {
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     language: settingsSelector(state).language,
-    defs: state.manifest.d2Manifest!
+    defs: state.manifest.d2Manifest!,
   });
 }
 
@@ -81,7 +81,7 @@ function LockArmorAndPerks({
   isPhonePortrait,
   onLockedMapChanged,
   onSeasonalModsChanged,
-  onArmor2ModsChanged
+  onArmor2ModsChanged,
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
   const [filterModsOpen, setFilterModsOpen] = useState(false);
@@ -98,8 +98,8 @@ function LockArmorAndPerks({
           {
             type: 'item',
             item,
-            bucket: item.bucket
-          }
+            bucket: item.bucket,
+          },
         ];
       }
     });
@@ -131,7 +131,7 @@ function LockArmorAndPerks({
               item.canBeEquippedBy(selectedStore) &&
               (!filter || filter(item))
           ),
-        sortBy: (item) => order.indexOf(item.bucket.hash)
+        sortBy: (item) => order.indexOf(item.bucket.hash),
       });
 
       updateFunc(item);
@@ -142,7 +142,7 @@ function LockArmorAndPerks({
     if (item.bucket) {
       onLockedMapChanged({
         ...lockedMap,
-        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
       });
     }
   };
@@ -151,7 +151,7 @@ function LockArmorAndPerks({
     if (item.bucket) {
       onLockedMapChanged({
         ...lockedMap,
-        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
       });
     }
   };
@@ -161,7 +161,7 @@ function LockArmorAndPerks({
       ...lockedArmor2Mods,
       [item.category]: lockedArmor2Mods[item.category]?.filter(
         (ex) => ex.mod.hash !== item.mod.hash
-      )
+      ),
     });
   };
 

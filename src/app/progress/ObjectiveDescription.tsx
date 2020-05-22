@@ -9,7 +9,7 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 export default function ObjectiveDescription({
   progressDescription,
   objectiveDef,
-  defs
+  defs,
 }: {
   progressDescription: string;
   objectiveDef?: DestinyObjectiveDefinition;

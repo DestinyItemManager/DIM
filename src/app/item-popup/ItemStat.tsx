@@ -17,7 +17,7 @@ import { getSocketsWithStyle } from '../utils/socket-utils';
 const modItemCategoryHashes = [
   1052191496, // weapon mods
   4062965806, // armor mods (pre-2.0)
-  4104513227 // armor 2.0 mods
+  4104513227, // armor 2.0 mods
 ];
 
 const TOTAL_STAT_HASH = -1000;
@@ -74,7 +74,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
     [styles.modded]: Boolean(moddedStatValue),
-    [styles.totalRow]: Boolean(totalDetails)
+    [styles.totalRow]: Boolean(totalDetails),
   };
 
   return (
@@ -199,7 +199,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue)
+    [styles.modded]: Boolean(moddedStatValue),
   };
 
   return (

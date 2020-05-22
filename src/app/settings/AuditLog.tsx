@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   AuditLogEntry,
   ItemAnnotationLogEntry,
-  SettingsLogEntry
+  SettingsLogEntry,
 } from '@destinyitemmanager/dim-api-types';
 import { getAuditLog } from 'app/dim-api/dim-api';
 import { DestinyAccount, PLATFORM_ICONS } from 'app/accounts/destiny-account';
@@ -20,7 +20,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    accounts: accountsSelector(state)
+    accounts: accountsSelector(state),
   };
 }
 

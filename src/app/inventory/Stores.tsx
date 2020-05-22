@@ -30,7 +30,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: sortedStoresSelector(state),
     buckets: state.inventory.buckets!,
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
@@ -182,7 +182,7 @@ function StoresInventory({
   buckets,
   stores,
   currentStore,
-  vault
+  vault,
 }: {
   buckets: InventoryBuckets;
   stores: DimStore[];

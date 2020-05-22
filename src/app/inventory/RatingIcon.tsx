@@ -6,14 +6,14 @@ import {
   thumbsDownIcon,
   faCaretDown,
   faCaretUp,
-  faMinus
+  faMinus,
 } from '../shell/icons';
 import './RatingIcon.scss';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 
 export default function RatingIcon({
   rating,
-  uiWishListRoll
+  uiWishListRoll,
 }: {
   rating: number;
   uiWishListRoll?: UiWishListRoll;

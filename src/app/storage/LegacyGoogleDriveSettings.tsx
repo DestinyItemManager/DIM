@@ -29,7 +29,7 @@ interface State {
 
 class LegacyGoogleDriveSettings extends React.Component<Props, State> {
   state: State = {
-    adapterStats: {}
+    adapterStats: {},
   };
   private subscriptions = new Subscriptions();
 
@@ -151,10 +151,10 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
         this.setState((state) => {
           const adapterStats = {
             ...state.adapterStats,
-            [adapter.name]: data ? dataStats(data) : null
+            [adapter.name]: data ? dataStats(data) : null,
           };
           return {
-            adapterStats
+            adapterStats,
           };
         });
         return;
@@ -166,10 +166,10 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     this.setState((state) => {
       const adapterStats = {
         ...state.adapterStats,
-        [adapter.name]: null
+        [adapter.name]: null,
       };
       return {
-        adapterStats
+        adapterStats,
       };
     });
     return;

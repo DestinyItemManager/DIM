@@ -26,7 +26,7 @@ const pursuitsOrder = ['Bounties', 'Quests', 'Items'];
  */
 export default function Pursuits({
   store,
-  defs
+  defs,
 }: {
   store: DimStore;
   defs?: D2ManifestDefinitions;

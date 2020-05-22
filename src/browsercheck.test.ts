@@ -20,45 +20,45 @@ const browsersSupported = [
   'opera 64',
   'opera 63',
   'safari 13',
-  'safari 12.1'
+  'safari 12.1',
 ];
 
 test.each([
   [
     'Firefox 72',
     'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
-    true
+    true,
   ],
   [
     'Chrome 79',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36',
-    true
+    true,
   ],
   [
     'iOS 12',
     'Mozilla/5.0 (iPod; CPU iPhone OS 12_0 like macOS) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/12.0 Mobile/14A5335d Safari/602.1.50',
-    true
+    true,
   ],
   [
     'Edge 18',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362',
-    true
+    true,
   ],
   [
     'Vivaldi',
     'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36 Vivaldi/2.10',
-    true
+    true,
   ],
   [
     'Opera',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36 OPR/65.0.3467.78',
-    true
+    true,
   ],
   [
     'Old Chrome',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36',
-    false
-  ]
+    false,
+  ],
 ])('%s: User agent %s, supported: %s', (_, userAgent, shouldBeSupported) => {
   expect(isSupported(browsersSupported, userAgent)).toStrictEqual(shouldBeSupported);
 });

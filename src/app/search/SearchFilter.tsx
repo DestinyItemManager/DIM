@@ -56,7 +56,7 @@ type DispatchProps = {
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
   setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
   bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
-  touchStores: touch
+  touchStores: touch,
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -85,7 +85,7 @@ function mapStateToProps(state: RootState): StoreProps {
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
     filteredItems,
-    isComparable
+    isComparable,
   };
 }
 
@@ -115,13 +115,13 @@ export class SearchFilter extends React.Component<Props, State> {
             type: 'success',
             title: state
               ? t('Filter.LockAllSuccess', { num: lockables.length })
-              : t('Filter.UnlockAllSuccess', { num: lockables.length })
+              : t('Filter.UnlockAllSuccess', { num: lockables.length }),
           });
         } catch (e) {
           showNotification({
             type: 'error',
             title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-            body: e.message
+            body: e.message,
           });
         } finally {
           // Touch the stores service to update state
@@ -149,7 +149,7 @@ export class SearchFilter extends React.Component<Props, State> {
       searchQuery,
       searchQueryVersion,
       filteredItems,
-      isComparable
+      isComparable,
     } = this.props;
     const { showSelect } = this.state;
 
@@ -224,5 +224,5 @@ export class SearchFilter extends React.Component<Props, State> {
 }
 
 export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {
-  forwardRef: true
+  forwardRef: true,
 })(SearchFilter);

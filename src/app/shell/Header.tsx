@@ -45,7 +45,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state),
     vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh),
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
@@ -69,7 +69,7 @@ class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      promptIosPwa: false
+      promptIosPwa: false,
     };
   }
 
@@ -149,12 +149,12 @@ class Header extends React.PureComponent<Props, State> {
               {
                 to: `${path}/inventory`,
                 text: t('Header.Inventory'),
-                hotkey: 'i'
+                hotkey: 'i',
               },
               {
                 to: `${path}/progress`,
                 text: t('Progress.Progress'),
-                hotkey: 'p'
+                hotkey: 'p',
               },
               {
                 to: `${path}/vendors`,
@@ -162,48 +162,48 @@ class Header extends React.PureComponent<Props, State> {
                 hotkey: 'v',
                 badge: vendorEngramDropActive && (
                   <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
-                )
+                ),
               },
               {
                 to: `${path}/collections`,
                 text: t('Vendors.Collections'),
-                hotkey: 'c'
+                hotkey: 'c',
               },
               {
                 to: `${path}/optimizer`,
                 text: t('LB.LB'),
-                hotkey: 'b'
+                hotkey: 'b',
               },
               !isPhonePortrait && {
                 to: `${path}/organizer`,
                 text: t('Organizer.Organizer'),
-                hotkey: 'o'
-              }
+                hotkey: 'o',
+              },
             ])
           : [
               {
                 to: `${path}/inventory`,
                 text: t('Header.Inventory'),
-                hotkey: 'i'
+                hotkey: 'i',
               },
               {
                 to: `${path}/optimizer`,
                 text: t('LB.LB'),
-                hotkey: 'o'
+                hotkey: 'o',
               },
               {
                 to: `${path}/vendors`,
                 text: t('Vendors.Vendors'),
-                hotkey: 'v'
+                hotkey: 'v',
               },
               {
                 to: `${path}/record-books`,
-                text: t('RecordBooks.RecordBooks')
+                text: t('RecordBooks.RecordBooks'),
               },
               {
                 to: `${path}/activities`,
-                text: t('Activities.Activities')
-              }
+                text: t('Activities.Activities'),
+              },
             ];
     }
 
@@ -222,7 +222,7 @@ class Header extends React.PureComponent<Props, State> {
       {
         combo: 'm',
         description: t('Hotkey.Menu'),
-        callback: this.toggleDropdown
+        callback: this.toggleDropdown,
       },
       ..._.compact(
         links.map(
@@ -230,10 +230,10 @@ class Header extends React.PureComponent<Props, State> {
             link.hotkey && {
               combo: link.hotkey,
               description: link.text,
-              callback: () => history.push(link.to)
+              callback: () => history.push(link.to),
             }
         )
-      )
+      ),
     ];
 
     const iosPwaAvailable =

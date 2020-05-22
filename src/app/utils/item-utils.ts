@@ -1,7 +1,7 @@
 import {
   DamageType,
   DestinyEnergyType,
-  DestinyInventoryItemDefinition
+  DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 
@@ -17,14 +17,14 @@ export const damageNamesByEnum: { [key in DamageType]: string | null } = {
   2: 'arc',
   3: 'solar',
   4: 'void',
-  5: 'raid'
+  5: 'raid',
 };
 
 export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
   [DestinyEnergyType.Any]: 'any',
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void'
+  [DestinyEnergyType.Void]: 'void',
 };
 
 export const Armor2ModPlugCategories = {
@@ -33,7 +33,7 @@ export const Armor2ModPlugCategories = {
   gauntlets: 3422420680,
   chest: 1526202480,
   leg: 2111701510,
-  classitem: 912441879
+  classitem: 912441879,
 } as const;
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>

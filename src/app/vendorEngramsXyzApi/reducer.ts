@@ -21,7 +21,7 @@ export type VendorDropAction = ActionType<typeof actions>;
 const initialState: VendorDropsState = {
   loaded: false,
   vendorDrops: [],
-  lastUpdated: unloadedDate
+  lastUpdated: unloadedDate,
 };
 
 export const vendorDrops: Reducer<VendorDropsState, VendorDropAction> = (
@@ -34,14 +34,14 @@ export const vendorDrops: Reducer<VendorDropsState, VendorDropAction> = (
         ...state,
         loaded: true,
         vendorDrops: action.payload,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       };
     case getType(actions.clearVendorDrops): {
       return {
         ...state,
         loaded: false,
         vendorDrops: [],
-        lastUpdated: unloadedDate
+        lastUpdated: unloadedDate,
       };
     }
     default:

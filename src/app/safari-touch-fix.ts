@@ -10,7 +10,7 @@ export function safariTouchFix() {
       get() {
         supportsPassive = true;
         return supportsPassive;
-      }
+      },
     });
     window.addEventListener('testPassive', _.noop, opts);
     window.removeEventListener('testPassive', _.noop, opts);

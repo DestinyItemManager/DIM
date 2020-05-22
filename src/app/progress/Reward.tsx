@@ -6,7 +6,7 @@ import BungieImage from '../dim-ui/BungieImage';
 
 export function Reward({
   reward,
-  defs
+  defs,
 }: {
   reward: DestinyItemQuantity;
   defs: D2ManifestDefinitions;

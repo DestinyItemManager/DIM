@@ -10,7 +10,7 @@ import {
   DestinyPlaceDefinition,
   DestinyVendorGroupDefinition,
   DestinyInventoryItemDefinition,
-  DestinyCollectibleState
+  DestinyCollectibleState,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -39,7 +39,7 @@ const vendorOrder = [
   1265988377, // benedict
   672118013, // banshee
   248695599, // drifter
-  2917531897 // ada
+  2917531897, // ada
 ];
 
 export function toVendorGroups(
@@ -79,7 +79,7 @@ export function toVendorGroups(
             const index = vendorOrder.indexOf(v.def.hash);
             return index >= 0 ? index : v.def.hash;
           }
-        )
+        ),
       };
     }),
     (g) => g.def.order
@@ -141,7 +141,7 @@ export function toVendor(
     destination: destinationDef,
     place: placeDef,
     items: vendorItems,
-    currencies
+    currencies,
   };
 }
 
@@ -198,9 +198,9 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
               item.item.isDestiny2() &&
               item.item.collectibleState !== null &&
               item.item.collectibleState & DestinyCollectibleState.NotAcquired
-          )
+          ),
         }))
-        .filter((v) => v.items.length)
+        .filter((v) => v.items.length),
     }))
     .filter((g) => g.vendors.length);
 }
@@ -218,9 +218,9 @@ export function filterVendorGroupsToSearch(
           ...vendor,
           items: vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())
             ? vendor.items
-            : vendor.items.filter((i) => i.item && filterItems(i.item))
+            : vendor.items.filter((i) => i.item && filterItems(i.item)),
         }))
-        .filter((v) => v.items.length)
+        .filter((v) => v.items.length),
     }))
     .filter((g) => g.vendors.length);
 }

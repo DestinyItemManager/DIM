@@ -30,7 +30,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
       ? ratePerks(item, reviews as D1ItemUserReview[])
       : emptySet<number>();
   return {
-    bestPerks
+    bestPerks,
   };
 }
 
@@ -98,7 +98,7 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
                   node.activated &&
                   (!isD1GridNode(node) || !node.xpRequired) &&
                   !node.exclusiveInColumn &&
-                  node.column < 1
+                  node.column < 1,
               })}
             >
               {isD1GridNode(node) && bestPerks.has(node.hash) && !node.activated && (

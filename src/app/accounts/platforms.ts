@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
   compareAccounts,
   DestinyAccount,
-  getDestinyAccountsForBungieAccount
+  getDestinyAccountsForBungieAccount,
 } from './destiny-account';
 import { getBungieAccount } from './bungie-account';
 import * as actions from './actions';
@@ -13,7 +13,7 @@ import {
   accountsSelector,
   currentAccountSelector,
   loadAccountsFromIndexedDB,
-  accountsLoadedSelector
+  accountsLoadedSelector,
 } from './reducer';
 import { ThunkResult } from 'app/store/reducers';
 import { dedupePromise } from 'app/utils/util';

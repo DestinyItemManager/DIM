@@ -7,7 +7,7 @@ import {
   DestinyRecordState,
   DestinyRecordComponent,
   DestinyUnlockValueUIStyle,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import './Record.scss';
@@ -43,7 +43,7 @@ export default function Record({
   defs,
   profileResponse,
   completedRecordsHidden,
-  redactedRecordsRevealed
+  redactedRecordsRevealed,
 }: Props) {
   const recordDef = defs.Record.get(recordHash);
   if (!recordDef) {
@@ -83,13 +83,13 @@ export default function Record({
 
   const intervals = getIntervals(recordDef, record);
   const intervalBarStyle = {
-    width: `calc((100% / ${intervals.length}) - 2px)`
+    width: `calc((100% / ${intervals.length}) - 2px)`,
   };
   const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
   const intervalProgressBar = !obscured && intervals.length > 0 && (
     <div
       className={clsx('record-interval-container', {
-        complete: allIntervalsCompleted
+        complete: allIntervalsCompleted,
       })}
     >
       {!allIntervalsCompleted &&
@@ -101,7 +101,7 @@ export default function Record({
               key={i.objective.objectiveHash}
               className={clsx('record-interval', {
                 redeemed,
-                unlocked: unlocked && !redeemed
+                unlocked: unlocked && !redeemed,
               })}
               style={intervalBarStyle}
             >
@@ -152,7 +152,7 @@ export default function Record({
         unlocked,
         obscured,
         tracked,
-        multistep: intervals.length > 0
+        multistep: intervals.length > 0,
       })}
     >
       {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
@@ -224,7 +224,7 @@ function getIntervals(
                 (data.completionValue - prevIntervalProgress)
             )
         : 0,
-      isRedeemed: record.intervalsRedeemedCount >= i + 1
+      isRedeemed: record.intervalsRedeemedCount >= i + 1,
     });
 
     isPrevIntervalComplete = data.complete;

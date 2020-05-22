@@ -1,5 +1,5 @@
 export const enum DimWishList {
-  WildcardItemId = -69420 // nice
+  WildcardItemId = -69420, // nice
 }
 
 /**

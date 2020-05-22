@@ -12,7 +12,7 @@ const resistanceMods = {
   1546607977: DamageType.Kinetic,
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
-  1546607979: DamageType.Thermal
+  1546607979: DamageType.Thermal,
 };
 
 /**
@@ -79,7 +79,7 @@ function buildForsakenKillTracker(
       typeDesc: objectiveDef.progressDescription,
       typeName: [3244015567, 2285636663, 38912240].includes(killTrackerSocket.plug.plugItem.hash)
         ? 'Crucible'
-        : 'Vanguard'
+        : 'Vanguard',
     };
   }
   return null;
@@ -116,7 +116,7 @@ function buildForsakenMasterworkStats(
       statValue: masterworkSocket.plug.stats
         ? masterworkSocket.plug.stats[masterwork.statTypeHash]
         : 0,
-      tier: masterwork.value
+      tier: masterwork.value,
     };
   }
   return null;
@@ -160,6 +160,6 @@ function buildMasterworkInfo(
     statHash,
     statName: statDef.displayProperties.name,
     statValue: socket.plug.stats ? socket.plug.stats[statHash] : 0,
-    tier: investmentStats[0].value
+    tier: investmentStats[0].value,
   };
 }

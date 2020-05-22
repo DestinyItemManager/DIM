@@ -29,7 +29,7 @@ interface DispatchProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
   return {
-    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed
+    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed,
   };
 }
 
@@ -37,7 +37,7 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
   return {
     toggle: () => {
       dispatch(toggleCollapsedSection(ownProps.sectionId));
-    }
+    },
   };
 }
 

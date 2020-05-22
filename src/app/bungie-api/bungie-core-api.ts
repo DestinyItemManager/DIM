@@ -13,7 +13,7 @@ const GlobalAlertLevelsToToastLevels = [
   'info', // Unknown
   'info', // Blue
   'warn', // Yellow
-  'error' // Red
+  'error', // Red
 ];
 
 /**
@@ -26,7 +26,7 @@ export async function getGlobalAlerts(): Promise<GlobalAlert[]> {
       key: alert.AlertKey,
       type: GlobalAlertLevelsToToastLevels[alert.AlertLevel],
       body: alert.AlertHtml,
-      timestamp: alert.AlertTimestamp
+      timestamp: alert.AlertTimestamp,
     }));
   }
   return [];

@@ -15,7 +15,7 @@ export function toWishList(fileText: string): WishListAndInfo {
     return {
       wishListRolls: toWishListRolls(fileText),
       title: getTitle(fileText),
-      description: getDescription(fileText)
+      description: getDescription(fileText),
     };
   } finally {
     console.timeEnd('Parse wish list');
@@ -93,7 +93,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
     itemHash,
     recommendedPerks,
     isExpertMode: false,
-    notes
+    notes,
   };
 }
 
@@ -123,7 +123,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
     itemHash,
     recommendedPerks,
     isExpertMode: false,
-    notes
+    notes,
   };
 }
 
@@ -157,7 +157,7 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
     recommendedPerks,
     isExpertMode: true,
     notes,
-    isUndesirable
+    isUndesirable,
   };
 }
 

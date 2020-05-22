@@ -9,7 +9,7 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 export default function ArmorBucketIcon({
   bucket,
-  className
+  className,
 }: {
   bucket: InventoryBucket;
   className?: string;

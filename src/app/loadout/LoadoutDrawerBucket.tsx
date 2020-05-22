@@ -13,7 +13,7 @@ export default function LoadoutDrawerBucket({
   itemSortOrder,
   pickLoadoutItem,
   equip,
-  remove
+  remove,
 }: {
   bucket: InventoryBucket;
   loadoutItems: LoadoutItem[];

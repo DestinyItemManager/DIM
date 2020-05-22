@@ -37,10 +37,10 @@ const D1LoadoutBuilder = React.lazy(() =>
   import(/* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
 );
 const Vendors = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
 }));
 const SingleVendor = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
 }));
 const D1Vendors = React.lazy(() =>
   import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
@@ -77,7 +77,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
         account.membershipId === props.platformMembershipId &&
         account.destinyVersion === props.destinyVersion
     ),
-    profileError: state.inventory.profileError
+    profileError: state.inventory.profileError,
   };
 }
 
@@ -163,8 +163,8 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       description: t('Hotkey.ToggleDetails'),
       callback() {
         // Empty - this gets redefined in dimMoveItemProperties
-      }
-    }
+      },
+    },
   ];
 
   itemTagList.forEach((tag) => {
@@ -172,11 +172,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       hotkeys.push({
         combo: tag.hotkey,
         description: t('Hotkey.MarkItemAs', {
-          tag: t(tag.label)
+          tag: t(tag.label),
         }),
         callback() {
           // Empty - this gets redefined in item-tag.component.ts
-        }
+        },
       });
     }
   });

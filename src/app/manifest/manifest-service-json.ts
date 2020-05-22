@@ -56,7 +56,7 @@ const tableTrimmers = {
     }
 
     return table;
-  }
+  },
 };
 
 class ManifestService {
@@ -79,7 +79,7 @@ class ManifestService {
           showNotification({
             type: 'warning',
             title: t('Manifest.Outdated'),
-            body: t('Manifest.OutdatedExplanation')
+            body: t('Manifest.OutdatedExplanation'),
           });
         }
       });
@@ -87,7 +87,7 @@ class ManifestService {
     10000,
     {
       leading: true,
-      trailing: false
+      trailing: false,
     }
   );
 
@@ -131,7 +131,7 @@ class ManifestService {
       } else if (e.status < 200 || e.status >= 400) {
         message = t('BungieService.NetworkError', {
           status: e.status,
-          statusText: e.statusText
+          statusText: e.statusText,
         });
       } else {
         // Something may be wrong with the manifest
@@ -234,7 +234,7 @@ class ManifestService {
       showNotification({
         title: t('Help.NoStorage'),
         body: t('Help.NoStorageMessage'),
-        type: 'error'
+        type: 'error',
       });
     }
   }

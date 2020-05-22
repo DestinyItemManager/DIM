@@ -34,7 +34,7 @@ export default function D1VendorItem({ saleItem, owned, totalCoins }: Props) {
 
 function D1VendorItemCost({
   cost,
-  totalCoins
+  totalCoins,
 }: {
   cost: VendorCost;
   totalCoins: {
@@ -44,7 +44,7 @@ function D1VendorItemCost({
   return (
     <div
       className={clsx(styles.cost, {
-        [styles.notEnough]: totalCoins[cost.currency.itemHash] < cost.value
+        [styles.notEnough]: totalCoins[cost.currency.itemHash] < cost.value,
       })}
     >
       {cost.value}{' '}

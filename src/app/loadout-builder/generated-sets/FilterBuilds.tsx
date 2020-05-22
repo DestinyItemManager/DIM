@@ -23,7 +23,7 @@ export default function FilterBuilds({
   onMinimumPowerChanged,
   onStatOrderChanged,
   onStatFiltersChanged,
-  onMasterworkAssumptionChange
+  onMasterworkAssumptionChange,
 }: {
   sets: readonly ArmorSet[];
   minimumPower: number;
@@ -96,7 +96,7 @@ function RangeSelector({
   min,
   max,
   initialValue,
-  onChange
+  onChange,
 }: {
   min: number;
   max: number;

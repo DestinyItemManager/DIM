@@ -13,7 +13,7 @@ import {
   faGithub,
   faReddit,
   faTshirt,
-  heartIcon
+  heartIcon,
 } from './icons';
 import { Link } from 'react-router-dom';
 
@@ -61,7 +61,7 @@ export default function About() {
             {t('Views.About.Version', {
               version: $DIM_VERSION,
               flavor: $DIM_FLAVOR,
-              date: new Date($DIM_BUILD_DATE).toLocaleString()
+              date: new Date($DIM_BUILD_DATE).toLocaleString(),
             })}
           </span>
         </Link>
@@ -93,7 +93,7 @@ export default function About() {
           </h2>
           <div
             dangerouslySetInnerHTML={{
-              __html: t('Views.Support.OpenCollective', { link: openCollectiveLink })
+              __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
             }}
           />
         </div>
@@ -105,7 +105,7 @@ export default function About() {
           </h2>
           <div
             dangerouslySetInnerHTML={{
-              __html: t('Views.Support.Store', { link: storeLink })
+              __html: t('Views.Support.Store', { link: storeLink }),
             }}
           />
         </div>
@@ -152,7 +152,7 @@ export default function About() {
           </h2>
           <div
             dangerouslySetInnerHTML={{
-              __html: t('Views.About.GitHubHelp', { link: githubLink })
+              __html: t('Views.About.GitHubHelp', { link: githubLink }),
             }}
           />
         </div>
@@ -162,7 +162,7 @@ export default function About() {
           </h2>
           <div
             dangerouslySetInnerHTML={{
-              __html: t('Views.About.TranslationText', { link: crowdinLink })
+              __html: t('Views.About.TranslationText', { link: crowdinLink }),
             }}
           />
         </div>
@@ -180,7 +180,7 @@ export default function About() {
         <dd>
           <div
             dangerouslySetInnerHTML={{
-              __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink })
+              __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink }),
             }}
           />
           {token && (
@@ -202,7 +202,7 @@ export default function About() {
       <p>
         <span
           dangerouslySetInnerHTML={{
-            __html: t('Views.Support.OpenCollective', { link: openCollectiveLink })
+            __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
           }}
         />{' '}
         {t('Views.Support.BackersDetail')}

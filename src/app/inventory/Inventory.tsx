@@ -33,7 +33,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    storesLoaded: storesLoadedSelector(state)
+    storesLoaded: storesLoadedSelector(state),
   };
 }
 

@@ -33,7 +33,7 @@ import {
   DestinyTalentGridDefinition,
   DestinyTraitDefinition,
   DestinyVendorDefinition,
-  DestinyVendorGroupDefinition
+  DestinyVendorGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 
 import { D2ManifestService } from '../manifest/manifest-service-json';
@@ -70,7 +70,7 @@ const lazyTables = [
   'PresentationNode',
   'Record',
   'Metric',
-  'Trait'
+  'Trait',
 ];
 
 const eagerTables = [
@@ -80,7 +80,7 @@ const eagerTables = [
   'Race',
   'Faction',
   'ItemTierType',
-  'ActivityMode'
+  'ActivityMode',
 ];
 
 /** These aren't really lazy */
@@ -144,7 +144,7 @@ async function getDefinitionsUncached() {
   const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
   const defs = {
     isDestiny1: () => false,
-    isDestiny2: () => true
+    isDestiny2: () => true,
   };
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
@@ -158,7 +158,7 @@ async function getDefinitionsUncached() {
       },
       getAll() {
         return db[table];
-      }
+      },
     };
   });
   // Resources that need to be fully loaded (because they're iterated over)

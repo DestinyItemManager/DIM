@@ -8,7 +8,7 @@ import { D1ItemFetchRequest, D1ItemReviewRequest } from '../item-review/d1-dtr-a
 export function translateToDtrWeapon(weapon: D1Item): D1ItemFetchRequest {
   return {
     referenceId: weapon.hash.toString(),
-    roll: getDtrRoll(weapon)
+    roll: getDtrRoll(weapon),
   };
 }
 
@@ -20,7 +20,7 @@ export function getRollAndPerks(weapon: D1Item): D1ItemReviewRequest {
   return {
     ...translateToDtrWeapon(weapon),
     selectedPerks: getDtrPerks(weapon),
-    instanceId: weapon.id
+    instanceId: weapon.id,
   };
 }
 

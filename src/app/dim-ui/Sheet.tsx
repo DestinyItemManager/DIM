@@ -17,7 +17,7 @@ interface Props {
 
 const spring = {
   ...config.stiff,
-  clamp: true
+  clamp: true,
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
@@ -37,7 +37,7 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
-  onClose: onCloseCallback
+  onClose: onCloseCallback,
 }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
   // As a result, our "state" is in refs.
@@ -69,7 +69,7 @@ export default function Sheet({
     from: { transform: `translateY(${windowHeight}px)` },
     to: { transform: `translateY(0px)` },
     config: spring,
-    onRest
+    onRest,
   }));
 
   /**

@@ -10,7 +10,7 @@ function getReporter(membershipInfo: DestinyAccount): DtrReviewer {
   return {
     membershipId: membershipInfo.membershipId,
     membershipType: membershipInfo.originalPlatformType,
-    displayName: membershipInfo.displayName
+    displayName: membershipInfo.displayName,
   };
 }
 
@@ -20,7 +20,7 @@ function generateD1ReviewReport(reviewId: string, membershipInfo: DestinyAccount
   return {
     reviewId,
     report: '',
-    reporter
+    reporter,
   };
 }
 
@@ -30,7 +30,7 @@ function generateD2ReviewReport(reviewId: string, membershipInfo: DestinyAccount
   return {
     reviewId,
     text: '',
-    reporter
+    reporter,
   };
 }
 

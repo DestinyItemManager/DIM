@@ -11,7 +11,7 @@ import styles from '../../vendors/VendorItems.m.scss';
 export default function D1VendorItems({
   vendor,
   totalCoins,
-  ownedItemHashes
+  ownedItemHashes,
 }: {
   vendor: Vendor;
   totalCoins: {

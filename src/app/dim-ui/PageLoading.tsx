@@ -13,7 +13,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    message: _.last(state.shell.loadingMessages)
+    message: _.last(state.shell.loadingMessages),
   };
 }
 
@@ -23,7 +23,7 @@ const transitionClasses = {
   enter: styles.pageLoadingEnter,
   enterActive: styles.pageLoadingEnterActive,
   exit: styles.pageLoadingExit,
-  exitActive: styles.pageLoadingExitActive
+  exitActive: styles.pageLoadingExitActive,
 };
 
 /**

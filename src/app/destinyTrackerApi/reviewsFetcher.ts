@@ -6,7 +6,7 @@ import {
   D1ItemReviewResponse,
   D1ItemUserReview,
   ActualD1ItemReviewResponse,
-  ActualD1ItemUserReview
+  ActualD1ItemUserReview,
 } from '../item-review/d1-dtr-api-types';
 import { getRollAndPerks } from './itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
@@ -41,7 +41,7 @@ export function getItemReviewsD1(item: D1Item): ThunkResult<D1ItemReviewResponse
     dispatch(
       reviewsLoaded({
         key: getItemReviewsKey(item),
-        reviews: reviewData
+        reviews: reviewData,
       })
     );
 

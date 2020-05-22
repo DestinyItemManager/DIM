@@ -53,7 +53,7 @@ const armorHashes = {
   46: gauntlets,
   47: chest,
   48: legs,
-  49: classItem
+  49: classItem,
 };
 
 /**
@@ -72,7 +72,7 @@ export const getSelectionTree = memoizeOne(
           id: category.originBucketIdentifier,
           itemCategoryHash: categoryHash,
           terminal: true,
-          icon: armorHashes[categoryHash]
+          icon: armorHashes[categoryHash],
         };
       }
     );
@@ -82,19 +82,19 @@ export const getSelectionTree = memoizeOne(
       id: 'kinetic',
       itemCategoryHash: 2,
       terminal: true,
-      icon: dmgKinetic
+      icon: dmgKinetic,
     };
     const energy = {
       id: 'energy',
       itemCategoryHash: 3,
       terminal: true,
-      icon: energyWeapon
+      icon: energyWeapon,
     };
     const power = {
       id: 'power',
       itemCategoryHash: 4,
       terminal: true,
-      icon: powerWeapon
+      icon: powerWeapon,
     };
 
     return {
@@ -111,111 +111,111 @@ export const getSelectionTree = memoizeOne(
               itemCategoryHash: 5,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: autoRifle
+              icon: autoRifle,
             },
             {
               id: 'handcannon',
               itemCategoryHash: 6,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: handCannon
+              icon: handCannon,
             },
             {
               id: 'pulserifle',
               itemCategoryHash: 7,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: pulseRifle
+              icon: pulseRifle,
             },
             {
               id: 'scoutrifle',
               itemCategoryHash: 8,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: scoutRifle
+              icon: scoutRifle,
             },
             {
               id: 'fusionrifle',
               itemCategoryHash: 9,
               subCategories: [energy, power],
               terminal: true,
-              icon: fusionRifle
+              icon: fusionRifle,
             },
             {
               id: 'sniperrifle',
               itemCategoryHash: 10,
               subCategories: [kinetic, energy, power],
               terminal: true,
-              icon: sniperRifle
+              icon: sniperRifle,
             },
             {
               id: 'shotgun',
               itemCategoryHash: 11,
               subCategories: [kinetic, energy, power],
               terminal: true,
-              icon: shotgun
+              icon: shotgun,
             },
             {
               id: 'machinegun',
               itemCategoryHash: 12,
               terminal: true,
-              icon: machinegun
+              icon: machinegun,
             },
             {
               id: 'rocketlauncher',
               itemCategoryHash: 13,
               terminal: true,
-              icon: rLauncher
+              icon: rLauncher,
             },
             {
               id: 'sidearm',
               itemCategoryHash: 14,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: sidearm
+              icon: sidearm,
             },
             {
               id: 'sword',
               itemCategoryHash: 54,
               terminal: true,
-              icon: sword
+              icon: sword,
             },
             {
               id: 'grenadelauncher',
               itemCategoryHash: 153950757,
               subCategories: [kinetic, energy, power],
               terminal: true,
-              icon: gLauncher
+              icon: gLauncher,
             },
             {
               id: 'tracerifle',
               itemCategoryHash: 2489664120,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: traceRifle
+              icon: traceRifle,
             },
             {
               id: 'linearfusionrifle',
               itemCategoryHash: 1504945536,
               subCategories: [kinetic, power],
               terminal: true,
-              icon: lFusionRifle
+              icon: lFusionRifle,
             },
             {
               id: 'submachine',
               itemCategoryHash: 3954685534,
               subCategories: [kinetic, energy],
               terminal: true,
-              icon: smg
+              icon: smg,
             },
             {
               id: 'bow',
               itemCategoryHash: 3317538576,
               subCategories: [kinetic, energy, power],
               terminal: true,
-              icon: bow
-            }
-          ]
+              icon: bow,
+            },
+          ],
         },
         {
           id: 'armor',
@@ -226,29 +226,29 @@ export const getSelectionTree = memoizeOne(
               id: 'hunter',
               itemCategoryHash: 23,
               subCategories: armorCategories,
-              icon: hunter
+              icon: hunter,
             },
             {
               id: 'titan',
               itemCategoryHash: 22,
               subCategories: armorCategories,
-              icon: titan
+              icon: titan,
             },
             {
               id: 'warlock',
               itemCategoryHash: 21,
               subCategories: armorCategories,
-              icon: warlock
-            }
-          ]
+              icon: warlock,
+            },
+          ],
         },
         {
           id: 'ghosts',
           itemCategoryHash: 39,
           icon: ghost,
-          terminal: true
-        }
-      ]
+          terminal: true,
+        },
+      ],
     };
   }
 );
@@ -260,7 +260,7 @@ export const getSelectionTree = memoizeOne(
 export default function ItemTypeSelector({
   defs,
   selection,
-  onSelection
+  onSelection,
 }: {
   defs: D2ManifestDefinitions;
   selection: ItemCategoryTreeNode[];
@@ -281,7 +281,7 @@ export default function ItemTypeSelector({
                 <label
                   key={subCategory.itemCategoryHash}
                   className={clsx(styles.button, {
-                    [styles.checked]: selection[depth + 1] === subCategory
+                    [styles.checked]: selection[depth + 1] === subCategory,
                   })}
                 >
                   <input

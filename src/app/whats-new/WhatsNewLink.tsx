@@ -26,7 +26,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
     this.state = {
       dimNeedsUpdate: false,
       alerts: [],
-      showChangelog: false
+      showChangelog: false,
     };
   }
 

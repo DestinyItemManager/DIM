@@ -81,7 +81,7 @@ export function getBonus(light: number, type: string): number {
 export const statsWithTiers = [
   1735777505, // Discipline
   144602215, // Intellect
-  4244567218 // Strength
+  4244567218, // Strength
 ];
 export function getD1CharacterStatTiers(stat: DimCharacterStat) {
   if (!statsWithTiers.includes(stat.hash)) {
@@ -101,7 +101,7 @@ const stats = [
   'STAT_STRENGTH',
   'STAT_ARMOR',
   'STAT_RECOVERY',
-  'STAT_AGILITY'
+  'STAT_AGILITY',
 ];
 
 /**
@@ -119,7 +119,7 @@ export function getCharacterStatsData(defs: D1ManifestDefinitions, data) {
       hash: rawStat.statHash,
       value: rawStat.value,
       name: '',
-      description: ''
+      description: '',
     };
 
     switch (statId) {

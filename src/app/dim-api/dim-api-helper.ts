@@ -41,7 +41,7 @@ export async function unauthenticatedApi<T>(
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers
+      headers,
     })
   );
 
@@ -65,7 +65,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   const headers = {
     Authorization: `Bearer ${token.accessToken}`,
-    'X-API-Key': API_KEY
+    'X-API-Key': API_KEY,
   };
   if (config.body) {
     headers['Content-Type'] = 'application/json';
@@ -75,7 +75,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers
+      headers,
     })
   );
 
@@ -136,13 +136,13 @@ const refreshToken = dedupePromise(async () => {
   const bungieToken = await getBungieToken();
   const authRequest: AuthTokenRequest = {
     bungieAccessToken: bungieToken.accessToken.value,
-    membershipId: bungieToken.bungieMembershipId
+    membershipId: bungieToken.bungieMembershipId,
   };
   try {
     const authToken = await unauthenticatedApi<DimAuthToken>({
       url: '/auth/token',
       method: 'POST',
-      body: authRequest
+      body: authRequest,
     });
 
     authToken.inception = Date.now();

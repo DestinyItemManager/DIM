@@ -21,7 +21,7 @@ export default function ItemPopupHeader({
   expanded,
   showToggle,
   language,
-  onToggleExpanded
+  onToggleExpanded,
 }: {
   item: DimItem;
   expanded: boolean;
@@ -60,18 +60,18 @@ export default function ItemPopupHeader({
     light,
     statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
-    typeName: item.typeName
+    typeName: item.typeName,
   };
 
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
-        masterwork: item.isDestiny2() && item.masterwork
+        masterwork: item.isDestiny2() && item.masterwork,
       })}
     >
       <GlobalHotkeys
         hotkeys={[
-          { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
+          { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded },
         ]}
       />
       <div className="item-title-container">

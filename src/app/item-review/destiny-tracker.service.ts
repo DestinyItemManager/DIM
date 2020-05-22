@@ -2,11 +2,11 @@ import { getItemReviewsD1 } from '../destinyTrackerApi/reviewsFetcher';
 import { getActivePlatform } from '../accounts/platforms';
 import {
   bulkFetch as bulkFetchD2,
-  bulkFetchVendorItems as bulkFetchD2VendorItems
+  bulkFetchVendorItems as bulkFetchD2VendorItems,
 } from '../destinyTrackerApi/d2-bulkFetcher';
 import {
   DestinyVendorSaleItemComponent,
-  DestinyVendorItemDefinition
+  DestinyVendorItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
@@ -19,7 +19,7 @@ import { ThunkResult } from '../store/reducers';
 import { submitReview as doSubmitReview } from '../destinyTrackerApi/reviewSubmitter';
 import {
   bulkFetchVendorItems as bulkFetchD1VendorItems,
-  bulkFetch as bulkFetchD1
+  bulkFetch as bulkFetchD1,
 } from '../destinyTrackerApi/bulkFetcher';
 import { reportReview as doReportReview } from '../destinyTrackerApi/reviewReporter';
 import { settingsSelector } from 'app/settings/reducer';

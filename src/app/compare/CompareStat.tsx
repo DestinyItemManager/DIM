@@ -12,7 +12,7 @@ export default function CompareStat({
   stat,
   item,
   highlight,
-  setHighlight
+  setHighlight,
 }: {
   stat: StatInfo;
   item: DimItem;

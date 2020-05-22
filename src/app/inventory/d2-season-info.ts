@@ -8,7 +8,7 @@ export enum D2SeasonEnum {
   PENUMBRA,
   SHADOWKEEP,
   DAWN,
-  WORTHY
+  WORTHY,
 }
 
 // TODO: Update on season change
@@ -25,7 +25,7 @@ export const D2SeasonInfo = {
     softCap: 0,
     releaseDate: '2017-09-06',
     resetTime: '09:00:00Z',
-    numWeeks: 0
+    numWeeks: 0,
   },
   1: {
     DLCName: 'Red War',
@@ -37,7 +37,7 @@ export const D2SeasonInfo = {
     softCap: 285,
     releaseDate: '2017-09-06',
     resetTime: '09:00:00Z',
-    numWeeks: 13
+    numWeeks: 13,
   },
   2: {
     DLCName: 'Curse of Osiris',
@@ -49,7 +49,7 @@ export const D2SeasonInfo = {
     softCap: 320,
     releaseDate: '2017-12-05',
     resetTime: '17:00:00Z',
-    numWeeks: 22
+    numWeeks: 22,
   },
   3: {
     DLCName: 'Warmind',
@@ -61,7 +61,7 @@ export const D2SeasonInfo = {
     softCap: 340,
     releaseDate: '2018-05-08',
     resetTime: '18:00:00Z',
-    numWeeks: 17
+    numWeeks: 17,
   },
   4: {
     DLCName: 'Forsaken',
@@ -73,7 +73,7 @@ export const D2SeasonInfo = {
     softCap: 500,
     releaseDate: '2018-09-04',
     resetTime: '17:00:00Z',
-    numWeeks: 13
+    numWeeks: 13,
   },
   5: {
     DLCName: 'Black Armory',
@@ -85,7 +85,7 @@ export const D2SeasonInfo = {
     softCap: 500,
     releaseDate: '2018-11-27',
     resetTime: '17:00:00Z',
-    numWeeks: 12
+    numWeeks: 12,
   },
   6: {
     DLCName: "Joker's Wild",
@@ -97,7 +97,7 @@ export const D2SeasonInfo = {
     softCap: 500,
     releaseDate: '2019-03-05',
     resetTime: '17:00:00Z',
-    numWeeks: 14
+    numWeeks: 14,
   },
   7: {
     DLCName: 'Penumbra',
@@ -109,7 +109,7 @@ export const D2SeasonInfo = {
     softCap: 500,
     releaseDate: '2019-06-04',
     resetTime: '17:00:00Z',
-    numWeeks: 13
+    numWeeks: 13,
   },
   8: {
     DLCName: 'Shadowkeep',
@@ -121,7 +121,7 @@ export const D2SeasonInfo = {
     softCap: 900,
     releaseDate: '2019-10-01',
     resetTime: '17:00:00Z',
-    numWeeks: 10
+    numWeeks: 10,
   },
   9: {
     DLCName: '',
@@ -133,7 +133,7 @@ export const D2SeasonInfo = {
     softCap: 900,
     releaseDate: '2019-12-10',
     resetTime: '17:00:00Z',
-    numWeeks: 13
+    numWeeks: 13,
   },
   10: {
     DLCName: '',
@@ -145,8 +145,8 @@ export const D2SeasonInfo = {
     softCap: 950,
     releaseDate: '2020-03-10',
     resetTime: '17:00:00Z',
-    numWeeks: 13
-  }
+    numWeeks: 13,
+  },
 };
 
 function enumLength(enumName: object): number {

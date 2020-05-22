@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import {
   storesSelector,
   ownedItemsSelector,
-  profileResponseSelector
+  profileResponseSelector,
 } from '../inventory/selectors';
 import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { toVendor } from './d2-vendors';
@@ -49,7 +49,7 @@ function mapStateToProps() {
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
-    profileResponse: profileResponseSelector(state)
+    profileResponse: profileResponseSelector(state),
   });
 }
 

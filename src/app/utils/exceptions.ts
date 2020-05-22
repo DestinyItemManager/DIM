@@ -29,17 +29,17 @@ if ($featureFlags.sentry) {
       'Bungie.net was too slow to respond.',
       /AbortError/,
       /Non-Error promise rejection/,
-      'VendorEngrams.xyz service call failed.'
+      'VendorEngrams.xyz service call failed.',
     ],
     ignoreUrls: [
       // Chrome extensions
       /extensions\//i,
       /^chrome:\/\//i,
-      /^moz-extension:\/\//i
+      /^moz-extension:\/\//i,
     ],
     attachStackTrace: true,
     // We're flooding Sentry for some reason
-    sampleRate: 0.05
+    sampleRate: 0.05,
   });
 
   reportException = (name: string, e: Error, errorInfo?: {}) => {

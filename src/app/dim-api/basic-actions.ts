@@ -3,7 +3,7 @@ import { DimApiState } from './reducer';
 import {
   GlobalSettings,
   ProfileResponse,
-  ProfileUpdateResult
+  ProfileUpdateResult,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 

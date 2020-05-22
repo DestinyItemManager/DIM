@@ -13,7 +13,7 @@ const bucketIcons = {
   3313201758: modificationsIcon,
   2973005342: shadersIcon,
   1469714392: consumablesIcon,
-  138197802: vaultIcon
+  138197802: vaultIcon,
 };
 const vaultBucketOrder = [
   // D1
@@ -25,7 +25,7 @@ const vaultBucketOrder = [
   138197802,
   1469714392,
   3313201758,
-  2973005342
+  2973005342,
 ];
 
 export default function VaultStats({ store }: { store: DimVault }) {
@@ -64,7 +64,7 @@ export default function VaultStats({ store }: { store: DimVault }) {
             title={store.vaultCounts[bucketId].bucket.name}
             className={clsx({
               [styles.full]:
-                store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity
+                store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity,
             })}
           >
             {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}

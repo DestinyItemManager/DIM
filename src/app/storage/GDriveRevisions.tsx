@@ -71,7 +71,7 @@ class GDriveRevisionComponent extends React.Component<
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
     };
     // There's a Safari bug that makes "private restore = async() => {}" throw "Can't find private variable: @derivedConstructor". It's fixed in the latest iOS but not all of them.
     this.restore = this.restore.bind(this);

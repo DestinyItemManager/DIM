@@ -30,13 +30,13 @@ export const farming: Reducer<FarmingState, FarmingAction> = (
     case getType(actions.start):
       return {
         ...state,
-        storeId: action.payload
+        storeId: action.payload,
       };
 
     case getType(actions.stop):
       return {
         ...state,
-        storeId: undefined
+        storeId: undefined,
       };
 
     default:

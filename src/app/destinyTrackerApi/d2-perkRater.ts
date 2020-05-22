@@ -76,7 +76,7 @@ function getPlugRatingsAndReviewCount(
   const ratingAndReview = {
     ratingCount,
     averageReview,
-    plugOptionHash
+    plugOptionHash,
   };
 
   return ratingAndReview;

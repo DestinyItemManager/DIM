@@ -13,7 +13,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    language: settingsSelector(state).language
+    language: settingsSelector(state).language,
   };
 }
 
@@ -31,14 +31,14 @@ function WhatsNew({ language }: Props) {
         <Timeline
           dataSource={{
             sourceType: 'profile',
-            screenName: 'ThisIsDIM'
+            screenName: 'ThisIsDIM',
           }}
           options={{
             lang: language,
             dnt: true,
             via: 'ThisIsDIM',
             username: 'ThisIsDIM',
-            height: '100%'
+            height: '100%',
           }}
         />
       </div>

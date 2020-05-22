@@ -45,7 +45,7 @@ export default function LocalStorageInfo({ showDetails }: { showDetails: boolean
           <div className="storage-guage">
             <div
               className={clsx({
-                full: quota.usage / quota.quota > 0.9
+                full: quota.usage / quota.quota > 0.9,
               })}
               style={{ width: percent(Math.max(quota.usage / quota.quota, 0.01)) }}
             />

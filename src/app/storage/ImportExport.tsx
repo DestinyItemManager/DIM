@@ -17,7 +17,7 @@ const supportsExport = !iOS;
 
 export default function ImportExport({
   onExportData,
-  onImportData
+  onImportData,
 }: {
   onExportData(): void;
   onImportData(data: object): Promise<any>;

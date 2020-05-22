@@ -20,12 +20,12 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    itemTag: getTag(props.item, itemInfosSelector(state))
+    itemTag: getTag(props.item, itemInfosSelector(state)),
   };
 }
 
 const mapDispatchToProps = {
-  setItemTag
+  setItemTag,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -44,7 +44,7 @@ function ItemTagHotkeys({ item, children, itemTag, setItemTag }: Props) {
         combo: tag.hotkey,
         description: t('Hotkey.MarkItemAs', { tag: tag.type }),
         callback: () =>
-          setItemTag({ itemId: item.id, tag: itemTag === tag.type ? undefined : tag.type })
+          setItemTag({ itemId: item.id, tag: itemTag === tag.type ? undefined : tag.type }),
       });
     }
   });

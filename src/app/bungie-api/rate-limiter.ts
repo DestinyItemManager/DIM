@@ -38,7 +38,7 @@ export class RateLimiterQueue {
       request,
       options,
       resolver,
-      rejecter
+      rejecter,
     });
     this.processQueue();
 
@@ -95,7 +95,7 @@ export const RateLimiterConfig = {
 
   addLimiter(queue: RateLimiterQueue) {
     this.limiters.push(queue);
-  }
+  },
 };
 
 /**

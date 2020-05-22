@@ -9,7 +9,7 @@ import { createSelector } from 'reselect';
 import {
   Loadout as DimApiLoadout,
   LoadoutItem as DimApiLoadoutItem,
-  DestinyVersion
+  DestinyVersion,
 } from '@destinyitemmanager/dim-api-types';
 import { currentProfileSelector, apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { emptyArray } from 'app/utils/empty';
@@ -76,7 +76,7 @@ export type LoadoutsAction = ActionType<typeof actions>;
 
 const initialState: LoadoutsState = {
   loadouts: [],
-  previousLoadouts: {}
+  previousLoadouts: {},
 };
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
@@ -87,20 +87,20 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
     case getType(actions.loaded):
       return {
         ...state,
-        loadouts: action.payload
+        loadouts: action.payload,
       };
 
     case getType(actions.deleteLoadout):
       return {
         ...state,
-        loadouts: state.loadouts.filter((l) => l.id !== action.payload)
+        loadouts: state.loadouts.filter((l) => l.id !== action.payload),
       };
 
     case getType(actions.updateLoadout): {
       const loadout = action.payload;
       return {
         ...state,
-        loadouts: [...state.loadouts.filter((l) => l.id !== loadout.id), loadout]
+        loadouts: [...state.loadouts.filter((l) => l.id !== loadout.id), loadout],
       };
     }
 
@@ -118,8 +118,8 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
         ...state,
         previousLoadouts: {
           ...state.previousLoadouts,
-          [storeId]: previousLoadouts
-        }
+          [storeId]: previousLoadouts,
+        },
       };
     }
 
@@ -146,8 +146,8 @@ function convertDimApiLoadoutToLoadout(
     destinyVersion,
     items: [
       ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
-      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false))
-    ]
+      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
+    ],
   };
 }
 
@@ -162,6 +162,6 @@ export function convertDimApiLoadoutItemToLoadoutItem(
     id: item.id || '0',
     hash: item.hash,
     amount: item.amount || 1,
-    equipped
+    equipped,
   };
 }

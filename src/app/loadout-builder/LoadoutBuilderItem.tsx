@@ -12,7 +12,7 @@ import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 export default function LoadoutBuilderItem({
   item,
   locked,
-  addLockedItem
+  addLockedItem,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
@@ -31,7 +31,7 @@ export default function LoadoutBuilderItem({
             className={clsx({
               'excluded-item': locked?.some(
                 (p) => p.type === 'exclude' && p.item.index === item.index
-              )
+              ),
             })}
           >
             <ConnectedInventoryItem

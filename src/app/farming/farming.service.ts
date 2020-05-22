@@ -20,7 +20,7 @@ const glimmerHashes = new Set([
   269776572, // -house-banners
   3632619276, // -silken-codex
   2904517731, // -axiomatic-beads
-  1932910919 // -network-keys
+  1932910919, // -network-keys
 ]);
 
 // These are things you may pick up frequently out in the wild
@@ -36,7 +36,7 @@ const makeRoomTypes = [
   434908299, // Artifact
   4023194814, // Ghost
   1469714392, // Consumable
-  3865314626 // Material
+  3865314626, // Material
 ];
 
 /**

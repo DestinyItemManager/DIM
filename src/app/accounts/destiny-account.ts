@@ -3,7 +3,7 @@ import {
   PlatformErrorCodes,
   DestinyGameVersions,
   DestinyLinkedProfilesResponse,
-  DestinyProfileUserInfoCard
+  DestinyProfileUserInfoCard,
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -35,7 +35,7 @@ export const PLATFORM_LABELS = {
   [BungieMembershipType.TigerSteam]: 'Steam',
   // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
-  [BungieMembershipType.BungieNext]: 'Bungie.net'
+  [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
@@ -49,7 +49,7 @@ export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
   Steam: BungieMembershipType.TigerSteam,
   // t('Accounts.Stadia')
   Stadia: BungieMembershipType.TigerStadia,
-  'Bungie.net': BungieMembershipType.BungieNext
+  'Bungie.net': BungieMembershipType.BungieNext,
 };
 
 export const PLATFORM_ICONS = {
@@ -59,7 +59,7 @@ export const PLATFORM_ICONS = {
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,
   [BungieMembershipType.TigerStadia]: stadiaIcon,
-  [BungieMembershipType.BungieNext]: 'Bungie.net'
+  [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 /** A specific Destiny account (one per platform and Destiny version) */
@@ -105,7 +105,7 @@ export function getDestinyAccountsForBungieAccount(
       if (platforms.length === 0) {
         showNotification({
           type: 'warning',
-          title: t('Accounts.NoCharacters')
+          title: t('Accounts.NoCharacters'),
         });
         removeToken();
         dispatch(loggedOut(true));
@@ -146,7 +146,7 @@ async function generatePlatforms(
         platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
         destinyVersion: 2,
         platforms: destinyAccount.applicableMembershipTypes,
-        lastPlayed: new Date(destinyAccount.dateLastPlayed)
+        lastPlayed: new Date(destinyAccount.dateLastPlayed),
       };
 
       // For accounts that were folded into Cross Save, only consider them as D1 accounts.
@@ -169,7 +169,7 @@ async function generatePlatforms(
           platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
           destinyVersion: 1,
           platforms: [destinyAccount.membershipType],
-          lastPlayed: new Date()
+          lastPlayed: new Date(),
         };
 
         if (
@@ -200,7 +200,7 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
         destinyVersion: 1,
         // D1 didn't support cross-save!
         platforms: [account.originalPlatformType],
-        lastPlayed: getLastPlayedD1Character(response)
+        lastPlayed: getLastPlayedD1Character(response),
       };
       return result;
     }
@@ -222,7 +222,7 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
       destinyVersion: 1,
       // D1 didn't support cross-save!
       platforms: [account.originalPlatformType],
-      lastPlayed: new Date(0)
+      lastPlayed: new Date(0),
     };
   }
 }

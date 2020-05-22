@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import {
   DestinyProfileResponse,
   DestinyMetricDefinition,
-  DestinyMetricComponent
+  DestinyMetricComponent,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import styles from './Metric.m.scss';

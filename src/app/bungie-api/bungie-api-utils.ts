@@ -9,7 +9,7 @@ export function bungieApiUpdate(path: string, data?: object): HttpClientConfig {
   return {
     method: 'POST',
     url: `https://www.bungie.net${path}`,
-    body: data
+    body: data,
   };
 }
 
@@ -17,7 +17,7 @@ export function bungieApiQuery(path: string, params?: object): HttpClientConfig 
   return {
     method: 'GET',
     url: `https://www.bungie.net${path}`,
-    params
+    params,
   };
 }
 

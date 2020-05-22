@@ -38,6 +38,6 @@ export function showNotification(notification: NotifyInput) {
     id: notificationId++,
     duration: 5000,
     type: 'info',
-    ...notification
+    ...notification,
   });
 }

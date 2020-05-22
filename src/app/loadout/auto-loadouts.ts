@@ -74,7 +74,7 @@ export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
 const powerStatHashes = [
   1480404414, // D2 Attack
   3897883278, // D1 & D2 Defense
-  368428387 // D1 Attack
+  368428387, // D1 Attack
 ];
 
 /**
@@ -274,7 +274,7 @@ const randomLoadoutTypes = new Set([
   'Leg',
   'ClassItem',
   'Artifact',
-  'Ghost'
+  'Ghost',
 ]);
 
 /**

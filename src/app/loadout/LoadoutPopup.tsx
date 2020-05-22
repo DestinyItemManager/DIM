@@ -15,7 +15,7 @@ import {
   gatherEngramsLoadout,
   searchLoadout,
   randomLoadout,
-  maxLightItemSet
+  maxLightItemSet,
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout, getLight, convertToLoadoutItem } from './loadout-utils';
@@ -25,7 +25,7 @@ import {
   makeRoomForPostmaster,
   pullFromPostmaster,
   pullablePostmasterItems,
-  totalPostmasterItems
+  totalPostmasterItems,
 } from './postmaster';
 import { queueAction } from '../inventory/action-queue';
 import {
@@ -45,7 +45,7 @@ import {
   faRandom,
   hunterIcon,
   warlockIcon,
-  titanIcon
+  titanIcon,
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
@@ -67,7 +67,7 @@ const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
   [DestinyClass.Hunter]: hunterIcon,
   [DestinyClass.Warlock]: warlockIcon,
-  [DestinyClass.Titan]: titanIcon
+  [DestinyClass.Titan]: titanIcon,
 };
 
 interface ProvidedProps {
@@ -124,7 +124,7 @@ function mapStateToProps() {
       classTypeId: dimStore.classType,
       account: currentAccountSelector(state)!,
       stores: storesSelector(state),
-      hasClassified: hasClassifiedSelector(state)
+      hasClassified: hasClassifiedSelector(state),
     };
   };
 }
@@ -138,7 +138,7 @@ class LoadoutPopup extends React.Component<Props> {
       loadouts,
       query,
       onClick,
-      hasClassified
+      hasClassified,
     } = this.props;
 
     // For the most part we don't need to memoize this - this menu is destroyed when closed
@@ -334,8 +334,8 @@ class LoadoutPopup extends React.Component<Props> {
           title: t('Loadouts.DeleteErrorTitle'),
           body: t('Loadouts.DeleteErrorDescription', {
             loadoutName: loadout.name,
-            error: e.message
-          })
+            error: e.message,
+          }),
         });
         console.error(e);
       }
@@ -452,6 +452,6 @@ export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 export function filterLoadoutToEquipped(loadout: Loadout) {
   return {
     ...loadout,
-    items: loadout.items.filter((i) => i.equipped)
+    items: loadout.items.filter((i) => i.equipped),
   };
 }

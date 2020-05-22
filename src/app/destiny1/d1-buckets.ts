@@ -18,9 +18,9 @@ export const D1Categories = {
     'Emote',
     'Ship',
     'Vehicle',
-    'Horn'
+    'Horn',
   ],
-  Progress: ['Bounties', 'Quests', 'Missions']
+  Progress: ['Bounties', 'Quests', 'Missions'],
 };
 
 // A mapping from the bucket hash to DIM item types
@@ -52,19 +52,19 @@ const bucketToType = {
   3796357825: 'Horn',
   3865314626: 'Material',
   4023194814: 'Ghost',
-  4274335291: 'Emblem'
+  4274335291: 'Emblem',
 };
 
 export const vaultTypes = {
   3003523923: 'Armor',
   4046403665: 'Weapons',
-  138197802: 'General'
+  138197802: 'General',
 };
 
 const sortToVault = {
   Armor: 3003523923,
   Weapons: 4046403665,
-  General: 138197802
+  General: 138197802,
 };
 
 const typeToSort = {};
@@ -89,12 +89,12 @@ export const getBuckets = _.once(async () => {
       capacity: Number.MAX_SAFE_INTEGER,
       sort: 'Unknown',
       type: 'Unknown',
-      accountWide: false
+      accountWide: false,
     },
     setHasUnknown() {
       this.byCategory[this.unknown.sort] = [this.unknown];
       this.byType[this.unknown.type] = this.unknown;
-    }
+    },
   };
   _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
@@ -114,7 +114,7 @@ export const getBuckets = _.once(async () => {
         accountWide: false,
         category: BucketCategory.Item,
         type: bucketToType[def.hash],
-        sort
+        sort,
       };
       if (bucket.type) {
         buckets.byType[bucket.type] = bucket;

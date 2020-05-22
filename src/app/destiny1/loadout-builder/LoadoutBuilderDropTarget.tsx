@@ -5,7 +5,7 @@ import {
   DropTarget,
   DropTargetConnector,
   DropTargetMonitor,
-  DropTargetSpec
+  DropTargetSpec,
 } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
 
@@ -39,7 +39,7 @@ const dropSpec: DropTargetSpec<Props> = {
     // can only drop on a matching bucket
     const item = monitor.getItem().item as DimItem;
     return item.bucket.type === props.bucketType;
-  }
+  },
 };
 
 // This forwards drag and drop state into props on the component
@@ -50,7 +50,7 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
     connectDropTarget: connect.dropTarget(),
     // You can ask the monitor about the current drag state:
     isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
+    canDrop: monitor.canDrop(),
   };
 }
 
@@ -62,7 +62,7 @@ class LoadoutBucketDropTarget extends React.Component<Props> {
       <div
         className={clsx({
           'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop
+          'on-drag-enter': canDrop,
         })}
       >
         {children}

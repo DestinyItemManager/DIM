@@ -9,7 +9,7 @@ import FileUpload from '../dim-ui/FileUpload';
 import {
   wishListsEnabledSelector,
   wishListsSelector,
-  wishListsLastFetchedSelector
+  wishListsLastFetchedSelector,
 } from '../wishlists/reducer';
 import _ from 'lodash';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
@@ -38,7 +38,7 @@ function mapStateToProps(state: RootState): StoreProps {
     title: wishList.title,
     description: wishList.description,
     wishListSource: settingsSelector(state).wishListSource,
-    wishListLastUpdated: wishListsLastFetchedSelector(state)
+    wishListLastUpdated: wishListsLastFetchedSelector(state),
   };
 }
 
@@ -49,7 +49,7 @@ function WishListSettings({
   title,
   description,
   wishListLastUpdated,
-  dispatch
+  dispatch,
 }: Props) {
   const [liveWishListSource, setLiveWishListSource] = useState(wishListSource);
   useEffect(() => {
@@ -78,7 +78,7 @@ function WishListSettings({
       showNotification({
         type: 'error',
         title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportError', { error: e.message })
+        body: t('WishListRoll.ImportError', { error: e.message }),
       });
     }
   };
@@ -146,7 +146,7 @@ function WishListSettings({
           <div className="fineprint">
             {t('WishListRoll.LastUpdated', {
               lastUpdatedDate: wishListLastUpdated.toLocaleDateString(),
-              lastUpdatedTime: wishListLastUpdated.toLocaleTimeString()
+              lastUpdatedTime: wishListLastUpdated.toLocaleTimeString(),
             })}
           </div>
         )}
@@ -158,7 +158,7 @@ function WishListSettings({
             <div className="horizontal">
               <label>
                 {t('WishListRoll.Num', {
-                  num: numWishListRolls
+                  num: numWishListRolls,
                 })}
               </label>
               <button className="dim-button" onClick={clearWishListEvent}>

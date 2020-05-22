@@ -11,7 +11,7 @@ export default React.memo(function AppIcon({
   icon,
   className,
   title,
-  spinning
+  spinning,
 }: {
   icon: string | IconDefinition;
   className?: string;

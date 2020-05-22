@@ -58,7 +58,7 @@ const initialState: AccountsState = {
     !DIM_API_KEY ||
     !BUNGIE_API_KEY ||
     ($DIM_FLAVOR === 'dev' &&
-      (!localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret')))
+      (!localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret'))),
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
@@ -71,14 +71,14 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         ...state,
         accounts: deepEqual(action.payload, state.accounts) ? state.accounts : action.payload || [],
         loaded: true,
-        accountsError: undefined
+        accountsError: undefined,
       };
     case getType(actions.setCurrentAccount): {
       const newCurrentAccount = action.payload ? state.accounts.indexOf(action.payload) : -1;
       return newCurrentAccount !== state.currentAccount
         ? {
             ...state,
-            currentAccount: newCurrentAccount
+            currentAccount: newCurrentAccount,
           }
         : state;
     }
@@ -90,24 +90,24 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
             accounts: deepEqual(action.payload, state.accounts)
               ? state.accounts
               : action.payload || [],
-            loadedFromIDB: true
+            loadedFromIDB: true,
           };
     case getType(actions.error):
       return {
         ...state,
-        accountsError: action.payload
+        accountsError: action.payload,
       };
     case getType(actions.loggedOut):
       return {
         ...initialState,
         reauth: action.payload.reauth,
-        needsLogin: true
+        needsLogin: true,
       };
 
     case getType(actions.needsDeveloper):
       return {
         ...state,
-        needsDeveloper: true
+        needsDeveloper: true,
       };
 
     default:

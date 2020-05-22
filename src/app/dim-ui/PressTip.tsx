@@ -31,8 +31,8 @@ const createPopper = popperGenerator({
     applyStyles,
     flip,
     preventOverflow,
-    arrow
-  ]
+    arrow,
+  ],
 });
 
 const popperOptions = (): Partial<Options> => {
@@ -41,7 +41,7 @@ const popperOptions = (): Partial<Options> => {
     left: 0,
     top: headerHeight + 5,
     right: 0,
-    bottom: 0
+    bottom: 0,
   };
 
   return {
@@ -52,30 +52,30 @@ const popperOptions = (): Partial<Options> => {
         options: {
           priority: ['bottom', 'top', 'right', 'left'],
           boundariesElement: 'viewport',
-          padding
-        }
+          padding,
+        },
       },
       {
         name: 'flip',
         options: {
           behavior: ['top', 'bottom', 'right', 'left'],
           boundariesElement: 'viewport',
-          padding
-        }
+          padding,
+        },
       },
       {
         name: 'offset',
         options: {
-          offset: [0, 5]
-        }
+          offset: [0, 5],
+        },
       },
       {
         name: 'arrow',
         options: {
-          element: '.' + styles.arrow
-        }
-      }
-    ]
+          element: '.' + styles.arrow,
+        },
+      },
+    ],
   };
 };
 
@@ -104,7 +104,7 @@ export default class PressTip extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
     };
   }
 

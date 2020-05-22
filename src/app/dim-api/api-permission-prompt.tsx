@@ -49,7 +49,7 @@ export function promptForApiPermission() {
           </NotificationButton>
         </div>
       </>
-    )
+    ),
   });
 
   return promise;

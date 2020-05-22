@@ -47,12 +47,12 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     itemDetails: settings.itemDetails,
-    language: settings.language
+    language: settings.language,
   };
 }
 
 const mapDispatchToProps = {
-  setSetting
+  setSetting,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -74,8 +74,8 @@ const createPopper = popperGenerator({
     applyStyles,
     flip,
     preventOverflow,
-    arrow
-  ]
+    arrow,
+  ],
 });
 
 const popperOptions = (boundarySelector: string | undefined): Partial<Options> => {
@@ -85,7 +85,7 @@ const popperOptions = (boundarySelector: string | undefined): Partial<Options> =
     left: 0,
     top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
     right: 0,
-    bottom: 0
+    bottom: 0,
   };
   return {
     placement: 'auto',
@@ -95,30 +95,30 @@ const popperOptions = (boundarySelector: string | undefined): Partial<Options> =
         options: {
           priority: ['bottom', 'top', 'right', 'left'],
           boundariesElement: 'viewport',
-          padding
-        }
+          padding,
+        },
       },
       {
         name: 'flip',
         options: {
           behavior: ['top', 'bottom', 'right', 'left'],
           boundariesElement: 'viewport',
-          padding
-        }
+          padding,
+        },
       },
       {
         name: 'offset',
         options: {
-          offset: [0, 5]
-        }
+          offset: [0, 5],
+        },
       },
       {
         name: 'arrow',
         options: {
-          element: '.' + styles.arrow
-        }
-      }
-    ]
+          element: '.' + styles.arrow,
+        },
+      },
+    ],
   };
 };
 
@@ -127,7 +127,7 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
   Legendary: styles.legendary,
   Rare: styles.rare,
   Uncommon: styles.uncommon,
-  Common: styles.common
+  Common: styles.common,
 } as const;
 
 /**
@@ -151,7 +151,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
             item,
             element,
             extraInfo,
-            tab: !item.reviewable && tab === ItemPopupTab.Reviews ? ItemPopupTab.Overview : tab
+            tab: !item.reviewable && tab === ItemPopupTab.Reviews ? ItemPopupTab.Overview : tab,
           }));
           if ($DIM_FLAVOR !== 'release') {
             console.log(item);
@@ -238,8 +238,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
               description: t('Hotkey.ClearDialog'),
               callback: () => {
                 this.onClose();
-              }
-            }
+              },
+            },
           ]}
         />
       </div>

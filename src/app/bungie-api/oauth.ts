@@ -15,11 +15,11 @@ export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tok
         grant_type: 'refresh_token', // eslint-disable-line @typescript-eslint/camelcase
         refresh_token: refreshToken.value, // eslint-disable-line @typescript-eslint/camelcase
         client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/camelcase
-        client_secret: oauthClientSecret() // eslint-disable-line @typescript-eslint/camelcase
+        client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/camelcase
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     })
       .then((response) => (response.ok ? response.json() : Promise.reject(response)))
       .then(handleAccessToken)
@@ -34,11 +34,11 @@ export function getAccessTokenFromCode(code: number): Promise<Tokens> {
         grant_type: 'authorization_code', // eslint-disable-line @typescript-eslint/camelcase
         code,
         client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/camelcase
-        client_secret: oauthClientSecret() // eslint-disable-line @typescript-eslint/camelcase
+        client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/camelcase
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     })
       .then((response) => (response.ok ? response.json() : Promise.reject(response)))
       .then(handleAccessToken)
@@ -54,12 +54,12 @@ function handleAccessToken(response): Tokens {
       value: data.access_token,
       expires: data.expires_in,
       name: 'access',
-      inception
+      inception,
     };
 
     const tokens: Tokens = {
       accessToken,
-      bungieMembershipId: data.membership_id
+      bungieMembershipId: data.membership_id,
     };
 
     if (data.refresh_token) {
@@ -67,7 +67,7 @@ function handleAccessToken(response): Tokens {
         value: data.refresh_token,
         expires: data.refresh_expires_in,
         name: 'refresh',
-        inception
+        inception,
       };
     }
 

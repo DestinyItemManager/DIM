@@ -9,7 +9,7 @@ export default function ItemStats({
   stats,
   item,
   quality,
-  className
+  className,
 }: {
   stats?: DimStat[];
   item?: DimItem;

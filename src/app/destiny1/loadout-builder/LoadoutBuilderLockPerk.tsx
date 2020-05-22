@@ -34,7 +34,7 @@ export default class LoadoutBuilderLockPerk extends React.Component<Props, State
       activePerks,
       lockedPerks,
       onRemove,
-      onItemLocked
+      onItemLocked,
     } = this.props;
     const { dialogOpen } = this.state;
 

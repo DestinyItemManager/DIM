@@ -50,7 +50,7 @@ function mapStateToProps(state: RootState): StoreProps {
     settings: settingsSelector(state),
     storesLoaded: storesLoadedSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray()
+    reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
   };
 }
 
@@ -62,50 +62,50 @@ const fakeWeapon = {
   dtrRatingCount: 100,
   element: {
     displayProperties: {
-      icon: '/img/destiny_content/damage_types/destiny2/thermal.png'
-    }
+      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
+    },
   },
   isNew: true,
   location: {
-    type: 'energy'
+    type: 'energy',
   },
   bucket: {
-    type: 'energy'
+    type: 'energy',
   },
   visible: true,
   primStat: {
-    value: 300
+    value: 300,
   },
   isDestiny2() {
     return true;
   },
   isDestiny1() {
     return false;
-  }
+  },
 };
 
 const fakeArmor = {
   icon: `~${exampleArmorImage}`,
   quality: {
-    min: 96
+    min: 96,
   },
   isNew: true,
   location: {
-    type: 'energy'
+    type: 'energy',
   },
   bucket: {
-    type: 'energy'
+    type: 'energy',
   },
   visible: true,
   primStat: {
-    value: 300
+    value: 300,
   },
   isDestiny2() {
     return false;
   },
   isDestiny1() {
     return true;
-  }
+  },
 };
 
 const languageOptions = mapToOptions({
@@ -121,7 +121,7 @@ const languageOptions = mapToOptions({
   ru: 'Русский',
   ja: '日本語',
   'zh-cht': '繁體中文', // Chinese (Traditional)
-  'zh-chs': '简体中文' // Chinese (Simplified)
+  'zh-chs': '简体中文', // Chinese (Simplified)
 });
 
 const colorA11yOptions = $featureFlags.colorA11y
@@ -134,7 +134,7 @@ const colorA11yOptions = $featureFlags.colorA11y
       'Tritanopia',
       'Tritanomaly',
       'Achromatopsia',
-      'Achromatomaly'
+      'Achromatomaly',
     ])
   : [];
 
@@ -146,7 +146,7 @@ function SettingsPage({
   isPhonePortrait,
   reviewModeOptions,
   storesLoaded,
-  dispatch
+  dispatch,
 }: Props) {
   useEffect(() => {
     getDefinitions();
@@ -232,17 +232,17 @@ function SettingsPage({
     rating: t('Settings.SortByRating'),
     classType: t('Settings.SortByClassType'),
     name: t('Settings.SortName'),
-    tag: t('Settings.SortByTag', { taglist: tagListString })
+    tag: t('Settings.SortByTag', { taglist: tagListString }),
     // archetype: 'Archetype'
   };
 
   const charColOptions = _.range(3, 6).map((num) => ({
     value: num,
-    name: t('Settings.ColumnSize', { num })
+    name: t('Settings.ColumnSize', { num }),
   }));
   const vaultColOptions = _.range(5, 21).map((num) => ({
     value: num,
-    name: t('Settings.ColumnSize', { num })
+    name: t('Settings.ColumnSize', { num }),
   }));
   vaultColOptions.unshift({ value: 999, name: t('Settings.ColumnSizeAuto') });
 
@@ -254,7 +254,7 @@ function SettingsPage({
       (displayName, id): SortProperty => ({
         id,
         displayName,
-        enabled: sortOrder.includes(id)
+        enabled: sortOrder.includes(id),
       })
     ),
     (o) => {
@@ -270,7 +270,7 @@ function SettingsPage({
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'ratings', title: t('Settings.Ratings') },
     { id: 'storage', title: t('Storage.MenuTitle') },
-    { id: 'spreadsheets', title: t('Settings.Data') }
+    { id: 'spreadsheets', title: t('Settings.Data') },
   ]);
 
   if (!storesLoaded) {
@@ -486,7 +486,7 @@ function SettingsPage({
                       value={settings.reviewsPlatformSelectionV2}
                       options={reviewPlatformOptions.map((o) => ({
                         name: t(o.description),
-                        value: o.platform
+                        value: o.platform,
                       }))}
                       onChange={saveAndReloadReviews}
                     />
@@ -497,7 +497,7 @@ function SettingsPage({
                       value={settings.reviewsModeSelection}
                       options={reviewModeOptions.map((m) => ({
                         name: m.description,
-                        value: m.mode
+                        value: m.mode,
                       }))}
                       onChange={saveAndReloadReviews}
                     />

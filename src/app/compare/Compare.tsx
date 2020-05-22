@@ -17,7 +17,7 @@ import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import {
   DestinyDisplayPropertiesDefinition,
-  DestinyInventoryItemDefinition
+  DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -43,7 +43,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     ratings: ratingsSelector(state),
     stores: storesSelector(state),
-    defs: state.manifest.d2Manifest
+    defs: state.manifest.d2Manifest,
   };
 }
 
@@ -73,7 +73,7 @@ class Compare extends React.Component<Props, State> {
     comparisonItems: [],
     comparisonSets: [],
     show: false,
-    sortBetterFirst: true
+    sortBetterFirst: true,
   };
   private subscriptions = new Subscriptions();
 
@@ -113,7 +113,7 @@ class Compare extends React.Component<Props, State> {
       comparisonItems: unsortedComparisonItems,
       sortedHash,
       highlight,
-      comparisonSets
+      comparisonSets,
     } = this.state;
 
     if (!show || unsortedComparisonItems.length === 0) {
@@ -139,7 +139,7 @@ class Compare extends React.Component<Props, State> {
                 ? { value: showRating || 0 }
                 : sortedHash === 'EnergyCapacity'
                 ? {
-                    value: (item.isDestiny2() && item.energy?.energyCapacity) || 0
+                    value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
                   }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -187,7 +187,7 @@ class Compare extends React.Component<Props, State> {
                   key={stat.id}
                   className={clsx('compare-stat-label', {
                     highlight: stat.id === highlight,
-                    sorted: stat.id === sortedHash
+                    sorted: stat.id === sortedHash,
                   })}
                   onMouseOver={() => this.setHighlight(stat.id)}
                   onClick={() => this.sort(stat.id)}
@@ -231,7 +231,7 @@ class Compare extends React.Component<Props, State> {
       show: false,
       comparisonItems: [],
       highlight: undefined,
-      sortedHash: undefined
+      sortedHash: undefined,
     });
     CompareService.dialogOpen = false;
   };
@@ -239,19 +239,19 @@ class Compare extends React.Component<Props, State> {
   private compareSimilar = (e: React.MouseEvent, comparisonSetItems: DimItem[]) => {
     e.preventDefault();
     this.setState({
-      comparisonItems: comparisonSetItems
+      comparisonItems: comparisonSetItems,
     });
   };
 
   private sort = (sortedHash?: string | number) => {
     this.setState((prevState) => ({
       sortedHash,
-      sortBetterFirst: prevState.sortedHash === sortedHash ? !prevState.sortBetterFirst : true
+      sortBetterFirst: prevState.sortedHash === sortedHash ? !prevState.sortBetterFirst : true,
     }));
   };
   private add = ({
     additionalItems,
-    showSomeDupes
+    showSomeDupes,
   }: {
     additionalItems: DimItem[];
     showSomeDupes: boolean;
@@ -270,7 +270,7 @@ class Compare extends React.Component<Props, State> {
         body:
           comparisonItems[0].classType && exampleItem.classType !== comparisonItems[0].classType
             ? t('Compare.Error.Class', { class: comparisonItems[0].classTypeNameLocalized })
-            : t('Compare.Error.Archetype', { type: comparisonItems[0].typeName })
+            : t('Compare.Error.Archetype', { type: comparisonItems[0].typeName }),
       });
       return;
     }
@@ -301,7 +301,7 @@ class Compare extends React.Component<Props, State> {
         const comparisonItems = comparisonSets[0]?.items ?? additionalItems;
         this.setState({
           comparisonSets,
-          comparisonItems
+          comparisonItems,
         });
       }
       // otherwise, compare only the items we were asked to compare
@@ -338,7 +338,7 @@ class Compare extends React.Component<Props, State> {
         'webkitAnimationEnd',
         'oanimationend',
         'msAnimationEnd',
-        'animationend'
+        'animationend',
       ]) {
         element.removeEventListener(event, removePop);
       }
@@ -374,13 +374,13 @@ class Compare extends React.Component<Props, State> {
       // same slot on the same class
       {
         buttonLabel: <>{exampleItem.typeName}</>,
-        items: allArmors
+        items: allArmors,
       },
 
       // above but also has to be armor 2.0
       {
         buttonLabel: <>{[t('Compare.Armor2'), exampleItem.typeName].join(' + ')}</>,
-        items: hasEnergy(exampleItem) ? allArmors.filter(hasEnergy) : []
+        items: hasEnergy(exampleItem) ? allArmors.filter(hasEnergy) : [],
       },
 
       // above but also the same seasonal mod slot, if it has one
@@ -389,7 +389,7 @@ class Compare extends React.Component<Props, State> {
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot)
-            : []
+            : [],
       },
 
       // armor 2.0 and needs to match energy capacity element
@@ -397,7 +397,7 @@ class Compare extends React.Component<Props, State> {
         buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
         items: hasEnergy(exampleItem)
           ? allArmors.filter(hasEnergy).filter(matchesExample('element'))
-          : []
+          : [],
       },
       // above but also the same seasonal mod slot, if it has one
       {
@@ -405,13 +405,13 @@ class Compare extends React.Component<Props, State> {
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
-            : []
+            : [],
       },
 
       // basically stuff with the same name & categories
       {
         buttonLabel: <>{exampleItem.name}</>,
-        items: allArmors.filter((i) => makeDupeID(i) === makeDupeID(exampleItem))
+        items: allArmors.filter((i) => makeDupeID(i) === makeDupeID(exampleItem)),
       },
 
       // above, but also needs to match energy capacity element
@@ -422,8 +422,8 @@ class Compare extends React.Component<Props, State> {
               .filter(hasEnergy)
               .filter(matchesExample('element'))
               .filter((i) => makeDupeID(i) === makeDupeID(exampleItem))
-          : []
-      }
+          : [],
+      },
     ];
 
     // here, we dump some buttons if they aren't worth displaying
@@ -524,13 +524,13 @@ class Compare extends React.Component<Props, State> {
       // same weapon type
       {
         buttonLabel: <>{exampleItem.typeName}</>,
-        items: allWeapons
+        items: allWeapons,
       },
 
       // above, but also same (kinetic/energy/heavy) slot
       {
         buttonLabel: <>{[exampleItem.bucket.name, exampleItem.typeName].join(' + ')}</>,
-        items: allWeapons.filter((i) => i.bucket.name === exampleItem.bucket.name)
+        items: allWeapons.filter((i) => i.bucket.name === exampleItem.bucket.name),
       },
 
       // same weapon type plus matching intrinsic (rpm+impact..... ish)
@@ -540,20 +540,20 @@ class Compare extends React.Component<Props, State> {
           ? allWeapons.filter(
               (i) => i.isDestiny2() && i.sockets && getIntrinsicPerk(i)?.hash === intrinsicHash
             )
-          : allWeapons.filter((i) => exampleItemRpm === getRpm(i))
+          : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
 
       // same weapon type and also matching element (& usually same-slot because same element)
       {
         buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
-        items: allWeapons.filter(matchesExample('element'))
+        items: allWeapons.filter(matchesExample('element')),
       },
 
       // exact same weapon, judging by name. might span multiple expansions.
       {
         buttonLabel: <>{exampleItem.name}</>,
-        items: allWeapons.filter(matchesExample('name'))
-      }
+        items: allWeapons.filter(matchesExample('name')),
+      },
     ];
     comparisonSets = comparisonSets.reverse();
     comparisonSets = comparisonSets.filter((comparisonSet, index) => {
@@ -589,7 +589,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
     stats.push({
       id: 'Rating',
       displayProperties: {
-        name: t('Compare.Rating')
+        name: t('Compare.Rating'),
       } as DestinyDisplayPropertiesDefinition,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
@@ -599,7 +599,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
         return { statHash: 0, value: showRating || undefined };
-      }
+      },
     });
   }
   if (firstComparison.primStat) {
@@ -612,14 +612,14 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
       lowerBetter: false,
       getStat(item: DimItem) {
         return item.primStat || undefined;
-      }
+      },
     });
   }
   if (firstComparison.bucket.inArmor) {
     stats.push({
       id: 'EnergyCapacity',
       displayProperties: {
-        name: t('EnergyMeter.Energy')
+        name: t('EnergyMeter.Energy'),
       } as DestinyDisplayPropertiesDefinition,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
@@ -630,11 +630,11 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
           (item.isDestiny2() &&
             item.energy && {
               statHash: item.energy.energyType,
-              value: item.energy.energyCapacity
+              value: item.energy.energyCapacity,
             }) ||
           undefined
         );
-      }
+      },
     });
   }
   // Todo: map of stat id => stat object
@@ -654,7 +654,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
             lowerBetter: false,
             getStat(item: DimItem) {
               return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            }
+            },
           };
           statsByHash[stat.statHash] = statInfo;
           stats.push(statInfo);
