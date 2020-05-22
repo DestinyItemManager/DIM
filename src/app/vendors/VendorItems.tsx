@@ -29,6 +29,7 @@ export default function VendorItems({
   ownedItemHashes,
   currencyLookups,
   filtering,
+  characterId,
 }: {
   defs: D2ManifestDefinitions;
   vendor: D2Vendor;
@@ -37,6 +38,7 @@ export default function VendorItems({
     [itemHash: number]: number;
   };
   filtering?: boolean;
+  characterId: string;
 }) {
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
@@ -101,7 +103,7 @@ export default function VendorItems({
                 </PressTip>
               )}
               {rewardVendorHash && rewardItem && (
-                <Link to={`vendors/${rewardVendorHash}`}>
+                <Link to={`vendors/${rewardVendorHash}?characterId=${characterId}`}>
                   <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage
                       className="item-img transparent"
@@ -135,6 +137,7 @@ export default function VendorItems({
                             defs={defs}
                             item={item}
                             owned={Boolean(ownedItemHashes?.has(item.item.hash))}
+                            characterId={characterId}
                           />
                         )
                     )}

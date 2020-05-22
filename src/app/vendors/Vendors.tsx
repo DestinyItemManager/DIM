@@ -273,6 +273,7 @@ class Vendors extends React.Component<Props, State> {
                     currencyLookups={currencyLookups}
                     filtering={filterToUnacquired || searchQuery.length > 0}
                     vendorDrops={vendorEngramDrops}
+                    characterId={selectedStore.id}
                   />
                 ))
               ) : (
@@ -317,6 +318,7 @@ function VendorGroup({
   defs,
   filtering,
   vendorDrops,
+  characterId,
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
@@ -324,6 +326,7 @@ function VendorGroup({
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
   vendorDrops?: VendorDrop[];
+  characterId: string;
 }) {
   return (
     <>
@@ -337,6 +340,7 @@ function VendorGroup({
             currencyLookups={currencyLookups}
             filtering={filtering}
             vendorDrops={vendorDrops}
+            characterId={characterId}
           />
         </ErrorBoundary>
       ))}

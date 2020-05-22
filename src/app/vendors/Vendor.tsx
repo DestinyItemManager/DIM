@@ -23,6 +23,7 @@ export default function Vendor({
   currencyLookups,
   filtering,
   vendorDrops,
+  characterId,
 }: {
   vendor: D2Vendor;
   defs: D2ManifestDefinitions;
@@ -32,6 +33,7 @@ export default function Vendor({
   };
   filtering: boolean;
   vendorDrops?: VendorDrop[];
+  characterId: string;
 }) {
   const placeString = _.uniq(
     [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
@@ -87,6 +89,7 @@ export default function Vendor({
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}
           filtering={filtering}
+          characterId={characterId}
         />
       </CollapsibleTitle>
     </div>

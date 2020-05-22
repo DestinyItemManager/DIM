@@ -185,6 +185,7 @@ function SingleVendor({
           vendor={d2Vendor}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={vendorResponse?.currencyLookups.data?.itemQuantities ?? {}}
+          characterId={characterId}
         />
       </ErrorBoundary>
     </div>
