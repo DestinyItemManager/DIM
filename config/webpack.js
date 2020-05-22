@@ -377,12 +377,8 @@ module.exports = (env) => {
         '$featureFlags.sentry': JSON.stringify(env.beta),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
-        // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
-        // Notifications for item moves
-        '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
         '$featureFlags.organizer': JSON.stringify(true),
         // Enable vendorengrams.xyz integration

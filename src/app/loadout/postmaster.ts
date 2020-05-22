@@ -165,29 +165,9 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     return succeeded;
   })();
 
-  if ($featureFlags.moveNotifications) {
-    showNotification(postmasterNotification(items.length, store, promise));
-  }
+  showNotification(postmasterNotification(items.length, store, promise));
 
-  const succeeded = await promise;
-
-  if (!$featureFlags.moveNotifications) {
-    if (succeeded > 0) {
-      showNotification({
-        type: 'success',
-        title: t('Loadouts.PullFromPostmasterPopupTitle'),
-        body: t('Loadouts.PullFromPostmasterDone', {
-          // t('Loadouts.PullFromPostmasterDone_male')
-          // t('Loadouts.PullFromPostmasterDone_female')
-          // t('Loadouts.PullFromPostmasterDone_male_plural')
-          // t('Loadouts.PullFromPostmasterDone_female_plural')
-          count: succeeded,
-          store: store.name,
-          context: store.genderName
-        })
-      });
-    }
-  }
+  await promise;
 }
 
 // cribbed from D1FarmingService, but modified

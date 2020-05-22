@@ -96,9 +96,7 @@ export default queuedAction(
         hideItemPopup();
         const movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
-        if ($featureFlags.moveNotifications) {
-          showNotification(moveItemNotification(item, target, movePromise));
-        }
+        showNotification(moveItemNotification(item, target, movePromise));
 
         item = await movePromise;
 
@@ -110,9 +108,6 @@ export default queuedAction(
         item.updateManualMoveTimestamp();
       } catch (e) {
         if (e.message !== 'move-canceled') {
-          if (!$featureFlags.moveNotifications) {
-            showNotification({ type: 'error', title: item.name, body: e.message });
-          }
           console.error('error moving', e, item);
           // Some errors aren't worth reporting
           if (
