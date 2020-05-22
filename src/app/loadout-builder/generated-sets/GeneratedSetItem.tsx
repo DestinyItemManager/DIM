@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType } from '../types';
-import ItemSockets from '../../item-popup/ItemSockets';
+import { LockedItemType, LockedArmor2Mod } from '../types';
+import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
@@ -10,6 +10,9 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
 import { generateMixesFromPerks } from '../process';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import './GeneratedSetItemLockedMods.scss';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
@@ -32,15 +35,19 @@ function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: numbe
 export default function GeneratedSetItem({
   item,
   locked,
+  defs,
   statValues,
   itemOptions,
+  lockedMods,
   addLockedItem,
   removeLockedItem
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
+  defs: D2ManifestDefinitions;
   statValues: number[];
   itemOptions: DimItem[];
+  lockedMods?: LockedArmor2Mod[];
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }) {
@@ -104,13 +111,20 @@ export default function GeneratedSetItem({
           </button>
         )
       )}
-      {item.isDestiny2() && (
+      {!$featureFlags.armor2ModPicker && item.isDestiny2() && (
         <ItemSockets
           item={item}
           minimal={true}
           classesByHash={classesByHash}
           onShiftClick={onShiftClick}
         />
+      )}
+      {$featureFlags.armor2ModPicker && (
+        <div className={'lockedMods'}>
+          {lockedMods?.map((mod) => (
+            <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+          ))}
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { LockableBuckets, LockedModBase } from './../types';
+import { LockableBuckets, LockedModBase, LockedArmor2ModMap } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
@@ -12,6 +12,7 @@ import {
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { canSetTakeMods } from './mod-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -172,28 +173,30 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
+  lockedArmor2ModMap: LockedArmor2ModMap,
   lockedSeasonalMods: readonly LockedModBase[],
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
 ) {
   let matchedSets = Array.from(sets);
-  // Filter before set tiers are generated
-  if (minimumPower > 0) {
-    matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
-  }
 
-  if (lockedSeasonalMods.length) {
-    const setsBeforeFilter = matchedSets.length;
-    // Filter so that every mod slots into some item
-    matchedSets = sets.filter((set) => canAllModsBeUsed(set, lockedSeasonalMods));
+  matchedSets = matchedSets.filter((set) => {
+    if (set.maxPower < minimumPower) {
+      return false;
+    }
 
-    console.info(
-      `Filtered out ${
-        setsBeforeFilter - matchedSets.length
-      } sets based on seasonal mod requirements`
-    );
-  }
+    if (lockedSeasonalMods.length && !canAllModsBeUsed(set, lockedSeasonalMods)) {
+      return false;
+    }
+
+    // TODO this is too restrictive as there may be other combinations that can take the mods
+    if ($featureFlags.armor2ModPicker && !canSetTakeMods(set.firstValidSet, lockedArmor2ModMap)) {
+      return false;
+    }
+
+    return true;
+  });
 
   matchedSets = matchedSets.sort(
     chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
