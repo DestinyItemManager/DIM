@@ -1,22 +1,18 @@
 import {
-  DestinyVendorsResponse,
   DestinyProfileResponse,
   DestinyCurrenciesComponent,
   DestinyItemPlug,
   DestinyCollectibleComponent,
 } from 'bungie-api-ts/destiny2';
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { loadingTracker } from '../shell/loading-tracker';
-import { fetchRatingsForVendors } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { t } from 'app/i18next-t';
-import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
@@ -27,7 +23,6 @@ import {
   profileResponseSelector,
 } from '../inventory/selectors';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import {
   D2VendorGroup,
   toVendorGroups,
@@ -42,13 +37,13 @@ import VendorsMenu from './VendorsMenu';
 import Hammer from 'react-hammerjs';
 import _ from 'lodash';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
-import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { parse } from 'simple-query-string';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { loadAllVendors } from './actions';
+import { useSubscription } from 'app/utils/hooks';
+import { VendorsState } from './reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -62,11 +57,16 @@ interface StoreProps {
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
+  vendors: VendorsState['vendorsByCharacter'];
+  vendorsError?: Error;
   filterItems(item: DimItem): boolean;
 }
 
+// TODO: extract detail component for vendors body? How to include selected store in state?
+
 function mapStateToProps() {
   const ownedItemSelectorInstance = ownedItemsSelector();
+
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
@@ -77,226 +77,57 @@ function mapStateToProps() {
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
     vendorEngramDrops: state.vendorDrops.vendorDrops,
+    vendors: state.vendors.vendorsByCharacter,
   });
 }
 
-interface State {
-  vendorsResponse?: DestinyVendorsResponse;
-  selectedStoreId?: string;
-  error?: Error;
-  filterToUnacquired: boolean;
-}
-
-type Props = ProvidedProps & StoreProps & RouteComponentProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
-class Vendors extends React.Component<Props, State> {
-  state: State = { filterToUnacquired: false };
+function Vendors({
+  defs,
+  stores,
+  buckets,
+  ownedItemHashes,
+  isPhonePortrait,
+  searchQuery,
+  filterItems,
+  profileResponse,
+  vendorEngramDrops,
+  vendors,
+  vendorsError,
+  dispatch,
+  account,
+}: Props) {
+  const [characterId, setCharacterId] = useState<string>();
+  const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 
-  private subscriptions = new Subscriptions();
-  private mergedCollectiblesSelector = createSelector(
-    (_, props: Props) => props.profileResponse,
-    (profileResponse) =>
-      profileResponse
-        ? mergeCollectibles(
-            profileResponse.profileCollectibles,
-            profileResponse.characterCollectibles
-          )
-        : emptyObject<{
-            [x: number]: DestinyCollectibleComponent;
-          }>()
-  );
-  private vendorGroupsSelector = createSelector(
-    (state: State) => state.vendorsResponse,
-    (_, props: Props) => props.defs,
-    (_, props: Props) => props.buckets,
-    (_, props: Props) => props.account,
-    this.mergedCollectiblesSelector,
-    (vendorsResponse, defs, buckets, account, mergedCollectibles): readonly D2VendorGroup[] =>
-      vendorsResponse && defs && buckets
-        ? toVendorGroups(vendorsResponse, defs, buckets, account, mergedCollectibles)
-        : emptyArray<D2VendorGroup>()
-  );
+  const selectedStoreId = characterId || getCurrentStore(stores)?.id;
 
-  async loadVendors() {
-    const { selectedStoreId } = this.state;
-    const { defs, account, stores, dispatch, location } = this.props;
-    if (this.state.error) {
-      this.setState({ error: undefined });
+  useEffect(() => {
+    D2StoresService.getStoresStream(account);
+    if (selectedStoreId) {
+      dispatch(loadAllVendors(account, selectedStoreId));
     }
+  }, [account, selectedStoreId, dispatch]);
 
-    if ($featureFlags.vendorEngrams) {
-      dispatch(getAllVendorDrops());
-    }
-
-    if (!defs) {
-      throw new Error('expected defs');
-    }
-
-    let characterId = selectedStoreId || (parse(location.search).characterId as string);
-    if (!characterId) {
-      if (stores.length) {
-        characterId = getCurrentStore(stores)!.id;
+  useSubscription(() =>
+    refresh$.subscribe(() => {
+      if (selectedStoreId) {
+        loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId)));
       }
-    }
+    })
+  );
 
-    if (!characterId) {
-      this.setState({ error: new Error("Couldn't load any characters.") });
-      return;
-    }
+  // TODO: wrap this whole thing with a selected store ID... wrapper thing
+  const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
 
-    let vendorsResponse;
-    try {
-      vendorsResponse = await getVendorsApi(account, characterId);
-      this.setState({ vendorsResponse, selectedStoreId: characterId });
-    } catch (error) {
-      this.setState({ error });
-    }
+  const onSetFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setFilterToUnacquired(e.currentTarget.checked);
 
-    if ($featureFlags.reviewsEnabled && vendorsResponse) {
-      dispatch(fetchRatingsForVendors(defs, vendorsResponse));
-    }
-  }
-
-  componentDidMount() {
-    if (this.props.defs && this.props.stores.length) {
-      const promise = this.loadVendors();
-      loadingTracker.addPromise(promise);
-    }
-
-    D2StoresService.getStoresStream(this.props.account);
-
-    this.subscriptions.add(
-      refresh$.subscribe(() => {
-        const promise = this.loadVendors();
-        loadingTracker.addPromise(promise);
-      })
-    );
-  }
-
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (
-      ((!prevProps.defs || !prevProps.stores.length) &&
-        this.props.defs &&
-        this.props.stores.length) ||
-      prevState.selectedStoreId !== this.state.selectedStoreId
-    ) {
-      loadingTracker.addPromise(this.loadVendors());
-    }
-  }
-
-  componentWillUnmount() {
-    this.subscriptions.unsubscribe();
-  }
-
-  render() {
-    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
-    const {
-      defs,
-      stores,
-      ownedItemHashes,
-      isPhonePortrait,
-      searchQuery,
-      filterItems,
-      profileResponse,
-      vendorEngramDrops,
-    } = this.props;
-
-    if (error) {
-      return (
-        <PageWithMenu>
-          <ErrorPanel error={error} />
-        </PageWithMenu>
-      );
-    }
-
-    if (!stores.length) {
-      return (
-        <PageWithMenu>
-          <ShowPageLoading message={t('Loading.Profile')} />
-        </PageWithMenu>
-      );
-    }
-
-    const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
-
-    let vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
-    const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
-
-    if (vendorGroups && filterToUnacquired) {
-      vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
-    }
-    if (vendorGroups && searchQuery.length) {
-      vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
-    }
-
-    const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(
-      ownedItemHashes,
-      defs,
-      profileResponse
-    );
-
-    return (
-      <PageWithMenu>
-        <PageWithMenu.Menu>
-          {selectedStore && (
-            <CharacterSelect
-              stores={stores}
-              vertical={!isPhonePortrait}
-              isPhonePortrait={isPhonePortrait}
-              selectedStore={selectedStore}
-              onCharacterChanged={this.onCharacterChanged}
-            />
-          )}
-          {selectedStore && (
-            <label className={styles.checkButton}>
-              {t('Vendors.FilterToUnacquired')}{' '}
-              <input type="checkbox" onChange={this.setFilterToUnacquired} />
-            </label>
-          )}
-          {!isPhonePortrait && vendorGroups && (
-            <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
-          )}
-        </PageWithMenu.Menu>
-        <PageWithMenu.Contents>
-          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            <div>
-              {vendorGroups && currencyLookups && defs ? (
-                vendorGroups.map((group) => (
-                  <VendorGroup
-                    key={group.def.hash}
-                    defs={defs}
-                    group={group}
-                    ownedItemHashes={fullOwnedItemHashes}
-                    currencyLookups={currencyLookups}
-                    filtering={filterToUnacquired || searchQuery.length > 0}
-                    vendorDrops={vendorEngramDrops}
-                    characterId={selectedStore.id}
-                  />
-                ))
-              ) : (
-                <ShowPageLoading message={t('Loading.Vendors')} />
-              )}
-            </div>
-          </Hammer>
-        </PageWithMenu.Contents>
-      </PageWithMenu>
-    );
-  }
-
-  private onCharacterChanged = (storeId: string) => {
-    this.setState({ selectedStoreId: storeId, vendorsResponse: undefined });
-  };
-
-  private setFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ filterToUnacquired: e.currentTarget.checked });
-  };
-
-  private handleSwipe: HammerListener = (e) => {
-    const { stores } = this.props;
-    const { selectedStoreId } = this.state;
+  const handleSwipe: HammerListener = (e) => {
     const characters = stores.filter((s) => !s.isVault);
 
     const selectedStoreIndex = selectedStoreId
@@ -304,11 +135,109 @@ class Vendors extends React.Component<Props, State> {
       : characters.findIndex((s) => s.current);
 
     if (e.direction === 2 && selectedStoreIndex < characters.length - 1) {
-      this.setState({ selectedStoreId: characters[selectedStoreIndex + 1].id });
+      setCharacterId(characters[selectedStoreIndex + 1].id);
     } else if (e.direction === 4 && selectedStoreIndex > 0) {
-      this.setState({ selectedStoreId: characters[selectedStoreIndex - 1].id });
+      setCharacterId(characters[selectedStoreIndex - 1].id);
     }
   };
+
+  const mergedCollectibles = useMemo(
+    () =>
+      profileResponse
+        ? mergeCollectibles(
+            profileResponse.profileCollectibles,
+            profileResponse.characterCollectibles
+          )
+        : emptyObject<{
+            [x: number]: DestinyCollectibleComponent;
+          }>(),
+    [profileResponse]
+  );
+
+  const vendorsResponse = characterId ? vendors[characterId]?.vendorsResponse : undefined;
+
+  let vendorGroups = useMemo(
+    () =>
+      vendorsResponse && defs && buckets
+        ? toVendorGroups(vendorsResponse, defs, buckets, account, mergedCollectibles)
+        : emptyArray<D2VendorGroup>(),
+    [account, buckets, defs, mergedCollectibles, vendorsResponse]
+  );
+
+  if (vendorsError) {
+    return (
+      <PageWithMenu>
+        <ErrorPanel error={vendorsError} />
+      </PageWithMenu>
+    );
+  }
+
+  if (!stores.length) {
+    return (
+      <PageWithMenu>
+        <ShowPageLoading message={t('Loading.Profile')} />
+      </PageWithMenu>
+    );
+  }
+
+  const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
+  const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
+
+  if (vendorGroups && filterToUnacquired) {
+    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+  }
+  if (vendorGroups && searchQuery.length) {
+    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+  }
+
+  const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
+
+  return (
+    <PageWithMenu>
+      <PageWithMenu.Menu>
+        {selectedStore && (
+          <CharacterSelect
+            stores={stores}
+            vertical={!isPhonePortrait}
+            isPhonePortrait={isPhonePortrait}
+            selectedStore={selectedStore}
+            onCharacterChanged={onCharacterChanged}
+          />
+        )}
+        {selectedStore && (
+          <label className={styles.checkButton}>
+            {t('Vendors.FilterToUnacquired')}{' '}
+            <input type="checkbox" onChange={onSetFilterToUnacquired} />
+          </label>
+        )}
+        {!isPhonePortrait && vendorGroups && (
+          <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
+        )}
+      </PageWithMenu.Menu>
+      <PageWithMenu.Contents>
+        <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
+          <div>
+            {vendorGroups && currencyLookups && defs ? (
+              vendorGroups.map((group) => (
+                <VendorGroup
+                  key={group.def.hash}
+                  defs={defs}
+                  group={group}
+                  ownedItemHashes={fullOwnedItemHashes}
+                  currencyLookups={currencyLookups}
+                  filtering={filterToUnacquired || searchQuery.length > 0}
+                  vendorDrops={vendorEngramDrops}
+                  characterId={selectedStore.id}
+                />
+              ))
+            ) : (
+              <ShowPageLoading message={t('Loading.Vendors')} />
+            )}
+          </div>
+        </Hammer>
+      </PageWithMenu.Contents>
+    </PageWithMenu>
+  );
 }
 
 function VendorGroup({
@@ -384,4 +313,4 @@ function enhanceOwnedItemsWithPlugSets(
   return allItems;
 }
 
-export default withRouter(connect<StoreProps>(mapStateToProps)(Vendors));
+export default connect<StoreProps>(mapStateToProps)(Vendors);
