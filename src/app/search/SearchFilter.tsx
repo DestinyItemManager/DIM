@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
@@ -61,10 +61,6 @@ const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> 
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
-interface State {
-  showSelect: boolean;
-}
-
 function mapStateToProps(state: RootState): StoreProps {
   const searchFilter = searchFilterSelector(state);
   // TODO: Narrow this down by screen?
@@ -89,13 +85,26 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-export class SearchFilter extends React.Component<Props, State> {
-  state: State = { showSelect: false };
-  private input = React.createRef<SearchFilterInput>();
+export function SearchFilter(
+  {
+    isPhonePortrait,
+    mobile,
+    searchConfig,
+    setSearchQuery,
+    searchQuery,
+    searchQueryVersion,
+    filteredItems,
+    isComparable,
+    touchStores,
+    onClear,
+  }: Props,
+  ref: React.Ref<{ focusFilterInput(): void; clearFilter(): void }>
+) {
+  const [showSelect, setShowSelect] = useState(false);
 
-  private bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
+  const bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
     async (e) => {
-      this.setState({ showSelect: false });
+      setShowSelect(false);
 
       const selectedTag = e.currentTarget.value;
 
@@ -103,7 +112,7 @@ export class SearchFilter extends React.Component<Props, State> {
         // Bulk locking/unlocking
 
         const state = selectedTag === 'lock';
-        const lockables = this.props.filteredItems.filter((i) => i.lockable);
+        const lockables = filteredItems.filter((i) => i.lockable);
         try {
           for (const item of lockables) {
             await setItemLockState(item, state);
@@ -126,103 +135,79 @@ export class SearchFilter extends React.Component<Props, State> {
         } finally {
           // Touch the stores service to update state
           if (lockables.length) {
-            this.props.touchStores();
+            touchStores();
           }
         }
       } else {
         // Bulk tagging
-        const tagItems = this.props.filteredItems.filter((i) => i.taggable);
+        const tagItems = filteredItems.filter((i) => i.taggable);
 
         if (isTagValue(selectedTag)) {
-          this.props.bulkTagItems(tagItems, selectedTag);
+          bulkTagItems(tagItems, selectedTag);
         }
       }
     }
   );
 
-  render() {
-    const {
-      isPhonePortrait,
-      mobile,
-      searchConfig,
-      setSearchQuery,
-      searchQuery,
-      searchQueryVersion,
-      filteredItems,
-      isComparable,
-    } = this.props;
-    const { showSelect } = this.state;
+  const compareMatching = () => {
+    CompareService.addItemsToCompare(filteredItems, false);
+  };
 
-    // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
+  const onTagClicked = () => setShowSelect(true);
 
-    const placeholder = isPhonePortrait
-      ? t('Header.FilterHelpBrief')
-      : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
+  const onClearFilter = () => {
+    setShowSelect(false);
+    onClear?.();
+  };
 
-    return (
-      <SearchFilterInput
-        ref={this.input}
-        onQueryChanged={setSearchQuery}
-        alwaysShowClearButton={mobile}
-        placeholder={placeholder}
-        searchConfig={searchConfig}
-        onClear={this.onClearFilter}
-        searchQueryVersion={searchQueryVersion}
-        searchQuery={searchQuery}
-      >
-        <>
-          <span className="filter-match-count">
-            {t('Header.FilterMatchCount', { count: filteredItems.length })}
-          </span>
-          {isComparable && (
-            <span className="filter-help">
-              <a onClick={this.compareMatching}>
-                <AppIcon icon={faClone} title={t('Header.CompareMatching')} />
-              </a>
-            </span>
-          )}
+  // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
+
+  const placeholder = isPhonePortrait
+    ? t('Header.FilterHelpBrief')
+    : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
+
+  return (
+    <SearchFilterInput
+      ref={ref}
+      onQueryChanged={setSearchQuery}
+      alwaysShowClearButton={mobile}
+      placeholder={placeholder}
+      searchConfig={searchConfig}
+      onClear={onClearFilter}
+      searchQueryVersion={searchQueryVersion}
+      searchQuery={searchQuery}
+    >
+      <>
+        <span className="filter-match-count">
+          {t('Header.FilterMatchCount', { count: filteredItems.length })}
+        </span>
+        {isComparable && (
           <span className="filter-help">
-            {showSelect ? (
-              <select className="bulk-tag-select" onChange={this.bulkTag}>
-                {bulkItemTags.map((tag) => (
-                  <option key={tag.type || 'default'} value={tag.type}>
-                    {t(tag.label)}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <a onClick={this.onTagClicked}>
-                <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
-              </a>
-            )}
+            <a onClick={compareMatching}>
+              <AppIcon icon={faClone} title={t('Header.CompareMatching')} />
+            </a>
           </span>
-        </>
-      </SearchFilterInput>
-    );
-  }
-
-  focusFilterInput = () => {
-    this.input.current?.focusFilterInput();
-  };
-
-  clearFilter = () => {
-    this.input.current?.clearFilter();
-  };
-
-  private compareMatching = () => {
-    CompareService.addItemsToCompare(this.props.filteredItems, false);
-  };
-
-  private onTagClicked = () => {
-    this.setState({ showSelect: true });
-  };
-
-  private onClearFilter = () => {
-    this.setState({ showSelect: false });
-    this.props.onClear?.();
-  };
+        )}
+        <span className="filter-help">
+          {showSelect ? (
+            <select className="bulk-tag-select" onChange={bulkTag}>
+              {bulkItemTags.map((tag) => (
+                <option key={tag.type || 'default'} value={tag.type}>
+                  {t(tag.label)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <a onClick={onTagClicked}>
+              <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
+            </a>
+          )}
+        </span>
+      </>
+    </SearchFilterInput>
+  );
 }
 
 export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {
   forwardRef: true,
-})(SearchFilter);
+})(React.forwardRef(SearchFilter));

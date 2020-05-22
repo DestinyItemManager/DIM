@@ -1,7 +1,14 @@
 import './search-filter.scss';
 
 import { AppIcon, disabledIcon, helpIcon, searchIcon } from '../shell/icons';
-import React, { Suspense } from 'react';
+import React, {
+  Suspense,
+  useState,
+  useRef,
+  useCallback,
+  useImperativeHandle,
+  useEffect,
+} from 'react';
 
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
@@ -30,11 +37,6 @@ interface ProvidedProps {
 
 type Props = ProvidedProps;
 
-interface State {
-  liveQuery: string;
-  filterHelpOpen: boolean;
-}
-
 const LazyFilterHelp = React.lazy(() =>
   import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
@@ -62,165 +64,86 @@ const filterNames = [
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay.
  */
-export default class SearchFilterInput extends React.Component<Props, State> {
-  state: State = { liveQuery: '', filterHelpOpen: false };
-  private textcomplete: Textcomplete;
-  private inputElement = React.createRef<HTMLInputElement>();
-  private debouncedUpdateQuery = _.debounce(this.props.onQueryChanged, 500);
+export default React.forwardRef(function SearchFilterInput(
+  {
+    searchQueryVersion,
+    searchConfig,
+    searchQuery,
+    alwaysShowClearButton,
+    placeholder,
+    children,
+    autoFocus,
+    onQueryChanged,
+    onClear,
+  }: Props,
+  ref: React.Ref<{ focusFilterInput(): void; clearFilter(): void }>
+) {
+  const [liveQuery, setLiveQuery] = useState('');
+  const [filterHelpOpen, setFilterHelpOpen] = useState(false);
 
-  componentWillUnmount() {
-    if (this.textcomplete) {
-      this.textcomplete.destroy();
-      this.textcomplete = null;
-    }
-  }
+  const textcomplete = useRef<Textcomplete>();
+  const inputElement = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdateQuery = useCallback(_.debounce(onQueryChanged, 500), [onQueryChanged]);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.searchConfig !== this.props.searchConfig) {
-      this.setupTextcomplete();
-    }
-    if (
-      prevProps.searchQueryVersion !== this.props.searchQueryVersion &&
-      this.props.searchQuery !== undefined
-    ) {
-      this.setState({ liveQuery: this.props.searchQuery });
-    }
-  }
+  const focusFilterInput = useCallback(() => {
+    inputElement.current?.focus();
+  }, []);
 
-  render() {
-    const { alwaysShowClearButton, placeholder, children, autoFocus } = this.props;
-    const { liveQuery, filterHelpOpen } = this.state;
+  const clearFilter = useCallback(() => {
+    debouncedUpdateQuery('');
+    setLiveQuery('');
+    textcomplete.current?.trigger('');
+    onClear?.();
+  }, [debouncedUpdateQuery, onClear]);
 
-    return (
-      <div className="search-filter" role="search">
-        <GlobalHotkeys
-          hotkeys={[
-            {
-              combo: 'f',
-              description: t('Hotkey.StartSearch'),
-              callback: (event) => {
-                this.focusFilterInput();
-                event.preventDefault();
-                event.stopPropagation();
-              },
-            },
-            {
-              combo: 'shift+f',
-              description: t('Hotkey.StartSearchClear'),
-              callback: (event) => {
-                this.clearFilter();
-                this.focusFilterInput();
-                event.preventDefault();
-                event.stopPropagation();
-              },
-            },
-          ]}
-        />
-        <AppIcon icon={searchIcon} />
-        <input
-          ref={this.inputElement}
-          className="filter-input"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          autoFocus={autoFocus}
-          placeholder={placeholder}
-          type="text"
-          name="filter"
-          value={liveQuery}
-          onChange={_.noop}
-          onInput={this.onQueryChange}
-          onKeyDown={this.onKeyDown}
-          onBlur={() => this.textcomplete?.hide()}
-        />
+  useImperativeHandle(
+    ref,
+    () => ({
+      focusFilterInput,
 
-        {liveQuery.length === 0 ? (
-          <span onClick={this.showFilterHelp} className="filter-help" title={t('Header.Filters')}>
-            <AppIcon icon={helpIcon} />
-          </span>
-        ) : (
-          children
-        )}
-        {(liveQuery.length > 0 || alwaysShowClearButton) && (
-          <span className="filter-help">
-            <a onClick={this.clearFilter} title={t('Header.Clear')}>
-              <AppIcon icon={disabledIcon} />
-            </a>
-          </span>
-        )}
-        {filterHelpOpen &&
-          ReactDOM.createPortal(
-            <Sheet
-              onClose={() => this.setState({ filterHelpOpen: false })}
-              header={<h1>{t('Header.Filters')}</h1>}
-              sheetClassName="filterHelp"
-            >
-              <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-                <LazyFilterHelp />
-              </Suspense>
-            </Sheet>,
-            document.body
-          )}
-      </div>
-    );
-  }
+      clearFilter,
+    }),
+    [focusFilterInput, clearFilter]
+  );
 
-  focusFilterInput = () => {
-    this.inputElement.current?.focus();
-  };
-
-  clearFilter = () => {
-    this.debouncedUpdateQuery('');
-    this.setState({ liveQuery: '' });
-    this.textcomplete?.trigger('');
-    this.props.onClear?.();
-  };
-
-  private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!this.textcomplete) {
-      this.setupTextcomplete();
-    }
+  const onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const query = e.currentTarget.value;
-    this.setState({ liveQuery: query });
-    this.debouncedUpdateQuery(query);
+    setLiveQuery(query);
+    debouncedUpdateQuery(query);
   };
 
-  private showFilterHelp = () => {
-    this.setState({ filterHelpOpen: true });
-  };
+  const showFilterHelp = () => setFilterHelpOpen(true);
 
-  private onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 27) {
       e.stopPropagation();
       e.preventDefault();
-      this.clearFilter();
+      clearFilter();
     }
   };
 
-  private setupTextcomplete = () => {
-    if (!this.inputElement.current) {
+  useEffect(() => {
+    if (!inputElement.current) {
       return;
     }
 
-    if (this.textcomplete) {
-      this.textcomplete.destroy();
-      this.textcomplete = null;
-    }
-    const editor = new Textarea(this.inputElement.current);
-    this.textcomplete = new Textcomplete(editor);
-    this.textcomplete.register(
+    const editor = new Textarea(inputElement.current);
+    textcomplete.current = new Textcomplete(editor);
+    textcomplete.current.register(
       [
         {
-          words: this.props.searchConfig.keywords,
+          words: searchConfig.keywords,
           match: /\b([\w:"']{3,})$/i,
           search(term: string, callback: (terms: string[]) => void) {
             if (term) {
               let words: string[] = term.includes(':') // with a colon, only match from beginning
                 ? // ("stat:" matches "stat:" but not "basestat:")
-                  this.words.filter((word: string) => word.startsWith(term.toLowerCase()))
+                  searchConfig.keywords.filter((word: string) =>
+                    word.startsWith(term.toLowerCase())
+                  )
                 : // ("stat" matches "stat:" and "basestat:")
-                  this.words.filter((word: string) => word.includes(term.toLowerCase()));
+                  searchConfig.keywords.filter((word: string) => word.includes(term.toLowerCase()));
 
               words = words.sort(
                 chainComparator(
@@ -267,18 +190,105 @@ export default class SearchFilterInput extends React.Component<Props, State> {
       }
     );
 
-    this.textcomplete.on('rendered', () => {
-      if (this.textcomplete.dropdown.items.length) {
+    textcomplete.current.on('rendered', () => {
+      if (textcomplete.current.dropdown.items.length) {
         // Activate the first item by default
-        this.textcomplete.dropdown.items[0].activate();
+        textcomplete.current.dropdown.items[0].activate();
       }
     });
-    this.textcomplete.dropdown.on('select', (selectEvent) => {
+    textcomplete.current.dropdown.on('select', (selectEvent) => {
       if (selectEvent.detail.searchResult.data.endsWith(':')) {
         setTimeout(() => {
-          this.textcomplete.editor.onInput();
+          textcomplete.current.editor.onInput();
         }, 200);
       }
     });
-  };
-}
+
+    return () => {
+      if (textcomplete.current) {
+        textcomplete.current.destroy();
+        textcomplete.current = null;
+      }
+    };
+  }, [searchConfig.keywords]);
+
+  useEffect(() => {
+    if (searchQuery !== undefined) {
+      setLiveQuery(searchQuery);
+    }
+  }, [searchQueryVersion, searchQuery]);
+
+  return (
+    <div className="search-filter" role="search">
+      <GlobalHotkeys
+        hotkeys={[
+          {
+            combo: 'f',
+            description: t('Hotkey.StartSearch'),
+            callback: (event) => {
+              focusFilterInput();
+              event.preventDefault();
+              event.stopPropagation();
+            },
+          },
+          {
+            combo: 'shift+f',
+            description: t('Hotkey.StartSearchClear'),
+            callback: (event) => {
+              clearFilter();
+              focusFilterInput();
+              event.preventDefault();
+              event.stopPropagation();
+            },
+          },
+        ]}
+      />
+      <AppIcon icon={searchIcon} />
+      <input
+        ref={inputElement}
+        className="filter-input"
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+        autoFocus={autoFocus}
+        placeholder={placeholder}
+        type="text"
+        name="filter"
+        value={liveQuery}
+        onChange={_.noop}
+        onInput={onQueryChange}
+        onKeyDown={onKeyDown}
+        onBlur={() => textcomplete.current?.hide()}
+      />
+
+      {liveQuery.length === 0 ? (
+        <span onClick={showFilterHelp} className="filter-help" title={t('Header.Filters')}>
+          <AppIcon icon={helpIcon} />
+        </span>
+      ) : (
+        children
+      )}
+      {(liveQuery.length > 0 || alwaysShowClearButton) && (
+        <span className="filter-help">
+          <a onClick={clearFilter} title={t('Header.Clear')}>
+            <AppIcon icon={disabledIcon} />
+          </a>
+        </span>
+      )}
+      {filterHelpOpen &&
+        ReactDOM.createPortal(
+          <Sheet
+            onClose={() => setFilterHelpOpen(false)}
+            header={<h1>{t('Header.Filters')}</h1>}
+            sheetClassName="filterHelp"
+          >
+            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
+              <LazyFilterHelp />
+            </Suspense>
+          </Sheet>,
+          document.body
+        )}
+    </div>
+  );
+});

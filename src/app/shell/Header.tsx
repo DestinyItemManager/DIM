@@ -10,7 +10,7 @@ import Refresh from './refresh';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
-import { default as SearchFilter, SearchFilter as SearchFilterClass } from '../search/SearchFilter';
+import { default as SearchFilter } from '../search/SearchFilter';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { connect } from 'react-redux';
@@ -114,7 +114,7 @@ function Header({ account, vendorEngramDropActive, history, isPhonePortrait, dis
   }, [account?.destinyVersion, dispatch]);
 
   // Search filter
-  const searchFilter = useRef<SearchFilterClass>(null);
+  const searchFilter = useRef<{ focusFilterInput(): void; clearFilter(): void }>(null);
 
   // Clear filter and close dropdown on path change
   const { pathname } = useLocation();
