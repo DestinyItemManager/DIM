@@ -5,14 +5,14 @@ import BungieImage from '../dim-ui/BungieImage';
 import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition,
-  DestinySeasonPassDefinition
+  DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 
 export default function WellRestedPerkIcon({
   defs,
   progressions,
   season,
-  seasonPass
+  seasonPass,
 }: {
   defs: D2ManifestDefinitions;
   progressions: DestinyCharacterProgressionComponent;

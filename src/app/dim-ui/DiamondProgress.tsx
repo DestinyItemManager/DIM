@@ -16,7 +16,7 @@ interface Props {
  */
 export default function DiamondProgres({ progress, level, icon, className }: Props) {
   const style = {
-    strokeDashoffset: 121.622368 - 121.622368 * progress
+    strokeDashoffset: 121.622368 - 121.622368 * progress,
   };
 
   // TODO: redo classes

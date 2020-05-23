@@ -22,14 +22,14 @@ export const manifest: Reducer<ManifestState, ManifestAction | AccountsAction> =
     case getType(actions.setD1Manifest): {
       return {
         ...state,
-        d1Manifest: action.payload
+        d1Manifest: action.payload,
       };
     }
 
     case getType(actions.setD2Manifest): {
       return {
         ...state,
-        d2Manifest: action.payload
+        d2Manifest: action.payload,
       };
     }
 

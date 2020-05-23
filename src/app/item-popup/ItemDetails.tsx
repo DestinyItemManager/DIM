@@ -39,7 +39,7 @@ type Props = ProvidedProps & StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     defs:
-      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!
+      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
   };
 }
 

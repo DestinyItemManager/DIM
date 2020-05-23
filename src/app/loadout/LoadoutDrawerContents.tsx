@@ -37,7 +37,7 @@ const loadoutTypes = [
   'Ship',
   'Ships',
   'Vehicle',
-  'Horn'
+  'Horn',
 ];
 
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
@@ -56,7 +56,7 @@ export const fromEquippedTypes = [
   'Leg',
   'ClassItem',
   'Artifact',
-  'Ghost'
+  'Ghost',
 ];
 
 export default function LoadoutDrawerContents(
@@ -69,7 +69,7 @@ export default function LoadoutDrawerContents(
     itemSortOrder,
     equip,
     remove,
-    add
+    add,
   }: {
     loadout: Loadout;
     buckets: InventoryBuckets;
@@ -164,7 +164,7 @@ async function pickLoadoutItem(
 
       // don't show information related to selected perks so we don't give the impression
       // that we will update perk selections when applying the loadout
-      ignoreSelectedPerks: true
+      ignoreSelectedPerks: true,
     });
 
     add(item, undefined, equip);

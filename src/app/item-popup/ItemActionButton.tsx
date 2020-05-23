@@ -15,7 +15,7 @@ export default function ItemActionButton({
   label,
   icon,
   className,
-  onClick
+  onClick,
 }: {
   title: string;
   label: string;

@@ -16,7 +16,7 @@ interface StoreProps {
 function mapStateToProps() {
   const storeSelector = farmingStoreSelector();
   return (state: RootState): StoreProps => ({
-    store: storeSelector(state)
+    store: storeSelector(state),
   });
 }
 
@@ -32,7 +32,7 @@ function D2Farming({ store }: Props) {
               <p>
                 {t('FarmingMode.D2Desc', {
                   store: store.name,
-                  context: store.genderName
+                  context: store.genderName,
                 })}
                 {/*
                     t('FarmingMode.D2Desc_male')

@@ -38,7 +38,7 @@ function DropDown({
   buttonDisabled,
   dropDownItems,
   forClass,
-  right
+  right,
 }: {
   buttonText: ReactNode;
   buttonDisabled?: boolean;

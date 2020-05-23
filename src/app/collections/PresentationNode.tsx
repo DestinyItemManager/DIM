@@ -48,11 +48,11 @@ function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     completedRecordsHidden: settings.completedRecordsHidden,
-    redactedRecordsRevealed: settings.redactedRecordsRevealed
+    redactedRecordsRevealed: settings.redactedRecordsRevealed,
   };
 }
 const mapDispatchToProps = {
-  setSetting
+  setSetting,
 };
 
 type DispatchProps = typeof mapDispatchToProps;
@@ -75,7 +75,7 @@ class PresentationNode extends React.Component<Props> {
       scrollToPosition({
         top: window.scrollY + clientRect.top - 50,
         left: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
     this.lastPath = this.props.path;
@@ -92,7 +92,7 @@ class PresentationNode extends React.Component<Props> {
       completedRecordsHidden,
       redactedRecordsRevealed,
       collectionCounts,
-      onNodePathSelected
+      onNodePathSelected,
     } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
     if (presentationNodeDef.redacted) {
@@ -148,20 +148,20 @@ class PresentationNode extends React.Component<Props> {
       1: 'Badge',
       2: 'Medals',
       3: 'Collectible',
-      4: 'Record'
+      4: 'Record',
     };
 
     const screenStyle = {
       0: 'Default',
       1: 'CategorySets',
-      2: 'Badge'
+      2: 'Badge',
     };
 
     const nodeStyle = {
       0: 'Default',
       1: 'Category',
       2: 'Collectibles',
-      3: 'Records'
+      3: 'Records',
     };
 
     // TODO: need more info on what iconSequences are
@@ -190,7 +190,7 @@ class PresentationNode extends React.Component<Props> {
           `level-${thisAndParents.length}`,
           {
             'only-child': onlyChild,
-            'always-expanded': alwaysExpanded
+            'always-expanded': alwaysExpanded,
           }
         )}
       >
@@ -199,7 +199,7 @@ class PresentationNode extends React.Component<Props> {
             className={clsx('title', {
               collapsed: !childrenExpanded,
               'hide-complete': completedRecordsHidden,
-              completed
+              completed,
             })}
             onClick={this.expandChildren}
             ref={this.headerRef}

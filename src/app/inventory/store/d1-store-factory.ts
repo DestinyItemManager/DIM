@@ -23,13 +23,13 @@ const progressionMeta = {
   807090922: { label: "Queen's Wrath", order: 8 },
   3641985238: { label: 'House of Judgment', order: 9 },
   2335631936: { label: 'Gunsmith', order: 10 },
-  2576753410: { label: 'SRL', order: 11 }
+  2576753410: { label: 'SRL', order: 11 },
 };
 
 const factionBadges = {
   969832704: 'Future War Cult',
   27411484: 'Dead Orbit',
-  2954371221: 'New Monarchy'
+  2954371221: 'New Monarchy',
 };
 
 /**
@@ -129,7 +129,7 @@ export const StoreProto = {
 
   getStoresService() {
     return D1StoresService;
-  }
+  },
 };
 
 export function makeCharacter(
@@ -154,8 +154,8 @@ export function makeCharacter(
               name: itemDef.itemName,
               description: itemDef.itemDescription,
               icon: itemDef.icon,
-              hasIcon: Boolean(itemDef.icon)
-            }
+              hasIcon: Boolean(itemDef.icon),
+            },
           };
         })
       );
@@ -188,7 +188,7 @@ export function makeCharacter(
     id: raw.id,
     name: t('ItemService.StoreName', {
       genderRace,
-      className
+      className,
     }),
     icon: `https://www.bungie.net/${character.emblemPath}`,
     current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
@@ -205,7 +205,7 @@ export function makeCharacter(
     percentToNextLevel: character.percentToNextLevel / 100,
     progression: raw.character.progression,
     advisors: raw.character.advisors,
-    isVault: false
+    isVault: false,
   });
 
   if (store.progression) {
@@ -245,7 +245,7 @@ export function makeCharacter(
 
   return {
     store,
-    items
+    items,
   };
 }
 
@@ -308,7 +308,7 @@ export function makeVault(
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count++;
       }
-    }
+    },
   });
 
   let items: any[] = [];
@@ -323,6 +323,6 @@ export function makeVault(
 
   return {
     store,
-    items
+    items,
   };
 }

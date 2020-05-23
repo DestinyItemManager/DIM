@@ -18,7 +18,7 @@ export default function Milestones({
   profileInfo,
   store,
   defs,
-  buckets
+  buckets,
 }: {
   store: DimStore;
   profileInfo: DestinyProfileResponse;
@@ -36,7 +36,7 @@ export default function Milestones({
 
   const milestoneItems = [
     ...milestonesForCharacter(defs, profileInfo, store),
-    ...profileMilestones
+    ...profileMilestones,
   ].flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store.classType));
 
   return (

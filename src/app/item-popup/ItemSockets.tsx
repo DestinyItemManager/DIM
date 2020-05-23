@@ -50,7 +50,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest,
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
@@ -66,7 +66,7 @@ function ItemSockets({
   classesByHash,
   isPhonePortrait,
   onShiftClick,
-  dispatch
+  dispatch,
 }: Props) {
   if ($featureFlags.reviewsEnabled) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -238,7 +238,7 @@ function Socket({
   bestPerks,
   isPhonePortrait,
   onClick,
-  onShiftClick
+  onShiftClick,
 }: {
   defs: D2ManifestDefinitions;
   item: D2Item;
@@ -257,7 +257,7 @@ function Socket({
   return (
     <div
       className={clsx('item-socket', {
-        hasMenu
+        hasMenu,
       })}
     >
       {socket.plugOptions.map((plug) => (

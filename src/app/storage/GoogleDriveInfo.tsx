@@ -18,13 +18,13 @@ export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }
             full:
               driveInfo.storageQuota.usage /
                 (driveInfo.storageQuota.limit || Number.MAX_SAFE_INTEGER) >
-              0.9
+              0.9,
           })}
           style={{
             width: percent(
               driveInfo.storageQuota.usage /
                 (driveInfo.storageQuota.limit || Number.MAX_SAFE_INTEGER)
-            )
+            ),
           }}
         />
         {driveInfo.storageQuota.dimQuotaUsed && (
@@ -34,7 +34,7 @@ export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }
               width: percent(
                 driveInfo.storageQuota.dimQuotaUsed /
                   (driveInfo.storageQuota.limit || Number.MAX_SAFE_INTEGER)
-              )
+              ),
             }}
           />
         )}

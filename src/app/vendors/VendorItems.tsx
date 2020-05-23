@@ -28,7 +28,7 @@ export default function VendorItems({
   vendor,
   ownedItemHashes,
   currencyLookups,
-  filtering
+  filtering,
 }: {
   defs: D2ManifestDefinitions;
   vendor: D2Vendor;
@@ -53,7 +53,7 @@ export default function VendorItems({
         ...Object.keys(faction.tokenValues)
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
-        ...currencies
+        ...currencies,
       ],
       (i) => i.hash
     );

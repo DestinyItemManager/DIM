@@ -2,7 +2,7 @@ import {
   ProfileUpdate,
   DeleteLoadoutUpdate,
   Loadout,
-  DestinyVersion
+  DestinyVersion,
 } from '@destinyitemmanager/dim-api-types';
 
 // https://stackoverflow.com/questions/51691235/typescript-map-union-type-to-another-union-type

@@ -16,7 +16,7 @@ import {
   DestinyItemSocketEntryDefinition,
   DestinyItemPlugBase,
   DestinyDamageTypeDefinition,
-  DestinyEnergyTypeDefinition
+  DestinyEnergyTypeDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';

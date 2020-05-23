@@ -35,7 +35,7 @@ const initialState: ReviewsState = {
   ratings: {},
   userReviews: {},
   reviews: {},
-  loadedFromIDB: false
+  loadedFromIDB: false,
 };
 
 export const ratingsSelector = (state: RootState) => state.reviews.ratings;
@@ -55,14 +55,14 @@ export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
         ...state,
         ratings: {
           ...state.ratings,
-          ...convertToRatingMap(action.payload.ratings)
-        }
+          ...convertToRatingMap(action.payload.ratings),
+        },
       };
 
     case getType(setCurrentAccount):
     case getType(actions.clearRatings):
       return {
-        ...initialState
+        ...initialState,
       };
 
     case getType(actions.reviewsLoaded): {
@@ -88,8 +88,8 @@ export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
         ...state,
         userReviews: {
           ...state.userReviews,
-          [getItemReviewsKey(action.payload.item)]: action.payload.review
-        }
+          [getItemReviewsKey(action.payload.item)]: action.payload.review,
+        },
       };
 
     case getType(actions.markReviewSubmitted): {
@@ -122,13 +122,13 @@ export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
         ...state,
         reviews: {
           ...state.reviews,
-          ...action.payload.reviews
+          ...action.payload.reviews,
         },
         ratings: {
           ...state.ratings,
-          ...action.payload.ratings
+          ...action.payload.ratings,
         },
-        loadedFromIDB: true
+        loadedFromIDB: true,
       };
     }
 
@@ -176,7 +176,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
           pros: '',
           review: '',
           cons: '',
-          treatAsSubmitted: false
+          treatAsSubmitted: false,
         }
       : {
           voted: 0,
@@ -184,7 +184,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
           cons: '',
           text: '',
           mode: settingsSelector(state).reviewsModeSelection,
-          treatAsSubmitted: false
+          treatAsSubmitted: false,
         })
   );
 }

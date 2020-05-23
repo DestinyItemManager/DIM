@@ -13,7 +13,7 @@ export default function ModPickerSection({
   category,
   maximumSelectable,
   energyMustMatch,
-  onModSelected
+  onModSelected,
 }: {
   defs: D2ManifestDefinitions;
   mods: readonly LockedArmor2Mod[];

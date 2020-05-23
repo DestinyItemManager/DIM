@@ -3,7 +3,7 @@ import React from 'react';
 
 export const enum SortDirection {
   ASC,
-  DESC
+  DESC,
 }
 
 type Value = string | number | boolean | undefined;

@@ -13,7 +13,7 @@ export default function LoadoutDrawerOptions({
   classTypeOptions,
   updateLoadout,
   saveLoadout,
-  saveAsNew
+  saveAsNew,
 }: {
   loadout?: Loadout;
   showClass: boolean;
@@ -34,21 +34,21 @@ export default function LoadoutDrawerOptions({
   const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateLoadout({
       ...loadout,
-      name: e.target.value
+      name: e.target.value,
     });
   };
 
   const setClassType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     updateLoadout({
       ...loadout,
-      classType: parseInt(e.target.value, 10)
+      classType: parseInt(e.target.value, 10),
     });
   };
 
   const setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateLoadout({
       ...loadout,
-      clearSpace: e.target.checked
+      clearSpace: e.target.checked,
     });
   };
 

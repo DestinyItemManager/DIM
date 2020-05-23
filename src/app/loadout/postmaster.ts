@@ -34,7 +34,7 @@ export async function makeRoomForPostmaster(
               Uncommon: 1,
               Rare: 2,
               Legendary: 3,
-              Exotic: 4
+              Exotic: 4,
             }[i.tier];
             // And low-stat
             if (i.primStat) {
@@ -66,14 +66,14 @@ export async function makeRoomForPostmaster(
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
-        context: store.genderName
-      })
+        context: store.genderName,
+      }),
     });
   } catch (e) {
     showNotification({
       type: 'error',
       title: t('Loadouts.MakeRoom'),
-      body: t('Loadouts.MakeRoomError', { error: e.message })
+      body: t('Loadouts.MakeRoomError', { error: e.message }),
     });
     throw e;
   }
@@ -114,7 +114,7 @@ const showNoSpaceError = _.throttle(
     showNotification({
       type: 'error',
       title: t('Loadouts.PullFromPostmasterPopupTitle'),
-      body: t('Loadouts.PullFromPostmasterError', { error: e.message })
+      body: t('Loadouts.PullFromPostmasterError', { error: e.message }),
     }),
   1000,
   { leading: true, trailing: false }
@@ -129,7 +129,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     showNotification({
       type: 'error',
       title: t('Loadouts.PullFromPostmasterPopupTitle'),
-      body: t('Loadouts.PullFromPostmasterError', { error: message })
+      body: t('Loadouts.PullFromPostmasterError', { error: message }),
     });
   });
 

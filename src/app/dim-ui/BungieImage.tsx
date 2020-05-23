@@ -26,7 +26,7 @@ export default React.memo(function BungieImage(
 export function bungieBackgroundStyle(src: BungieImagePath, additionalBackground?: string) {
   additionalBackground = additionalBackground ? `, ${additionalBackground}` : '';
   return {
-    backgroundImage: `url("${bungieNetPath(src)}")${additionalBackground}`
+    backgroundImage: `url("${bungieNetPath(src)}")${additionalBackground}`,
   };
 }
 

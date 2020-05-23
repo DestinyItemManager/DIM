@@ -89,7 +89,7 @@ export default class StoreHeading extends React.Component<Props, State> {
       <div className={clsx('character', { current: store.current })}>
         <div
           className={clsx('character-box', {
-            destiny2: store.isDestiny2()
+            destiny2: store.isDestiny2(),
           })}
           aria-label={store.name}
           onClick={this.openLoadoutPopup}
@@ -120,7 +120,7 @@ export default class StoreHeading extends React.Component<Props, State> {
               <div className="level-bar">
                 <div
                   className={clsx('level-bar-progress', {
-                    'mote-progress': !store.percentToNextLevel
+                    'mote-progress': !store.percentToNextLevel,
                   })}
                   style={{ width: percent(levelBar) }}
                 />
@@ -156,13 +156,13 @@ function getLevelBar(store: DimStore) {
   if (store.isDestiny2()) {
     return {
       levelBar: 0,
-      xpTillMote: undefined
+      xpTillMote: undefined,
     };
   }
   if (store.percentToNextLevel) {
     return {
       levelBar: store.percentToNextLevel,
-      xpTillMote: undefined
+      xpTillMote: undefined,
     };
   }
   if (store.progression?.progressions) {
@@ -170,16 +170,16 @@ function getLevelBar(store: DimStore) {
     if (prestige) {
       const data = {
         level: prestige.level,
-        exp: prestige.nextLevelAt - prestige.progressToNextLevel
+        exp: prestige.nextLevelAt - prestige.progressToNextLevel,
       };
       return {
         xpTillMote: t('Stats.Prestige', data),
-        levelBar: prestige.progressToNextLevel / prestige.nextLevelAt
+        levelBar: prestige.progressToNextLevel / prestige.nextLevelAt,
       };
     }
   }
   return {
     levelBar: 0,
-    xpTillMote: undefined
+    xpTillMote: undefined,
   };
 }

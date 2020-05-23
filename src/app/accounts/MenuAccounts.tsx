@@ -26,7 +26,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     currentAccount: currentAccountSelector(state),
-    accounts: state.accounts.accounts
+    accounts: state.accounts.accounts,
   };
 }
 

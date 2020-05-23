@@ -12,7 +12,7 @@ export default function SeasonalModPicker({
   defs,
   mods,
   locked,
-  onSeasonalModSelected
+  onSeasonalModSelected,
 }: {
   defs: D2ManifestDefinitions;
   mods: readonly LockedModBase[];

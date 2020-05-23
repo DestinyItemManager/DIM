@@ -8,7 +8,7 @@ const energyOrder = [
   DestinyEnergyType.Void,
   DestinyEnergyType.Thermal,
   DestinyEnergyType.Arc,
-  DestinyEnergyType.Any
+  DestinyEnergyType.Any,
 ];
 
 /**

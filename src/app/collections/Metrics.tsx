@@ -3,7 +3,7 @@ import Metric from './Metric';
 import _ from 'lodash';
 import {
   DestinyPresentationNodeMetricChildEntry,
-  DestinyProfileResponse
+  DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './Metrics.m.scss';
@@ -12,7 +12,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 export default function Metrics({
   metrics,
   defs,
-  profileResponse
+  profileResponse,
 }: {
   metrics: DestinyPresentationNodeMetricChildEntry[];
   defs: D2ManifestDefinitions;

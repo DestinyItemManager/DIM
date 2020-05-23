@@ -13,7 +13,7 @@ export default function CharacterSelect({
   selectedStore,
   vertical,
   isPhonePortrait,
-  onCharacterChanged
+  onCharacterChanged,
 }: {
   stores: DimStore[];
   selectedStore: DimStore;
@@ -56,7 +56,7 @@ export default function CharacterSelect({
           <div
             key={store.id}
             className={clsx(styles.tile, {
-              [styles.unselected]: store.id !== selectedStore.id
+              [styles.unselected]: store.id !== selectedStore.id,
             })}
           >
             <SimpleCharacterTile character={store} onClick={onCharacterChanged} />

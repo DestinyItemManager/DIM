@@ -23,7 +23,7 @@ export const D1CategoryHashes = {
   machinegun: 12,
   rocketlauncher: 13,
   sidearm: 14,
-  sword: 54
+  sword: 54,
 };
 
 /** D2 has these item types but D1 doesn't */
@@ -36,7 +36,7 @@ export const D2CategoryHashes = {
   transmat: 208981632,
   weaponmod: 610365472,
   armormod: 4104513227,
-  reptoken: 2088636411
+  reptoken: 2088636411,
 };
 
 /** these are checked against default rolls to determine if something's curated */
@@ -51,14 +51,14 @@ export const curatedPlugsWhitelist = [
   2619833294, // scopes
   2718120384, // magazines_gl
   2833605196, // barrels
-  3809303875 // bowstring
+  3809303875, // bowstring
 ];
 
 /** write something here */
 export const lightStats = [
   1480404414, // D2 Attack
   3897883278, // D1 & D2 Defense
-  368428387 // D1 Attack
+  368428387, // D1 Attack
 ];
 
 /** compare against DimItem.type in EN */
@@ -76,7 +76,7 @@ export const cosmeticTypes = [
   'Ship',
   'Ships',
   'ClanBanners',
-  'Finishers'
+  'Finishers',
 ];
 
 /** sublime engrams */
@@ -90,7 +90,7 @@ export const sublimeEngrams = [
   3592189221, // -leg-armor
   738642122,
   3797169075, // -helmet
-  838904328
+  838904328,
 ];
 
 /** powerful rewards listed in quests or bounties */
@@ -108,7 +108,7 @@ export const powerfulSources = [
   3829523414, // InventoryItem "Luminous Planetary Engram"
   4143344829, // InventoryItem "Luminous Engram"
   4039143015, // InventoryItem "Powerful Gear"
-  4249081773 // InventoryItem "Powerful Armor"
+  4249081773, // InventoryItem "Powerful Armor"
 ];
 
 /** season 3 swag from rasputin */
@@ -117,21 +117,21 @@ export const ikelos = [
   1723472487, // InventoryItem "IKELOS_SMG_v1.0.1"
   1887808042, // InventoryItem "IKELOS_SG_v1.0.1"
   3866356643, // InventoryItem "IKELOS_HC_v1.0.1"
-  4036115577 //  InventoryItem "Sleeper Simulant"
+  4036115577, //  InventoryItem "Sleeper Simulant"
 ];
 
 export const boosts = [
   1043138475, // -black-wax-idol
   1772853454, // -blue-polyphage
   3783295803, // -ether-seeds
-  3446457162 // -resupply-codes
+  3446457162, // -resupply-codes
 ];
 
 export const supplies = [
   269776572, // -house-banners
   3632619276, // -silken-codex
   2904517731, // -axiomatic-beads
-  1932910919 // -network-keys
+  1932910919, // -network-keys
 ];
 
 /** for D1 items: used to calculate which vendor an item could have come from */
@@ -150,15 +150,15 @@ export const vendorHashes = {
     cq: [1362425043], // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER / Crucible Quartermaster
     eris: [1374970038], // SOURCE_VENDOR_CROTAS_BANE / Eris Morn
     ev: [3559790162], // SOURCE_VENDOR_SPECIAL_ORDERS / Eververse
-    gunsmith: [353834582] // SOURCE_VENDOR_GUNSMITH /
+    gunsmith: [353834582], // SOURCE_VENDOR_GUNSMITH /
   },
   restricted: {
     fwc: [353834582], // remove motes of light & strange coins
     do: [353834582],
     nm: [353834582],
     speaker: [353834582],
-    cq: [353834582, 2682516238] // remove ammo synths and planetary materials
-  }
+    cq: [353834582, 2682516238], // remove ammo synths and planetary materials
+  },
 };
 
 /** for D1 items: used to calculate which activity an item could have come from
@@ -181,7 +181,7 @@ export const D1ActivityHashes = {
     coe: [1537575125], // SOURCE_POE_ELDER_CHALLENGE / Challenge of Elders
     af: [3667653533], // SOURCE_ARCHON_FORGE / Archon Forge
     dawning: [3131490494], // SOURCE_DAWNING /
-    aot: [3068521220, 4161861381, 440710167] // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+    aot: [3068521220, 4161861381, 440710167], // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
   },
   restricted: {
     trials: [2179714245, 2682516238, 560942287], // remove xur exotics and patrol items
@@ -194,8 +194,8 @@ export const D1ActivityHashes = {
     coe: [3602080346, 2682516238], // remove engrams
     af: [2682516238], // remove engrams
     dawning: [2682516238, 1111209135], // remove engrams, planetary materials, & chroma
-    aot: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
-  }
+    aot: [2964550958, 2659839637, 353834582, 560942287], // Remove ROI, TTK, motes, & glimmer items
+  },
 };
 
 /** if a plug contains these, consider it empty */
@@ -204,7 +204,7 @@ export const emptySocketHashes = [
   2600899007, // InventoryItem "Empty Mod Socket"
   1835369552, // InventoryItem "Empty Mod Socket"
   3851138800, // InventoryItem "Empty Mod Socket"
-  791435474 // InventoryItem "Empty Activity Mod Socket"
+  791435474, // InventoryItem "Empty Activity Mod Socket"
 ];
 
 /** these stats actually exist on D2 armor */
@@ -214,7 +214,7 @@ const d2ArmorStatHashByName = {
   recovery: 1943323491,
   discipline: 1735777505,
   intellect: 144602215,
-  strength: 4244567218
+  strength: 4244567218,
 };
 
 /**
@@ -223,7 +223,7 @@ const d2ArmorStatHashByName = {
  */
 const dimArmorStatHashByName = {
   ...d2ArmorStatHashByName,
-  total: -1000
+  total: -1000,
 };
 
 /** stats names used to create armor-specific filters */
@@ -254,7 +254,7 @@ export const statHashByName = {
   drawtime: 447667954,
   zoom: 3555269338,
   inventorysize: 1931675084,
-  ...dimArmorStatHashByName
+  ...dimArmorStatHashByName,
 };
 
 /** all-stat list, to generate filters from */

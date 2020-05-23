@@ -47,7 +47,7 @@ const reducer: Reducer<RootState> = (state, action) => {
     manifest,
     vendorDrops,
     // Dummy reducer to get the types to work
-    dimApi: (state: DimApiState = dimApiInitialState) => state
+    dimApi: (state: DimApiState = dimApiInitialState) => state,
   });
 
   const intermediateState = combinedReducers(state, action);
@@ -62,7 +62,7 @@ const reducer: Reducer<RootState> = (state, action) => {
   if (intermediateState.dimApi !== dimApiState) {
     return {
       ...intermediateState,
-      dimApi: dimApiState
+      dimApi: dimApiState,
     };
   }
 

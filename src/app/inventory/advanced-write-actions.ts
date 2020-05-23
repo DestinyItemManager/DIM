@@ -4,7 +4,7 @@ import {
   AwaAuthorizationResult,
   AwaUserSelection,
   insertSocketPlug,
-  DestinySocketArrayType
+  DestinySocketArrayType,
 } from 'bungie-api-ts/destiny2';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { get, set } from 'idb-keyval';
@@ -35,10 +35,10 @@ export async function insertPlug(
     plug: {
       socketIndex: socket.socketIndex,
       socketArrayType: DestinySocketArrayType.Default,
-      plugItemHash
+      plugItemHash,
     },
     characterId: item.owner,
-    membershipType: account.originalPlatformType
+    membershipType: account.originalPlatformType,
   });
 
   // TODO: need to update the item after modifying, and signal that it has changed (Redux?)
@@ -69,12 +69,12 @@ export async function getAwaToken(
       showNotification({
         type: 'info',
         title: t('AWA.ConfirmTitle'),
-        body: t('AWA.ConfirmDescription')
+        body: t('AWA.ConfirmDescription'),
       });
 
       info = awaCache[action] = {
         ...(await requestAdvancedWriteActionToken(account, action, item)),
-        used: 0
+        used: 0,
       };
 
       // Deletes of "group A" require an item and shouldn't be cached

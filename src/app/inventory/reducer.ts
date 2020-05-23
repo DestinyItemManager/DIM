@@ -92,7 +92,7 @@ const initialState: InventoryState = {
   newItems: new Set(),
   newItemsLoaded: false,
   itemInfos: {},
-  isDraggingStack: false
+  isDraggingStack: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -107,7 +107,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         // Make a new array to break change detection for the root stores components
-        stores: [...state.stores]
+        stores: [...state.stores],
       };
 
     case getType(actions.charactersUpdated):
@@ -118,13 +118,13 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.setBuckets):
       return {
         ...state,
-        buckets: action.payload
+        buckets: action.payload,
       };
 
     case getType(actions.error):
       return {
         ...state,
-        profileError: action.payload
+        profileError: action.payload,
       };
 
     // *** New items ***
@@ -133,7 +133,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         newItems: action.payload,
-        newItemsLoaded: true
+        newItemsLoaded: true,
       };
 
     case getType(actions.clearNewItem):
@@ -143,7 +143,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 
         return {
           ...state,
-          newItems
+          newItems,
         };
       } else {
         return state;
@@ -152,7 +152,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.clearAllNewItems):
       return {
         ...state,
-        newItems: new Set()
+        newItems: new Set(),
       };
 
     // *** Tags and notes ***
@@ -160,7 +160,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.tagsAndNotesLoaded):
       return {
         ...state,
-        itemInfos: action.payload
+        itemInfos: action.payload,
       };
 
     case getType(actions.setItemTag):
@@ -191,7 +191,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.stackableDrag):
       return {
         ...state,
-        isDraggingStack: action.payload
+        isDraggingStack: action.payload,
       };
 
     case getType(setCurrentAccount):
@@ -207,7 +207,7 @@ function updateInventory(
   {
     stores,
     buckets,
-    profileResponse
+    profileResponse,
   }: {
     stores: DimStore[];
     buckets?: InventoryBuckets | undefined;
@@ -220,7 +220,7 @@ function updateInventory(
     ...state,
     stores,
     newItems: computeNewItems(state.stores, state.newItems, stores),
-    profileError: undefined
+    profileError: undefined,
   };
   if (buckets) {
     newState.buckets = buckets;
@@ -251,11 +251,11 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
           ...characterInfo,
           stats: {
             ...store.stats,
-            ...characterInfo.stats
-          }
+            ...characterInfo.stats,
+          },
         }
       );
-    })
+    }),
   };
 }
 
@@ -264,7 +264,7 @@ function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {
   if (tag) {
     if (!existingTag) {
       draft.itemInfos[itemId] = {
-        tag
+        tag,
       };
     } else {
       existingTag.tag = tag;
@@ -282,7 +282,7 @@ function setNote(draft: Draft<InventoryState>, itemId: string, notes?: string) {
   if (notes && notes.length > 0) {
     if (!existingTag) {
       draft.itemInfos[itemId] = {
-        notes
+        notes,
       };
     } else {
       existingTag.notes = notes;

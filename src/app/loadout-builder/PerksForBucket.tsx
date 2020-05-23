@@ -5,7 +5,7 @@ import { LockedItemType, BurnItem } from './types';
 import {
   SelectableBurn,
   SelectablePerk,
-  SelectableMod
+  SelectableMod,
 } from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { DimItem } from 'app/inventory/item-types';
@@ -23,7 +23,7 @@ export default function PerksForBucket({
   burns,
   locked,
   items,
-  onPerkSelected
+  onPerkSelected,
 }: {
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;

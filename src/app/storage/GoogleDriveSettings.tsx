@@ -13,7 +13,7 @@ import {
   disabledIcon,
   signOutIcon,
   signInIcon,
-  restoreIcon
+  restoreIcon,
 } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
@@ -35,7 +35,7 @@ interface State {
 
 class GoogleDriveSettings extends React.Component<RouteComponentProps, State> {
   state: State = {
-    adapterStats: {}
+    adapterStats: {},
   };
   private subscriptions = new Subscriptions();
 
@@ -173,10 +173,10 @@ class GoogleDriveSettings extends React.Component<RouteComponentProps, State> {
         this.setState((state) => {
           const adapterStats = {
             ...state.adapterStats,
-            [adapter.name]: data ? dataStats(data) : null
+            [adapter.name]: data ? dataStats(data) : null,
           };
           return {
-            adapterStats
+            adapterStats,
           };
         });
         return;
@@ -188,10 +188,10 @@ class GoogleDriveSettings extends React.Component<RouteComponentProps, State> {
     this.setState((state) => {
       const adapterStats = {
         ...state.adapterStats,
-        [adapter.name]: null
+        [adapter.name]: null,
       };
       return {
-        adapterStats
+        adapterStats,
       };
     });
     return;

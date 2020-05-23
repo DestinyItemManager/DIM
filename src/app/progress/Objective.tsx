@@ -4,7 +4,7 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
-  DestinyObjectiveDefinition
+  DestinyObjectiveDefinition,
 } from 'bungie-api-ts/destiny2';
 import ObjectiveDescription from './ObjectiveDescription';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
@@ -18,7 +18,7 @@ import '../item-popup/ItemObjectives.scss';
 export default function Objective({
   defs,
   objective,
-  suppressObjectiveDescription
+  suppressObjectiveDescription,
 }: {
   defs: D2ManifestDefinitions | D1ManifestDefinitions;
   objective: DestinyObjectiveProgress;
@@ -68,11 +68,11 @@ export default function Objective({
 
   const classes = clsx('objective-row', {
     'objective-complete': complete,
-    'objective-boolean': isBoolean
+    'objective-boolean': isBoolean,
   });
 
   const progressBarStyle = {
-    width: percent(progress / completionValue)
+    width: percent(progress / completionValue),
   };
 
   // TODO: green pips, red pips
@@ -102,7 +102,7 @@ export default function Objective({
 export function ObjectiveValue({
   objectiveDef,
   progress,
-  completionValue = 0
+  completionValue = 0,
 }: {
   objectiveDef: DestinyObjectiveDefinition | undefined;
   progress: number;

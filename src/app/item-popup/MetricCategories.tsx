@@ -5,7 +5,7 @@ import styles from './MetricCategories.m.scss';
 
 export default function MetricCategories({
   availableMetricCategoryNodeHashes,
-  defs
+  defs,
 }: {
   availableMetricCategoryNodeHashes: number[];
   defs: D2ManifestDefinitions;
@@ -21,7 +21,7 @@ export default function MetricCategories({
 
 function MetricCategory({
   categoryHash,
-  defs
+  defs,
 }: {
   categoryHash: number;
   defs: D2ManifestDefinitions;

@@ -5,13 +5,13 @@ import {
   DEFAULT_GLOW,
   DEFAULT_GLOW_CATEGORY,
   DEFAULT_ORNAMENTS,
-  DEFAULT_SHADER
+  DEFAULT_SHADER,
 } from 'app/inventory/store/sockets';
 import {
   DestinyAmmunitionType,
   DestinyClass,
   DestinyCollectibleState,
-  DestinyItemSubType
+  DestinyItemSubType,
 } from 'bungie-api-ts/destiny2';
 import { ItemInfos, getNotes, getTag, itemTagSelectorList } from '../inventory/dim-item-info';
 import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
@@ -19,12 +19,12 @@ import { chainComparator, compareBy, reverseComparator } from '../utils/comparat
 import {
   getItemDamageShortName,
   getSpecialtySocketMetadata,
-  modSlotTags
+  modSlotTags,
 } from 'app/utils/item-utils';
 import {
   itemInfosSelector,
   sortedStoresSelector,
-  currentStoreSelector
+  currentStoreSelector,
 } from '../inventory/selectors';
 import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 
@@ -142,7 +142,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   // Add new ItemCategoryHash hashes to this, to add new category searches
   const categoryHashFilters: { [key: string]: number } = {
     ...hashes.D1CategoryHashes,
-    ...(isD2 ? hashes.D2CategoryHashes : {})
+    ...(isD2 ? hashes.D2CategoryHashes : {}),
   };
 
   const stats = [
@@ -165,7 +165,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     ...(isD1 ? ['rof'] : []),
     ...(isD2
       ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total', 'any']
-      : [])
+      : []),
   ];
 
   /**
@@ -188,7 +188,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
       'green',
       'blue',
       'purple',
-      'yellow'
+      'yellow',
     ],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
@@ -246,7 +246,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
             'cq',
             'eris',
             'ev',
-            'gunsmith'
+            'gunsmith',
           ],
           activity: [
             'vanilla',
@@ -265,8 +265,8 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
             'coe',
             'af',
             'dawning',
-            'aot'
-          ]
+            'aot',
+          ],
         }
       : {}),
     ...(isD2
@@ -287,10 +287,10 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           reacquirable: ['reacquirable'],
           trashlist: ['trashlist'],
           wishlist: ['wishlist'],
-          wishlistdupe: ['wishlistdupe']
+          wishlistdupe: ['wishlistdupe'],
         }
       : {}),
-    ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {})
+    ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {}),
   };
 
   // Filters that operate on numeric ranges with comparison operators
@@ -302,7 +302,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     'year',
     ...(isD1 ? ['level', 'quality', 'percentage'] : []),
     ...(isD2 ? ['masterwork', 'season'] : []),
-    ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : [])
+    ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : []),
   ];
 
   // Filters that operate with fixed predicate values or freeform text, plus the processed above ranges
@@ -348,11 +348,11 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           // maximum stat finders
           ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
           ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
-          ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`)
+          ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
+    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
   ];
 
   // create suggestion stubs for filter names
@@ -380,7 +380,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     keywordToFilter,
     keywords: [...new Set(keywords)], // de-dupe kinetic (dmg) & kinetic (slot)
     destinyVersion,
-    categoryHashFilters
+    categoryHashFilters,
   };
 }
 /**
@@ -522,7 +522,7 @@ function searchFilters(
                     : // else we are looking for the biggest stat
                       {
                         value: Math.max(_maxStatValues[itemSlot][stat.statHash].value, stat.value),
-                        base: Math.max(_maxStatValues[itemSlot][stat.statHash].base, stat.base)
+                        base: Math.max(_maxStatValues[itemSlot][stat.statHash].base, stat.base),
                       };
               }
             }
@@ -590,7 +590,7 @@ function searchFilters(
             predicate: 'or',
             invert: false,
             value: '',
-            orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef]
+            orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef],
           });
         } else {
           filterStack.push(filterDef);
@@ -723,7 +723,7 @@ function searchFilters(
           green: 'uncommon',
           blue: 'rare',
           purple: 'legendary',
-          yellow: 'exotic'
+          yellow: 'exotic',
         };
         return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
@@ -1376,7 +1376,7 @@ function searchFilters(
           {
             primary: DestinyAmmunitionType.Primary,
             special: DestinyAmmunitionType.Special,
-            heavy: DestinyAmmunitionType.Heavy
+            heavy: DestinyAmmunitionType.Heavy,
           }[predicate]
         );
       },
@@ -1389,7 +1389,7 @@ function searchFilters(
       ...hashes.armorStatNames.reduce((obj, name) => {
         obj[`base${name}`] = filterByStats(name, true);
         return obj;
-      }, {})
-    }
+      }, {}),
+    },
   };
 }

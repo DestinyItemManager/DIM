@@ -54,7 +54,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
         </div>
         <div className="faction-level">
           {t('Progress.PercentPrestige', {
-            pct: Math.round((progress.currentProgress / rankTotal) * 100)
+            pct: Math.round((progress.currentProgress / rankTotal) * 100),
           })}
         </div>
         {Boolean(resets.currentResetCount) && (

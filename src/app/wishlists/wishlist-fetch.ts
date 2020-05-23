@@ -76,7 +76,7 @@ export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): Thu
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
-        wishListAndInfo.description
+        wishListAndInfo.description,
       ]).join('\n');
 
       showNotification({
@@ -84,14 +84,14 @@ export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): Thu
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportSuccess', {
           count: wishListAndInfo.wishListRolls.length,
-          titleAndDescription
-        })
+          titleAndDescription,
+        }),
       });
     } else {
       showNotification({
         type: 'warning',
         title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportFailed')
+        body: t('WishListRoll.ImportFailed'),
       });
     }
   };
@@ -113,7 +113,7 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       dispatch(
         loadWishLists({
           lastFetched: wishListState.lastFetched,
-          wishListAndInfo: wishListState.wishListAndInfo
+          wishListAndInfo: wishListState.wishListAndInfo,
         })
       );
     }

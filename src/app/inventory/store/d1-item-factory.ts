@@ -14,14 +14,14 @@ import {
   DestinyClass,
   DestinyDisplayPropertiesDefinition,
   DestinyDamageTypeDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
 } from 'bungie-api-ts/destiny2';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
   year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
   //         RoI       WoTM         FoTl       Dawning    Raid Reprise
-  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381]
+  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381],
 };
 
 // Maps tierType to tierTypeName in English
@@ -35,7 +35,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 const factionNodes = {
   652505621: 'New Monarchy',
   2669659850: 'Future War Cult',
-  2794386410: 'Dead Orbit'
+  2794386410: 'Dead Orbit',
 };
 
 /**
@@ -95,7 +95,7 @@ const ItemProto = {
   },
   getStoresService() {
     return D1StoresService;
-  }
+  },
 };
 
 export function resetIdTracker() {
@@ -178,14 +178,14 @@ const toD2DamageType = _.memoize(
         icon: damageType.iconPath,
         hasIcon: true,
         highResIcon: '',
-        iconSequences: []
+        iconSequences: [],
       },
       transparentIconPath: damageType.transparentIconPath,
       hash: damageType.hash,
       showIcon: damageType.showIcon,
       enumValue: damageType.enumValue,
       index: damageType.index,
-      redacted: damageType.redacted
+      redacted: damageType.redacted,
     }
 );
 
@@ -210,7 +210,7 @@ function makeItem(
     // maybe it is redacted...
     itemDef = {
       itemName: 'Missing Item',
-      redacted: true
+      redacted: true,
     };
   }
 
@@ -257,7 +257,7 @@ function makeItem(
             maximum: defaultMinMax.maximum,
             minimum: defaultMinMax.minimum,
             statHash: val,
-            value: 0
+            value: 0,
           };
         }
       });
@@ -373,7 +373,7 @@ function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     quality: null, // filled in later
-    dtrRating: null
+    dtrRating: null,
   });
 
   // *able
@@ -398,7 +398,7 @@ function makeItem(
       name: statDef.statName,
       description: statDef.statDescription,
       icon: statDef.icon,
-      hasIcon: Boolean(statDef.icon)
+      hasIcon: Boolean(statDef.icon),
     };
   }
 
@@ -651,7 +651,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       hidden: node.hidden,
 
       dtrHash,
-      dtrRoll
+      dtrRoll,
 
       // Whether (and in which order) this perk should be
       // "featured" on an abbreviated info panel, as in the
@@ -714,7 +714,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
     complete:
       totalXPRequired <= totalXP &&
-      _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
+      _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
   };
 }
 
@@ -831,14 +831,14 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
           statHash: stat.statHash,
           displayProperties: {
             name: def.statName,
-            description: def.statDescription
+            description: def.statDescription,
           } as DestinyDisplayPropertiesDefinition,
           sort,
           value: val,
           maximumValue,
           bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY', // energy == magazine for swords
           smallerIsBetter: [447667954, 2961396640].includes(stat.statHash),
-          additive: item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE'
+          additive: item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE',
         };
 
         return dimStat;

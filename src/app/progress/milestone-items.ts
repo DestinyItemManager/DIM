@@ -10,7 +10,7 @@ import {
   DestinyMilestoneRewardEntry,
   DestinyMilestoneRewardCategoryDefinition,
   DestinyMilestoneType,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -101,7 +101,7 @@ function availableQuestToItem(
       places: [],
       activityTypes: [],
       modifierHashes: availableQuest?.activity?.modifierHashes || [],
-      rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 }))
+      rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 })),
     };
   }
 
@@ -139,7 +139,7 @@ function activityMilestoneToItem(
       places: [],
       activityTypes: [],
       modifierHashes: milestone.activities[0].modifierHashes || [],
-      rewards
+      rewards,
     };
   }
 
@@ -158,7 +158,7 @@ function weeklyClanMilestoneToItems(
 
   const displayProperties = {
     ...milestoneDef.displayProperties,
-    ...reward.displayProperties
+    ...reward.displayProperties,
   };
 
   const dimItem = makeFakePursuitItem(
@@ -174,7 +174,7 @@ function weeklyClanMilestoneToItems(
     places: [],
     activityTypes: [],
     modifierHashes: [],
-    rewards: reward.items
+    rewards: reward.items,
   };
 
   return dimItem;
@@ -237,7 +237,7 @@ function makeFakePursuitItem(
     source: null,
     collectibleState: null,
     collectibleHash: null,
-    missingSockets: false
+    missingSockets: false,
   });
 
   return dimItem;

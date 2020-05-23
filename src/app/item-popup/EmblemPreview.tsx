@@ -7,7 +7,7 @@ import styles from './EmblemPreview.m.scss';
 
 export default function EmblemPreview({
   item,
-  defs
+  defs,
 }: {
   item: DimItem;
   defs: D2ManifestDefinitions;

@@ -4,7 +4,7 @@ import {
   D1ItemWithNormalStats,
   LockedPerkHash,
   ItemBucket,
-  ArmorSet
+  ArmorSet,
 } from './types';
 import intellectIcon from 'images/intellect.png';
 import disciplineIcon from 'images/discipline.png';
@@ -15,7 +15,7 @@ import {
   genSetHash,
   calcArmorStats,
   getBonusConfig,
-  getActiveHighestSets
+  getActiveHighestSets,
 } from './utils';
 
 import _ from 'lodash';
@@ -96,7 +96,7 @@ export function getSetBucketsStep(
       activesets: '',
       highestsets: {},
       activeHighestSets: {},
-      collapsedConfigs: []
+      collapsedConfigs: [],
     });
   }
 
@@ -125,7 +125,7 @@ export function getSetBucketsStep(
                           Leg: legs[l],
                           ClassItem: classItems[ci],
                           Artifact: artifacts[ar],
-                          Ghost: ghosts[gh]
+                          Ghost: ghosts[gh],
                         },
                         stats: {
                           144602215: {
@@ -133,25 +133,25 @@ export function getSetBucketsStep(
                             value: 0,
                             name: 'Intellect',
                             description: '',
-                            icon: intellectIcon
+                            icon: intellectIcon,
                           },
                           1735777505: {
                             hash: 1735777505,
                             value: 0,
                             name: 'Discipline',
                             description: '',
-                            icon: disciplineIcon
+                            icon: disciplineIcon,
                           },
                           4244567218: {
                             hash: 4244567218,
                             value: 0,
                             name: 'Strength',
                             description: '',
-                            icon: strengthIcon
-                          }
+                            icon: strengthIcon,
+                          },
                         },
                         setHash: '',
-                        includesVendorItems: false
+                        includesVendorItems: false,
                       };
 
                       const pieces = Object.values(set.armor);
@@ -173,14 +173,14 @@ export function getSetBucketsStep(
                         } else {
                           setMap[set.setHash].tiers[tiersString] = {
                             stats: set.stats,
-                            configs: [getBonusConfig(set.armor)]
+                            configs: [getBonusConfig(set.armor)],
                           };
                         }
                       } else {
                         setMap[set.setHash] = { set, tiers: {} };
                         setMap[set.setHash].tiers[tiersString] = {
                           stats: set.stats,
-                          configs: [getBonusConfig(set.armor)]
+                          configs: [getBonusConfig(set.armor)],
                         };
                       }
 
@@ -246,7 +246,7 @@ export function getSetBucketsStep(
         false,
         false,
         false,
-        false
+        false,
       ];
 
       if (cancelToken.cancelled) {
@@ -263,7 +263,7 @@ export function getSetBucketsStep(
         activesets,
         activeHighestSets,
         collapsedConfigs,
-        highestsets: setMap
+        highestsets: setMap,
       });
     }
     setTimeout(() => step(activeGuardian, 0, 0, 0, 0, 0, 0, 0, 0));

@@ -13,13 +13,13 @@ const currentAccount: DestinyAccount = {
   displayName: 'Foobar',
   originalPlatformType: BungieMembershipType.TigerPsn,
   platformLabel: 'PlayStation',
-  platforms: [BungieMembershipType.TigerPsn]
+  platforms: [BungieMembershipType.TigerPsn],
 };
 const currentAccountKey = '98765-d2';
 
 const initialState: DimApiState = {
   ...apiInitialState,
-  apiPermissionGranted: true
+  apiPermissionGranted: true,
 };
 
 describe('setSetting', () => {
@@ -33,12 +33,12 @@ describe('setSetting', () => {
       {
         action: 'setting',
         payload: {
-          showNewItems: true
+          showNewItems: true,
         },
         before: {
-          showNewItems: false
-        }
-      }
+          showNewItems: false,
+        },
+      },
     ]);
   });
 });
@@ -59,11 +59,11 @@ describe('setItemTag', () => {
         action: 'tag',
         payload: {
           id: '1234',
-          tag: 'favorite'
+          tag: 'favorite',
         },
         platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion
-      }
+        destinyVersion: currentAccount.destinyVersion,
+      },
     ]);
   });
 
@@ -88,24 +88,24 @@ describe('setItemTag', () => {
         action: 'tag',
         payload: {
           id: '1234',
-          tag: 'favorite'
+          tag: 'favorite',
         },
         platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion
+        destinyVersion: currentAccount.destinyVersion,
       },
       {
         action: 'tag',
         payload: {
           id: '1234',
-          tag: null
+          tag: null,
         },
         before: {
           id: '1234',
-          tag: 'favorite'
+          tag: 'favorite',
         },
         platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion
-      }
+        destinyVersion: currentAccount.destinyVersion,
+      },
     ]);
   });
 });
@@ -119,33 +119,33 @@ describe('prepareToFlushUpdates', () => {
         {
           action: 'setting',
           payload: {
-            showNewItems: true
+            showNewItems: true,
           },
           before: {
-            showNewItems: false
-          }
+            showNewItems: false,
+          },
         },
         // Modify another setting
         {
           action: 'setting',
           payload: {
-            itemSize: 50
+            itemSize: 50,
           },
           before: {
-            itemSize: 48
-          }
+            itemSize: 48,
+          },
         },
         // Turn new items back off
         {
           action: 'setting',
           payload: {
-            showNewItems: false
+            showNewItems: false,
           },
           before: {
-            showNewItems: true
-          }
-        }
-      ]
+            showNewItems: true,
+          },
+        },
+      ],
     };
 
     const updatedState = dimApi(state, prepareToFlushUpdates());
@@ -156,12 +156,12 @@ describe('prepareToFlushUpdates', () => {
       {
         action: 'setting',
         payload: {
-          itemSize: 50
+          itemSize: 50,
         },
         before: {
-          itemSize: 48
-        }
-      }
+          itemSize: 48,
+        },
+      },
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
@@ -174,52 +174,52 @@ describe('prepareToFlushUpdates', () => {
         {
           action: 'setting',
           payload: {
-            showNewItems: true
+            showNewItems: true,
           },
           before: {
-            showNewItems: false
-          }
+            showNewItems: false,
+          },
         },
         // Save a tag for D2
         {
           action: 'tag',
           payload: {
             id: '1234',
-            tag: 'favorite'
+            tag: 'favorite',
           },
           before: {
-            id: '1234'
+            id: '1234',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         // Save a tag for D1, same profile
         {
           action: 'tag',
           payload: {
             id: '1231903',
-            tag: 'keep'
+            tag: 'keep',
           },
           before: {
-            id: '1231903'
+            id: '1231903',
           },
           platformMembershipId: '3456',
-          destinyVersion: 1
+          destinyVersion: 1,
         },
         // Save a tag for D2, same profile
         {
           action: 'tag',
           payload: {
             id: '76543',
-            tag: 'junk'
+            tag: 'junk',
           },
           before: {
-            id: '76543'
+            id: '76543',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
-        }
-      ]
+          destinyVersion: 2,
+        },
+      ],
     };
 
     const updatedState = dimApi(state, prepareToFlushUpdates());
@@ -231,51 +231,51 @@ describe('prepareToFlushUpdates', () => {
       {
         action: 'setting',
         payload: {
-          showNewItems: true
+          showNewItems: true,
         },
         before: {
-          showNewItems: false
-        }
+          showNewItems: false,
+        },
       },
       // Save a tag for D2
       {
         action: 'tag',
         payload: {
           id: '1234',
-          tag: 'favorite'
+          tag: 'favorite',
         },
         before: {
-          id: '1234'
+          id: '1234',
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
+        destinyVersion: 2,
       },
       // Save a tag for D2
       {
         action: 'tag',
         payload: {
           id: '76543',
-          tag: 'junk'
+          tag: 'junk',
         },
         before: {
-          id: '76543'
+          id: '76543',
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
+        destinyVersion: 2,
       },
       // Save a tag for D1
       {
         action: 'tag',
         payload: {
           id: '1231903',
-          tag: 'keep'
+          tag: 'keep',
         },
         before: {
-          id: '1231903'
+          id: '1231903',
         },
         platformMembershipId: '3456',
-        destinyVersion: 1
-      }
+        destinyVersion: 1,
+      },
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
@@ -289,38 +289,38 @@ describe('prepareToFlushUpdates', () => {
           action: 'tag',
           payload: {
             id: '1234',
-            tag: 'favorite'
+            tag: 'favorite',
           },
           before: {
-            id: '1234'
+            id: '1234',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         // Save a tag for D2, same profile
         {
           action: 'tag',
           payload: {
             id: '76543',
-            tag: 'junk'
+            tag: 'junk',
           },
           before: {
-            id: '76543'
+            id: '76543',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         // Turn new items on
         {
           action: 'setting',
           payload: {
-            showNewItems: true
+            showNewItems: true,
           },
           before: {
-            showNewItems: false
-          }
-        }
-      ]
+            showNewItems: false,
+          },
+        },
+      ],
     };
 
     const updatedState = dimApi(state, prepareToFlushUpdates());
@@ -333,37 +333,37 @@ describe('prepareToFlushUpdates', () => {
         action: 'tag',
         payload: {
           id: '1234',
-          tag: 'favorite'
+          tag: 'favorite',
         },
         before: {
-          id: '1234'
+          id: '1234',
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
+        destinyVersion: 2,
       },
       // Save a tag for D2
       {
         action: 'tag',
         payload: {
           id: '76543',
-          tag: 'junk'
+          tag: 'junk',
         },
         before: {
-          id: '76543'
+          id: '76543',
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
+        destinyVersion: 2,
       },
       // Turn new items on
       {
         action: 'setting',
         payload: {
-          showNewItems: true
+          showNewItems: true,
         },
         before: {
-          showNewItems: false
-        }
-      }
+          showNewItems: false,
+        },
+      },
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
@@ -381,7 +381,7 @@ describe('prepareToFlushUpdates', () => {
             classType: DestinyClass.Warlock,
             equipped: [],
             unequipped: [],
-            clearSpace: false
+            clearSpace: false,
           },
           before: {
             id: '1234',
@@ -389,10 +389,10 @@ describe('prepareToFlushUpdates', () => {
             classType: DestinyClass.Unknown,
             equipped: [],
             unequipped: [],
-            clearSpace: false
+            clearSpace: false,
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         // Update the name
         {
@@ -403,7 +403,7 @@ describe('prepareToFlushUpdates', () => {
             classType: DestinyClass.Warlock,
             equipped: [],
             unequipped: [],
-            clearSpace: false
+            clearSpace: false,
           },
           before: {
             id: '1234',
@@ -411,10 +411,10 @@ describe('prepareToFlushUpdates', () => {
             classType: DestinyClass.Warlock,
             equipped: [],
             unequipped: [],
-            clearSpace: false
+            clearSpace: false,
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         // Delete it
         {
@@ -426,12 +426,12 @@ describe('prepareToFlushUpdates', () => {
             classType: DestinyClass.Warlock,
             equipped: [],
             unequipped: [],
-            clearSpace: false
+            clearSpace: false,
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
-        } as DeleteLoadoutUpdateWithRollback
-      ]
+          destinyVersion: 2,
+        } as DeleteLoadoutUpdateWithRollback,
+      ],
     };
 
     const updatedState = dimApi(state, prepareToFlushUpdates());
@@ -449,11 +449,11 @@ describe('prepareToFlushUpdates', () => {
           classType: DestinyClass.Unknown,
           equipped: [],
           unequipped: [],
-          clearSpace: false
+          clearSpace: false,
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
-      }
+        destinyVersion: 2,
+      },
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
@@ -466,43 +466,43 @@ describe('prepareToFlushUpdates', () => {
           action: 'tag',
           payload: {
             id: '1234',
-            tag: 'favorite'
+            tag: 'favorite',
           },
           before: {
             id: '1234',
-            tag: 'junk'
+            tag: 'junk',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
+          destinyVersion: 2,
         },
         {
           action: 'tag',
           payload: {
             id: '1234',
-            notes: 'woohoo'
-          },
-          before: {
-            id: '1234',
-            tag: 'favorite'
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2
-        },
-        {
-          action: 'tag',
-          payload: {
-            id: '1234',
-            tag: null
+            notes: 'woohoo',
           },
           before: {
             id: '1234',
             tag: 'favorite',
-            notes: 'woohoo'
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
-        }
-      ]
+          destinyVersion: 2,
+        },
+        {
+          action: 'tag',
+          payload: {
+            id: '1234',
+            tag: null,
+          },
+          before: {
+            id: '1234',
+            tag: 'favorite',
+            notes: 'woohoo',
+          },
+          platformMembershipId: '3456',
+          destinyVersion: 2,
+        },
+      ],
     };
 
     const updatedState = dimApi(state, prepareToFlushUpdates());
@@ -514,15 +514,15 @@ describe('prepareToFlushUpdates', () => {
         payload: {
           id: '1234',
           tag: null,
-          notes: 'woohoo'
+          notes: 'woohoo',
         },
         before: {
           id: '1234',
-          tag: 'junk'
+          tag: 'junk',
         },
         platformMembershipId: '3456',
-        destinyVersion: 2
-      }
+        destinyVersion: 2,
+      },
     ];
     expect(copy(updatedState.updateQueue)).toEqual(expected);
   });
@@ -536,27 +536,27 @@ describe('finishedUpdates', () => {
         {
           action: 'setting',
           payload: {
-            showNewItems: true
+            showNewItems: true,
           },
           before: {
-            showNewItems: false
-          }
+            showNewItems: false,
+          },
         },
         // Save a tag for D2
         {
           action: 'tag',
           payload: {
             id: '1234',
-            tag: 'favorite'
+            tag: 'favorite',
           },
           before: {
-            id: '1234'
+            id: '1234',
           },
           platformMembershipId: '3456',
-          destinyVersion: 2
-        }
+          destinyVersion: 2,
+        },
       ],
-      updateInProgressWatermark: 2
+      updateInProgressWatermark: 2,
     };
     const updatedState = dimApi(
       state,

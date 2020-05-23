@@ -16,7 +16,7 @@ interface StoreProps {
 }
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    defs: state.manifest.d2Manifest!
+    defs: state.manifest.d2Manifest!,
   });
 }
 type Props = ProvidedProps & StoreProps;

@@ -16,7 +16,7 @@ export default function SocketDetailsSelectedPlug({
   plug,
   defs,
   item,
-  currentPlug
+  currentPlug,
 }: {
   plug: DestinyInventoryItemDefinition;
   defs: D2ManifestDefinitions;
@@ -63,8 +63,8 @@ export default function SocketDetailsSelectedPlug({
         modValue,
         dimStat: {
           ...itemStat,
-          value: itemStatValue
-        } as DimStat
+          value: itemStatValue,
+        } as DimStat,
       };
     })
   );

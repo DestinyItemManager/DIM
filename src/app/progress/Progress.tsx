@@ -51,7 +51,7 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: sortedStoresSelector(state),
     defs: state.manifest.d2Manifest,
     buckets: state.inventory.buckets,
-    profileInfo: profileResponseSelector(state)
+    profileInfo: profileResponseSelector(state),
   };
 }
 
@@ -137,21 +137,21 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
-    { id: 'seals', title: sealTitle }
+    { id: 'seals', title: sealTitle },
   ];
   const externalLinks = [
     {
       href: `https://braytech.org/${account.originalPlatformType}/${account.membershipId}/${selectedStore.id}/`,
       title: 'BrayTech.org',
-      logo: braytechLogo
+      logo: braytechLogo,
     },
     { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
     { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' },
     {
       href: `https://www.d2checklist.com/${account.originalPlatformType}/${account.membershipId}`,
       title: 'D2Checklist',
-      logo: d2ChecklistLogo
-    }
+      logo: d2ChecklistLogo,
+    },
   ];
 
   return (

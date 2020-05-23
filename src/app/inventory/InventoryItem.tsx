@@ -50,7 +50,7 @@ export default function InventoryItem({
   onClick,
   onShiftClick,
   onDoubleClick,
-  innerRef
+  innerRef,
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
 
@@ -78,12 +78,12 @@ export default function InventoryItem({
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
-    [styles.subclassPathBottom]: subclassPath?.position === 'bottom'
+    [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
   };
   const itemImageStyles = clsx('item-img', {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless(item),
-    [styles.masterwork]: item.masterwork
+    [styles.masterwork]: item.masterwork,
   });
 
   return (
@@ -160,7 +160,7 @@ const superIconNodeHashes = {
   sentinelShield: 368405360,
   bannerShield: 3504292102,
   hammerOfSol: 1722642322,
-  burningMaul: 1323416107
+  burningMaul: 1323416107,
 };
 
 // prettier-ignore
@@ -217,7 +217,7 @@ function selectedSubclassPath(talentGrid: DimTalentGrid) {
       return {
         base: def.base,
         position: def.position,
-        super: superNode?.icon
+        super: superNode?.icon,
       };
     }
   }

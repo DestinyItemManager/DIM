@@ -5,13 +5,13 @@ import {
   equip as d1equip,
   equipItems as d1EquipItems,
   transfer as d1Transfer,
-  setItemState as d1SetItemState
+  setItemState as d1SetItemState,
 } from '../bungie-api/destiny1-api';
 import {
   equip as d2equip,
   equipItems as d2EquipItems,
   transfer as d2Transfer,
-  setLockState as d2SetLockState
+  setLockState as d2SetLockState,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
@@ -27,7 +27,7 @@ import {
   getTag,
   vaultDisplacePriority,
   characterDisplacePriority,
-  ItemInfos
+  ItemInfos,
 } from './dim-item-info';
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
@@ -102,17 +102,17 @@ function ItemService(): ItemServiceType {
   // throttle these calls so we don't just keep refreshing over and over.
   // This needs to be up here because of how we return the service object.
   const throttledReloadStores = _.throttle(() => D1StoresService.reloadStores(), 10000, {
-    trailing: false
+    trailing: false,
   });
 
   const throttledD2ReloadStores = _.throttle(() => D2StoresService.reloadStores(), 10000, {
-    trailing: false
+    trailing: false,
   });
 
   return {
     getSimilarItem,
     moveTo,
-    equipItems
+    equipItems,
   };
 
   function equipApi(item: DimItem): (item: DimItem) => Promise<any> {
@@ -326,7 +326,7 @@ function ItemService(): ItemServiceType {
         Rare: 3,
         Uncommon: 2,
         Common: 1,
-        Exotic: 0
+        Exotic: 0,
       }[i.tier];
       if (item.isExotic && i.isExotic) {
         value += 5;
@@ -507,7 +507,7 @@ function ItemService(): ItemServiceType {
           t('ItemService.ExoticError', {
             itemname: item.name,
             slot: otherExotic.type,
-            error: e.message
+            error: e.message,
           })
         );
       }
@@ -634,7 +634,7 @@ function ItemService(): ItemServiceType {
     if (stackable && otherStore) {
       return {
         item: stackable,
-        target: otherStore
+        target: otherStore,
       };
     }
 
@@ -684,7 +684,7 @@ function ItemService(): ItemServiceType {
           if (candidate.amount <= spaceLeft) {
             moveAsideCandidate = {
               item: candidate,
-              target: targetStore
+              target: targetStore,
             };
             return true;
           }
@@ -703,7 +703,7 @@ function ItemService(): ItemServiceType {
           if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
             moveAsideCandidate = {
               item: candidate,
-              target: targetStore
+              target: targetStore,
             };
             return true;
           }
@@ -718,7 +718,7 @@ function ItemService(): ItemServiceType {
     if (!moveAsideCandidate && !store.isVault) {
       moveAsideCandidate = {
         item: moveAsideCandidates[0],
-        target: vault
+        target: vault,
       };
     }
 
@@ -818,7 +818,7 @@ function ItemService(): ItemServiceType {
             left = left - storeReservations[s.id];
           }
           return Math.max(0, left);
-        }
+        },
       };
 
       // Move starting from the vault (which is always last)
@@ -845,7 +845,7 @@ function ItemService(): ItemServiceType {
         const errorData = {
           itemtype,
           store: moveAsideTarget.name,
-          context: moveAsideTarget.genderName
+          context: moveAsideTarget.genderName,
         };
 
         const error: DimError = new Error(
@@ -907,7 +907,7 @@ function ItemService(): ItemServiceType {
           ? t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
           : t('ItemService.OnlyEquippedClassLevel', {
               class: item.classTypeNameLocalized.toLowerCase(),
-              level: item.equipRequiredLevel
+              level: item.equipRequiredLevel,
             });
 
       const error: DimError = new Error(message);
@@ -1024,7 +1024,7 @@ export function sortMoveAsideCandidatesForStore(
     Uncommon: 1,
     Rare: 2,
     Legendary: 4,
-    Exotic: 3
+    Exotic: 3,
   };
 
   // A sort for items to use for ranking *which item to move*

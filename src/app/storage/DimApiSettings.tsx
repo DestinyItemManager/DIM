@@ -16,7 +16,7 @@ import {
   importLegacyData,
   deleteAllApiData,
   loadDimApiData,
-  showBackupDownloadedNotification
+  showBackupDownloadedNotification,
 } from 'app/dim-api/actions';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
@@ -34,7 +34,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     apiPermissionGranted: apiPermissionGrantedSelector(state),
-    profileLoadedError: state.dimApi.profileLoadedError
+    profileLoadedError: state.dimApi.profileLoadedError,
   };
 }
 

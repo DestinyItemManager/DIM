@@ -6,7 +6,7 @@ import styles from './ClosableContainer.m.scss';
  */
 export default function ClosableContainer({
   children,
-  onClose
+  onClose,
 }: {
   children: React.ReactNode;
   onClose(): void;

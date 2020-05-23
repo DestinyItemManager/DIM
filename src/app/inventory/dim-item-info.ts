@@ -21,36 +21,36 @@ export const tagConfig = {
     label: 'Tags.Favorite',
     sortOrder: 0,
     hotkey: 'shift+1',
-    icon: heartIcon
+    icon: heartIcon,
   },
   keep: {
     type: 'keep' as const,
     label: 'Tags.Keep',
     sortOrder: 1,
     hotkey: 'shift+2',
-    icon: tagIcon
+    icon: tagIcon,
   },
   infuse: {
     type: 'infuse' as const,
     label: 'Tags.Infuse',
     sortOrder: 2,
     hotkey: 'shift+4',
-    icon: boltIcon
+    icon: boltIcon,
   },
   junk: {
     type: 'junk' as const,
     label: 'Tags.Junk',
     sortOrder: 3,
     hotkey: 'shift+3',
-    icon: banIcon
+    icon: banIcon,
   },
   archive: {
     type: 'archive' as const,
     label: 'Tags.Archive',
     sortOrder: 4,
     hotkey: 'shift+5',
-    icon: archiveIcon
-  }
+    icon: archiveIcon,
+  },
 };
 
 export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
@@ -78,7 +78,7 @@ export const characterDisplacePriority: (TagValue | 'none')[] = [
   'junk',
   'keep',
   // Favorites you probably want to keep on your character
-  'favorite'
+  'favorite',
 ];
 
 /**
@@ -96,7 +96,7 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
   // Infusion fuel belongs in the vault
   'infuse',
   // Archived items should absolutely stay in the vault
-  'archive'
+  'archive',
 ];
 
 /**
@@ -128,7 +128,7 @@ export const itemTagList: TagInfo[] = Object.values(tagConfig);
 // t(Tags.TagItem) is the dropdown selector text hint for untagged things
 export const itemTagSelectorList: TagInfo[] = [
   { label: 'Tags.TagItem' },
-  ...Object.values(tagConfig)
+  ...Object.values(tagConfig),
 ];
 
 /**

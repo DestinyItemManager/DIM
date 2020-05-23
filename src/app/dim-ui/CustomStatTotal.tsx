@@ -23,7 +23,7 @@ interface StoreProps {
 }
 
 const mapDispatchToProps = {
-  setSetting
+  setSetting,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -32,7 +32,7 @@ type ToggleProps = ProvidedProps & StoreProps & DispatchProps;
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest!,
-    customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
+    customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
   });
 }
 
@@ -41,7 +41,7 @@ function StatTotalTogglePreConnect({
   readOnly = false,
   defs,
   customTotalStatsByClass,
-  setSetting
+  setSetting,
 }: ToggleProps) {
   const activeStats = customTotalStatsByClass[forClass]?.length
     ? customTotalStatsByClass[forClass]
@@ -52,7 +52,7 @@ function StatTotalTogglePreConnect({
       {addDividers(
         [
           { className: 'activeStatLabels', includesCheck: true },
-          { className: 'inactiveStatLabels', includesCheck: false }
+          { className: 'inactiveStatLabels', includesCheck: false },
         ].map(({ className, includesCheck }) => (
           <span
             key={className}
@@ -95,7 +95,7 @@ function StatToggleButton({
   setSetting,
   currentSettings,
   currentClass,
-  readOnly = false
+  readOnly = false,
 }: {
   stat: DestinyStatDefinition;
   setSetting: DispatchProps['setSetting'];
@@ -115,8 +115,8 @@ function StatToggleButton({
                   [currentClass]: toggleArrayElement(
                     stat.hash,
                     currentSettings[currentClass] ?? armorStats
-                  )
-                }
+                  ),
+                },
               });
             }
           : undefined

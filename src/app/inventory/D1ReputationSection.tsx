@@ -13,7 +13,7 @@ export default function D1ReputationSection({ stores }: { stores: DimStore[] }) 
           <div
             key={store.id}
             className={clsx('store-cell', {
-              vault: store.isVault
+              vault: store.isVault,
             })}
           >
             <D1Reputation store={store} />

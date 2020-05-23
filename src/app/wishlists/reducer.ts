@@ -39,7 +39,7 @@ export type WishListAction = ActionType<typeof actions>;
 const initialState: WishListsState = {
   loaded: false,
   wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] },
-  lastFetched: undefined
+  lastFetched: undefined,
 };
 
 export const wishLists: Reducer<WishListsState, WishListAction> = (
@@ -52,7 +52,7 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
         ...state,
         wishListAndInfo: { ...initialState.wishListAndInfo, ...action.payload.wishListAndInfo },
         loaded: true,
-        lastFetched: action.payload.lastFetched || new Date()
+        lastFetched: action.payload.lastFetched || new Date(),
       };
     case getType(actions.clearWishLists): {
       return {
@@ -61,11 +61,11 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
           title: undefined,
           description: undefined,
           wishListRolls: [],
-          source: ''
+          source: '',
         },
         lastFetched: undefined,
         wishListSource: undefined,
-        loaded: true
+        loaded: true,
       };
     }
     default:
@@ -80,7 +80,7 @@ export function saveWishListToIndexedDB() {
       if (nextState.loaded) {
         set('wishlist', {
           wishListAndInfo: nextState.wishListAndInfo,
-          lastFetched: nextState.lastFetched
+          lastFetched: nextState.lastFetched,
         });
       }
     }

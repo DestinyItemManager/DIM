@@ -1,6 +1,6 @@
 import {
   DestinyDisplayPropertiesDefinition,
-  DestinyMilestoneChallengeActivity
+  DestinyMilestoneChallengeActivity,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
@@ -42,7 +42,7 @@ export function RaidDisplay(props: Props) {
 export function RaidActivity({
   defs,
   activity,
-  displayName
+  displayName,
 }: {
   defs: D2ManifestDefinitions;
   activity: DestinyMilestoneChallengeActivity;

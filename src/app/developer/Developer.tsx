@@ -20,7 +20,7 @@ export default class Developer extends React.Component<{}, State> {
       clientSecret:
         localStorage.getItem('oauthClientSecret') || urlParams.oauthClientSecret || undefined,
       dimApiKey: localStorage.getItem('dimApiKey') || urlParams.dimApiKey || undefined,
-      dimAppName: localStorage.getItem('dimAppName') || urlParams.dimAppName || undefined
+      dimAppName: localStorage.getItem('dimAppName') || urlParams.dimAppName || undefined,
     };
   }
 

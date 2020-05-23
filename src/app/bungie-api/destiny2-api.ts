@@ -23,7 +23,7 @@ import {
   DestinyLinkedProfilesResponse,
   BungieMembershipType,
   getItem,
-  DestinyItemResponse
+  DestinyItemResponse,
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -54,7 +54,7 @@ export async function getLinkedAccounts(
   const response = await getLinkedProfiles(httpAdapter, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext,
-    getAllMemberships: true
+    getAllMemberships: true,
   });
   return response.Response;
 }
@@ -108,13 +108,13 @@ async function getProfile(
   const response = await getProfileApi(httpAdapter, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.originalPlatformType,
-    components
+    components,
   });
   // TODO: what does it actually look like to not have an account?
   if (Object.keys(response.Response).length === 0) {
     throw new Error(
       t('BungieService.NoAccountForPlatform', {
-        platform: platform.platformLabel
+        platform: platform.platformLabel,
       })
     );
   }
@@ -135,8 +135,8 @@ export async function getItemDetails(
     itemInstanceId,
     components: [
       // Get plug objectives (kill trackers and catalysts)
-      DestinyComponentType.ItemPlugObjectives
-    ]
+      DestinyComponentType.ItemPlugObjectives,
+    ],
   });
   return response.Response;
 }
@@ -163,9 +163,9 @@ export async function getVendor(
       DestinyComponentType.ItemPlugStates,
       DestinyComponentType.ItemReusablePlugs,
       // TODO: We should try to defer this until the popup is open!
-      DestinyComponentType.ItemPlugObjectives
+      DestinyComponentType.ItemPlugObjectives,
     ],
-    vendorHash
+    vendorHash,
   });
   return response.Response;
 }
@@ -191,8 +191,8 @@ export async function getVendors(
       DestinyComponentType.ItemPlugStates,
       DestinyComponentType.ItemReusablePlugs,
       // TODO: We should try to defer this until the popup is open!
-      DestinyComponentType.ItemPlugObjectives
-    ]
+      DestinyComponentType.ItemPlugObjectives,
+    ],
   });
   return response.Response;
 }
@@ -206,7 +206,7 @@ export async function getVendorsMinimal(
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
-    components: [DestinyComponentType.Vendors]
+    components: [DestinyComponentType.Vendors],
   });
   return response.Response;
 }
@@ -226,7 +226,7 @@ export async function transfer(
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
-    transferToVault: store.isVault
+    transferToVault: store.isVault,
   };
 
   const response = item.location.inPostmaster
@@ -252,7 +252,7 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
   return equipItem(httpAdapter, {
     characterId: item.owner,
     membershipType: platform!.originalPlatformType,
-    itemId: item.id
+    itemId: item.id,
   });
 }
 
@@ -269,7 +269,7 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
   const response = await equipItemsApi(httpAdapter, {
     characterId: store.id,
     membershipType: platform!.originalPlatformType,
-    itemIds: items.map((i) => i.id)
+    itemIds: items.map((i) => i.id),
   });
   const data: DestinyEquipItemResults = response.Response;
   return items.filter((i) => {
@@ -292,7 +292,7 @@ export function setLockState(
     characterId: store.isVault ? item.owner : store.id,
     membershipType: account!.originalPlatformType,
     itemId: item.id,
-    state: lockState
+    state: lockState,
   });
 }
 
@@ -306,10 +306,10 @@ export async function requestAdvancedWriteActionToken(
     type: action,
     membershipType: account.originalPlatformType,
     affectedItemId: item ? item.id : undefined,
-    characterId: item ? item.owner : undefined
+    characterId: item ? item.owner : undefined,
   });
   const awaTokenResult = await awaGetActionToken(httpAdapter, {
-    correlationId: awaInitResult.Response.correlationId
+    correlationId: awaInitResult.Response.correlationId,
   });
   return awaTokenResult.Response;
 }

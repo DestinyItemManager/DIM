@@ -55,7 +55,7 @@ const filterNames = [
   'perk',
   'perkname',
   'name',
-  'description'
+  'description',
 ];
 
 /**
@@ -102,7 +102,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 this.focusFilterInput();
                 event.preventDefault();
                 event.stopPropagation();
-              }
+              },
             },
             {
               combo: 'shift+f',
@@ -112,8 +112,8 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 this.focusFilterInput();
                 event.preventDefault();
                 event.stopPropagation();
-              }
-            }
+              },
+            },
           ]}
         />
         <AppIcon icon={searchIcon} />
@@ -259,11 +259,11 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           replace(word: string) {
             word = word.toLowerCase();
             return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
-          }
-        }
+          },
+        },
       ],
       {
-        zIndex: 1000
+        zIndex: 1000,
       }
     );
 

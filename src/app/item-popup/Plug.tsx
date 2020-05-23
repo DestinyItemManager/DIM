@@ -24,7 +24,7 @@ export default function Plug({
   hasMenu,
   isPhonePortrait,
   onClick,
-  onShiftClick
+  onShiftClick,
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
@@ -96,7 +96,7 @@ export default function Plug({
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: !itemCategories.includes(INTRINSIC_PLUG_CATEGORY)
+        notIntrinsic: !itemCategories.includes(INTRINSIC_PLUG_CATEGORY),
       })}
       onClick={handleShiftClick}
     >

@@ -28,7 +28,7 @@ export default function NotificationsContainer() {
     config: spring,
     from: { opacity: 0, height: 0 },
     enter: [{ height: 'auto' }, { opacity: 1 }],
-    leave: [{ opacity: 0 }, { height: 0 }]
+    leave: [{ opacity: 0 }, { height: 0 }],
   });
 
   return (

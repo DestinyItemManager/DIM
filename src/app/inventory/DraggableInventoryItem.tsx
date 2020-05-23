@@ -71,14 +71,14 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
     return (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
       : item.equipment || item.bucket.hasTransferDestination;
-  }
+  },
 };
 
 function collect(connect: DragSourceConnector): InternalProps {
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
-    connectDragSource: connect.dragSource()
+    connectDragSource: connect.dragSource(),
     // TODO: The monitor param has interesting things for doing animation
   };
 }

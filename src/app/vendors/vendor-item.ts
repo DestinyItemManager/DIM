@@ -6,7 +6,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyItemQuantity,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { makeFakeItem } from '../inventory/store/d2-item-factory';

@@ -38,7 +38,7 @@ export function showMoveAmountPopup(
       amount: item.amount,
       maximum,
       onAmountSelected: resolve,
-      onCancel: reject
+      onCancel: reject,
     });
   });
 }

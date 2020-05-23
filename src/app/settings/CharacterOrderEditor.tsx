@@ -20,7 +20,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    characters: sortedStoresSelector(state)
+    characters: sortedStoresSelector(state),
   };
 }
 
@@ -60,7 +60,7 @@ class CharacterOrderEditor extends React.Component<Props> {
                     {(provided, snapshot) => (
                       <div
                         className={clsx('character-order-editor-item', {
-                          'is-dragging': snapshot.isDragging
+                          'is-dragging': snapshot.isDragging,
                         })}
                         ref={provided.innerRef}
                         {...provided.draggableProps}

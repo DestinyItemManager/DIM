@@ -53,8 +53,8 @@ export default function Refresh() {
           {
             combo: 'r',
             description: t('Hotkey.RefreshInventory'),
-            callback: refresh
-          }
+            callback: refresh,
+          },
         ]}
       />
       <AppIcon icon={refreshIcon} spinning={active} />

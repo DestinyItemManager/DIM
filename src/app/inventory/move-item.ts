@@ -138,13 +138,13 @@ export const distribute = queuedAction(
         vaultMoves.push({
           source: stores[index],
           target: vault,
-          amount: -delta
+          amount: -delta,
         });
       } else if (delta > 0) {
         targetMoves.push({
           source: vault,
           target: stores[index],
-          amount: delta
+          amount: delta,
         });
       }
     });
@@ -162,7 +162,7 @@ export const distribute = queuedAction(
       await applyMoves(targetMoves);
       showNotification({
         type: 'success',
-        title: t('ItemMove.Distributed', { name: actionableItem.name })
+        title: t('ItemMove.Distributed', { name: actionableItem.name }),
       });
     } catch (a) {
       showNotification({ type: 'error', title: actionableItem.name, body: a.message });

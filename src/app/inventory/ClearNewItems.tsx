@@ -21,12 +21,12 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     showNewItems: settingsSelector(state).showNewItems,
-    hasNewItems: state.inventory.newItems.size > 0
+    hasNewItems: state.inventory.newItems.size > 0,
   };
 }
 
 const mapDispatchToProps = {
-  clearAllNewItems
+  clearAllNewItems,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -44,8 +44,8 @@ function ClearNewItems({ showNewItems, hasNewItems, clearAllNewItems }: Props) {
           {
             combo: 'x',
             description: t('Hotkey.ClearNewItems'),
-            callback: clearAllNewItems
-          }
+            callback: clearAllNewItems,
+          },
         ]}
       />
       <button onClick={clearAllNewItems} title={t('Hotkey.ClearNewItemsTitle')}>

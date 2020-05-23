@@ -158,7 +158,7 @@ const replaceWithIcon = (
  */
 export default function RichDestinyText({
   text,
-  defs
+  defs,
 }: {
   text: string;
   defs?: D1ManifestDefinitions | D2ManifestDefinitions;

@@ -50,7 +50,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     wishListsEnabled: wishListsEnabledSelector(state),
-    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id]
+    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
   };
 }
 
@@ -73,7 +73,7 @@ function ConnectedInventoryItem({
   inventoryWishListRoll,
   wishListsEnabled,
   ignoreSelectedPerks,
-  innerRef
+  innerRef,
 }: Props) {
   return (
     <InventoryItem

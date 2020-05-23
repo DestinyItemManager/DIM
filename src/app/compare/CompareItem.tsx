@@ -15,7 +15,7 @@ export default function CompareItem({
   itemClick,
   remove,
   highlight,
-  setHighlight
+  setHighlight,
 }: {
   item: DimItem;
   stats: StatInfo[];

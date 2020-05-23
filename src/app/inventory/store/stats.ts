@@ -8,7 +8,7 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyStatAggregationType,
   DestinyStatCategory,
-  DestinySocketCategoryStyle
+  DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
 import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -41,7 +41,7 @@ export const armorStats = [
   1943323491, // Recovery
   1735777505, // Discipline
   144602215, // Intellect
-  4244567218 // Strength
+  4244567218, // Strength
 ];
 
 /**
@@ -69,7 +69,7 @@ export const statWhiteList = [
   1931675084, // Inventory Size
   925767036, // Ammo Capacity
   ...armorStats,
-  -1000 // Total
+  -1000, // Total
 ];
 
 /** Stats that should be forced to display without a bar (just a number). */
@@ -79,20 +79,20 @@ const statsNoBar = [
   2961396640, // Charge Time
   447667954, // Draw Time
   1931675084, // Recovery
-  2715839340 // Recoil Direction
+  2715839340, // Recoil Direction
 ];
 
 /** Stats that are measured in milliseconds. */
 export const statsMs = [
   447667954, // Draw Time
-  2961396640 // Charge Time
+  2961396640, // Charge Time
 ];
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsWhitelist = [
   1345609583, // Aim Assistance
   3555269338, // Zoom
-  2715839340 // Recoil Direction
+  2715839340, // Recoil Direction
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -195,7 +195,7 @@ function buildStatsFromMods(
   for (const statHash of armorStats) {
     const hashAndValue = {
       statTypeHash: statHash,
-      value: statTracker[statHash]
+      value: statTracker[statHash],
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
     builtStat.maximumValue = 42;
@@ -297,7 +297,7 @@ function buildStat(
     // set to use DestinyStatAggregationType.Character
     additive:
       statDef.statCategory === DestinyStatCategory.Defense &&
-      statDef.aggregationType === DestinyStatAggregationType.Character
+      statDef.aggregationType === DestinyStatAggregationType.Character,
   };
 }
 
@@ -444,7 +444,7 @@ function buildLiveStats(
       maximumValue,
       bar,
       smallerIsBetter,
-      additive: statDef.aggregationType === DestinyStatAggregationType.Character
+      additive: statDef.aggregationType === DestinyStatAggregationType.Character,
     });
   }
 
@@ -483,7 +483,7 @@ function totalStat(stats: DimStat[]): DimStat {
     investmentValue: total,
     statHash: -1000,
     displayProperties: ({
-      name: t('Stats.Total')
+      name: t('Stats.Total'),
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statWhiteList.indexOf(-1000),
     value: total,
@@ -491,7 +491,7 @@ function totalStat(stats: DimStat[]): DimStat {
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
-    additive: false
+    additive: false,
   };
 }
 

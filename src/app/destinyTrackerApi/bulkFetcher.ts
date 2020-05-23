@@ -81,7 +81,7 @@ function makeRating(dtrRating: D1ItemFetchResponse): DtrRating {
     overallScore: dtrRating.rating || 0,
     ratingCount: dtrRating.ratingCount,
     highlightedRatingCount: dtrRating.highlightedRatingCount,
-    roll: dtrRating.roll
+    roll: dtrRating.roll,
   };
 }
 

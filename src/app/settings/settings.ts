@@ -15,7 +15,7 @@ export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 const saveSettings = _.debounce(
   (settings) =>
     SyncService.set({
-      'settings-v1.0': settings
+      'settings-v1.0': settings,
     }),
   1000
 );

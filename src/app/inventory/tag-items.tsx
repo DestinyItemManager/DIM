@@ -17,14 +17,14 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
     // existing tags are later passed to buttonEffect so the notif button knows what to revert
     const previousState = itemsToBeTagged.map((item) => ({
       item,
-      setTag: getTag(item, itemInfos)
+      setTag: getTag(item, itemInfos),
     }));
 
     dispatch(
       setItemTagsBulk(
         itemsToBeTagged.map((item) => ({
           itemId: item.id,
-          tag: selectedTag === 'clear' ? undefined : selectedTag
+          tag: selectedTag === 'clear' ? undefined : selectedTag,
         }))
       )
     );
@@ -37,11 +37,11 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
         <>
           {selectedTag === 'clear'
             ? t('Filter.BulkClear', {
-                count: itemsToBeTagged.length
+                count: itemsToBeTagged.length,
               })
             : t('Filter.BulkTag', {
                 count: itemsToBeTagged.length,
-                tag: t(appliedTagInfo.label)
+                tag: t(appliedTagInfo.label),
               })}
           <NotificationButton
             onClick={async () => {
@@ -49,21 +49,21 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
                 setItemTagsBulk(
                   previousState.map(({ item, setTag }) => ({
                     itemId: item.id,
-                    tag: setTag
+                    tag: setTag,
                   }))
                 )
               );
               showNotification({
                 type: 'success',
                 title: t('Header.BulkTag'),
-                body: t('Filter.BulkRevert', { count: previousState.length })
+                body: t('Filter.BulkRevert', { count: previousState.length }),
               });
             }}
           >
             <AppIcon icon={undoIcon} /> {t('Filter.Undo')}
           </NotificationButton>
         </>
-      )
+      ),
     });
   };
 }

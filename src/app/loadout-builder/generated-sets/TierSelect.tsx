@@ -24,7 +24,7 @@ export default function TierSelect({
   rowClassName,
   order,
   onStatOrderChanged,
-  onStatFiltersChanged
+  onStatFiltersChanged,
 }: {
   stats: { [statType in StatTypes]: MinMaxIgnored };
   statRanges: { [statType in StatTypes]: MinMax };
@@ -109,7 +109,7 @@ function DraggableItem({
   index,
   name,
   className,
-  children
+  children,
 }: {
   id: string;
   index: number;
@@ -144,7 +144,7 @@ function MinMaxSelectInner({
   max,
   ignored,
   stats,
-  handleTierChange
+  handleTierChange,
 }: {
   stat: string;
   type: 'Min' | 'Max';
@@ -160,7 +160,7 @@ function MinMaxSelectInner({
       update = {
         min: stats[stat].min,
         max: stats[stat].max,
-        ignored: e.target.value === IGNORE
+        ignored: e.target.value === IGNORE,
       };
     } else {
       const value = parseInt(e.target.value, 10);
@@ -170,7 +170,7 @@ function MinMaxSelectInner({
         [lower]: value,
         [opposite]:
           opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value),
-        ignored: false
+        ignored: false,
       };
     }
 
@@ -188,7 +188,7 @@ function MinMaxSelectInner({
       {_.range(min, max + 1).map((tier) => (
         <option key={tier} value={tier}>
           {t('LoadoutBuilder.TierNumber', {
-            tier
+            tier,
           })}
         </option>
       ))}

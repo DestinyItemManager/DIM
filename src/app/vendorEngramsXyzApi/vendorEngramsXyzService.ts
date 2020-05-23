@@ -35,8 +35,8 @@ function vendorEngramsFetch(url: string) {
   const request = new Request(url, {
     method: 'POST',
     headers: {
-      Accept: 'application/json'
-    }
+      Accept: 'application/json',
+    },
   });
 
   return Promise.resolve(fetch(request));

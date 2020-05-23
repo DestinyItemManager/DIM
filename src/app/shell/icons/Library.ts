@@ -6,7 +6,7 @@ import {
   dimTitanIcon,
   dimWarlockIcon,
   stadiaIcon,
-  battleNetIcon
+  battleNetIcon,
 } from './custom';
 
 const faArchive = 'fas fa-archive';
@@ -179,5 +179,5 @@ export {
   faYoutube,
   faDiscord,
   faGithub,
-  faReddit
+  faReddit,
 };

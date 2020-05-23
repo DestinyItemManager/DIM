@@ -3,7 +3,7 @@ import {
   DestinyProgression,
   DestinyFactionDefinition,
   DestinyColor,
-  DestinyDisplayPropertiesDefinition
+  DestinyDisplayPropertiesDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';

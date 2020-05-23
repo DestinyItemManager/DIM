@@ -2,7 +2,7 @@ import {
   DestinyCharacterProgressionComponent,
   DestinyProgressionDefinition,
   DestinySeasonDefinition,
-  DestinySeasonPassDefinition
+  DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
@@ -23,7 +23,7 @@ export function isWellRested(
 } {
   if (!season || !season.seasonPassProgressionHash) {
     return {
-      wellRested: false
+      wellRested: false,
     };
   }
 
@@ -33,7 +33,7 @@ export function isWellRested(
 
   if (!seasonPassProgressionHash || !prestigeProgressionHash) {
     return {
-      wellRested: false
+      wellRested: false,
     };
   }
 
@@ -66,7 +66,7 @@ export function isWellRested(
   return {
     wellRested: progress < requiredXP,
     progress,
-    requiredXP
+    requiredXP,
   };
 }
 

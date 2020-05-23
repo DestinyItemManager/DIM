@@ -4,7 +4,7 @@ import {
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
-  thumbsUpIcon
+  thumbsUpIcon,
 } from 'app/shell/icons';
 import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 import { DestinyClass, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
@@ -77,11 +77,11 @@ export function getColumns(
 
   const statsGroup: ColumnGroup = {
     id: 'stats',
-    header: t('Organizer.Columns.Stats')
+    header: t('Organizer.Columns.Stats'),
   };
   const baseStatsGroup: ColumnGroup = {
     id: 'baseStats',
-    header: t('Organizer.Columns.BaseStats')
+    header: t('Organizer.Columns.BaseStats'),
   };
 
   // Some stat labels are long. This lets us replace them with i18n
@@ -90,7 +90,7 @@ export function getColumns(
     4188031367: t('Organizer.Stats.Reload'), // Reload Speed
     1345609583: t('Organizer.Stats.Aim'), // Aim Assistance
     2715839340: t('Organizer.Stats.Recoil'), // Recoil Direction
-    1931675084: t('Organizer.Stats.Inventory') // Inventory Size
+    1931675084: t('Organizer.Stats.Inventory'), // Inventory Size
   };
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
@@ -119,7 +119,7 @@ export function getColumns(
             }
             return <ItemStatValue stat={stat} item={item} />;
           },
-          filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`
+          filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`,
         };
       }
     ),
@@ -132,7 +132,7 @@ export function getColumns(
     columnGroup: baseStatsGroup,
     value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
     cell: (value) => value,
-    filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`
+    filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
   }));
 
   const isGhost = itemsType === 'ghost';
@@ -159,34 +159,34 @@ export function getColumns(
         </ItemPopupTrigger>
       ),
       noSort: true,
-      noHide: true
+      noHide: true,
     },
     {
       id: 'name',
       header: t('Organizer.Columns.Name'),
       value: (i) => i.name,
-      filter: (name) => `name:"${name}"`
+      filter: (name) => `name:"${name}"`,
     },
     !isGhost && {
       id: 'power',
       header: <AppIcon icon={powerIndicatorIcon} />,
       value: (item) => item.primStat?.value,
       defaultSort: SortDirection.DESC,
-      filter: (value) => `power:>=${value}`
+      filter: (value) => `power:>=${value}`,
     },
     !isGhost && {
       id: 'dmg',
       header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
       value: (item) => item.element?.displayProperties.name,
       cell: (_, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
-      filter: (_, item) => `is:${getItemDamageShortName(item)}`
+      filter: (_, item) => `is:${getItemDamageShortName(item)}`,
     },
     isArmor && {
       id: 'energy',
       header: t('Organizer.Columns.Energy'),
       value: (item) => item.isDestiny2() && item.energy?.energyCapacity,
       defaultSort: SortDirection.DESC,
-      filter: (value) => `energycapacity>=:${value}`
+      filter: (value) => `energycapacity>=:${value}`,
     },
     {
       id: 'locked',
@@ -194,7 +194,7 @@ export function getColumns(
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:locked' : 'not:locked')
+      filter: (value) => (value ? 'is:locked' : 'not:locked'),
     },
     {
       id: 'tag',
@@ -202,7 +202,7 @@ export function getColumns(
       value: (item) => getTag(item, itemInfos),
       cell: (value: TagValue) => <TagIcon tag={value} />,
       sort: compareBy((tag: TagValue) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
-      filter: (value) => `tag:${value || 'none'}`
+      filter: (value) => `tag:${value || 'none'}`,
     },
     {
       id: 'new',
@@ -210,7 +210,7 @@ export function getColumns(
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:new' : 'not:new')
+      filter: (value) => (value ? 'is:new' : 'not:new'),
     },
     isWeapon &&
       hasWishList && {
@@ -229,7 +229,7 @@ export function getColumns(
           ) : undefined,
         sort: compareBy((wishList) => (wishList === undefined ? 0 : wishList === true ? -1 : 1)),
         filter: (value) =>
-          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist'
+          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
     {
       id: 'reacquireable',
@@ -241,7 +241,7 @@ export function getColumns(
         !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled),
       defaultSort: SortDirection.DESC,
       cell: booleanCell,
-      filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable')
+      filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable'),
     },
     $featureFlags.reviewsEnabled && {
       id: 'rating',
@@ -255,19 +255,19 @@ export function getColumns(
           </>
         ) : undefined,
       defaultSort: SortDirection.DESC,
-      filter: (value) => `rating:>=${value}`
+      filter: (value) => `rating:>=${value}`,
     },
     {
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
       value: (i) => i.tier,
-      filter: (value) => `is:${value}`
+      filter: (value) => `is:${value}`,
     },
     {
       id: 'source',
       header: t('Organizer.Columns.Source'),
       value: source,
-      filter: (value) => `source:${value}`
+      filter: (value) => `source:${value}`,
     },
     {
       id: 'year',
@@ -278,24 +278,24 @@ export function getColumns(
           : item.isDestiny2()
           ? D2SeasonInfo[item.season].year
           : undefined,
-      filter: (value) => `year:${value}`
+      filter: (value) => `year:${value}`,
     },
     {
       id: 'season',
       header: t('Organizer.Columns.Season'),
       value: (i) => i.isDestiny2() && i.season,
-      filter: (value) => `season:${value}`
+      filter: (value) => `season:${value}`,
     },
     {
       id: 'event',
       header: t('Organizer.Columns.Event'),
       value: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : undefined),
-      filter: (value) => `event:${value}`
+      filter: (value) => `event:${value}`,
     },
     isGhost && {
       id: 'ghost',
       header: t('Organizer.Columns.Ghost'),
-      value: (item) => ghostBadgeContent(item).join('')
+      value: (item) => ghostBadgeContent(item).join(''),
     },
     isArmor && {
       id: 'modslot',
@@ -304,7 +304,7 @@ export function getColumns(
       value: getItemSpecialtyModSlotDisplayName,
       cell: (value, item) =>
         value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
-      filter: (value) => `modslot:${value}`
+      filter: (value) => `modslot:${value}`,
     },
     isWeapon && {
       id: 'archetype',
@@ -318,7 +318,8 @@ export function getColumns(
         !item.isExotic && item.isDestiny2() && !item.energy ? (
           <div>
             {_.compact([
-              item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
+              item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
+                ?.plug,
             ]).map((p) => (
               <PressTip
                 key={p.plugItem.hash}
@@ -332,7 +333,7 @@ export function getColumns(
             ))}
           </div>
         ) : undefined,
-      filter: (value) => `perkname:"${value}"`
+      filter: (value) => `perkname:"${value}"`,
     },
     {
       id: 'perks',
@@ -341,7 +342,7 @@ export function getColumns(
       cell: (_, item) => <PerksCell defs={defs} item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
-      filter: (value) => `perkname:"${value}"`
+      filter: (value) => `perkname:"${value}"`,
     },
     isWeapon && {
       id: 'traits',
@@ -350,7 +351,7 @@ export function getColumns(
       cell: (_, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
       noSort: true,
       gridWidth: 'minmax(180px,max-content)',
-      filter: (value) => `perkname:"${value}"`
+      filter: (value) => `perkname:"${value}"`,
     },
     ...statColumns,
     ...baseStatColumns,
@@ -364,19 +365,19 @@ export function getColumns(
       ),
       value: (item) =>
         _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.base : 0)),
-      defaultSort: SortDirection.DESC
+      defaultSort: SortDirection.DESC,
     },
     isWeapon && {
       id: 'masterworkTier',
       header: t('Organizer.Columns.MasterworkTier'),
       value: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => `masterwork:>=${value}`
+      filter: (value) => `masterwork:>=${value}`,
     },
     isWeapon && {
       id: 'masterworkStat',
       header: t('Organizer.Columns.MasterworkStat'),
-      value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined)
+      value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined),
     },
     isWeapon && {
       id: 'killTracker',
@@ -396,7 +397,7 @@ export function getColumns(
             {value}
           </div>
         ),
-      defaultSort: SortDirection.DESC
+      defaultSort: SortDirection.DESC,
     },
     {
       id: 'loadouts',
@@ -414,14 +415,14 @@ export function getColumns(
           )
         );
       },
-      noSort: true
+      noSort: true,
     },
     {
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
       value: (item) => getNotes(item, itemInfos),
       gridWidth: 'minmax(200px, 1fr)',
-      filter: (value) => `notes:"${value}"`
+      filter: (value) => `notes:"${value}"`,
     },
     isWeapon &&
       hasWishList && {
@@ -429,8 +430,8 @@ export function getColumns(
         header: t('Organizer.Columns.WishListNotes'),
         value: (item) => wishList?.[item.id]?.notes,
         gridWidth: 'minmax(200px, 1fr)',
-        filter: (value) => `wishlistnotes:"${value}"`
-      }
+        filter: (value) => `wishlistnotes:"${value}"`,
+      },
   ]);
 
   return columns;
@@ -439,7 +440,7 @@ export function getColumns(
 function PerksCell({
   defs,
   item,
-  traitsOnly
+  traitsOnly,
 }: {
   defs: D2ManifestDefinitions;
   item: DimItem;
@@ -470,7 +471,7 @@ function PerksCell({
         <div
           key={socket.socketIndex}
           className={clsx(styles.modPerks, {
-            [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1
+            [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
           })}
         >
           {socket.plugOptions.map(

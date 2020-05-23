@@ -4,7 +4,7 @@ import {
   DestinyVendorSaleItemComponent,
   DestinyVendorResponse,
   DestinyVendorItemDefinition,
-  DestinyVendorDefinition
+  DestinyVendorDefinition,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';

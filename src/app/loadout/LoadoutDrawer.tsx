@@ -52,14 +52,14 @@ export function editLoadout(loadout: Loadout, { showClass = true, isNew = true }
   editLoadout$.next({
     loadout,
     showClass,
-    isNew
+    isNew,
   });
 }
 
 export function addItemToLoadout(item: DimItem, $event) {
   addItem$.next({
     item,
-    clickEvent: $event
+    clickEvent: $event,
   });
 }
 
@@ -104,7 +104,7 @@ function mapStateToProps() {
     stores: storesSelector(state),
     buckets: state.inventory.buckets!,
     defs:
-      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!
+      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
   });
 }
 
@@ -113,7 +113,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     show: false,
     showClass: true,
     isNew: false,
-    clashingLoadout: null
+    clashingLoadout: null,
   };
   private subscriptions = new Subscriptions();
 
@@ -255,7 +255,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           warnitems.push({
             ...loadoutItem,
             icon: itemDef.displayProperties.icon,
-            name: itemDef.displayProperties.name
+            name: itemDef.displayProperties.name,
           } as DimItem);
         }
       }
@@ -279,7 +279,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       show: true,
       loadout,
       showClass: Boolean(args.showClass),
-      isNew: Boolean(args.isNew)
+      isNew: Boolean(args.isNew),
     });
   };
 
@@ -302,7 +302,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
         // don't show information related to selected perks so we don't give the impression
         // that we will update perk selections when applying the loadout
-        ignoreSelectedPerks: true
+        ignoreSelectedPerks: true,
       });
 
       this.add(item, undefined, equip);
@@ -326,7 +326,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
         id: item.id,
         hash: item.hash,
         amount: Math.min(item.amount, e?.shiftKey ? 5 : 1),
-        equipped: false
+        equipped: false,
       };
 
       // Other items of the same type (as DimItem)
@@ -365,7 +365,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           } else {
             showNotification({
               type: 'warning',
-              title: t('Loadouts.MaxSlots', { slots: maxSlots })
+              title: t('Loadouts.MaxSlots', { slots: maxSlots }),
             });
           }
         } else if (dupe && item.maxStackSize > 1) {
@@ -382,7 +382,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
         }
       });
       return {
-        loadout: newLoadout
+        loadout: newLoadout,
       };
     });
   };
@@ -451,12 +451,12 @@ class LoadoutDrawer extends React.Component<Props, State> {
         type: 'error',
         title: t('Loadouts.ClashingTitle'),
         body: t('Loadouts.ClashingDescription', {
-          loadoutName: clashingLoadout.name
+          loadoutName: clashingLoadout.name,
         }),
         onClick: () => {
           this.setState({ show: true, clashingLoadout: copy(clashingLoadout) });
           loadoutDialogOpen = true;
-        }
+        },
       });
     }
   };
@@ -467,9 +467,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
       this.setState({
         loadout: {
           ...loadout,
-          name: ''
+          name: '',
         },
-        clashingLoadout: null
+        clashingLoadout: null,
       });
     }
   }
@@ -480,8 +480,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
       title: t('Loadouts.SaveErrorTitle'),
       body: t('Loadouts.SaveErrorDescription', {
         loadoutName: name,
-        error: e.message
-      })
+        error: e.message,
+      }),
     });
     console.error(e);
     this.close(e);
@@ -496,7 +496,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
     const newLoadout = {
       ...copy(loadout),
-      id: uuidv4() // Let it be a new ID
+      id: uuidv4(), // Let it be a new ID
     };
     this.setState({ loadout: newLoadout, isNew: true });
     this.saveLoadout(e, newLoadout);
@@ -513,8 +513,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     this.setState((state) => ({
       loadout: {
         ...state.loadout!,
-        items: state.loadout!.items.filter((i) => !(i.hash === item.hash && i.id === item.id))
-      }
+        items: state.loadout!.items.filter((i) => !(i.hash === item.hash && i.id === item.id)),
+      },
     }));
   };
 

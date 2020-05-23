@@ -20,7 +20,7 @@ export function scrollToElement(elem: Element | null) {
     scrollToPosition({
       top: window.scrollY + rect.top - (headerHeight + 6),
       left: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 }

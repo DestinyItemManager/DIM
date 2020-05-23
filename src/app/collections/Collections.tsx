@@ -49,7 +49,7 @@ function mapStateToProps() {
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
-    profileResponse: profileResponseSelector(state)
+    profileResponse: profileResponseSelector(state),
   });
 }
 

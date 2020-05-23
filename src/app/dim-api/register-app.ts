@@ -9,8 +9,8 @@ export async function registerApp(dimAppName: string, bungieApiKey: string) {
       body: {
         id: dimAppName,
         bungieApiKey,
-        origin: window.location.origin
-      }
+        origin: window.location.origin,
+      },
     },
     true
   );

@@ -56,7 +56,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   private handleWindowResize = _.throttle(() => this.setState({ rowHeight: 0, rowWidth: 0 }), 300, {
     leading: false,
-    trailing: true
+    trailing: true,
   });
 
   constructor(props: Props) {
@@ -96,7 +96,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       combos,
       combosWithoutCaps,
       enabledStats,
-      lockedArmor2Mods
+      lockedArmor2Mods,
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
@@ -202,7 +202,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const { lockedMap, onLockedMapChanged } = this.props;
     onLockedMapChanged({
       ...lockedMap,
-      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
     });
   };
 
@@ -210,7 +210,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const { lockedMap, onLockedMapChanged } = this.props;
     onLockedMapChanged({
       ...lockedMap,
-      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
     });
   };
 }

@@ -7,7 +7,7 @@ import {
   DestinyInventoryItemDefinition,
   TierType,
   DestinyItemSubType,
-  DestinyEnergyType
+  DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../process';
@@ -24,7 +24,7 @@ const unwantedSockets = new Set([
   1514141500, // Solar damage resistance
   2973005342, // Shaders
   3356843615, // Ornaments
-  2457930460 // Empty masterwork slot
+  2457930460, // Empty masterwork slot
 ]);
 
 /**

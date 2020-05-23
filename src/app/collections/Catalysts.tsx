@@ -9,7 +9,7 @@ import Record from './Record';
 
 export default function Catalysts({
   defs,
-  profileResponse
+  profileResponse,
 }: {
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;

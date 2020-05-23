@@ -10,7 +10,7 @@ import {
   BurnItem,
   LockedMap,
   ItemsByBucket,
-  LockedModBase
+  LockedModBase,
 } from './types';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
@@ -20,7 +20,7 @@ import {
   lockedItemsEqual,
   addLockedItem,
   isLoadoutBuilderItem,
-  filterPlugs
+  filterPlugs,
 } from './generated-sets/utils';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
@@ -53,23 +53,23 @@ const burns: BurnItem[] = [
     dmg: 'arc',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeArc'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
-    }
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png',
+    },
   },
   {
     dmg: 'solar',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeSolar'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
-    }
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png',
+    },
   },
   {
     dmg: 'void',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeVoid'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'
-    }
-  }
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png',
+    },
+  },
 ];
 
 interface ProvidedProps {
@@ -198,7 +198,7 @@ function mapStateToProps() {
         return Object.entries(unlockedPlugs)
           .map(([i, plugSetHash]) => ({
             item: defs.InventoryItem.get(parseInt(i, 10)),
-            plugSetHash
+            plugSetHash,
           }))
           .filter(
             (i) =>
@@ -217,7 +217,7 @@ function mapStateToProps() {
     language: settingsSelector(state).language,
     perks: perksSelector(state, props),
     mods: unlockedPlugsSelector(state, props),
-    defs: state.manifest.d2Manifest!
+    defs: state.manifest.d2Manifest!,
   });
 }
 
@@ -235,7 +235,7 @@ class PerkPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
     selectedPerks: copy(this.props.lockedMap),
-    selectedSeasonalMods: copy(this.props.lockedSeasonalMods)
+    selectedSeasonalMods: copy(this.props.lockedSeasonalMods),
   };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
@@ -399,8 +399,8 @@ class PerkPicker extends React.Component<Props, State> {
                       description: t('LoadoutBuilder.SelectPerks'),
                       callback: (event) => {
                         this.onSubmit(event, onClose);
-                      }
-                    }
+                      },
+                    },
                   ]}
                 />
               </div>
@@ -447,15 +447,15 @@ class PerkPicker extends React.Component<Props, State> {
       this.setState({
         selectedPerks: {
           ...selectedPerks,
-          [bucket.hash]: removeLockedItem(item, selectedPerks[bucket.hash])
-        }
+          [bucket.hash]: removeLockedItem(item, selectedPerks[bucket.hash]),
+        },
       });
     } else {
       this.setState({
         selectedPerks: {
           ...selectedPerks,
-          [bucket.hash]: addLockedItem(item, selectedPerks[bucket.hash])
-        }
+          [bucket.hash]: addLockedItem(item, selectedPerks[bucket.hash]),
+        },
       });
     }
   };
@@ -467,11 +467,11 @@ class PerkPicker extends React.Component<Props, State> {
       this.setState({
         selectedSeasonalMods: selectedSeasonalMods.filter(
           (existing) => existing.mod.hash !== item.mod.hash
-        )
+        ),
       });
     } else {
       this.setState({
-        selectedSeasonalMods: [...selectedSeasonalMods, item]
+        selectedSeasonalMods: [...selectedSeasonalMods, item],
       });
     }
   };
@@ -496,7 +496,7 @@ export default connect<StoreProps>(mapStateToProps)(PerkPicker);
 function LockedItemIcon({
   lockedItem,
   defs,
-  onClick
+  onClick,
 }: {
   lockedItem: LockedItemType;
   defs: D2ManifestDefinitions;

@@ -29,7 +29,7 @@ import { saveItemInfosOnStateChange } from 'app/inventory/reducer';
 
 polyfill({
   holdToDrag: 300,
-  dragImageCenterOnTouch: true
+  dragImageCenterOnTouch: true,
 });
 
 safariTouchFix();

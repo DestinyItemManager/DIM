@@ -3,7 +3,7 @@ import {
   DestinyItemObjectivesComponent,
   DestinyObjectiveProgress,
   DestinyObjectiveDefinition,
-  DestinyUnlockValueUIStyle
+  DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import { DimFlavorObjective } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -71,7 +71,7 @@ export function buildFlavorObjective(
     progress:
       def.valueStyle === 5
         ? (flavorObjective.progress || 0) / flavorObjective.completionValue
-        : (def.valueStyle === 6 || def.valueStyle === 0 ? flavorObjective.progress : 0) || 0
+        : (def.valueStyle === 6 || def.valueStyle === 0 ? flavorObjective.progress : 0) || 0,
   };
 }
 

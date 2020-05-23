@@ -34,8 +34,8 @@ export function moveItemNotification(
     body: t('ItemMove.MovingItem', {
       name: item.name,
       target: target.name,
-      context: target.genderName
-    })
+      context: target.genderName,
+    }),
   };
 }
 
@@ -63,8 +63,8 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
-      context: store.genderName
-    })
+      context: store.genderName,
+    }),
   };
 }
 
@@ -90,20 +90,20 @@ export function postmasterNotification(
       // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
-      context: store.genderName
-    })
+      context: store.genderName,
+    }),
   };
 }
 
 const enum MoveState {
   InProgress,
   Failed,
-  Succeeded
+  Succeeded,
 }
 
 const moveStateClasses = {
   [MoveState.Failed]: styles.failed,
-  [MoveState.Succeeded]: styles.succeeded
+  [MoveState.Succeeded]: styles.succeeded,
 };
 
 function MoveItemNotificationIcon({ completion }: { completion: Promise<any> }) {

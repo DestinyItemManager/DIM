@@ -6,7 +6,7 @@ import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 export const enum UiWishListRoll {
   Good = 1,
-  Bad
+  Bad,
 }
 
 export function toUiWishListRoll(
@@ -185,7 +185,7 @@ function getInventoryWishListRoll(
     return {
       wishListPerks: getWishListPlugs(item, matchingWishListRoll),
       notes: matchingWishListRoll.notes,
-      isUndesirable: matchingWishListRoll.isUndesirable
+      isUndesirable: matchingWishListRoll.isUndesirable,
     };
   }
 

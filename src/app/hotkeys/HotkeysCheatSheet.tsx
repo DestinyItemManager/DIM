@@ -20,8 +20,8 @@ export default class HotkeysCheatSheet extends React.Component<{}, State> {
           {
             combo: '?',
             description: t('Hotkey.ShowHotkeys'),
-            callback: this.toggle
-          }
+            callback: this.toggle,
+          },
         ]}
       />
     );
@@ -40,8 +40,8 @@ export default class HotkeysCheatSheet extends React.Component<{}, State> {
             {
               combo: 'esc',
               description: '',
-              callback: this.hide
-            }
+              callback: this.hide,
+            },
           ]}
         />
         <div className="cfp-hotkeys">
@@ -67,7 +67,7 @@ export default class HotkeysCheatSheet extends React.Component<{}, State> {
 
   private toggle = () =>
     this.setState((state) => ({
-      visible: !state.visible
+      visible: !state.visible,
     }));
 
   private hide = () => this.setState({ visible: false });

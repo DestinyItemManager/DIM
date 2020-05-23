@@ -19,7 +19,7 @@ const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
     type: 'info',
     title: t('FarmingMode.OutOfRoomTitle'),
-    body: t('FarmingMode.OutOfRoom', { character: store.name })
+    body: t('FarmingMode.OutOfRoom', { character: store.name }),
   });
 }, 60000);
 
@@ -75,7 +75,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       savePreviousLoadout({
         storeId: store.id,
         loadoutId: loadout.id,
-        previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name }))
+        previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name })),
       })
     );
   }
@@ -84,7 +84,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 
   const loadoutItemIds = items.map((i) => ({
     id: i.id,
-    hash: i.hash
+    hash: i.hash,
   }));
 
   // Only select stuff that needs to change state
@@ -145,7 +145,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       item: DimItem | null;
       message: string;
       level: string;
-    }[]
+    }[],
   };
 
   if (itemsToDequip.length > 1) {
@@ -186,7 +186,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       scope.errors.push({
         level: 'error',
         item,
-        message: t('Loadouts.CouldNotEquip', { itemname: item.name })
+        message: t('Loadouts.CouldNotEquip', { itemname: item.name }),
       });
     });
   }
@@ -248,7 +248,7 @@ async function applyLoadoutItems(
           const storesByAmount = _.sortBy(
             otherStores.map((store) => ({
               store,
-              amount: store.amountOfItem(pseudoItem)
+              amount: store.amountOfItem(pseudoItem),
             })),
             (v) => v.amount
           ).reverse();
@@ -264,7 +264,7 @@ async function applyLoadoutItems(
                 t('Loadouts.TooManyRequested', {
                   total: totalAmount,
                   itemname: item.name,
-                  requested: pseudoItem.amount
+                  requested: pseudoItem.amount,
                 })
               );
               error.level = 'warn';
@@ -295,7 +295,7 @@ async function applyLoadoutItems(
     scope.errors.push({
       item,
       level: e.level,
-      message: e.message
+      message: e.message,
     });
   }
 

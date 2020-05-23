@@ -9,7 +9,7 @@ import {
   ItemsByBucket,
   LockedMap,
   LockedArmor2Mod,
-  LockedArmor2ModMap
+  LockedArmor2ModMap,
 } from './types';
 import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
@@ -25,7 +25,7 @@ export const statHashes: { [type in StatTypes]: number } = {
   Recovery: 1943323491,
   Discipline: 1735777505,
   Intellect: 144602215,
-  Strength: 4244567218
+  Strength: 4244567218,
 };
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
@@ -35,7 +35,7 @@ const bucketsToCategories = {
   [LockableBuckets.gauntlets]: Armor2ModPlugCategories.gauntlets,
   [LockableBuckets.chest]: Armor2ModPlugCategories.chest,
   [LockableBuckets.leg]: Armor2ModPlugCategories.leg,
-  [LockableBuckets.classitem]: Armor2ModPlugCategories.classitem
+  [LockableBuckets.classitem]: Armor2ModPlugCategories.classitem,
 };
 
 /**
@@ -255,7 +255,7 @@ export function process(
       'combinations'
     );
     reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
-      combos: existingTask
+      combos: existingTask,
     });
   }
   localStorage.setItem('loadout-optimizer', combos.toString());
@@ -279,7 +279,7 @@ export function process(
                 chests[chestsKey],
                 legs[legsKey],
                 classitems[classItemsKey],
-                ghosts[ghostsKey]
+                ghosts[ghostsKey],
               ];
 
               const firstValidSet = getFirstValidSet(armor);
@@ -290,7 +290,7 @@ export function process(
                   keyToStats(chestsKey),
                   keyToStats(legsKey),
                   keyToStats(classItemsKey),
-                  keyToStats(ghostsKey)
+                  keyToStats(ghostsKey),
                 ];
 
                 const maxPower = getPower(firstValidSet);
@@ -320,7 +320,7 @@ export function process(
                 if (existingSetAtTier) {
                   existingSetAtTier.sets.push({
                     armor,
-                    statChoices
+                    statChoices,
                   });
                   if (maxPower > existingSetAtTier.maxPower) {
                     existingSetAtTier.firstValidSet = firstValidSet;
@@ -333,8 +333,8 @@ export function process(
                     sets: [
                       {
                         armor,
-                        statChoices
-                      }
+                        statChoices,
+                      },
                     ],
                     stats: stats as {
                       [statType in StatTypes]: number;
@@ -342,7 +342,7 @@ export function process(
                     // TODO: defer calculating first valid set / statchoices / maxpower?
                     firstValidSet,
                     firstValidSetStatChoices: statChoices,
-                    maxPower
+                    maxPower,
                   };
                 }
               }
@@ -475,7 +475,7 @@ function generateMixesFromPerksOrStats(
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
   const mixes: number[][] = [
-    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats)
+    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
   ];
 
   const altPerks: (DimPlug[] | null)[] = [null];

@@ -21,7 +21,7 @@ export function getBungieAccount(): BungieAccount | undefined {
 
   if (token?.bungieMembershipId) {
     return {
-      membershipId: token.bungieMembershipId
+      membershipId: token.bungieMembershipId,
     };
   }
 }

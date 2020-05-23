@@ -8,7 +8,7 @@ export default function Checkbox({
   value,
   helpLink,
   name,
-  onChange
+  onChange,
 }: {
   label: string;
   value: boolean;

@@ -4,7 +4,7 @@ import {
   DropTargetSpec,
   DropTargetConnector,
   DropTargetMonitor,
-  ConnectDropTarget
+  ConnectDropTarget,
 } from 'react-dnd';
 import clsx from 'clsx';
 import { InventoryBucket } from './inventory-buckets';
@@ -51,7 +51,7 @@ const dropSpec: DropTargetSpec<Props> = {
     // But equipping has requirements
     const item = monitor.getItem().item as DimItem;
     return item.canBeEquippedBy(props.store);
-  }
+  },
 };
 
 // This forwards drag and drop state into props on the component
@@ -64,7 +64,7 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
     // You can ask the monitor about the current drag state:
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop(),
-    item: item && (item.item as DimItem)
+    item: item && (item.item as DimItem),
   };
 }
 
@@ -83,7 +83,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
         ref={this.captureRef}
         className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop
+          'on-drag-enter': canDrop,
         })}
         onClick={this.onClick}
         aria-label={bucket.name}

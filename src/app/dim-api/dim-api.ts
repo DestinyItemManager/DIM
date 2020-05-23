@@ -10,7 +10,7 @@ import {
   ImportResponse,
   ProfileUpdateResponse,
   AuditLogResponse,
-  DeleteAllResponse
+  DeleteAllResponse,
 } from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
@@ -18,7 +18,7 @@ export async function getGlobalSettings() {
   const response = await unauthenticatedApi<PlatformInfoResponse>(
     {
       url: '/platform_info',
-      method: 'GET'
+      method: 'GET',
     },
     true
   );
@@ -33,11 +33,11 @@ export async function getDimApiProfile(account?: DestinyAccount) {
       ? {
           platformMembershipId: account.membershipId,
           destinyVersion: account.destinyVersion,
-          components: 'settings,loadouts,tags'
+          components: 'settings,loadouts,tags',
         }
       : {
-          components: 'settings'
-        }
+          components: 'settings',
+        },
   });
   return response;
 }
@@ -46,7 +46,7 @@ export async function importData(data: DimData) {
   const response = await authenticatedApi<ImportResponse>({
     url: '/import',
     method: 'POST',
-    body: data
+    body: data,
   });
   return response;
 }
@@ -64,15 +64,15 @@ export async function postUpdates(
       ? {
           platformMembershipId,
           destinyVersion,
-          updates
+          updates,
         }
       : {
-          updates
+          updates,
         };
   const response = await authenticatedApi<ProfileUpdateResponse>({
     url: '/profile',
     method: 'POST',
-    body: request
+    body: request,
   });
   return response.results;
 }
@@ -80,7 +80,7 @@ export async function postUpdates(
 export async function getAuditLog() {
   const response = await authenticatedApi<AuditLogResponse>({
     url: '/audit',
-    method: 'GET'
+    method: 'GET',
   });
   return response.log;
 }
@@ -88,7 +88,7 @@ export async function getAuditLog() {
 export async function deleteAllData() {
   const response = await authenticatedApi<DeleteAllResponse>({
     url: '/delete_all_data',
-    method: 'POST'
+    method: 'POST',
   });
   return response.deleted;
 }
@@ -96,7 +96,7 @@ export async function deleteAllData() {
 export async function exportDimApiData() {
   const response = await authenticatedApi<ExportResponse>({
     url: '/export',
-    method: 'GET'
+    method: 'GET',
   });
   return response;
 }

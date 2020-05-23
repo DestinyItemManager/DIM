@@ -66,7 +66,7 @@ class ManifestService {
       } else if (e.status < 200 || e.status >= 400) {
         message = t('BungieService.NetworkError', {
           status: e.status,
-          statusText: e.statusText
+          statusText: e.statusText,
         });
       } else {
         // Something may be wrong with the manifest
@@ -130,7 +130,7 @@ class ManifestService {
       showNotification({
         title: t('Help.NoStorage'),
         body: t('Help.NoStorageMessage'),
-        type: 'error'
+        type: 'error',
       });
     }
   }

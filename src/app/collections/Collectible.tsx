@@ -6,7 +6,7 @@ import {
   DestinyProfileResponse,
   DestinyScope,
   DestinyCollectibleState,
-  DestinyCollectibleDefinition
+  DestinyCollectibleDefinition,
 } from 'bungie-api-ts/destiny2';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import _ from 'lodash';
@@ -24,7 +24,7 @@ export default function Collectible({
   defs,
   buckets,
   profileResponse,
-  ownedItemHashes
+  ownedItemHashes,
 }: Props) {
   const collectibleDef = defs.Collectible.get(collectibleHash);
   if (!collectibleDef) {

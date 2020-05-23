@@ -78,7 +78,7 @@ function getPerkRatingsAndReviewCount(
   const ratingAndReview = {
     ratingCount,
     averageReview,
-    perkNode
+    perkNode,
   };
 
   return ratingAndReview;

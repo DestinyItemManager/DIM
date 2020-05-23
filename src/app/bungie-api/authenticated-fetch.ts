@@ -5,7 +5,7 @@ import {
   setToken,
   getToken,
   hasTokenExpired,
-  removeAccessToken
+  removeAccessToken,
 } from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { t } from 'app/i18next-t';

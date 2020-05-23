@@ -8,7 +8,7 @@ const notifyStorageFull = _.throttle(() => {
     showNotification({
       type: 'error',
       title: t('Help.NoStorage'),
-      body: t('Help.NoStorageMessage')
+      body: t('Help.NoStorageMessage'),
     });
   });
 }, 5 * 60 * 1000);

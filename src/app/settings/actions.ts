@@ -9,7 +9,7 @@ export const setSetting = createAction(
   'settings/SET',
   <V extends keyof Settings>(property: V, value: Settings[V]) => ({
     property,
-    value
+    value,
   })
 )() as <V extends keyof Settings>(
   property: V,

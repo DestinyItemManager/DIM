@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 export default function VendorItemComponent({
   item,
   defs,
-  owned
+  owned,
 }: {
   defs: D2ManifestDefinitions;
   item: VendorItem;
@@ -80,7 +80,7 @@ export function VendorItemDisplay({
   acquired,
   item,
   extraData,
-  children
+  children,
 }: {
   unavailable?: boolean;
   owned?: boolean;
@@ -100,7 +100,7 @@ export function VendorItemDisplay({
   return (
     <div
       className={clsx(styles.vendorItem, {
-        [styles.unavailable]: unavailable
+        [styles.unavailable]: unavailable,
       })}
     >
       {owned ? <AppIcon className={styles.ownedIcon} icon={faCheck} /> : acquired && acquiredIcon}
@@ -116,7 +116,7 @@ export function VendorItemDisplay({
 
 function VendorItemCost({
   cost,
-  defs
+  defs,
 }: {
   defs: D2ManifestDefinitions;
   cost: DestinyItemQuantity;

@@ -188,7 +188,7 @@ export const SyncService = {
         await adapter.set(cached);
       }
     }
-  }
+  },
 };
 
 async function getAndCacheFromAdapters(): Promise<DimData> {

@@ -6,7 +6,7 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
   DestinyProfileResponse,
-  DestinyClass
+  DestinyClass,
 } from 'bungie-api-ts/destiny2';
 import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
@@ -22,7 +22,7 @@ export default function SeasonalRank({
   characterProgressions,
   season,
   seasonPass,
-  profileInfo
+  profileInfo,
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;
@@ -99,7 +99,7 @@ export default function SeasonalRank({
   return (
     <div
       className={clsx('seasonal-rank', 'milestone-quest', {
-        'has-premium-rewards': hasPremiumRewards
+        'has-premium-rewards': hasPremiumRewards,
       })}
     >
       <div className="milestone-icon">
@@ -121,7 +121,7 @@ export default function SeasonalRank({
               <div
                 className={clsx('seasonal-reward-wrapper', styles.pursuit, {
                   free: item.uiDisplayStyle === 'free',
-                  premium: item.uiDisplayStyle === 'premium'
+                  premium: item.uiDisplayStyle === 'premium',
                 })}
                 key={itemInfo.hash}
               >
@@ -185,6 +185,6 @@ function fakeReward(hash: number, level: number) {
     itemHash: hash,
     quantity: 1,
     rewardedAtProgressionLevel: level,
-    uiDisplayStyle: 'free'
+    uiDisplayStyle: 'free',
   };
 }

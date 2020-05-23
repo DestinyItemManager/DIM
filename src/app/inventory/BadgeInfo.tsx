@@ -74,7 +74,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
   const badgeclsx = {
     [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
     [styles.capped]: isCapped,
-    [styles.masterwork]: item.masterwork
+    [styles.masterwork]: item.masterwork,
   };
 
   const badgeContent =
@@ -86,7 +86,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
 
   const reviewclsx = {
     [styles.review]: true,
-    [styles.wishlistRoll]: uiWishListRoll
+    [styles.wishlistRoll]: uiWishListRoll,
   };
 
   return (

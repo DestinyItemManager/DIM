@@ -16,7 +16,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       serialize: false,
       actionsBlacklist: [getType(update), getType(setD1Manifest), getType(setD2Manifest)],
       stateSanitizer: (state: RootState) =>
-        state.inventory ? { ...state, inventory: '<<EXCLUDED>>', manifest: '<<EXCLUDED>>' } : state
+        state.inventory ? { ...state, inventory: '<<EXCLUDED>>', manifest: '<<EXCLUDED>>' } : state,
     })
   : compose;
 

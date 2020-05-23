@@ -11,7 +11,7 @@ const HTTP_503_TIMEOUT = 10 * 60 * 1000;
 const circuitBreaker = new CircuitBreaker({
   timeoutDuration: TIMEOUT,
   windowDuration: 1 * 60 * 1000, // 1 minute
-  volumeThreshold: 2
+  volumeThreshold: 2,
 });
 
 let lastFiveOhThreeCaught: Date | null;
@@ -32,8 +32,8 @@ export function dtrFetch(url: string, body: object) {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   });
 
   let timer;

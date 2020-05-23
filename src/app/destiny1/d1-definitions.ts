@@ -19,7 +19,7 @@ const lazyTables = [
   'ScriptedSkull',
   'Activity',
   'ActivityType',
-  'DamageType'
+  'DamageType',
 ];
 
 const eagerTables = ['InventoryBucket', 'Class', 'Race', 'Faction', 'Vendor'];
@@ -65,7 +65,7 @@ async function getUncachedDefinitions() {
     const db = await D1ManifestService.getManifest();
     const defs = {
       isDestiny1: () => true,
-      isDestiny2: () => false
+      isDestiny2: () => false,
     };
     // Load objects that lazily load their properties from the sqlite DB.
     lazyTables.forEach((tableShort) => {
@@ -78,7 +78,7 @@ async function getUncachedDefinitions() {
           const val = D1ManifestService.getRecord(db, table, name);
           this[name] = val;
           return val;
-        }
+        },
       };
     });
     // Resources that need to be fully loaded (because they're iterated over)

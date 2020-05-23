@@ -8,7 +8,7 @@ import {
   enabledIcon,
   moveUpIcon,
   moveDownIcon,
-  unselectedCheckIcon
+  unselectedCheckIcon,
 } from '../shell/icons';
 
 export interface SortProperty {
@@ -85,7 +85,7 @@ export default class SortOrderEditor extends React.Component<Props> {
     if (fromDrag) {
       order[newIndex] = {
         ...order[newIndex],
-        enabled: newIndex === 0 || order[newIndex - 1].enabled
+        enabled: newIndex === 0 || order[newIndex - 1].enabled,
       };
     }
     this.fireOrderChanged(order);
@@ -132,7 +132,7 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
         <div
           className={clsx('sort-order-editor-item', {
             'is-dragging': snapshot.isDragging,
-            disabled: !item.enabled
+            disabled: !item.enabled,
           })}
           data-index={index}
           ref={provided.innerRef}

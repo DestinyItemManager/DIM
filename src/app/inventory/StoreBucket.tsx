@@ -43,7 +43,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     itemSortOrder: itemSortOrderSelector(state),
     // We only need this property when this is a vault armor bucket
     allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
-    characterOrder: characterOrderSelector(state)
+    characterOrder: characterOrderSelector(state),
   };
 }
 
@@ -53,7 +53,7 @@ const classIcons = {
   [DestinyClass.Unknown]: globeIcon,
   [DestinyClass.Hunter]: hunterIcon,
   [DestinyClass.Warlock]: warlockIcon,
-  [DestinyClass.Titan]: titanIcon
+  [DestinyClass.Titan]: titanIcon,
 };
 
 /**
@@ -105,7 +105,7 @@ class StoreBucket extends React.Component<Props> {
                 className="pull-item-button"
                 title={t('MovePopup.PullItem', {
                   bucket: bucket.name,
-                  store: store.name
+                  store: store.name,
                 })}
               >
                 <AppIcon icon={addIcon} />
@@ -141,8 +141,8 @@ class StoreBucket extends React.Component<Props> {
           item.bucket.hash === bucket.hash && item.canBeEquippedBy(store),
         prompt: t('MovePopup.PullItem', {
           bucket: bucket.name,
-          store: store.name
-        })
+          store: store.name,
+        }),
       });
 
       moveItemTo(item, store, equip, item.amount);

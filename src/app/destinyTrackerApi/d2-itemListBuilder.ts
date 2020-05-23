@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {
   DestinyVendorSaleItemComponent,
-  DestinyVendorItemDefinition
+  DestinyVendorItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
@@ -46,7 +46,7 @@ export function getVendorItemList(
     return getNewItemsFromFetchRequests(allVendorItems, ratings);
   } else if (vendorItems) {
     const allVendorItems = vendorItems.map((vi) => ({
-      referenceId: vi.itemHash
+      referenceId: vi.itemHash,
     })) as D2ItemFetchRequest[];
 
     return getNewItemsFromFetchRequests(allVendorItems, ratings);

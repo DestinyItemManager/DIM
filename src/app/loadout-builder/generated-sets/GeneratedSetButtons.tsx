@@ -16,7 +16,7 @@ export default function GeneratedSetButtons({
   store,
   set,
   numSets,
-  onLoadoutSet
+  onLoadoutSet,
 }: {
   store: DimStore;
   set: ArmorSet;

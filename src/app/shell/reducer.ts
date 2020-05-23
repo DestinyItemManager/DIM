@@ -29,7 +29,7 @@ const initialState: ShellState = {
   isPhonePortrait: isPhonePortraitFromMediaQuery(),
   searchQuery: '',
   searchQueryVersion: 0,
-  loadingMessages: []
+  loadingMessages: [],
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (
@@ -40,7 +40,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
     case getType(actions.setPhonePortrait):
       return {
         ...state,
-        isPhonePortrait: action.payload
+        isPhonePortrait: action.payload,
       };
     case getType(actions.setSearchQuery):
       return {
@@ -48,7 +48,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
         searchQuery: action.payload.query,
         searchQueryVersion: action.payload.doNotUpdateVersion
           ? state.searchQueryVersion
-          : state.searchQueryVersion + 1
+          : state.searchQueryVersion + 1,
       };
 
     case getType(actions.toggleSearchQueryComponent): {
@@ -61,21 +61,21 @@ export const shell: Reducer<ShellState, ShellAction> = (
       return {
         ...state,
         searchQuery: newQuery,
-        searchQueryVersion: state.searchQueryVersion + 1
+        searchQueryVersion: state.searchQueryVersion + 1,
       };
     }
 
     case getType(actions.loadingStart): {
       return {
         ...state,
-        loadingMessages: _.uniq([...state.loadingMessages, action.payload])
+        loadingMessages: _.uniq([...state.loadingMessages, action.payload]),
       };
     }
 
     case getType(actions.loadingEnd): {
       return {
         ...state,
-        loadingMessages: state.loadingMessages.filter((m) => m !== action.payload)
+        loadingMessages: state.loadingMessages.filter((m) => m !== action.payload),
       };
     }
 

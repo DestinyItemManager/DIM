@@ -8,7 +8,7 @@ import {
   DestinyInventoryItemDefinition,
   DestinyEnergyType,
   DestinyItemPlug,
-  DestinyItemPlugBase
+  DestinyItemPlugBase,
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
@@ -92,7 +92,7 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     defs: state.manifest.d2Manifest!,
     inventoryPlugs: inventoryPlugs(state, props),
-    unlockedPlugs: unlockedPlugsSelector(state, props)
+    unlockedPlugs: unlockedPlugsSelector(state, props),
   });
 }
 
@@ -229,7 +229,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
             className={clsx(styles.clickableMod, {
               [styles.selected]: selectedPlug === mod,
               [styles.notUnlocked]:
-                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
+                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash),
             })}
             itemDef={mod}
             defs={defs}
@@ -249,7 +249,7 @@ export const SocketDetailsMod = React.memo(
     itemDef,
     defs,
     className,
-    onClick
+    onClick,
   }: {
     itemDef: DestinyInventoryItemDefinition;
     defs: D2ManifestDefinitions;

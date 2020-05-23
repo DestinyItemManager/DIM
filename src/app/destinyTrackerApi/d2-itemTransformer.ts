@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {
   DestinyVendorSaleItemComponent,
-  DestinyInventoryItemDefinition
+  DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
@@ -29,11 +29,11 @@ export function getReviewKey(
 
     return {
       referenceId: dtrItem.referenceId,
-      availablePerks: dtrItem.availablePerks
+      availablePerks: dtrItem.availablePerks,
     };
   } else if (itemHash) {
     return {
-      referenceId: itemHash
+      referenceId: itemHash,
     };
   } else {
     throw new Error('No data supplied to find a matching item from our stores.');
@@ -58,7 +58,7 @@ export function translateToDtrItem(
 ): D2ItemFetchRequest {
   return {
     referenceId: isVendorSaleItem(item) ? item.itemHash : item.hash,
-    availablePerks: getAvailablePerks(item)
+    availablePerks: getAvailablePerks(item),
   };
 }
 
@@ -75,7 +75,7 @@ export function getRollAndPerks(item: D2Item): DtrD2BasicItem {
     attachedMods: powerModHashes,
     referenceId: item.hash,
     instanceId: item.id,
-    availablePerks: getAvailablePerks(item)
+    availablePerks: getAvailablePerks(item),
   };
 }
 

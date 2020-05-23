@@ -4,7 +4,7 @@ import {
   ItemBucket,
   SetType,
   ArmorSet,
-  LockedPerkHash
+  LockedPerkHash,
 } from './types';
 
 import { D1Item } from '../../inventory/item-types';
@@ -49,7 +49,7 @@ function getBestItem(
       }
       return total + bonus;
     })!,
-    bonusType: type
+    bonusType: type,
   };
 }
 
@@ -101,7 +101,7 @@ export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorT
     Leg: armor.Leg.bonusType,
     ClassItem: armor.ClassItem.bonusType,
     Artifact: armor.Artifact.bonusType,
-    Ghost: armor.Ghost.bonusType
+    Ghost: armor.Ghost.bonusType,
   };
 }
 
@@ -129,7 +129,7 @@ export function getBestArmor(
     { stats: [1735777505, 4244567218], type: 'disstr' },
     { stats: [144602215], type: 'int' },
     { stats: [1735777505], type: 'dis' },
-    { stats: [4244567218], type: 'str' }
+    { stats: [4244567218], type: 'str' },
   ];
   const armor = {};
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
@@ -267,7 +267,7 @@ export function loadVendorsBucket(
       Leg: [],
       ClassItem: [],
       Artifact: [],
-      Ghost: []
+      Ghost: [],
     };
   }
   return _.map(vendors, (vendor) =>
@@ -304,7 +304,7 @@ function getBuckets(items: D1Item[]): ItemBucket {
     Leg: items.filter((item) => item.type === 'Leg').map(normalizeStats),
     ClassItem: items.filter((item) => item.type === 'ClassItem').map(normalizeStats),
     Artifact: items.filter((item) => item.type === 'Artifact').map(normalizeStats),
-    Ghost: items.filter((item) => item.type === 'Ghost').map(normalizeStats)
+    Ghost: items.filter((item) => item.type === 'Ghost').map(normalizeStats),
   };
 }
 
@@ -317,7 +317,7 @@ function normalizeStats(item: D1ItemWithNormalStats) {
       scaled: stat.scaled ? stat.scaled.min : 0,
       bonus: stat.bonus,
       split: stat.split || 0,
-      qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
+      qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0,
     };
   }
   return item;

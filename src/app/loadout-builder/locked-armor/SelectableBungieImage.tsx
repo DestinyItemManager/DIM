@@ -7,7 +7,7 @@ import {
   BurnItem,
   LockedModBase,
   LockedArmor2Mod,
-  ModPickerCategory
+  ModPickerCategory,
 } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
@@ -28,7 +28,7 @@ const badPerk = new Set([
   527286589, // unflinching kinetic aim
   952165152, // power dexterity
   377666359, // energy dexterity
-  2326218464 // kinetic dexterity
+  2326218464, // kinetic dexterity
 ]);
 
 /**
@@ -42,7 +42,7 @@ export function SelectableMod({
   selected,
   unselectable,
   onLockedPerk,
-  onLockedModBase
+  onLockedModBase,
 }: {
   mod: DestinyInventoryItemDefinition;
   // plugSet this mod appears in
@@ -69,7 +69,7 @@ export function SelectableMod({
     <div
       className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable
+        [styles.unselectable]: unselectable,
       })}
       onClick={handleClick}
       role="button"
@@ -92,7 +92,7 @@ export function SelectableArmor2Mod({
   defs,
   selected,
   unselectable,
-  onLockedArmor2Mod
+  onLockedArmor2Mod,
 }: {
   mod: DestinyInventoryItemDefinition;
   category: ModPickerCategory;
@@ -109,7 +109,7 @@ export function SelectableArmor2Mod({
     <div
       className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable
+        [styles.unselectable]: unselectable,
       })}
       onClick={handleClick}
       role="button"
@@ -133,7 +133,7 @@ export function SelectablePerk({
   defs,
   selected,
   unselectable,
-  onLockedPerk
+  onLockedPerk,
 }: {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
@@ -154,7 +154,7 @@ export function SelectablePerk({
     <div
       className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable
+        [styles.unselectable]: unselectable,
       })}
       onClick={handleClick}
       role="button"
@@ -163,7 +163,7 @@ export function SelectablePerk({
       <BungieImageAndAmmo
         className={clsx({
           [styles.goodPerk]: perk.hash === 1818103563,
-          [styles.badPerk]: isBadPerk
+          [styles.badPerk]: isBadPerk,
         })}
         hash={perk.hash}
         alt=""
@@ -191,7 +191,7 @@ export function SelectableBurn({
   bucket,
   selected,
   unselectable,
-  onLockedPerk
+  onLockedPerk,
 }: {
   burn: BurnItem;
   bucket: InventoryBucket;
@@ -208,7 +208,7 @@ export function SelectableBurn({
     <div
       className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable
+        [styles.unselectable]: unselectable,
       })}
       onClick={handleClick}
       role="button"

@@ -65,7 +65,7 @@ export default function Notification({ notification, style, onClose }: Props) {
   const progressBarProps = useSpring({
     from: { width: '0%' },
     to: { width: mouseover || Boolean(!error && !success && notification.promise) ? '0%' : '100%' },
-    config: mouseover ? config.default : { ...config.default, duration: notification.duration }
+    config: mouseover ? config.default : { ...config.default, duration: notification.duration },
   });
 
   return (

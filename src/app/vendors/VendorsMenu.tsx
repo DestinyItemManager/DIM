@@ -11,7 +11,7 @@ import vendorEngramSvg from '../../images/engram.svg';
 
 export default function VendorsMenu({
   groups,
-  vendorEngramDrops
+  vendorEngramDrops,
 }: {
   groups: readonly D2VendorGroup[];
   vendorEngramDrops: readonly VendorDrop[] | undefined;

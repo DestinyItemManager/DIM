@@ -61,7 +61,7 @@ type Props = ProvidedProps & StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: sortedStoresSelector(state),
-    defs: state.manifest.d1Manifest
+    defs: state.manifest.d1Manifest,
   };
 }
 
@@ -96,7 +96,7 @@ class Activities extends React.Component<Props> {
             <CollapsibleTitle
               style={bungieBackgroundStyle(activity.image)}
               className={clsx('title activity-header', {
-                'activity-featured': activity.featured
+                'activity-featured': activity.featured,
               })}
               sectionId={`activities-${activity.hash}`}
               title={
@@ -159,7 +159,7 @@ class Activities extends React.Component<Props> {
       'wrathofthemachine',
       // 'elderchallenge',
       'nightfall',
-      'heroicstrike'
+      'heroicstrike',
     ];
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
@@ -200,7 +200,7 @@ class Activities extends React.Component<Props> {
           ? t('Activities.WeeklyHeroic')
           : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
       skulls: null as Skull[] | null,
-      tiers: [] as ActivityTier[]
+      tiers: [] as ActivityTier[],
     };
 
     if (rawActivity.extended) {
@@ -261,7 +261,7 @@ class Activities extends React.Component<Props> {
               lastPlayed: store.lastPlayed,
               id: store.id,
               icon: store.icon,
-              steps
+              steps,
             };
           });
 
@@ -270,7 +270,7 @@ class Activities extends React.Component<Props> {
       icon: tierDef.icon,
       name,
       complete: tier.activityData.isCompleted,
-      characters
+      characters,
     };
   };
 }
@@ -295,13 +295,13 @@ const skullHashesByName: { [name: string]: number | undefined } = {
   Exposure: 16,
   Airborne: 17,
   Catapult: 18,
-  Epic: 20
+  Epic: 20,
 };
 
 function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull[] {
   const activity = {
     heroic: defs.Activity.get(870614351),
-    epic: defs.Activity.get(2234107290)
+    epic: defs.Activity.get(2234107290),
   };
 
   skulls.forEach((skull) => {

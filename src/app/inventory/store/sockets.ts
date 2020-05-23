@@ -7,7 +7,7 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemPlugBase,
   DestinyObjectiveProgress,
-  DestinySocketCategoryStyle
+  DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
@@ -36,7 +36,7 @@ const EXCLUDED_PLUGS = new Set([
   1961001474,
   3612467353,
   // Default Shader
-  4248210736
+  4248210736,
 ]);
 
 /** The item category hash for "intrinsic perk" */
@@ -157,13 +157,13 @@ export function buildInstancedSockets(
 
     categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash),
-      sockets
+      sockets,
     });
   }
 
   return {
     sockets: _.compact(realSockets), // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
   };
 }
 
@@ -201,13 +201,13 @@ function buildDefinedSockets(
 
     categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash),
-      sockets
+      sockets,
     });
   }
 
   return {
     sockets: _.compact(realSockets), // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
   };
 }
 
@@ -292,7 +292,7 @@ function buildDefinedSocket(
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
-    socketDefinition: socketDef
+    socketDefinition: socketDef,
   };
 }
 
@@ -338,7 +338,7 @@ function buildPlug(
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || [],
     perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
-    stats: null
+    stats: null,
   };
 }
 
@@ -359,7 +359,7 @@ function buildDefinedPlug(
     enableFailReasons: '',
     plugObjectives: [],
     perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
-    stats: null
+    stats: null,
   };
 }
 
@@ -441,6 +441,6 @@ function buildSocket(
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
-    socketDefinition: socketDef
+    socketDefinition: socketDef,
   };
 }

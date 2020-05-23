@@ -32,7 +32,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest!,
     stores: storesSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
   });
 }
 

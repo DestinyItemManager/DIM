@@ -9,7 +9,7 @@ const map = {
   up: '\u2191', // ↑
   down: '\u2193', // ↓
   return: '\u23CE', // ⏎
-  backspace: '\u232B' // ⌫
+  backspace: '\u232B', // ⌫
 };
 
 /**

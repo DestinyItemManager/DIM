@@ -7,7 +7,7 @@ export default function Select({
   value,
   name,
   onChange,
-  options
+  options,
 }: {
   label: string;
   value: string | number;
@@ -35,7 +35,7 @@ export default function Select({
 export function mapToOptions(map: { [key: string]: string }) {
   return _.map(map, (value, key) => ({
     name: value,
-    value: key
+    value: key,
   }));
 }
 

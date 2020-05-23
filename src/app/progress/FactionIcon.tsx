@@ -1,7 +1,7 @@
 import {
   DestinyFactionDefinition,
   DestinyProgression,
-  DestinyVendorComponent
+  DestinyVendorComponent,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';

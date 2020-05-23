@@ -9,7 +9,7 @@ import {
   faFlag,
   faPenSquare,
   faExclamationTriangle,
-  banIcon
+  banIcon,
 } from '../shell/icons';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
@@ -64,7 +64,7 @@ export default class ItemReview extends React.Component<Props, State> {
         <div>
           <div
             className={clsx({
-              'link community-review--clickable': review.isReviewer
+              'link community-review--clickable': review.isReviewer,
             })}
             onClick={this.editReview}
           >
@@ -85,7 +85,7 @@ export default class ItemReview extends React.Component<Props, State> {
                 )}{' '}
                 <span
                   className={clsx('community-review--review-author', {
-                    'community-review--who__special': review.isHighlighted
+                    'community-review--who__special': review.isHighlighted,
                   })}
                 >
                   {review.reviewer.displayName}
@@ -108,7 +108,7 @@ export default class ItemReview extends React.Component<Props, State> {
               review.mode !== DtrD2ActivityModes.notSpecified && (
                 <div className="community-review--game-mode">
                   {t('DtrReview.ForGameMode', {
-                    mode: translateReviewMode(reviewModeOptions, review)
+                    mode: translateReviewMode(reviewModeOptions, review),
                   })}
                 </div>
               )}

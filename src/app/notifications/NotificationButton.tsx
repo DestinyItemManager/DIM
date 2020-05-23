@@ -8,7 +8,7 @@ import styles from './NotificationButton.m.scss';
  */
 export default function NotificationButton({
   children,
-  onClick
+  onClick,
 }: {
   children: React.ReactChild | React.ReactChild[];
   onClick(e: React.MouseEvent): void;

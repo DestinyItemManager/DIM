@@ -15,7 +15,7 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
     // This gets overwritten in any path that'd save a real loadout, and apply doesn't care
     destinyVersion: 2,
     name,
-    items
+    items,
   };
 }
 
@@ -33,7 +33,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
     const itemWeight = {
       Weapons: 6,
       Armor: 5,
-      General: 4
+      General: 4,
     };
 
     const itemWeightDenominator = items.reduce(
@@ -142,6 +142,6 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     id: item.id,
     hash: item.hash,
     amount: item.amount,
-    equipped
+    equipped,
   };
 }

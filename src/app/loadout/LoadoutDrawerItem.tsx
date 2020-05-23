@@ -5,7 +5,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 export default function LoadoutDrawerItem({
   item,
   equip,
-  remove
+  remove,
 }: {
   item: DimItem;
   equip(item: DimItem, e: React.MouseEvent): void;

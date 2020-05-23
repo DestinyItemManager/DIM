@@ -28,7 +28,7 @@ export function submitReview(
 
     dispatch(
       markReviewSubmitted({
-        key: getItemReviewsKey(item)
+        key: getItemReviewsKey(item),
       })
     );
 
@@ -55,7 +55,7 @@ function submitReviewPromise(
   const reviewer = {
     membershipId: membershipInfo.membershipId,
     membershipType: membershipInfo.originalPlatformType,
-    displayName: membershipInfo.displayName
+    displayName: membershipInfo.displayName,
   };
 
   const review = isD2UserReview(item, userReview)
@@ -64,13 +64,13 @@ function submitReviewPromise(
         text: userReview.text,
         pros: userReview.pros,
         cons: userReview.cons,
-        mode: userReview.mode
+        mode: userReview.mode,
       }
     : {
         rating: userReview.rating,
         review: userReview.review,
         pros: userReview.pros,
-        cons: userReview.cons
+        cons: userReview.cons,
       };
 
   const rating = { ...rollAndPerks, ...review, reviewer };

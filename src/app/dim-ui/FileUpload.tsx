@@ -8,7 +8,7 @@ import { AppIcon, uploadIcon } from 'app/shell/icons';
 export default function FileUpload({
   accept,
   title,
-  onDrop
+  onDrop,
 }: {
   accept?: string;
   title: string;

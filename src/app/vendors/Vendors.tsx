@@ -3,7 +3,7 @@ import {
   DestinyProfileResponse,
   DestinyCurrenciesComponent,
   DestinyItemPlug,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -24,7 +24,7 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import {
   ownedItemsSelector,
   sortedStoresSelector,
-  profileResponseSelector
+  profileResponseSelector,
 } from '../inventory/selectors';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -32,7 +32,7 @@ import {
   D2VendorGroup,
   toVendorGroups,
   filterVendorGroupsToUnacquired,
-  filterVendorGroupsToSearch
+  filterVendorGroupsToSearch,
 } from './d2-vendors';
 import styles from './Vendors.m.scss';
 import { searchFilterSelector } from 'app/search/search-filters';
@@ -76,7 +76,7 @@ function mapStateToProps() {
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendorEngramDrops: state.vendorDrops.vendorDrops
+    vendorEngramDrops: state.vendorDrops.vendorDrops,
   });
 }
 
@@ -201,7 +201,7 @@ class Vendors extends React.Component<Props, State> {
       searchQuery,
       filterItems,
       profileResponse,
-      vendorEngramDrops
+      vendorEngramDrops,
     } = this.props;
 
     if (error) {
@@ -316,7 +316,7 @@ function VendorGroup({
   currencyLookups,
   defs,
   filtering,
-  vendorDrops
+  vendorDrops,
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;

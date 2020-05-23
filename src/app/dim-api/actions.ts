@@ -3,7 +3,7 @@ import {
   getDimApiProfile,
   importData,
   postUpdates,
-  deleteAllData
+  deleteAllData,
 } from '../dim-api/dim-api';
 import { ThunkResult, RootState } from '../store/reducers';
 import { DimApiState } from './reducer';
@@ -22,7 +22,7 @@ import {
   flushUpdatesFailed,
   allDataDeleted,
   setApiPermissionGranted,
-  profileLoadError
+  profileLoadError,
 } from './basic-actions';
 import { deepEqual } from 'fast-equals';
 import { DimData, SyncService } from 'app/storage/sync.service';
@@ -75,7 +75,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
         const savedState: ProfileIndexedDBState = {
           settings: settingsToSave,
           profiles: nextState.profiles,
-          updateQueue: nextState.updateQueue
+          updateQueue: nextState.updateQueue,
         };
         console.log('Saving profile data to IDB');
         set('dim-api-profile', savedState);
@@ -481,7 +481,7 @@ export function showBackupDownloadedNotification() {
     type: 'success',
     title: t('Storage.DimSyncEnabled'),
     body: t('Storage.AutoBackup'),
-    duration: 15000
+    duration: 15000,
   });
 }
 
@@ -490,7 +490,7 @@ function showImportSkippedNotification() {
     type: 'warning',
     title: t('Storage.ImportNotification.SkippedTitle'),
     body: t('Storage.ImportNotification.SkippedBody'),
-    duration: 15000
+    duration: 15000,
   });
 }
 
@@ -504,7 +504,7 @@ function showImportSuccessNotification(
     body: forceImport
       ? t('Storage.ImportNotification.SuccessBodyForced', result)
       : t('Storage.ImportNotification.SuccessBody', result),
-    duration: 15000
+    duration: 15000,
   });
 }
 

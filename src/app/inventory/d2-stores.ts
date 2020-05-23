@@ -6,7 +6,7 @@ import {
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
   DestinyCollectibleComponent,
-  DestinyItemComponent
+  DestinyItemComponent,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -76,7 +76,7 @@ export function updateCharacters(): ThunkResult {
             background: bungieNetPath(character.emblemBackgroundPath),
             icon: bungieNetPath(character.emblemPath),
             stats: getCharacterStatsData(getState().manifest.d2Manifest!, character.stats),
-            color: character.emblemColor
+            color: character.emblemColor,
           }))
         : [];
     } else {
@@ -91,7 +91,7 @@ export function updateCharacters(): ThunkResult {
         stats: getD1CharacterStatsData(
           getState().manifest.d1Manifest!,
           character.base.characterBase
-        )
+        ),
       }));
     }
 
@@ -104,7 +104,7 @@ export function mergeCollectibles(
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
   const allCollectibles = {
-    ...profileCollectibles.data?.collectibles
+    ...profileCollectibles.data?.collectibles,
   };
 
   _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
@@ -148,7 +148,7 @@ function makeD2StoresService(): D2StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
-    reloadStores
+    reloadStores,
   };
 
   return service;
@@ -196,7 +196,7 @@ function makeD2StoresService(): D2StoreServiceType {
         getBuckets(),
         store.dispatch(loadNewItems(account)),
         store.dispatch(loadItemInfos(account)),
-        getStores(account)
+        getStores(account),
       ]);
       console.time('Process inventory');
 
@@ -389,7 +389,7 @@ function makeD2StoresService(): D2StoreServiceType {
         const vaultBucketId = bucket.vaultBucket.hash;
         store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
           count: 0,
-          bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+          bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
         };
         store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
       }
@@ -429,7 +429,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hasClassified,
         description: def.displayProperties.description,
         value: maxBasePower,
-        icon: helmetIcon
+        icon: helmetIcon,
       };
 
       const artifactPower = getArtifactBonus(store);
@@ -439,7 +439,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hasClassified: false,
         description: def.displayProperties.description,
         value: artifactPower,
-        icon: xpIcon
+        icon: xpIcon,
       };
 
       store.stats.maxTotalPower = {
@@ -448,7 +448,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hasClassified,
         description: def.displayProperties.description,
         value: maxBasePower + artifactPower,
-        icon: bungieNetPath(def.displayProperties.icon)
+        icon: bungieNetPath(def.displayProperties.icon),
       };
     }
   }
@@ -462,7 +462,7 @@ function makeD2StoresService(): D2StoreServiceType {
         const vaultBucketId = bucket.hash;
         vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
           count: 0,
-          bucket
+          bucket,
         };
         vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.hash].length;
       }

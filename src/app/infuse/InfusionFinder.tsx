@@ -21,7 +21,7 @@ import {
   SearchConfig,
   searchConfigSelector,
   SearchFilters,
-  searchFiltersConfigSelector
+  searchFiltersConfigSelector,
 } from '../search/search-filters';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
@@ -60,12 +60,12 @@ function mapStateToProps(state: RootState): StoreProps {
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
 const mapDispatchToProps = {
-  setSetting
+  setSetting,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -109,7 +109,7 @@ class InfusionFinder extends React.Component<Props, State> {
             target: item,
             direction: InfuseDirection.INFUSE,
             height: undefined,
-            filter: ''
+            filter: '',
           });
         } else {
           this.setState({
@@ -118,7 +118,7 @@ class InfusionFinder extends React.Component<Props, State> {
             target: undefined,
             direction: InfuseDirection.FUEL,
             height: undefined,
-            filter: ''
+            filter: '',
           });
         }
       })
@@ -195,10 +195,10 @@ class InfusionFinder extends React.Component<Props, State> {
         <h1>
           {direction === InfuseDirection.INFUSE
             ? t('Infusion.InfuseTarget', {
-                name: query.name
+                name: query.name,
               })
             : t('Infusion.InfuseSource', {
-                name: query.name
+                name: query.name,
               })}
         </h1>
         <div className="infusionControls">
@@ -282,7 +282,7 @@ class InfusionFinder extends React.Component<Props, State> {
       source: undefined,
       target: undefined,
       height: undefined,
-      filter: ''
+      filter: '',
     });
   };
 
@@ -305,7 +305,7 @@ class InfusionFinder extends React.Component<Props, State> {
       return {
         direction,
         target: direction === InfuseDirection.INFUSE ? query : undefined,
-        source: direction === InfuseDirection.FUEL ? query : undefined
+        source: direction === InfuseDirection.FUEL ? query : undefined,
       };
     });
     this.props.setSetting('infusionDirection', 1);
@@ -328,7 +328,7 @@ class InfusionFinder extends React.Component<Props, State> {
     const items: LoadoutItem[] = [
       convertToLoadoutItem(target, false),
       // Include the source, since we wouldn't want it to get moved out of the way
-      convertToLoadoutItem(source, source.equipped)
+      convertToLoadoutItem(source, source.equipped),
     ];
 
     if (source.isDestiny1()) {
@@ -338,7 +338,7 @@ class InfusionFinder extends React.Component<Props, State> {
           id: '0',
           hash: 937555249,
           amount: 2,
-          equipped: false
+          equipped: false,
         });
       } else if (target.bucket.sort === 'Weapons') {
         // Weapon Parts
@@ -346,7 +346,7 @@ class InfusionFinder extends React.Component<Props, State> {
           id: '0',
           hash: 1898539128,
           amount: 10,
-          equipped: false
+          equipped: false,
         });
       } else {
         // Armor Materials
@@ -354,7 +354,7 @@ class InfusionFinder extends React.Component<Props, State> {
           id: '0',
           hash: 1542293174,
           amount: 10,
-          equipped: false
+          equipped: false,
         });
       }
       if (source.isExotic) {
@@ -363,7 +363,7 @@ class InfusionFinder extends React.Component<Props, State> {
           id: '0',
           hash: 452597397,
           amount: 1,
-          equipped: false
+          equipped: false,
         });
       }
     }

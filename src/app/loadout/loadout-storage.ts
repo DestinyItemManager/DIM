@@ -15,21 +15,21 @@ const enum LoadoutClass {
   any = -1,
   warlock = 0,
   titan = 1,
-  hunter = 2
+  hunter = 2,
 }
 
 const loadoutClassToClassType = {
   [LoadoutClass.warlock]: DestinyClass.Warlock,
   [LoadoutClass.titan]: DestinyClass.Titan,
   [LoadoutClass.hunter]: DestinyClass.Hunter,
-  [LoadoutClass.any]: DestinyClass.Unknown
+  [LoadoutClass.any]: DestinyClass.Unknown,
 };
 
 const classTypeToLoadoutClass = {
   [DestinyClass.Titan]: LoadoutClass.titan,
   [DestinyClass.Hunter]: LoadoutClass.hunter,
   [DestinyClass.Warlock]: LoadoutClass.warlock,
-  [DestinyClass.Unknown]: LoadoutClass.any
+  [DestinyClass.Unknown]: LoadoutClass.any,
 };
 
 /** The format loadouts are stored in. */
@@ -78,7 +78,7 @@ export function deleteLoadout(loadout: Loadout): ThunkResult {
     await SyncService.remove(loadout.id);
     // remove the loadout ID from the list of loadout IDs
     await SyncService.set({
-      'loadouts-v3.0': getState().loadouts.loadouts.map((l) => l.id)
+      'loadouts-v3.0': getState().loadouts.loadouts.map((l) => l.id),
     });
   };
 }
@@ -92,7 +92,7 @@ async function saveLoadouts(
 
   const data = {
     'loadouts-v3.0': loadoutPrimitives.map((l) => l.id),
-    ..._.keyBy(loadoutPrimitives, (l) => l.id)
+    ..._.keyBy(loadoutPrimitives, (l) => l.id),
   };
 
   await SyncService.set(data);
@@ -151,9 +151,9 @@ function convertToInMemoryFormat(loadoutPrimitive: DehydratedLoadout): Loadout {
       id: item.id || '0',
       hash: item.hash,
       amount: item.amount || 1,
-      equipped: Boolean(item.equipped)
+      equipped: Boolean(item.equipped),
     })),
-    clearSpace: loadoutPrimitive.clearSpace
+    clearSpace: loadoutPrimitive.clearSpace,
   };
 
   // Blizzard.net is no more, they're all Steam now
@@ -173,7 +173,7 @@ function convertToStorageFormat(
     id: item.id,
     hash: item.hash,
     amount: item.amount,
-    equipped: item.equipped
+    equipped: item.equipped,
   })) as DimItem[];
 
   // Try to fix up the membership IDs of old accounts.
@@ -196,7 +196,7 @@ function convertToStorageFormat(
     membershipId: loadout.membershipId,
     destinyVersion: loadout.destinyVersion,
     clearSpace: loadout.clearSpace,
-    items
+    items,
   };
 }
 

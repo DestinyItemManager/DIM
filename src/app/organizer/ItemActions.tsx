@@ -15,7 +15,7 @@ function ItemActions({
   onLock,
   onNote,
   onTagSelectedItems,
-  onMoveSelectedItems
+  onMoveSelectedItems,
 }: {
   stores: DimStore[];
   itemsAreSelected: boolean;
@@ -31,7 +31,7 @@ function ItemActions({
         {tagInfo.icon && <AppIcon icon={tagInfo.icon} />} {t(tagInfo.label)}
       </>
     ),
-    onItemSelect: () => onTagSelectedItems(tagInfo)
+    onItemSelect: () => onTagSelectedItems(tagInfo),
   }));
 
   const moveItems: DropDownItem[] = stores.map((store) => ({
@@ -41,7 +41,7 @@ function ItemActions({
         <img height="16" width="16" src={store.icon} /> {store.name}
       </>
     ),
-    onItemSelect: () => onMoveSelectedItems(store)
+    onItemSelect: () => onMoveSelectedItems(store),
   }));
 
   const noted = () => {

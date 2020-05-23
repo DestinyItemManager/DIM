@@ -2,7 +2,7 @@ import {
   DestinyCharacterComponent,
   DestinyItemComponent,
   DestinyClass,
-  DestinyGender
+  DestinyGender,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
@@ -25,7 +25,7 @@ import { getCurrentStore } from '../stores-helpers';
 const genderTypeToEnglish = {
   [DestinyGender.Male]: 'male',
   [DestinyGender.Female]: 'female',
-  [DestinyGender.Unknown]: ''
+  [DestinyGender.Unknown]: '',
 };
 
 // Prototype for Store objects - add methods to this to add them to all
@@ -163,7 +163,7 @@ export const StoreProto = {
 
   getStoresService() {
     return D2StoresService;
-  }
+  },
 };
 
 export function makeCharacter(
@@ -185,7 +185,7 @@ export function makeCharacter(
     icon: bungieNetPath(character.emblemPath),
     name: t('ItemService.StoreName', {
       genderRace,
-      className
+      className,
     }),
     current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
     lastPlayed,
@@ -201,7 +201,7 @@ export function makeCharacter(
     genderRace,
     genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
-    color: character.emblemColor
+    color: character.emblemColor,
   });
 
   return store;
@@ -214,7 +214,7 @@ export function makeVault(
   const currencies = profileCurrencies.map((c) => ({
     itemHash: c.itemHash,
     quantity: c.quantity,
-    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties
+    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
   }));
 
   return Object.assign(Object.create(StoreProto), {
@@ -270,7 +270,7 @@ export function makeVault(
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count++;
       }
-    }
+    },
   });
 }
 
@@ -297,7 +297,7 @@ export function getCharacterStatsData(
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon)
+      icon: bungieNetPath(def.displayProperties.icon),
     };
     ret[statHash] = stat;
   });

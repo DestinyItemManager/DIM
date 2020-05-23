@@ -6,7 +6,7 @@ import { DestinyDamageTypeDefinition, DestinyEnergyTypeDefinition } from 'bungie
 
 export default function ElementIcon({
   element,
-  className
+  className,
 }: {
   element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   className?: string;

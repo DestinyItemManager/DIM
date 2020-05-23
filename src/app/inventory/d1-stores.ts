@@ -49,7 +49,7 @@ function StoreService(): D1StoreServiceType {
   const service = {
     getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
-    reloadStores
+    reloadStores,
   };
 
   return service;
@@ -96,7 +96,7 @@ function StoreService(): D1StoreServiceType {
       getBuckets(),
       store.dispatch(loadNewItems(account)),
       store.dispatch(loadItemInfos(account)),
-      getStores(account)
+      getStores(account),
     ])
       .then(([defs, buckets, , , rawStores]) => {
         const lastPlayedDate = findLastPlayedDate(rawStores);
@@ -195,7 +195,7 @@ function StoreService(): D1StoreServiceType {
         const vaultBucketOrder = [
           4046403665, // Weapons
           3003523923, // Armor
-          138197802 // General
+          138197802, // General
         ];
 
         _.sortBy(
@@ -205,7 +205,7 @@ function StoreService(): D1StoreServiceType {
           const vaultBucketId = bucket.vaultBucket!.hash;
           vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
             count: 0,
-            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+            bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
           };
           vault.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
         });

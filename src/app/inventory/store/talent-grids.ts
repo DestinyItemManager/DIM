@@ -76,7 +76,7 @@ export function buildTalentGrid(
         // Whether or not the material cost has been paid for the node
         unlocked: true,
         // Some nodes don't show up in the grid, like purchased ascend nodes
-        hidden: node.hidden
+        hidden: node.hidden,
       };
     })
   );
@@ -104,6 +104,6 @@ export function buildTalentGrid(
         compareBy((node) => node.row)
       )
     ),
-    complete: gridNodes.every((n) => n.unlocked)
+    complete: gridNodes.every((n) => n.unlocked),
   };
 }

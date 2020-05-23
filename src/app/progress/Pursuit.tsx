@@ -33,7 +33,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
-    searchHidden: !searchFilterSelector(state)(item)
+    searchHidden: !searchFilterSelector(state)(item),
   };
 }
 

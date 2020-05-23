@@ -14,7 +14,7 @@ interface State {
 
 function mapStateToProps(state: RootState) {
   return {
-    isDraggingStack: state.inventory.isDraggingStack
+    isDraggingStack: state.inventory.isDraggingStack,
   };
 }
 
@@ -35,7 +35,7 @@ class StackableDragHelp extends React.Component<Props, State> {
 
     const classes = {
       'drag-help-hidden': !isDraggingStack,
-      'drag-shift-activated': shiftKeyDown
+      'drag-shift-activated': shiftKeyDown,
     };
 
     // TODO: CSS Transition group? would have to handle attach/detach

@@ -32,14 +32,14 @@ const WhatsNew = React.lazy(() =>
 
 // These three are all from the same chunk
 const SettingsPage = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage,
 }));
 const GDriveRevisions = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "settings" */ './settings/components'))
-    .GDriveRevisions
+    .GDriveRevisions,
 }));
 const AuditLog = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog
+  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog,
 }));
 
 interface StoreProps {
@@ -63,7 +63,7 @@ function mapStateToProps(state: RootState): StoreProps {
     charColMobile: settings.charColMobile,
     needsLogin: state.accounts.needsLogin,
     reauth: state.accounts.reauth,
-    needsDeveloper: state.accounts.needsDeveloper
+    needsDeveloper: state.accounts.needsDeveloper,
   };
 }
 
@@ -77,7 +77,7 @@ function App({
   showNewItems,
   needsLogin,
   reauth,
-  needsDeveloper
+  needsDeveloper,
 }: Props) {
   useEffect(() => {
     testFeatureCompatibility();
@@ -91,7 +91,7 @@ function App({
         itemQuality: itemQuality,
         'show-new-items': showNewItems,
         'ms-edge': /Edge/.test(navigator.userAgent),
-        ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+        ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       })}
     >
       <ScrollToTop />
