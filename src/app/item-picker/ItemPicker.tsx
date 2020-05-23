@@ -13,7 +13,7 @@ import {
   SearchFilters,
   searchFiltersConfigSelector,
 } from '../search/search-filters';
-import SearchFilterInput from '../search/SearchFilterInput';
+import SearchFilterInput, { SearchFilterRef } from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import clsx from 'clsx';
@@ -73,7 +73,7 @@ class ItemPicker extends React.Component<Props, State> {
     equip: this.props.equip === undefined ? this.props.preferEquip : this.props.equip,
   };
   private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterInput>();
+  private filterInput = React.createRef<SearchFilterRef>();
 
   componentDidMount() {
     if (this.itemContainer.current) {

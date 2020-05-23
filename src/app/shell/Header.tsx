@@ -25,9 +25,10 @@ import _ from 'lodash';
 import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import vendorEngramSvg from '../../images/engram.svg';
 import { accountRoute } from 'app/routes';
-import { RouteComponentProps, useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
+import { SearchFilterRef } from 'app/search/SearchFilterInput';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -39,7 +40,7 @@ interface StoreProps {
 
 // TODO: finally time to hack apart the header styles!
 
-type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -49,7 +50,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-function Header({ account, vendorEngramDropActive, history, isPhonePortrait, dispatch }: Props) {
+function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: Props) {
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLAnchorElement>(null);
@@ -114,7 +115,7 @@ function Header({ account, vendorEngramDropActive, history, isPhonePortrait, dis
   }, [account?.destinyVersion, dispatch]);
 
   // Search filter
-  const searchFilter = useRef<{ focusFilterInput(): void; clearFilter(): void }>(null);
+  const searchFilter = useRef<SearchFilterRef>(null);
 
   // Clear filter and close dropdown on path change
   const { pathname } = useLocation();
@@ -131,6 +132,8 @@ function Header({ account, vendorEngramDropActive, history, isPhonePortrait, dis
       searchFilter.current.focusFilterInput();
     }
   }, [showSearch]);
+
+  const history = useHistory();
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
 

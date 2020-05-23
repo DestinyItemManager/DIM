@@ -1,6 +1,5 @@
 import React from 'react';
 import Sheet from '../dim-ui/Sheet';
-import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -28,6 +27,7 @@ import ModPickerHeader from './ModPickerHeader';
 import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
+import { SearchFilterRef } from 'app/search/SearchFilterInput';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -152,7 +152,7 @@ class ModPicker extends React.Component<Props, State> {
     lockedArmor2Mods: copy(this.props.lockedArmor2Mods),
   };
   private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterInput>();
+  private filterInput = React.createRef<SearchFilterRef>();
 
   componentDidMount() {
     if (this.itemContainer.current) {

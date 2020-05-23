@@ -60,6 +60,11 @@ const filterNames = [
   'description',
 ];
 
+export interface SearchFilterRef {
+  focusFilterInput(): void;
+  clearFilter(): void;
+}
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay.
@@ -76,7 +81,7 @@ export default React.forwardRef(function SearchFilterInput(
     onQueryChanged,
     onClear,
   }: Props,
-  ref: React.Ref<{ focusFilterInput(): void; clearFilter(): void }>
+  ref: React.Ref<SearchFilterRef>
 ) {
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);

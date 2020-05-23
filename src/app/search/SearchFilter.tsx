@@ -12,7 +12,7 @@ import { SearchConfig, searchFilterSelector, searchConfigSelector } from './sear
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { loadingTracker } from '../shell/loading-tracker';
-import SearchFilterInput from './SearchFilterInput';
+import SearchFilterInput, { SearchFilterRef } from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
 import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
@@ -98,7 +98,7 @@ export function SearchFilter(
     touchStores,
     onClear,
   }: Props,
-  ref: React.Ref<{ focusFilterInput(): void; clearFilter(): void }>
+  ref: React.Ref<SearchFilterRef>
 ) {
   const [showSelect, setShowSelect] = useState(false);
 
