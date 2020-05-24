@@ -177,7 +177,6 @@ function InfusionFinder({
   isPhonePortrait,
   lastInfusionDirection,
 }: Props) {
-  // These bits of state are pretty independent, but should they be in the reducer as well?
   const itemContainer = useRef<HTMLDivElement>(null);
   const [{ direction, query, source, target, height, filter }, stateDispatch] = useReducer(
     stateReducer,
@@ -243,9 +242,9 @@ function InfusionFinder({
   const effectiveSource = source || dupes[0] || items[0];
 
   let result: DimItem | undefined;
-  if (effectiveSource && effectiveTarget && effectiveSource.primStat && effectiveTarget.primStat) {
+  if (effectiveSource?.primStat && effectiveTarget?.primStat) {
     const infused = effectiveSource.primStat?.value || 0;
-    result = copy(target);
+    result = copy(effectiveTarget);
     (result as any).primStat.value = infused;
   }
 
