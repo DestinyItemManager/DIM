@@ -15,7 +15,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout,
   saveAsNew,
 }: {
-  loadout?: Loadout;
+  loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
   clashingLoadout?: Loadout;
