@@ -254,8 +254,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
           // TODO: makeFakeItem
           warnitems.push({
             ...loadoutItem,
-            icon: itemDef.displayProperties.icon,
-            name: itemDef.displayProperties.name,
+            icon: itemDef.displayProperties?.icon || itemDef.icon,
+            name: itemDef.displayProperties?.name || itemDef.itemName,
           } as DimItem);
         }
       }
