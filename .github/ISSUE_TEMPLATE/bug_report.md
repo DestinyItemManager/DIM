@@ -11,7 +11,7 @@ assignees: ''
 Find the version in "About DIM" from the menu (the button with three bars on the upper left of the screen). Is the DIM icon orange, or blue?
 
 **What Browser and OS are you using?**
-It helps to know what type of browser and what version you're using.
+It helps to know what type of browser and what version you're using. Have you installed DIM as an app through Chrome or Safari?
 
 **Describe the bug and how to make it happen**
 Tell us what's wrong. A great format for bug reports is "I did X, and I expected Y, but instead Z happened." If it helps illustrate the issue, please add screenshots to help explain your problem.
