@@ -6,9 +6,7 @@ import { connect } from 'react-redux';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { t } from 'app/i18next-t';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-
-const youTubeLink =
-  "<a href='https://www.youtube.com/watch?v=TDMiysNXoOo&list=PLwhQ0xgGDsPuKwoA8nBxeb9Gin-UcUf6d' target='_blank' rel='noopener noreferrer'>YouTube</a>";
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 
 function mapStateToProps(state: RootState) {
   return {
@@ -22,8 +20,9 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
       <div>
         <p>{t('Filter.Combine', { example: 'is:arc light:>300' })}</p>
         <p>{t('Filter.Negate', { notexample: '-is:engram' })}</p>
-
-        <p dangerouslySetInnerHTML={{ __html: t('Filter.VideoExample', { link: youTubeLink }) }} />
+        <p>
+          <UserGuideLink topic="Item_Search" title={t('Filter.VideoExample')} />
+        </p>
         <table>
           <tbody>
             <tr>

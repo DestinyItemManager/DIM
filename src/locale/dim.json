@@ -333,13 +333,16 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
-    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
+    "VideoExample": "Visit our User Guide for in-depth info on using search filters.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "Year": "Shows items from which year of Destiny they appeared in."
+  },
+  "General": {
+    "UserGuideLink": "User guide"
   },
   "Ghost": {
     "crucible": "crucible",
@@ -499,8 +502,8 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
-    "Season": "Season",
     "SearchAMod": "Search a mod or description",
+    "Season": "",
     "Seasonal": "Seasonal",
     "SelectMods": "Select Mods",
     "ShowAllConfigs": "Show all configurations",
@@ -538,7 +541,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
-    "LockPerk": "Select mod or perk",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -558,8 +561,7 @@
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
-    "UnlockItem": "Unlock Item",
-    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
@@ -567,14 +569,8 @@
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
-    "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedError": "None of the items in your loadout could be transferred.",
     "AppliedWarn": "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors.",
-    "Applied_female": "Your single item loadout has been transferred to your {{store}}.",
-    "Applied_female_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_male": "Your single item loadout has been transferred to your {{store}}.",
-    "Applied_male_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "ChangeName": "Change name",
@@ -623,12 +619,6 @@
     "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "PullFromPostmaster": "Collect Postmaster",
-    "PullFromPostmasterDone": "Finished pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterDone_female": "Finished pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterDone_female_plural": "Finished pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterDone_male": "Finished pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterDone_male_plural": "Finished pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterDone_plural": "Finished pulling {{count}} Postmaster items to {{store}}.",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
@@ -869,7 +859,6 @@
     "AutoBackup": "We've backed up your data to a file called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
-    "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
     "DeleteAllDataLabel": "Wipe DIM Sync Data",
@@ -884,7 +873,6 @@
     "DriveSync": "Log in to Google Drive",
     "EnableDimApi": "Enable DIM Sync",
     "Enabled": "Enabled",
-    "Explain": "DIM stores its own data (loadouts, tags, settings, etc.) separate from your Destiny data (which is maintained by Bungie.net).",
     "Export": "Download Data Backup",
     "ForceSync": "Force sync data from Google Drive",
     "ForceSyncWarning": "This will overwrite any local data with the data from Google Drive. Are you sure you want to do that?",
@@ -932,7 +920,6 @@
     "StatLabel": "This currently contains:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "Data Storage",
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
     "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
@@ -1007,6 +994,8 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
+      "Wiki": "DIM User Guide Wiki",
+      "WikiHelp": "Learn how to use DIM and contribute to our community-driven user guide.",
       "YouTube": "YouTube",
       "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },

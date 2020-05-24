@@ -1,5 +1,7 @@
 ## Next
 
+* DIM has a new community-driven user guide at https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki
+
 ## 6.11.0 <span className="changelog-date">(2020-05-17)</span>
 
 * Added the Organizer page, which lets you see all your items in a table form, which you can sort and filter (try shift-clicking on a cell!). Add and remove columns and bulk-tag your items to help quickly figure out which items you want to keep and which you can get rid of.

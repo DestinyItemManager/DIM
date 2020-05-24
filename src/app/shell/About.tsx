@@ -14,6 +14,7 @@ import {
   faReddit,
   faTshirt,
   heartIcon,
+  helpIcon,
 } from './icons';
 import { Link } from 'react-router-dom';
 
@@ -33,6 +34,7 @@ const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
+const wikiLink = 'https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki';
 
 export default function About() {
   useEffect(() => {
@@ -117,6 +119,14 @@ export default function About() {
           </h2>
           {t('Views.About.TwitterHelp')} <br />
           <ExternalLink href={twitterLink}>@ThisIsDIM</ExternalLink>
+        </div>
+        <div>
+          <h2>
+            <ExternalLink href={wikiLink}>
+              <AppIcon icon={helpIcon} /> {t('Views.About.Wiki')}
+            </ExternalLink>
+          </h2>
+          {t('Views.About.WikiHelp')} <br />
         </div>
         <div>
           <h2>

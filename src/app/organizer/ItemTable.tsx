@@ -43,6 +43,7 @@ import { loadoutsSelector } from 'app/loadout/reducer';
 import { StatInfo } from 'app/compare/Compare';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -490,6 +491,7 @@ function ItemTable({
             onTagSelectedItems={onTagSelectedItems}
             onMoveSelectedItems={onMoveSelectedItems}
           />
+          <UserGuideLink topic="Organizer" className={styles.guideLink} />
           <Dropzone onDrop={importCsv} accept=".csv">
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()}>
