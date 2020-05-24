@@ -491,7 +491,7 @@ function LoadoutDrawer({
     } catch (e) {}
   };
 
-  const onSaveLoadout = async (
+  const onSaveLoadout = (
     e: React.MouseEvent,
     loadoutToSave: Readonly<Loadout> | undefined = loadout
   ) => {
@@ -500,23 +500,8 @@ function LoadoutDrawer({
       return;
     }
 
-    // Eagerly close
+    dispatch(saveLoadout(loadoutToSave));
     close();
-
-    try {
-      // TODO: nuke this clashing loadout business
-      await dispatch(saveLoadout(loadoutToSave));
-    } catch (e) {
-      showNotification({
-        type: 'error',
-        title: t('Loadouts.SaveErrorTitle'),
-        body: t('Loadouts.SaveErrorDescription', {
-          loadoutName: name,
-          error: e.message,
-        }),
-      });
-      console.error(e);
-    }
   };
 
   const saveAsNew = (e) => {

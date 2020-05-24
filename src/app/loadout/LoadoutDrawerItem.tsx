@@ -11,10 +11,15 @@ export default function LoadoutDrawerItem({
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
 }) {
+  const onClose = (e) => {
+    e.stopPropagation();
+    remove(item, e);
+  };
+
   return (
     <div onClick={(e) => equip(item, e)} className="loadout-item">
       <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
-      <div className="close" onClick={(e) => remove(item, e)} />
+      <div className="close" onClick={onClose} />
     </div>
   );
 }
