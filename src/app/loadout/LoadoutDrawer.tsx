@@ -14,7 +14,6 @@ import { createSelector } from 'reselect';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/selectors';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
-import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -32,6 +31,7 @@ import produce from 'immer';
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
 import { emptyArray } from 'app/utils/empty';
+import { loadoutsSelector } from './reducer';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -79,13 +79,13 @@ interface StoreProps {
   stores: DimStore[];
   buckets: InventoryBuckets;
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
+  loadouts: Loadout[];
 }
 
 type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Readonly<Loadout>;
-  clashingLoadout?: Loadout;
   show: boolean;
   showClass: boolean;
   isNew: boolean;
@@ -94,10 +94,7 @@ interface State {
 type Action =
   /** Reset the tool (for when the sheet is closed) */
   | { type: 'reset' }
-  /** Edit the clashing loadout, if there is one. */
-  | { type: 'editClashing' }
-  | { type: 'showClashingLoadout'; loadout: Loadout; clashingLoadout: Loadout }
-  | { type: 'resetName' }
+  /** Start editing a new or existing loadout */
   | {
       type: 'editLoadout';
       loadout: Loadout;
@@ -105,11 +102,14 @@ type Action =
       showClass: boolean;
       account: DestinyAccount;
     }
+  /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
+  /** Add an item to the loadout */
   | { type: 'addItem'; item: DimItem; equip: boolean | undefined; shift: boolean; items: DimItem[] }
+  /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
-  | { type: 'equipItem'; item: DimItem; items: DimItem[] }
-  | { type: 'asNew'; loadout: Loadout };
+  /** Make an item that's already in the loadout equipped */
+  | { type: 'equipItem'; item: DimItem; items: DimItem[] };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -121,36 +121,8 @@ function stateReducer(state: State, action: Action): State {
         show: false,
         showClass: true,
         isNew: false,
-        clashingLoadout: undefined,
         loadout: undefined,
       };
-
-    case 'editClashing':
-      return state.clashingLoadout
-        ? { ...state, loadout: state.clashingLoadout, isNew: false, clashingLoadout: undefined }
-        : state;
-
-    case 'showClashingLoadout': {
-      const { loadout, clashingLoadout } = action;
-      return {
-        ...state,
-        loadout,
-        clashingLoadout,
-        show: true,
-      };
-    }
-
-    case 'resetName':
-      return state.loadout
-        ? {
-            ...state,
-            loadout: {
-              ...state.loadout,
-              name: '',
-            },
-            clashingLoadout: undefined,
-          }
-        : state;
 
     case 'editLoadout': {
       const { loadout, isNew, showClass, account } = action;
@@ -164,6 +136,7 @@ function stateReducer(state: State, action: Action): State {
         },
         isNew,
         showClass,
+        show: true,
       };
     }
 
@@ -210,15 +183,6 @@ function stateReducer(state: State, action: Action): State {
             loadout: equipItem(loadout, item, items),
           }
         : state;
-    }
-
-    case 'asNew': {
-      const { loadout } = action;
-      return {
-        ...state,
-        loadout,
-        isNew: true,
-      };
     }
   }
 }
@@ -432,6 +396,7 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     defs:
       destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
+    loadouts: loadoutsSelector(state),
   });
 }
 
@@ -446,17 +411,15 @@ function LoadoutDrawer({
   stores,
   itemSortOrder,
   defs,
+  loadouts,
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ show, loadout, showClass, isNew, clashingLoadout }, stateDispatch] = useReducer(
-    stateReducer,
-    {
-      show: false,
-      showClass: true,
-      isNew: false,
-    }
-  );
+  const [{ show, loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
+    show: false,
+    showClass: true,
+    isNew: false,
+  });
 
   // The loadout to edit comes in from the editLoadout$ rx observable
   const editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
@@ -468,8 +431,6 @@ function LoadoutDrawer({
     stateDispatch({ type: 'editLoadout', loadout, showClass, isNew, account });
   };
   useSubscription(() => editLoadout$.subscribe(editLoadout));
-
-  const onEditClashingLoadout = () => stateDispatch({ type: 'editClashing' });
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(() => findItems(loadout?.items, defs, stores), [
@@ -544,24 +505,7 @@ function LoadoutDrawer({
 
     try {
       // TODO: nuke this clashing loadout business
-      const clashingLoadout = await dispatch(saveLoadout(loadoutToSave));
-      if (clashingLoadout) {
-        showNotification({
-          type: 'error',
-          title: t('Loadouts.ClashingTitle'),
-          body: t('Loadouts.ClashingDescription', {
-            loadoutName: clashingLoadout.name,
-          }),
-          onClick: () => {
-            stateDispatch({
-              type: 'showClashingLoadout',
-              loadout: loadoutToSave,
-              clashingLoadout: copy(clashingLoadout),
-            });
-            loadoutDialogOpen = true;
-          },
-        });
-      }
+      await dispatch(saveLoadout(loadoutToSave));
     } catch (e) {
       showNotification({
         type: 'error',
@@ -575,11 +519,6 @@ function LoadoutDrawer({
     }
   };
 
-  const onResetName = () =>
-    stateDispatch({
-      type: 'resetName',
-    });
-
   const saveAsNew = (e) => {
     e.preventDefault();
 
@@ -590,7 +529,6 @@ function LoadoutDrawer({
       ...copy(loadout),
       id: uuidv4(), // Let it be a new ID
     };
-    stateDispatch({ type: 'asNew', loadout: newLoadout });
     onSaveLoadout(e, newLoadout);
   };
 
@@ -600,17 +538,17 @@ function LoadoutDrawer({
 
   const bucketTypes = Object.keys(buckets.byType);
 
+  // Find a loadout with the same name that could overlap with this one
+  const clashingLoadout = loadouts.find(
+    (l) =>
+      loadout.name === l.name &&
+      loadout.id !== l.id &&
+      (loadout.classType === l.classType || l.classType === DestinyClass.Unknown)
+  );
+
   const header = (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
-      {clashingLoadout && (
-        <LoadoutEditPopup
-          changeNameHandler={onResetName}
-          editHandler={onEditClashingLoadout}
-          loadoutClass={clashingLoadout.classType}
-          loadoutName={clashingLoadout.name}
-        />
-      )}
       <LoadoutDrawerOptions
         loadout={loadout}
         showClass={showClass}
@@ -619,6 +557,7 @@ function LoadoutDrawer({
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
+        clashingLoadout={clashingLoadout}
       />
     </div>
   );

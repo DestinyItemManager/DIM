@@ -4,7 +4,6 @@ import { DimItem } from '../inventory/item-types';
 import * as actions from './actions';
 import { LoadoutItem, Loadout } from './loadout-types';
 import { ThunkResult } from 'app/store/reducers';
-import { loadoutsSelector } from './reducer';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { accountsSelector } from 'app/accounts/reducer';
@@ -57,17 +56,11 @@ export function loadLoadouts(data: DimData): ThunkResult {
   };
 }
 
-export function saveLoadout(loadout: Loadout): ThunkResult<Loadout | undefined> {
+export function saveLoadout(loadout: Loadout): ThunkResult {
   return async (dispatch, getState) => {
-    const clashingLoadout = getClashingLoadout(loadoutsSelector(getState()), loadout);
-
-    if (!clashingLoadout) {
-      dispatch(actions.updateLoadout(loadout));
-      // By this point we should have accounts!
-      await saveLoadouts(getState().loadouts.loadouts, accountsSelector(getState()));
-    }
-
-    return clashingLoadout;
+    dispatch(actions.updateLoadout(loadout));
+    // By this point we should have accounts!
+    await saveLoadouts(getState().loadouts.loadouts, accountsSelector(getState()));
   };
 }
 
@@ -97,16 +90,6 @@ async function saveLoadouts(
 
   await SyncService.set(data);
   return loadouts;
-}
-
-/** Find other loadouts that have the same name as a proposed new loadout. */
-function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout | undefined {
-  return loadouts.find(
-    (loadout) =>
-      loadout.name === newLoadout.name &&
-      loadout.id !== newLoadout.id &&
-      (loadout.classType === newLoadout.classType || loadout.classType === DestinyClass.Unknown)
-  );
 }
 
 function processLoadout(data: DimData): Loadout[] {
