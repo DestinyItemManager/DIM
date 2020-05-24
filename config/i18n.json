@@ -336,13 +336,16 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
-    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
+    "VideoExample": "Visit our User Guide for in-depth info on using search filters.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "Year": "Shows items from which year of Destiny they appeared in."
+  },
+  "General": {
+    "UserGuideLink": "User guide"
   },
   "Ghost": {
     "crucible": "crucible",
@@ -1016,7 +1019,9 @@
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel.",
+      "Wiki": "DIM User Guide Wiki",
+      "WikiHelp": "Learn how to use DIM and contribute to our community-driven user guide."
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",

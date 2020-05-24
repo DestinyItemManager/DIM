@@ -28,6 +28,7 @@
   > div {
     display: flex;
     flex-direction: row;
+    align-items: center;
     position: sticky;
     left: 4px;
     width: 98vw;
@@ -35,6 +36,10 @@
   }
 }
 $toolbarHeight: 41px - 16px + 8px;
+
+.guideLink {
+  margin-right: 8px !important;
+}
 
 // Column headers
 .header {

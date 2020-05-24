@@ -7,6 +7,7 @@ interface CssExports {
   'dmg': string;
   'energy': string;
   'exotic': string;
+  'guideLink': string;
   'hasFilter': string;
   'header': string;
   'icon': string;
