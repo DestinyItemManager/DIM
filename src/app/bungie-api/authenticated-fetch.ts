@@ -84,7 +84,7 @@ async function responseIndicatesBadToken(response: Response) {
 /**
  * A fatal token error means we have to log in again.
  */
-class FatalTokenError extends Error {
+export class FatalTokenError extends Error {
   constructor(msg) {
     super(msg);
     this.name = 'FatalTokenError';
