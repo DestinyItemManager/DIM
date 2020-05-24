@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **What version of DIM are you using?**
-Find the version in "About DIM" from the menu.
+Find the version in "About DIM" from the menu (the button with three bars on the upper left of the screen). Is the DIM icon orange, or blue?
 
 **What Browser and OS are you using?**
 It helps to know what type of browser and what version you're using.
