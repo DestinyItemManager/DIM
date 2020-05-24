@@ -56,7 +56,16 @@ export default function LoadoutDrawerOptions({
 
   // TODO: make the link to loadout optimizer bring the currently equipped items along in route state
 
-  const saveDisabled = !loadout.name.length || !loadout.items.length || Boolean(clashingLoadout);
+  const saveDisabled =
+    !loadout.name.length ||
+    !loadout.items.length ||
+    // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
+    Boolean(clashingLoadout && clashingLoadout.id !== loadout.id);
+
+  const saveAsNewDisabled =
+    saveDisabled ||
+    // There's an existing loadout with the same name & class
+    Boolean(clashingLoadout);
 
   return (
     <div className="loadout-options">
@@ -98,7 +107,7 @@ export default function LoadoutDrawerOptions({
               className="dim-button"
               onClick={saveAsNew}
               type="button"
-              disabled={saveDisabled}
+              disabled={saveAsNewDisabled}
             >
               {t('Loadouts.SaveAsNew')}
             </button>
@@ -116,7 +125,7 @@ export default function LoadoutDrawerOptions({
           </label>
         </div>
       </form>
-      {clashingLoadout && (
+      {clashingLoadout && clashingLoadout.id !== loadout.id && (
         <div className="dim-already-exists">
           {clashingLoadout.classType !== DestinyClass.Unknown
             ? t('Loadouts.AlreadyExistsClass', {

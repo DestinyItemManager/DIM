@@ -524,11 +524,13 @@ function LoadoutDrawer({
   const bucketTypes = Object.keys(buckets.byType);
 
   // Find a loadout with the same name that could overlap with this one
+  // Note that this might be the saved version of this very same loadout!
   const clashingLoadout = loadouts.find(
     (l) =>
       loadout.name === l.name &&
-      loadout.id !== l.id &&
-      (loadout.classType === l.classType || l.classType === DestinyClass.Unknown)
+      (loadout.classType === l.classType ||
+        l.classType === DestinyClass.Unknown ||
+        loadout.classType === DestinyClass.Unknown)
   );
 
   const header = (
