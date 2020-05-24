@@ -2,7 +2,7 @@ const missingSources: { [key: string]: number[] } = {
   adventure: [
     1589569998, // Gearhead Gauntlets
     1886391431, // Gearhead Gloves
-    2290569618, // Gearhead Grips
+    2290569618 // Gearhead Grips
   ],
   blackarmory: [
     78664642, // Annealed Shaper Gloves
@@ -19,19 +19,19 @@ const missingSources: { [key: string]: number[] } = {
     3322192806, // Annealed Shaper Robes
     3363625697, // Woven Firesmith Grips
     3607521808, // Woven Firesmith Mask
-    4064641551, // Annealed Shaper Bond
+    4064641551 // Annealed Shaper Bond
   ],
   calus: [
     784492908, // Hive Armaments
     2249025553, // Hive Invigoration
     3425422485, // Hive Repurposing
-    3888848980, // Hive Barrier
+    3888848980 // Hive Barrier
   ],
   crownofsorrow: [
     784492908, // Hive Armaments
     2249025553, // Hive Invigoration
     3425422485, // Hive Repurposing
-    3888848980, // Hive Barrier
+    3888848980 // Hive Barrier
   ],
   crucible: [
     85800627, // Ankaa Seeker IV
@@ -123,7 +123,7 @@ const missingSources: { [key: string]: number[] } = {
     4136212668, // Wing Discipline
     4144133120, // Wing Theorem
     4211218181, // Ankaa Seeker IV
-    4269346472, // Binary Phoenix Bond
+    4269346472 // Binary Phoenix Bond
   ],
   do: [
     102368695, // Anti-Extinction Mask
@@ -140,7 +140,7 @@ const missingSources: { [key: string]: number[] } = {
     3373566763, // Anti-Extinction Robes
     3470850110, // Anti-Extinction Grasps
     3890232472, // Anti-Extinction Legs
-    3940923523, // Stella Incognita Cloak
+    3940923523 // Stella Incognita Cloak
   ],
   dreaming: [
     99549082, // Reverie Dawn Helm
@@ -157,7 +157,7 @@ const missingSources: { [key: string]: number[] } = {
     3250140572, // Reverie Dawn Cloak
     3343583008, // Reverie Dawn Mark
     3711557785, // Reverie Dawn Strides
-    4257800469, // Reverie Dawn Greaves
+    4257800469 // Reverie Dawn Greaves
   ],
   drifter: [
     9767416, // Ancient Apocalypse Bond
@@ -204,12 +204,12 @@ const missingSources: { [key: string]: number[] } = {
     3804360785, // Ancient Apocalypse Mark
     3825427923, // Ancient Apocalypse Helm
     3925589496, // Ancient Apocalypse Hood
-    4255727106, // Ancient Apocalypse Hood
+    4255727106 // Ancient Apocalypse Hood
   ],
   edz: [
     1589569998, // Gearhead Gauntlets
     1886391431, // Gearhead Gloves
-    2290569618, // Gearhead Grips
+    2290569618 // Gearhead Grips
   ],
   eow: [
     75025442, // Boots of Feltroc
@@ -226,7 +226,7 @@ const missingSources: { [key: string]: number[] } = {
     3681852889, // Mark of Nohr
     3693007688, // Grips of Feltroc
     3731175213, // Mask of Nohr
-    4240859456, // Vest of Feltroc
+    4240859456 // Vest of Feltroc
   ],
   ep: [
     425390008, // Midnight Exigent Greaves
@@ -243,7 +243,7 @@ const missingSources: { [key: string]: number[] } = {
     3691605010, // Midnight Exigent Plate
     3792637803, // Abhorrent Imperative Mask
     3876414174, // Midnight Exigent Gauntlets
-    4286845987, // Midnight Exigent Mark
+    4286845987 // Midnight Exigent Mark
   ],
   eververse: [
     138961800, // Helm of Optimacy
@@ -295,7 +295,7 @@ const missingSources: { [key: string]: number[] } = {
     3850655136, // Winterhart Vest
     3866715933, // Dawning Warmth
     3947596543, // Green Dawning Lanterns
-    4059030097, // Winterhart Mask
+    4059030097 // Winterhart Mask
   ],
   fwc: [
     79417130, // Simulator Grips
@@ -312,7 +312,7 @@ const missingSources: { [key: string]: number[] } = {
     2657180960, // Entanglement Bond
     2915206011, // Simulator Mask
     3030715588, // Simulator Boots
-    3762717334, // Simulator Gauntlets
+    3762717334 // Simulator Gauntlets
   ],
   gambit: [
     9767416, // Ancient Apocalypse Bond
@@ -359,7 +359,7 @@ const missingSources: { [key: string]: number[] } = {
     3804360785, // Ancient Apocalypse Mark
     3825427923, // Ancient Apocalypse Helm
     3925589496, // Ancient Apocalypse Hood
-    4255727106, // Ancient Apocalypse Hood
+    4255727106 // Ancient Apocalypse Hood
   ],
   gambitprime: [
     95332289, // Notorious Collector Strides
@@ -541,7 +541,7 @@ const missingSources: { [key: string]: number[] } = {
     4245233855, // Illicit Sentry Grips
     4266990316, // Notorious Sentry Boots
     4266990318, // Illicit Sentry Boots
-    4266990319, // Outlawed Sentry Boots
+    4266990319 // Outlawed Sentry Boots
   ],
   garden: [],
   gunsmith: [],
@@ -560,12 +560,12 @@ const missingSources: { [key: string]: number[] } = {
     3758301014, // Noble Constant Type 2
     4146629762, // Frumious Strides
     4208352991, // Ego Talon IV
-    4225579453, // Noble Constant Type 2
+    4225579453 // Noble Constant Type 2
   ],
   io: [
     1445420672, // Mindbreaker Boots
     2025523685, // Mindbreaker Boots
-    2164070257, // Mindbreaker Boots
+    2164070257 // Mindbreaker Boots
   ],
   ironbanner: [
     21320325, // Bond of Remembrance
@@ -672,7 +672,7 @@ const missingSources: { [key: string]: number[] } = {
     4144217282, // Iron Fellowship Strides
     4156963223, // Iron Symmachy Vest
     4211068696, // Iron Truage Legs
-    4248834293, // Iron Remembrance Vest
+    4248834293 // Iron Remembrance Vest
   ],
   lastwish: [
     16387641, // Mark of the Great Hunt
@@ -689,7 +689,7 @@ const missingSources: { [key: string]: number[] } = {
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
     3874578566, // Greaves of the Great Hunt
-    4219088013, // Helm of the Great Hunt
+    4219088013 // Helm of the Great Hunt
   ],
   legendaryengram: [
     24598504, // Red Moon Phantom Vest
@@ -811,7 +811,7 @@ const missingSources: { [key: string]: number[] } = {
     4079913195, // Dead End Cure 2.1
     4097652774, // Tangled Web Plate
     4146408011, // Tangled Web Gloves
-    4166246718, // Insight Vikti Robes
+    4166246718 // Insight Vikti Robes
   ],
   leviathan: [
     311429764, // Shadow's Mark
@@ -843,7 +843,7 @@ const missingSources: { [key: string]: number[] } = {
     3530284424, // Wraps of the Fulminator
     3530284425, // Wraps of the Emperor's Minister
     3853397100, // Boots of the Emperor's Agent
-    3853397101, // Boots of the Ace-Defiant
+    3853397101 // Boots of the Ace-Defiant
   ],
   mars: [
     425390008, // Midnight Exigent Greaves
@@ -860,7 +860,7 @@ const missingSources: { [key: string]: number[] } = {
     3691605010, // Midnight Exigent Plate
     3792637803, // Abhorrent Imperative Mask
     3876414174, // Midnight Exigent Gauntlets
-    4286845987, // Midnight Exigent Mark
+    4286845987 // Midnight Exigent Mark
   ],
   menagerie: [
     56157064, // Exodus Down Gauntlets
@@ -892,7 +892,7 @@ const missingSources: { [key: string]: number[] } = {
     3960258378, // Exodus Down Hood
     4007396243, // Exodus Down Gloves
     4060742749, // Exodus Down Mask
-    4130486121, // Exodus Down Mask
+    4130486121 // Exodus Down Mask
   ],
   mercury: [
     61987238, // Kairos Function Mask
@@ -909,13 +909,13 @@ const missingSources: { [key: string]: number[] } = {
     3873109093, // Kairos Function Plate
     4148237373, // Kairos Function Greaves
     4240041208, // Kairos Function Boots
-    4252342556, // Kairos Function Cloak
+    4252342556 // Kairos Function Cloak
   ],
   moon: [],
   nessus: [
     2866378042, // Unethical Experiments Bond
     2940586725, // Unethical Experiments Mark
-    3144980977, // Unethical Experiments Cloak
+    3144980977 // Unethical Experiments Cloak
   ],
   nightfall: [],
   nightmare: [],
@@ -934,7 +934,7 @@ const missingSources: { [key: string]: number[] } = {
     2165598463, // Coronation Bond
     2835971286, // Sovereign Robes
     3060679667, // Sovereign Vest
-    4119718816, // Sovereign Helm
+    4119718816 // Sovereign Helm
   ],
   prestige: [],
   prophecy: [],
@@ -953,7 +953,7 @@ const missingSources: { [key: string]: number[] } = {
     2719710110, // Bulletsmith's Ire Helm
     2750983488, // Bladesmith's Memory Cloak
     3491990569, // Bulletsmith's Ire Plate
-    4092373800, // Gunsmith's Devotion Robes
+    4092373800 // Gunsmith's Devotion Robes
   ],
   scourge: [
     96643258, // Bladesmith's Memory Mask
@@ -970,7 +970,7 @@ const missingSources: { [key: string]: number[] } = {
     2719710110, // Bulletsmith's Ire Helm
     2750983488, // Bladesmith's Memory Cloak
     3491990569, // Bulletsmith's Ire Plate
-    4092373800, // Gunsmith's Devotion Robes
+    4092373800 // Gunsmith's Devotion Robes
   ],
   seasonpass: [
     238618944, // Righteous Helm
@@ -1033,7 +1033,7 @@ const missingSources: { [key: string]: number[] } = {
     4026120124, // Substitutional Alloy Grips
     4026120127, // Substitutional Alloy Grips
     4078925541, // Substitutional Alloy Mask
-    4078925542, // Substitutional Alloy Mask
+    4078925542 // Substitutional Alloy Mask
   ],
   shaxx: [
     85800627, // Ankaa Seeker IV
@@ -1125,7 +1125,7 @@ const missingSources: { [key: string]: number[] } = {
     4136212668, // Wing Discipline
     4144133120, // Wing Theorem
     4211218181, // Ankaa Seeker IV
-    4269346472, // Binary Phoenix Bond
+    4269346472 // Binary Phoenix Bond
   ],
   shipwright: [],
   sos: [
@@ -1143,7 +1143,7 @@ const missingSources: { [key: string]: number[] } = {
     3518692432, // Equitis Shade Cowl
     3862230571, // Insigne Shade Bond
     4151496279, // Turris Shade Greaves
-    4213777114, // Insigne Shade Robes
+    4213777114 // Insigne Shade Robes
   ],
   strikes: [
     358599471, // Vigil of Heroes
@@ -1207,7 +1207,7 @@ const missingSources: { [key: string]: number[] } = {
     4074662489, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
-    4288492921, // Vigil of Heroes
+    4288492921 // Vigil of Heroes
   ],
   sundial: [],
   tangled: [
@@ -1216,7 +1216,7 @@ const missingSources: { [key: string]: number[] } = {
     1566911695, // Scorned Baron Plate
     2944336620, // Nea-Thonis Breather
     3523809305, // Eimin-Tin Ritual Mask
-    4245441464, // Scorned Baron Robes
+    4245441464 // Scorned Baron Robes
   ],
   titan: [
     66047450, // Lost Pacific Gloves
@@ -1233,7 +1233,7 @@ const missingSources: { [key: string]: number[] } = {
     3283642233, // Lost Pacific Plate
     3416618798, // Lost Pacific Robes
     3734713335, // Lost Pacific Bond
-    4105480824, // Lost Pacific Cape
+    4105480824 // Lost Pacific Cape
   ],
   trials: [
     72827962, // Focusing Robes
@@ -1265,7 +1265,7 @@ const missingSources: { [key: string]: number[] } = {
     4100217958, // Focusing Boots
     4100217959, // Flowing Treads
     4177448932, // Focusing Wraps
-    4177448933, // Channeling Wraps
+    4177448933 // Channeling Wraps
   ],
   vexoffensive: [],
   zavala: [
@@ -1330,8 +1330,8 @@ const missingSources: { [key: string]: number[] } = {
     4074662489, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
-    4288492921, // Vigil of Heroes
-  ],
+    4288492921 // Vigil of Heroes
+  ]
 };
 
 export default missingSources;
