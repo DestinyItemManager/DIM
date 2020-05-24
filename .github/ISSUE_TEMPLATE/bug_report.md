@@ -15,3 +15,10 @@ It helps to know what type of browser and what version you're using.
 
 **Describe the bug and how to make it happen**
 Tell us what's wrong. A great format for bug reports is "I did X, and I expected Y, but instead Z happened." If it helps illustrate the issue, please add screenshots to help explain your problem.
+
+**Include devtools console logs**
+If you can, open the devtools console (ctrl+shift+J on PC and cmd+option+J on Mac) and paste what you see in the window that pops up:
+
+```
+Paste console logs here
+```
