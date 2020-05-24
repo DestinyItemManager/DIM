@@ -13,6 +13,7 @@ export interface VendorsState {
     [characterId: string]: {
       vendorsResponse: DestinyVendorsResponse;
       lastLoaded: Date;
+      error?: Error;
     };
   };
 }
@@ -28,17 +29,33 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
   action: VendorsAction | AccountsAction
 ) => {
   switch (action.type) {
-    case getType(actions.loadedAll):
+    case getType(actions.loadedAll): {
+      const { characterId, vendorsResponse } = action.payload;
       return {
         ...state,
         vendorsByCharacter: {
           ...state.vendorsByCharacter,
-          [action.payload.characterId]: {
-            vendorsResponse: action.payload.vendorsResponse,
+          [characterId]: {
+            vendorsResponse: vendorsResponse,
             lastLoaded: new Date(),
+            error: undefined,
           },
         },
       };
+    }
+
+    case getType(actions.loadedError): {
+      const { characterId, error } = action.payload;
+      return {
+        ...state,
+        vendorsByCharacter: {
+          ...state.vendorsByCharacter,
+          [characterId]: {
+            error,
+          },
+        },
+      };
+    }
 
     case getType(setCurrentAccount):
       return initialState;

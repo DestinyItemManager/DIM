@@ -58,11 +58,8 @@ interface StoreProps {
   profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
-  vendorsError?: Error;
   filterItems(item: DimItem): boolean;
 }
-
-// TODO: extract detail component for vendors body? How to include selected store in state?
 
 function mapStateToProps() {
   const ownedItemSelectorInstance = ownedItemsSelector();
@@ -97,7 +94,6 @@ function Vendors({
   profileResponse,
   vendorEngramDrops,
   vendors,
-  vendorsError,
   dispatch,
   account,
 }: Props) {
@@ -116,12 +112,11 @@ function Vendors({
   useSubscription(() =>
     refresh$.subscribe(() => {
       if (selectedStoreId) {
-        loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId)));
+        loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
       }
     })
   );
 
-  // TODO: wrap this whole thing with a selected store ID... wrapper thing
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
 
   const onSetFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -154,7 +149,8 @@ function Vendors({
     [profileResponse]
   );
 
-  const vendorsResponse = characterId ? vendors[characterId]?.vendorsResponse : undefined;
+  const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
+  const vendorsResponse = vendorData?.vendorsResponse;
 
   let vendorGroups = useMemo(
     () =>
@@ -164,10 +160,10 @@ function Vendors({
     [account, buckets, defs, mergedCollectibles, vendorsResponse]
   );
 
-  if (vendorsError) {
+  if (!vendorsResponse && vendorData?.error) {
     return (
       <PageWithMenu>
-        <ErrorPanel error={vendorsError} />
+        <ErrorPanel error={vendorData.error} />
       </PageWithMenu>
     );
   }

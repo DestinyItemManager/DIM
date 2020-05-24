@@ -11,13 +11,22 @@ export const loadedAll = createAction('vendors/LOADED_ALL')<{
   vendorsResponse: DestinyVendorsResponse;
 }>();
 
-export function loadAllVendors(account: DestinyAccount, characterId: string): ThunkResult {
-  // TODO dedupePromise, throttle
+export const loadedError = createAction('vendors/LOADED_ERROR')<{
+  characterId: string;
+  error: Error;
+}>();
+
+export function loadAllVendors(
+  account: DestinyAccount,
+  characterId: string,
+  force = false
+): ThunkResult {
   return async (dispatch, getState) => {
     // Only load at most once per 30 seconds
     if (
+      !force &&
       Date.now() - (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded.getTime() || 0) <
-      30 * 1000
+        30 * 1000
     ) {
       return;
     }
@@ -26,17 +35,15 @@ export function loadAllVendors(account: DestinyAccount, characterId: string): Th
       dispatch(getAllVendorDrops());
     }
 
-    let vendorsResponse;
     try {
-      vendorsResponse = await getVendorsApi(account, characterId);
+      const vendorsResponse = await getVendorsApi(account, characterId);
       dispatch(loadedAll({ vendorsResponse, characterId }));
 
       if ($featureFlags.reviewsEnabled && vendorsResponse) {
         dispatch(fetchRatingsForVendors(getState().manifest.d2Manifest!, vendorsResponse));
       }
     } catch (error) {
-      // TODO: Error action
-      this.setState({ error });
+      dispatch(loadedError({ characterId, error }));
     }
   };
 }
