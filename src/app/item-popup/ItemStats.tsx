@@ -1,5 +1,5 @@
 import React from 'react';
-import { DimItem, D1Item, DimStat } from '../inventory/item-types';
+import { DimItem, DimStat } from '../inventory/item-types';
 import _ from 'lodash';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
 import clsx from 'clsx';
@@ -8,12 +8,10 @@ import styles from './ItemStats.m.scss';
 export default function ItemStats({
   stats,
   item,
-  quality,
   className,
 }: {
   stats?: DimStat[];
   item?: DimItem;
-  quality?: D1Item['quality'];
   className?: string;
 }) {
   stats = stats || item?.stats || undefined;
@@ -32,7 +30,7 @@ export default function ItemStats({
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item?.isDestiny1() && quality?.min && <D1QualitySummaryStat item={item} />}
+      {item?.isDestiny1() && item.quality?.min && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

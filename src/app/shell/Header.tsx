@@ -169,69 +169,49 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   }[] = [];
   if (account) {
     const path = accountRoute(account);
-
-    links =
-      account.destinyVersion === 2
-        ? _.compact([
-            {
-              to: `${path}/inventory`,
-              text: t('Header.Inventory'),
-              hotkey: 'i',
-            },
-            {
-              to: `${path}/progress`,
-              text: t('Progress.Progress'),
-              hotkey: 'p',
-            },
-            {
-              to: `${path}/vendors`,
-              text: t('Vendors.Vendors'),
-              hotkey: 'v',
-              badge: vendorEngramDropActive && (
-                <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
-              ),
-            },
-            {
-              to: `${path}/collections`,
-              text: t('Vendors.Collections'),
-              hotkey: 'c',
-            },
-            {
-              to: `${path}/optimizer`,
-              text: t('LB.LB'),
-              hotkey: 'b',
-            },
-            !isPhonePortrait && {
-              to: `${path}/organizer`,
-              text: t('Organizer.Organizer'),
-              hotkey: 'o',
-            },
-          ])
-        : [
-            {
-              to: `${path}/inventory`,
-              text: t('Header.Inventory'),
-              hotkey: 'i',
-            },
-            {
-              to: `${path}/optimizer`,
-              text: t('LB.LB'),
-              hotkey: 'o',
-            },
-            {
-              to: `${path}/vendors`,
-              text: t('Vendors.Vendors'),
-              hotkey: 'v',
-            },
-            {
-              to: `${path}/record-books`,
-              text: t('RecordBooks.RecordBooks'),
-            },
-            {
-              to: `${path}/activities`,
-              text: t('Activities.Activities'),
-            },
-          ];
+    links = _.compact([
+      {
+        to: `${path}/inventory`,
+        text: t('Header.Inventory'),
+        hotkey: 'i',
+      },
+      account.destinyVersion === 2 && {
+        to: `${path}/progress`,
+        text: t('Progress.Progress'),
+        hotkey: 'p',
+      },
+      {
+        to: `${path}/vendors`,
+        text: t('Vendors.Vendors'),
+        hotkey: 'v',
+        badge: vendorEngramDropActive && (
+          <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
+        ),
+      },
+      account.destinyVersion === 2 && {
+        to: `${path}/collections`,
+        text: t('Vendors.Collections'),
+        hotkey: 'c',
+      },
+      {
+        to: `${path}/optimizer`,
+        text: t('LB.LB'),
+        hotkey: 'b',
+      },
+      !isPhonePortrait && {
+        to: `${path}/organizer`,
+        text: t('Organizer.Organizer'),
+        hotkey: 'o',
+      },
+      account.destinyVersion === 1 && {
+        to: `${path}/record-books`,
+        text: t('RecordBooks.RecordBooks'),
+      },
+      account.destinyVersion === 1 && {
+        to: `${path}/activities`,
+        text: t('Activities.Activities'),
+      },
+    ]);
   }
 
   const linkNodes = links.map((link) => (

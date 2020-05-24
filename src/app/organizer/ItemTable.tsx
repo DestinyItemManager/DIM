@@ -174,6 +174,7 @@ function ItemTable({
   const isArmor = firstItem?.bucket.inArmor;
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
   const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
+  const destinyVersion = firstItem?.destinyVersion || 2;
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
@@ -187,7 +188,8 @@ function ItemTable({
         wishList,
         customStatTotal,
         loadouts,
-        newItems
+        newItems,
+        destinyVersion
       ),
     [
       wishList,
@@ -200,6 +202,7 @@ function ItemTable({
       classIfAny,
       loadouts,
       newItems,
+      destinyVersion,
     ]
   );
 
