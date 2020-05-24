@@ -35,12 +35,26 @@ jobs:
         id: porcelain
         run: echo ::set-output name=porcelain::"$(git status --porcelain)"
 
-      - name: Push changes (DIM)
+#      - name: Push changes (DIM)
+#        if: steps.porcelain.outputs.porcelain
+#        uses: delphiactual/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          commit_message: "i18n"
+#          user_email: "destinyitemmanager@gmail.com"
+#          user_name: "DIM i18n Bot"
+#          branch: master
+
+      - name: Create Pull Request (DIM)
         if: steps.porcelain.outputs.porcelain
-        uses: delphiactual/github-push-action@master
+        uses: peter-evans/create-pull-request@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: "i18n"
-          user_email: "destinyitemmanager@gmail.com"
-          user_name: "DIM i18n Bot"
-          branch: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: i18n - ${{ env.GITHUB_SHA_SHORT }}
+          committer: DIM i18n Bot <destinyitemmanager@gmail.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          title: '[i18n] Updates'
+          body: i18n updates
+          labels: i18n, automated pr
+          reviewers: delphiactual
+          branch: i18n
