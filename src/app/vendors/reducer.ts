@@ -51,6 +51,7 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
         vendorsByCharacter: {
           ...state.vendorsByCharacter,
           [characterId]: {
+            ...state.vendorsByCharacter[characterId],
             error,
           },
         },
