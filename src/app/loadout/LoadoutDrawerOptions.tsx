@@ -107,6 +107,15 @@ export default function LoadoutDrawerOptions({
               className="dim-button"
               onClick={saveAsNew}
               type="button"
+              title={
+                clashingLoadout
+                  ? clashingLoadout.classType !== DestinyClass.Unknown
+                    ? t('Loadouts.AlreadyExistsClass', {
+                        className: getClass(clashingLoadout.classType),
+                      })
+                    : t('Loadouts.AlreadyExistsGlobal')
+                  : t('Loadouts.SaveAsNew')
+              }
               disabled={saveAsNewDisabled}
             >
               {t('Loadouts.SaveAsNew')}

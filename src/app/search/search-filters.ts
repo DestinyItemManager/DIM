@@ -463,7 +463,7 @@ function searchFilters(
         compareBy((item) => item.locked),
         compareBy((item) => {
           const tag = getTag(item, itemInfos);
-          return tag && ['favorite', 'keep'].includes(tag);
+          return Boolean(tag && ['favorite', 'keep'].includes(tag));
         }),
         compareBy((i) => i.id) // tiebreak by ID
       )
