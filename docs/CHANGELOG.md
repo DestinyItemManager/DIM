@@ -3,6 +3,7 @@
 ## 6.12.0 <span className="changelog-date">(2020-05-24)</span>
 
 * DIM has a new community-driven user guide at https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki
+* The Vault Organizer is now available for D1.
 
 ## 6.11.0 <span className="changelog-date">(2020-05-17)</span>
 
