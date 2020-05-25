@@ -1,10 +1,9 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import './storage.scss';
-import { StorageAdapter, SyncService } from './sync.service';
+import { SyncService } from './sync.service';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
-import { dataStats } from './data-stats';
 import { AppIcon, signOutIcon, signInIcon, restoreIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
@@ -22,35 +21,27 @@ interface Props extends RouteComponentProps {
 
 interface State {
   driveInfo?: DriveAboutResource;
-  adapterStats: {
-    [adapterName: string]: { [key: string]: number } | null;
-  };
 }
 
+/**
+ * Settings to import old data from Google Drive or pre-DIM-Sync local storage.
+ */
 class LegacyGoogleDriveSettings extends React.Component<Props, State> {
-  state: State = {
-    adapterStats: {},
-  };
+  state: State = {};
   private subscriptions = new Subscriptions();
 
   componentDidMount() {
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
-        if (this.props.location.search.includes('gdrive=true')) {
-          this.forceSync(undefined).then(() => this.props.history.replace('/settings'));
-        }
         this.updateGoogleDriveInfo();
       }),
 
       SyncService.GoogleDriveStorage.enabled$.subscribe((enabled) => {
-        this.refreshAdapter(SyncService.GoogleDriveStorage);
         if (enabled) {
           this.updateGoogleDriveInfo();
         }
       })
     );
-
-    SyncService.adapters.filter((adapter) => adapter.enabled).forEach(this.refreshAdapter);
 
     if (SyncService.GoogleDriveStorage.enabled) {
       this.updateGoogleDriveInfo();
@@ -107,19 +98,9 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     );
   }
 
-  private forceSync = async (e?: any, prompt = true) => {
-    e?.preventDefault();
-    if (prompt && confirm(t('Storage.ForceSyncWarning'))) {
-      const data = await SyncService.get(true);
-      await SyncService.set(data, true);
-      Promise.all(SyncService.adapters.map(this.refreshAdapter));
-    }
-    return false;
-  };
-
   private importFromLegacy = async (e?: any) => {
     e?.preventDefault();
-    const data = await SyncService.get(true);
+    const data = await SyncService.get();
     this.props.onImportData(data);
   };
 
@@ -128,7 +109,6 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     if (confirm(t('Storage.GDriveSignInWarning'))) {
       try {
         await SyncService.GoogleDriveStorage.authorize();
-        await this.forceSync(e, false);
       } catch (e) {
         alert(t('Storage.GDriveSignInError') + e.message);
         reportException('Google Drive Signin', e);
@@ -141,38 +121,6 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     e.preventDefault();
     alert(t('Storage.GDriveLogout'));
     return SyncService.GoogleDriveStorage.revokeDrive();
-  };
-
-  private refreshAdapter = async (adapter: StorageAdapter) => {
-    try {
-      if (adapter.enabled) {
-        const data = await adapter.get();
-
-        this.setState((state) => {
-          const adapterStats = {
-            ...state.adapterStats,
-            [adapter.name]: data ? dataStats(data) : null,
-          };
-          return {
-            adapterStats,
-          };
-        });
-        return;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.setState((state) => {
-      const adapterStats = {
-        ...state.adapterStats,
-        [adapter.name]: null,
-      };
-      return {
-        adapterStats,
-      };
-    });
-    return;
   };
 
   private updateGoogleDriveInfo = async () => {

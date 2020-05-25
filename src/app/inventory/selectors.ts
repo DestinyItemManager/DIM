@@ -2,10 +2,10 @@ import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { characterSortSelector } from '../settings/character-sort';
 import _ from 'lodash';
-import { apiPermissionGrantedSelector, currentProfileSelector } from 'app/dim-api/selectors';
-import { InventoryState } from './reducer';
+import { currentProfileSelector } from 'app/dim-api/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { getCurrentStore } from './stores-helpers';
+import { ItemInfos } from './dim-item-info';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
@@ -39,7 +39,5 @@ export const ownedItemsSelector = () =>
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
 /** Item infos (tags/notes) */
-export const itemInfosSelector = (state: RootState) =>
-  apiPermissionGrantedSelector(state)
-    ? ((currentProfileSelector(state)?.tags || emptyObject()) as InventoryState['itemInfos'])
-    : state.inventory.itemInfos;
+export const itemInfosSelector = (state: RootState): ItemInfos =>
+  currentProfileSelector(state)?.tags || emptyObject();

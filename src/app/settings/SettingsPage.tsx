@@ -21,7 +21,7 @@ import Select, { mapToOptions, listToOptions } from './Select';
 import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
 import { Settings } from './initial-settings';
-import { defaultItemSize, settingsSelector } from './reducer';
+import { settingsSelector } from './reducer';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
@@ -185,7 +185,7 @@ function SettingsPage({
 
   const resetItemSize = (e) => {
     e.preventDefault();
-    dispatch(setSetting('itemSize', defaultItemSize()));
+    dispatch(setSetting('itemSize', 50));
     return false;
   };
 

@@ -1,14 +1,12 @@
-import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
-import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 import { Settings } from 'app/settings/initial-settings';
-import { loadoutClassToClassType } from 'app/loadout/loadout-storage';
 import { Loadout, ItemAnnotation, DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export interface DimData {
   // The last selected platform membership ID
@@ -34,7 +32,6 @@ export interface StorageAdapter {
   enabled: boolean;
 
   get(): Promise<DimData>;
-  set(value: object): Promise<void>;
 }
 
 /**
@@ -71,8 +68,6 @@ const adapters: StorageAdapter[] = [new IndexedDBStorage(), GoogleDriveStorageAd
 
 // A cache for while we're already in the middle of loading
 let _getPromise: Promise<DimData> | undefined;
-let cached: DimData;
-
 let gapiLoaded = false;
 
 export const SyncService = {
@@ -85,8 +80,7 @@ export const SyncService = {
 
       GoogleDriveStorageAdapter.signIn$.subscribe(() => {
         // Force refresh data
-        console.log('GDrive sign in, refreshing data');
-        this.get(true).then(initSettings);
+        console.log('GDrive sign in');
       });
     } else {
       const apiScript = document.createElement('script');
@@ -98,105 +92,21 @@ export const SyncService = {
   },
 
   /**
-   * Write some key/value pairs to storage. This will write to each
-   * adapter in order.
-   *
-   * @param value an object that will be merged with the saved data object and persisted.
-   * @param PUT if this is true, replace all data with value, rather than merging it
-   */
-  async set(value: Partial<DimData>, PUT = false): Promise<void> {
-    if (!cached) {
-      throw new Error('Must call get at least once before setting');
-    }
-
-    if (!PUT && deepEqual(_.pick(cached, Object.keys(value)), value)) {
-      if ($featureFlags.debugSync) {
-        console.log('Skip save, already got it', _.pick(cached, Object.keys(value)), value);
-      }
-      return;
-    }
-
-    // use replace to override the data. normally we're doing a PATCH
-    if (PUT) {
-      // update our data
-      cached = value;
-    } else {
-      Object.assign(cached, value);
-    }
-
-    for (const adapter of adapters) {
-      if (adapter.enabled) {
-        if ($featureFlags.debugSync) {
-          console.log('setting', adapter.name, cached);
-        }
-        try {
-          await adapter.set(cached);
-        } catch (e) {
-          console.error('Sync: Error saving to', adapter.name, e);
-          reportException('Sync Save', e);
-        }
-      }
-    }
-  },
-
-  /**
    * Load all the saved data. This attempts to load from each adapter
    * in reverse order, and returns whatever produces a result first.
    *
    * @param force bypass the in-memory cache.
    */
-  // get DIM saved data
-  get(force = false): Promise<Readonly<DimData>> {
-    // if we already have it and we're not forcing a sync
-    if (cached && !force) {
-      return Promise.resolve(cached);
-    }
-
+  get(): Promise<Readonly<DimData>> {
     _getPromise = _getPromise || getAndCacheFromAdapters();
     return _getPromise;
-  },
-
-  /**
-   * Remove one or more keys from storage. It is removed from all adapters.
-   *
-   * @param keys to delete
-   */
-  async remove(key: string | string[]): Promise<void> {
-    if (!cached) {
-      // Nothing to do
-      return;
-    }
-
-    let deleted = false;
-    if (Array.isArray(key)) {
-      key.forEach((k) => {
-        if (cached[k]) {
-          delete cached[k];
-          deleted = true;
-        }
-      });
-    } else {
-      deleted = Boolean(cached[key]);
-      delete cached[key];
-    }
-
-    if (!deleted) {
-      return;
-    }
-
-    for (const adapter of adapters) {
-      if (adapter.enabled) {
-        await adapter.set(cached);
-      }
-    }
   },
 };
 
 async function getAndCacheFromAdapters(): Promise<DimData> {
   try {
     const value = await getFromAdapters();
-    cached = value || {};
-    return cached;
+    return value || {};
   } finally {
     _getPromise = undefined;
   }
@@ -233,61 +143,3 @@ window.gapi_onload = () => {
   gapiLoaded = true;
   SyncService.init();
 };
-
-/**
- * Extract loadouts in DIM API format from the legacy DimData
- */
-export function extractLoadouts(importData: DimData): Loadout[] {
-  const ids = importData['loadouts-v3.0'];
-  if (!ids) {
-    return [];
-  }
-  return ids
-    .map((id) => importData[id])
-    .filter(Boolean)
-    .map((rawLoadout) => ({
-      platformMembershipId: rawLoadout.membershipId,
-      destinyVersion: rawLoadout.destinyVersion,
-      id: rawLoadout.id,
-      name: rawLoadout.name,
-      classType:
-        loadoutClassToClassType[rawLoadout.classType === undefined ? -1 : rawLoadout.classType],
-      clearSpace: rawLoadout.clearSpace || false,
-      equipped: rawLoadout.items
-        .filter((i) => i.equipped)
-        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
-      unequipped: rawLoadout.items
-        .filter((i) => !i.equipped)
-        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
-    }));
-}
-
-type PlatformItemAnnotation = ItemAnnotation & {
-  platformMembershipId: string;
-  destinyVersion: DestinyVersion;
-};
-
-/**
- * Extract tags/notes in DIM API format from the legacy DimData
- */
-function extractItemAnnotations(importData: DimData): PlatformItemAnnotation[] {
-  const annotations: PlatformItemAnnotation[] = [];
-  for (const key in importData) {
-    const match = /dimItemInfo-m(\d+)-d(1|2)/.exec(key);
-    if (match) {
-      const platformMembershipId = match[1];
-      const destinyVersion = parseInt(match[2], 10) as DestinyVersion;
-      for (const id in importData[key]) {
-        const value = importData[key][id];
-        annotations.push({
-          platformMembershipId,
-          destinyVersion,
-          id,
-          tag: value.tag,
-          notes: value.notes,
-        });
-      }
-    }
-  }
-  return annotations;
-}

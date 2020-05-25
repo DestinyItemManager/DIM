@@ -26,12 +26,12 @@ import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import { Subject } from 'rxjs';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { saveLoadout } from './loadout-storage';
 import produce from 'immer';
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
 import { emptyArray } from 'app/utils/empty';
 import { loadoutsSelector } from './reducer';
+import { updateLoadout } from './actions';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -500,7 +500,7 @@ function LoadoutDrawer({
       return;
     }
 
-    dispatch(saveLoadout(loadoutToSave));
+    dispatch(updateLoadout(loadoutToSave));
     close();
   };
 

@@ -6,12 +6,15 @@ import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
 import { refreshIcon, AppIcon } from '../shell/icons';
-import { initSettings } from '../settings/settings';
 import { useHistory } from 'react-router';
+import { importDataBackup } from 'app/dim-api/import';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatchProp } from 'app/store/reducers';
 
 export default function GDriveRevisions() {
   const [revisions, setRevisions] = useState<GDriveRevision[]>();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     SyncService.GoogleDriveStorage.getRevisions().then(setRevisions);
@@ -49,6 +52,7 @@ export default function GDriveRevisions() {
                 key={revision.id}
                 revision={revision}
                 onRestoreSuccess={onRestoreSuccess}
+                dispatch={dispatch}
               />
             ))}
         </tbody>
@@ -61,7 +65,7 @@ class GDriveRevisionComponent extends React.Component<
   {
     revision: GDriveRevision;
     onRestoreSuccess(): void;
-  },
+  } & ThunkDispatchProp,
   {
     content?: object;
     loading: boolean;
@@ -143,9 +147,8 @@ class GDriveRevisionComponent extends React.Component<
         .filter(Boolean)
         .join(', ');
       if (confirm(t('Storage.ImportConfirm', { stats: statsLine }))) {
-        await SyncService.set(content, true);
+        await this.props.dispatch(importDataBackup(content));
         alert(t('Storage.ImportSuccess'));
-        initSettings();
         // TODO: gotta import to DIM API
         this.props.onRestoreSuccess();
       }

@@ -5,7 +5,7 @@ import { AppIcon, spreadsheetIcon } from '../shell/icons';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DropzoneOptions } from 'react-dropzone';
 import { DimStore } from 'app/inventory/store-types';
-import { TagValue } from 'app/inventory/dim-item-info';
+import { ItemInfos } from 'app/inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
@@ -13,12 +13,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 interface StoreProps {
   disabled?: boolean;
   stores: DimStore[];
-  itemInfos: {
-    [key: string]: {
-      tag?: TagValue;
-      notes?: string;
-    };
-  };
+  itemInfos: ItemInfos;
 }
 
 function mapStateToProps(state: RootState): StoreProps {

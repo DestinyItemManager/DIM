@@ -105,14 +105,6 @@ export const setItemNote = createAction('tag_notes/SET_NOTE')<{
   note?: string;
 }>();
 
-/** Update the item infos (tags/notes). */
-export const tagsAndNotesLoaded = createAction('tag_notes/LOADED')<{
-  [key: string]: {
-    tag?: TagValue;
-    notes?: string;
-  };
-}>();
-
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
 

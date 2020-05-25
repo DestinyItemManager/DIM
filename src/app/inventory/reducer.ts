@@ -3,15 +3,12 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { TagValue } from './dim-item-info';
 import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
 import { RootState } from '../store/reducers';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import produce, { Draft } from 'immer';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
-import { SyncService } from 'app/storage/sync.service';
 import { set } from 'idb-keyval';
 import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
@@ -23,17 +20,6 @@ import { StoreProto as D1StoreProto } from './store/d1-store-factory';
  * We specifically watch the legacy state, not the new one.
  */
 export const saveItemInfosOnStateChange = _.once(() => {
-  observeStore(
-    (state: RootState) => state.inventory.itemInfos,
-    (_currentState, nextState, rootState) => {
-      const account = currentAccountSelector(rootState);
-      if (account) {
-        const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-        SyncService.set({ [key]: nextState });
-      }
-    }
-  );
-
   // Sneak in another observer for saving new-items to IDB
   observeStore(
     (state: RootState) => state.inventory.newItems,
@@ -71,16 +57,6 @@ export interface InventoryState {
   readonly newItems: Set<string>;
   readonly newItemsLoaded: boolean;
 
-  /**
-   * Tags and notes for items.
-   */
-  readonly itemInfos: {
-    [key: string]: {
-      tag?: TagValue;
-      notes?: string;
-    };
-  };
-
   /** Are we currently dragging a stack? */
   readonly isDraggingStack;
 }
@@ -91,7 +67,6 @@ const initialState: InventoryState = {
   stores: [],
   newItems: new Set(),
   newItemsLoaded: false,
-  itemInfos: {},
   isDraggingStack: false,
 };
 
@@ -154,38 +129,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         ...state,
         newItems: new Set(),
       };
-
-    // *** Tags and notes ***
-
-    case getType(actions.tagsAndNotesLoaded):
-      return {
-        ...state,
-        itemInfos: action.payload,
-      };
-
-    case getType(actions.setItemTag):
-      return produce(state, (draft) => {
-        setTag(draft, action.payload.itemId, action.payload.tag);
-      });
-
-    case getType(actions.setItemTagsBulk):
-      return produce(state, (draft) => {
-        for (const info of action.payload) {
-          setTag(draft, info.itemId, info.tag);
-        }
-      });
-
-    case getType(actions.setItemNote):
-      return produce(state, (draft) => {
-        setNote(draft, action.payload.itemId, action.payload.note);
-      });
-
-    case getType(actions.tagCleanup):
-      return produce(state, (draft) => {
-        for (const itemId of action.payload) {
-          delete draft.itemInfos[itemId];
-        }
-      });
 
     // Stack dragging
     case getType(actions.stackableDrag):
@@ -257,42 +200,6 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
       );
     }),
   };
-}
-
-function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {
-  const existingTag = draft.itemInfos[itemId];
-  if (tag) {
-    if (!existingTag) {
-      draft.itemInfos[itemId] = {
-        tag,
-      };
-    } else {
-      existingTag.tag = tag;
-    }
-  } else if (existingTag) {
-    delete existingTag?.tag;
-    if (!existingTag.tag && !existingTag.notes) {
-      delete draft.itemInfos[itemId];
-    }
-  }
-}
-
-function setNote(draft: Draft<InventoryState>, itemId: string, notes?: string) {
-  const existingTag = draft.itemInfos[itemId];
-  if (notes && notes.length > 0) {
-    if (!existingTag) {
-      draft.itemInfos[itemId] = {
-        notes,
-      };
-    } else {
-      existingTag.notes = notes;
-    }
-  } else if (existingTag) {
-    delete existingTag?.notes;
-    if (!existingTag.tag && !existingTag.notes) {
-      delete draft.itemInfos[itemId];
-    }
-  }
 }
 
 /** Can an item be marked as new? */
