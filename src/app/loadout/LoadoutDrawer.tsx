@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { useEffect, useReducer, useMemo } from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import _ from 'lodash';
 import copy from 'fast-copy';
@@ -14,10 +14,8 @@ import { createSelector } from 'reselect';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/selectors';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
-import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
-import { Subscriptions } from '../utils/rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
@@ -30,8 +28,10 @@ import { Subject } from 'rxjs';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { saveLoadout } from './loadout-storage';
 import produce from 'immer';
-import memoizeOne from 'memoize-one';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { useSubscription } from 'app/utils/hooks';
+import { useLocation } from 'react-router';
+import { emptyArray } from 'app/utils/empty';
+import { loadoutsSelector } from './reducer';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -48,6 +48,9 @@ export const addItem$ = new Subject<{
   clickEvent: MouseEvent;
 }>();
 
+/**
+ * Start editing a loadout.
+ */
 export function editLoadout(loadout: Loadout, { showClass = true, isNew = true } = {}) {
   editLoadout$.next({
     loadout,
@@ -56,6 +59,9 @@ export function editLoadout(loadout: Loadout, { showClass = true, isNew = true }
   });
 }
 
+/**
+ * Add an item to the loadout we're currently editing. This is driven by clicks in Inventory.
+ */
 export function addItemToLoadout(item: DimItem, $event) {
   addItem$.next({
     item,
@@ -73,16 +79,301 @@ interface StoreProps {
   stores: DimStore[];
   buckets: InventoryBuckets;
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
+  loadouts: Loadout[];
 }
 
-type Props = StoreProps & ThunkDispatchProp & RouteComponentProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Readonly<Loadout>;
   show: boolean;
   showClass: boolean;
   isNew: boolean;
-  clashingLoadout: Loadout | null;
+}
+
+type Action =
+  /** Reset the tool (for when the sheet is closed) */
+  | { type: 'reset' }
+  /** Start editing a new or existing loadout */
+  | {
+      type: 'editLoadout';
+      loadout: Loadout;
+      isNew: boolean;
+      showClass: boolean;
+      account: DestinyAccount;
+    }
+  /** Replace the current loadout with an updated one */
+  | { type: 'update'; loadout: Loadout }
+  /** Add an item to the loadout */
+  | { type: 'addItem'; item: DimItem; equip: boolean | undefined; shift: boolean; items: DimItem[] }
+  /** Remove an item from the loadout */
+  | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
+  /** Make an item that's already in the loadout equipped */
+  | { type: 'equipItem'; item: DimItem; items: DimItem[] };
+
+/**
+ * All state for this component is managed through this reducer and the Actions above.
+ */
+function stateReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'reset':
+      return {
+        show: false,
+        showClass: true,
+        isNew: false,
+        loadout: undefined,
+      };
+
+    case 'editLoadout': {
+      const { loadout, isNew, showClass, account } = action;
+
+      return {
+        ...state,
+        loadout: {
+          ...loadout,
+          destinyVersion: account.destinyVersion,
+          membershipId: account.membershipId,
+        },
+        isNew,
+        showClass,
+        show: true,
+      };
+    }
+
+    case 'update':
+      return {
+        ...state,
+        loadout: action.loadout,
+      };
+
+    case 'addItem': {
+      const { loadout } = state;
+      const { item, equip, shift, items } = action;
+
+      if (!item.canBeInLoadout()) {
+        showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
+        return state;
+      }
+
+      return loadout
+        ? {
+            ...state,
+            loadout: addItem(loadout, item, equip, shift, items),
+          }
+        : state;
+    }
+
+    case 'removeItem': {
+      const { loadout } = state;
+      const { item, shift, items } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: removeItem(loadout, item, shift, items),
+          }
+        : state;
+    }
+
+    case 'equipItem': {
+      const { loadout } = state;
+      const { item, items } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: equipItem(loadout, item, items),
+          }
+        : state;
+    }
+  }
+}
+
+/**
+ * Produce a new loadout that adds a new item to the given loadout.
+ */
+function addItem(
+  loadout: Readonly<Loadout>,
+  item: DimItem,
+  /** Whether the item should be equipped in the loadout or not. Leave undefined for a sensible default. */
+  equip: boolean | undefined,
+  shift: boolean,
+  items: DimItem[]
+): Loadout {
+  const loadoutItem: LoadoutItem = {
+    id: item.id,
+    hash: item.hash,
+    amount: Math.min(item.amount, shift ? 5 : 1),
+    equipped: false,
+  };
+
+  // Other items of the same type (as DimItem)
+  const typeInventory = items.filter((i) => i.type === item.type);
+  const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+  const maxSlots = item.bucket.capacity;
+
+  return produce(loadout, (draftLoadout) => {
+    const findItem = (item: DimItem) =>
+      draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+
+    if (!dupe) {
+      if (typeInventory.length < maxSlots) {
+        loadoutItem.equipped =
+          equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
+        if (loadoutItem.equipped) {
+          for (const otherItem of typeInventory) {
+            findItem(otherItem).equipped = false;
+          }
+        }
+
+        // Only allow one subclass per element
+        if (item.type === 'Class') {
+          const conflictingItem = items.find(
+            (i) => i.type === item.type && i.element?.hash === item.element?.hash
+          );
+          if (conflictingItem) {
+            draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
+          }
+          loadoutItem.equipped = true;
+        }
+
+        draftLoadout.items.push(loadoutItem);
+      } else {
+        showNotification({
+          type: 'warning',
+          title: t('Loadouts.MaxSlots', { slots: maxSlots }),
+        });
+      }
+    } else if (dupe && item.maxStackSize > 1) {
+      const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
+      dupe.amount = dupe.amount + increment;
+      // TODO: handle stack splits
+    }
+
+    if (
+      draftLoadout.classType === DestinyClass.Unknown &&
+      item.classType !== DestinyClass.Unknown
+    ) {
+      draftLoadout.classType = item.classType;
+    }
+  });
+}
+
+/**
+ * Produce a new Loadout with the given item removed from the original loadout.
+ */
+function removeItem(
+  loadout: Readonly<Loadout>,
+  item: DimItem,
+  shift: boolean,
+  items: DimItem[]
+): Loadout {
+  return produce(loadout, (draftLoadout) => {
+    const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+
+    if (!loadoutItem) {
+      return;
+    }
+
+    const decrement = shift ? 5 : 1;
+    loadoutItem.amount = (loadoutItem.amount || 1) - decrement;
+    if (loadoutItem.amount <= 0) {
+      draftLoadout.items = draftLoadout.items.filter(
+        (i) => !(i.hash === item.hash && i.id === item.id)
+      );
+    }
+
+    if (loadoutItem.equipped) {
+      const typeInventory = items.filter((i) => i.type === item.type);
+      const nextInLine =
+        typeInventory.length > 0 &&
+        draftLoadout.items.find(
+          (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
+        );
+      if (nextInLine) {
+        nextInLine.equipped = true;
+      }
+    }
+  });
+}
+
+/**
+ * Produce a new loadout with the given item switched to being equipped.
+ */
+function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) {
+  return produce(loadout, (draftLoadout) => {
+    const findItem = (item: DimItem) =>
+      draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+    const loadoutItem = findItem(item);
+    if (item.equipment) {
+      if (item.type === 'Class' && !loadoutItem.equipped) {
+        loadoutItem.equipped = true;
+      } else if (loadoutItem.equipped) {
+        loadoutItem.equipped = false;
+      } else {
+        items
+          .filter(
+            (i) =>
+              // Others in this slot
+              i.type === item.type ||
+              // Other exotics
+              (item.equippingLabel && i.equippingLabel === item.equippingLabel)
+          )
+          .map(findItem)
+          .forEach((i) => {
+            i.equipped = false;
+          });
+
+        loadoutItem.equipped = true;
+      }
+    }
+  });
+}
+
+/**
+ * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
+ * are returned as warnitems.
+ */
+function findItems(
+  loadoutItems: LoadoutItem[] | undefined,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  stores: DimStore[]
+): [DimItem[], DimItem[]] {
+  if (!loadoutItems) {
+    return [emptyArray(), emptyArray()];
+  }
+
+  const findItem = (loadoutItem: LoadoutItem) => {
+    for (const store of stores) {
+      for (const item of store.items) {
+        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
+          return item;
+        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+          return item;
+        }
+      }
+    }
+    return undefined;
+  };
+
+  const items: DimItem[] = [];
+  const warnitems: DimItem[] = [];
+  for (const loadoutItem of loadoutItems) {
+    const item = findItem(loadoutItem);
+    if (item) {
+      items.push(item);
+    } else {
+      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
+      if (itemDef) {
+        // TODO: makeFakeItem
+        warnitems.push({
+          ...loadoutItem,
+          icon: itemDef.displayProperties?.icon || itemDef.icon,
+          name: itemDef.displayProperties?.name || itemDef.itemName,
+        } as DimItem);
+      }
+    }
+  }
+
+  return [items, warnitems];
 }
 
 function mapStateToProps() {
@@ -105,187 +396,77 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     defs:
       destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
+    loadouts: loadoutsSelector(state),
   });
 }
 
-class LoadoutDrawer extends React.Component<Props, State> {
-  state: State = {
+/**
+ * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
+ * loadouts from this interface.
+ */
+function LoadoutDrawer({
+  account,
+  buckets,
+  classTypeOptions,
+  stores,
+  itemSortOrder,
+  defs,
+  loadouts,
+  dispatch,
+}: Props) {
+  // All state and the state of the loadout is managed through this reducer
+  const [{ show, loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
     show: false,
     showClass: true,
     isNew: false,
-    clashingLoadout: null,
-  };
-  private subscriptions = new Subscriptions();
-
-  componentDidMount() {
-    this.subscriptions.add(
-      editLoadout$.subscribe(this.editLoadout),
-      addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
-        this.add(args.item, args.clickEvent);
-      })
-    );
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-      this.close();
-    }
-  }
-
-  componentWillUnmount() {
-    this.subscriptions.unsubscribe();
-  }
-
-  render() {
-    const { buckets, classTypeOptions, stores, itemSortOrder } = this.props;
-    const { show, loadout, showClass, isNew, clashingLoadout } = this.state;
-
-    if (!loadout || !show) {
-      return null;
-    }
-
-    const bucketTypes = Object.keys(buckets.byType);
-    const onEdit = () =>
-      clashingLoadout &&
-      this.setState({ loadout: clashingLoadout, isNew: false, clashingLoadout: null });
-
-    const [items, warnitems] = this.findItems(loadout);
-
-    const header = (
-      <div className="loadout-drawer-header">
-        <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
-        {clashingLoadout && (
-          <LoadoutEditPopup
-            changeNameHandler={() => this.changeNameHandler()}
-            editHandler={onEdit}
-            loadoutClass={clashingLoadout.classType}
-            loadoutName={clashingLoadout.name}
-          />
-        )}
-        <LoadoutDrawerOptions
-          loadout={loadout}
-          showClass={showClass}
-          isNew={isNew}
-          classTypeOptions={classTypeOptions}
-          updateLoadout={(loadout) => this.setState({ loadout })}
-          saveLoadout={this.saveLoadout}
-          saveAsNew={this.saveAsNew}
-        />
-      </div>
-    );
-
-    return (
-      <Sheet onClose={this.close} header={header}>
-        <div id="loadout-drawer" className="loadout-create">
-          <div className="loadout-content">
-            <LoadoutDrawerDropTarget
-              bucketTypes={bucketTypes}
-              storeIds={stores.map((s) => s.id)}
-              onDroppedItem={this.add}
-            >
-              {warnitems.length > 0 && (
-                <div className="loadout-contents">
-                  <p>{t('Loadouts.VendorsCannotEquip')}</p>
-                  <div className="loadout-warn-items">
-                    {warnitems.map((item) => (
-                      <div key={item.id} className="loadout-item">
-                        <InventoryItem item={item} onClick={() => this.fixWarnItem(item)} />
-                        <div className="close" onClick={() => this.removeWarnItem(item)} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="loadout-contents">
-                <LoadoutDrawerContents
-                  loadout={loadout}
-                  items={items}
-                  buckets={buckets}
-                  stores={stores}
-                  itemSortOrder={itemSortOrder}
-                  equip={this.equip}
-                  remove={this.remove}
-                  add={this.add}
-                />
-              </div>
-            </LoadoutDrawerDropTarget>
-          </div>
-        </div>
-      </Sheet>
-    );
-  }
-
-  /**
-   * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
-   * are returned as warnitems.
-   */
-  private findItems = memoizeOne((loadout: Loadout | undefined) => {
-    if (!loadout) {
-      return [];
-    }
-
-    const { stores, defs } = this.props;
-
-    const findItem = (loadoutItem: LoadoutItem) => {
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-            return item;
-          } else if (
-            (!loadoutItem.id || loadoutItem.id === '0') &&
-            loadoutItem.hash === item.hash
-          ) {
-            return item;
-          }
-        }
-      }
-      return undefined;
-    };
-
-    const items: DimItem[] = [];
-    const warnitems: DimItem[] = [];
-    for (const loadoutItem of loadout.items) {
-      const item = findItem(loadoutItem);
-      if (item) {
-        items.push(item);
-      } else {
-        const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-        if (itemDef) {
-          // TODO: makeFakeItem
-          warnitems.push({
-            ...loadoutItem,
-            icon: itemDef.displayProperties?.icon || itemDef.icon,
-            name: itemDef.displayProperties?.name || itemDef.itemName,
-          } as DimItem);
-        }
-      }
-    }
-
-    return [items, warnitems];
   });
 
-  private editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
-    const { account } = this.props;
-    const loadout = copy(args.loadout);
+  // The loadout to edit comes in from the editLoadout$ rx observable
+  const editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
+    const loadout = args.loadout;
+    const isNew = Boolean(args.isNew);
+    const showClass = Boolean(args.showClass);
     loadoutDialogOpen = true;
-    if (loadout.classType === undefined) {
-      loadout.classType = -1;
-    }
-    loadout.items = loadout.items || {};
-    loadout.destinyVersion = account.destinyVersion;
-    loadout.membershipId = account.membershipId;
 
-    this.setState({
-      show: true,
-      loadout,
-      showClass: Boolean(args.showClass),
-      isNew: Boolean(args.isNew),
-    });
+    stateDispatch({ type: 'editLoadout', loadout, showClass, isNew, account });
+  };
+  useSubscription(() => editLoadout$.subscribe(editLoadout));
+
+  // Turn loadout items into real DimItems
+  const [items, warnitems] = useMemo(() => findItems(loadout?.items, defs, stores), [
+    defs,
+    loadout?.items,
+    stores,
+  ]);
+
+  const onAddItem = (item: DimItem, e?: MouseEvent, equip = false) =>
+    stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), equip, items });
+
+  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
+    stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+
+  const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
+
+  /**
+   * If an item comes in on the addItem$ rx observable, add it.
+   */
+  useSubscription(() =>
+    addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) =>
+      onAddItem(args.item, args.clickEvent)
+    )
+  );
+
+  const close = () => {
+    stateDispatch({ type: 'reset' });
+    loadoutDialogOpen = false;
   };
 
-  private fixWarnItem = async (warnItem: DimItem) => {
-    const { loadout } = this.state;
+  // Close the sheet on navigation
+  const { pathname } = useLocation();
+  useEffect(close, [pathname]);
 
+  /** Prompt the user to select a replacement for a missing item. */
+  const fixWarnItem = async (warnItem: DimItem) => {
     const loadoutClassType = loadout?.classType;
 
     try {
@@ -305,191 +486,26 @@ class LoadoutDrawer extends React.Component<Props, State> {
         ignoreSelectedPerks: true,
       });
 
-      this.add(item, undefined, equip);
-      this.removeWarnItem(warnItem);
+      onAddItem(item, undefined, equip);
+      onRemoveItem(warnItem);
     } catch (e) {}
   };
 
-  private add = (item: DimItem, e?: MouseEvent, equip?: boolean) => {
-    this.setState((state) => {
-      const { loadout } = state;
-      if (!loadout) {
-        return {};
-      }
-      if (!item.canBeInLoadout()) {
-        showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
-        return {};
-      }
-      const [items] = this.findItems(loadout);
-
-      const loadoutItem: LoadoutItem = {
-        id: item.id,
-        hash: item.hash,
-        amount: Math.min(item.amount, e?.shiftKey ? 5 : 1),
-        equipped: false,
-      };
-
-      // Other items of the same type (as DimItem)
-      const typeInventory = items.filter((i) => i.type === item.type);
-
-      const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
-
-      const maxSlots = item.bucket.capacity;
-
-      const newLoadout = produce(loadout, (draftLoadout) => {
-        const findItem = (item: DimItem) =>
-          draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
-
-        if (!dupe) {
-          if (typeInventory.length < maxSlots) {
-            loadoutItem.equipped =
-              equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
-            if (loadoutItem.equipped) {
-              for (const otherItem of typeInventory) {
-                findItem(otherItem).equipped = false;
-              }
-            }
-
-            // Only allow one subclass per element
-            if (item.type === 'Class') {
-              const conflictingItem = items.find(
-                (i) => i.type === item.type && i.element?.hash === item.element?.hash
-              );
-              if (conflictingItem) {
-                draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
-              }
-              loadoutItem.equipped = true;
-            }
-
-            draftLoadout.items.push(loadoutItem);
-          } else {
-            showNotification({
-              type: 'warning',
-              title: t('Loadouts.MaxSlots', { slots: maxSlots }),
-            });
-          }
-        } else if (dupe && item.maxStackSize > 1) {
-          const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-          dupe.amount = dupe.amount + increment;
-          // TODO: handle stack splits
-        }
-
-        if (
-          draftLoadout.classType === DestinyClass.Unknown &&
-          item.classType !== DestinyClass.Unknown
-        ) {
-          draftLoadout.classType = item.classType;
-        }
-      });
-      return {
-        loadout: newLoadout,
-      };
-    });
-  };
-
-  private remove = (item: DimItem, $event) => {
-    $event.stopPropagation();
-    const { loadout } = this.state;
-
-    if (!loadout) {
+  const onSaveLoadout = (
+    e: React.MouseEvent,
+    loadoutToSave: Readonly<Loadout> | undefined = loadout
+  ) => {
+    e.preventDefault();
+    if (!loadoutToSave) {
       return;
     }
 
-    const newLoadout = produce(loadout, (draftLoadout) => {
-      const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
-
-      if (!loadoutItem) {
-        return;
-      }
-
-      const decrement = $event.shiftKey ? 5 : 1;
-      loadoutItem.amount = (loadoutItem.amount || 1) - decrement;
-      if (loadoutItem.amount <= 0) {
-        draftLoadout.items = draftLoadout.items.filter(
-          (i) => !(i.hash === item.hash && i.id === item.id)
-        );
-      }
-
-      if (loadoutItem.equipped) {
-        const [items] = this.findItems(draftLoadout);
-        const typeInventory = items.filter((i) => i.type === item.type);
-        const nextInLine =
-          typeInventory.length > 0 &&
-          draftLoadout.items.find(
-            (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
-          );
-        if (nextInLine) {
-          nextInLine.equipped = true;
-        }
-      }
-    });
-
-    if (newLoadout !== loadout) {
-      this.setState({ loadout: newLoadout });
-    }
+    dispatch(saveLoadout(loadoutToSave));
+    close();
   };
 
-  private saveLoadout = async (e, loadout = this.state.loadout) => {
+  const saveAsNew = (e) => {
     e.preventDefault();
-    const { dispatch } = this.props;
-    if (!loadout) {
-      return;
-    }
-
-    this.close();
-    try {
-      const clashingLoadout = await dispatch(saveLoadout(loadout));
-      this.handleLoadOutSaveResult(clashingLoadout);
-    } catch (e) {
-      this.handleLoadoutError(e, loadout.name);
-    }
-  };
-
-  private handleLoadOutSaveResult = (clashingLoadout?: Loadout) => {
-    if (clashingLoadout) {
-      showNotification({
-        type: 'error',
-        title: t('Loadouts.ClashingTitle'),
-        body: t('Loadouts.ClashingDescription', {
-          loadoutName: clashingLoadout.name,
-        }),
-        onClick: () => {
-          this.setState({ show: true, clashingLoadout: copy(clashingLoadout) });
-          loadoutDialogOpen = true;
-        },
-      });
-    }
-  };
-
-  private changeNameHandler() {
-    const { loadout } = this.state;
-    if (loadout) {
-      this.setState({
-        loadout: {
-          ...loadout,
-          name: '',
-        },
-        clashingLoadout: null,
-      });
-    }
-  }
-
-  private handleLoadoutError = (e, name: string) => {
-    showNotification({
-      type: 'error',
-      title: t('Loadouts.SaveErrorTitle'),
-      body: t('Loadouts.SaveErrorDescription', {
-        loadoutName: name,
-        error: e.message,
-      }),
-    });
-    console.error(e);
-    this.close(e);
-  };
-
-  private saveAsNew = (e) => {
-    e.preventDefault();
-    const { loadout } = this.state;
 
     if (!loadout) {
       return;
@@ -498,64 +514,80 @@ class LoadoutDrawer extends React.Component<Props, State> {
       ...copy(loadout),
       id: uuidv4(), // Let it be a new ID
     };
-    this.setState({ loadout: newLoadout, isNew: true });
-    this.saveLoadout(e, newLoadout);
+    onSaveLoadout(e, newLoadout);
   };
 
-  private close = (e?) => {
-    e?.preventDefault();
-    this.setState({ show: false, loadout: undefined, clashingLoadout: null });
-    this.findItems(undefined); // clear memoize
-    loadoutDialogOpen = false;
-  };
+  if (!loadout || !show) {
+    return null;
+  }
 
-  private removeWarnItem = (item: DimItem) => {
-    this.setState((state) => ({
-      loadout: {
-        ...state.loadout!,
-        items: state.loadout!.items.filter((i) => !(i.hash === item.hash && i.id === item.id)),
-      },
-    }));
-  };
+  const bucketTypes = Object.keys(buckets.byType);
 
-  private equip = (item: DimItem) => {
-    const { loadout } = this.state;
-    if (!loadout) {
-      return;
-    }
+  // Find a loadout with the same name that could overlap with this one
+  // Note that this might be the saved version of this very same loadout!
+  const clashingLoadout = loadouts.find(
+    (l) =>
+      loadout.name === l.name &&
+      (loadout.classType === l.classType ||
+        l.classType === DestinyClass.Unknown ||
+        loadout.classType === DestinyClass.Unknown)
+  );
 
-    const [items] = this.findItems(loadout);
+  const header = (
+    <div className="loadout-drawer-header">
+      <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
+      <LoadoutDrawerOptions
+        loadout={loadout}
+        showClass={showClass}
+        isNew={isNew}
+        classTypeOptions={classTypeOptions}
+        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+        saveLoadout={onSaveLoadout}
+        saveAsNew={saveAsNew}
+        clashingLoadout={clashingLoadout}
+      />
+    </div>
+  );
 
-    const newLoadout = produce(loadout, (draftLoadout) => {
-      const findItem = (item: DimItem) =>
-        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
-      const loadoutItem = findItem(item);
-      if (item.equipment) {
-        if (item.type === 'Class' && !loadoutItem.equipped) {
-          loadoutItem.equipped = true;
-        } else if (loadoutItem.equipped) {
-          loadoutItem.equipped = false;
-        } else {
-          items
-            .filter(
-              (i) =>
-                // Others in this slot
-                i.type === item.type ||
-                // Other exotics
-                (item.equippingLabel && i.equippingLabel === item.equippingLabel)
-            )
-            .map(findItem)
-            .forEach((i) => {
-              i.equipped = false;
-            });
-
-          loadoutItem.equipped = true;
-        }
-      }
-    });
-
-    this.setState({ loadout: newLoadout });
-  };
+  return (
+    <Sheet onClose={close} header={header}>
+      <div id="loadout-drawer" className="loadout-create">
+        <div className="loadout-content">
+          <LoadoutDrawerDropTarget
+            bucketTypes={bucketTypes}
+            storeIds={stores.map((s) => s.id)}
+            onDroppedItem={onAddItem}
+          >
+            {warnitems.length > 0 && (
+              <div className="loadout-contents">
+                <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                <div className="loadout-warn-items">
+                  {warnitems.map((item) => (
+                    <div key={item.id} className="loadout-item">
+                      <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                      <div className="close" onClick={() => onRemoveItem(item)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="loadout-contents">
+              <LoadoutDrawerContents
+                loadout={loadout}
+                items={items}
+                buckets={buckets}
+                stores={stores}
+                itemSortOrder={itemSortOrder}
+                equip={onEquipItem}
+                remove={onRemoveItem}
+                add={onAddItem}
+              />
+            </div>
+          </LoadoutDrawerDropTarget>
+        </div>
+      </div>
+    </Sheet>
+  );
 }
 
-export default withRouter(connect(mapStateToProps)(LoadoutDrawer));
+export default connect(mapStateToProps)(LoadoutDrawer);

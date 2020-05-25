@@ -5,6 +5,7 @@ import { Loadout } from './loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Prompt } from 'react-router';
 import { Link } from 'react-router-dom';
+import { getClass } from 'app/inventory/store/character-utils';
 
 export default function LoadoutDrawerOptions({
   loadout,
@@ -12,10 +13,11 @@ export default function LoadoutDrawerOptions({
   isNew,
   classTypeOptions,
   updateLoadout,
+  clashingLoadout,
   saveLoadout,
   saveAsNew,
 }: {
-  loadout?: Loadout;
+  loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
   clashingLoadout?: Loadout;
@@ -54,6 +56,17 @@ export default function LoadoutDrawerOptions({
 
   // TODO: make the link to loadout optimizer bring the currently equipped items along in route state
 
+  const saveDisabled =
+    !loadout.name.length ||
+    !loadout.items.length ||
+    // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
+    Boolean(clashingLoadout && clashingLoadout.id !== loadout.id);
+
+  const saveAsNewDisabled =
+    saveDisabled ||
+    // There's an existing loadout with the same name & class
+    Boolean(clashingLoadout);
+
   return (
     <div className="loadout-options">
       <Prompt when={loadout.items.length > 0} message={t('Loadouts.Abandon')} />
@@ -86,11 +99,16 @@ export default function LoadoutDrawerOptions({
           )}
         </div>
         <div className="input-group">
-          <button className="dim-button" disabled={!loadout.name.length || !loadout.items.length}>
+          <button className="dim-button" type="submit" disabled={saveDisabled}>
             {t('Loadouts.Save')}
           </button>
           {!isNew && (
-            <button className="dim-button" onClick={saveAsNew}>
+            <button
+              className="dim-button"
+              onClick={saveAsNew}
+              type="button"
+              disabled={saveAsNewDisabled}
+            >
               {t('Loadouts.SaveAsNew')}
             </button>
           )}
@@ -107,6 +125,15 @@ export default function LoadoutDrawerOptions({
           </label>
         </div>
       </form>
+      {clashingLoadout && clashingLoadout.id !== loadout.id && (
+        <div className="dim-already-exists">
+          {clashingLoadout.classType !== DestinyClass.Unknown
+            ? t('Loadouts.AlreadyExistsClass', {
+                className: getClass(clashingLoadout.classType),
+              })
+            : t('Loadouts.AlreadyExistsGlobal')}
+        </div>
+      )}
     </div>
   );
 }
