@@ -197,13 +197,13 @@ export const dimApi = (
             ...state,
             apiPermissionGranted,
           }
-        : // If we're disabling DIM Sync, reset local state to the initial state, as if we'd never loaded
+        : // If we're disabling DIM Sync, unset profile loaded and clear the update queue
           {
             ...state,
             apiPermissionGranted,
-            profiles: initialState.profiles,
-            settings: initialState.settings,
             profileLoaded: false,
+            updateQueue: [],
+            updateInProgressWatermark: 0,
           };
     }
 

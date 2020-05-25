@@ -861,7 +861,7 @@
     },
     "AuditLog": "DIM Sync Change History",
     "AuditLogLabel": "View past data changes",
-    "AutoBackup": "We've backed up your data to a file called dim-data.json, just in case.",
+    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
