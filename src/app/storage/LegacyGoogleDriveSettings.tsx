@@ -109,20 +109,17 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
 
   private driveSync = async (e) => {
     e.preventDefault();
-    if (confirm(t('Storage.GDriveSignInWarning'))) {
-      try {
-        await SyncService.GoogleDriveStorage.authorize();
-      } catch (e) {
-        alert(t('Storage.GDriveSignInError') + e.message);
-        reportException('Google Drive Signin', e);
-      }
+    try {
+      await SyncService.GoogleDriveStorage.authorize();
+    } catch (e) {
+      alert(t('Storage.GDriveSignInError') + e.message);
+      reportException('Google Drive Signin', e);
     }
     return null;
   };
 
   private driveLogout = (e) => {
     e.preventDefault();
-    alert(t('Storage.GDriveLogout'));
     return SyncService.GoogleDriveStorage.revokeDrive();
   };
 

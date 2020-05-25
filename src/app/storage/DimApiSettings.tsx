@@ -8,11 +8,7 @@ import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/reducers';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import _ from 'lodash';
-import {
-  deleteAllApiData,
-  loadDimApiData,
-  showBackupDownloadedNotification,
-} from 'app/dim-api/actions';
+import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
@@ -23,6 +19,7 @@ import { Link } from 'react-router-dom';
 import { ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { parseProfileKey } from 'app/dim-api/reducer';
 import { importDataBackup } from 'app/dim-api/import';
+import { showNotification } from 'app/notifications/notifications';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -167,4 +164,14 @@ function exportLocalData(): ThunkResult<ExportResponse> {
 
     return exportResponse;
   };
+}
+
+// TODO: gotta change all these strings
+function showBackupDownloadedNotification() {
+  showNotification({
+    type: 'success',
+    title: t('Storage.DimSyncEnabled'),
+    body: t('Storage.AutoBackup'),
+    duration: 15000,
+  });
 }

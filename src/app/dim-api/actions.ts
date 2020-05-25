@@ -361,15 +361,6 @@ export function deleteAllApiData(): ThunkResult<any> {
   };
 }
 
-export function showBackupDownloadedNotification() {
-  showNotification({
-    type: 'success',
-    title: t('Storage.DimSyncEnabled'),
-    body: t('Storage.AutoBackup'),
-    duration: 15000,
-  });
-}
-
 function showProfileLoadErrorNotification(e: Error) {
   showNotification(
     dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), e)

@@ -251,43 +251,6 @@ export class GoogleDriveStorage implements StorageAdapter {
     gapi.auth2.getAuthInstance().signOut();
   }
 
-  async getRevisions(): Promise<GDriveRevision[]> {
-    try {
-      await this.ready;
-      const fileId = await this.getFileId();
-      const revisions = await gapi.client.drive.revisions.list({ fileId });
-      if (revisions.status === 200) {
-        return revisions.result.revisions as GDriveRevision[];
-      } else {
-        throw new Error('Error getting revisions: ' + gdriveErrorMessage(revisions));
-      }
-    } catch (e) {
-      throw new Error(
-        `Unable to load GDrive revisions for ${this.fileId}: ${gdriveErrorMessage(e)}`
-      );
-    }
-  }
-
-  async getRevisionContent(revisionId: string): Promise<object> {
-    await this.ready;
-    try {
-      const fileId = await this.getFileId();
-      const file = await gapi.client.drive.revisions.get({
-        fileId,
-        revisionId,
-        alt: 'media',
-      });
-
-      if (file.status === 200) {
-        return file.result;
-      } else {
-        throw new Error('Error getting revisions: ' + gdriveErrorMessage(file));
-      }
-    } catch (e) {
-      throw new Error(`Unable to load revision ${revisionId}: ${gdriveErrorMessage(e)}`);
-    }
-  }
-
   // https://developers.google.com/drive/api/v3/reference/about#resource
   async getDriveInfo(): Promise<DriveAboutResource> {
     await this.ready;
