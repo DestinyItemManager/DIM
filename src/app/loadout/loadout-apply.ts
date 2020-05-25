@@ -99,7 +99,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 
     // only try to equip subclasses that are equippable, since we allow multiple in a loadout
     const applicableSubclass =
-      item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+      item.type !== 'Class' || (!item.equipped && !store.isVault) || item.canBeEquippedBy(store);
     if (!applicableSubclass) {
       totalItems--;
       return false;
