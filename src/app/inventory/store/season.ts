@@ -1,4 +1,4 @@
-import { D2CalculatedSeason, D2CurrentSeason } from '../d2-season-info';
+import { D2CalculatedSeason, D2CurrentSeason } from 'data/d2/d2-season-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import { D2Item } from '../item-types';

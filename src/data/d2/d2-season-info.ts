@@ -1,5 +1,6 @@
 export enum D2SeasonEnum {
-  RED_WAR = 1,
+  DEBUG = 0,
+  RED_WAR,
   CURSE_OF_OSIRIS,
   WARMIND,
   FORSAKEN,
@@ -9,15 +10,17 @@ export enum D2SeasonEnum {
   SHADOWKEEP,
   DAWN,
   WORTHY,
+
+  __LENGTH, // This always needs to be last
 }
 
-// TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.WORTHY;
+export const D2CurrentSeason: number = D2SeasonEnum.__LENGTH - 1;
 
 export const D2SeasonInfo = {
   0: {
     DLCName: 'Debug',
     seasonName: 'Debug',
+    seasonTag: 'debug',
     season: 0,
     year: 0,
     maxLevel: 0,
@@ -30,6 +33,7 @@ export const D2SeasonInfo = {
   1: {
     DLCName: 'Red War',
     seasonName: 'Red War',
+    seasonTag: 'redwar',
     season: 1,
     year: 1,
     maxLevel: 20,
@@ -42,6 +46,7 @@ export const D2SeasonInfo = {
   2: {
     DLCName: 'Curse of Osiris',
     seasonName: 'Curse of Osiris',
+    seasonTag: 'osiris',
     season: 2,
     year: 1,
     maxLevel: 25,
@@ -54,6 +59,7 @@ export const D2SeasonInfo = {
   3: {
     DLCName: 'Warmind',
     seasonName: 'Warmind',
+    seasonTag: 'warmind',
     season: 3,
     year: 1,
     maxLevel: 30,
@@ -66,6 +72,7 @@ export const D2SeasonInfo = {
   4: {
     DLCName: 'Forsaken',
     seasonName: 'Season of the Outlaw',
+    seasonTag: 'outlaw',
     season: 4,
     year: 2,
     maxLevel: 50,
@@ -78,6 +85,7 @@ export const D2SeasonInfo = {
   5: {
     DLCName: 'Black Armory',
     seasonName: 'Season of the Forge',
+    seasonTag: 'forge',
     season: 5,
     year: 2,
     maxLevel: 50,
@@ -90,6 +98,7 @@ export const D2SeasonInfo = {
   6: {
     DLCName: "Joker's Wild",
     seasonName: 'Season of the Drifter',
+    seasonTag: 'drifter',
     season: 6,
     year: 2,
     maxLevel: 50,
@@ -102,6 +111,7 @@ export const D2SeasonInfo = {
   7: {
     DLCName: 'Penumbra',
     seasonName: 'Season of Opulence',
+    seasonTag: 'opulence',
     season: 7,
     year: 2,
     maxLevel: 50,
@@ -114,6 +124,7 @@ export const D2SeasonInfo = {
   8: {
     DLCName: 'Shadowkeep',
     seasonName: 'Season of the Undying',
+    seasonTag: 'undying',
     season: 8,
     year: 3,
     maxLevel: 50,
@@ -126,6 +137,7 @@ export const D2SeasonInfo = {
   9: {
     DLCName: '',
     seasonName: 'Season of Dawn',
+    seasonTag: 'dawn',
     season: 9,
     year: 3,
     maxLevel: 50,
@@ -138,6 +150,7 @@ export const D2SeasonInfo = {
   10: {
     DLCName: '',
     seasonName: 'Season of the Worthy',
+    seasonTag: 'worthy',
     season: 10,
     year: 3,
     maxLevel: 50,
@@ -147,23 +160,27 @@ export const D2SeasonInfo = {
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },
-};
-
-function enumLength(enumName: object): number {
-  // https://stackoverflow.com/questions/38034673/determine-the-number-of-enum-elements-typescript
-  let count = 0;
-  for (const item in enumName) {
-    if (isNaN(Number(item))) {
-      count++;
-    }
+} as Record<
+  number,
+  {
+    DLCName: string;
+    seasonName: string;
+    seasonTag: string;
+    season: number;
+    year: number;
+    maxLevel: number;
+    maxPower: number;
+    softCap: number;
+    releaseDate: string;
+    resetTime: string;
+    numWeeks: number;
   }
-  return count;
-}
+>;
 
 function getCurrentSeason(): number {
   let seasonDate: Date;
-  const today = new Date(Date.now());
-  for (let i = enumLength(D2SeasonEnum); i > 0; i--) {
+  const today = new Date();
+  for (let i = D2SeasonEnum.__LENGTH - 1; i > 0; i--) {
     seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
     if (today >= seasonDate) {
       return D2SeasonInfo[i].season;
