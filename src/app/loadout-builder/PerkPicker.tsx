@@ -1,6 +1,5 @@
 import React from 'react';
 import Sheet from '../dim-ui/Sheet';
-import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -40,6 +39,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import { specialtyModSocketHashes } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { SearchFilterRef } from 'app/search/SearchFilterInput';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -238,7 +238,7 @@ class PerkPicker extends React.Component<Props, State> {
     selectedSeasonalMods: copy(this.props.lockedSeasonalMods),
   };
   private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterInput>();
+  private filterInput = React.createRef<SearchFilterRef>();
 
   componentDidMount() {
     if (this.itemContainer.current) {
