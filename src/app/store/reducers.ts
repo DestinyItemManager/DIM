@@ -12,6 +12,7 @@ import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { VendorDropsState, vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 import { Settings } from 'app/settings/initial-settings';
+import { VendorsState, vendors } from 'app/vendors/reducer';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
@@ -26,6 +27,7 @@ export interface RootState {
   readonly farming: FarmingState;
   readonly manifest: ManifestState;
   readonly vendorDrops: VendorDropsState;
+  readonly vendors: VendorsState;
   readonly dimApi: DimApiState;
 }
 
@@ -46,6 +48,7 @@ const reducer: Reducer<RootState> = (state, action) => {
     farming,
     manifest,
     vendorDrops,
+    vendors,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,
   });
