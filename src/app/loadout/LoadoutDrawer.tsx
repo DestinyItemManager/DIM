@@ -229,7 +229,6 @@ function addItem(
           const conflictingItem = items.find(
             (i) => i.type === item.type && i.classType === item.classType
           );
-          console.log('Class', typeInventory, dupe, conflictingItem);
           if (conflictingItem) {
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
           }

@@ -63,7 +63,6 @@ export async function applyLoadout(
       // TODO: allow for an error view function to be passed in
       // TODO: cancel button!
       loadoutPromise.then((scope) => {
-        console.log('Done', scope);
         if (scope.failed > 0) {
           if (scope.failed === scope.total) {
             throw new Error(t('Loadouts.AppliedError'));
@@ -197,7 +196,6 @@ async function doApplyLoadout(
         .filter((i) => !equippedItems.find((it) => it.id === i.id))
         .map((i) => getLoadoutItem(i, store))
     );
-    console.log('failedItems', failedItems);
     failedItems.forEach((item) => {
       scope.failed++;
       scope.errors.push({
