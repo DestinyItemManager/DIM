@@ -2,7 +2,8 @@
 name: i18n download bot
 on:
   schedule:
-    - cron: "0 19 * * SAT"
+    - cron: "0 19 * * 6"
+    - cron: "30 4 * * 1"
 jobs:
   build:
     runs-on: ubuntu-latest
