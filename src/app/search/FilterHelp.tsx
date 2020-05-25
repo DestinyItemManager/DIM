@@ -536,6 +536,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
                   <span>modslot:opulent</span>
                   <span>modslot:outlaw</span>
                   <span>modslot:undying</span>
+                  <span>modslot:worthy</span>
                 </td>
                 <td>{t('Filter.ModSlot')}</td>
               </tr>
@@ -549,6 +550,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
                   <span>holdsmod:opulent</span>
                   <span>holdsmod:outlaw</span>
                   <span>holdsmod:undying</span>
+                  <span>holdsmod:worthy</span>
                 </td>
                 <td>{t('Filter.HoldsMod')}</td>
               </tr>
