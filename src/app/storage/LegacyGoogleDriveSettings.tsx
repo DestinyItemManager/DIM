@@ -31,6 +31,9 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   componentDidMount() {
+    // Start up the old sync service for imports
+    SyncService.init();
+
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
         this.updateGoogleDriveInfo();

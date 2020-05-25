@@ -5,8 +5,7 @@ import { GoogleDriveStorage } from './google-drive-storage';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 import { Settings } from 'app/settings/initial-settings';
-import { Loadout, ItemAnnotation, DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 export interface DimData {
   // The last selected platform membership ID
