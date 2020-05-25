@@ -8,6 +8,7 @@ import styles from './GeneratedSetButtons.m.scss';
 import { Loadout } from 'app/loadout/loadout-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { statTier } from './utils';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -51,7 +52,9 @@ export default function GeneratedSetButtons({
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
 function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
-  const data = { ...set.stats, tier: _.sum(Object.values(set.stats)) };
+  const data = {
+    tier: _.sumBy(Object.values(set.stats), statTier),
+  };
   const loadout = newLoadout(
     t('Loadouts.Generated', data),
     set.firstValidSet.map((i) => convertToLoadoutItem(i, true))
