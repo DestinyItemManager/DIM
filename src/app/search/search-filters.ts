@@ -31,7 +31,7 @@ import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from '../inventory/d2-season-info';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import D2Sources from 'data/d2/source-info';
 import { DimStore } from '../inventory/store-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';

@@ -14,7 +14,7 @@ import { getItemDamageShortName, getItemSpecialtyModSlotDisplayName } from 'app/
 import BungieImage from 'app/dim-ui/BungieImage';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2SeasonInfo } from 'app/inventory/d2-season-info';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { DimItem, D1Item } from 'app/inventory/item-types';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import ElementIcon from 'app/inventory/ElementIcon';
