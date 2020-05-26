@@ -49,7 +49,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-const classIcons = {
+export const classIcons = {
   [DestinyClass.Unknown]: globeIcon,
   [DestinyClass.Hunter]: hunterIcon,
   [DestinyClass.Warlock]: warlockIcon,

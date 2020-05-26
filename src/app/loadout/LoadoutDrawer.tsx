@@ -105,7 +105,7 @@ type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; equip: boolean | undefined; shift: boolean; items: DimItem[] }
+  | { type: 'addItem'; item: DimItem; equip?: boolean; shift: boolean; items: DimItem[] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -224,13 +224,13 @@ function addItem(
           }
         }
 
-        // Only allow one subclass per element
+        // Only allow one subclass to be present per class (to allow for making a loadout that specifies a subclass for each class)
         if (item.type === 'Class') {
           const conflictingItem = items.find(
-            (i) => i.type === item.type && i.element?.hash === item.element?.hash
+            (i) => i.type === item.type && i.classType === item.classType
           );
           if (conflictingItem) {
-            draftLoadout.items = draftLoadout.items.filter((i) => i.id === conflictingItem.id);
+            draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
           }
           loadoutItem.equipped = true;
         }
@@ -242,7 +242,7 @@ function addItem(
           title: t('Loadouts.MaxSlots', { slots: maxSlots }),
         });
       }
-    } else if (dupe && item.maxStackSize > 1) {
+    } else if (item.maxStackSize > 1) {
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
       dupe.amount = dupe.amount + increment;
       // TODO: handle stack splits
@@ -296,19 +296,25 @@ function removeItem(
 }
 
 /**
- * Produce a new loadout with the given item switched to being equipped.
+ * Produce a new loadout with the given item switched to being equipped (or unequipped if it's already equipped).
  */
 function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) {
   return produce(loadout, (draftLoadout) => {
     const findItem = (item: DimItem) =>
       draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+
+    // Classes are always equipped
+    if (item.type === 'Class') {
+      return;
+    }
+
     const loadoutItem = findItem(item);
     if (item.equipment) {
-      if (item.type === 'Class' && !loadoutItem.equipped) {
-        loadoutItem.equipped = true;
-      } else if (loadoutItem.equipped) {
+      if (loadoutItem.equipped) {
+        // It's equipped, mark it unequipped
         loadoutItem.equipped = false;
       } else {
+        // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
         items
           .filter(
             (i) =>
@@ -439,7 +445,7 @@ function LoadoutDrawer({
     stores,
   ]);
 
-  const onAddItem = (item: DimItem, e?: MouseEvent, equip = false) =>
+  const onAddItem = (item: DimItem, e?: MouseEvent, equip?: boolean) =>
     stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), equip, items });
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>

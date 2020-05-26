@@ -27,8 +27,11 @@ export default function LoadoutDrawerBucket({
     return null;
   }
 
-  const equippedItem = items.find((i) =>
-    loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equipped)
+  const equippedItems = sortItems(
+    items.filter((i) =>
+      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equipped)
+    ),
+    itemSortOrder
   );
   const unequippedItems = sortItems(
     items.filter((i) =>
@@ -39,14 +42,16 @@ export default function LoadoutDrawerBucket({
 
   return (
     <div className="loadout-bucket">
-      {equippedItem || unequippedItems.length > 0 ? (
+      {equippedItems.length > 0 || unequippedItems.length > 0 ? (
         <>
           <div className="loadout-bucket-name">{bucket.name}</div>
           <div className={`loadout-bucket-items bucket-${bucket.type}`}>
             <div className="sub-bucket equipped">
               <div className="equipped-item">
-                {equippedItem ? (
-                  <LoadoutDrawerItem item={equippedItem} equip={equip} remove={remove} />
+                {equippedItems.length > 0 ? (
+                  equippedItems.map((item) => (
+                    <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
+                  ))
                 ) : (
                   <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
                     <AppIcon icon={addIcon} />
@@ -54,16 +59,18 @@ export default function LoadoutDrawerBucket({
                 )}
               </div>
             </div>
-            {(equippedItem || unequippedItems.length > 0) && bucket.type !== 'Class' && (
+            {(equippedItems.length > 0 || unequippedItems.length > 0) && bucket.type !== 'Class' && (
               <div className="sub-bucket">
                 {unequippedItems.map((item) => (
                   <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
                 ))}
-                {equippedItem && unequippedItems.length < 9 && bucket.type !== 'Class' && (
-                  <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={addIcon} />
-                  </a>
-                )}
+                {equippedItems.length > 0 &&
+                  unequippedItems.length < bucket.capacity - 1 &&
+                  bucket.type !== 'Class' && (
+                    <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
+                      <AppIcon icon={addIcon} />
+                    </a>
+                  )}
               </div>
             )}
           </div>

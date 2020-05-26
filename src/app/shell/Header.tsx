@@ -279,7 +279,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
                 {t('Settings.Settings')}
               </NavLink>
               {installPromptEvent ? (
-                <a className="link" onClick={installDim}>
+                <a className="link menuItem" onClick={installDim}>
                   {t('Header.InstallDIM')}
                 </a>
               ) : (
