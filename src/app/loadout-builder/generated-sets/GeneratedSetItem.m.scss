@@ -108,6 +108,15 @@
   }
 }
 
+.lockedSockets {
+  display: flex;
+  flex-direction: column;
+}
+
+.lockedSocketsRow {
+  margin-bottom: 4px;
+}
+
 .swapButton {
   composes: dim-button from global;
   grid-area: button;

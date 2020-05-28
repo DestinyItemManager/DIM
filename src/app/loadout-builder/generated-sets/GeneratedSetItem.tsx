@@ -9,10 +9,11 @@ import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
-import { generateMixesFromPerks } from '../process';
+import { generateMixesFromPerks, matchLockedItem } from '../process';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './GeneratedSetItemLockedMods.scss';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
@@ -88,6 +89,18 @@ export default function GeneratedSetItem({
       : addLockedItem(lockedItem);
   };
 
+  const lockedPerksAndOldMods: DestinyInventoryItemDefinition[] = [];
+
+  if ($featureFlags.armor2ModPicker && locked?.length) {
+    for (const lockedItem of locked) {
+      if (lockedItem.type === 'perk' && matchLockedItem(item, lockedItem)) {
+        lockedPerksAndOldMods.push(lockedItem.perk);
+      } else if (lockedItem.type === 'mod' && matchLockedItem(item, lockedItem)) {
+        lockedPerksAndOldMods.push(lockedItem.mod);
+      }
+    }
+  }
+
   return (
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
@@ -120,10 +133,19 @@ export default function GeneratedSetItem({
         />
       )}
       {$featureFlags.armor2ModPicker && (
-        <div className={'lockedMods'}>
-          {lockedMods?.map((mod) => (
-            <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
-          ))}
+        <div className={styles.lockedSockets}>
+          {lockedMods?.length && (
+            <div className={`lockedMods ${styles.lockedSocketsRow}`}>
+              {lockedMods?.map((mod) => (
+                <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+              ))}
+            </div>
+          )}
+          <div className={`lockedMods ${styles.lockedSocketsRow}`}>
+            {lockedPerksAndOldMods?.map((def) => (
+              <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
+            ))}
+          </div>
         </div>
       )}
     </div>

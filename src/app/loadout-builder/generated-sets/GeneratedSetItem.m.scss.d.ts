@@ -3,6 +3,8 @@
 interface CssExports {
   'altPerk': string;
   'item': string;
+  'lockedSockets': string;
+  'lockedSocketsRow': string;
   'selectedPerk': string;
   'swapButton': string;
 }

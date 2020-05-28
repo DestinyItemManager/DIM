@@ -87,7 +87,7 @@ export function filterItems(
   return filteredItems;
 }
 
-function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
+export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   switch (lockedItem.type) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
