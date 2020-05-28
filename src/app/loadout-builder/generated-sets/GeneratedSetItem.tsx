@@ -134,7 +134,7 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          {lockedMods?.length && (
+          {Boolean(lockedMods?.length) && (
             <div className={`lockedMods ${styles.lockedSocketsRow}`}>
               {lockedMods?.map((mod) => (
                 <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
