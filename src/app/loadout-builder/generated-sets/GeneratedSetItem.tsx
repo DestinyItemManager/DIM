@@ -89,14 +89,17 @@ export default function GeneratedSetItem({
       : addLockedItem(lockedItem);
   };
 
-  const lockedPerksAndOldMods: DestinyInventoryItemDefinition[] = [];
+  const lockedPerks: DestinyInventoryItemDefinition[] = [];
+  /*  TODO: atm I just have all mods here but this will move to only old ones
+      when we get closer to releasing as perk picker will only have old mods */
+  const lockedOldMods: DestinyInventoryItemDefinition[] = [];
 
   if ($featureFlags.armor2ModPicker && locked?.length) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk' && matchLockedItem(item, lockedItem)) {
-        lockedPerksAndOldMods.push(lockedItem.perk);
+        lockedPerks.push(lockedItem.perk);
       } else if (lockedItem.type === 'mod' && matchLockedItem(item, lockedItem)) {
-        lockedPerksAndOldMods.push(lockedItem.mod);
+        lockedOldMods.push(lockedItem.mod);
       }
     }
   }
@@ -135,14 +138,21 @@ export default function GeneratedSetItem({
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
           {Boolean(lockedMods?.length) && (
-            <div className={`lockedMods ${styles.lockedSocketsRow}`}>
+            <div className={`lockedItems ${styles.lockedSocketsRow}`}>
               {lockedMods?.map((mod) => (
                 <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
               ))}
             </div>
           )}
-          <div className={`lockedMods ${styles.lockedSocketsRow}`}>
-            {lockedPerksAndOldMods?.map((def) => (
+          {Boolean(lockedOldMods.length) && (
+            <div className={`lockedItems ${styles.lockedSocketsRow}`}>
+              {lockedOldMods?.map((def) => (
+                <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
+              ))}
+            </div>
+          )}
+          <div className={`lockedItems lockedPerks ${styles.lockedSocketsRow}`}>
+            {lockedPerks?.map((def) => (
               <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
             ))}
           </div>

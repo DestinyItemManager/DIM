@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-.lockedMods {
+.lockedItems {
   display: flex;
   flex-direction: row;
 
@@ -34,5 +34,11 @@
       right: calc(#{$item-border-width} + ((0.64 * var(--item-size)) / 10.5));
       font-size: calc((0.64 * var(--item-size)) / 5.5);
     }
+  }
+}
+
+.lockedPerks {
+  img {
+    border: none;
   }
 }
