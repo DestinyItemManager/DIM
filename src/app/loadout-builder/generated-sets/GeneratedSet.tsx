@@ -49,7 +49,6 @@ function GeneratedSet({
   removeLockedItem,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
-
   const setCreateLoadout = (loadout: Loadout) => {
     editLoadout(loadout, { showClass: false });
   };

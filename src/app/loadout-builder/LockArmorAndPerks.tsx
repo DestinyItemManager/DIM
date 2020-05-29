@@ -269,7 +269,7 @@ function LockArmorAndPerks({
             <div className={styles.itemGrid}>
               {flatLockedArmor2Mods.map((item) => (
                 <LockedArmor2ModIcon
-                  key={item.mod.hash}
+                  key={item.key}
                   item={item}
                   defs={defs}
                   onModClicked={() => onArmor2ModClicked(item)}
