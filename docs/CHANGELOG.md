@@ -1,5 +1,6 @@
 ## Next
 
+* DIM data (loadouts, tags, settings) can no longer be stored in Google Drive. If you already have things stored there, you can use that data to import into the new storage, but it will no longer be updated. Disabling DIM Sync will now store data locally only.
 * The Vault Organizer is now available for D1.
 
 ## 6.12.0 <span className="changelog-date">(2020-05-24)</span>
