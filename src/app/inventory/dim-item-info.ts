@@ -1,16 +1,13 @@
 import _ from 'lodash';
-import { SyncService, DimData } from '../storage/sync.service';
 
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
-import { tagCleanup, tagsAndNotesLoaded } from './actions';
+import { tagCleanup } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { InventoryState } from './reducer';
-import { BungieMembershipType } from 'bungie-api-ts/user';
 import { ThunkResult } from 'app/store/reducers';
 import { itemInfosSelector } from './selectors';
+import { ItemAnnotation } from '@destinyitemmanager/dim-api-types';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
@@ -99,20 +96,7 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
   'archive',
 ];
 
-/**
- * Extra DIM-specific info, stored per item.
- */
-export interface DimItemInfo {
-  tag?: TagValue;
-  notes?: string;
-}
-
-export type ItemInfos = {
-  [key: string]: {
-    tag?: TagValue;
-    notes?: string;
-  };
-};
+export type ItemInfos = { [itemId: string]: ItemAnnotation };
 
 export interface TagInfo {
   type?: TagValue;
@@ -130,23 +114,6 @@ export const itemTagSelectorList: TagInfo[] = [
   { label: 'Tags.TagItem' },
   ...Object.values(tagConfig),
 ];
-
-/**
- * Load legacy (pre-DIM-Sync) item infos (tags and notes) into Redux from the sync service
- */
-export function loadItemInfos(account: DestinyAccount): ThunkResult {
-  return async (dispatch) => {
-    const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-
-    const data = await SyncService.get();
-
-    let infos = data[key];
-    if (!infos) {
-      infos = await getOldInfos(account, data);
-    }
-    dispatch(tagsAndNotesLoaded(infos));
-  };
-}
 
 /**
  * Delete items from the loaded items that don't appear in newly-loaded stores
@@ -179,45 +146,10 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
   };
 }
 
-/**
- * Load infos in the old way we used to save them.
- */
-export async function getOldInfos(
-  account: DestinyAccount,
-  data: Readonly<DimData>
-): Promise<Readonly<ItemInfos>> {
-  let oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
-
-  let infos = data[oldKey];
-  if (!infos) {
-    // Steam players may have originally been Blizzard players
-    if (account.originalPlatformType === BungieMembershipType.TigerSteam) {
-      oldKey = `dimItemInfo-m${account.membershipId}-p${BungieMembershipType.TigerBlizzard}-d${account.destinyVersion}`;
-      infos = data[oldKey];
-    }
-  }
-
-  if (infos) {
-    ga('send', 'event', 'Item Tagging', 'Old Version');
-    // Convert to new format
-    const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
-    await SyncService.remove(oldKey);
-    return newInfos;
-  }
-
-  return {};
+export function getTag(item: DimItem, itemInfos: ItemInfos): TagValue | undefined {
+  return itemInfos[item.id]?.tag || undefined;
 }
 
-export function getTag(
-  item: DimItem,
-  itemInfos: InventoryState['itemInfos']
-): TagValue | undefined {
-  return itemInfos[item.id] && itemInfos[item.id].tag;
-}
-
-export function getNotes(
-  item: DimItem,
-  itemInfos: InventoryState['itemInfos']
-): string | undefined {
-  return itemInfos[item.id] && itemInfos[item.id].notes;
+export function getNotes(item: DimItem, itemInfos: ItemInfos): string | undefined {
+  return itemInfos[item.id]?.notes || undefined;
 }

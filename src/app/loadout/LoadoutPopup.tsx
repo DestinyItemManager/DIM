@@ -56,12 +56,12 @@ import { createSelector } from 'reselect';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
-import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getAllItems } from 'app/inventory/stores-helpers';
+import { deleteLoadout } from './actions';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -326,19 +326,7 @@ class LoadoutPopup extends React.Component<Props> {
   private deleteLoadout = async (loadout: Loadout) => {
     const { dispatch } = this.props;
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      try {
-        await dispatch(deleteLoadout(loadout));
-      } catch (e) {
-        showNotification({
-          type: 'error',
-          title: t('Loadouts.DeleteErrorTitle'),
-          body: t('Loadouts.DeleteErrorDescription', {
-            loadoutName: loadout.name,
-            error: e.message,
-          }),
-        });
-        console.error(e);
-      }
+      dispatch(deleteLoadout(loadout.id));
     }
   };
 

@@ -3,9 +3,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
 import { AppIcon, faCheck } from 'app/shell/icons';
-import { SyncService } from 'app/storage/sync.service';
 import styles from './api-permission-prompt.m.scss';
-import { exportBackupData } from 'app/storage/export-data';
 
 /**
  * This asks the user if they want to use DIM Sync. It will stay up until a choice is made.
@@ -19,10 +17,6 @@ export function promptForApiPermission() {
 
   const ok = async (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Force a backup of their data just in case
-    const data = await SyncService.get();
-    exportBackupData(data);
     returnValue(true);
   };
 

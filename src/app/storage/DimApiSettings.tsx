@@ -5,19 +5,10 @@ import { t } from 'app/i18next-t';
 import ImportExport from './ImportExport';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/reducers';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
-import GoogleDriveSettings from './GoogleDriveSettings';
-import { SyncService } from './sync.service';
-import { dataStats } from './data-stats';
 import _ from 'lodash';
-import { initSettings } from 'app/settings/settings';
-import {
-  importLegacyData,
-  deleteAllApiData,
-  loadDimApiData,
-  showBackupDownloadedNotification,
-} from 'app/dim-api/actions';
+import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
@@ -25,6 +16,10 @@ import { exportDimApiData } from 'app/dim-api/dim-api';
 import { exportBackupData } from './export-data';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { Link } from 'react-router-dom';
+import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import { parseProfileKey } from 'app/dim-api/reducer';
+import { importDataBackup } from 'app/dim-api/import';
+import { showNotification } from 'app/notifications/notifications';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -50,8 +45,8 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     const granted = event.target.checked;
     dispatch(setApiPermissionGranted(granted));
     if (granted) {
+      const data = await dispatch(exportLocalData());
       // Force a backup of their data just in case
-      const data = await SyncService.get();
       exportBackupData(data);
       showBackupDownloadedNotification();
       dispatch(loadDimApiData());
@@ -60,40 +55,21 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
 
   const onExportData = async () => {
     setHasBackedUp(true);
-    const data = await (apiPermissionGranted ? exportDimApiData() : SyncService.get());
-    exportBackupData(data);
+    if (apiPermissionGranted) {
+      // Export from the server
+      const data = await exportDimApiData();
+      exportBackupData(data);
+    } else {
+      // Export from local data
+      const data = await dispatch(exportLocalData());
+      exportBackupData(data);
+    }
   };
 
   const onImportData = async (data: object) => {
-    if (apiPermissionGranted) {
-      if (confirm(t('Storage.ImportConfirmDimApi'))) {
-        // TODO: At this point the legacy data is definitely out of sync
-        await dispatch(importLegacyData(data, true));
-        alert(t('Storage.ImportSuccess'));
-      }
-    } else {
-      const stats = dataStats(data);
-
-      const statsLine = _.map(
-        stats,
-        (value, key) => (value ? t(`Storage.${key}`, { value }) : undefined)
-        // t('Storage.LoadoutsD1')
-        // t('Storage.LoadoutsD2')
-        // t('Storage.TagNotesD1')
-        // t('Storage.TagNotesD2')
-        // t('Storage.Settings')
-        // t('Storage.IgnoredUsers')
-      )
-        .filter(Boolean)
-        .join(', ');
-
-      if (confirm(t('Storage.ImportConfirm', { stats: statsLine }))) {
-        // Don't save the `importedToDimApi` flag
-        const { importedToDimApi, ...otherData } = data as any;
-        await SyncService.set(otherData, true);
-        initSettings();
-        alert(t('Storage.ImportSuccess'));
-      }
+    if (confirm(t('Storage.ImportConfirmDimApi'))) {
+      await dispatch(importDataBackup(data));
+      alert(t('Storage.ImportSuccess'));
     }
   };
 
@@ -105,8 +81,6 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       dispatch(deleteAllApiData());
     }
   };
-
-  // TODO: button to manually sync
 
   return (
     <section className="storage" id="storage">
@@ -138,18 +112,66 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
           </Link>
         </div>
       )}
-      <div className="setting horizontal">
-        <label>{t('Storage.DeleteAllDataLabel')}</label>
-        <button className="dim-button" onClick={deleteAllData}>
-          <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-        </button>
-      </div>
-      {!apiPermissionGranted && <GoogleDriveSettings />}
+      {apiPermissionGranted && (
+        <div className="setting horizontal">
+          <label>{t('Storage.DeleteAllDataLabel')}</label>
+          <button className="dim-button" onClick={deleteAllData}>
+            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+          </button>
+        </div>
+      )}
       <LocalStorageInfo showDetails={!apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      {apiPermissionGranted && <LegacyGoogleDriveSettings onImportData={onImportData} />}
+      <LegacyGoogleDriveSettings onImportData={onImportData} />
     </section>
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(DimApiSettings);
+
+/**
+ * Export the local IDB data to a format the DIM API could import.
+ */
+function exportLocalData(): ThunkResult<ExportResponse> {
+  return async (_, getState) => {
+    const dimApiState = getState().dimApi;
+    const exportResponse: ExportResponse = {
+      settings: dimApiState.settings,
+      loadouts: [],
+      tags: [],
+    };
+
+    for (const profileKey in dimApiState.profiles) {
+      if (Object.prototype.hasOwnProperty.call(dimApiState.profiles, profileKey)) {
+        const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
+
+        for (const loadout of Object.values(dimApiState.profiles[profileKey].loadouts)) {
+          exportResponse.loadouts.push({
+            loadout,
+            platformMembershipId,
+            destinyVersion,
+          });
+        }
+        for (const annotation of Object.values(dimApiState.profiles[profileKey].tags)) {
+          exportResponse.tags.push({
+            annotation,
+            platformMembershipId,
+            destinyVersion,
+          });
+        }
+      }
+    }
+
+    return exportResponse;
+  };
+}
+
+// TODO: gotta change all these strings
+function showBackupDownloadedNotification() {
+  showNotification({
+    type: 'success',
+    title: t('Storage.DimSyncEnabled'),
+    body: t('Storage.AutoBackup'),
+    duration: 15000,
+  });
+}

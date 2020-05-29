@@ -20,6 +20,7 @@ import {
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { emptyArray } from 'app/utils/empty';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -122,19 +123,6 @@ export const dimApi = (
   // This is a specially-handled reducer (see reducers.ts) which gets the current account (based on incoming state) passed along
   account?: DestinyAccount
 ): DimApiState => {
-  if (
-    (state.apiPermissionGranted !== true || !state.globalSettings.dimApiEnabled) &&
-    // Let through the ability to change the API permission
-    action.type !== getType(actions.setApiPermissionGranted) &&
-    // Let through global settings
-    action.type !== getType(actions.globalSettingsLoaded)
-  ) {
-    // If the API is off, don't track state. We will want to tweak this when we start using
-    // this state as the local state even when Sync is off, but for now it avoids us doing the
-    // wrong thing.
-    return state;
-  }
-
   switch (action.type) {
     case getType(actions.globalSettingsLoaded):
       return {
@@ -209,13 +197,13 @@ export const dimApi = (
             ...state,
             apiPermissionGranted,
           }
-        : // If we're disabling DIM Sync, reset local state to the initial state, as if we'd never loaded
+        : // If we're disabling DIM Sync, unset profile loaded and clear the update queue
           {
             ...state,
             apiPermissionGranted,
-            profiles: initialState.profiles,
-            settings: initialState.settings,
             profileLoaded: false,
+            updateQueue: [],
+            updateInProgressWatermark: 0,
           };
     }
 
@@ -329,6 +317,13 @@ function prepareUpdateQueue(state: DimApiState) {
   console.time('prepareUpdateQueue');
   try {
     return produce(state, (draft) => {
+      // If the user only wants to save data locally, then throw away the update queue.
+      if (state.apiPermissionGranted === false) {
+        draft.updateQueue = emptyArray();
+        draft.updateInProgressWatermark = 0;
+        return;
+      }
+
       let platformMembershipId: string | undefined;
       let destinyVersion: DestinyVersion | undefined;
 
@@ -728,11 +723,11 @@ function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRoll
 export function makeProfileKeyFromAccount(account: DestinyAccount) {
   return makeProfileKey(account.membershipId, account.destinyVersion);
 }
-function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
+export function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
   return `${platformMembershipId}-d${destinyVersion}`;
 }
 
-function parseProfileKey(profileKey: string): [string, DestinyVersion] {
+export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
   const match = profileKey.match(/(\d+)-d(1|2)/);
   if (!match) {
     throw new Error("Profile key didn't match expected format");

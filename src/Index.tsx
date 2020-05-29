@@ -16,8 +16,7 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
-import { SyncService } from './app/storage/sync.service';
-import { initSettings, watchLanguageChanges } from './app/settings/settings';
+import { watchLanguageChanges } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
 import { saveWishListToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
@@ -55,13 +54,9 @@ store.dispatch(loadDimApiData());
 
 saveItemInfosOnStateChange();
 
-// Load some stuff at startup
-SyncService.init();
-
 initi18n().then(() => {
   // Settings depends on i18n
   watchLanguageChanges();
-  initSettings();
 
   console.log(
     `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`

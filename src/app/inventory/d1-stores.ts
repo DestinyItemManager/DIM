@@ -5,7 +5,7 @@ import { reportException } from '../utils/exceptions';
 import { getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { getBuckets } from '../destiny1/d1-buckets';
-import { loadItemInfos, cleanInfos } from './dim-item-info';
+import { cleanInfos } from './dim-item-info';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
 import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
@@ -95,10 +95,9 @@ function StoreService(): D1StoreServiceType {
       getDefinitions(),
       getBuckets(),
       store.dispatch(loadNewItems(account)),
-      store.dispatch(loadItemInfos(account)),
       getStores(account),
     ])
-      .then(([defs, buckets, , , rawStores]) => {
+      .then(([defs, buckets, , rawStores]) => {
         const lastPlayedDate = findLastPlayedDate(rawStores);
 
         // Currencies object gets mutated by processStore

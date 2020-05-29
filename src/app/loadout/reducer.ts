@@ -11,52 +11,22 @@ import {
   LoadoutItem as DimApiLoadoutItem,
   DestinyVersion,
 } from '@destinyitemmanager/dim-api-types';
-import { currentProfileSelector, apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector } from 'app/dim-api/selectors';
 import { emptyArray } from 'app/utils/empty';
-
-const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
   currentAccountSelector,
   currentProfileSelector,
-  (state: RootState) => state.loadouts.loadouts,
-  apiPermissionGrantedSelector,
-  (currentAccount, profile, legacyLoadouts, apiPermissionGranted) =>
-    apiPermissionGranted
-      ? profile
-        ? Object.values(profile?.loadouts).map((loadout) =>
-            convertDimApiLoadoutToLoadout(
-              currentAccount!.membershipId,
-              currentAccount!.destinyVersion,
-              loadout
-            )
+  (currentAccount, profile) =>
+    profile
+      ? Object.values(profile.loadouts).map((loadout) =>
+          convertDimApiLoadoutToLoadout(
+            currentAccount!.membershipId,
+            currentAccount!.destinyVersion,
+            loadout
           )
-        : emptyArray<Loadout>()
-      : currentAccount
-      ? legacyLoadouts.filter((loadout) => {
-          if (loadout.membershipId !== undefined) {
-            return (
-              loadout.membershipId === currentAccount.membershipId &&
-              loadout.destinyVersion === currentAccount.destinyVersion
-            );
-          } else if (loadout.platform !== undefined) {
-            reportOldLoadout();
-            if (
-              loadout.platform === currentAccount.platformLabel &&
-              loadout.destinyVersion === currentAccount.destinyVersion
-            ) {
-              // Take this opportunity to fix up the membership ID
-              loadout.membershipId = currentAccount.membershipId;
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            // In D1 loadouts could get saved without platform or membership ID
-            return currentAccount.destinyVersion === 1;
-          }
-        })
+        )
       : emptyArray<Loadout>()
 );
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
@@ -67,7 +37,6 @@ export const previousLoadoutSelector = (state: RootState, storeId: string): Load
 };
 
 export interface LoadoutsState {
-  readonly loadouts: Loadout[];
   /** A stack of previous loadouts by character ID, for undo loadout. */
   readonly previousLoadouts: { [characterId: string]: Loadout[] };
 }
@@ -75,7 +44,6 @@ export interface LoadoutsState {
 export type LoadoutsAction = ActionType<typeof actions>;
 
 const initialState: LoadoutsState = {
-  loadouts: [],
   previousLoadouts: {},
 };
 
@@ -84,26 +52,6 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
   action: LoadoutsAction
 ) => {
   switch (action.type) {
-    case getType(actions.loaded):
-      return {
-        ...state,
-        loadouts: action.payload,
-      };
-
-    case getType(actions.deleteLoadout):
-      return {
-        ...state,
-        loadouts: state.loadouts.filter((l) => l.id !== action.payload),
-      };
-
-    case getType(actions.updateLoadout): {
-      const loadout = action.payload;
-      return {
-        ...state,
-        loadouts: [...state.loadouts.filter((l) => l.id !== loadout.id), loadout],
-      };
-    }
-
     case getType(actions.savePreviousLoadout): {
       const { storeId, loadoutId, previousLoadout } = action.payload;
       let previousLoadouts = state.previousLoadouts[storeId] || [];

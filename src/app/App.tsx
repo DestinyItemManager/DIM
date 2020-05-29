@@ -34,10 +34,6 @@ const WhatsNew = React.lazy(() =>
 const SettingsPage = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage,
 }));
-const GDriveRevisions = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "settings" */ './settings/components'))
-    .GDriveRevisions,
-}));
 const AuditLog = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog,
 }));
@@ -134,9 +130,6 @@ function App({
                 </Route>
                 <Route path="/login" exact>
                   <Login />
-                </Route>
-                <Route path="/settings/gdrive-revisions" exact>
-                  <GDriveRevisions />
                 </Route>
                 <Route path="/settings/audit" exact>
                   <AuditLog />

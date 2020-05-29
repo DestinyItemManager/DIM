@@ -19,7 +19,7 @@ import { reportException } from '../utils/exceptions';
 import { getLight } from '../loadout/loadout-utils';
 import { resetIdTracker, processItems } from './store/d2-item-factory';
 import { makeVault, makeCharacter, getCharacterStatsData } from './store/d2-store-factory';
-import { loadItemInfos, cleanInfos } from './dim-item-info';
+import { cleanInfos } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
@@ -191,11 +191,10 @@ function makeD2StoresService(): D2StoreServiceType {
     resetIdTracker();
 
     try {
-      const [defs, buckets, , , profileInfo] = await Promise.all([
+      const [defs, buckets, , profileInfo] = await Promise.all([
         getDefinitions(),
         getBuckets(),
         store.dispatch(loadNewItems(account)),
-        store.dispatch(loadItemInfos(account)),
         getStores(account),
       ]);
       console.time('Process inventory');

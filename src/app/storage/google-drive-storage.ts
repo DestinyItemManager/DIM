@@ -79,31 +79,6 @@ export class GoogleDriveStorage implements StorageAdapter {
     }
   }
 
-  // TODO: set a timestamp for merging?
-  async set(value: object): Promise<void> {
-    await this.ready;
-    if (!this.enabled) {
-      return;
-    }
-    try {
-      const fileId = await this.getFileId();
-      return await gapi.client.request({
-        path: `/upload/drive/v3/files/${fileId}`,
-        method: 'PATCH',
-        params: {
-          uploadType: 'media',
-          alt: 'json',
-        },
-        body: value,
-      });
-    } catch (resp) {
-      // TODO: error handling
-      // this.revokeDrive();
-      console.error('Error saving to Google Drive', resp);
-      throw new Error(`error saving. ${gdriveErrorMessage(resp)}`);
-    }
-  }
-
   /**
    * Bootstrap the Google Drive client libraries and
    * authentication. If the user has authed in the past, they are
@@ -274,43 +249,6 @@ export class GoogleDriveStorage implements StorageAdapter {
     this.enabled = false;
     localStorage.removeItem('gdrive-fileid');
     gapi.auth2.getAuthInstance().signOut();
-  }
-
-  async getRevisions(): Promise<GDriveRevision[]> {
-    try {
-      await this.ready;
-      const fileId = await this.getFileId();
-      const revisions = await gapi.client.drive.revisions.list({ fileId });
-      if (revisions.status === 200) {
-        return revisions.result.revisions as GDriveRevision[];
-      } else {
-        throw new Error('Error getting revisions: ' + gdriveErrorMessage(revisions));
-      }
-    } catch (e) {
-      throw new Error(
-        `Unable to load GDrive revisions for ${this.fileId}: ${gdriveErrorMessage(e)}`
-      );
-    }
-  }
-
-  async getRevisionContent(revisionId: string): Promise<object> {
-    await this.ready;
-    try {
-      const fileId = await this.getFileId();
-      const file = await gapi.client.drive.revisions.get({
-        fileId,
-        revisionId,
-        alt: 'media',
-      });
-
-      if (file.status === 200) {
-        return file.result;
-      } else {
-        throw new Error('Error getting revisions: ' + gdriveErrorMessage(file));
-      }
-    } catch (e) {
-      throw new Error(`Unable to load revision ${revisionId}: ${gdriveErrorMessage(e)}`);
-    }
   }
 
   // https://developers.google.com/drive/api/v3/reference/about#resource

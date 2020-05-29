@@ -1,6 +1,5 @@
-import { get, set } from 'idb-keyval';
+import { get } from 'idb-keyval';
 import { StorageAdapter, DimData } from './sync.service';
-import { handleLocalStorageFullError } from '../compatibility';
 
 /**
  * Local storage using IndexedDB. IndexedDB has large storage limits,
@@ -13,9 +12,5 @@ export class IndexedDBStorage implements StorageAdapter {
 
   get() {
     return Promise.resolve(get<DimData>('DIM-data'));
-  }
-
-  set(value: object) {
-    return Promise.resolve(set('DIM-data', value)).catch(handleLocalStorageFullError);
   }
 }

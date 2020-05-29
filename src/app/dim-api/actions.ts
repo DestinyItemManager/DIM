@@ -1,7 +1,6 @@
 import {
   getGlobalSettings,
   getDimApiProfile,
-  importData,
   postUpdates,
   deleteAllData,
 } from '../dim-api/dim-api';
@@ -25,7 +24,6 @@ import {
   profileLoadError,
 } from './basic-actions';
 import { deepEqual } from 'fast-equals';
-import { DimData, SyncService } from 'app/storage/sync.service';
 import { ProfileUpdateWithRollback } from './api-types';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
@@ -50,10 +48,6 @@ const installApiPermissionObserver = _.once(() => {
       if (apiPermissionGranted !== null) {
         // Save the permission preference to local storage
         localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
-        if (!apiPermissionGranted) {
-          // Clear the flag in the legacy data that this has been imported already, so that we can reimport later
-          SyncService.get().then(() => SyncService.set({ importedToDimApi: false }));
-        }
       }
     }
   );
@@ -168,22 +162,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // Show a prompt if the user has not said one way or another whether they want to use the API
     if (getState().dimApi.apiPermissionGranted === null) {
-      // TODO: show only once at a time!
       waitingForApiPermission = true;
       try {
         const useApi = await promptForApiPermission();
         dispatch(setApiPermissionGranted(useApi));
-        if (useApi) {
-          showBackupDownloadedNotification();
-        }
       } finally {
         waitingForApiPermission = false;
       }
-    }
-
-    if (!getState().dimApi.apiPermissionGranted) {
-      // OK, they don't want to use DIM Sync...
-      return;
     }
 
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
@@ -191,6 +176,11 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
     }
     installObservers(dispatch); // idempotent
+
+    if (!getState().dimApi.apiPermissionGranted) {
+      // They don't want to sync to the server, stay local only
+      return;
+    }
 
     // don't load from remote if there is already an update queue from IDB - we'd roll back data otherwise!
     if (getState().dimApi.updateQueue.length > 0) {
@@ -243,9 +233,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // Make sure any queued updates get sent to the server
     await dispatch(flushUpdates());
-
-    // Check to see if legacy data needs to be auto-imported
-    await dispatch(importLegacyData());
   };
 }
 
@@ -258,6 +245,11 @@ let flushUpdatesBackoff = 0;
 export function flushUpdates(): ThunkResult<any> {
   return async (dispatch, getState) => {
     let dimApiState = getState().dimApi;
+
+    // Skip flushing state if the API is disabled
+    if (!dimApiState.globalSettings.dimApiEnabled) {
+      return;
+    }
 
     if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length > 0) {
       // Prepare the queue
@@ -353,93 +345,6 @@ function subtractObject<T>(obj: T | undefined, defaults: T): Partial<T> {
   return result;
 }
 
-/** Returns a promise that resolves when the profile is fully loaded. */
-function waitForProfileLoad() {
-  return new Promise((resolve) => {
-    const unsubscribe = observeStore(
-      (state) => state.dimApi.profileLoaded,
-      (_, loaded) => {
-        if (loaded) {
-          unsubscribe();
-          resolve();
-        }
-      }
-    );
-  });
-}
-
-/**
- * Import legacy-format data (from SyncService) into DIM Sync. This may be from a user clicking "Import" but we
- * also kick this off automatically after every sync so that we auto-import legacy data into DIM Sync if the user
- * doesn't already have data in DIM Sync.
- *
- * @param force Whether to overwrite data in DIM Sync if there's already data there.
- */
-export function importLegacyData(data?: DimData, force = false): ThunkResult<any> {
-  return async (dispatch, getState) => {
-    if (!data) {
-      data = await SyncService.get();
-    }
-
-    let dimApiData = getState().dimApi;
-
-    if (!dimApiData.globalSettings.dimApiEnabled) {
-      return;
-    }
-
-    if (!dimApiData.profileLoaded) {
-      await waitForProfileLoad();
-    }
-
-    if (!force && data.importedToDimApi) {
-      console.log("[importLegacyData] Don't need to import, this legacy data has already imported");
-      return;
-    }
-
-    // Check to see if there's anything to import - don't want to start a brand new user out with importing.
-    if (isLegacyDataEmpty(data)) {
-      console.log(
-        "[importLegacyData] Don't need to import, there are no settings, tags or loadouts in the legacy data"
-      );
-      // Silently return
-      return;
-    }
-
-    dimApiData = getState().dimApi;
-
-    if (
-      !force &&
-      (Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length) ||
-        !_.isEmpty(subtractObject(dimApiData.settings, initialSettingsState)))
-    ) {
-      console.warn(
-        '[importLegacyData] Skipping legacy data import because there are already settings, loadouts or tags in the DIM API profile data'
-      );
-
-      // Mark in the legacy data that this has been imported already
-      await SyncService.set({ importedToDimApi: true });
-      showImportSkippedNotification();
-      return;
-    }
-
-    try {
-      console.log('[importLegacyData] Attempting to import legacy data into DIM API');
-      const result = await importData(data);
-      console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
-      showImportSuccessNotification(result, force);
-    } catch (e) {
-      console.error('[importLegacyData] Error importing legacy data into DIM API', e);
-      return;
-    }
-
-    // Mark in the legacy data that this has been imported already
-    await SyncService.set({ importedToDimApi: true });
-
-    // Reload from the server
-    return dispatch(loadDimApiData(true));
-  };
-}
-
 /**
  * Wipe out all data in the DIM Sync cloud storage. Not recoverable!
  */
@@ -454,58 +359,6 @@ export function deleteAllApiData(): ThunkResult<any> {
 
     return result;
   };
-}
-
-/** Does the legacy data contain any settings, loadouts or tags? */
-function isLegacyDataEmpty(data: DimData) {
-  if (data['loadouts-v3.0']?.length) {
-    return false;
-  }
-
-  for (const key in importData) {
-    const match = /dimItemInfo-m(\d+)-d(1|2)/.exec(key);
-    if (match && !_.isEmpty(importData[key])) {
-      return false;
-    }
-  }
-
-  if (!_.isEmpty(subtractObject(data['settings-v1.0'], initialSettingsState))) {
-    return false;
-  }
-
-  return true;
-}
-
-export function showBackupDownloadedNotification() {
-  showNotification({
-    type: 'success',
-    title: t('Storage.DimSyncEnabled'),
-    body: t('Storage.AutoBackup'),
-    duration: 15000,
-  });
-}
-
-function showImportSkippedNotification() {
-  showNotification({
-    type: 'warning',
-    title: t('Storage.ImportNotification.SkippedTitle'),
-    body: t('Storage.ImportNotification.SkippedBody'),
-    duration: 15000,
-  });
-}
-
-function showImportSuccessNotification(
-  result: { loadouts: number; tags: number },
-  forceImport = false
-) {
-  showNotification({
-    type: 'success',
-    title: t('Storage.ImportNotification.SuccessTitle'),
-    body: forceImport
-      ? t('Storage.ImportNotification.SuccessBodyForced', result)
-      : t('Storage.ImportNotification.SuccessBody', result),
-    duration: 15000,
-  });
 }
 
 function showProfileLoadErrorNotification(e: Error) {
