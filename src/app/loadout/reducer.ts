@@ -20,7 +20,7 @@ export const loadoutsSelector = createSelector(
   currentProfileSelector,
   (currentAccount, profile) =>
     profile
-      ? Object.values(profile?.loadouts).map((loadout) =>
+      ? Object.values(profile.loadouts).map((loadout) =>
           convertDimApiLoadoutToLoadout(
             currentAccount!.membershipId,
             currentAccount!.destinyVersion,
