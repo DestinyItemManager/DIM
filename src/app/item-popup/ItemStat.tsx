@@ -92,7 +92,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         {displayValue}
       </div>
 
-      {statsMs.includes(stat.statHash) && (
+      {item?.isDestiny2() && statsMs.includes(stat.statHash) && (
         <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
       )}
 
