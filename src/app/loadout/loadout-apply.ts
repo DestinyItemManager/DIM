@@ -23,6 +23,17 @@ const outOfSpaceWarning = _.throttle((store) => {
   });
 }, 60000);
 
+interface Scope {
+  failed: number;
+  total: number;
+  successfulItems: DimItem[];
+  errors: {
+    item: DimItem | null;
+    message: string;
+    level: string;
+  }[];
+}
+
 /**
  * Apply a loadout - a collection of items to be moved and possibly equipped all at once.
  * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
@@ -68,7 +79,11 @@ export async function applyLoadout(
   await loadoutPromise;
 }
 
-async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false) {
+async function doApplyLoadout(
+  store: DimStore,
+  loadout: Loadout,
+  allowUndo = false
+): Promise<Scope> {
   const storeService = store.getStoresService();
   if (allowUndo && !store.isVault) {
     reduxStore.dispatch(
@@ -97,9 +112,9 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       return false;
     }
 
-    // only try to equip subclasses that are equippable, since we allow multiple in a loadout
+    // only try to equip items that are equippable - otherwise ignore them
     const applicableSubclass =
-      item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+      item.type !== 'Class' || (pseudoItem.equipped && item.canBeEquippedBy(store));
     if (!applicableSubclass) {
       totalItems--;
       return false;
@@ -137,7 +152,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
     return item?.equipped && item.owner !== store.id;
   });
 
-  const scope = {
+  const scope: Scope = {
     failed: 0,
     total: totalItems,
     successfulItems: [] as DimItem[],
@@ -290,6 +305,7 @@ async function applyLoadoutItems(
   } catch (e) {
     const level = e.level || 'error';
     if (level === 'error') {
+      console.error('Failed to apply loadout item', item?.name, e);
       scope.failed++;
     }
     scope.errors.push({

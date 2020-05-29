@@ -19,15 +19,17 @@ export default function VendorItemComponent({
   item,
   defs,
   owned,
+  characterId,
 }: {
   defs: D2ManifestDefinitions;
   item: VendorItem;
   owned: boolean;
+  characterId?: string;
 }) {
   if (item.displayTile) {
     return (
       <div className={styles.vendorItem}>
-        <Link to={`vendors/${item.previewVendorHash}`}>
+        <Link to={`vendors/${item.previewVendorHash}?characterId=${characterId}`}>
           <BungieImage
             className={styles.tile}
             title={item.displayProperties.name}

@@ -69,7 +69,7 @@ export default function LoadoutDrawerOptions({
 
   return (
     <div className="loadout-options">
-      <Prompt when={loadout.items.length > 0} message={t('Loadouts.Abandon')} />
+      <Prompt when={isNew && loadout.items.length > 0} message={t('Loadouts.Abandon')} />
       <form onSubmit={saveLoadout}>
         <div className="input-group loadout-name">
           <input
@@ -107,6 +107,15 @@ export default function LoadoutDrawerOptions({
               className="dim-button"
               onClick={saveAsNew}
               type="button"
+              title={
+                clashingLoadout
+                  ? clashingLoadout.classType !== DestinyClass.Unknown
+                    ? t('Loadouts.AlreadyExistsClass', {
+                        className: getClass(clashingLoadout.classType),
+                      })
+                    : t('Loadouts.AlreadyExistsGlobal')
+                  : t('Loadouts.SaveAsNew')
+              }
               disabled={saveAsNewDisabled}
             >
               {t('Loadouts.SaveAsNew')}
@@ -114,8 +123,8 @@ export default function LoadoutDrawerOptions({
           )}
         </div>
         <div className="input-group">
-          <Link className="dim-button" to="optimizer">
-            {t('LB.LB')}
+          <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+            {t('Loadouts.OpenInOptimizer')}
           </Link>
         </div>
         <div className="input-group">

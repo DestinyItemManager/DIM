@@ -96,6 +96,7 @@ export function SearchFilter(
     filteredItems,
     isComparable,
     touchStores,
+    bulkTagItems,
     onClear,
   }: Props,
   ref: React.Ref<SearchFilterRef>

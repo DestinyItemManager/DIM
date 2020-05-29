@@ -3,7 +3,7 @@ import { ItemInfos, getNotes, getTag, tagConfig } from './dim-item-info';
 import { setItemNote, setItemTagsBulk } from './actions';
 
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from './d2-season-info';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import D2Sources from 'data/d2/source-info';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';

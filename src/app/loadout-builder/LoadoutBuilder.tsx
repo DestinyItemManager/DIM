@@ -9,7 +9,7 @@ import { D2StoresService } from '../inventory/d2-stores';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
+import { filterGeneratedSets, isLoadoutBuilderItem, addLockedItem } from './generated-sets/utils';
 import {
   ArmorSet,
   StatTypes,
@@ -43,8 +43,10 @@ import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
+import { Loadout } from 'app/loadout/loadout-types';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -62,7 +64,9 @@ interface StoreProps {
   filters: SearchFilters;
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps &
+  StoreProps &
+  RouteComponentProps<{}, StaticContext, { loadout?: Loadout }>;
 
 interface State {
   lockedMap: LockedMap;
@@ -136,8 +140,28 @@ class LoadoutBuilder extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+
+    let lockedMap: LockedMap = {};
+    const { stores, location } = this.props;
+    if (stores.length && location.state?.loadout) {
+      for (const loadoutItem of location.state.loadout.items) {
+        if (loadoutItem.equipped) {
+          const item = getItemAcrossStores(stores, loadoutItem);
+          if (item && isLoadoutBuilderItem(item)) {
+            lockedMap = {
+              ...lockedMap,
+              [item.bucket.hash]: addLockedItem(
+                { type: 'item', item, bucket: item.bucket },
+                lockedMap[item.bucket.hash]
+              ),
+            };
+          }
+        }
+      }
+    }
+
     this.state = {
-      lockedMap: {},
+      lockedMap,
       statFilters: {
         Mobility: { min: 0, max: 10, ignored: false },
         Resilience: { min: 0, max: 10, ignored: false },
@@ -378,4 +402,4 @@ class LoadoutBuilder extends React.Component<Props, State> {
     this.setState({ assumeMasterwork });
 }
 
-export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
+export default withRouter(connect<StoreProps>(mapStateToProps)(LoadoutBuilder));
