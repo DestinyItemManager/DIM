@@ -9,7 +9,11 @@ import {
 import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 import { DestinyClass, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
-import { getItemDamageShortName, getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+import {
+  getItemDamageShortName,
+  getItemSpecialtyModSlotDisplayName,
+  getSpecialtySocketMetadata,
+} from 'app/utils/item-utils';
 
 import BungieImage from 'app/dim-ui/BungieImage';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -125,6 +129,7 @@ export function getColumns(
             }
             return <ItemStatValue stat={stat} item={item} />;
           },
+          defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
           filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`,
         };
       }
@@ -355,7 +360,10 @@ export function getColumns(
         value: getItemSpecialtyModSlotDisplayName,
         cell: (value, item) =>
           value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
-        filter: (value) => `modslot:${value}`,
+        filter: (_, item) => {
+          const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
+          return `modslot:${modSocketTypeHash?.tag || 'none'}`;
+        },
       },
     destinyVersion === 1 && {
       id: 'percentComplete',
