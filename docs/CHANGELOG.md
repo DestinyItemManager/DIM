@@ -2,6 +2,8 @@
 
 * DIM data (loadouts, tags, settings) can no longer be stored in Google Drive. If you already have things stored there, you can use that data to import into the new storage, but it will no longer be updated. Disabling DIM Sync will now store data locally only.
 * The Vault Organizer is now available for D1.
+* CSV export will no longer erroneously consider calus as a source and instead output the correct source.
+* CSV export will now export the same source information that DIM uses for items that do not have a source in the API.
 
 ## 6.12.0 <span className="changelog-date">(2020-05-24)</span>
 

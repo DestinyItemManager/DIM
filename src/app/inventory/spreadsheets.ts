@@ -5,6 +5,7 @@ import { setItemNote, setItemTagsBulk } from './actions';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import D2Sources from 'data/d2/source-info';
+import D2MissingSources from 'data/d2/missing-source-info';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
 import { DtrRating } from '../item-review/dtr-api-types';
@@ -42,8 +43,9 @@ const FILTER_NODE_NAMES = [
   'No Projection',
 ];
 
-// ignore raid sources in favor of more detailed sources
+// ignore raid & calus sources in favor of more detailed sources
 delete D2Sources.raid;
+delete D2Sources.calus;
 
 export function downloadCsvFiles(
   stores: DimStore[],
@@ -278,7 +280,8 @@ export function source(item: DimItem) {
       Object.keys(D2Sources).find(
         (src) =>
           D2Sources[src].sourceHashes.includes(item.source) ||
-          D2Sources[src].itemHashes.includes(item.hash)
+          D2Sources[src].itemHashes.includes(item.hash) ||
+          D2MissingSources[src].includes(item.hash)
       ) || ''
     );
   }
