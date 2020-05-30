@@ -1,4 +1,4 @@
-import { D2CalculatedSeason, D2CurrentSeason } from 'data/d2/d2-season-info';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import { D2Item } from '../item-types';
@@ -24,5 +24,5 @@ export function getSeason(item: D2Item): number {
     return SourceToD2Season[item.source];
   }
 
-  return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
+  return D2Seasons[item.hash] || D2CalculatedSeason;
 }
