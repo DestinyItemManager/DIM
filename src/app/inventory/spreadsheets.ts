@@ -46,8 +46,6 @@ const FILTER_NODE_NAMES = [
 // ignore raid & calus sources in favor of more detailed sources
 delete D2Sources.raid;
 delete D2Sources.calus;
-delete D2MissingSources.raid;
-delete D2MissingSources.calus;
 
 export function downloadCsvFiles(
   stores: DimStore[],
