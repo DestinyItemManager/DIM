@@ -28,11 +28,6 @@ export default function ModPickerSection({
   onModRemoved(mod: LockedArmor2Mod);
 }) {
   const isModUnSelectable = (item: LockedArmor2Mod) => {
-    // if it is selected you can unselect it
-    if (locked?.some((p) => p.mod.hash === item.mod.hash)) {
-      return false;
-    }
-
     if (locked && locked.length >= maximumSelectable) {
       return true;
     }
