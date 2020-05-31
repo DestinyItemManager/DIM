@@ -124,7 +124,9 @@ function SettingAudit({ payload }: { payload: SettingsLogEntry['payload'] }) {
   return (
     <>
       {Object.entries(payload).map(([key, value]) => (
-        <div key={key}>{t('AuditLog.Setting', { key, value: JSON.stringify(value) })}</div>
+        <div key={key}>
+          {t('AuditLog.Setting', { key, value: JSON.stringify(value, undefined, '  ') })}
+        </div>
       ))}
     </>
   );

@@ -24,11 +24,15 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
   return async (dispatch, getState) => {
     const dimApiData = getState().dimApi;
 
-    if (dimApiData.globalSettings.dimApiEnabled && !dimApiData.profileLoaded) {
+    if (
+      dimApiData.globalSettings.dimApiEnabled &&
+      dimApiData.apiPermissionGranted &&
+      !dimApiData.profileLoaded
+    ) {
       await waitForProfileLoad();
     }
 
-    if (dimApiData.globalSettings.dimApiEnabled) {
+    if (dimApiData.globalSettings.dimApiEnabled && dimApiData.apiPermissionGranted) {
       try {
         console.log('[importLegacyData] Attempting to import legacy data into DIM API');
         const result = await importData(data);
@@ -51,25 +55,29 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
 
       for (const platformLoadout of loadouts) {
         const { platformMembershipId, destinyVersion, ...loadout } = platformLoadout;
-        const key = makeProfileKey(platformMembershipId, destinyVersion);
-        if (!profiles[key]) {
-          profiles[key] = {
-            loadouts: {},
-            tags: {},
-          };
+        if (platformMembershipId && destinyVersion) {
+          const key = makeProfileKey(platformMembershipId, destinyVersion);
+          if (!profiles[key]) {
+            profiles[key] = {
+              loadouts: {},
+              tags: {},
+            };
+          }
+          profiles[key].loadouts[loadout.id] = loadout;
         }
-        profiles[key].loadouts[loadout.id] = loadout;
       }
       for (const platformTag of tags) {
         const { platformMembershipId, destinyVersion, ...tag } = platformTag;
-        const key = makeProfileKey(platformMembershipId, destinyVersion);
-        if (!profiles[key]) {
-          profiles[key] = {
-            loadouts: {},
-            tags: {},
-          };
+        if (platformMembershipId && destinyVersion) {
+          const key = makeProfileKey(platformMembershipId, destinyVersion);
+          if (!profiles[key]) {
+            profiles[key] = {
+              loadouts: {},
+              tags: {},
+            };
+          }
+          profiles[key].tags[tag.id] = tag;
         }
-        profiles[key].tags[tag.id] = tag;
       }
 
       dispatch(
