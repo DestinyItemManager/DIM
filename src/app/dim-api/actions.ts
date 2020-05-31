@@ -179,6 +179,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     if (!getState().dimApi.apiPermissionGranted) {
       // They don't want to sync to the server, stay local only
+      readyResolve();
       return;
     }
 
