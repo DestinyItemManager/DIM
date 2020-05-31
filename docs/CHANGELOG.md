@@ -4,6 +4,12 @@
 * The Vault Organizer is now available for D1.
 * CSV export will no longer erroneously consider calus as a source and instead output the correct source.
 * CSV export will now export the same source information that DIM uses for items that do not have a source in the API.
+* Fixed import/export of data - if your backups didn't load before, they should now.
+* Fixed Organizer default sorting for stats, and shift-click filtering for modslot.
+* Vendors data no longer has to reload every time you visit the page.
+* is:dupelower search is stabilized so that tagging items as junk doesn't change what is considered "lower"
+* Fixed loadouts with subclasses not fully transferring to the vault.
+* Don't display "ms" unit on Charge Time stat for D1 fusion rifles.
 
 ## 6.12.0 <span className="changelog-date">(2020-05-24)</span>
 
