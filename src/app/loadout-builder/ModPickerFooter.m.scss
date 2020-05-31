@@ -3,16 +3,16 @@
 .footer {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-
-  div {
-    margin-right: 4px;
-  }
 }
 
 .selectedMods {
   composes: flexWrap from '../dim-ui/common.m.scss';
   flex: 1;
   align-items: center;
+
+  > * {
+    margin-right: 4px;
+  }
 }
 
 .submitButton {

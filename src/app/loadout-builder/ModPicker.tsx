@@ -28,7 +28,6 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { v4 as uuidv4 } from 'uuid';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -39,6 +38,9 @@ const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.classitem]: t('LB.ClassItem'),
   [ModPickerCategories.seasonal]: t('LB.Seasonal'),
 };
+
+/** Used for generating the key attribute of the lockedArmor2Mods */
+let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -199,7 +201,7 @@ class ModPicker extends React.Component<Props, State> {
             ? specialtyModSocketHashes.includes(mod.plug.plugCategoryHash)
             : mod.plug.plugCategoryHash === category
         )
-        .map((mod) => ({ key: uuidv4(), mod, category }));
+        .map((mod) => ({ key: modKey++, mod, category }));
 
     const isGeneralOrSeasonal = (category: ModPickerCategory) =>
       category === ModPickerCategories.general || category === ModPickerCategories.seasonal;

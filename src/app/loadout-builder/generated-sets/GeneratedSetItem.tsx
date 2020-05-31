@@ -141,7 +141,7 @@ export default function GeneratedSetItem({
           {Boolean(lockedMods?.length) && (
             <div className={clsx('lockedItems', styles.lockedSocketsRow)}>
               {lockedMods?.map((mod) => (
-                <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+                <SocketDetailsMod key={mod.key} itemDef={mod.mod} defs={defs} />
               ))}
             </div>
           )}
