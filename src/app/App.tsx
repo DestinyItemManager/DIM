@@ -82,7 +82,7 @@ function App({
   return (
     <div
       key={`lang-${language}`}
-      className={clsx(`lang-${language}`, `char-cols-${charColMobile}`, {
+      className={clsx(styles.container, `lang-${language}`, `char-cols-${charColMobile}`, {
         'show-reviews': $featureFlags.reviewsEnabled && showReviews,
         itemQuality: itemQuality,
         'show-new-items': showNewItems,

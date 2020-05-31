@@ -99,7 +99,7 @@ function ItemActions({
       >
         <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
       </button>
-      <span> {t('Organizer.ShiftTip')}</span>
+      <span className={styles.tip}> {t('Organizer.ShiftTip')}</span>
     </div>
   );
 }

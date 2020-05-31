@@ -5,3 +5,9 @@
 .actionButton {
   margin: 0 2px;
 }
+
+.tip {
+  @media (max-width: 1270px) {
+    display: none;
+  }
+}

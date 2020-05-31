@@ -11,6 +11,7 @@ interface CssExports {
   'hasFilter': string;
   'header': string;
   'icon': string;
+  'importButton': string;
   'inlineIcon': string;
   'isPerk': string;
   'loadouts': string;
