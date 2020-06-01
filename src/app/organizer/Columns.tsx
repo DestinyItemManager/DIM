@@ -411,7 +411,7 @@ export function getColumns(
         item.isDestiny1() ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
-      filter: (value) => `perkname:"${value}"`,
+      filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
     },
     destinyVersion === 2 &&
       isWeapon && {
@@ -421,7 +421,7 @@ export function getColumns(
         cell: (_, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
-        filter: (value) => `perkname:"${value}"`,
+        filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
       },
     ...statColumns,
     ...baseStatColumns,

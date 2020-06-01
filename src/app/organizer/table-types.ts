@@ -38,7 +38,7 @@ export interface ColumnDefinition {
   /** Renderer for the cell. Default: value */
   cell?(value: Value, item: DimItem): React.ReactNode;
   /** A generator for search terms matching this item. Default: No filtering. */
-  filter?(value: Value, item: DimItem): string;
+  filter?(value: Value, item: DimItem): string | undefined;
   /** A custom sort function. Default: Something reasonable. */
   sort?(firstValue: Value, secondValue: Value): 0 | 1 | -1;
 }
