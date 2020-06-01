@@ -39,6 +39,9 @@ const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.seasonal]: t('LB.Seasonal'),
 };
 
+/** Used for generating the key attribute of the lockedArmor2Mods */
+let modKey = 0;
+
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
   compareBy((i) => i.plug.energyCost?.energyType),
@@ -198,7 +201,7 @@ class ModPicker extends React.Component<Props, State> {
             ? specialtyModSocketHashes.includes(mod.plug.plugCategoryHash)
             : mod.plug.plugCategoryHash === category
         )
-        .map((mod) => ({ mod, category }));
+        .map((mod) => ({ key: modKey++, mod, category }));
 
     const isGeneralOrSeasonal = (category: ModPickerCategory) =>
       category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
@@ -211,7 +214,7 @@ class ModPicker extends React.Component<Props, State> {
             lockedArmor2Mods={lockedArmor2Mods}
             isPhonePortrait={isPhonePortrait}
             onSubmit={(e) => this.onSubmit(e, onClose)}
-            onModSelected={this.onModSelected}
+            onModSelected={this.onModRemoved}
           />
         )
       : undefined;
@@ -243,6 +246,7 @@ class ModPicker extends React.Component<Props, State> {
               maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
               energyMustMatch={!isGeneralOrSeasonal(category)}
               onModSelected={this.onModSelected}
+              onModRemoved={this.onModRemoved}
             />
           ))}
         </div>
@@ -253,20 +257,29 @@ class ModPicker extends React.Component<Props, State> {
   private onModSelected = (item: LockedArmor2Mod) => {
     const { lockedArmor2Mods } = this.state;
 
-    if (lockedArmor2Mods[item.category]?.some((li) => li.mod.hash === item.mod.hash)) {
+    this.setState({
+      lockedArmor2Mods: {
+        ...lockedArmor2Mods,
+        [item.category]: [...lockedArmor2Mods[item.category], item],
+      },
+    });
+  };
+
+  private onModRemoved = (item: LockedArmor2Mod) => {
+    const { lockedArmor2Mods } = this.state;
+
+    const firstIndex = lockedArmor2Mods[item.category].findIndex(
+      (li) => li.mod.hash === item.mod.hash
+    );
+
+    if (firstIndex >= 0) {
+      const newState = [...lockedArmor2Mods[item.category]];
+      newState.splice(firstIndex, 1);
+
       this.setState({
         lockedArmor2Mods: {
           ...lockedArmor2Mods,
-          [item.category]: lockedArmor2Mods[item.category]?.filter(
-            (li) => li.mod.hash !== item.mod.hash
-          ),
-        },
-      });
-    } else {
-      this.setState({
-        lockedArmor2Mods: {
-          ...lockedArmor2Mods,
-          [item.category]: [...(lockedArmor2Mods[item.category] || []), item],
+          [item.category]: newState,
         },
       });
     }

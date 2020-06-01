@@ -14,6 +14,7 @@ import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './GeneratedSetItemLockedMods.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
@@ -138,20 +139,20 @@ export default function GeneratedSetItem({
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
           {Boolean(lockedMods?.length) && (
-            <div className={`lockedItems ${styles.lockedSocketsRow}`}>
+            <div className={clsx('lockedItems', styles.lockedSocketsRow)}>
               {lockedMods?.map((mod) => (
-                <SocketDetailsMod key={mod.mod.hash} itemDef={mod.mod} defs={defs} />
+                <SocketDetailsMod key={mod.key} itemDef={mod.mod} defs={defs} />
               ))}
             </div>
           )}
           {Boolean(lockedOldMods.length) && (
-            <div className={`lockedItems ${styles.lockedSocketsRow}`}>
+            <div className={clsx('lockedItems', styles.lockedSocketsRow)}>
               {lockedOldMods?.map((def) => (
                 <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
               ))}
             </div>
           )}
-          <div className={`lockedItems lockedPerks ${styles.lockedSocketsRow}`}>
+          <div className={clsx('lockedItems', 'lockedPerks', styles.lockedSocketsRow)}>
             {lockedPerks?.map((def) => (
               <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
             ))}

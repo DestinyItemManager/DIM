@@ -34,7 +34,7 @@ function ModPickerFooter(props: Props) {
               <React.Fragment key={category.category}>
                 {lockedArmor2Mods[category.category]?.map((lockedItem) => (
                   <LockedArmor2ModIcon
-                    key={lockedItem.mod.hash}
+                    key={lockedItem.key}
                     item={lockedItem}
                     defs={defs}
                     onModClicked={() => onModSelected(lockedItem)}

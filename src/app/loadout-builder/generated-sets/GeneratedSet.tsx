@@ -58,7 +58,6 @@ function GeneratedSet({
     console.error('No valid sets!');
     return null;
   }
-  const firstValidSet = set.firstValidSet;
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
@@ -137,7 +136,7 @@ function GeneratedSet({
         />
       </div>
       <div className={styles.items}>
-        {firstValidSet.map((item, index) => (
+        {set.firstValidSet.map((item, index) => (
           <GeneratedSetItem
             key={item.index}
             item={item}

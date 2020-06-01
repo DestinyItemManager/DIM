@@ -2,13 +2,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import {
-  LockedItemType,
-  BurnItem,
-  LockedModBase,
-  LockedArmor2Mod,
-  ModPickerCategory,
-} from '../types';
+import { LockedItemType, BurnItem, LockedModBase, LockedArmor2Mod } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -88,21 +82,19 @@ export function SelectableMod({
 
 export function SelectableArmor2Mod({
   mod,
-  category,
   defs,
   selected,
   unselectable,
   onLockedArmor2Mod,
 }: {
-  mod: DestinyInventoryItemDefinition;
-  category: ModPickerCategory;
+  mod: LockedArmor2Mod;
   defs: D2ManifestDefinitions;
   selected: boolean;
   unselectable: boolean;
   onLockedArmor2Mod(mod: LockedArmor2Mod): void;
 }) {
   const handleClick = () => {
-    !unselectable && onLockedArmor2Mod({ mod, category });
+    !unselectable && onLockedArmor2Mod(mod);
   };
 
   return (
@@ -115,10 +107,10 @@ export function SelectableArmor2Mod({
       role="button"
       tabIndex={0}
     >
-      <SocketDetailsMod itemDef={mod} defs={defs} />
+      <SocketDetailsMod itemDef={mod.mod} defs={defs} />
       <div className={styles.perkInfo}>
-        <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
-        <div className={styles.perkDescription}>{mod.displayProperties.description}</div>
+        <div className={styles.perkTitle}>{mod.mod.displayProperties.name}</div>
+        <div className={styles.perkDescription}>{mod.mod.displayProperties.description}</div>
       </div>
     </div>
   );

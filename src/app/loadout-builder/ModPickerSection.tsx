@@ -4,6 +4,7 @@ import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { LockedArmor2Mod, ModPickerCategory } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import ClosableContainer from './ClosableContainer';
 
 export default function ModPickerSection({
   defs,
@@ -14,6 +15,7 @@ export default function ModPickerSection({
   maximumSelectable,
   energyMustMatch,
   onModSelected,
+  onModRemoved,
 }: {
   defs: D2ManifestDefinitions;
   mods: readonly LockedArmor2Mod[];
@@ -23,13 +25,9 @@ export default function ModPickerSection({
   maximumSelectable: number;
   energyMustMatch?: boolean;
   onModSelected(mod: LockedArmor2Mod);
+  onModRemoved(mod: LockedArmor2Mod);
 }) {
   const isModUnSelectable = (item: LockedArmor2Mod) => {
-    // if it is selected you can unselect it
-    if (locked?.some((p) => p.mod.hash === item.mod.hash)) {
-      return false;
-    }
-
     if (locked && locked.length >= maximumSelectable) {
       return true;
     }
@@ -61,15 +59,15 @@ export default function ModPickerSection({
       <h3>{title}</h3>
       <div className={styles.perks}>
         {mods.map((item) => (
-          <SelectableArmor2Mod
-            key={item.mod.hash}
-            defs={defs}
-            selected={Boolean(locked?.some((p) => p.mod.hash === item.mod.hash))}
-            mod={item.mod}
-            category={item.category}
-            unselectable={isModUnSelectable(item)}
-            onLockedArmor2Mod={onModSelected}
-          />
+          <ClosableContainer key={item.key} onClose={() => onModRemoved(item)}>
+            <SelectableArmor2Mod
+              defs={defs}
+              selected={Boolean(locked?.some((p) => p.mod.hash === item.mod.hash))}
+              mod={item}
+              unselectable={isModUnSelectable(item)}
+              onLockedArmor2Mod={onModSelected}
+            />
+          </ClosableContainer>
         ))}
       </div>
     </div>

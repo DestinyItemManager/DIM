@@ -72,6 +72,8 @@ export const ModPickerCategories = { ...Armor2ModPlugCategories, seasonal: 'seas
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
 export interface LockedArmor2Mod {
+  /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
+  key: number;
   mod: DestinyInventoryItemDefinition;
   category: ModPickerCategory;
 }
