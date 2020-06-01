@@ -1,5 +1,8 @@
 ## Next
 
+* Add a banner to support Black Lives Matter.
+* Avoid an issue where shift-clicking on empty space near perks in the Organizer can enable a useless filter.
+
 ## 6.13.0 <span className="changelog-date">(2020-05-31)</span>
 
 * DIM data (loadouts, tags, settings) can no longer be stored in Google Drive. If you already have things stored there, you can use that data to import into the new storage, but it will no longer be updated. Disabling DIM Sync will now store data locally only.
