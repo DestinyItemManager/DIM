@@ -1,5 +1,7 @@
 ## Next
 
+## 6.13.1 <span className="changelog-date">(2020-06-01)</span>
+
 * Add a banner to support Black Lives Matter.
 * Avoid an issue where shift-clicking on empty space near perks in the Organizer can enable a useless filter.
 
