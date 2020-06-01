@@ -308,11 +308,13 @@ function ItemTable({
         ? (e) => {
             if (e.shiftKey) {
               if ((e.target as Element).hasAttribute('data-perk-name')) {
-                dispatch(
-                  toggleSearchQueryComponent(
-                    column.filter!((e.target as Element).getAttribute('data-perk-name')!, row.item)
-                  )
+                const filter = column.filter!(
+                  (e.target as Element).getAttribute('data-perk-name')!,
+                  row.item
                 );
+                if (filter) {
+                  dispatch(toggleSearchQueryComponent(filter));
+                }
                 return;
               }
               const filter = column.filter!(row.values[column.id], row.item);
