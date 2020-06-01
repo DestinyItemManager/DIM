@@ -34,8 +34,9 @@ const IssueBanner = () => {
         <Sheet onClose={closeCampaign} header={<h1>Black Lives Matter</h1>}>
           <div className={styles.container}>
             <p>
-              The team at DIM stands with the Black community to denounce systemic racism and police
-              brutality.
+              DIM stands in solidarity with the Black community in acknowledging centuries of white
+              oppression and violence. Rest in power George Floyd, Breonna Taylor, Amaud Arbery, and
+              the countless victims of systemic violence.
             </p>
             <p>Learn how you can help those fighting for justice:</p>
             <p>

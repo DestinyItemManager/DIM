@@ -1,6 +1,6 @@
 .banner {
-  font-size: 28px;
-  padding: 16px 32px;
+  font-size: 24px;
+  padding: 12px 24px;
   background-color: black;
 }
 
@@ -27,6 +27,9 @@
 
   p {
     font-size: 1 rem;
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   img {
@@ -36,7 +39,6 @@
 
 .container {
   margin: 1rem;
-  margin-top: 2rem;
 }
 
 :global(#content) {
