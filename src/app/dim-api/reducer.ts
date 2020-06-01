@@ -23,7 +23,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { emptyArray } from 'app/utils/empty';
 
 export interface DimApiState {
-  globalSettings: GlobalSettings;
+  globalSettings: GlobalSettings & { showIssueBanner: boolean };
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
@@ -94,6 +94,7 @@ export const initialState: DimApiState = {
     ...defaultGlobalSettings,
     // 2019-12-17 we've been asked to disable auto-refresh
     autoRefresh: false,
+    showIssueBanner: true,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
