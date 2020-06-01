@@ -22,7 +22,7 @@ module.exports = function csp(env) {
       // Twitter Widget
       'https://platform.twitter.com',
       'https://cdn.syndication.twimg.com',
-      'https://opencollective.com'
+      'https://opencollective.com',
     ],
     styleSrc: [
       SELF,
@@ -32,7 +32,7 @@ module.exports = function csp(env) {
       'https://fonts.googleapis.com/css',
       // Twitter Widget
       'https://platform.twitter.com/css/',
-      'https://*.twimg.com/'
+      'https://*.twimg.com/',
     ],
     connectSrc: [
       SELF,
@@ -45,7 +45,7 @@ module.exports = function csp(env) {
       'https://api.tracker.gg',
       'https://api.vendorengrams.xyz',
       'https://raw.githubusercontent.com',
-      'https://api.destinyitemmanager.com'
+      'https://api.destinyitemmanager.com',
     ],
     imgSrc: [
       SELF,
@@ -64,18 +64,18 @@ module.exports = function csp(env) {
       'https://platform.twitter.com',
       'https://*.twimg.com/',
       // User profile info in storage settings
-      'https://*.googleusercontent.com/'
+      'https://*.googleusercontent.com/',
     ],
     fontSrc: [
       SELF,
       // Google Fonts
-      'https://fonts.gstatic.com'
+      'https://fonts.gstatic.com',
     ],
     childSrc: [
       SELF,
       // Google Login
       'https://accounts.google.com',
-      'https://content.googleapis.com'
+      'https://content.googleapis.com',
     ],
     frameSrc: [
       // Google Login
@@ -84,11 +84,11 @@ module.exports = function csp(env) {
       // Twitter Widget
       'https://syndication.twitter.com/',
       'https://platform.twitter.com/',
-      'https://opencollective.com'
+      'https://opencollective.com',
     ],
     objectSrc: SELF,
     // Web app manifest
-    manifestSrc: SELF
+    manifestSrc: SELF,
   };
 
   // Turn on reporting to sentry.io on beta only
@@ -99,6 +99,6 @@ module.exports = function csp(env) {
   }
 
   return builder({
-    directives: baseCSP
+    directives: baseCSP,
   });
 };

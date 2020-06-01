@@ -59,7 +59,7 @@ module.exports = (env) => {
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.ts',
-      gdriveReturn: './src/gdriveReturn.ts'
+      gdriveReturn: './src/gdriveReturn.ts',
     },
 
     output: {
@@ -67,7 +67,7 @@ module.exports = (env) => {
       publicPath: '/',
       filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
       chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      futureEmitAssets: true
+      futureEmitAssets: true,
     },
 
     // Dev server
@@ -77,11 +77,11 @@ module.exports = (env) => {
           stats: 'errors-only',
           https: {
             key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
+            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
           },
           historyApiFallback: true,
           hotOnly: true,
-          liveReload: false
+          liveReload: false,
         }
       : {},
 
@@ -94,7 +94,7 @@ module.exports = (env) => {
 
     performance: {
       // Don't warn about too-large chunks
-      hints: false
+      hints: false,
     },
 
     optimization: {
@@ -106,7 +106,7 @@ module.exports = (env) => {
         chunks(chunk) {
           return chunk.name !== 'browsercheck';
         },
-        automaticNameDelimiter: '-'
+        automaticNameDelimiter: '-',
       },
       minimizer: [
         new TerserPlugin({
@@ -117,11 +117,11 @@ module.exports = (env) => {
             module: true,
             compress: { warnings: false, passes: 3, toplevel: true },
             mangle: { safari10: true, toplevel: true },
-            output: { safari10: true }
+            output: { safari10: true },
           },
-          sourceMap: true
-        })
-      ]
+          sourceMap: true,
+        }),
+      ],
     },
 
     module: {
@@ -135,18 +135,18 @@ module.exports = (env) => {
             {
               loader: 'babel-loader',
               options: {
-                cacheDirectory: true
-              }
-            }
-          ]
+                cacheDirectory: true,
+              },
+            },
+          ],
         },
         {
           test: /\.html$/,
           exclude: /index\.html/,
           loader: 'html-loader',
           options: {
-            esModule: true
-          }
+            esModule: true,
+          },
         },
         {
           // Optimize SVGs - mostly for destiny-icons.
@@ -158,21 +158,21 @@ module.exports = (env) => {
                 limit: 5 * 1024, // only inline if less than 5kb
                 name: ASSET_NAME_PATTERN,
                 // Use smaller data URIs
-                generator: (content) => svgToMiniDataURI(content.toString())
-              }
+                generator: (content) => svgToMiniDataURI(content.toString()),
+              },
             },
             {
-              loader: 'svgo-loader'
-            }
-          ]
+              loader: 'svgo-loader',
+            },
+          ],
         },
         {
           test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
-            name: ASSET_NAME_PATTERN
-          }
+            name: ASSET_NAME_PATTERN,
+          },
         },
         // *.m.scss will have CSS Modules support
         {
@@ -182,23 +182,23 @@ module.exports = (env) => {
             {
               loader: 'css-modules-typescript-loader',
               options: {
-                mode: process.env.CI ? 'verify' : 'emit'
-              }
+                mode: process.env.CI ? 'verify' : 'emit',
+              },
             },
             {
               loader: 'css-loader',
               options: {
                 modules: {
                   localIdentName:
-                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
+                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
                 },
                 localsConvention: 'camelCaseOnly',
-                sourceMap: true
-              }
+                sourceMap: true,
+              },
             },
             'postcss-loader',
-            'sass-loader'
-          ]
+            'sass-loader',
+          ],
         },
         // Regular *.scss are global
         {
@@ -209,16 +209,16 @@ module.exports = (env) => {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true
-              }
+                sourceMap: true,
+              },
             },
             'postcss-loader',
-            'sass-loader'
-          ]
+            'sass-loader',
+          ],
         },
         {
           test: /\.css$/,
-          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
+          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
@@ -227,21 +227,21 @@ module.exports = (env) => {
             {
               loader: 'babel-loader',
               options: {
-                cacheDirectory: true
-              }
+                cacheDirectory: true,
+              },
             },
             env.dev
               ? null
               : {
-                  loader: 'ts-loader'
-                }
-          ])
+                  loader: 'ts-loader',
+                },
+          ]),
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
           test: /\.jsx?$/,
-          loader: 'source-map-loader'
+          loader: 'source-map-loader',
         },
         {
           type: 'javascript/auto',
@@ -250,23 +250,23 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: { name: '[name]-[md5:hash:6].[ext]' }
-            }
-          ]
+              options: { name: '[name]-[md5:hash:6].[ext]' },
+            },
+          ],
         },
         {
           type: 'javascript/auto',
-          test: /\.wasm/
+          test: /\.wasm/,
         },
         {
           test: /CHANGELOG\.md$/,
-          loader: 'raw-loader'
-        }
+          loader: 'raw-loader',
+        },
       ],
 
       noParse: function (path) {
         return false;
-      }
+      },
     },
 
     resolve: {
@@ -277,8 +277,8 @@ module.exports = (env) => {
         data: path.resolve('./src/data/'),
         images: path.resolve('./src/images/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
-        'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts')
-      }
+        'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts'),
+      },
     },
 
     plugins: [
@@ -290,7 +290,7 @@ module.exports = (env) => {
 
       new MiniCssExtractPlugin({
         filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
+        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css',
       }),
 
       new HtmlWebpackPlugin({
@@ -301,22 +301,22 @@ module.exports = (env) => {
         templateParameters: {
           version,
           date: new Date(buildTime).toString(),
-          splash
-        }
+          splash,
+        },
       }),
 
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'return.html',
         template: '!html-loader!src/return.html',
-        chunks: ['authReturn']
+        chunks: ['authReturn'],
       }),
 
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'gdrive-return.html',
         template: '!html-loader!src/gdrive-return.html',
-        chunks: ['gdriveReturn']
+        chunks: ['gdriveReturn'],
       }),
 
       // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
@@ -326,14 +326,14 @@ module.exports = (env) => {
         inject: false,
         minify: false,
         templateParameters: {
-          csp: csp(env.name)
-        }
+          csp: csp(env.name),
+        },
       }),
 
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
         version,
-        buildTime
+        buildTime,
       }),
 
       new CopyWebpackPlugin([
@@ -342,7 +342,7 @@ module.exports = (env) => {
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
-        { from: './src/safari-pinned-tab.svg' }
+        { from: './src/safari-pinned-tab.svg' },
       ]),
 
       new webpack.DefinePlugin({
@@ -382,24 +382,26 @@ module.exports = (env) => {
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the Armor 2 Mod picker
-        '$featureFlags.armor2ModPicker': JSON.stringify(env.dev)
+        '$featureFlags.armor2ModPicker': JSON.stringify(env.dev),
+        // Show a banner for supporting a charitable cause
+        '$featureFlags.issueBanner': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
         collections: true,
         memoizing: true,
         shorthands: true,
-        flattening: true
+        flattening: true,
       }),
 
-      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/])
+      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/]),
     ],
 
     node: {
       fs: 'empty',
       net: 'empty',
-      tls: 'empty'
-    }
+      tls: 'empty',
+    },
   };
 
   // Enable if you want to debug the size of the chunks
@@ -410,7 +412,7 @@ module.exports = (env) => {
   if (env.release) {
     config.plugins.push(
       new CopyWebpackPlugin([
-        { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
+        { from: './src/android-config.json', to: '.well-known/assetlinks.json' },
       ])
     );
   }
@@ -419,7 +421,7 @@ module.exports = (env) => {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        eslint: true
+        eslint: true,
       })
     );
 
@@ -428,33 +430,33 @@ module.exports = (env) => {
         title: 'DIM',
         excludeWarnings: false,
         alwaysNotify: true,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
       })
     );
     config.plugins.push(
       new ForkTsCheckerNotifierWebpackPlugin({
         title: 'DIM TypeScript',
         excludeWarnings: false,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
       })
     );
 
     config.module.rules.push({
       test: /\.jsx?$/,
       include: /node_modules/,
-      use: ['react-hot-loader/webpack']
+      use: ['react-hot-loader/webpack'],
     });
   } else {
     // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['node_modules/.cache']
+        cleanOnceBeforeBuildPatterns: ['node_modules/.cache'],
       }),
 
       // Tell React we're in Production mode
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production'),
-        'process.env': JSON.stringify({ NODE_ENV: 'production' })
+        'process.env': JSON.stringify({ NODE_ENV: 'production' }),
       }),
 
       // Generate a service worker
@@ -468,23 +470,23 @@ module.exports = (env) => {
           /data\/d1\/manifests/,
           /manifest-webapp/,
           // Android manifest
-          /\.well-known/
+          /\.well-known/,
         ],
         swSrc: './src/service-worker.ts',
-        swDest: 'service-worker.js'
+        swDest: 'service-worker.js',
       })
     );
 
     if (process.env.PT_PROJECT_TOKEN) {
       const packOptions = {
         upload: true,
-        fail_build: true
+        fail_build: true,
       };
 
       if (process.env.TRAVIS === 'true') {
         Object.assign(packOptions, {
           branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
-          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT
+          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
         });
       }
 

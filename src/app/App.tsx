@@ -25,6 +25,7 @@ import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
 import { t } from './i18next-t';
+import { IssueBanner } from './banner/IssueBanner';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -47,6 +48,7 @@ interface StoreProps {
   needsLogin: boolean;
   reauth: boolean;
   needsDeveloper: boolean;
+  showIssueBanner: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -60,10 +62,13 @@ function mapStateToProps(state: RootState): StoreProps {
     needsLogin: state.accounts.needsLogin,
     reauth: state.accounts.reauth,
     needsDeveloper: state.accounts.needsDeveloper,
+    showIssueBanner: $featureFlags.issueBanner && state.dimApi.globalSettings.showIssueBanner,
   };
 }
 
 type Props = StoreProps;
+
+const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 function App({
   language,
@@ -74,6 +79,7 @@ function App({
   needsLogin,
   reauth,
   needsDeveloper,
+  showIssueBanner,
 }: Props) {
   useEffect(() => {
     testFeatureCompatibility();
@@ -162,6 +168,7 @@ function App({
         <ActivityTracker />
         {$featureFlags.colorA11y && <ColorA11y />}
         <HotkeysCheatSheet />
+        {$featureFlags.issueBanner && showIssueBanner && !mobile && <IssueBanner />}
       </ClickOutsideRoot>
     </div>
   );

@@ -1,0 +1,51 @@
+.banner {
+  font-size: 24px;
+  padding: 12px 24px;
+  background-color: black;
+}
+
+.toaster {
+  cursor: pointer;
+
+  &.maximized {
+    padding: 1.5rem;
+    width: 600px;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    font-size: 1rem;
+  }
+  position: fixed;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease-in-out;
+
+  p {
+    font-size: 1 rem;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  img {
+    display: block;
+  }
+}
+
+.container {
+  margin: 1rem;
+}
+
+:global(#content) {
+  margin-bottom: 100px;
+}
+
+:global(.android #content),
+:global(.ios #content) {
+  margin-bottom: 0;
+}

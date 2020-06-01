@@ -32,6 +32,8 @@ declare const $featureFlags: {
   vendorEngrams: boolean;
   /** Enable the Armor 2 Mod Picker */
   armor2ModPicker: boolean;
+  /** Show a banner for supporting a charitable cause */
+  issueBanner: boolean;
 };
 
 declare namespace React {
