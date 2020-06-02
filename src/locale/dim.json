@@ -885,6 +885,7 @@
       "FailedTitle": "Import Failed",
       "NoData": "No loadouts or tags found in the backup",
       "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
       "SuccessTitle": "Import Successful"
     },
     "ImportTooManyFiles": "Please only select one file to import.",

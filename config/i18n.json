@@ -889,6 +889,7 @@
     "ImportNotification": {
       "SuccessTitle": "Import Successful",
       "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
       "FailedTitle": "Import Failed",
       "FailedBody": "Unable to import data. {{error}}",
       "NoData": "No loadouts or tags found in the backup"

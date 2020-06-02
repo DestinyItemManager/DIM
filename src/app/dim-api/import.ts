@@ -37,7 +37,7 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
         console.log('[importLegacyData] Attempting to import legacy data into DIM API');
         const result = await importData(data);
         console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
-        showImportSuccessNotification(result);
+        showImportSuccessNotification(result, true);
 
         // Reload from the server
         return dispatch(loadDimApiData(true));
@@ -97,10 +97,13 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
           updateQueue: [],
         })
       );
-      showImportSuccessNotification({
-        loadouts: loadouts.length,
-        tags: tags.length,
-      });
+      showImportSuccessNotification(
+        {
+          loadouts: loadouts.length,
+          tags: tags.length,
+        },
+        false
+      );
     }
   };
 }
@@ -120,11 +123,16 @@ function waitForProfileLoad() {
   });
 }
 
-function showImportSuccessNotification(result: { loadouts: number; tags: number }) {
+function showImportSuccessNotification(
+  result: { loadouts: number; tags: number },
+  dimSync: boolean
+) {
   showNotification({
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
-    body: t('Storage.ImportNotification.SuccessBodyForced', result),
+    body: dimSync
+      ? t('Storage.ImportNotification.SuccessBodyForced', result)
+      : t('Storage.ImportNotification.SuccessBodyLocal', result),
     duration: 15000,
   });
 }
