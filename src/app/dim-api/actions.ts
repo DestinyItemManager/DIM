@@ -38,6 +38,8 @@ import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { compareAccounts } from 'app/accounts/destiny-account';
+import { SyncService } from 'app/storage/sync.service';
+import { importDataBackup } from './import';
 
 const installApiPermissionObserver = _.once(() => {
   // Observe API permission and reflect it into local storage
@@ -173,11 +175,16 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
     if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
-      dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
+      await dispatch(loadProfileFromIndexedDB());
     }
     installObservers(dispatch); // idempotent
 
     if (!getState().dimApi.apiPermissionGranted) {
+      // If they don't have any data in the new storage model, try to get it from the old one
+      if (_.isEmpty(getState().dimApi.profiles)) {
+        await dispatch(tryLoadLegacyData());
+      }
+
       // They don't want to sync to the server, stay local only
       readyResolve();
       return;
@@ -330,6 +337,21 @@ export function loadProfileFromIndexedDB(): ThunkResult<any> {
     }
 
     dispatch(profileLoadedFromIDB(profile));
+  };
+}
+
+/**
+ * Try to automatically load legacy data into the new model - this is only intended for when
+ * DIM Sync is disabled.
+ */
+function tryLoadLegacyData(): ThunkResult {
+  return async (dispatch, getState) => {
+    SyncService.init();
+    await delay(1000); // I don't know how to make sure sync service is fully initialized
+    const data = await SyncService.get();
+    if (!getState().dimApi.apiPermissionGranted && data && !_.isEmpty(data)) {
+      await dispatch(importDataBackup(data));
+    }
   };
 }
 
