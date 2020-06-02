@@ -35,7 +35,7 @@ const IssueBanner = () => {
           <div className={styles.container}>
             <p>
               DIM stands in solidarity with the Black community in acknowledging centuries of white
-              oppression and violence. Rest in power George Floyd, Breonna Taylor, Amaud Arbery, and
+              oppression and violence. Rest in power George Floyd, Breonna Taylor, Ahmaud Arbery, and
               the countless victims of systemic violence.
             </p>
             <p>Learn how you can help those fighting for justice:</p>
