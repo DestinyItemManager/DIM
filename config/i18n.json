@@ -888,12 +888,14 @@
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportNotification": {
       "SuccessTitle": "Import Successful",
-      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there."
+      "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "FailedTitle": "Import Failed",
+      "FailedBody": "Unable to import data. {{error}}",
+      "NoData": "No loadouts or tags found in the backup"
     },
     "ImportExport": "Backup & Import",
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
-    "ImportSuccess": "Imported DIM data!",
     "ImportTooManyFiles": "Please only select one file to import.",
     "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",

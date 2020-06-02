@@ -854,7 +854,7 @@
     },
     "AuditLog": "DIM Sync Change History",
     "AuditLogLabel": "View past data changes",
-    "AutoBackup": "We've backed up your data to a file called dim-data.json, just in case.",
+    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
@@ -881,10 +881,12 @@
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportNotification": {
+      "FailedBody": "Unable to import data. {{error}}",
+      "FailedTitle": "Import Failed",
+      "NoData": "No loadouts or tags found in the backup",
       "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
       "SuccessTitle": "Import Successful"
     },
-    "ImportSuccess": "Imported DIM data!",
     "ImportTooManyFiles": "Please only select one file to import.",
     "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",

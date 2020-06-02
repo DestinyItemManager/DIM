@@ -69,7 +69,6 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
   const onImportData = async (data: object) => {
     if (confirm(t('Storage.ImportConfirmDimApi'))) {
       await dispatch(importDataBackup(data));
-      alert(t('Storage.ImportSuccess'));
     }
   };
 

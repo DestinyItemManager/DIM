@@ -38,18 +38,28 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
         const result = await importData(data);
         console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
         showImportSuccessNotification(result);
+
+        // Reload from the server
+        return dispatch(loadDimApiData(true));
       } catch (e) {
         console.error('[importLegacyData] Error importing legacy data into DIM API', e);
+        showImportFailedNotification(e);
         return;
       }
-
-      // Reload from the server
-      return dispatch(loadDimApiData(true));
     } else {
       // Import directly into local state, since the user doesn't want to use DIM Sync
       const settings = data.settings || data['settings-v1.0'];
       const loadouts = extractLoadouts(data);
       const tags = extractItemAnnotations(data);
+
+      if (!loadouts.length && !tags.length) {
+        console.error(
+          '[importLegacyData] Error importing legacy data into DIM API - no data',
+          data
+        );
+        showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
+        return;
+      }
 
       const profiles: DimApiState['profiles'] = {};
 
@@ -87,6 +97,10 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
           updateQueue: [],
         })
       );
+      showImportSuccessNotification({
+        loadouts: loadouts.length,
+        tags: tags.length,
+      });
     }
   };
 }
@@ -111,6 +125,15 @@ function showImportSuccessNotification(result: { loadouts: number; tags: number 
     type: 'success',
     title: t('Storage.ImportNotification.SuccessTitle'),
     body: t('Storage.ImportNotification.SuccessBodyForced', result),
+    duration: 15000,
+  });
+}
+
+function showImportFailedNotification(e: Error) {
+  showNotification({
+    type: 'error',
+    title: t('Storage.ImportNotification.FailedTitle'),
+    body: t('Storage.ImportNotification.FailedBody', { error: e.message }),
     duration: 15000,
   });
 }
