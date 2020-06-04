@@ -204,9 +204,9 @@ class ManifestService {
       // then fall back to appending "?dim" then "?dim-[random numbers]",
       // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
       const cacheBusterStrings = [
-        '2',
-        '3?dim',
-        `4?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+        '',
+        '?dim',
+        `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
       ];
       const futures = tableWhitelist
         .map((t) => `Destiny${t}Definition`)
