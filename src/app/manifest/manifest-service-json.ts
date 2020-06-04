@@ -212,15 +212,15 @@ class ManifestService {
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
           let response: Response | null = null;
-          const error: any[] = [];
+          let error: any = null;
 
           for (const query of cacheBusterStrings) {
             try {
               response = await fetch(`https://www.bungie.net${components[table]}${query}`);
               if (response.ok) break;
-              error.push(response);
+              error = error ?? response;
             } catch (e) {
-              error.push(e);
+              error = error ?? e;
             }
           }
           const body = await (response?.ok ? response.json() : Promise.reject(error));
