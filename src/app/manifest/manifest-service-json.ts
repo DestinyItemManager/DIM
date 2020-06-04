@@ -1,17 +1,17 @@
-import { DestinyInventoryItemDefinition, DestinyManifest } from 'bungie-api-ts/destiny2';
-import { del, get, set } from 'idb-keyval';
-import { emptyArray, emptyObject } from 'app/utils/empty';
-import { loadingEnd, loadingStart } from 'app/shell/actions';
-
 import _ from 'lodash';
-import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
-import { deepEqual } from 'fast-equals';
+import { get, set, del } from 'idb-keyval';
+
 import { reportException } from '../utils/exceptions';
+import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settingsReady } from '../settings/settings';
-import { settingsSelector } from 'app/settings/reducer';
-import { showNotification } from '../notifications/notifications';
-import store from 'app/store/store';
 import { t } from 'app/i18next-t';
+import { DestinyManifest, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { deepEqual } from 'fast-equals';
+import { showNotification } from '../notifications/notifications';
+import { settingsSelector } from 'app/settings/reducer';
+import store from 'app/store/store';
+import { emptyObject, emptyArray } from 'app/utils/empty';
+import { loadingStart, loadingEnd } from 'app/shell/actions';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
