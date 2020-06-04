@@ -1,17 +1,17 @@
-import _ from 'lodash';
-import { get, set, del } from 'idb-keyval';
+import { DestinyInventoryItemDefinition, DestinyManifest } from 'bungie-api-ts/destiny2';
+import { del, get, set } from 'idb-keyval';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { loadingEnd, loadingStart } from 'app/shell/actions';
 
-import { reportException } from '../utils/exceptions';
+import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
-import { settingsReady } from '../settings/settings';
-import { t } from 'app/i18next-t';
-import { DestinyManifest, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
-import { showNotification } from '../notifications/notifications';
+import { reportException } from '../utils/exceptions';
+import { settingsReady } from '../settings/settings';
 import { settingsSelector } from 'app/settings/reducer';
+import { showNotification } from '../notifications/notifications';
 import store from 'app/store/store';
-import { emptyObject, emptyArray } from 'app/utils/empty';
-import { loadingStart, loadingEnd } from 'app/shell/actions';
+import { t } from 'app/i18next-t';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -199,12 +199,31 @@ class ManifestService {
     store.dispatch(loadingStart(t('Manifest.Download')));
     try {
       const manifest = {};
+      // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+      // try canonical component URL which should likely be already cached,
+      // then fall back to appending "?dim" then "?dim-[random numbers]",
+      // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
+      const cacheBusterStrings = [
+        '',
+        '?dim',
+        `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+      ];
       const futures = tableWhitelist
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
-          // Adding a cache buster "?dim" to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
-          const response = await fetch(`https://www.bungie.net${components[table]}?dim`);
-          const body = await (response.ok ? response.json() : Promise.reject(response));
+          let response: Response | null = null;
+          let error: any;
+
+          for (const query of cacheBusterStrings) {
+            try {
+              response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+              if (response.ok) break;
+              error = response;
+            } catch (e) {
+              error = e;
+            }
+          }
+          const body = await (response?.ok ? response.json() : Promise.reject(error));
           manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
         });
 
