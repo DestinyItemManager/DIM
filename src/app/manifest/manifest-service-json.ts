@@ -199,12 +199,31 @@ class ManifestService {
     store.dispatch(loadingStart(t('Manifest.Download')));
     try {
       const manifest = {};
+      // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+      // try canonical component URL which should likely be already cached,
+      // then fall back to appending "?dim" then "?dim-[random numbers]",
+      // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
+      const cacheBusterStrings = [
+        '',
+        '?dim',
+        `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+      ];
       const futures = tableWhitelist
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
-          // Adding a cache buster "?dim" to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
-          const response = await fetch(`https://www.bungie.net${components[table]}?dim`);
-          const body = await (response.ok ? response.json() : Promise.reject(response));
+          let response: Response | null = null;
+          let error: any = null;
+
+          for (const query of cacheBusterStrings) {
+            try {
+              response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+              if (response.ok) break;
+              error = error ?? response;
+            } catch (e) {
+              error = error ?? e;
+            }
+          }
+          const body = await (response?.ok ? response.json() : Promise.reject(error));
           manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
         });
 
