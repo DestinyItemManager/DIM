@@ -854,7 +854,7 @@
     },
     "AuditLog": "Cronologia modifiche di DIM Sync",
     "AuditLogLabel": "Visualizza le modifiche passate dei dati",
-    "AutoBackup": "Abbiamo salvato i tuoi dati in un file chiamato dim-data.json, in caso servissero.",
+    "AutoBackup": "Abbiamo salvato i tuoi dati in un file, nella tua cartella di download, chiamato dim-data.json, in caso servissero.",
     "BackUpFirst": "Devi prima effettuare un backup dei tuoi dati. Non si sa mai.",
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
     "DeleteAllData": "Cancella TUTTI i dati dai server di DIM Sync",
@@ -881,10 +881,13 @@
     "ImportFailed": "Importazione Fallita! {{error}}",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportNotification": {
+      "FailedBody": "Impossibile importare dati. {{error}}",
+      "FailedTitle": "Importazione Fallita",
+      "NoData": "Nessun loadout o etichette trovati nel backup",
       "SuccessBodyForced": "Importate impostazioni, {{loadouts}} loadout, e {{tags}} oggetti etichettati dal tuo backup in DIM Sync, sostituendo ciò che era già presente.",
+      "SuccessBodyLocal": "Importate impostazioni, {{loadouts}} loadout e {{tags}} oggetti etichettati dal tuo backup nell'archivio locale, sovrascrivendo ciò che era presente. Non possiamo garantire che l'archivio locale non venga perduto - considera l'attivazione di DIM Sync.",
       "SuccessTitle": "Importazione avvenuta con successo"
     },
-    "ImportSuccess": "Dati DIM importati!",
     "ImportTooManyFiles": "Per favore seleziona un solo file da importare.",
     "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
     "IndexedDBStorage": "Memoria del browser locale",

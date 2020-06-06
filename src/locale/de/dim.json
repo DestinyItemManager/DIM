@@ -306,7 +306,7 @@
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
     "StatsBase": "Filtert Rüstung basierend auf seinem Basisstatwert, ohne ausgerüstete Mods.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
-    "StatsMax": "Findet Rüstung mit der höchsten Zahl für einen bestimmten Status. Enthält alle Items mit dem höchsten Status.",
+    "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
     "Tags": {
       "Archive": "Dimmt Gegenstände, die Du selten brauchst.",
       "Dismantle": "Zeigt Items an, die du eventuell zerlegen willst.",
@@ -854,7 +854,7 @@
     },
     "AuditLog": "DIM Sync-Änderungsverlauf",
     "AuditLogLabel": "Letzte Datenänderungen anzeigen",
-    "AutoBackup": "Wir haben deine Daten in der Datei dim-data.json gespeichert, für alle Fälle.",
+    "AutoBackup": "Wir haben deine Daten in der Datei dim-data.json in deinem Download Ordner gesichert, für alle Fälle.",
     "BackUpFirst": "Du MUSST deine Daten zuerst sichern, bevor du alles löschen kannst. Für alle Fälle.",
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
     "DeleteAllData": "ALLE Daten von DIM Sync-Servern löschen",
@@ -881,10 +881,13 @@
     "ImportFailed": "Importieren fehlgeschlagen! {{error}}",
     "ImportNoFile": "Keine Datei ausgewählt!",
     "ImportNotification": {
+      "FailedBody": "Daten konnten nicht importiert werden. {{error}}",
+      "FailedTitle": "Import fehlgeschlagen",
+      "NoData": "Keine Loadouts oder Markierungen in der Sicherung gefunden",
       "SuccessBodyForced": "Einstellungen, {{loadouts}} Loadouts und {{tags}} markierten Items wurden aus deiner Sicherung in DIM Sync importiert, und ersetzten das, was bereits vorhanden war.",
+      "SuccessBodyLocal": "Importierte Einstellungen, {{loadouts}} Loadouts und {{tags}} markierte Elemente aus deiner Sicherung in den lokalen Speicher und ersetzten das, was bereits vorhanden war. Wir können nicht garantieren, dass der lokale Speicher nicht verloren geht - denke daran, DIM Sync zu aktivieren.",
       "SuccessTitle": "Import erfolgreich"
     },
-    "ImportSuccess": "DIM Daten importiert!",
     "ImportTooManyFiles": "Bitte nur eine Datei zum Importieren wählen.",
     "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
     "IndexedDBStorage": "Lokaler Browser Speicher",

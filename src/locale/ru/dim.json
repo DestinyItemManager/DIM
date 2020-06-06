@@ -854,7 +854,7 @@
     },
     "AuditLog": "DIM Sync Change History",
     "AuditLogLabel": "View past data changes",
-    "AutoBackup": "We've backed up your data to a file called dim-data.json, just in case.",
+    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
@@ -881,10 +881,13 @@
     "ImportFailed": "Ошибка импорта! {{error}}",
     "ImportNoFile": "Не выбран файл!",
     "ImportNotification": {
+      "FailedBody": "Unable to import data. {{error}}",
+      "FailedTitle": "Import Failed",
+      "NoData": "No loadouts or tags found in the backup",
       "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
       "SuccessTitle": "Импортирование выполнено успешно"
     },
-    "ImportSuccess": "Данные DIM импортированы!",
     "ImportTooManyFiles": "Выберите Один файл для импорта.",
     "ImportWrongFileType": "JSON не распознан. Скорее всего это не резервная копия DIM.",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
