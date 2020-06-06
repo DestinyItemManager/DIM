@@ -854,7 +854,7 @@
     },
     "AuditLog": "DIM Sync Change History",
     "AuditLogLabel": "View past data changes",
-    "AutoBackup": "We've backed up your data to a file called dim-data.json, just in case.",
+    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "如果硬碟空間不足或長時間未訪問DIM，流覽器有可能會刪除這些資料資訊。",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
@@ -881,10 +881,13 @@
     "ImportFailed": "導入失敗！{{error}}",
     "ImportNoFile": "沒有選擇檔！",
     "ImportNotification": {
+      "FailedBody": "Unable to import data. {{error}}",
+      "FailedTitle": "Import Failed",
+      "NoData": "No loadouts or tags found in the backup",
       "SuccessBodyForced": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into DIM Sync, replacing what was already there.",
+      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
       "SuccessTitle": "Import Successful"
     },
-    "ImportSuccess": "已導入DIM數據！",
     "ImportTooManyFiles": "請選擇一個檔案導入。",
     "ImportWrongFileType": "檔案不是json檔案。它可能不是dim備份。",
     "IndexedDBStorage": "本地流覽器存儲",
