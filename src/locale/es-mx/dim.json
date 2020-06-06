@@ -885,7 +885,7 @@
       "FailedTitle": "Importación Fallida",
       "NoData": "No se encontraron equipaciones o etiquetas en la copia de seguridad",
       "SuccessBodyForced": "Configuraciones importadas, {{loadouts}} equipaciones y {{tags}} objetos etiquetas desde tu copia de seguridad a Sincronización DIM, reemplazando lo que ya estaba allí.",
-      "SuccessBodyLocal": "Configuraciones, {{loadouts}} equipaciones y {{tags}} objetos etiquetados importados desde tu copia de seguridad al almacenamiento local, reemplazando lo que ya había ahí. No podemos garantizar que el almacenamiento local será perdido - considera habilitar Sincronización DIM.",
+      "SuccessBodyLocal": "Configuraciones, {{loadouts}} equipaciones y {{tags}} objetos etiquetados importados desde tu copia de seguridad al almacenamiento local, reemplazará lo que ya había ahí. No podemos garantizar que el almacenamiento local será perdido - considera habilitar Sincronización DIM.",
       "SuccessTitle": "Importación Exitosa"
     },
     "ImportTooManyFiles": "Por favor, selecciona sólo un archivo a importar.",
