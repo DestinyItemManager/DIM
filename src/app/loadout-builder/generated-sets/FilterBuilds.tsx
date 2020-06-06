@@ -6,7 +6,7 @@ import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './FilterBuilds.m.scss';
-import { statHashes, statKeys } from '../process';
+import { statHashes, statKeys } from '../utils';
 import { statTier } from './utils';
 
 /**

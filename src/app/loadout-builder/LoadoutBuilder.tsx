@@ -21,7 +21,8 @@ import {
   ModPickerCategories,
 } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
-import { process, filterItems, statKeys } from './process';
+import { statKeys } from './utils';
+import { filterItems } from './preProcessFilter';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -47,6 +48,7 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
+import { useProcess } from './useProcess';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -132,7 +134,6 @@ class LoadoutBuilder extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
-  private processMemoized = memoizeOne(process);
   private getEnabledStats = memoizeOne(
     (statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>) =>
       new Set(statKeys.filter((statType) => !statFilters[statType].ignored))
@@ -257,7 +258,7 @@ class LoadoutBuilder extends React.Component<Props, State> {
         lockedArmor2Mods,
         filter
       );
-      const result = this.processMemoized(
+      const result = useProcess(
         filteredItems,
         lockedMap,
         lockedArmor2Mods,

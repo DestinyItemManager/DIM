@@ -10,7 +10,7 @@ import {
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
-import { statKeys } from '../process';
+import { statKeys } from '../utils';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { canSetTakeMods } from './mod-utils';
 

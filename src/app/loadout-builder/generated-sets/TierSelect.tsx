@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import { StatTypes, MinMax, MinMaxIgnored } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { statHashes } from '../process';
+import { statHashes } from '../utils';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';

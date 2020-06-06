@@ -9,12 +9,13 @@ import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
-import { generateMixesFromPerks, matchLockedItem } from '../process';
+import { generateMixesFromPerks } from '../utils';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './GeneratedSetItemLockedMods.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { matchLockedItem } from '../preProcessFilter';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
