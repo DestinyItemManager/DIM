@@ -254,16 +254,17 @@ function LoadoutBuilder({
   filters,
   location,
 }: Props) {
-  // Using useMemo tp ensure these functions are only created once
-  const filterItemsMemoized = useMemo(() => memoizeOne(filterItems), []);
-  const filterSetsMemoized = useMemo(() => memoizeOne(filterGeneratedSets), []);
-  const processMemoized = useMemo(() => memoizeOne(process), []);
-  const getEnabledStats = useMemo(
-    () =>
+  // Memoizing to ensure these functions are only created once
+  const [filterItemsMemoized, filterSetsMemoized, processMemoized, getEnabledStats] = useMemo(
+    () => [
+      memoizeOne(filterItems),
+      memoizeOne(filterGeneratedSets),
+      memoizeOne(process),
       memoizeOne(
         (statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>) =>
           new Set(statKeys.filter((statType) => !statFilters[statType].ignored))
       ),
+    ],
     []
   );
 
