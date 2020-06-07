@@ -45,7 +45,7 @@ function getBulkFetchPromise(
 export function bulkFetch(stores: D1Store[]): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     if (!getState().reviews.loadedFromIDB) {
-      await loadReviewsFromIndexedDB()(dispatch, getState, {});
+      await dispatch(loadReviewsFromIndexedDB());
     }
     const bulkRankings = await getBulkFetchPromise(stores, ratingsSelector(getState()));
     return attachRankings(bulkRankings, dispatch);
