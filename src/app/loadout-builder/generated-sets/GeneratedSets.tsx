@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import { WindowScroller, List } from 'react-virtualized';
@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { addLockedItem, removeLockedItem } from './utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { LoadoutBuilderAction } from '../LoadoutBuilder';
 
 interface Props {
   selectedStore: DimStore;
@@ -23,7 +24,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
-  onLockedMapChanged(lockedMap: Props['lockedMap']): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
 interface State {
@@ -193,18 +194,24 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   private addLockedItemType = (item: LockedItemType) => {
-    const { lockedMap, onLockedMapChanged } = this.props;
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
+    const { lockedMap, lbDispatch } = this.props;
+    lbDispatch({
+      type: 'lockedMapChanged',
+      lockedMap: {
+        ...lockedMap,
+        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
+      },
     });
   };
 
   private removeLockedItemType = (item: LockedItemType) => {
-    const { lockedMap, onLockedMapChanged } = this.props;
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
+    const { lockedMap, lbDispatch } = this.props;
+    lbDispatch({
+      type: 'lockedMapChanged',
+      lockedMap: {
+        ...lockedMap,
+        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
+      },
     });
   };
 }

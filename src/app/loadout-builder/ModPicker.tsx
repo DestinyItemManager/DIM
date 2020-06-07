@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import Sheet from '../dim-ui/Sheet';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
@@ -28,6 +28,7 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { LoadoutBuilderAction } from './LoadoutBuilder';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -52,7 +53,7 @@ export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
-  onArmor2ModsChanged(mods: LockedArmor2ModMap): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
 
@@ -287,7 +288,10 @@ class ModPicker extends React.Component<Props, State> {
 
   private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    this.props.onArmor2ModsChanged(this.state.lockedArmor2Mods);
+    this.props.lbDispatch({
+      type: 'lockedArmor2ModsChanged',
+      lockedArmor2Mods: this.state.lockedArmor2Mods,
+    });
     onClose();
   };
 

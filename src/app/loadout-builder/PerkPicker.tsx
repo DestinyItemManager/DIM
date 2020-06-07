@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import Sheet from '../dim-ui/Sheet';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
@@ -40,6 +40,7 @@ import { specialtyModSocketHashes } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { LoadoutBuilderAction } from './LoadoutBuilder';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -77,8 +78,7 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedSeasonalMods: LockedModBase[];
   classType: DestinyClass;
-  onPerksSelected(perks: LockedMap): void;
-  onSeasonalModsChanged(mods: LockedModBase[]): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
 
@@ -478,8 +478,11 @@ class PerkPicker extends React.Component<Props, State> {
 
   private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    this.props.onPerksSelected(this.state.selectedPerks);
-    this.props.onSeasonalModsChanged(this.state.selectedSeasonalMods);
+    this.props.lbDispatch({
+      type: 'lockedMapAndSeasonalModsChanged',
+      lockedMap: this.state.selectedPerks,
+      lockedSeasonalMods: this.state.selectedSeasonalMods,
+    });
     onClose();
   };
 
