@@ -1,6 +1,7 @@
 import React from 'react';
 import { ClickOutsideContext } from './ClickOutside';
 import { Subject } from 'rxjs';
+import styles from './ClickOutsideRoot.m.scss';
 
 /**
  * The root element that lets ClickOutside work. This defines the
@@ -12,7 +13,9 @@ export default class ClickOutsideRoot extends React.Component<{ children: React.
   render() {
     return (
       <ClickOutsideContext.Provider value={this.clickOutsideSubject}>
-        <div onClick={this.onClick}>{this.props.children}</div>
+        <div onClick={this.onClick} className={styles.container}>
+          {this.props.children}
+        </div>
       </ClickOutsideContext.Provider>
     );
   }

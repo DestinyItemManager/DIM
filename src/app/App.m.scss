@@ -1,3 +1,13 @@
 .filters {
   visibility: hidden;
 }
+
+.container {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+:global(#app) {
+  height: 100%;
+  box-sizing: border-box;
+}

@@ -5,7 +5,7 @@
 }
 
 .table {
-  min-width: 100%;
+  min-width: 1270px;
   display: grid;
   margin: 8px 0 16px 0 !important;
 
@@ -39,6 +39,12 @@ $toolbarHeight: 41px - 16px + 8px;
 
 .guideLink {
   margin-right: 8px !important;
+}
+
+.importButton {
+  @media (max-width: 1000px) {
+    display: none;
+  }
 }
 
 // Column headers

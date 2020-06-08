@@ -433,7 +433,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadWeaponCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
         </button>
       );
@@ -444,7 +444,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadArmorCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
         </button>
       );
@@ -455,7 +455,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadGhostCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
         </button>
       );
@@ -499,7 +499,7 @@ function ItemTable({
           <UserGuideLink topic="Organizer" className={styles.guideLink} />
           <Dropzone onDrop={importCsv} accept=".csv">
             {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()}>
+              <div {...getRootProps()} className={styles.importButton}>
                 <input {...getInputProps()} />
                 <div className="dim-button">
                   <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}

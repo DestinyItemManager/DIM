@@ -19,6 +19,7 @@ body {
   padding-top: $header-height;
   padding-top: calc(#{$header-height} + constant(safe-area-inset-top));
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
+  box-sizing: border-box;
 }
 #header {
   padding: 0 0 0 2px;
