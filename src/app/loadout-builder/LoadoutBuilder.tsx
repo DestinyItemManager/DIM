@@ -1,7 +1,7 @@
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useMemo, useReducer, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
@@ -9,7 +9,12 @@ import { D2StoresService } from '../inventory/d2-stores';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets, isLoadoutBuilderItem, addLockedItem } from './generated-sets/utils';
+import {
+  filterGeneratedSets,
+  isLoadoutBuilderItem,
+  addLockedItem,
+  removeLockedItem,
+} from './generated-sets/utils';
 import {
   ArmorSet,
   StatTypes,
@@ -19,6 +24,7 @@ import {
   LockedModBase,
   LockedArmor2ModMap,
   ModPickerCategories,
+  LockedItemType,
 } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
@@ -39,7 +45,6 @@ import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
-import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -48,6 +53,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
 import { Location } from 'history';
+import { useSubscription } from 'app/utils/hooks';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -143,6 +149,8 @@ export type LoadoutBuilderAction =
   | { type: 'queryChanged'; query: string }
   | { type: 'statOrderChanged'; statOrder: StatTypes[] }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
+  | { type: 'addItemToLockedMap'; item: LockedItemType }
+  | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | { type: 'lockedSeasonalModsChanged'; lockedSeasonalMods: LockedModBase[] }
   | {
       type: 'lockedMapAndSeasonalModsChanged';
@@ -180,6 +188,28 @@ function stateReducer(state: State, action: LoadoutBuilderAction): State {
       return { ...state, statOrder: action.statOrder };
     case 'lockedMapChanged':
       return { ...state, lockedMap: action.lockedMap };
+    case 'addItemToLockedMap': {
+      const { item } = action;
+      const bucketHash = item.bucket.hash;
+      return {
+        ...state,
+        lockedMap: {
+          ...state.lockedMap,
+          [bucketHash]: addLockedItem(item, state.lockedMap[bucketHash]),
+        },
+      };
+    }
+    case 'removeItemFromLockedMap': {
+      const { item } = action;
+      const bucketHash = item.bucket.hash;
+      return {
+        ...state,
+        lockedMap: {
+          ...state.lockedMap,
+          [bucketHash]: removeLockedItem(item, state.lockedMap[bucketHash]),
+        },
+      };
+    }
     case 'lockedSeasonalModsChanged':
       return { ...state, lockedSeasonalMods: action.lockedSeasonalMods };
     case 'lockedMapAndSeasonalModsChanged':
@@ -283,27 +313,28 @@ function LoadoutBuilder({
     stateDispatch,
   ] = useReducer(stateReducer, { stores, location }, init);
 
-  useEffect(() => {
-    const subscriptions = new Subscriptions();
-    subscriptions.add(
-      D2StoresService.getStoresStream(account).subscribe((stores) => {
-        if (!stores || !stores.length) {
-          return;
-        }
+  useSubscription(
+    useCallback(
+      () =>
+        D2StoresService.getStoresStream(account).subscribe((stores) => {
+          if (!stores || !stores.length) {
+            return;
+          }
 
-        if (!selectedStoreId) {
-          stateDispatch({ type: 'changeCharacter', storeId: getCurrentStore(stores)!.id });
-        }
-      }),
+          if (!selectedStoreId) {
+            stateDispatch({ type: 'changeCharacter', storeId: getCurrentStore(stores)!.id });
+          }
+        }),
+      [account, selectedStoreId]
+    )
+  );
 
-      // Disable refreshing stores, since it resets the scroll offset
-      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
-    );
-
-    return () => {
-      subscriptions.unsubscribe();
-    };
-  }, [account, selectedStoreId]);
+  useSubscription(
+    useCallback(
+      () => refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
+      []
+    )
+  );
 
   if (!storesLoaded || !defs || !selectedStoreId) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

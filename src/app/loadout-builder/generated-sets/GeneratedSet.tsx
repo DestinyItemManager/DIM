@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -16,6 +16,7 @@ import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { assignModsToArmorSet } from './mod-utils';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { LoadoutBuilderAction } from '../LoadoutBuilder';
 
 interface Props {
   set: ArmorSet;
@@ -27,8 +28,7 @@ interface Props {
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
-  addLockedItem(lockedItem: LockedItemType): void;
-  removeLockedItem(lockedItem: LockedItemType): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
 /**
@@ -45,8 +45,7 @@ function GeneratedSet({
   enabledStats,
   forwardedRef,
   lockedArmor2Mods,
-  addLockedItem,
-  removeLockedItem,
+  lbDispatch,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -143,8 +142,7 @@ function GeneratedSet({
             defs={defs}
             itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
             locked={lockedMap[item.bucket.hash]}
-            addLockedItem={addLockedItem}
-            removeLockedItem={removeLockedItem}
+            lbDispatch={lbDispatch}
             statValues={set.firstValidSetStatChoices[index]}
             lockedMods={assignedMods[item.hash]}
           />
