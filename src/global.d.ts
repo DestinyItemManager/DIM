@@ -50,7 +50,7 @@ interface Window {
   };
   BroadcastChannel?: BroadcastChannel;
   OC?: any;
-  // eslint-disable-next-line @typescript-eslint/camelcase
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   gapi_onload(): void;
 
   // Service worker stuff

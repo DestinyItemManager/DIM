@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import './storage.scss';
-import { SyncService } from './sync.service';
+import { SyncService, DimData } from './sync.service';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
 import { AppIcon, signOutIcon, signInIcon, restoreIcon } from '../shell/icons';
@@ -16,7 +16,7 @@ declare global {
 }
 
 interface Props extends RouteComponentProps {
-  onImportData(data: object): Promise<any>;
+  onImportData(data: DimData): Promise<any>;
 }
 
 interface State {

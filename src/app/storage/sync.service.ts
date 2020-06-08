@@ -137,7 +137,7 @@ async function getFromAdapters(): Promise<DimData | undefined> {
   return undefined;
 }
 
-// eslint-disable-next-line @typescript-eslint/camelcase
+// eslint-disable-next-line @typescript-eslint/naming-convention
 window.gapi_onload = () => {
   gapiLoaded = true;
   SyncService.init();

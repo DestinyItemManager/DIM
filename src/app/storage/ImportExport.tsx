@@ -5,6 +5,8 @@ import { AppIcon, downloadIcon } from 'app/shell/icons';
 import FileUpload from 'app/dim-ui/FileUpload';
 import { DropzoneOptions } from 'react-dropzone';
 import _ from 'lodash';
+import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import { DimData } from './sync.service';
 
 declare global {
   interface Window {
@@ -20,7 +22,7 @@ export default function ImportExport({
   onImportData,
 }: {
   onExportData(): void;
-  onImportData(data: object): Promise<any>;
+  onImportData(data: DimData | ExportResponse): Promise<any>;
 }) {
   if (!supportsExport) {
     return null;
