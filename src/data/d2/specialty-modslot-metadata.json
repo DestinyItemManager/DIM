@@ -1,5 +1,13 @@
 [
   {
+    "season": 0,
+    "tag": "arrival",
+    "compatibleTags": [],
+    "thisSlotPlugCategoryHashes": [443647229],
+    "compatiblePlugCategoryHashes": [426869514],
+    "emptyModSocketHashes": [4153634494]
+  },
+  {
     "season": 4,
     "tag": "outlaw",
     "compatibleTags": ["outlaw", "forge"],
@@ -42,7 +50,7 @@
   {
     "season": 10,
     "tag": "worthy",
-    "compatibleTags": ["dawn", "worthy"],
+    "compatibleTags": ["arrival", "dawn", "worthy"],
     "thisSlotPlugCategoryHashes": [426869514],
     "compatiblePlugCategoryHashes": [208760563, 426869514],
     "emptyModSocketHashes": [2655746324]
