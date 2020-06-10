@@ -94,8 +94,8 @@ export default function ItemPopupHeader({
           </a>
         )}
         {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
-          <div onClick={onToggleExpanded}>
-            <AppIcon className="info" icon={expanded ? faChevronCircleUp : openDropdownIcon} />
+          <div className="info" onClick={onToggleExpanded}>
+            <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
           </div>
         )}
       </div>
