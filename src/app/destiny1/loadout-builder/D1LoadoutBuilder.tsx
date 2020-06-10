@@ -270,24 +270,23 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               ).map((item) => (
                 <div key={item.index} className="item-container">
                   <div className="item-stats">
-                    {item.stats &&
-                      item.stats.map((stat) => (
-                        <div
-                          key={stat.statHash}
-                          style={getColor(
-                            item.normalStats![stat.statHash].qualityPercentage,
-                            'color'
-                          )}
-                        >
-                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                          {item.normalStats![stat.statHash].scaled > 0 && (
-                            <span>
-                              <small>{item.normalStats![stat.statHash].scaled}</small>/
-                              <small>{stat.split}</small>
-                            </span>
-                          )}
-                        </div>
-                      ))}
+                    {item.stats?.map((stat) => (
+                      <div
+                        key={stat.statHash}
+                        style={getColor(
+                          item.normalStats![stat.statHash].qualityPercentage,
+                          'color'
+                        )}
+                      >
+                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                        {item.normalStats![stat.statHash].scaled > 0 && (
+                          <span>
+                            <small>{item.normalStats![stat.statHash].scaled}</small>/
+                            <small>{stat.split}</small>
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
                   <div>
                     <LoadoutBuilderItem shiftClickCallback={this.excludeItem} item={item} />

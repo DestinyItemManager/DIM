@@ -118,7 +118,7 @@ export default function InventoryItem({
       {subclassPath?.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
       )}
-      {item.isDestiny2 && item.isDestiny2() && item.plug?.costElementIcon && (
+      {item.isDestiny2?.() && item.plug?.costElementIcon && (
         <>
           <div
             style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
@@ -133,8 +133,7 @@ export default function InventoryItem({
 
 export function borderless(item: DimItem) {
   return (
-    (item.isDestiny2 &&
-      item.isDestiny2() &&
+    (item.isDestiny2?.() &&
       (item.bucket.hash === 3284755031 || item.itemCategoryHashes?.includes(268598612))) ||
     item.isEngram
   );

@@ -125,8 +125,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
         })
       );
       if (
-        results.errors &&
-        results.errors.length &&
+        results.errors?.length &&
         !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
       ) {
         throw new Error(results.errors[0].message);

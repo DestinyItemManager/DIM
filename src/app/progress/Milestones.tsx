@@ -111,13 +111,12 @@ function milestonesForCharacter(
       def &&
       (def.showInExplorer || def.showInMilestones) &&
       (milestone.activities ||
-        (milestone.availableQuests &&
-          milestone.availableQuests.every(
-            (q) =>
-              q.status.stepObjectives.length > 0 &&
-              q.status.started &&
-              (!q.status.completed || !q.status.redeemed)
-          )))
+        milestone.availableQuests?.every(
+          (q) =>
+            q.status.stepObjectives.length > 0 &&
+            q.status.started &&
+            (!q.status.completed || !q.status.redeemed)
+        ))
     );
   });
 

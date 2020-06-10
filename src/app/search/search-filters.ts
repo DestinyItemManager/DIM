@@ -541,11 +541,9 @@ function searchFilters(
     const statHashes: number[] =
       statType === 'any' ? hashes.anyArmorStatHashes : [hashes.statHashByName[statType]];
     return (item: DimItem, predicate: string) => {
-      const matchingStats =
-        item.stats &&
-        item.stats.filter(
-          (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], predicate)
-        );
+      const matchingStats = item.stats?.filter(
+        (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], predicate)
+      );
       return matchingStats && Boolean(matchingStats.length);
     };
   };
@@ -683,15 +681,11 @@ function searchFilters(
           let result;
           if (filter.orFilters) {
             result = filter.orFilters.some((filter) => {
-              const result =
-                this.filters[filter.predicate] &&
-                this.filters[filter.predicate](item, filter.value);
-
+              const result = this.filters[filter.predicate]?.(item, filter.value);
               return filter.invert ? !result : result;
             });
           } else {
-            result =
-              this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
+            result = this.filters[filter.predicate]?.(item, filter.value);
           }
           return filter.invert ? !result : result;
         });
@@ -827,13 +821,11 @@ function searchFilters(
         const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.type}`;
 
-        const matchingStats =
-          item.stats &&
-          item.stats.filter(
-            (s) =>
-              statHashes.includes(s.statHash) &&
-              s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
-          );
+        const matchingStats = item.stats?.filter(
+          (s) =>
+            statHashes.includes(s.statHash) &&
+            s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
+        );
 
         return matchingStats && Boolean(matchingStats.length);
       },
@@ -962,11 +954,8 @@ function searchFilters(
         return Boolean(getNotes(item, itemInfos));
       },
       stattype(item: DimItem, predicate: string) {
-        return (
-          item.stats &&
-          item.stats.some((s) =>
-            Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
-          )
+        return item.stats?.some((s) =>
+          Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
         );
       },
       stackable(item: DimItem) {
@@ -1008,10 +997,9 @@ function searchFilters(
       perk(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
         return (
-          (item.talentGrid &&
-            item.talentGrid.nodes.some(
-              (node) => regex.test(node.name) || regex.test(node.description)
-            )) ||
+          item.talentGrid?.nodes.some(
+            (node) => regex.test(node.name) || regex.test(node.description)
+          ) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1063,10 +1051,7 @@ function searchFilters(
         );
       },
       powerfulreward(item: D2Item) {
-        return (
-          item.pursuit &&
-          item.pursuit.rewards.some((r) => hashes.powerfulSources.includes(r.itemHash))
-        );
+        return item.pursuit?.rewards.some((r) => hashes.powerfulSources.includes(r.itemHash));
       },
       light(item: DimItem, predicate: string) {
         if (!item.primStat) {
@@ -1174,7 +1159,7 @@ function searchFilters(
           return (
             (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
             D2Sources[predicate].itemHashes.includes(item.hash) ||
-            (missingSources[predicate] && missingSources[predicate].includes(item.hash))
+            missingSources[predicate]?.includes(item.hash)
           );
         } else if (D2EventPredicateLookup[predicate]) {
           return D2EventPredicateLookup[predicate] === item?.event;
@@ -1238,15 +1223,13 @@ function searchFilters(
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        const oneSocketPerPlug =
-          item.sockets &&
-          item.sockets.sockets
-            .filter((socket) =>
-              hashes.curatedPlugsWhitelist.includes(
-                socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
-              )
+        const oneSocketPerPlug = item.sockets?.sockets
+          .filter((socket) =>
+            hashes.curatedPlugsWhitelist.includes(
+              socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
             )
-            .every((socket) => socket?.plugOptions.length === 1);
+          )
+          .every((socket) => socket?.plugOptions.length === 1);
 
         return (
           legendaryWeapon &&
@@ -1279,48 +1262,38 @@ function searchFilters(
         return !item.notransfer;
       },
       hasShader(item: D2Item) {
-        return (
-          item.sockets &&
-          item.sockets.sockets.some((socket) =>
-            Boolean(
-              socket.plug &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
-                socket.plug.plugItem.hash !== DEFAULT_SHADER
-            )
+        return item.sockets?.sockets.some((socket) =>
+          Boolean(
+            socket.plug?.plugItem.plug &&
+              socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
+              socket.plug.plugItem.hash !== DEFAULT_SHADER
           )
         );
       },
       hasOrnament(item: D2Item) {
-        return (
-          item.sockets &&
-          item.sockets.sockets.some((socket) =>
-            Boolean(
-              socket.plug &&
-                socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-                socket.plug.plugItem.hash !== DEFAULT_GLOW &&
-                !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-                !socket.plug.plugItem.itemCategoryHashes.includes(DEFAULT_GLOW_CATEGORY)
-            )
+        return item.sockets?.sockets.some((socket) =>
+          Boolean(
+            socket.plug &&
+              socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
+              socket.plug.plugItem.hash !== DEFAULT_GLOW &&
+              !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
+              !socket.plug.plugItem.itemCategoryHashes.includes(DEFAULT_GLOW_CATEGORY)
           )
         );
       },
       hasMod(item: D2Item) {
-        return (
-          item.sockets &&
-          item.sockets.sockets.some((socket) =>
-            Boolean(
-              socket.plug &&
-                !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                  /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
-                ) &&
-                // enforce that this provides a perk (excludes empty slots)
-                socket.plug.plugItem.perks.length &&
-                // enforce that this doesn't have an energy cost (y3 reusables)
-                !socket.plug.plugItem.plug.energyCost
-            )
+        return item.sockets?.sockets.some((socket) =>
+          Boolean(
+            socket.plug &&
+              !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+              socket.plug.plugItem.plug &&
+              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+              ) &&
+              // enforce that this provides a perk (excludes empty slots)
+              socket.plug.plugItem.perks.length &&
+              // enforce that this doesn't have an energy cost (y3 reusables)
+              !socket.plug.plugItem.plug.energyCost
           )
         );
       },
@@ -1343,9 +1316,7 @@ function searchFilters(
         );
       },
       trashlist(item: D2Item) {
-        return Boolean(
-          inventoryWishListRolls[item.id] && inventoryWishListRolls[item.id].isUndesirable
-        );
+        return Boolean(inventoryWishListRolls[item.id]?.isUndesirable);
       },
       wishlist(item: D2Item) {
         return Boolean(

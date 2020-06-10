@@ -174,8 +174,7 @@ function getInventoryWishListRoll(
   let matchingWishListRoll: WishListRoll | undefined;
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
-    matchingWishListRoll =
-      wishListRolls[hash] && wishListRolls[hash].find((cr) => allDesiredPerksExist(item, cr));
+    matchingWishListRoll = wishListRolls[hash]?.find((cr) => allDesiredPerksExist(item, cr));
     if (matchingWishListRoll) {
       break;
     }

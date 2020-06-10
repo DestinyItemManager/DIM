@@ -22,8 +22,7 @@ interface Props {
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
-  item.isDestiny2 &&
-  item.isDestiny2() &&
+  item.isDestiny2?.() &&
   item.sockets &&
   item.itemCategoryHashes &&
   item.itemCategoryHashes.includes(39)
@@ -53,9 +52,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
-  const isGhost = Boolean(
-    item.isDestiny2 && item.isDestiny2() && item.itemCategoryHashes?.includes(39)
-  );
+  const isGhost = Boolean(item.isDestiny2?.() && item.itemCategoryHashes?.includes(39));
   const isGeneric = !isBounty && !isStackable && !isGhost;
 
   const ghostInfos = getGhostInfos(item);

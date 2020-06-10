@@ -381,13 +381,12 @@ export function makeItem(
     collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
     displaySource: itemDef.displaySource,
-    plug: itemDef.plug &&
-      itemDef.plug.energyCost && {
-        energyCost: itemDef.plug.energyCost.energyCost,
-        costElementIcon: defs.Stat.get(
-          defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
-        ).displayProperties.icon,
-      },
+    plug: itemDef.plug?.energyCost && {
+      energyCost: itemDef.plug.energyCost.energyCost,
+      costElementIcon: defs.Stat.get(
+        defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
+      ).displayProperties.icon,
+    },
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
@@ -498,7 +497,7 @@ export function makeItem(
     const multiEmblem = createdItem.sockets.sockets.filter(
       (plug) => plug.plug?.plugItem.itemType === DestinyItemType.Emblem
     );
-    const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
+    const selectedEmblem = multiEmblem[0]?.plug;
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;

@@ -761,7 +761,7 @@ function ItemService(): ItemServiceType {
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = s.spaceLeftForItem(i);
       // minus any reservations
-      if (reservations[s.id] && reservations[s.id][i.type]) {
+      if (reservations[s.id]?.[i.type]) {
         left -= reservations[s.id][i.type];
       }
       // but not counting the original item that's moving
