@@ -1,16 +1,16 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
-import { addLockedItem, removeLockedItem } from './utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { LoadoutBuilderAction } from '../LoadoutBuilder';
 
 interface Props {
   selectedStore: DimStore;
@@ -23,7 +23,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
-  onLockedMapChanged(lockedMap: Props['lockedMap']): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
 interface State {
@@ -93,6 +93,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       combosWithoutCaps,
       enabledStats,
       lockedArmor2Mods,
+      lbDispatch,
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
@@ -138,8 +139,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             set={measureSet}
             selectedStore={selectedStore}
             lockedMap={lockedMap}
-            addLockedItem={this.addLockedItemType}
-            removeLockedItem={this.removeLockedItemType}
+            lbDispatch={lbDispatch}
             defs={defs}
             statOrder={statOrder}
             enabledStats={enabledStats}
@@ -164,8 +164,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     set={sets[index]}
                     selectedStore={selectedStore}
                     lockedMap={lockedMap}
-                    addLockedItem={this.addLockedItemType}
-                    removeLockedItem={this.removeLockedItemType}
+                    lbDispatch={lbDispatch}
                     defs={defs}
                     statOrder={statOrder}
                     enabledStats={enabledStats}
@@ -190,21 +189,5 @@ export default class GeneratedSets extends React.Component<Props, State> {
         0
       );
     }
-  };
-
-  private addLockedItemType = (item: LockedItemType) => {
-    const { lockedMap, onLockedMapChanged } = this.props;
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
-    });
-  };
-
-  private removeLockedItemType = (item: LockedItemType) => {
-    const { lockedMap, onLockedMapChanged } = this.props;
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
-    });
   };
 }

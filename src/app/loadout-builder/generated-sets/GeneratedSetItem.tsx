@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, Dispatch } from 'react';
 import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType, LockedArmor2Mod } from '../types';
@@ -15,6 +15,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './GeneratedSetItemLockedMods.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { LoadoutBuilderAction } from '../LoadoutBuilder';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
@@ -41,8 +42,7 @@ export default function GeneratedSetItem({
   statValues,
   itemOptions,
   lockedMods,
-  addLockedItem,
-  removeLockedItem,
+  lbDispatch,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
@@ -50,13 +50,16 @@ export default function GeneratedSetItem({
   statValues: number[];
   itemOptions: DimItem[];
   lockedMods?: LockedArmor2Mod[];
-  addLockedItem(lockedItem: LockedItemType): void;
-  removeLockedItem(lockedItem: LockedItemType): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
     item,
     statValues,
   ]);
+
+  const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
+  const removeLockedItem = (item: LockedItemType) =>
+    lbDispatch({ type: 'removeItemFromLockedMap', item });
 
   const classesByHash = altPerks.reduce(
     (memo, perk) => ({ ...memo, [perk.plugItem.hash]: styles.altPerk }),
