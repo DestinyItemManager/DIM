@@ -1,30 +1,20 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import hotkeys, { Hotkey } from './hotkeys';
-
-interface Props {
-  hotkeys: Hotkey[];
-  children?: React.ReactNode;
-}
 
 let componentId = 0;
 
-export default class GlobalHotkeys extends React.Component<Props> {
-  private id = componentId++;
+export default function GlobalHotkeys({
+  hotkeys: hotkeyDefs,
+  children,
+}: {
+  hotkeys: Hotkey[];
+  children?: any;
+}) {
+  const [id] = useState(() => componentId++);
+  useEffect(() => {
+    hotkeys.register(id, hotkeyDefs);
+    return () => hotkeys.unregister(id);
+  });
 
-  componentDidMount() {
-    hotkeys.register(this.id, this.props.hotkeys);
-  }
-
-  componentDidUpdate() {
-    hotkeys.unregister(this.id);
-    hotkeys.register(this.id, this.props.hotkeys);
-  }
-
-  componentWillUnmount() {
-    hotkeys.unregister(this.id);
-  }
-
-  render() {
-    return this.props.children || null;
-  }
+  return children || null;
 }
