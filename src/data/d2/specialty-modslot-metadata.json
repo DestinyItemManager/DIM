@@ -42,9 +42,17 @@
   {
     "season": 10,
     "tag": "worthy",
-    "compatibleTags": ["dawn", "worthy"],
+    "compatibleTags": ["dawn", "worthy", "arrival"],
     "thisSlotPlugCategoryHashes": [426869514],
-    "compatiblePlugCategoryHashes": [208760563, 426869514],
+    "compatiblePlugCategoryHashes": [208760563, 426869514, 443647229],
     "emptyModSocketHashes": [2655746324]
+  },
+  {
+    "season": 11,
+    "tag": "arrival",
+    "compatibleTags": ["worthy", "arrival"],
+    "thisSlotPlugCategoryHashes": [443647229],
+    "compatiblePlugCategoryHashes": [426869514, 443647229],
+    "emptyModSocketHashes": [4153634494]
   }
 ]

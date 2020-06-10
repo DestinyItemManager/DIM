@@ -37,6 +37,7 @@ const missingSources: { [key: string]: number[] } = {
     85800627, // Ankaa Seeker IV
     87665893, // Binary Phoenix Cloak
     98331691, // Binary Phoenix Mark
+    119859462, // Wing Theorem
     215768941, // Ankaa Seeker IV
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
@@ -49,7 +50,11 @@ const missingSources: { [key: string]: number[] } = {
     449878234, // Phoenix Strife Type 0
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
+    641063251, // Wing Theorem
+    657606375, // Wing Discipline
     670877864, // Binary Phoenix Mark
+    687386728, // Wing Discipline
+    693067797, // Wing Contender
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
     761953100, // Ankaa Seeker IV
@@ -66,6 +71,7 @@ const missingSources: { [key: string]: number[] } = {
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1613581523, // Wing Discipline
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -77,18 +83,22 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1807196134, // Phoenix Strife Type 0
     1830829330, // Swordflight 4.1
+    1835747805, // Nature of the Beast
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV
     1904811766, // Swordflight 4.1
+    1914589560, // Wing Contender
     1929596421, // Ankaa Seeker IV
     2070517134, // Wing Contender
     2094233929, // Swordflight 4.1
     2231762285, // Phoenix Strife Type 0
+    2286507447, // Wing Theorem
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
     2323865727, // Wing Theorem
+    2389585538, // Wing Discipline
     2415711886, // Wing Contender
     2426070307, // Binary Phoenix Cloak
     2466453881, // Wing Discipline
@@ -103,13 +113,19 @@ const missingSources: { [key: string]: number[] } = {
     2727890395, // Ankaa Seeker IV
     2775298636, // Ankaa Seeker IV
     2845947996, // Phoenix Strife Type 0
+    2899275886, // Wing Discipline
     3089908066, // Wing Discipline
+    3091776080, // Wing Contender
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
+    3153956825, // Wing Contender
     3298826188, // Swordflight 4.1
     3315265682, // Phoenix Strife Type 0
+    3408834730, // Wing Contender
+    3441081953, // Wing Theorem
     3483546829, // Wing Discipline
     3522021318, // Wing Discipline
+    3684978064, // Wing Theorem
     3756286064, // Phoenix Strife Type 0
     3772194440, // Wing Contender
     3781722107, // Phoenix Strife Type 0
@@ -134,6 +150,7 @@ const missingSources: { [key: string]: number[] } = {
     1600224949, // Anti-Extinction Gloves
     1730282946, // Stella Incognita Bond
     1875607511, // Stella Incognita Mark
+    1946491241, // Truthteller
     2862198970, // Anti-Extinction Gauntlets
     3176347031, // Anti-Extinction Boots
     3304105970, // Anti-Extinction Vest
@@ -168,20 +185,31 @@ const missingSources: { [key: string]: number[] } = {
     230878649, // Ancient Apocalypse Mask
     386367515, // Ancient Apocalypse Boots
     392058749, // Ancient Apocalypse Boots
+    436615288, // Ancient Apocalypse Cloak
     485653258, // Ancient Apocalypse Strides
     509238959, // Ancient Apocalypse Mark
+    606902507, // Ancient Apocalypse Grips
+    671423576, // Ancient Apocalypse Boots
+    725297842, // Ancient Apocalypse Robes
+    754069623, // Ancient Apocalypse Hood
     759348512, // Ancient Apocalypse Mask
     787909455, // Ancient Apocalypse Robes
     887818405, // Ancient Apocalypse Robes
+    896081219, // Ancient Apocalypse Bond
     1013137701, // Ancient Apocalypse Hood
     1188039652, // Ancient Apocalypse Gauntlets
     1237661249, // Ancient Apocalypse Plate
+    1267361154, // Ancient Apocalypse Mask
+    1314666277, // Ancient Apocalypse Vest
     1356064950, // Ancient Apocalypse Grips
     1359908066, // Ancient Apocalypse Gauntlets
     1488486721, // Ancient Apocalypse Bond
     1548620661, // Ancient Apocalypse Cloak
+    1698660093, // Ancient Apocalypse Strides
     1741396519, // Ancient Apocalypse Vest
     1752237812, // Ancient Apocalypse Gloves
+    1811579911, // Ancient Apocalypse Plate
+    2002452096, // Ancient Apocalypse Helm
     2020166300, // Ancient Apocalypse Mark
     2039976446, // Ancient Apocalypse Boots
     2451538755, // Ancient Apocalypse Strides
@@ -196,14 +224,18 @@ const missingSources: { [key: string]: number[] } = {
     2728668760, // Ancient Apocalypse Vest
     2858060922, // Ancient Apocalypse Vest
     2881248566, // Ancient Apocalypse Cloak
+    2993008662, // Ancient Apocalypse Mark
     3404053788, // Ancient Apocalypse Greaves
     3537476911, // Ancient Apocalypse Mask
     3550729740, // Ancient Apocalypse Robes
     3595268459, // Ancient Apocalypse Gloves
     3664007718, // Ancient Apocalypse Helm
+    3694642467, // Ancient Apocalypse Greaves
     3804360785, // Ancient Apocalypse Mark
     3825427923, // Ancient Apocalypse Helm
+    3863492689, // Ancient Apocalypse Gauntlets
     3925589496, // Ancient Apocalypse Hood
+    4122447870, // Ancient Apocalypse Gloves
     4255727106, // Ancient Apocalypse Hood
   ],
   edz: [
@@ -216,16 +248,31 @@ const missingSources: { [key: string]: number[] } = {
     88873628, // Gauntlets of Nohr
     161336786, // Mask of Sekris
     574916072, // Bond of Sekris
+    588627781, // Bond of Sekris
     627690043, // Wraps of Sekris
     781488881, // Mask of Feltroc
+    845536715, // Vest of Feltroc
+    1256688732, // Mask of Feltroc
+    1756558505, // Mask of Sekris
     1877424533, // Robes of Sekris
+    2369496221, // Plate of Nohr
+    2537874394, // Boots of Sekris
+    2653039573, // Grips of Feltroc
     2938125956, // Plate of Nohr
+    3099636805, // Greaves of Nohr
     3168014845, // Cloak of Feltroc
+    3181497704, // Robes of Sekris
     3331120813, // Boots of Sekris
+    3359121706, // Mask of Nohr
+    3364682867, // Gauntlets of Nohr
     3386768934, // Greaves of Nohr
+    3497220322, // Cloak of Feltroc
     3681852889, // Mark of Nohr
     3693007688, // Grips of Feltroc
     3731175213, // Mask of Nohr
+    3831484112, // Mark of Nohr
+    3842934816, // Wraps of Sekris
+    4229161783, // Boots of Feltroc
     4240859456, // Vest of Feltroc
   ],
   ep: [
@@ -323,20 +370,31 @@ const missingSources: { [key: string]: number[] } = {
     230878649, // Ancient Apocalypse Mask
     386367515, // Ancient Apocalypse Boots
     392058749, // Ancient Apocalypse Boots
+    436615288, // Ancient Apocalypse Cloak
     485653258, // Ancient Apocalypse Strides
     509238959, // Ancient Apocalypse Mark
+    606902507, // Ancient Apocalypse Grips
+    671423576, // Ancient Apocalypse Boots
+    725297842, // Ancient Apocalypse Robes
+    754069623, // Ancient Apocalypse Hood
     759348512, // Ancient Apocalypse Mask
     787909455, // Ancient Apocalypse Robes
     887818405, // Ancient Apocalypse Robes
+    896081219, // Ancient Apocalypse Bond
     1013137701, // Ancient Apocalypse Hood
     1188039652, // Ancient Apocalypse Gauntlets
     1237661249, // Ancient Apocalypse Plate
+    1267361154, // Ancient Apocalypse Mask
+    1314666277, // Ancient Apocalypse Vest
     1356064950, // Ancient Apocalypse Grips
     1359908066, // Ancient Apocalypse Gauntlets
     1488486721, // Ancient Apocalypse Bond
     1548620661, // Ancient Apocalypse Cloak
+    1698660093, // Ancient Apocalypse Strides
     1741396519, // Ancient Apocalypse Vest
     1752237812, // Ancient Apocalypse Gloves
+    1811579911, // Ancient Apocalypse Plate
+    2002452096, // Ancient Apocalypse Helm
     2020166300, // Ancient Apocalypse Mark
     2039976446, // Ancient Apocalypse Boots
     2451538755, // Ancient Apocalypse Strides
@@ -351,14 +409,18 @@ const missingSources: { [key: string]: number[] } = {
     2728668760, // Ancient Apocalypse Vest
     2858060922, // Ancient Apocalypse Vest
     2881248566, // Ancient Apocalypse Cloak
+    2993008662, // Ancient Apocalypse Mark
     3404053788, // Ancient Apocalypse Greaves
     3537476911, // Ancient Apocalypse Mask
     3550729740, // Ancient Apocalypse Robes
     3595268459, // Ancient Apocalypse Gloves
     3664007718, // Ancient Apocalypse Helm
+    3694642467, // Ancient Apocalypse Greaves
     3804360785, // Ancient Apocalypse Mark
     3825427923, // Ancient Apocalypse Helm
+    3863492689, // Ancient Apocalypse Gauntlets
     3925589496, // Ancient Apocalypse Hood
+    4122447870, // Ancient Apocalypse Gloves
     4255727106, // Ancient Apocalypse Hood
   ],
   gambitprime: [
@@ -572,12 +634,14 @@ const missingSources: { [key: string]: number[] } = {
     63725907, // Iron Remembrance Plate
     75550387, // Iron Truage Legs
     92135663, // Iron Remembrance Vest
+    125833536, // Iron Fellowship Gloves
     130221063, // Iron Truage Vestments
     131359121, // Iron Fellowship Casque
     167461728, // Iron Remembrance Gloves
     197164672, // Iron Truage Hood
     198946996, // Iron Symmachy Helm
     228784708, // Iron Symmachy Robes
+    391384020, // Iron Fellowship Helm
     423204919, // Iron Truage Hood
     425007249, // Iron Remembrance Plate
     473526496, // Iron Fellowship Vest
@@ -598,6 +662,7 @@ const missingSources: { [key: string]: number[] } = {
     1173846338, // Iron Fellowship Bond
     1181560527, // Iron Truage Vest
     1233689371, // Iron Remembrance Hood
+    1248530160, // Iron Fellowship Cloak
     1311649814, // Timur's Iron Bond
     1313089081, // Iron Truage Plate
     1313767877, // Radegast's Iron Sash
@@ -610,6 +675,7 @@ const missingSources: { [key: string]: number[] } = {
     1476572353, // Iron Truage Greaves
     1478755348, // Iron Truage Gauntlets
     1570751539, // Iron Symmachy Strides
+    1571959827, // Iron Fellowship Plate
     1604601714, // Iron Truage Vestments
     1631733639, // Bond of Remembrance
     1631922345, // Iron Remembrance Greaves
@@ -627,11 +693,13 @@ const missingSources: { [key: string]: number[] } = {
     2310625418, // Mark of Remembrance
     2391553724, // Iron Fellowship Hood
     2500327265, // Radegast's Iron Sash
+    2522706952, // Iron Fellowship Robes
     2555322239, // Iron Truage Gauntlets
     2614190248, // Iron Remembrance Vestments
     2620437164, // Mark of Remembrance
     2627255028, // Radegast's Iron Sash
     2692970954, // Iron Remembrance Gloves
+    2717305289, // Iron Fellowship Hood
     2758933481, // Iron Remembrance Hood
     2817130155, // Iron Fellowship Robes
     2845071512, // Iron Remembrance Casque
@@ -644,50 +712,74 @@ const missingSources: { [key: string]: number[] } = {
     2914695209, // Iron Truage Helm
     3042878056, // Iron Fellowship Grips
     3057399960, // Iron Truage Vest
+    3115740538, // Iron Fellowship Boots
     3115791898, // Iron Remembrance Legs
     3292445816, // Iron Truage Casque
     3300129601, // Iron Truage Gloves
     3308875113, // Iron Remembrance Grips
     3329206472, // Cloak of Remembrance
     3369424240, // Iron Truage Grips
+    3406291173, // Iron Fellowship Strides
     3472216012, // Iron Fellowship Plate
+    3517179757, // Iron Fellowship Gauntlets
     3543922672, // Iron Truage Hood
     3544440242, // Iron Remembrance Casque
     3570981007, // Iron Symmachy Greaves
     3600816955, // Iron Remembrance Strides
+    3624199242, // Iron Fellowship Casque
     3646911172, // Iron Truage Vest
+    3671337107, // Iron Fellowship Grips
     3686482762, // Iron Truage Boots
     3696011098, // Iron Truage Greaves
     3735443949, // Iron Symmachy Hood
     3746327861, // Iron Fellowship Gloves
     3756249289, // Iron Truage Grips
+    3763521327, // Iron Fellowship Greaves
     3791686334, // Iron Truage Gloves
     3815391974, // Iron Symmachy Boots
     3856062457, // Iron Truage Casque
     3906637800, // Iron Truage Plate
     4010793371, // Iron Remembrance Grips
+    4039932861, // Iron Fellowship Vest
     4048191131, // Iron Truage Boots
     4078529821, // Iron Fellowship Cloak
     4096639276, // Iron Truage Plate
     4144217282, // Iron Fellowship Strides
     4156963223, // Iron Symmachy Vest
+    4201843274, // Iron Fellowship Mark
     4211068696, // Iron Truage Legs
+    4224804453, // Iron Fellowship Bond
     4248834293, // Iron Remembrance Vest
   ],
   lastwish: [
+    4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
+    49280456, // Gloves of the Great Hunt
     576683388, // Gauntlets of the Great Hunt
+    726265506, // Boots of the Great Hunt
     776723133, // Robes of the Great Hunt
+    778784376, // Mark of the Great Hunt
+    972689703, // Vest of the Great Hunt
     1127835600, // Grips of the Great Hunt
     1190016345, // Mask of the Great Hunt
+    1258342944, // Mask of the Great Hunt
+    1432728945, // Hood of the Great Hunt
     1444894250, // Strides of the Great Hunt
+    1477271933, // Bond of the Great Hunt
     1646520469, // Cloak of the Great Hunt
+    1656835365, // Plate of the Great Hunt
+    2112541750, // Cloak of the Great Hunt
     2280287728, // Bond of the Great Hunt
+    2550116544, // Robes of the Great Hunt
     2868042232, // Vest of the Great Hunt
+    2950533187, // Strides of the Great Hunt
+    3119383537, // Grips of the Great Hunt
     3143067364, // Plate of the Great Hunt
+    3208178411, // Gauntlets of the Great Hunt
     3227674085, // Boots of the Great Hunt
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
+    3868637058, // Helm of the Great Hunt
     3874578566, // Greaves of the Great Hunt
     4219088013, // Helm of the Great Hunt
   ],
@@ -698,7 +790,9 @@ const missingSources: { [key: string]: number[] } = {
     130772858, // Tangled Web Vest
     133227345, // Kerak Type 2
     144651852, // Prodigal Mask
+    265279665, // Clandestine Maneuvers
     339438127, // High-Minded Complex
+    362404956, // Terra Concord Plate
     432525353, // Red Moon Phantom Mask
     433294875, // Devastation Complex
     474076509, // Errant Knight 1.0
@@ -709,24 +803,30 @@ const missingSources: { [key: string]: number[] } = {
     545134223, // Tangled Web Mark
     548907748, // Devastation Complex
     553373026, // Tangled Web Hood
+    597618504, // Insight Vikti Hood
     629469344, // Heiro Camo
     629482101, // Dead End Cure 2.1
     633160551, // Insight Rover Vest
     635809934, // Terra Concord Helm
     639670612, // Mimetic Savior Plate
     655964556, // Mimetic Savior Gauntlets
+    695071581, // Tesseract Trace IV
     737010724, // Thorium Holt Bond
     836969671, // Insight Unyielding Greaves
     854373147, // Insight Unyielding Plate
     875215126, // Prodigal Mark
     880368054, // Tangled Web Grips
+    881579413, // Terra Concord Helm
+    974507844, // Insight Rover Grips
     983115833, // Terra Concord Plate
     1006824129, // Terra Concord Greaves
     1028913028, // Tesseract Trace IV
+    1063507982, // Terra Concord Greaves
     1088960547, // Prodigal Greaves
     1111042046, // High-Minded Complex
     1127029635, // Insight Rover Boots
     1148805553, // Thorium Holt Boots
+    1153347999, // Icarus Drifter Cape
     1195298951, // Be Thy Champion
     1213841242, // Red Moon Phantom Steps
     1257810769, // Prodigal Gauntlets
@@ -736,10 +836,13 @@ const missingSources: { [key: string]: number[] } = {
     1330542168, // Tangled Web Bond
     1348658294, // Clandestine Maneuvers
     1367655773, // Tangled Web Boots
+    1399263478, // Icarus Drifter Vest
     1425077417, // Mimetic Savior Bond
     1513486336, // Road Complex AA1
     1548943654, // Tesseract Trace IV
     1598372079, // Retro-Grade TG2
+    1648238545, // Terra Concord Mark
+    1655109893, // Tesseract Trace IV
     1726695877, // Cloak of Five Full Moons
     1728789982, // Thorium Holt Hood
     1740873035, // Icarus Drifter Grips
@@ -752,19 +855,24 @@ const missingSources: { [key: string]: number[] } = {
     1892576458, // Devastation Complex
     1893349933, // Tesseract Trace IV
     1904199788, // Mark of the Unassailable
+    1920259123, // Tesseract Trace IV
     1954457094, // Road Complex AA1
     2020589887, // Road Complex AA1
     2026285619, // Errant Knight 1.0
     2085574015, // Terra Concord Fists
     2092750352, // Tangled Web Strides
+    2112821379, // Insight Unyielding Helm
     2148295091, // Tangled Web Helm
     2151378428, // Tangled Web Greaves
     2173858802, // Prodigal Cloak
     2193432605, // Mimetic Savior Helm
     2205604183, // Dead End Cure 2.1
     2297281780, // Terra Concord Mark
+    2298664693, // Insight Rover Mask
     2332398934, // Kerak Type 2
+    2339155434, // Tesseract Trace IV
     2360521872, // A Cloak Called Home
+    2364041279, // Insight Vikti Robes
     2379553211, // Be Thy Guide
     2402435619, // Philomath Cover
     2439195958, // Philomath Robes
@@ -776,19 +884,28 @@ const missingSources: { [key: string]: number[] } = {
     2546015644, // Tesseract Trace IV
     2561056920, // Retro-Grade TG2
     2562555736, // Icarus Drifter Cape
+    2567710435, // Icarus Drifter Mask
+    2581516944, // Hodiocentrist Bond
+    2629014079, // Anti-Hero Victory
     2674524165, // Tangled Web Robes
     2713755753, // Kerak Type 2
     2734010957, // Prodigal Hood
     2772485446, // Prodigal Steps
+    2808379196, // Insight Rover Vest
     2819613314, // Far Gone Hood
+    2837138379, // Insight Vikti Boots
     2838060329, // Heiro Camo
     2845530750, // Retro-Grade Mark
+    2905153902, // Insight Rover Boots
     3018268196, // Insight Vikti Boots
     3024860521, // Retro-Grade TG2
     3061780015, // Tangled Web Mask
     3087552232, // Heiro Camo
     3198691833, // Prodigal Bond
+    3239215026, // Icarus Drifter Grips
+    3250360146, // Insight Unyielding Gauntlets
     3257088093, // Icarus Drifter Legs
+    3299386902, // Insight Unyielding Plate
     3316802363, // Retro-Grade TG2
     3386676796, // Prodigal Gloves
     3434158555, // Prodigal Vest
@@ -798,38 +915,65 @@ const missingSources: { [key: string]: number[] } = {
     3527995388, // Dead End Cure 2.1
     3536492583, // Kerak Type 2
     3593916933, // Prodigal Grasps
+    3611199822, // Synaptic Construct
     3619376218, // Heiro Camo
+    3651598572, // Insight Unyielding Greaves
     3688229984, // Insight Rover Mask
     3691737472, // Prodigal Helm
     3717812073, // Thorium Holt Robes
+    3852389988, // Terra Concord Fists
     3899739148, // Philomath Boots
     3906537733, // Icarus Drifter Vest
     3920228039, // Synaptic Construct
     3979056138, // Insight Vikti Gloves
     3988753671, // Prodigal Cuirass
+    4064910796, // Icarus Drifter Legs
     4074193483, // Tangled Web Cloak
     4079913195, // Dead End Cure 2.1
     4097652774, // Tangled Web Plate
     4146408011, // Tangled Web Gloves
     4166246718, // Insight Vikti Robes
+    4239920089, // Insight Vikti Gloves
   ],
   leviathan: [
+    64543268, // Boots of the Emperor's Minister
+    64543269, // Boots of the Fulminator
     311429764, // Shadow's Mark
     311429765, // Mark of the Emperor's Champion
+    325434398, // Vest of the Ace-Defiant
+    325434399, // Vest of the Emperor's Agent
     336656482, // Boots of the Fulminator
     336656483, // Boots of the Emperor's Minister
+    455108040, // Helm of the Emperor's Champion
+    455108041, // Mask of Rull
     581908796, // Bond of the Emperor's Minister
     581908797, // Shadow's Bond
+    608074492, // Robes of the Emperor's Minister
+    608074493, // Robes of the Fulminator
     618662448, // Headpiece of the Emperor's Minister
     618662449, // Mask of the Fulminator
     641933202, // Helm of the Ace-Defiant
     641933203, // Mask of the Emperor's Agent
+    748485514, // Mask of the Fulminator
+    748485515, // Headpiece of the Emperor's Minister
+    754149842, // Wraps of the Emperor's Minister
+    754149843, // Wraps of the Fulminator
+    853543290, // Greaves of Rull
+    853543291, // Greaves of the Emperor's Champion
+    917591018, // Grips of the Ace-Defiant
+    917591019, // Gloves of the Emperor's Agent
     1108389626, // Gloves of the Emperor's Agent
     1108389627, // Grips of the Ace-Defiant
     1230192768, // Robes of the Fulminator
     1230192769, // Robes of the Emperor's Minister
     1354679720, // Shadow's Cloak
     1354679721, // Cloak of the Emperor's Agent
+    1390282760, // Chassis of Rull
+    1390282761, // Cuirass of the Emperor's Champion
+    2070062384, // Shadow's Bond
+    2070062385, // Bond of the Emperor's Minister
+    2158603584, // Gauntlets of Rull
+    2158603585, // Gauntlets of the Emperor's Champion
     2183861870, // Gauntlets of the Emperor's Champion
     2183861871, // Gauntlets of Rull
     2232730708, // Vest of the Emperor's Agent
@@ -838,12 +982,20 @@ const missingSources: { [key: string]: number[] } = {
     2758465169, // Greaves of Rull
     2913992254, // Mask of Rull
     2913992255, // Helm of the Emperor's Champion
+    3092380260, // Mark of the Emperor's Champion
+    3092380261, // Shadow's Mark
     3292127944, // Cuirass of the Emperor's Champion
     3292127945, // Chassis of Rull
     3530284424, // Wraps of the Fulminator
     3530284425, // Wraps of the Emperor's Minister
+    3711700026, // Mask of the Emperor's Agent
+    3711700027, // Helm of the Ace-Defiant
     3853397100, // Boots of the Emperor's Agent
     3853397101, // Boots of the Ace-Defiant
+    3950028838, // Cloak of the Emperor's Agent
+    3950028839, // Shadow's Cloak
+    4251770244, // Boots of the Ace-Defiant
+    4251770245, // Boots of the Emperor's Agent
   ],
   mars: [
     425390008, // Midnight Exigent Greaves
@@ -1039,6 +1191,7 @@ const missingSources: { [key: string]: number[] } = {
     85800627, // Ankaa Seeker IV
     87665893, // Binary Phoenix Cloak
     98331691, // Binary Phoenix Mark
+    119859462, // Wing Theorem
     215768941, // Ankaa Seeker IV
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
@@ -1051,7 +1204,11 @@ const missingSources: { [key: string]: number[] } = {
     449878234, // Phoenix Strife Type 0
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
+    641063251, // Wing Theorem
+    657606375, // Wing Discipline
     670877864, // Binary Phoenix Mark
+    687386728, // Wing Discipline
+    693067797, // Wing Contender
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
     761953100, // Ankaa Seeker IV
@@ -1068,6 +1225,7 @@ const missingSources: { [key: string]: number[] } = {
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1613581523, // Wing Discipline
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -1079,18 +1237,22 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1807196134, // Phoenix Strife Type 0
     1830829330, // Swordflight 4.1
+    1835747805, // Nature of the Beast
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV
     1904811766, // Swordflight 4.1
+    1914589560, // Wing Contender
     1929596421, // Ankaa Seeker IV
     2070517134, // Wing Contender
     2094233929, // Swordflight 4.1
     2231762285, // Phoenix Strife Type 0
+    2286507447, // Wing Theorem
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
     2323865727, // Wing Theorem
+    2389585538, // Wing Discipline
     2415711886, // Wing Contender
     2426070307, // Binary Phoenix Cloak
     2466453881, // Wing Discipline
@@ -1105,13 +1267,19 @@ const missingSources: { [key: string]: number[] } = {
     2727890395, // Ankaa Seeker IV
     2775298636, // Ankaa Seeker IV
     2845947996, // Phoenix Strife Type 0
+    2899275886, // Wing Discipline
     3089908066, // Wing Discipline
+    3091776080, // Wing Contender
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
+    3153956825, // Wing Contender
     3298826188, // Swordflight 4.1
     3315265682, // Phoenix Strife Type 0
+    3408834730, // Wing Contender
+    3441081953, // Wing Theorem
     3483546829, // Wing Discipline
     3522021318, // Wing Discipline
+    3684978064, // Wing Theorem
     3756286064, // Phoenix Strife Type 0
     3772194440, // Wing Contender
     3781722107, // Phoenix Strife Type 0
@@ -1131,21 +1299,39 @@ const missingSources: { [key: string]: number[] } = {
   sos: [
     91896851, // Equitis Shade Boots
     165966230, // Insigne Shade Gloves
+    503773817, // Insigne Shade Gloves
     813277303, // Equitis Shade Rig
     1035112834, // Turris Shade Mark
+    1156439528, // Insigne Shade Cover
     1178920188, // Turris Shade Helm
+    1339632007, // Turris Shade Helm
     1378348656, // Insigne Shade Boots
+    1793869832, // Turris Shade Greaves
+    2128823667, // Turris Shade Mark
     2295412715, // Turris Shade Plate
     2305801487, // Insigne Shade Cover
     2475562438, // Equitis Shade Cloak
+    2552158692, // Equitis Shade Rig
     2575374197, // Turris Shade Gauntlets
+    2620001759, // Insigne Shade Robes
+    2722103686, // Equitis Shade Boots
+    2904930850, // Turris Shade Plate
+    3066613133, // Equitis Shade Cowl
     3316476193, // Equitis Shade Grips
+    3395856235, // Insigne Shade Boots
     3518692432, // Equitis Shade Cowl
+    3581198350, // Turris Shade Gauntlets
+    3719175804, // Equitis Shade Grips
+    3720446265, // Equitis Shade Cloak
     3862230571, // Insigne Shade Bond
+    3867160430, // Insigne Shade Bond
     4151496279, // Turris Shade Greaves
     4213777114, // Insigne Shade Robes
   ],
   strikes: [
+    178749005, // Vigil of Heroes
+    273457849, // Vigil of Heroes
+    332170995, // Vigil of Heroes
     358599471, // Vigil of Heroes
     417061387, // Xenos Vale IV
     420247988, // Xenos Vale IV
@@ -1158,20 +1344,26 @@ const missingSources: { [key: string]: number[] } = {
     946526461, // The Took Offense
     986111044, // Vigil of Heroes
     1003941622, // Vigil of Heroes
+    1108278178, // Vigil of Heroes
     1130203390, // Vigil of Heroes
     1188816597, // The Took Offense
     1269679141, // The Took Offense
     1276048857, // The Shelter in Place
     1320081419, // The Shelter in Place
+    1392054568, // Vigil of Heroes
     1405063395, // Vigil of Heroes
     1514841742, // Mark of Shelter
+    1524444346, // Vigil of Heroes
     1538362007, // Vigil of Heroes
+    1578461326, // Vigil of Heroes
     1699493316, // The Last Dance
     1702245537, // Xenos Vale IV
     1805830669, // Xenos Vale Bond
+    1812185909, // Vigil of Heroes
     1825880546, // The Took Offense
     1953621386, // The Took Offense
     1959285715, // The Took Offense
+    2009892127, // Vigil of Heroes
     2011569904, // Vigil of Heroes
     2060516289, // Vigil of Heroes
     2076567986, // Vigil of Heroes
@@ -1182,6 +1374,7 @@ const missingSources: { [key: string]: number[] } = {
     2454114768, // Xenos Vale IV
     2460793798, // Vigil of Heroes
     2498588344, // Xenos Vale IV
+    2629204288, // Vigil of Heroes
     2671880779, // Vigil of Heroes
     2722966297, // The Shelter in Place
     2764938807, // The Took Offense
@@ -1191,6 +1384,7 @@ const missingSources: { [key: string]: number[] } = {
     3034285946, // Xenos Vale IV
     3074985148, // Vigil of Heroes
     3130904371, // Vigil of Heroes
+    3207116971, // Vigil of Heroes
     3221304270, // Xenos Vale IV
     3375632008, // The Shelter in Place
     3469164235, // The Took Offense
@@ -1198,13 +1392,17 @@ const missingSources: { [key: string]: number[] } = {
     3500775049, // Vigil of Heroes
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
+    3631862279, // Vigil of Heroes
     3666681446, // Vigil of Heroes
+    3722981806, // Vigil of Heroes
+    3761819011, // Vigil of Heroes
     3851385946, // Vigil of Heroes
     3963753111, // Xenos Vale Bond
     3984883553, // The Shelter in Place
     4024037919, // Origin Story
     4038429998, // The Shelter in Place
     4074662489, // Vigil of Heroes
+    4086100104, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
     4288492921, // Vigil of Heroes
@@ -1236,39 +1434,27 @@ const missingSources: { [key: string]: number[] } = {
     4105480824, // Lost Pacific Cape
   ],
   trials: [
-    72827962, // Focusing Robes
-    72827963, // Channeling Robes
-    155955678, // Mark Relentless
-    155955679, // Mark Judgment
-    421771594, // Cloak Relentless
-    421771595, // Cloak Judgment
-    686607148, // Channeling Cowl
-    686607149, // Focusing Cowl
-    773318266, // Flowing Vest
-    773318267, // Floating Vest
-    784751926, // Crushing Plate
-    784751927, // Annihilating Plate
-    945907382, // Flowing Grips
-    945907383, // Floating Grips
-    1929400866, // Annihilating Helm
-    1929400867, // Crushing Helm
-    2158289680, // Flowing Boots
-    2158289681, // Floating Boots
-    3025466098, // Crushing Guard
-    3025466099, // Annihilating Guard
-    3127319342, // Floating Cowl
-    3127319343, // Flowing Cowl
-    3149072082, // Judgement's Wrap
-    3149072083, // Bond Relentless
-    3426704396, // Crushing Greaves
-    3426704397, // Annihilating Greaves
-    4100217958, // Focusing Boots
-    4100217959, // Flowing Treads
-    4177448932, // Focusing Wraps
-    4177448933, // Channeling Wraps
+    142864314, // Bond of the Exile
+    150551028, // Boots of the Exile
+    272735286, // Greaves of the Exile
+    442736573, // Gloves of the Exile
+    495541988, // Hood of the Exile
+    571925067, // Cover of the Exile
+    861160515, // Robe of the Exile
+    875395086, // Vest of the Exile
+    1164471069, // Helm of the Exile
+    1193489623, // Cloak of the Exile
+    2579999316, // Plate of the Exile
+    2764588986, // Grips of the Exile
+    2808362207, // Legs of the Exile
+    3365406121, // Mark of the Exile
+    3921970316, // Gauntlets of the Exile
   ],
   vexoffensive: [],
   zavala: [
+    178749005, // Vigil of Heroes
+    273457849, // Vigil of Heroes
+    332170995, // Vigil of Heroes
     358599471, // Vigil of Heroes
     417061387, // Xenos Vale IV
     420247988, // Xenos Vale IV
@@ -1281,20 +1467,26 @@ const missingSources: { [key: string]: number[] } = {
     946526461, // The Took Offense
     986111044, // Vigil of Heroes
     1003941622, // Vigil of Heroes
+    1108278178, // Vigil of Heroes
     1130203390, // Vigil of Heroes
     1188816597, // The Took Offense
     1269679141, // The Took Offense
     1276048857, // The Shelter in Place
     1320081419, // The Shelter in Place
+    1392054568, // Vigil of Heroes
     1405063395, // Vigil of Heroes
     1514841742, // Mark of Shelter
+    1524444346, // Vigil of Heroes
     1538362007, // Vigil of Heroes
+    1578461326, // Vigil of Heroes
     1699493316, // The Last Dance
     1702245537, // Xenos Vale IV
     1805830669, // Xenos Vale Bond
+    1812185909, // Vigil of Heroes
     1825880546, // The Took Offense
     1953621386, // The Took Offense
     1959285715, // The Took Offense
+    2009892127, // Vigil of Heroes
     2011569904, // Vigil of Heroes
     2060516289, // Vigil of Heroes
     2076567986, // Vigil of Heroes
@@ -1305,6 +1497,7 @@ const missingSources: { [key: string]: number[] } = {
     2454114768, // Xenos Vale IV
     2460793798, // Vigil of Heroes
     2498588344, // Xenos Vale IV
+    2629204288, // Vigil of Heroes
     2671880779, // Vigil of Heroes
     2722966297, // The Shelter in Place
     2764938807, // The Took Offense
@@ -1314,6 +1507,7 @@ const missingSources: { [key: string]: number[] } = {
     3034285946, // Xenos Vale IV
     3074985148, // Vigil of Heroes
     3130904371, // Vigil of Heroes
+    3207116971, // Vigil of Heroes
     3221304270, // Xenos Vale IV
     3375632008, // The Shelter in Place
     3469164235, // The Took Offense
@@ -1321,13 +1515,17 @@ const missingSources: { [key: string]: number[] } = {
     3500775049, // Vigil of Heroes
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
+    3631862279, // Vigil of Heroes
     3666681446, // Vigil of Heroes
+    3722981806, // Vigil of Heroes
+    3761819011, // Vigil of Heroes
     3851385946, // Vigil of Heroes
     3963753111, // Xenos Vale Bond
     3984883553, // The Shelter in Place
     4024037919, // Origin Story
     4038429998, // The Shelter in Place
     4074662489, // Vigil of Heroes
+    4086100104, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
     4288492921, // Vigil of Heroes

@@ -688,8 +688,7 @@
     "Store": "Store",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-      "GearWithMax": "{{light}} ({{maxLight}} max) {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "Take",
     "TrackUntrack": {

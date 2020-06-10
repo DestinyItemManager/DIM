@@ -73,6 +73,7 @@ export default function ItemPopupHeader({
   const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
   const powerCapString =
     light &&
+    item.powerCap &&
     (finalSeason
       ? t('MovePopup.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
       : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
@@ -112,17 +113,16 @@ export default function ItemPopupHeader({
       </div>
 
       <div className="item-subtitle">
-        {hasLeftIcon && (
-          <div className="icon">
-            {item.element &&
-              !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-                <ElementIcon
-                  element={item.element}
-                  className={clsx('element', getItemDamageShortName(item))}
-                />
-              )}
-          </div>
-        )}
+        {hasLeftIcon &&
+          item.element &&
+          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+            <div className="icon">
+              <ElementIcon
+                element={item.element}
+                className={clsx('element', getItemDamageShortName(item))}
+              />
+            </div>
+          )}
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}

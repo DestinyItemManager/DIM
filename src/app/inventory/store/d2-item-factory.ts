@@ -299,8 +299,11 @@ export function makeItem(
     item.versionNumber !== undefined &&
     itemDef.quality.versions?.[item.versionNumber]?.powerCapHash;
   // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
-  const powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
-  // here is where we need to manually adjust unreasonable power values like 999990
+  let powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
+
+  // here is where we need to manually adjust unreasonable powerCap values,
+  // which are used for things that aren't currently set to ever cap
+  if (powerCap && powerCap > 50000) powerCap = null;
 
   // null out falsey values like a blank string for a url
   const iconOverlay =

@@ -1,5 +1,5 @@
 export enum D2SeasonEnum {
-  DEBUG = 0,
+  DEBUG,
   RED_WAR,
   CURSE_OF_OSIRIS,
   WARMIND,
@@ -10,11 +10,11 @@ export enum D2SeasonEnum {
   SHADOWKEEP,
   DAWN,
   WORTHY,
+  REDACTED_11, // TODO: Update on verification
+  REDACTED_12, // TODO: Update on verification
 
-  __LENGTH, // This always needs to be last
+  __LENGTH__, // This always needs to be last
 }
-
-export const D2CurrentSeason: number = D2SeasonEnum.__LENGTH - 1;
 
 export const D2SeasonInfo = {
   0: {
@@ -163,7 +163,7 @@ export const D2SeasonInfo = {
   11: {
     DLCName: '',
     seasonName: 'Season of the Arrivals',
-    seasonTag: 'arrivals',
+    seasonTag: 'arrival',
     season: 11,
     year: 3,
     maxLevel: 50,
@@ -183,97 +183,6 @@ export const D2SeasonInfo = {
     maxPower: 1110, // TODO: Update on verification
     softCap: 1050, // TODO: Update on verification
     releaseDate: '2020-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  13: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-13', // TODO: Update on verification
-    season: 13,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1160, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2021-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  14: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-14', // TODO: Update on verification
-    season: 14,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1210, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2022-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  15: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-15', // TODO: Update on verification
-    season: 14,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1260, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2023-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  16: {
-    DLCName: 'Beyond Light',
-    seasonName: 'Season of [the Redacted-12]', // TODO: Update on verification
-    seasonTag: 'redacted-16', // TODO: Update on verification
-    season: 16,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1310, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2024-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  17: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-17', // TODO: Update on verification
-    season: 17,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1360, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2025-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  18: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-18', // TODO: Update on verification
-    season: 18,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1410, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2026-09-22',
-    resetTime: '17:00:00Z',
-    numWeeks: 13,
-  },
-  19: {
-    DLCName: '',
-    seasonName: '', // TODO: Update on verification
-    seasonTag: 'redacted-19', // TODO: Update on verification
-    season: 19,
-    year: 4,
-    maxLevel: 50,
-    maxPower: 1460, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
-    releaseDate: '2027-09-22',
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },
@@ -297,7 +206,7 @@ export const D2SeasonInfo = {
 function getCurrentSeason(): number {
   let seasonDate: Date;
   const today = new Date();
-  for (let i = D2SeasonEnum.__LENGTH - 1; i > 0; i--) {
+  for (let i = D2SeasonEnum.__LENGTH__ - 1; i > 0; i--) {
     seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
     if (today >= seasonDate) {
       return D2SeasonInfo[i].season;
