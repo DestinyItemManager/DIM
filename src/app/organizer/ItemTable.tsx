@@ -96,7 +96,7 @@ function mapStateToProps() {
 
   return (state: RootState, props: ProvidedProps): StoreProps => {
     const items = itemsSelector(state, props);
-    const isArmor = items[0]?.bucket.inArmor;
+    const isWeapon = items[0]?.bucket.inWeapons;
     return {
       items,
       defs: state.manifest.d2Manifest!,
@@ -106,7 +106,7 @@ function mapStateToProps() {
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       enabledColumns: settingsSelector(state)[
-        isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
+        isWeapon ? 'organizerColumnsWeapons' : 'organizerColumnsArmor'
       ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
