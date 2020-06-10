@@ -1108,26 +1108,18 @@ function searchFilters(
         return Boolean(item.energy);
       },
       powerlimit(item: D2Item, predicate: string) {
-        console.log({
-          mathCheck: mathCheck.test(predicate),
-          compare: compareByOperator(item.powerCap ?? 99999999, predicate),
-          powercap: item.powerCap,
-          predicate,
-        });
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         return mathCheck.test(predicate) && compareByOperator(item.powerCap ?? 99999999, predicate);
         // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
       },
       powerlimitseason(item: D2Item, predicate: string) {
-        // anything with no powerCap has no known limit, so treat it like it's 99999999
-
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return (
           itemFinalSeason &&
           mathCheck.test(predicate) &&
           compareByOperator(itemFinalSeason, predicate)
         );
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
+        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimitseason:arrivals"
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {

@@ -45,7 +45,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   if (moddedStatValue) {
     baseBar -= moddedStatValue;
   }
-  if (stat.statHash === -573) console.log(stat);
+
   if (masterworkDisplayValue) {
     baseBar -= masterworkDisplayValue;
   }
