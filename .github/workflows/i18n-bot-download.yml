@@ -11,14 +11,6 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
 
-      - name: Install Node
-        uses: actions/setup-node@v1.4.2
-        with:
-          node-version: '14.x'
-
-      - name: Install Yarn
-        uses: bahmutov/npm-install@v1
-
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
         with:
@@ -35,7 +27,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: sort all dim.json
-        run: npx jsonsort src/locale
+        run: |
+          jq -S . src/locale/dim.json > src/locale/dim_sorted.json && mv src/locale/dim_sorted.json src/locale/dim.json
+          jq -S . src/locale/de/dim.json > src/locale/de/dim_sorted.json && mv src/locale/de/dim_sorted.json src/locale/de/dim.json
+          jq -S . src/locale/es/dim.json > src/locale/es/dim_sorted.json && mv src/locale/es/dim_sorted.json src/locale/es/dim.json
+          jq -S . src/locale/es-mx/dim.json > src/locale/es-mx/dim_sorted.json && mv src/locale/es-mx/dim_sorted.json src/locale/es-mx/dim.json
+          jq -S . src/locale/fr/dim.json > src/locale/fr/dim_sorted.json && mv src/locale/fr/dim_sorted.json src/locale/fr/dim.json
+          jq -S . src/locale/it/dim.json > src/locale/it/dim_sorted.json && mv src/locale/it/dim_sorted.json src/locale/it/dim.json
+          jq -S . src/locale/ja/dim.json > src/locale/ja/dim_sorted.json && mv src/locale/ja/dim_sorted.json src/locale/ja/dim.json
+          jq -S . src/locale/ko/dim.json > src/locale/ko/dim_sorted.json && mv src/locale/ko/dim_sorted.json src/locale/ko/dim.json
+          jq -S . src/locale/pl/dim.json > src/locale/pl/dim_sorted.json && mv src/locale/pl/dim_sorted.json src/locale/pl/dim.json
+          jq -S . src/locale/pt-br/dim.json > src/locale/pt-br/dim_sorted.json && mv src/pt-br/locale/dim_sorted.json src/locale/pt-br/dim.json
+          jq -S . src/locale/ru/dim.json > src/locale/ru/dim_sorted.json && mv src/locale/ru/dim_sorted.json src/locale/ru/dim.json
+          jq -S . src/locale/zh-chs/dim.json > src/locale/zh-chs/dim_sorted.json && mv src/locale/zh-chs/dim_sorted.json src/zh-chs/locale/dim.json
+          jq -S . src/locale/zh-cht/dim.json > src/locale/zh-cht/dim_sorted.json && mv src/locale/zh-cht/dim_sorted.json src/zh-cht/locale/dim.json
 
       - name: Check for new files (DIM)
         id: porcelain
