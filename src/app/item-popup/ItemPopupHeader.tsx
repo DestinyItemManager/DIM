@@ -75,7 +75,7 @@ export default function ItemPopupHeader({
     light &&
     item.powerCap &&
     (finalSeason
-      ? t('MovePopup.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
       : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
@@ -130,7 +130,7 @@ export default function ItemPopupHeader({
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
       <div className="item-subtitle">
-        {powerCapString && <div className="">{powerCapString}</div>}
+        {powerCapString && <div className="">{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>}
       </div>
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>

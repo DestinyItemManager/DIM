@@ -302,7 +302,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     'count',
     'year',
     ...(isD1 ? ['level', 'quality', 'percentage'] : []),
-    ...(isD2 ? ['masterwork', 'season', 'powerlimit', 'powerlimitseason'] : []),
+    ...(isD2 ? ['masterwork', 'season', 'powerlimit', 'sunsetsafter', 'powerlimitseason'] : []),
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : []),
   ];
 
@@ -637,11 +637,14 @@ function searchFilters(
             case 'percentage':
               addPredicate('quality', filterValue, invert);
               break;
+            case 'powerlimitseason':
+              addPredicate('sunsetsafter', filterValue, invert);
+              break;
             // pass these filter names and values unaltered
             case 'masterwork':
             case 'season':
             case 'powerlimit':
-            case 'powerlimitseason':
+            case 'sunsetsafter':
             case 'year':
             case 'stack':
             case 'count':
@@ -1112,14 +1115,14 @@ function searchFilters(
         return mathCheck.test(predicate) && compareByOperator(item.powerCap ?? 99999999, predicate);
         // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
       },
-      powerlimitseason(item: D2Item, predicate: string) {
+      sunsetsafter(item: D2Item, predicate: string) {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return (
           itemFinalSeason &&
           mathCheck.test(predicate) &&
           compareByOperator(itemFinalSeason, predicate)
         );
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimitseason:arrivals"
+        // hypothetically we can use this mathcheck to divert if we decided to support something like "sunsetsafter:arrivals"
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
