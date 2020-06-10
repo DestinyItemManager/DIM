@@ -15,6 +15,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { DestinyClass, DamageType } from 'bungie-api-ts/destiny2';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 
 export default function ItemPopupHeader({
   item,
@@ -65,6 +66,16 @@ export default function ItemPopupHeader({
     typeName: item.typeName,
   };
 
+  const lightString = light
+    ? t('MovePopup.Subtitle.Gear', subtitleData)
+    : t('MovePopup.Subtitle.Consumable', subtitleData);
+
+  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
+  const powerCapString =
+    light &&
+    (finalSeason
+      ? t('MovePopup.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
@@ -115,16 +126,12 @@ export default function ItemPopupHeader({
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
-        <div className="item-type-info">
-          {light && maxLight
-            ? t('MovePopup.Subtitle.GearWithMax', subtitleData)
-            : light
-            ? t('MovePopup.Subtitle.Gear', subtitleData)
-            : t('MovePopup.Subtitle.Consumable', subtitleData)}
-        </div>
+        <div className="item-type-info">{lightString}</div>
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
-
+      <div className="item-subtitle">
+        {powerCapString && <div className="">{powerCapString}</div>}
+      </div>
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );
