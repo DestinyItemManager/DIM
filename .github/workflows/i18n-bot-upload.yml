@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Sort dim.json
-        run: jq -S . src/locale/dim.json > src/locale/dim_sorted.json && mv src/locale/dim_sorted.json src/locale/dim.json
+        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
 
       - name: Upload updated dim.json to crowdin
         uses: crowdin/github-action@1.0.4
