@@ -1,4 +1,4 @@
-module.exports = function(api) {
+module.exports = function (api) {
   const isProduction = api.env('production');
   const plugins = [
     'lodash',
@@ -9,8 +9,8 @@ module.exports = function(api) {
     [
       '@babel/plugin-transform-runtime',
       {
-        useESModules: true
-      }
+        useESModules: true,
+      },
     ],
     [
       'transform-imports',
@@ -18,20 +18,20 @@ module.exports = function(api) {
         '@fortawesome/free-brands-svg-icons': {
           transform: (member) => `@fortawesome/free-brands-svg-icons/${member}`,
           preventFullImport: true,
-          skipDefaultConversion: true
+          skipDefaultConversion: true,
         },
         '@fortawesome/free-solid-svg-icons': {
           transform: (member) => `@fortawesome/free-solid-svg-icons/${member}`,
           preventFullImport: true,
-          skipDefaultConversion: true
+          skipDefaultConversion: true,
         },
         '@fortawesome/free-regular-svg-icons': {
           transform: (member) => `@fortawesome/free-regular-svg-icons/${member}`,
           preventFullImport: true,
-          skipDefaultConversion: true
-        }
-      }
-    ]
+          skipDefaultConversion: true,
+        },
+      },
+    ],
   ];
 
   if (isProduction) {
@@ -43,13 +43,13 @@ module.exports = function(api) {
     // In dev, compile TS with babel
     plugins.push(
       'react-hot-loader/babel',
-      '@babel/proposal-class-properties',
+      ['@babel/proposal-class-properties', { loose: true }],
       '@babel/proposal-object-rest-spread',
       [
         'const-enum',
         {
-          transform: 'constObject'
-        }
+          transform: 'constObject',
+        },
       ],
       ['@babel/plugin-transform-typescript', { isTSX: true }]
     );
@@ -65,11 +65,11 @@ module.exports = function(api) {
           loose: true,
           useBuiltIns: 'usage',
           corejs: 3,
-          shippedProposals: true
-        }
+          shippedProposals: true,
+        },
       ],
-      ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3 }]
+      ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3 }],
     ],
-    plugins
+    plugins,
   };
 };

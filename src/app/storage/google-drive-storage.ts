@@ -47,12 +47,12 @@ export class GoogleDriveStorage implements StorageAdapter {
 
   // drive api data
   drive = {
-    client_id: $GOOGLE_DRIVE_CLIENT_ID, // eslint-disable-line @typescript-eslint/camelcase
+    client_id: $GOOGLE_DRIVE_CLIENT_ID, // eslint-disable-line @typescript-eslint/naming-convention
     scope: 'https://www.googleapis.com/auth/drive.appdata',
     discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-    fetch_basic_profile: false, // eslint-disable-line @typescript-eslint/camelcase
-    ux_mode: 'redirect', // eslint-disable-line @typescript-eslint/camelcase
-    redirect_uri: `${window.location.origin}/gdrive-return.html`, // eslint-disable-line @typescript-eslint/camelcase
+    fetch_basic_profile: false, // eslint-disable-line @typescript-eslint/naming-convention
+    ux_mode: 'redirect', // eslint-disable-line @typescript-eslint/naming-convention
+    redirect_uri: `${window.location.origin}/gdrive-return.html`, // eslint-disable-line @typescript-eslint/naming-convention
   };
 
   // The Google Drive ID of the file we use to save data.

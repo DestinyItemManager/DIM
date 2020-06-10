@@ -1,5 +1,7 @@
 ## Next
 
+## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
+
 ## 6.13.2 <span className="changelog-date">(2020-06-03)</span>
 
 ## 6.13.1 <span className="changelog-date">(2020-06-01)</span>

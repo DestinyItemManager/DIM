@@ -20,6 +20,7 @@ import { ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { parseProfileKey } from 'app/dim-api/reducer';
 import { importDataBackup } from 'app/dim-api/import';
 import { showNotification } from 'app/notifications/notifications';
+import { DimData } from './sync.service';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -66,7 +67,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     }
   };
 
-  const onImportData = async (data: object) => {
+  const onImportData = async (data: DimData | ExportResponse) => {
     if (confirm(t('Storage.ImportConfirmDimApi'))) {
       await dispatch(importDataBackup(data));
     }

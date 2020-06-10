@@ -96,7 +96,7 @@ function mapStateToProps() {
 
   return (state: RootState, props: ProvidedProps): StoreProps => {
     const items = itemsSelector(state, props);
-    const isArmor = items[0]?.bucket.inArmor;
+    const isWeapon = items[0]?.bucket.inWeapons;
     return {
       items,
       defs: state.manifest.d2Manifest!,
@@ -106,7 +106,7 @@ function mapStateToProps() {
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       enabledColumns: settingsSelector(state)[
-        isArmor ? 'organizerColumnsArmor' : 'organizerColumnsWeapons'
+        isWeapon ? 'organizerColumnsWeapons' : 'organizerColumnsArmor'
       ],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
@@ -433,7 +433,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadWeaponCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
         </button>
       );
@@ -444,7 +444,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadArmorCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
         </button>
       );
@@ -455,7 +455,7 @@ function ItemTable({
         return false;
       };
       downloadAction = (
-        <button className="dim-button" onClick={downloadGhostCsv}>
+        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
           <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
         </button>
       );
@@ -499,7 +499,7 @@ function ItemTable({
           <UserGuideLink topic="Organizer" className={styles.guideLink} />
           <Dropzone onDrop={importCsv} accept=".csv">
             {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()}>
+              <div {...getRootProps()} className={styles.importButton}>
                 <input {...getInputProps()} />
                 <div className="dim-button">
                   <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}

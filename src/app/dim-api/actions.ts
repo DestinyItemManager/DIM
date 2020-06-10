@@ -58,7 +58,7 @@ const installApiPermissionObserver = _.once(() => {
 /**
  * Watch the redux store and write out values to indexedDB, etc.
  */
-const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, AnyAction>) => {
   // Watch the state and write it out to IndexedDB
   observeStore(
     (state) => state.dimApi,

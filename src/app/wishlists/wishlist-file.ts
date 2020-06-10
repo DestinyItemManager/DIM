@@ -1,7 +1,7 @@
 import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import { emptySet } from 'app/utils/empty';
 
-let _blockNotes: string | undefined;
+let blockNotes: string | undefined;
 
 /* Utilities for reading a wishlist file */
 
@@ -32,7 +32,7 @@ const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 function parseBlockNoteLine(blockNoteLine: string): null {
   const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
 
-  _blockNotes = blockMatchResults?.groups?.blockNotes;
+  blockNotes = blockMatchResults?.groups?.blockNotes;
 
   return null;
 }
@@ -58,7 +58,7 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
   return matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
     ? matchResults.groups.wishListNotes
-    : _blockNotes;
+    : blockNotes;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {

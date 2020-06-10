@@ -854,7 +854,7 @@
     },
     "AuditLog": "Registros de alterações de sincronização do DIM",
     "AuditLogLabel": "Visualizar alterações de dados anteriores",
-    "AutoBackup": "Nós fizemos o backup de seus dados em um arquivo chamado dim-data.json, só por precaução.",
+    "AutoBackup": "Nós fizemos o backup dos seus dados para um arquivo em sua pasta de downloads chamado dim-data.json, só por precaução.",
     "BackUpFirst": "Você DEVE fazer o backup dos seus dados atuais antes de apagar tudo. Só por precaução.",
     "BrowserMayClearData": "O navegador pode apagar esses dados se você ficar sem espaço ou não visitar DIM frequentemente.",
     "DeleteAllData": "Remover TODOS os dados dos Servidores de Sincronização DIM",
@@ -881,10 +881,13 @@
     "ImportFailed": "Importação Falhou! {{error}}",
     "ImportNoFile": "Nenhum arquivo selecionado!",
     "ImportNotification": {
+      "FailedBody": "Não foi possível importar os dados. {{error}}",
+      "FailedTitle": "Falha na importação",
+      "NoData": "Nenhum set ou tag encontrado no backup",
       "SuccessBodyForced": "Dados de configurações, {{tags}} tags e {{loadouts}} sets foram importados de seu backup para a Sincronização DIM, substituindo o que havia por lá.",
+      "SuccessBodyLocal": "Importamos as configurações, {{loadouts}} sets e {{tags}} itens com tags do seu backup para o armazenamento local, substituindo o que já existia. Não podemos garantir que o armazenamento local não seja perdido, então considere ativar a Sincronização DIM.",
       "SuccessTitle": "Sucesso ao Importar"
     },
-    "ImportSuccess": "Dados do DIM importados!",
     "ImportTooManyFiles": "Por favor selecione somente um arquivo para importar.",
     "ImportWrongFileType": "Arquivo não é um arquivo JSON. Pode não ser um backup do DIM.",
     "IndexedDBStorage": "Armazenamento local do Navegador",

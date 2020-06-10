@@ -115,7 +115,7 @@ export function bulkFetch(
 ): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     if (!getState().reviews.loadedFromIDB) {
-      await loadReviewsFromIndexedDB()(dispatch, getState, {});
+      await dispatch(loadReviewsFromIndexedDB());
     }
 
     const existingRatings = ratingsSelector(getState());

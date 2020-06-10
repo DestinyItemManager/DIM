@@ -122,9 +122,7 @@ export default function VendorItems({
             vendor.def.displayCategories[categoryIndex].identifier !== 'category_preview' && (
               <div className={styles.vendorRow} key={categoryIndex}>
                 <h3 className={styles.categoryTitle}>
-                  {(vendor.def.displayCategories[categoryIndex] &&
-                    vendor.def.displayCategories[categoryIndex].displayProperties.name) ||
-                    'Unknown'}
+                  {vendor.def.displayCategories[categoryIndex]?.displayProperties.name || 'Unknown'}
                 </h3>
                 <div className={styles.vendorItems}>
                   {items

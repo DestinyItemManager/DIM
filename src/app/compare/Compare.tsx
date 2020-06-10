@@ -21,7 +21,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 // import intrinsicLookupTable from 'data/d2/intrinsic-perk-lookup.json';
 // we are falling back to using just an exactly matching intrinsic perk for now
 // archetypes are difficult.
@@ -355,13 +355,16 @@ class Compare extends React.Component<Props, State> {
   ) => {
     const exampleItem = comparisonItems[0];
     const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
-    const exampleItemModSlot = getItemSpecialtyModSlotDisplayName(exampleItem);
+    const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
+    const specialtyModSlotName = this.props.defs?.InventoryItem.get(
+      exampleItemModSlot?.emptyModSocketHashes[0] ?? -99999999
+    )?.itemTypeDisplayName;
 
     // helper functions for filtering items
     const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
       item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
-      exampleItemModSlot === getItemSpecialtyModSlotDisplayName(item);
+      exampleItemModSlot?.tag === getSpecialtySocketMetadata(item)?.tag;
     const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class
@@ -385,7 +388,7 @@ class Compare extends React.Component<Props, State> {
 
       // above but also the same seasonal mod slot, if it has one
       {
-        buttonLabel: <>{[exampleItemModSlot].join(' + ')}</>,
+        buttonLabel: <>{[specialtyModSlotName].join(' + ')}</>,
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot)
@@ -401,7 +404,7 @@ class Compare extends React.Component<Props, State> {
       },
       // above but also the same seasonal mod slot, if it has one
       {
-        buttonLabel: <>{[exampleItemElementIcon, exampleItemModSlot]}</>,
+        buttonLabel: <>{[exampleItemElementIcon, specialtyModSlotName]}</>,
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
@@ -465,12 +468,10 @@ class Compare extends React.Component<Props, State> {
       item[key] === exampleItem[key];
     // stuff for looking up weapon archetypes
     const getRpm = (i: DimItem) => {
-      const itemRpmStat =
-        i.stats &&
-        i.stats.find(
-          (s) =>
-            s.statHash === (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : 4284893193)
-        );
+      const itemRpmStat = i.stats?.find(
+        (s) =>
+          s.statHash === (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : 4284893193)
+      );
       return itemRpmStat?.value || -99999999;
     };
 
@@ -494,11 +495,9 @@ class Compare extends React.Component<Props, State> {
     };
       */
     const getIntrinsicPerk = (item: D2Item): DestinyInventoryItemDefinition | undefined => {
-      const intrinsic =
-        item.sockets &&
-        item.sockets.sockets.find((s) =>
-          s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-        );
+      const intrinsic = item.sockets?.sockets.find((s) =>
+        s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
+      );
       return intrinsic?.plug?.plugItem;
     };
     const exampleItemRpm = getRpm(exampleItem);

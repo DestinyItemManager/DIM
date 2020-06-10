@@ -854,7 +854,7 @@
     },
     "AuditLog": "DIM 동기화 변경 기록",
     "AuditLogLabel": "과거 데이터 변경 내역 보기",
-    "AutoBackup": "만일을 대비해서 데이터를 dim-data.json 파일에 백업했습니다.",
+    "AutoBackup": "만일을 대비해서 데이터를 다운로드 폴더의 dim-data.json 파일에 백업했습니다.",
     "BackUpFirst": "만일을 대비해서 모든 데이터를 삭제하기 전에 백업하세요.",
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
     "DeleteAllData": "DIM 동기화 서버의 모든 데이터 삭제",
@@ -881,10 +881,13 @@
     "ImportFailed": "불러오기 실패! {{error}}",
     "ImportNoFile": "선택된 파일이 없습니다!",
     "ImportNotification": {
+      "FailedBody": "데이터를 가져올 수 없습니다. {{error}}",
+      "FailedTitle": "가져오기 실패",
+      "NoData": "백업에서 로드아웃이나 태그를 찾을 수 없음",
       "SuccessBodyForced": "백업에서 DIM 동기화로 설정, {{loadouts}}개의 로드아웃, {{tags}}개의 태그된 아이템을 가져와서 기존 데이터를 대체했습니다.",
+      "SuccessBodyLocal": "설정, {{loadouts}}개의 로드아웃, {{tags}}개의 태그된 아이템을 백업에서 가져왔으며, 로컬 저장소에 있던 데이터를 대체했습니다. 로컬 저장소가 손실되지 않을 것을 보장할 수 없습니다 - DIM 동기화 사용을 고려하십시오.",
       "SuccessTitle": "가져오기 성공"
     },
-    "ImportSuccess": "DIM 데이터 복원 완료!",
     "ImportTooManyFiles": "불러올 파일을 하나만 선택하세요.",
     "ImportWrongFileType": "이 파일은 JSON 파일이 아닙니다. DIM 백업 파일이 아닐 수 있습니다.",
     "IndexedDBStorage": "로컬 브라우저 저장소",

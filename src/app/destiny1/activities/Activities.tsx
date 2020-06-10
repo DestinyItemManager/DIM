@@ -129,14 +129,13 @@ class Activities extends React.Component<Props> {
                   </div>
                 ))}
 
-                {activity.skulls &&
-                  activity.skulls.map((skull) => (
-                    <div key={skull.displayName} className="activity-skulls">
-                      <BungieImage src={skull.icon} className="small-icon" />
-                      {skull.displayName}
-                      <span className="weak"> - {skull.description}</span>
-                    </div>
-                  ))}
+                {activity.skulls?.map((skull) => (
+                  <div key={skull.displayName} className="activity-skulls">
+                    <BungieImage src={skull.icon} className="small-icon" />
+                    {skull.displayName}
+                    <span className="weak"> - {skull.description}</span>
+                  </div>
+                ))}
               </div>
             </CollapsibleTitle>
           </div>

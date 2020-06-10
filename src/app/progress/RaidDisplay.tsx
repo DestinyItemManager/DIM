@@ -61,13 +61,12 @@ export function RaidActivity({
     <div className="raid-tier">
       <span className="milestone-name">{activityName}</span>
       <div className="quest-modifiers">
-        {activity.modifierHashes &&
-          activity.modifierHashes.map(
-            (modifierHash) =>
-              modifierHash !== armsmasterModifierHash && (
-                <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
-              )
-          )}
+        {activity.modifierHashes?.map(
+          (modifierHash) =>
+            modifierHash !== armsmasterModifierHash && (
+              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+            )
+        )}
         <LoadoutRequirementModifier defs={defs} activity={activity} />
       </div>
       <div className="quest-objectives">

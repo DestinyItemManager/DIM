@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
@@ -34,6 +34,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import ModPicker from './ModPicker';
+import { LoadoutBuilderAction } from './LoadoutBuilder';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -41,9 +42,7 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedSeasonalMods: LockedModBase[];
   lockedArmor2Mods: LockedArmor2ModMap;
-  onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
-  onSeasonalModsChanged(mod: LockedModBase[]): void;
-  onArmor2ModsChanged(mods: LockedArmor2ModMap): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
 interface StoreProps {
@@ -79,9 +78,7 @@ function LockArmorAndPerks({
   buckets,
   stores,
   isPhonePortrait,
-  onLockedMapChanged,
-  onSeasonalModsChanged,
-  onArmor2ModsChanged,
+  lbDispatch,
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
   const [filterModsOpen, setFilterModsOpen] = useState(false);
@@ -103,8 +100,7 @@ function LockArmorAndPerks({
         ];
       }
     });
-
-    onLockedMapChanged({ ...lockedMap, ...newLockedMap });
+    lbDispatch({ type: 'lockedMapChanged', lockedMap: { ...lockedMap, ...newLockedMap } });
   };
 
   /**
@@ -112,7 +108,7 @@ function LockArmorAndPerks({
    * Recomputes matched sets
    */
   const resetLocked = () => {
-    onLockedMapChanged({});
+    lbDispatch({ type: 'lockedMapChanged', lockedMap: {} });
   };
 
   const chooseItem = (
@@ -140,26 +136,35 @@ function LockArmorAndPerks({
 
   const addLockedItemType = (item: LockedItemType) => {
     if (item.bucket) {
-      onLockedMapChanged({
-        ...lockedMap,
-        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
+      lbDispatch({
+        type: 'lockedMapChanged',
+        lockedMap: {
+          ...lockedMap,
+          [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash]),
+        },
       });
     }
   };
 
   const removeLockedItemType = (item: LockedItemType) => {
     if (item.bucket) {
-      onLockedMapChanged({
-        ...lockedMap,
-        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
+      lbDispatch({
+        type: 'lockedMapChanged',
+        lockedMap: {
+          ...lockedMap,
+          [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash]),
+        },
       });
     }
   };
 
   const onArmor2ModClicked = (item: LockedArmor2Mod) => {
-    onArmor2ModsChanged({
-      ...lockedArmor2Mods,
-      [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
+    lbDispatch({
+      type: 'lockedArmor2ModsChanged',
+      lockedArmor2Mods: {
+        ...lockedArmor2Mods,
+        [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
+      },
     });
   };
 
@@ -236,9 +241,12 @@ function LockArmorAndPerks({
                 item={item}
                 defs={defs}
                 onModClicked={() =>
-                  onSeasonalModsChanged(
-                    lockedSeasonalMods.filter((locked) => locked.mod.hash !== item.mod.hash)
-                  )
+                  lbDispatch({
+                    type: 'lockedSeasonalModsChanged',
+                    lockedSeasonalMods: lockedSeasonalMods.filter(
+                      (locked) => locked.mod.hash !== item.mod.hash
+                    ),
+                  })
                 }
               />
             ))}
@@ -256,8 +264,7 @@ function LockArmorAndPerks({
                 lockedMap={lockedMap}
                 lockedSeasonalMods={lockedSeasonalMods}
                 onClose={() => setFilterPerksOpen(false)}
-                onPerksSelected={onLockedMapChanged}
-                onSeasonalModsChanged={onSeasonalModsChanged}
+                lbDispatch={lbDispatch}
               />,
               document.body
             )}
@@ -287,7 +294,7 @@ function LockArmorAndPerks({
                   classType={selectedStore.classType}
                   lockedArmor2Mods={lockedArmor2Mods}
                   onClose={() => setFilterModsOpen(false)}
-                  onArmor2ModsChanged={onArmor2ModsChanged}
+                  lbDispatch={lbDispatch}
                 />,
                 document.body
               )}
