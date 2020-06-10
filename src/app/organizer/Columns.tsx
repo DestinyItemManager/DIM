@@ -13,6 +13,7 @@ import {
   getItemDamageShortName,
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
+  getItemPowerCapFinalSeason,
 } from 'app/utils/item-utils';
 
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -224,6 +225,23 @@ export function getColumns(
       value: (item) => item.primStat?.value,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`,
+    },
+    !isGhost && {
+      id: 'maxpower',
+      header: t('Stats.PowerCap'),
+      value: (item) => item.powerCap,
+      cell: (value, item) =>
+        value && (
+          <>
+            {t('Stats.PowerCapWithSeason', {
+              powerCap: value,
+              finalSeason: getItemPowerCapFinalSeason(item),
+            })}
+          </>
+        ),
+      defaultSort: SortDirection.DESC,
+      filter: (value) => `sunsetsafter:>=${value}`,
+      gridWidth: 'minmax(max-content,max-content)',
     },
     !isGhost &&
       (destinyVersion === 2 || isWeapon) && {

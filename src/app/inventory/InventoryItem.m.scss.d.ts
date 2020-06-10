@@ -5,6 +5,7 @@ interface CssExports {
   'complete': string;
   'exotic': string;
   'icon': string;
+  'iconOverlay': string;
   'icons': string;
   'masterwork': string;
   'masterworkOverlay': string;

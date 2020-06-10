@@ -15,6 +15,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { DestinyClass, DamageType } from 'bungie-api-ts/destiny2';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 
 export default function ItemPopupHeader({
   item,
@@ -46,6 +47,7 @@ export default function ItemPopupHeader({
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
+  const maxLight = item.powerCap;
 
   const classType =
     item.classType !== DestinyClass.Unknown &&
@@ -58,11 +60,23 @@ export default function ItemPopupHeader({
 
   const subtitleData = {
     light,
+    maxLight,
     statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
     typeName: item.typeName,
   };
 
+  const lightString = light
+    ? t('MovePopup.Subtitle.Gear', subtitleData)
+    : t('MovePopup.Subtitle.Consumable', subtitleData);
+
+  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
+  const powerCapString =
+    light &&
+    item.powerCap &&
+    (finalSeason
+      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
@@ -92,35 +106,32 @@ export default function ItemPopupHeader({
           </a>
         )}
         {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
-          <div onClick={onToggleExpanded}>
-            <AppIcon className="info" icon={expanded ? faChevronCircleUp : openDropdownIcon} />
+          <div className="info" onClick={onToggleExpanded}>
+            <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
           </div>
         )}
       </div>
 
       <div className="item-subtitle">
-        {hasLeftIcon && (
-          <div className="icon">
-            {item.element &&
-              !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-                <ElementIcon
-                  element={item.element}
-                  className={clsx('element', getItemDamageShortName(item))}
-                />
-              )}
-          </div>
-        )}
+        {hasLeftIcon &&
+          item.element &&
+          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+            <div className="icon">
+              <ElementIcon
+                element={item.element}
+                className={clsx('element', getItemDamageShortName(item))}
+              />
+            </div>
+          )}
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
-        <div className="item-type-info">
-          {light
-            ? t('MovePopup.Subtitle.Gear', subtitleData)
-            : t('MovePopup.Subtitle.Consumable', subtitleData)}
-        </div>
+        <div className="item-type-info">{lightString}</div>
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
-
+      <div className="item-subtitle">
+        {powerCapString && <div className="">{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>}
+      </div>
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );

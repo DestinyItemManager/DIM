@@ -107,6 +107,11 @@ export default function InventoryItem({
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}
+      {item.iconOverlay && (
+        <div className={clsx(styles.iconOverlay)}>
+          <BungieImage src={item.iconOverlay} />
+        </div>
+      )}
       {(tag || item.locked || notes) && (
         <div className={styles.icons}>
           {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
