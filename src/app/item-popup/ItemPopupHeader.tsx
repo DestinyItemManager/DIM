@@ -46,6 +46,7 @@ export default function ItemPopupHeader({
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
+  const maxLight = item.powerCap;
 
   const classType =
     item.classType !== DestinyClass.Unknown &&
@@ -58,6 +59,7 @@ export default function ItemPopupHeader({
 
   const subtitleData = {
     light,
+    maxLight,
     statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
     typeName: item.typeName,
@@ -114,7 +116,9 @@ export default function ItemPopupHeader({
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
         <div className="item-type-info">
-          {light
+          {light && maxLight
+            ? t('MovePopup.Subtitle.GearWithMax', subtitleData)
+            : light
             ? t('MovePopup.Subtitle.Gear', subtitleData)
             : t('MovePopup.Subtitle.Consumable', subtitleData)}
         </div>

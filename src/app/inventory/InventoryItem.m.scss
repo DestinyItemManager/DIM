@@ -98,6 +98,32 @@
   background-image: url('../../images/exotic-masterwork.png');
 }
 
+.iconOverlay {
+  overflow: hidden;
+  top: $item-border-width;
+  left: $item-border-width;
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
+  position: absolute;
+  & > img {
+    top: 0;
+    left: 0;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+    position: absolute;
+  }
+}
+.iconOverlay::before {
+  content: '';
+  position: absolute;
+  height: 37px;
+  width: 37px;
+  transform: rotate(45deg);
+  left: -18.5px;
+  top: -18.5px;
+  background: #444;
+}
+
 // The container for the tag/notes/wishlist icons
 .icons {
   position: absolute;

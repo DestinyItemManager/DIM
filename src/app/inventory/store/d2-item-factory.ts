@@ -295,6 +295,19 @@ export function makeItem(
       defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
 
+  const powerCapHash =
+    item.versionNumber !== undefined &&
+    itemDef.quality.versions?.[item.versionNumber]?.powerCapHash;
+  // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
+  const powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
+  // here is where we need to manually adjust unreasonable power values like 999990
+
+  // null out falsey values like a blank string for a url
+  const iconOverlay =
+    (item.versionNumber !== undefined &&
+      itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+    null;
+
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
 
@@ -337,6 +350,7 @@ export function makeItem(
       overrideStyleItem?.displayProperties.icon ||
       displayProperties.icon ||
       '/img/misc/missing_icon_d2.png',
+    iconOverlay,
     secondaryIcon:
       overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
@@ -358,6 +372,7 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
     energy: instanceDef?.energy ?? null,
+    powerCap,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),

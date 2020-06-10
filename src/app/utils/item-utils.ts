@@ -6,6 +6,7 @@ import {
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 
 import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { objectifyArray } from './util';
 
 // damage is a mess!
@@ -96,3 +97,7 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   Object.values(Armor2ModPlugCategories).some(
     (category) => category === item.plug.plugCategoryHash
   ) || specialtyModSocketHashes.includes(item.plug.plugCategoryHash);
+
+const seasonsByPowerCap = objectifyArray(Object.values(D2SeasonInfo), 'maxPower');
+export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
+  seasonsByPowerCap[item.powerCap ?? -99999999]?.season;

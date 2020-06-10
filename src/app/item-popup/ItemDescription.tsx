@@ -13,6 +13,7 @@ import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { setItemNote } from 'app/inventory/actions';
 import { itemInfosSelector } from 'app/inventory/selectors';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   item: DimItem;
@@ -42,11 +43,17 @@ function ItemDescription({ item, notes, inventoryWishListRoll, dispatch }: Props
   const [notesOpen, setNotesOpen] = useState(false);
 
   const saveNotes = (note: string) => dispatch(setItemNote({ itemId: item.id, note }));
-
+  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
   // TODO: close notes button
-
   return (
     <>
+      {item.powerCap && (
+        <div className="">
+          {finalSeason
+            ? t('MovePopup.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+            : t('MovePopup.PowerCap', { powerCap: item.powerCap })}
+        </div>
+      )}
       {showDescription && <div className={styles.officialDescription}>{item.description}</div>}
       {item.isDestiny2() && Boolean(item.displaySource?.length) && (
         <div className={styles.officialDescription}>{item.displaySource}</div>

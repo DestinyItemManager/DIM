@@ -10,7 +10,7 @@ import {
   DestinyStatCategory,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat, DimSockets, DimItem } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -70,6 +70,7 @@ export const statWhiteList = [
   925767036, // Ammo Capacity
   ...armorStats,
   -1000, // Total
+  -573, // Power Limit
 ];
 
 /** Stats that should be forced to display without a bar (just a number). */
@@ -155,6 +156,9 @@ export function buildStats(
   ) {
     investmentStats = buildStatsFromMods(createdItem.sockets, defs, statGroup, statDisplays);
   }
+  // Add the power limit stat for armor
+  const powerCap = powerCapStat(createdItem);
+  powerCap && investmentStats.push(powerCap);
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
 }
@@ -493,6 +497,25 @@ function totalStat(stats: DimStat[]): DimStat {
     smallerIsBetter: false,
     additive: false,
   };
+}
+
+function powerCapStat(item: DimItem): DimStat | false {
+  return (
+    item.powerCap !== null && {
+      investmentValue: item.powerCap,
+      statHash: -573,
+      displayProperties: ({
+        name: t('Stats.PowerCap'),
+      } as any) as DestinyDisplayPropertiesDefinition,
+      sort: statWhiteList.indexOf(-573),
+      value: item.powerCap,
+      base: item.powerCap,
+      maximumValue: item.powerCap,
+      bar: false,
+      smallerIsBetter: false,
+      additive: false,
+    }
+  );
 }
 
 /**

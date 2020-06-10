@@ -684,6 +684,8 @@
     "OverviewTab": "Overview",
     "Owned": "This item is in your inventory.",
     "OwnedMod": "This mod is in your modifications inventory.",
+    "PowerCap": "Power Limit: {{powerCap}}",
+    "PowerCapWithSeason": "Power Limit: {{powerCap}} (Season {{finalSeason}})",
     "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
@@ -692,6 +694,7 @@
     "Store": "Store",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
+      "GearWithMax": "{{light}} ({{maxLight}} max) {{statName}} {{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "Take",
@@ -845,6 +848,7 @@
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
+    "PowerCap": "Power Limit",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
