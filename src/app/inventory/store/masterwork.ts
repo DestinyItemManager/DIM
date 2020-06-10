@@ -90,8 +90,7 @@ function buildForsakenMasterworkStats(
 ): DimMasterwork | null {
   const masterworkSocket = createdItem.sockets!.sockets.find((socket) =>
     Boolean(
-      socket.plug &&
-        socket.plug.plugItem.plug &&
+      socket.plug?.plugItem.plug &&
         (socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
           socket.plug.plugItem.plug.plugCategoryIdentifier.endsWith('_masterwork'))
     )

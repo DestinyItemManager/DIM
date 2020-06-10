@@ -139,10 +139,7 @@ export function countCollectibles(
   if (presentationNodeDef.redacted) {
     return { [node]: { acquired: 0, visible: 0 } };
   }
-  if (
-    presentationNodeDef.children.collectibles &&
-    presentationNodeDef.children.collectibles.length
-  ) {
+  if (presentationNodeDef.children.collectibles?.length) {
     const collectibleDefs = presentationNodeDef.children.collectibles.map((c) =>
       defs.Collectible.get(c.collectibleHash)
     );

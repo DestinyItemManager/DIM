@@ -468,12 +468,10 @@ class Compare extends React.Component<Props, State> {
       item[key] === exampleItem[key];
     // stuff for looking up weapon archetypes
     const getRpm = (i: DimItem) => {
-      const itemRpmStat =
-        i.stats &&
-        i.stats.find(
-          (s) =>
-            s.statHash === (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : 4284893193)
-        );
+      const itemRpmStat = i.stats?.find(
+        (s) =>
+          s.statHash === (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : 4284893193)
+      );
       return itemRpmStat?.value || -99999999;
     };
 
@@ -497,11 +495,9 @@ class Compare extends React.Component<Props, State> {
     };
       */
     const getIntrinsicPerk = (item: D2Item): DestinyInventoryItemDefinition | undefined => {
-      const intrinsic =
-        item.sockets &&
-        item.sockets.sockets.find((s) =>
-          s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-        );
+      const intrinsic = item.sockets?.sockets.find((s) =>
+        s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
+      );
       return intrinsic?.plug?.plugItem;
     };
     const exampleItemRpm = getRpm(exampleItem);
