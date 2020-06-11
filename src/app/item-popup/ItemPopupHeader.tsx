@@ -47,7 +47,7 @@ export default function ItemPopupHeader({
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
-  const maxLight = item.powerCap;
+  const maxLight = item.isDestiny2() && item.powerCap;
 
   const classType =
     item.classType !== DestinyClass.Unknown &&
@@ -70,13 +70,13 @@ export default function ItemPopupHeader({
     ? t('MovePopup.Subtitle.Gear', subtitleData)
     : t('MovePopup.Subtitle.Consumable', subtitleData);
 
-  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
+  const finalSeason = item.isDestiny2() && item.powerCap && getItemPowerCapFinalSeason(item);
   const powerCapString =
     light &&
-    item.powerCap &&
+    maxLight &&
     (finalSeason
-      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
-      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
+      ? t('Stats.PowerCapWithSeason', { powerCap: maxLight, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: maxLight }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
@@ -129,9 +129,11 @@ export default function ItemPopupHeader({
         <div className="item-type-info">{lightString}</div>
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
-      <div className="item-subtitle">
-        {powerCapString && <div className="">{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>}
-      </div>
+      {powerCapString && (
+        <div className="item-subtitle">
+          <div className="">{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
+        </div>
+      )}
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );
