@@ -94,7 +94,7 @@
 
   background-image: url('../../images/masterwork.png');
 }
-.exotic {
+.exoticMasterwork {
   background-image: url('../../images/exotic-masterwork.png');
 }
 
@@ -112,16 +112,31 @@
     width: calc(var(--item-size) - #{2 * $item-border-width});
     position: absolute;
   }
-}
-.iconOverlay::before {
-  content: '';
-  position: absolute;
-  height: 37px;
-  width: 37px;
-  transform: rotate(45deg);
-  left: -18.5px;
-  top: -18.5px;
-  background: #444;
+  &::before {
+    content: '';
+    position: absolute;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+    transform: rotate(44.3deg);
+    left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
+    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
+    background: #444;
+  }
+  &.legendary::before {
+    background: #522f65;
+  }
+  &.exotic::before {
+    background: #ceae33;
+  }
+  &.basic::before {
+    background: #c3bcb4;
+  }
+  &.rare::before {
+    background: #5076a3;
+  }
+  &.common::before {
+    background: #366f42;
+  }
 }
 
 // The container for the tag/notes/wishlist icons
