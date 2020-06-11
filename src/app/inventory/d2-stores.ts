@@ -318,7 +318,7 @@ function makeD2StoresService(): D2StoreServiceType {
         }
       }
     }
-    console.log({ buckets, items });
+
     const processedItems = processItems(
       defs,
       buckets,
