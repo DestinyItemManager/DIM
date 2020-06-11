@@ -309,6 +309,7 @@ function ItemTable({
             if (e.shiftKey) {
               if ((e.target as Element).hasAttribute('data-perk-name')) {
                 const filter = column.filter!(
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                   (e.target as Element).getAttribute('data-perk-name')!,
                   row.item
                 );
