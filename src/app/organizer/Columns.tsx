@@ -226,23 +226,24 @@ export function getColumns(
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`,
     },
-    !isGhost && {
-      id: 'maxpower',
-      header: t('Stats.PowerCap'),
-      value: (item) => item.powerCap,
-      cell: (value, item) =>
-        value && (
-          <>
-            {t('Stats.PowerCapWithSeason', {
-              powerCap: value,
-              finalSeason: getItemPowerCapFinalSeason(item),
-            })}
-          </>
-        ),
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `sunsetsafter:>=${value}`,
-      gridWidth: 'minmax(max-content,max-content)',
-    },
+    !isGhost &&
+      destinyVersion === 2 && {
+        id: 'maxpower',
+        header: t('Stats.PowerCap'),
+        value: (item) => item.isDestiny2() && item.powerCap,
+        cell: (value, item) =>
+          value && (
+            <>
+              {t('Stats.PowerCapWithSeason', {
+                powerCap: value,
+                finalSeason: getItemPowerCapFinalSeason(item),
+              })}
+            </>
+          ),
+        defaultSort: SortDirection.DESC,
+        filter: (value) => `sunsetsafter:>=${value}`,
+        gridWidth: 'minmax(max-content,max-content)',
+      },
     !isGhost &&
       (destinyVersion === 2 || isWeapon) && {
         id: 'dmg',

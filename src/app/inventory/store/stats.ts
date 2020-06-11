@@ -10,7 +10,7 @@ import {
   DestinyStatCategory,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, DimStat, DimSockets, DimItem } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';

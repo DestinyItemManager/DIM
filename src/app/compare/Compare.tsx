@@ -605,8 +605,23 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
       )
     );
   }
+  if (
+    firstComparison.isDestiny2() &&
+    (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
+  ) {
+    stats.push(
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
+        item.isDestiny2()
+          ? {
+              statHash: 573,
+              value: item.powerCap ?? undefined,
+            }
+          : undefined
+      )
+    );
+  }
 
-  if (firstComparison.bucket.inArmor) {
+  if (firstComparison.isDestiny2() && firstComparison.bucket.inArmor) {
     stats.push(
       makeFakeStat(
         'EnergyCapacity',
@@ -621,38 +636,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
       )
     );
   }
-  if (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons) {
-    stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
-        item.isDestiny2()
-          ? {
-              statHash: 573,
-              value: item.powerCap ?? undefined,
-            }
-          : undefined
-      )
-    );
-    stats.push({
-      id: 'PowerCap',
-      displayProperties: {
-        name: t('Stats.PowerCap'),
-      } as DestinyDisplayPropertiesDefinition,
-      min: Number.MAX_SAFE_INTEGER,
-      max: 0,
-      enabled: false,
-      lowerBetter: false,
-      getStat(item: DimItem) {
-        return (
-          (item.isDestiny2() &&
-            item.energy && {
-              statHash: item.energy.energyType,
-              value: item.energy.energyCapacity,
-            }) ||
-          undefined
-        );
-      },
-    });
-  }
+
   // Todo: map of stat id => stat object
   // add 'em up
   const statsByHash: { [statHash: string]: StatInfo } = {};

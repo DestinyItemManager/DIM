@@ -100,4 +100,4 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
-  powerCapToSeason[item.powerCap ?? -99999999];
+  item.isDestiny2() ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
