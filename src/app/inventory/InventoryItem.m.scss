@@ -117,9 +117,9 @@
     position: absolute;
     height: calc(var(--item-size) - #{2 * $item-border-width});
     width: calc(var(--item-size) - #{2 * $item-border-width});
-    transform: rotate(44.5deg);
+    transform: rotate(44.3deg);
     left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
-    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.66);
+    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
     background: #444;
   }
   &.legendary::before {
