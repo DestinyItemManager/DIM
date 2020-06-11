@@ -1,46 +1,37 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+export default React.memo(function ScrollClassDiv({
+  scrollClass,
+  children,
+  ...divProps
+}: React.HTMLAttributes<HTMLDivElement> & {
   scrollClass: string;
-}
+}) {
+  const rafTimer = useRef<number>(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-export default class ScrollClassDiv extends React.PureComponent<Props> {
-  private rafTimer: number;
-  private ref = React.createRef<HTMLDivElement>();
-  private scrollParent: HTMLElement | Document;
+  useEffect(() => {
+    const stickyHeader = () => {
+      const scrolled = Boolean(
+        document.body.scrollTop > 0 || document.documentElement?.scrollTop > 0
+      );
+      if (ref.current) {
+        ref.current.classList.toggle(scrollClass, scrolled);
+      }
+    };
 
-  componentDidMount() {
-    this.scrollParent = document;
-    this.scrollParent.addEventListener('scroll', this.scrollHandler, false);
-  }
+    const scrollHandler = () => {
+      cancelAnimationFrame(rafTimer.current);
+      rafTimer.current = requestAnimationFrame(stickyHeader);
+    };
 
-  componentWillUnmount() {
-    this.scrollParent.removeEventListener('scroll', this.scrollHandler);
-  }
+    document.addEventListener('scroll', scrollHandler, false);
+    return () => document.removeEventListener('scroll', scrollHandler);
+  }, [scrollClass]);
 
-  render() {
-    const { scrollClass, ...props } = this.props;
-
-    return (
-      <div ref={this.ref} {...props}>
-        {this.props.children}
-      </div>
-    );
-  }
-
-  scrollHandler = () => {
-    cancelAnimationFrame(this.rafTimer);
-    this.rafTimer = requestAnimationFrame(this.stickyHeader);
-  };
-
-  stickyHeader = () => {
-    const scrolled = Boolean(
-      this.scrollParent instanceof Document
-        ? document.body.scrollTop > 0 || document.documentElement?.scrollTop > 0
-        : this.scrollParent.scrollTop > 0
-    );
-    if (this.ref.current) {
-      this.ref.current.classList.toggle(this.props.scrollClass, scrolled);
-    }
-  };
-}
+  return (
+    <div ref={ref} {...divProps}>
+      {children}
+    </div>
+  );
+});
