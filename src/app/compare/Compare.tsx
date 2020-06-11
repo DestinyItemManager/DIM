@@ -65,8 +65,9 @@ export interface StatInfo {
   max: number;
   enabled: boolean;
   lowerBetter: boolean;
-  getStat(item: DimItem): DimStat | { value?: number; statHash: number } | undefined;
+  getStat: StatGetter;
 }
+type StatGetter = (item: DimItem) => DimStat | { value?: number; statHash: number } | undefined;
 
 class Compare extends React.Component<Props, State> {
   state: State = {
@@ -584,41 +585,57 @@ class Compare extends React.Component<Props, State> {
 function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings']) {
   const firstComparison = comparisonItems[0];
   const stats: StatInfo[] = [];
+
   if ($featureFlags.reviewsEnabled) {
-    stats.push({
-      id: 'Rating',
-      displayProperties: {
-        name: t('Compare.Rating'),
-      } as DestinyDisplayPropertiesDefinition,
-      min: Number.MAX_SAFE_INTEGER,
-      max: 0,
-      enabled: false,
-      lowerBetter: false,
-      getStat(item: DimItem) {
+    stats.push(
+      makeFakeStat('Rating', t('Compare.Rating'), (item: DimItem) => {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
         return { statHash: 0, value: showRating || undefined };
-      },
-    });
+      })
+    );
   }
+
   if (firstComparison.primStat) {
-    stats.push({
-      id: firstComparison.primStat.statHash,
-      displayProperties: firstComparison.primStat.stat.displayProperties,
-      min: Number.MAX_SAFE_INTEGER,
-      max: 0,
-      enabled: false,
-      lowerBetter: false,
-      getStat(item: DimItem) {
-        return item.primStat || undefined;
-      },
-    });
+    stats.push(
+      makeFakeStat(
+        firstComparison.primStat.statHash,
+        firstComparison.primStat.stat.displayProperties,
+        (item: DimItem) => item.primStat || undefined
+      )
+    );
   }
+
   if (firstComparison.bucket.inArmor) {
+    stats.push(
+      makeFakeStat(
+        'EnergyCapacity',
+        t('EnergyMeter.Energy'),
+        (item: DimItem) =>
+          (item.isDestiny2() &&
+            item.energy && {
+              statHash: item.energy.energyType,
+              value: item.energy.energyCapacity,
+            }) ||
+          undefined
+      )
+    );
+  }
+  if (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons) {
+    stats.push(
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
+        item.isDestiny2()
+          ? {
+              statHash: 573,
+              value: item.powerCap ?? undefined,
+            }
+          : undefined
+      )
+    );
     stats.push({
-      id: 'EnergyCapacity',
+      id: 'PowerCap',
       displayProperties: {
-        name: t('EnergyMeter.Energy'),
+        name: t('Stats.PowerCap'),
       } as DestinyDisplayPropertiesDefinition,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
@@ -662,7 +679,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
     }
   }
 
-  stats.forEach((stat) => {
+  for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
       if (itemStat) {
@@ -672,13 +689,32 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
         stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
     }
-  });
+  }
 
   return stats;
 }
 
 function isDimStat(stat: DimStat | any): stat is DimStat {
   return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
+}
+
+function makeFakeStat(
+  id: string | number,
+  displayProperties: DestinyDisplayPropertiesDefinition | string,
+  getStat: StatGetter,
+  lowerBetter = false
+) {
+  if (typeof displayProperties === 'string')
+    displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
+  return {
+    id,
+    displayProperties,
+    min: Number.MAX_SAFE_INTEGER,
+    max: 0,
+    enabled: false,
+    lowerBetter,
+    getStat,
+  };
 }
 
 export default withRouter(connect<StoreProps>(mapStateToProps)(Compare));

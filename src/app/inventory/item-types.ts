@@ -64,8 +64,6 @@ export interface DimItem {
   secondaryIcon: string;
   /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
   element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
-  powerCap: number | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Whether we can pull this item from the postmaster */
@@ -216,6 +214,8 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   /** for y3 armor, this is the type and capacity information */
   energy: DestinyItemInstanceEnergy | null;
+  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
+  powerCap: number | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
