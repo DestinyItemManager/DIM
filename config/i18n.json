@@ -74,6 +74,8 @@
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
     "NotLoggedIn": "Please authorize DIM in order to use this app.",
     "SlowResponse": "Bungie.net was too slow to respond.",
+    "Slow": "Bungie.net is slow right now",
+    "SlowDetails": "Bungie.net is taking a long time to return your information. This can happen when a lot of players are in the game at once, or if Bungie.net is having issues. You also might be having an internet connection issue. We'll keep waiting for a response.",
     "Throttled": "Bungie.net is limiting how many requests DIM can make.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",

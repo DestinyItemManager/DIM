@@ -11,10 +11,9 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { t } from 'app/i18next-t';
 import store from 'app/store/store';
 import { loggedOut } from 'app/accounts/actions';
+import _ from 'lodash';
 
 let cache: Promise<Tokens> | null = null;
-
-const TIMEOUT = 15000;
 
 /**
  * A wrapper around "fetch" that implements Bungie's OAuth scheme. This either
@@ -26,8 +25,6 @@ export async function fetchWithBungieOAuth(
   options?: RequestInit,
   triedRefresh = false
 ): Promise<Response> {
-  const controller = typeof AbortController === 'function' ? new AbortController() : null;
-  const signal = controller?.signal;
   if (typeof request === 'string') {
     request = new Request(request);
   }
@@ -45,34 +42,23 @@ export async function fetchWithBungieOAuth(
     throw e;
   }
 
-  let timer;
-  if (controller) {
-    timer = setTimeout(() => controller.abort(), TIMEOUT);
-  }
-
   // clone is us trying to work around "Body has already been consumed." in retry.
-  try {
-    const response = await fetch(request.clone(), { ...options, signal });
-    if (await responseIndicatesBadToken(response)) {
-      if (triedRefresh) {
-        // Give up
-        removeToken();
-        goToLoginPage();
-        throw new Error("Access token expired, and we've already tried to refresh. Failing.");
-      }
-      // OK, Bungie has told us our access token is expired or
-      // invalid. Refresh it and try again.
-      console.log(`Access token expired, removing access token and trying again`);
-      removeAccessToken();
-      return fetchWithBungieOAuth(request, options, true);
+  const response = await fetch(request.clone(), options);
+  if (await responseIndicatesBadToken(response)) {
+    if (triedRefresh) {
+      // Give up
+      removeToken();
+      goToLoginPage();
+      throw new Error("Access token expired, and we've already tried to refresh. Failing.");
     }
-
-    return response;
-  } finally {
-    if (controller) {
-      clearTimeout(timer);
-    }
+    // OK, Bungie has told us our access token is expired or
+    // invalid. Refresh it and try again.
+    console.log(`Access token expired, removing access token and trying again`);
+    removeAccessToken();
+    return fetchWithBungieOAuth(request, options, true);
   }
+
+  return response;
 }
 
 async function responseIndicatesBadToken(response: Response) {
