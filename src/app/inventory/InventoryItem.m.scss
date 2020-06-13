@@ -35,7 +35,6 @@
   height: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
-  pointer-events: none;
 
   &:focus {
     outline: none;
@@ -150,7 +149,6 @@
 
 // Individual icons in the icon tray
 .icon {
-  pointer-events: none;
   display: block;
   position: static;
   width: calc(var(--item-size) / 5);

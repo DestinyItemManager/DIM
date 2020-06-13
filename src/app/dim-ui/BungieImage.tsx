@@ -1,5 +1,6 @@
 import React from 'react';
-
+import clsx from 'clsx';
+clsx;
 /**
  * A relative path to a Bungie.net image asset.
  */
@@ -14,8 +15,14 @@ export type BungieImageProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, '
  */
 export default React.memo(function BungieImage(props: BungieImageProps) {
   const { src, ...otherProps } = props;
-
-  return <img src={bungieNetPath(src)} loading="lazy" {...otherProps} />;
+  return (
+    <img
+      src={bungieNetPath(src)}
+      loading="lazy"
+      {...otherProps}
+      className={clsx(otherProps.className, 'no-pointer-events')}
+    />
+  );
 });
 
 /**
