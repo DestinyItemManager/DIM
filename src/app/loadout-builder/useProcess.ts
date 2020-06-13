@@ -1,14 +1,16 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
-import { ItemsByBucket, LockedMap, LockedArmor2ModMap } from './types';
+import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from './types';
 import { DimItem } from 'app/inventory/item-types';
 import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './processWorker/types';
 
 type ProcessResult = null | {
-  sets: ProcessArmorSet[];
+  sets: ArmorSet[];
   combos: number;
   combosWithoutCaps: number;
 };
+
+type ItemsById = { [id: string]: DimItem };
 
 /**
  * Hook to process all the stat groups for LO in a web worker.
@@ -20,25 +22,39 @@ export function useProcess(
   selectedStoreId: string,
   assumeMasterwork: boolean
 ) {
-  const [result, setResult] = useState({
-    processing: false,
-    result: null as ProcessResult,
-  });
+  const [result, setResult] = useState(null as ProcessResult);
 
   const worker = useWorker();
 
   useEffect(() => {
-    setResult({ processing: true, result: null });
+    const totalStart = performance.now();
+
+    setResult(null);
 
     const processItems: ProcessItemsByBucket = {};
+    const itemsById: ItemsById = {};
 
     for (const [key, items] of Object.entries(filteredItems)) {
-      processItems[key] = items.map(mapDimItemToProcessItem);
+      processItems[key] = [];
+      for (const item of items) {
+        processItems[key].push(mapDimItemToProcessItem(item));
+        itemsById[item.id] = item;
+      }
     }
 
     worker
       .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
-      .then((result) => setResult({ processing: false, result }));
+      .then(({ sets, combos, combosWithoutCaps }) => {
+        const start = performance.now();
+        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        console.log(`Item hydration took ${performance.now() - start}ms`);
+        setResult({
+          sets: hydratedSets,
+          combos,
+          combosWithoutCaps,
+        });
+        console.log(`Whole process took ${performance.now() - totalStart}`);
+      });
   }, [
     worker,
     setResult,
@@ -127,15 +143,26 @@ function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
   };
 }
 
-// owner: string;
-//   destinyVersion: DestinyVersion;
-//   bucketHash: number;
-//   hash: number;
-//   type: string;
-//   name: string;
-//   equipped: boolean;
-//   equippingLabel?: string;
-//   sockets: DimSockets | null;
-//   energy: DestinyItemInstanceEnergy | null;
-//   basePower: number;
-//   stats: DimStat[] | null;
+export function hydrateArmorSet(processed: ProcessArmorSet, itemsById: ItemsById): ArmorSet {
+  const sets: ArmorSet['sets'] = [];
+
+  for (const processSet of processed.sets) {
+    const armor: DimItem[][] = [];
+
+    for (const itemIds of processSet.armor) {
+      armor.push(itemIds.map((id) => itemsById[id]));
+    }
+
+    sets.push({ armor, statChoices: processSet.statChoices });
+  }
+
+  const firstValidSet: DimItem[] = processed.firstValidSet.map((id) => itemsById[id]);
+
+  return {
+    sets,
+    firstValidSet,
+    firstValidSetStatChoices: processed.firstValidSetStatChoices,
+    stats: processed.stats,
+    maxPower: processed.maxPower,
+  };
+}

@@ -33,13 +33,13 @@ export interface ProcessArmorSet {
    */
   readonly sets: {
     /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    readonly armor: readonly ProcessItem[][];
+    readonly armor: readonly string[][];
     /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
     readonly statChoices: readonly number[][];
   }[];
 
   /** The first (highest-power) valid set from this stat mix. */
-  readonly firstValidSet: readonly ProcessItem[];
+  readonly firstValidSet: readonly string[];
   readonly firstValidSetStatChoices: readonly number[][];
 
   /** The maximum power loadout possible in this stat mix. */

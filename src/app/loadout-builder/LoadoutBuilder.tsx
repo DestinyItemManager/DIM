@@ -4,9 +4,8 @@ import React, { useMemo, Dispatch } from 'react';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets, hydrateArmorSet } from './generated-sets/utils';
+import { filterGeneratedSets } from './generated-sets/utils';
 import {
-  ArmorSet,
   StatTypes,
   ItemsByBucket,
   LockedMap,
@@ -83,7 +82,7 @@ function LoadoutBuilder({
     [characterItems, lockedMap, lockedArmor2Mods, filter]
   );
 
-  const { result } = useProcess(
+  const result = useProcess(
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
@@ -91,22 +90,26 @@ function LoadoutBuilder({
     assumeMasterwork
   );
 
-  const hydratedSets = useMemo(() => {
-    if (!result?.sets) {
-      return;
-    }
+  // const hydratedSets = useMemo(() => {
+  //   if (!result?.sets) {
+  //     return;
+  //   }
 
-    const sets: ArmorSet[] = [];
+  //   const start = performance.now();
 
-    for (const processSet of result.sets) {
-      const set = hydrateArmorSet(processSet, characterItems);
-      if (set) {
-        sets.push(set);
-      }
-    }
+  //   const sets: ArmorSet[] = [];
 
-    return sets;
-  }, [result?.sets, characterItems]);
+  //   for (const processSet of result.sets) {
+  //     const set = hydrateArmorSet(processSet, filteredItems);
+  //     if (set) {
+  //       sets.push(set);
+  //     }
+  //   }
+
+  //   console.log(`Hydrating armor took ${performance.now() - start} ms`);
+
+  //   return sets;
+  // }, [result?.sets, filteredItems]);
 
   const combos = result?.combos || 0;
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
@@ -114,7 +117,7 @@ function LoadoutBuilder({
   const filteredSets = useMemo(
     () =>
       filterGeneratedSets(
-        hydratedSets,
+        result?.sets,
         minimumPower,
         lockedMap,
         lockedArmor2Mods,
@@ -124,7 +127,7 @@ function LoadoutBuilder({
         enabledStats
       ),
     [
-      hydratedSets,
+      result?.sets,
       minimumPower,
       lockedMap,
       lockedArmor2Mods,
@@ -144,7 +147,7 @@ function LoadoutBuilder({
       />
 
       <FilterBuilds
-        sets={hydratedSets}
+        sets={result?.sets}
         selectedStore={selectedStore as D2Store}
         minimumPower={minimumPower}
         stats={statFilters}
@@ -220,4 +223,4 @@ function LoadoutBuilder({
   );
 }
 
-export default LoadoutBuilder;
+export default React.memo(LoadoutBuilder);

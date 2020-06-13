@@ -213,11 +213,11 @@ export function process(
                 const existingSetAtTier = groupedSets[tiers];
                 if (existingSetAtTier) {
                   existingSetAtTier.sets.push({
-                    armor,
+                    armor: armor.map((items) => items.map((item) => item.id)),
                     statChoices,
                   });
                   if (maxPower > existingSetAtTier.maxPower) {
-                    existingSetAtTier.firstValidSet = firstValidSet;
+                    existingSetAtTier.firstValidSet = firstValidSet.map((item) => item.id);
                     existingSetAtTier.maxPower = maxPower;
                     existingSetAtTier.firstValidSetStatChoices = statChoices;
                   }
@@ -226,7 +226,7 @@ export function process(
                   groupedSets[tiers] = {
                     sets: [
                       {
-                        armor,
+                        armor: armor.map((items) => items.map((item) => item.id)),
                         statChoices,
                       },
                     ],
@@ -234,7 +234,7 @@ export function process(
                       [statType in StatTypes]: number;
                     },
                     // TODO: defer calculating first valid set / statchoices / maxpower?
-                    firstValidSet,
+                    firstValidSet: firstValidSet.map((item) => item.id),
                     firstValidSetStatChoices: statChoices,
                     maxPower,
                   };
