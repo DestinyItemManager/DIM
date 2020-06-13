@@ -12,6 +12,6 @@
   box-sizing: border-box;
 }
 
-.no-pointer-events {
+:global(.no-pointer-events) {
   pointer-events: none;
 }

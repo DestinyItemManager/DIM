@@ -3,7 +3,6 @@
 interface CssExports {
   'container': string;
   'filters': string;
-  'noPointerEvents': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
