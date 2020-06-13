@@ -313,6 +313,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
     if (item.isDestiny2()) {
+      row['Power Limit'] = item.powerCap;
+    }
+    if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo?.statName;
       row['Masterwork Tier'] = item.masterworkInfo?.tier
         ? Math.min(10, item.masterworkInfo.tier)
@@ -428,10 +431,13 @@ function downloadWeapons(
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
       Category: item.bucket.type,
       Element: item.element?.displayProperties.name,
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
+    if (item.isDestiny2()) {
+      row['Power Limit'] = item.powerCap;
+    }
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo?.statName;
       row['Masterwork Tier'] = item.masterworkInfo?.tier
