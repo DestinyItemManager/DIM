@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-clsx;
+
 /**
  * A relative path to a Bungie.net image asset.
  */
