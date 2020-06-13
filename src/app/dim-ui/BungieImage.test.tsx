@@ -6,6 +6,7 @@ test('bungie image prefixes with ', () => {
   const { container } = render(<BungieImage src="/foo.jpg" />);
   expect(container.firstChild).toMatchInlineSnapshot(`
     <img
+      class="no-pointer-events"
       loading="lazy"
       src="https://www.bungie.net/foo.jpg"
     />

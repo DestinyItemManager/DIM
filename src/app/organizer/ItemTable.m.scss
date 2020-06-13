@@ -155,7 +155,6 @@ $toolbarHeight: 41px - 16px + 8px;
     height: calc(var(--item-size) * 0.75);
     display: block;
     box-sizing: border-box;
-    pointer-events: none;
     border: 1px solid #ddd;
   }
 }

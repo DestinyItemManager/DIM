@@ -11,6 +11,7 @@ it('should have an extra class name ', () => {
       class="test-class-name container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />
@@ -28,6 +29,7 @@ it('should not have an extra class name ', () => {
       class="container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />
@@ -45,6 +47,7 @@ it('should be a primary ammo image ', () => {
       class="container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />
@@ -62,6 +65,7 @@ it('should be a special ammo image ', () => {
       class="container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />
@@ -79,6 +83,7 @@ it('should be a heavy ammo image ', () => {
       class="container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />
@@ -96,6 +101,7 @@ it('should have no ammo image if hashes do not match ', () => {
       class="container"
     >
       <img
+        class="no-pointer-events"
         loading="lazy"
         src="https://www.bungie.net/foo.png"
       />

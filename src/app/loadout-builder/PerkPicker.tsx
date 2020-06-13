@@ -512,13 +512,14 @@ function LockedItemIcon({
       );
     case 'perk':
       return (
-        <BungieImageAndAmmo
-          onClick={onClick}
-          className={styles.selectedPerk}
-          hash={lockedItem.perk.hash}
-          title={lockedItem.perk.displayProperties.name}
-          src={lockedItem.perk.displayProperties.icon}
-        />
+        <span onClick={onClick}>
+          <BungieImageAndAmmo
+            className={styles.selectedPerk}
+            hash={lockedItem.perk.hash}
+            title={lockedItem.perk.displayProperties.name}
+            src={lockedItem.perk.displayProperties.icon}
+          />
+        </span>
       );
     case 'burn':
       return (
