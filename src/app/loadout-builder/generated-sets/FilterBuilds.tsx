@@ -25,7 +25,7 @@ export default function FilterBuilds({
   onStatFiltersChanged,
   onMasterworkAssumptionChange,
 }: {
-  sets: readonly ArmorSet[];
+  sets?: readonly ArmorSet[];
   minimumPower: number;
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMaxIgnored };
@@ -38,7 +38,7 @@ export default function FilterBuilds({
   onMasterworkAssumptionChange(assumeMasterwork: boolean): void;
 }) {
   const statRanges = useMemo(() => {
-    if (!sets.length) {
+    if (!sets || !sets.length) {
       return _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
     }
     const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0, ignored: false }));

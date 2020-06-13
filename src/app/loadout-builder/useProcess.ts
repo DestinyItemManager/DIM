@@ -1,9 +1,11 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
-import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from './types';
+import { ItemsByBucket, LockedMap, LockedArmor2ModMap } from './types';
+import { DimItem } from 'app/inventory/item-types';
+import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './processWorker/types';
 
 type ProcessResult = null | {
-  sets: ArmorSet[];
+  sets: ProcessArmorSet[];
   combos: number;
   combosWithoutCaps: number;
 };
@@ -28,8 +30,14 @@ export function useProcess(
   useEffect(() => {
     setResult({ processing: true, result: null });
 
+    const processItems: ProcessItemsByBucket = {};
+
+    for (const [key, items] of Object.entries(filteredItems)) {
+      processItems[key] = items.map(mapDimItemToProcessItem);
+    }
+
     worker
-      .process(filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
+      .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
       .then((result) => setResult({ processing: false, result }));
   }, [
     worker,
@@ -71,3 +79,63 @@ function makeWorkerApiAndCleanup() {
 
   return { worker, cleanup };
 }
+
+function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
+  const {
+    owner,
+    destinyVersion,
+    bucket,
+    id,
+    type,
+    name,
+    equipped,
+    equippingLabel,
+    basePower,
+    stats,
+  } = dimItem;
+
+  if (dimItem.isDestiny2()) {
+    return {
+      owner,
+      destinyVersion,
+      bucketHash: bucket.hash,
+      id,
+      type,
+      name,
+      equipped,
+      equippingLabel,
+      basePower,
+      stats,
+      sockets: dimItem.sockets,
+      energy: dimItem.energy,
+    };
+  }
+
+  return {
+    owner,
+    destinyVersion,
+    bucketHash: bucket.hash,
+    id,
+    type,
+    name,
+    equipped,
+    equippingLabel,
+    basePower,
+    stats,
+    sockets: null,
+    energy: null,
+  };
+}
+
+// owner: string;
+//   destinyVersion: DestinyVersion;
+//   bucketHash: number;
+//   hash: number;
+//   type: string;
+//   name: string;
+//   equipped: boolean;
+//   equippingLabel?: string;
+//   sockets: DimSockets | null;
+//   energy: DestinyItemInstanceEnergy | null;
+//   basePower: number;
+//   stats: DimStat[] | null;

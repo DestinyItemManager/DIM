@@ -1,4 +1,4 @@
-import { LockableBuckets, LockedModBase, LockedArmor2ModMap } from './../types';
+import { LockableBuckets, LockedModBase, LockedArmor2ModMap, ItemsByBucket } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
@@ -13,6 +13,7 @@ import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../utils';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { canSetTakeMods } from './mod-utils';
+import { ProcessArmorSet } from '../processWorker/types';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -170,7 +171,7 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
  * Filter sets down based on stat filters, locked perks, etc.
  */
 export function filterGeneratedSets(
-  sets: readonly ArmorSet[],
+  sets?: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
@@ -179,6 +180,10 @@ export function filterGeneratedSets(
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
 ) {
+  if (!sets) {
+    return;
+  }
+
   let matchedSets = Array.from(sets);
 
   matchedSets = matchedSets.filter((set) => {
@@ -492,4 +497,55 @@ export function sumEnabledStats(stats: ArmorSet['stats'], enabledStats: Set<Stat
 
 export function statTier(stat: number) {
   return Math.floor(stat / 10);
+}
+
+export function hydrateArmorSet(
+  processed: ProcessArmorSet,
+  characterItems: ItemsByBucket
+): ArmorSet | undefined {
+  const sets: ArmorSet['sets'] = [];
+
+  for (const processSet of processed.sets) {
+    const armor: DimItem[][] = [];
+
+    for (const processItems of processSet.armor) {
+      const items: DimItem[] = [];
+      armor.push(items);
+
+      for (const processItem of processItems) {
+        const item = characterItems[processItem.bucketHash].find(
+          (cItem) => cItem.id === processItem.id
+        );
+
+        if (!item) {
+          return;
+        }
+
+        items.push(item);
+      }
+    }
+
+    sets.push({ armor, statChoices: processSet.statChoices });
+  }
+
+  const firstValidSet: DimItem[] = [];
+
+  for (const processItem of processed.firstValidSet) {
+    const item = characterItems[processItem.bucketHash].find(
+      (cItem) => cItem.id === processItem.id
+    );
+    if (!item) {
+      return;
+    }
+
+    firstValidSet.push(item);
+  }
+
+  return {
+    sets,
+    firstValidSet,
+    firstValidSetStatChoices: processed.firstValidSetStatChoices,
+    stats: processed.stats,
+    maxPower: processed.maxPower,
+  };
 }

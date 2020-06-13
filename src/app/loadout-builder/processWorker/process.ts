@@ -1,32 +1,32 @@
 import _ from 'lodash';
-import { DimItem } from '../../inventory/item-types';
 import {
   LockableBuckets,
-  ArmorSet,
   StatTypes,
   LockedItemType,
-  ItemsByBucket,
   LockedMap,
   LockedArmor2Mod,
   LockedArmor2ModMap,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
-import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
-import { statKeys, statHashes, generateMixesFromPerksOrStats } from '../utils';
+import { statKeys, statHashes, statValues } from '../utils';
+import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
+import { DimStat, DimPlug } from '../../inventory/item-types';
+import { getMasterworkSocketHashes } from '../../utils/socket-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  */
 export function process(
-  filteredItems: ItemsByBucket,
+  filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   selectedStoreId: string,
   assumeMasterwork: boolean
-): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
+): { sets: ProcessArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
@@ -116,7 +116,7 @@ export function process(
   const combosLimit = 500000;
 
   // Get the keys of the object, sorted by total stats descending
-  const makeKeys = (obj: { [key: string]: DimItem[] }) =>
+  const makeKeys = (obj: { [key: string]: ProcessItem[] }) =>
     _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k)));
 
   const helmsKeys = makeKeys(helms);
@@ -154,26 +154,12 @@ export function process(
     console.log('Reduced armor combinations from', combosWithoutCaps, 'to', combos);
   }
 
-  // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
-  const existingTask = localStorage.getItem('loadout-optimizer');
-  if (existingTask && existingTask !== '0') {
-    console.error(
-      'Loadout Optimizer probably crashed last time while processing',
-      existingTask,
-      'combinations'
-    );
-    reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
-      combos: existingTask,
-    });
-  }
-  localStorage.setItem('loadout-optimizer', combos.toString());
-
   if (combos === 0) {
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-  const groupedSets: { [tiers: string]: Mutable<ArmorSet> } = {};
+  const groupedSets: { [tiers: string]: Mutable<ProcessArmorSet> } = {};
 
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
@@ -273,8 +259,6 @@ export function process(
     'ms'
   );
 
-  localStorage.removeItem('loadout-optimizer');
-
   return { sets: finalSets, combos, combosWithoutCaps };
 }
 
@@ -323,7 +307,7 @@ function byStatMix(
     }
   }
 
-  return (item: DimItem): string[] => {
+  return (item: ProcessItem): string[] => {
     const stats = item.stats;
 
     if (!stats || stats.length < 3) {
@@ -344,7 +328,7 @@ function byStatMix(
  * items in each slot are already sorted by power. This respects the rule that two exotics
  * cannot be equipped at once.
  */
-function getFirstValidSet(armors: readonly DimItem[][]) {
+function getFirstValidSet(armors: readonly ProcessItem[][]) {
   const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
@@ -379,7 +363,7 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
 /**
  * Get the maximum average power for a particular set of armor.
  */
-function getPower(items: DimItem[]) {
+function getPower(items: ProcessItem[]) {
   let power = 0;
   let numPoweredItems = 0;
   for (const item of items) {
@@ -390,4 +374,122 @@ function getPower(items: DimItem[]) {
   }
 
   return Math.floor(power / numPoweredItems);
+}
+
+/**
+ * This is an awkward helper used by both byStatMix (to generate the list of
+ * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
+ * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
+ * calculates them directly from the stats.
+ *
+ * It has two modes depending on whether an "onMix" callback is provided - if it is, it
+ * assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
+ * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
+ * returns all the mixes. This is like this so we can share this complicated bit of logic
+ * and not get it out of sync.
+ */
+function generateMixesFromPerksOrStats(
+  item: ProcessItem,
+  assumeArmor2IsMasterwork: boolean | null,
+  lockedModStats: { [statHash: number]: number },
+  /** Callback when a new mix is found. */
+  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+) {
+  const stats = item.stats;
+
+  if (!stats || stats.length < 3) {
+    return [];
+  }
+
+  const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
+  const mixes: number[][] = [
+    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
+  ];
+
+  const altPerks: (DimPlug[] | null)[] = [null];
+
+  if (stats && item.destinyVersion === 2 && item.sockets && !item.energy) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plugOptions.length > 1) {
+        for (const plug of socket.plugOptions) {
+          if (plug !== socket.plug && plug.stats) {
+            // Stats without the currently selected plug, with the optional plug
+            const mixNum = mixes.length;
+            for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
+              const existingMix = mixes[mixIndex];
+              const optionStat = statValues.map((statHash, index) => {
+                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
+                const optionPlugValue = plug.stats?.[statHash] || 0;
+                return existingMix[index] - currentPlugValue + optionPlugValue;
+              });
+
+              if (onMix) {
+                const existingMixAlts = altPerks[mixIndex];
+                const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
+                altPerks.push(plugs);
+                if (!onMix(optionStat, plugs)) {
+                  return [];
+                }
+              }
+              mixes.push(optionStat);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return mixes;
+}
+
+function getBaseStatValues(
+  stats: {
+    [index: string]: DimStat;
+  },
+  item: ProcessItem,
+  assumeMasterwork: boolean | null,
+  lockedModStats: { [statHash: number]: number }
+) {
+  const baseStats = {};
+
+  for (const statHash of statValues) {
+    baseStats[statHash] = stats[statHash].value;
+  }
+
+  // Checking energy tells us if it is Armour 2.0
+  if (item.destinyVersion === 2 && item.sockets && item.energy) {
+    let masterworkSocketHashes: number[] = [];
+
+    // only get masterwork sockets if we aren't manually adding the values
+    if (!assumeMasterwork) {
+      masterworkSocketHashes = getMasterworkSocketHashes(
+        item.sockets,
+        DestinySocketCategoryStyle.EnergyMeter
+      );
+    }
+
+    for (const socket of item.sockets.sockets) {
+      const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
+
+      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
+        for (const statHash of statValues) {
+          if (socket.plug.stats[statHash]) {
+            baseStats[statHash] -= socket.plug.stats[statHash];
+          }
+        }
+      }
+    }
+
+    if (assumeMasterwork) {
+      for (const statHash of statValues) {
+        baseStats[statHash] += 2;
+      }
+    }
+    // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
+    _.forIn(lockedModStats, (value, statHash) => {
+      baseStats[statHash] += value;
+    });
+  }
+  // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
+  return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
 }

@@ -10,7 +10,7 @@ import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
-import { LoadoutBuilderAction } from '../LoadoutBuilder';
+import { LoadoutBuilderAction } from '../LoadoutBuilderContainer';
 
 interface Props {
   selectedStore: DimStore;

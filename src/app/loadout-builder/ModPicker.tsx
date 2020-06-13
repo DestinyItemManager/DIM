@@ -28,7 +28,7 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from './LoadoutBuilder';
+import { LoadoutBuilderAction } from './LoadoutBuilderContainer';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
