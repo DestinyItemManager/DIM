@@ -1,6 +1,7 @@
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
+import D2SeasonFromOverlay from 'data/d2/season-to-iconoverlay.json';
 import { D2Item } from '../item-types';
 
 const SourceToD2Season = D2SeasonToSource.sources;
@@ -18,6 +19,12 @@ export function getSeason(item: D2Item): number {
     )
   ) {
     return 0;
+  }
+
+  if (item.iconOverlay) {
+    return Number(
+      Object.keys(D2SeasonFromOverlay).find((key) => D2SeasonFromOverlay[key] === item.iconOverlay)
+    );
   }
 
   if (SourceToD2Season[item.source]) {
