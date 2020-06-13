@@ -1,13 +1,13 @@
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
-import D2SeasonFromOverlay from 'data/d2/season-to-iconoverlay.json';
+import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
 import { D2Item } from '../item-types';
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
 // TODO: load this lazily with import(). Requires some rework of the filters code.
-export function getSeason(item: D2Item): number {
+export function getSeason(item: D2Item, watermark: string | null): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
@@ -21,10 +21,8 @@ export function getSeason(item: D2Item): number {
     return 0;
   }
 
-  if (item.iconOverlay) {
-    return Number(
-      Object.keys(D2SeasonFromOverlay).find((key) => D2SeasonFromOverlay[key] === item.iconOverlay)
-    );
+  if (watermark) {
+    return Number(D2SeasonFromOverlay[watermark]);
   }
 
   if (SourceToD2Season[item.source]) {
