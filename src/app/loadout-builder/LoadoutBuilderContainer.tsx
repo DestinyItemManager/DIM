@@ -294,7 +294,9 @@ function LoadoutBuilderContainer({
             stateDispatch({ type: 'changeCharacter', storeId: getCurrentStore(stores)!.id });
           }
         }),
-      [account, selectedStoreId]
+      /* do not include selectedStoreId in dependencies, it triggers two process rounds */
+      /* eslint-disable react-hooks/exhaustive-deps */
+      [account]
     )
   );
 
