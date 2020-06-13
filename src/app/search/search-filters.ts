@@ -339,6 +339,13 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     // energy capacity elements and ranges
     ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
     ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
+    // keywords for checking when an item hits power limit. s11 is the first valid season for this
+    ...(isD2
+      ? Object.entries(seasonTags)
+          .filter(([, seasonNumber]) => seasonNumber > 10)
+          .reverse()
+          .map(([tag]) => `sunsetsafter:${tag}`)
+      : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -1112,17 +1119,12 @@ function searchFilters(
       },
       powerlimit(item: D2Item, predicate: string) {
         // anything with no powerCap has no known limit, so treat it like it's 99999999
-        return mathCheck.test(predicate) && compareByOperator(item.powerCap ?? 99999999, predicate);
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
+        return compareByOperator(item.powerCap ?? 99999999, predicate);
       },
       sunsetsafter(item: D2Item, predicate: string) {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
-        return (
-          itemFinalSeason &&
-          mathCheck.test(predicate) &&
-          compareByOperator(itemFinalSeason, predicate)
-        );
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "sunsetsafter:arrivals"
+        const interpretedPredicate = predicate.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
+        return itemFinalSeason && compareByOperator(itemFinalSeason, interpretedPredicate);
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
