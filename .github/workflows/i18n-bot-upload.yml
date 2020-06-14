@@ -15,11 +15,8 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
 
-      - name: Install Yarn
-        uses: bahmutov/npm-install@v1
-
       - name: Sort dim.json
-        run: npx jsonsort src/locale/dim.json
+        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
 
       - name: Upload updated dim.json to crowdin
         uses: crowdin/github-action@1.0.4

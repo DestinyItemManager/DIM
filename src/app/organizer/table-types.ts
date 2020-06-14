@@ -6,7 +6,7 @@ export const enum SortDirection {
   DESC,
 }
 
-type Value = string | number | boolean | undefined;
+type Value = string | number | boolean | undefined | null;
 
 /**
  * Columns can optionally belong to a column group - if so, they're shown/hidden as a group.

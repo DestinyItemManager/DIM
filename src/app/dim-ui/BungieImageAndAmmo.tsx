@@ -1,20 +1,17 @@
 import React from 'react';
 import styles from './BungieImageAndAmmo.m.scss';
-import BungieImage, { BungieImagePath } from './BungieImage';
+import BungieImage, { BungieImageProps } from './BungieImage';
 import clsx from 'clsx';
 
-interface BungieImageProps {
-  src: BungieImagePath;
+type BungieImageAndAmmoProps = BungieImageProps & {
   hash: number;
-}
+};
 
 /**
  * A display for perk images that knows about certain items that have
  * corresponding ammo types.
  */
-export default function BungieImageAndAmmo(
-  props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
-) {
+export default function BungieImageAndAmmo(props: BungieImageAndAmmoProps) {
   const { hash, className, ...otherProps } = props;
 
   let ammoImage;

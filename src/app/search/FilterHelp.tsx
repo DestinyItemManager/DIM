@@ -133,14 +133,34 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
               </tr>
             )}
             {destinyVersion === 2 && (
-              <tr>
-                <td>
-                  <span>power:value</span> <span>power:&gt;=value</span>{' '}
-                  <span>power:&gt;value</span> <span>power:&lt;value</span>{' '}
-                  <span>power:&lt;=value</span>
-                </td>
-                <td>{t('Filter.PowerLevel')}</td>
-              </tr>
+              <>
+                <tr>
+                  <td>
+                    <span>power:value</span> <span>power:&gt;=value</span>{' '}
+                    <span>power:&gt;value</span> <span>power:&lt;value</span>{' '}
+                    <span>power:&lt;=value</span>
+                  </td>
+                  <td>{t('Filter.PowerLevel')}</td>
+                </tr>
+                <tr>
+                  <td>
+                    powerlimit
+                    <span>powerlimit:value</span> <span>powerlimit:&gt;=value</span>{' '}
+                    <span>powerlimit:&gt;value</span> <span>powerlimit:&lt;value</span>{' '}
+                    <span>powerlimit:&lt;=value</span>
+                  </td>
+                  <td>{t('Filter.PowerLimit')}</td>
+                </tr>
+                <tr>
+                  <td>
+                    sunsetsafter / powerlimitseason
+                    <span>sunsetsafter:value</span> <span>sunsetsafter:&gt;=value</span>{' '}
+                    <span>sunsetsafter:&gt;value</span> <span>sunsetsafter:&lt;value</span>{' '}
+                    <span>sunsetsafter:&lt;=value</span>
+                  </td>
+                  <td>{t('Filter.SunsetAfter')}</td>
+                </tr>
+              </>
             )}
             <tr>
               <td>

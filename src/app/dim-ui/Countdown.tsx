@@ -1,53 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { t } from 'app/i18next-t';
 
-interface Props {
+/**
+ * Render a countdown to a specific date.
+ */
+export default function Countdown({
+  endTime,
+  compact,
+}: {
   endTime: Date;
+  /** Render the time as a compact string instead of spelled out */
   compact?: boolean;
-}
+}) {
+  const [diff, setDiff] = useState(endTime.getTime() - Date.now());
+  const interval = useRef(0);
 
-interface State {
-  diff: number;
-}
+  useEffect(() => {
+    const update = () => {
+      const diff = endTime.getTime() - Date.now();
+      // We set the diff just to make it re-render. We could just as easily set this to now(), or an incrementing number
+      setDiff(diff);
+      if (diff <= 0) {
+        clearInterval(interval.current);
+      }
+    };
+    interval.current = window.setInterval(update, 60000);
+    update();
+    return () => clearInterval(interval.current);
+  }, [endTime]);
 
-export default class Countdown extends React.Component<Props, State> {
-  static getDerivedStateFromProps(props: Props) {
-    const diff = props.endTime.getTime() - Date.now();
-    return { diff };
-  }
-
-  private interval: number;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = { diff: 0 };
-  }
-
-  componentDidMount() {
-    // Update once a minute
-    this.interval = window.setInterval(this.update, 60000);
-    this.update();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    return (
-      <span className="countdown" title={this.props.endTime.toLocaleString()}>
-        {dhm(this.state.diff / 1000, this.props.compact)}
-      </span>
-    );
-  }
-
-  private update = () => {
-    const diff = this.props.endTime.getTime() - Date.now();
-    this.setState({ diff });
-    if (diff <= 0) {
-      clearInterval(this.interval);
-    }
-  };
+  return (
+    <span className="countdown" title={endTime.toLocaleString()}>
+      {dhm(diff / 1000, compact)}
+    </span>
+  );
 }
 
 function pad(n: number, width: number) {

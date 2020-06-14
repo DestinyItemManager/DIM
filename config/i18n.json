@@ -74,6 +74,8 @@
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
     "NotLoggedIn": "Please authorize DIM in order to use this app.",
     "SlowResponse": "Bungie.net was too slow to respond.",
+    "Slow": "Bungie.net is slow right now",
+    "SlowDetails": "Bungie.net is taking a long time to return your information. This can happen when a lot of players are in the game at once, or if Bungie.net is having issues. You also might be having an internet connection issue. We'll keep waiting for a response.",
     "Throttled": "Bungie.net is limiting how many requests DIM can make.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
@@ -251,6 +253,7 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
@@ -310,6 +313,7 @@
     "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
+    "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
@@ -692,6 +696,7 @@
     "Store": "Store",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
+      "GearWithMax": "{{light}} ({{maxLight}} max) {{statName}} {{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "Take",
@@ -845,6 +850,8 @@
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
+    "PowerCap": "Power Limit",
+    "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",

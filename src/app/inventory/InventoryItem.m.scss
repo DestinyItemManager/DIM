@@ -35,7 +35,6 @@
   height: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
-  pointer-events: none;
 
   &:focus {
     outline: none;
@@ -94,8 +93,49 @@
 
   background-image: url('../../images/masterwork.png');
 }
-.exotic {
+.exoticMasterwork {
   background-image: url('../../images/exotic-masterwork.png');
+}
+
+.iconOverlay {
+  overflow: hidden;
+  top: $item-border-width;
+  left: $item-border-width;
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
+  position: absolute;
+  & > img {
+    top: 0;
+    left: 0;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+    position: absolute;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+    transform: rotate(44.3deg);
+    left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
+    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
+    background: #444;
+  }
+  &.legendary::before {
+    background: #522f65;
+  }
+  &.exotic::before {
+    background: #ceae33;
+  }
+  &.basic::before {
+    background: #c3bcb4;
+  }
+  &.rare::before {
+    background: #5076a3;
+  }
+  &.common::before {
+    background: #366f42;
+  }
 }
 
 // The container for the tag/notes/wishlist icons
@@ -109,7 +149,6 @@
 
 // Individual icons in the icon tray
 .icon {
-  pointer-events: none;
   display: block;
   position: static;
   width: calc(var(--item-size) / 5);

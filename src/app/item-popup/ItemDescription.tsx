@@ -44,7 +44,6 @@ function ItemDescription({ item, notes, inventoryWishListRoll, dispatch }: Props
   const saveNotes = (note: string) => dispatch(setItemNote({ itemId: item.id, note }));
 
   // TODO: close notes button
-
   return (
     <>
       {showDescription && <div className={styles.officialDescription}>{item.description}</div>}

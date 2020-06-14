@@ -11,8 +11,8 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
 
-      - name: Install Yarn
-        uses: bahmutov/npm-install@v1
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v2.x
 
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
@@ -29,8 +29,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: sort all dim.json
-        run: npx jsonsort src/locale
+      - name: sort dim.json
+        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
+
+      - name: sort locale dim.json
+        run: |
+          allLocales=("de" "es" "es-mx" "fr" "it" "ja" "ko" "pl" "pt-br" "ru" "zh-chs" "zh-cht")
+          for lang in ${allLocales[@]}; do
+            dimJSON="$(jq -S . src/locale/$lang/dim.json)" && echo "${dimJSON}" > src/locale/$lang/dim.json
+          done
 
       - name: Check for new files (DIM)
         id: porcelain
@@ -41,7 +48,7 @@ jobs:
 #        uses: delphiactual/github-push-action@master
 #        with:
 #          github_token: ${{ secrets.I18N_PAT }}
-#          commit_message: "i18n"
+#          commit_message: "i18n - ${{ env.GITHUB_SHA_SHORT }}"
 #          user_email: "destinyitemmanager@gmail.com"
 #          user_name: "DIM i18n Bot"
 #          branch: master

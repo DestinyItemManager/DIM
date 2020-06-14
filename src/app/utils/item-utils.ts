@@ -6,6 +6,7 @@ import {
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 
 import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
+import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
 
 // damage is a mess!
@@ -96,3 +97,7 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   Object.values(Armor2ModPlugCategories).some(
     (category) => category === item.plug.plugCategoryHash
   ) || specialtyModSocketHashes.includes(item.plug.plugCategoryHash);
+
+/** given item, get the final season it will be relevant (able to hit max power level) */
+export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
+  item.isDestiny2() ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;

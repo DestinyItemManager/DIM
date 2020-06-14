@@ -34,6 +34,7 @@ import {
   DestinyTraitDefinition,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
+  DestinyPowerCapDefinition,
 } from 'bungie-api-ts/destiny2';
 
 import { D2ManifestService } from '../manifest/manifest-service-json';
@@ -71,6 +72,7 @@ const lazyTables = [
   'Record',
   'Metric',
   'Trait',
+  'PowerCap',
 ];
 
 const eagerTables = [
@@ -116,6 +118,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Record: DefinitionTable<DestinyRecordDefinition>;
   Metric: DefinitionTable<DestinyMetricDefinition>;
   Trait: DefinitionTable<DestinyTraitDefinition>;
+  PowerCap: DefinitionTable<DestinyPowerCapDefinition>;
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
 

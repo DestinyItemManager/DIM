@@ -1,6 +1,16 @@
 ## Next
 
+* Items now show their power cap in the item popup, Compare, and in the Organizer (new column). Keep in mind some power caps may change in upcoming seasons.
+* Fix the season icon for reissued items.
+* Fix not being able to dismiss the item popup on the Organizer in certain cases.
+* Remove the 15 second timeout for loading data from Bungie.net.
+* Fix umbral engrams showing up weird in the engram row.
+
 ## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
+
+* Fixed misdetection of seasonal mods in Compare.
+* Work around a Bungie.net issue that could prevent the Destiny info database from loading.
+* Improved the experience for users who previously had DIM Sync off.
 
 ## 6.13.2 <span className="changelog-date">(2020-06-03)</span>
 

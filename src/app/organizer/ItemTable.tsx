@@ -309,7 +309,7 @@ function ItemTable({
             if (e.shiftKey) {
               if ((e.target as Element).hasAttribute('data-perk-name')) {
                 const filter = column.filter!(
-                  (e.target as Element).getAttribute('data-perk-name')!,
+                  (e.target as Element).getAttribute('data-perk-name'),
                   row.item
                 );
                 if (filter) {

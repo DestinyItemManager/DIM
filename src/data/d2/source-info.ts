@@ -116,6 +116,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
+      2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
     ],
   },
@@ -282,6 +283,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ],
     sourceHashes: [
       1027607603, // Source: Complete this reward's associated Iron Banner quest.
+      1312894505, // Source: Iron Banner.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
@@ -447,6 +449,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
       2653618435, // Source: Leviathan raid.
+      2723305286, // Source: Raid Ring promotional event.
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
@@ -470,9 +473,10 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   seasonpass: {
     itemHashes: [],
     sourceHashes: [
-      594540014, // Source: Exotic quest "Make Bows, Not War." Available only to Season Pass owners.
       1593696611, // Source: Season Pass Reward
       1838401392, // Source: Earned as a Season Pass reward.
+      2379344669, // Source: Season Pass.
+      2917345346, // Source: Earned as a Season Pass reward.
     ],
   },
   shaxx: {
@@ -500,6 +504,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
+      2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
     ],
   },

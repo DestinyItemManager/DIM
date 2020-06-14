@@ -58,6 +58,8 @@ export interface DimItem {
   description: string;
   /** Icon path for the item. */
   icon: string;
+  /** Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items */
+  iconOverlay: string | null;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon: string;
   /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
@@ -212,6 +214,8 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   /** for y3 armor, this is the type and capacity information */
   energy: DestinyItemInstanceEnergy | null;
+  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
+  powerCap: number | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
