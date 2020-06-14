@@ -5,6 +5,7 @@
 * Fix not being able to dismiss the item popup on the Organizer in certain cases.
 * Remove the 15 second timeout for loading data from Bungie.net.
 * Fix umbral engrams showing up weird in the engram row.
+* Add Charge Rate and Guard Endurance stat to swords.
 
 ## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
 
