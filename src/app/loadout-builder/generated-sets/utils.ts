@@ -170,14 +170,14 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
  * Filter sets down based on stat filters, locked perks, etc.
  */
 export function filterGeneratedSets(
-  sets?: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   lockedSeasonalMods: readonly LockedModBase[],
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
-  enabledStats: Set<StatTypes>
+  enabledStats: Set<StatTypes>,
+  sets?: readonly ArmorSet[]
 ) {
   if (!sets) {
     return;

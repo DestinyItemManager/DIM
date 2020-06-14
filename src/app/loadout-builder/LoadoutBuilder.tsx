@@ -96,17 +96,16 @@ function LoadoutBuilder({
   const filteredSets = useMemo(
     () =>
       filterGeneratedSets(
-        result?.sets,
         minimumPower,
         lockedMap,
         lockedArmor2Mods,
         lockedSeasonalMods,
         statFilters,
         statOrder,
-        enabledStats
+        enabledStats,
+        result?.sets
       ),
     [
-      result?.sets,
       minimumPower,
       lockedMap,
       lockedArmor2Mods,
@@ -114,6 +113,7 @@ function LoadoutBuilder({
       statFilters,
       statOrder,
       enabledStats,
+      result?.sets,
     ]
   );
 
