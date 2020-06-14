@@ -86,6 +86,9 @@ const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
+/** replaces a word with a corresponding season i.e. turns `<=forge` into `<=5`.
+ * use only on simple filter values where there's not other letters */
+const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
 // so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
 
@@ -654,19 +657,10 @@ function searchFilters(
             // mutate predicates where keywords (forge) should be translated into seasons (5)
             case 'powerlimitseason':
             case 'sunsetsafter':
-              addPredicate(
-                'sunsetsafter',
-                filterValue.replace(/[a-z]+$/i, (tag) => seasonTags[tag]),
-                invert
-              );
-
+              addPredicate('sunsetsafter', replaceSeasonTagWithNumber(filterValue), invert);
               break;
             case 'season':
-              addPredicate(
-                'season',
-                filterValue.replace(/[a-z]+$/i, (tag) => seasonTags[tag]),
-                invert
-              );
+              addPredicate('season', replaceSeasonTagWithNumber(filterValue), invert);
               break;
             // pass these filter names and values unaltered
             case 'masterwork':
