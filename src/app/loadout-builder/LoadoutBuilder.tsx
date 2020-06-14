@@ -55,6 +55,15 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { Location } from 'history';
 import { useSubscription } from 'app/utils/hooks';
 
+export const statHashToType: { [hash: string]: StatTypes } = {
+  '2996146975': 'Mobility',
+  '392767087': 'Resilience',
+  '1943323491': 'Recovery',
+  '1735777505': 'Discipline',
+  '144602215': 'Intellect',
+  '4244567218': 'Strength',
+};
+
 interface ProvidedProps {
   account: DestinyAccount;
 }
@@ -62,6 +71,8 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
+  settingsStatOrder: string[];
+  settingsAssumeMasterwork: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -90,11 +101,15 @@ interface State {
 const init = ({
   stores,
   location,
+  settingsStatOrder,
+  settingsAssumeMasterwork,
 }: {
   stores: DimStore[];
   location: Location<{
     loadout?: Loadout | undefined;
   }>;
+  settingsStatOrder: string[];
+  settingsAssumeMasterwork: boolean;
 }): State => {
   let lockedMap: LockedMap = {};
 
@@ -136,9 +151,9 @@ const init = ({
     },
     minimumPower: 750,
     query: '',
-    statOrder: statKeys,
+    statOrder: settingsStatOrder.map((hash) => statHashToType[hash]),
     selectedStoreId: getCurrentStore(stores)?.id,
-    assumeMasterwork: false,
+    assumeMasterwork: settingsAssumeMasterwork,
   };
 };
 
@@ -262,6 +277,8 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
+    settingsStatOrder: state.dimApi.settings.loStatSortOrder,
+    settingsAssumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
     isPhonePortrait: state.shell.isPhonePortrait,
     items: itemsSelector(state),
     defs: state.manifest.d2Manifest,
@@ -277,6 +294,8 @@ function LoadoutBuilder({
   account,
   storesLoaded,
   stores,
+  settingsStatOrder,
+  settingsAssumeMasterwork,
   isPhonePortrait,
   items,
   defs,
@@ -298,6 +317,8 @@ function LoadoutBuilder({
     []
   );
 
+  console.log(`am: ${settingsAssumeMasterwork}`);
+
   const [
     {
       lockedMap,
@@ -311,7 +332,11 @@ function LoadoutBuilder({
       assumeMasterwork,
     },
     stateDispatch,
-  ] = useReducer(stateReducer, { stores, location }, init);
+  ] = useReducer(
+    stateReducer,
+    { stores, location, settingsStatOrder, settingsAssumeMasterwork },
+    init
+  );
 
   useSubscription(
     useCallback(
@@ -325,7 +350,7 @@ function LoadoutBuilder({
             stateDispatch({ type: 'changeCharacter', storeId: getCurrentStore(stores)!.id });
           }
         }),
-      [account, selectedStoreId]
+      [account]
     )
   );
 
