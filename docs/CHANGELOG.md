@@ -1,6 +1,7 @@
 ## Next
 
-* Items now show their power cap in the item popup, Compare, and in the Organizer (new column). Keep in mind some power caps may change in upcoming seasons.
+* Items now show their power limit in the item popup, Compare, and in the Organizer (new column). Keep in mind some power limits may change in upcoming seasons.
+* Try the `sunsetsafter:` or `powerlimit:` filters to find things by their power limit.
 * Fix the season icon for reissued items.
 * Fix not being able to dismiss the item popup on the Organizer in certain cases.
 * Remove the 15 second timeout for loading data from Bungie.net.
