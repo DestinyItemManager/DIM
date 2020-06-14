@@ -605,7 +605,14 @@ function searchFilters(
       }
 
       for (const search of searchTerms) {
-        // i.e. ["-not:tagged", "-", "not:", "not", "tagged"
+        // i.e. [
+        // "-not:tagged", (discarded)
+        // "-",           (invertString)
+        // "not:",        (discarded)
+        // "not",         (filterName)
+        // "tagged"       (filterValue)
+        // ]
+
         const [, invertString, , filterName, filterValue] =
           search.match(/^(-?)(([^:]+):)?(.+)$/) || [];
         let invert = Boolean(invertString);
@@ -616,7 +623,7 @@ function searchFilters(
           switch (filterName) {
             case 'not':
               invert = !invert;
-            // fall through intentionally after setting "not" inversion. eslint demands this comment :|
+            // fall through intentionally after setting "not" inversion
             case 'is': {
               // do a lookup by filterValue (i.e. arc)
               // to find the appropriate predicate (i.e. dmg)
@@ -644,14 +651,26 @@ function searchFilters(
             case 'percentage':
               addPredicate('quality', filterValue, invert);
               break;
+            // mutate predicates where keywords (forge) should be translated into seasons (5)
             case 'powerlimitseason':
-              addPredicate('sunsetsafter', filterValue, invert);
+            case 'sunsetsafter':
+              addPredicate(
+                'sunsetsafter',
+                filterValue.replace(/[a-z]+$/i, (tag) => seasonTags[tag]),
+                invert
+              );
+
+              break;
+            case 'season':
+              addPredicate(
+                'season',
+                filterValue.replace(/[a-z]+$/i, (tag) => seasonTags[tag]),
+                invert
+              );
               break;
             // pass these filter names and values unaltered
             case 'masterwork':
-            case 'season':
             case 'powerlimit':
-            case 'sunsetsafter':
             case 'year':
             case 'stack':
             case 'count':
@@ -1090,10 +1109,7 @@ function searchFilters(
         );
       },
       season(item: D2Item, predicate: string) {
-        if (mathCheck.test(predicate)) {
-          return compareByOperator(item.season, predicate);
-        }
-        return seasonTags[predicate] && seasonTags[predicate] === item.season;
+        return compareByOperator(item.season, predicate);
       },
       year(item: DimItem, predicate: string) {
         if (item.isDestiny1()) {
