@@ -159,8 +159,6 @@ export function assignModsToArmorSet(
     assignments[item.hash] = new Array<LockedArmor2Mod>();
   }
 
-  assignGeneralMods(setToMatch, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
-
   assignModsForSlot(setToMatch[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet], assignments);
   assignModsForSlot(
     setToMatch[1],
@@ -181,18 +179,23 @@ export function assignModsToArmorSet(
 }
 
 // Should be in the same order as first valid set
-export function canSetTakeMods(set: readonly DimItem[], lockedArmor2Mods: LockedArmor2ModMap) {
-  const modAssignments = assignModsToArmorSet(set, lockedArmor2Mods);
+export function canSetTakeGeneralAndSeasonalMods(
+  set: readonly DimItem[],
+  lockedArmor2Mods: LockedArmor2ModMap
+) {
+  const assignments: Record<number, LockedArmor2Mod[]> = {};
+
+  // we ignore slot specific mods as they are prefiltered so should match up
+  assignGeneralMods(set, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
+  assignAllSeasonalMods(set, lockedArmor2Mods.seasonal, assignments);
 
   let assignmentCount = 0;
-  for (const slotAssignments of Object.values(modAssignments)) {
+  for (const slotAssignments of Object.values(assignments)) {
     assignmentCount += slotAssignments.length;
   }
 
-  let modCount = 0;
-  for (const slotMods of Object.values(lockedArmor2Mods)) {
-    modCount += slotMods.length;
-  }
-
-  return assignmentCount === modCount;
+  return (
+    assignmentCount ===
+    lockedArmor2Mods[Armor2ModPlugCategories.general].length + lockedArmor2Mods.seasonal.length
+  );
 }

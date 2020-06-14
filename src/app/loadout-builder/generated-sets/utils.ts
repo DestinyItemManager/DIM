@@ -12,7 +12,7 @@ import {
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../utils';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { canSetTakeMods } from './mod-utils';
+import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -195,7 +195,10 @@ export function filterGeneratedSets(
     }
 
     // TODO this is too restrictive as there may be other combinations that can take the mods
-    if ($featureFlags.armor2ModPicker && !canSetTakeMods(set.firstValidSet, lockedArmor2ModMap)) {
+    if (
+      $featureFlags.armor2ModPicker &&
+      !canSetTakeGeneralAndSeasonalMods(set.firstValidSet, lockedArmor2ModMap)
+    ) {
       return false;
     }
 

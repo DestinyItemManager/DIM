@@ -12,7 +12,7 @@ import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { statKeys, statHashes, statValues } from '../utils';
 import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
-import { DimStat, DimPlug } from '../../inventory/item-types';
+import { DimStat } from '../../inventory/item-types';
 import { getMasterworkSocketHashes } from '../../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
@@ -376,24 +376,10 @@ function getPower(items: ProcessItem[]) {
   return Math.floor(power / numPoweredItems);
 }
 
-/**
- * This is an awkward helper used by both byStatMix (to generate the list of
- * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
- * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
- * calculates them directly from the stats.
- *
- * It has two modes depending on whether an "onMix" callback is provided - if it is, it
- * assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
- * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
- * returns all the mixes. This is like this so we can share this complicated bit of logic
- * and not get it out of sync.
- */
 function generateMixesFromPerksOrStats(
   item: ProcessItem,
   assumeArmor2IsMasterwork: boolean | null,
-  lockedModStats: { [statHash: number]: number },
-  /** Callback when a new mix is found. */
-  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+  lockedModStats: { [statHash: number]: number }
 ) {
   const stats = item.stats;
 
@@ -405,8 +391,6 @@ function generateMixesFromPerksOrStats(
   const mixes: number[][] = [
     getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
   ];
-
-  const altPerks: (DimPlug[] | null)[] = [null];
 
   if (stats && item.destinyVersion === 2 && item.sockets && !item.energy) {
     for (const socket of item.sockets.sockets) {
@@ -423,14 +407,6 @@ function generateMixesFromPerksOrStats(
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
 
-              if (onMix) {
-                const existingMixAlts = altPerks[mixIndex];
-                const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
-                altPerks.push(plugs);
-                if (!onMix(optionStat, plugs)) {
-                  return [];
-                }
-              }
               mixes.push(optionStat);
             }
           }
