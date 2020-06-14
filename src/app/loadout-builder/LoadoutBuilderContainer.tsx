@@ -294,7 +294,7 @@ function LoadoutBuilderContainer({
             stateDispatch({ type: 'changeCharacter', storeId: getCurrentStore(stores)!.id });
           }
         }),
-      /* do not include selectedStoreId in dependencies, it triggers two process rounds */
+      /* do not include selectedStoreId in dependencies, it triggers two process rounds after changing store */
       /* eslint-disable react-hooks/exhaustive-deps */
       [account]
     )

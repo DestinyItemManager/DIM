@@ -90,27 +90,6 @@ function LoadoutBuilder({
     assumeMasterwork
   );
 
-  // const hydratedSets = useMemo(() => {
-  //   if (!result?.sets) {
-  //     return;
-  //   }
-
-  //   const start = performance.now();
-
-  //   const sets: ArmorSet[] = [];
-
-  //   for (const processSet of result.sets) {
-  //     const set = hydrateArmorSet(processSet, filteredItems);
-  //     if (set) {
-  //       sets.push(set);
-  //     }
-  //   }
-
-  //   console.log(`Hydrating armor took ${performance.now() - start} ms`);
-
-  //   return sets;
-  // }, [result?.sets, filteredItems]);
-
   const combos = result?.combos || 0;
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
 
