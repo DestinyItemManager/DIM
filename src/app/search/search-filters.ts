@@ -86,6 +86,9 @@ const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
+/** replaces a word with a corresponding season i.e. turns `<=forge` into `<=5`.
+ * use only on simple filter values where there's not other letters */
+const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
 // so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
 
@@ -339,6 +342,13 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     // energy capacity elements and ranges
     ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
     ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
+    // keywords for checking when an item hits power limit. s11 is the first valid season for this
+    ...(isD2
+      ? Object.entries(seasonTags)
+          .filter(([, seasonNumber]) => seasonNumber > 10)
+          .reverse()
+          .map(([tag]) => `sunsetsafter:${tag}`)
+      : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -598,7 +608,14 @@ function searchFilters(
       }
 
       for (const search of searchTerms) {
-        // i.e. ["-not:tagged", "-", "not:", "not", "tagged"
+        // i.e. [
+        // "-not:tagged", (discarded)
+        // "-",           (invertString)
+        // "not:",        (discarded)
+        // "not",         (filterName)
+        // "tagged"       (filterValue)
+        // ]
+
         const [, invertString, , filterName, filterValue] =
           search.match(/^(-?)(([^:]+):)?(.+)$/) || [];
         let invert = Boolean(invertString);
@@ -609,7 +626,7 @@ function searchFilters(
           switch (filterName) {
             case 'not':
               invert = !invert;
-            // fall through intentionally after setting "not" inversion. eslint demands this comment :|
+            // fall through intentionally after setting "not" inversion
             case 'is': {
               // do a lookup by filterValue (i.e. arc)
               // to find the appropriate predicate (i.e. dmg)
@@ -637,14 +654,17 @@ function searchFilters(
             case 'percentage':
               addPredicate('quality', filterValue, invert);
               break;
+            // mutate predicates where keywords (forge) should be translated into seasons (5)
             case 'powerlimitseason':
-              addPredicate('sunsetsafter', filterValue, invert);
+            case 'sunsetsafter':
+              addPredicate('sunsetsafter', replaceSeasonTagWithNumber(filterValue), invert);
+              break;
+            case 'season':
+              addPredicate('season', replaceSeasonTagWithNumber(filterValue), invert);
               break;
             // pass these filter names and values unaltered
             case 'masterwork':
-            case 'season':
             case 'powerlimit':
-            case 'sunsetsafter':
             case 'year':
             case 'stack':
             case 'count':
@@ -1083,10 +1103,7 @@ function searchFilters(
         );
       },
       season(item: D2Item, predicate: string) {
-        if (mathCheck.test(predicate)) {
-          return compareByOperator(item.season, predicate);
-        }
-        return seasonTags[predicate] && seasonTags[predicate] === item.season;
+        return compareByOperator(item.season, predicate);
       },
       year(item: DimItem, predicate: string) {
         if (item.isDestiny1()) {
@@ -1112,17 +1129,11 @@ function searchFilters(
       },
       powerlimit(item: D2Item, predicate: string) {
         // anything with no powerCap has no known limit, so treat it like it's 99999999
-        return mathCheck.test(predicate) && compareByOperator(item.powerCap ?? 99999999, predicate);
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
+        return compareByOperator(item.powerCap ?? 99999999, predicate);
       },
       sunsetsafter(item: D2Item, predicate: string) {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
-        return (
-          itemFinalSeason &&
-          mathCheck.test(predicate) &&
-          compareByOperator(itemFinalSeason, predicate)
-        );
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "sunsetsafter:arrivals"
+        return itemFinalSeason && compareByOperator(itemFinalSeason, predicate);
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
