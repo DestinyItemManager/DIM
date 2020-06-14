@@ -27,16 +27,20 @@ const IssueBanner = () => {
       })}
     >
       {isMinimized ? (
-        <div className="item" style={{
-            fontSize: `24px`, 
+        <div
+          className="item"
+          style={{
+            fontSize: `24px`,
             padding: `12px 24px`,
             backgroundColor: `black`,
             position: `unset`,
             contain: `unset`,
-            box-sizing: `unset`,
+            boxSizing: `unset`,
             width: `unset`,
             transition: `unset`,
-          }}" onClick={openCampaign}>
+          }}
+          onClick={openCampaign}
+        >
           Black Lives Matter
         </div>
       ) : (
@@ -44,8 +48,8 @@ const IssueBanner = () => {
           <div className={styles.container}>
             <p>
               DIM stands in solidarity with the Black community in acknowledging centuries of white
-              oppression and violence. Rest in power George Floyd, Breonna Taylor, Ahmaud Arbery, and
-              the countless victims of systemic violence.
+              oppression and violence. Rest in power George Floyd, Breonna Taylor, Ahmaud Arbery,
+              and the countless victims of systemic violence.
             </p>
             <p>Learn how you can help those fighting for justice:</p>
             <p>
