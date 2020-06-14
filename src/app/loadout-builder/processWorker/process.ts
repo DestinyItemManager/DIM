@@ -247,7 +247,15 @@ export function process(
     }
   }
 
-  const finalSets = Object.values(groupedSets);
+  // TODO move to a smarter system where we throw away stuff that wont be in this
+  // to keep the memory footprint down.
+  const finalSets = Object.values(groupedSets)
+    .sort(
+      (aSet, bSet) =>
+        Object.values(bSet.stats).reduce((a, b) => a + b, 0) -
+        Object.values(aSet.stats).reduce((a, b) => a + b, 0)
+    )
+    .slice(0, 250);
 
   console.log(
     'found',

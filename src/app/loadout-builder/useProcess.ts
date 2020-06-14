@@ -45,9 +45,11 @@ export function useProcess(
 
     console.timeEnd('useProcess: item preprocessing');
 
+    console.time('useProcess: worker time');
     worker
       .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
       .then(({ sets, combos, combosWithoutCaps }) => {
+        console.timeEnd('useProcess: worker time');
         console.time('useProcess: item hydration');
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
         console.timeEnd('useProcess: item hydration');
@@ -71,6 +73,8 @@ export function useProcess(
   return result;
 }
 
+// TODO Rather than always using the same worker maybe we should be caching the active worker so we can terminate
+// it early if the user clicks something else. I think currently this may be blocked by the existing task.
 function useWorker() {
   const { worker, cleanup } = useMemo(() => makeWorkerApiAndCleanup(), []);
 
@@ -125,8 +129,8 @@ function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
       equippingLabel,
       basePower,
       stats,
-      sockets: dimItem.sockets,
-      energy: dimItem.energy,
+      sockets: dimItem.sockets, // TODO Cut down to minimum necessary things for process
+      energy: dimItem.energy, // TODO Cut down to minimum necessary things for process
     };
   }
 
