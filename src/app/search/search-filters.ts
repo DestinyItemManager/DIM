@@ -1139,8 +1139,7 @@ function searchFilters(
       },
       sunsetsafter(item: D2Item, predicate: string) {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
-        const interpretedPredicate = predicate.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
-        return itemFinalSeason && compareByOperator(itemFinalSeason, interpretedPredicate);
+        return itemFinalSeason && compareByOperator(itemFinalSeason, predicate);
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
