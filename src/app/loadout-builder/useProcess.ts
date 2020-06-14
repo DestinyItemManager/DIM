@@ -27,10 +27,11 @@ export function useProcess(
   const worker = useWorker();
 
   useEffect(() => {
-    const totalStart = performance.now();
+    console.time('useProcess');
 
     setResult(null);
 
+    console.time('useProcess: item preprocessing');
     const processItems: ProcessItemsByBucket = {};
     const itemsById: ItemsById = {};
 
@@ -42,18 +43,20 @@ export function useProcess(
       }
     }
 
+    console.timeEnd('useProcess: item preprocessing');
+
     worker
       .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
       .then(({ sets, combos, combosWithoutCaps }) => {
-        const start = performance.now();
+        console.time('useProcess: item hydration');
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
-        console.log(`Item hydration took ${performance.now() - start}ms`);
+        console.timeEnd('useProcess: item hydration');
         setResult({
           sets: hydratedSets,
           combos,
           combosWithoutCaps,
         });
-        console.log(`Whole process took ${performance.now() - totalStart}`);
+        console.timeEnd('useProcess');
       });
   }, [
     worker,
