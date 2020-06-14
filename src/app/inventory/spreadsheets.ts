@@ -117,7 +117,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
     let total = 0;
 
     for (const file of files) {
-      const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
+      const results = await new Promise<Papa.ParseResult<CSVRow>>((resolve, reject) =>
         Papa.parse(file, {
           header: true,
           complete: resolve,
@@ -130,7 +130,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
       ) {
         throw new Error(results.errors[0].message);
       }
-      const contents: CSVRow[] = results.data;
+      const contents = results.data;
 
       if (!contents || !contents.length) {
         throw new Error(t('Csv.EmptyFile'));

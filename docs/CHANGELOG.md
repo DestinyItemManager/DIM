@@ -7,6 +7,7 @@
 * Fix umbral engrams showing up weird in the engram row.
 * Prevent Chrome on Android from showing a "download this image" prompt when long-pressing on images.
 * Fix non-selected perks not showing on old fixed-roll weapons.
+* Add Charge Rate and Guard Endurance stat to swords.
 
 ## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
 
