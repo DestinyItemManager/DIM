@@ -1,5 +1,0 @@
-RewriteEngine On
-<IfModule mod_rewrite.c>
-    RewriteCond %{REQUEST_FILENAME} !.well-known/
-    RewriteRule "(^|/)\.(?!well-known)" - [F]
-</IfModule>
