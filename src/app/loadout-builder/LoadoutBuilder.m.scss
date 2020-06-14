@@ -33,3 +33,17 @@
     min-width: 0;
   }
 }
+
+.processing {
+  background-color: black;
+  border-radius: 5px;
+  font-size: 1.4em;
+  height: 30px;
+  position: fixed;
+  right: 10px;
+  text-align: center;
+  top: 50px;
+  vertical-align: middle;
+  width: 30px;
+  z-index: 50;
+}

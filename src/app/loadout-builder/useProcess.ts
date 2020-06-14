@@ -4,10 +4,13 @@ import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from './types'
 import { DimItem } from 'app/inventory/item-types';
 import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './processWorker/types';
 
-type ProcessResult = null | {
-  sets: ArmorSet[];
-  combos: number;
-  combosWithoutCaps: number;
+type ProcessResult = {
+  processing: boolean;
+  result: {
+    sets: ArmorSet[];
+    combos: number;
+    combosWithoutCaps: number;
+  } | null;
 };
 
 type ItemsById = { [id: string]: DimItem };
@@ -22,14 +25,17 @@ export function useProcess(
   selectedStoreId: string,
   assumeMasterwork: boolean
 ) {
-  const [result, setResult] = useState(null as ProcessResult);
+  const [{ result, processing }, setState] = useState({
+    processing: false,
+    result: null,
+  } as ProcessResult);
 
   const worker = useWorker();
 
   useEffect(() => {
     console.time('useProcess');
 
-    setResult(null);
+    setState({ processing: true, result });
 
     console.time('useProcess: item preprocessing');
     const processItems: ProcessItemsByBucket = {};
@@ -53,24 +59,21 @@ export function useProcess(
         console.time('useProcess: item hydration');
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
         console.timeEnd('useProcess: item hydration');
-        setResult({
-          sets: hydratedSets,
-          combos,
-          combosWithoutCaps,
+        setState({
+          processing: false,
+          result: {
+            sets: hydratedSets,
+            combos,
+            combosWithoutCaps,
+          },
         });
         console.timeEnd('useProcess');
       });
-  }, [
-    worker,
-    setResult,
-    filteredItems,
-    lockedItems,
-    lockedArmor2ModMap,
-    selectedStoreId,
-    assumeMasterwork,
-  ]);
+    /* do not include result in dependenvies */
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, [worker, filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork]);
 
-  return result;
+  return { result, processing };
 }
 
 // TODO Rather than always using the same worker maybe we should be caching the active worker so we can terminate

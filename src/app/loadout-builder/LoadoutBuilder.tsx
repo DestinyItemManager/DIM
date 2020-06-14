@@ -27,6 +27,7 @@ import { LoadoutBuilderAction, LBState } from './LoadoutBuilderContainer';
 import { useProcess } from './useProcess';
 import { DimItem } from 'app/inventory/item-types';
 import { Loading } from 'app/dim-ui/Loading';
+import { AppIcon, refreshIcon } from 'app/shell/icons';
 
 interface Props {
   stores: DimStore[];
@@ -82,7 +83,7 @@ function LoadoutBuilder({
     [characterItems, lockedMap, lockedArmor2Mods, filter]
   );
 
-  const result = useProcess(
+  const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
@@ -178,6 +179,11 @@ function LoadoutBuilder({
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
+        {filteredSets && processing && (
+          <div className={styles.processing}>
+            <AppIcon icon={refreshIcon} spinning={true} />
+          </div>
+        )}
         {filteredSets ? (
           <GeneratedSets
             sets={filteredSets}
