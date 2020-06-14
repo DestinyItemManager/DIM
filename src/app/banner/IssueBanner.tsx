@@ -27,7 +27,16 @@ const IssueBanner = () => {
       })}
     >
       {isMinimized ? (
-        <div className={styles.banner} onClick={openCampaign}>
+        <div className="item" style={{
+            fontSize: `24px`, 
+            padding: `12px 24px`,
+            backgroundColor: `black`,
+            position: `unset`,
+            contain: `unset`,
+            box-sizing: `unset`,
+            width: `unset`,
+            transition: `unset`,
+          }}" onClick={openCampaign}>
           Black Lives Matter
         </div>
       ) : (
