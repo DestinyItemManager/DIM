@@ -61,6 +61,8 @@ export const statWhiteList = [
   1591432999, // Accuracy
   155624089, // Stability
   943549884, // Handling
+  3022301683, // Charge Rate (Sword)
+  3736848092, // Guard Endurance
   4188031367, // Reload Speed
   1345609583, // Aim Assistance
   3555269338, // Zoom
