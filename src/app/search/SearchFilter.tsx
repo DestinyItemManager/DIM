@@ -185,27 +185,26 @@ export function SearchFilter(
         {isComparable && (
           <span
             onClick={compareMatching}
-            className="filter-help"
+            className="filter-bar-button"
             title={t('Header.CompareMatching')}
           >
             <AppIcon icon={faClone} />
           </span>
         )}
-        <span className="filter-help">
-          {showSelect ? (
-            <select className="bulk-tag-select" onChange={bulkTag}>
-              {bulkItemTags.map((tag) => (
-                <option key={tag.type || 'default'} value={tag.type}>
-                  {t(tag.label)}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <span onClick={onTagClicked} title={t('Header.BulkTag')}>
-              <AppIcon icon={tagIcon} />
-            </span>
-          )}
-        </span>
+
+        {showSelect ? (
+          <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
+            {bulkItemTags.map((tag) => (
+              <option key={tag.type || 'default'} value={tag.type}>
+                {t(tag.label)}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
+            <AppIcon icon={tagIcon} />
+          </span>
+        )}
       </>
     </SearchFilterInput>
   );
