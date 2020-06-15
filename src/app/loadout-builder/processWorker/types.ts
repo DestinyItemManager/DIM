@@ -1,21 +1,44 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { DimSockets, DimStat } from '../../inventory/item-types';
-import { DestinyItemInstanceEnergy } from 'bungie-api-ts/destiny2';
 import { StatTypes } from '../types';
 
+export interface ProcessStat {
+  statHash: number;
+  value: number;
+}
+
+export interface ProcessPlug {
+  stats: {
+    [statHash: number]: number;
+  } | null;
+  plugItemHash: number;
+}
+
+export interface ProcessSocket {
+  plug: ProcessPlug | null;
+  plugOptions: ProcessPlug[];
+}
+
+export interface ProcessSocketCategory {
+  categoryStyle: number;
+  sockets: ProcessSocket[];
+}
+
+export interface ProcessSockets {
+  sockets: ProcessSocket[];
+  /** Sockets grouped by category. */
+  categories: ProcessSocketCategory[];
+}
 export interface ProcessItem {
   owner: string;
-  destinyVersion: DestinyVersion;
   bucketHash: number;
   id: string;
   type: string;
   name: string;
   equipped: boolean;
   equippingLabel?: string;
-  sockets: DimSockets | null;
-  energy: DestinyItemInstanceEnergy | null;
+  sockets: ProcessSockets | null;
+  hasEnergy: boolean;
   basePower: number;
-  stats: DimStat[] | null;
+  stats: ProcessStat[] | null;
 }
 
 export type ProcessItemsByBucket = Readonly<{

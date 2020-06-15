@@ -24,7 +24,7 @@ import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { LoadoutBuilderAction, LBState } from './LoadoutBuilderContainer';
-import { useProcess } from './useProcess';
+import { useProcess } from './hooks/useProcess';
 import { DimItem } from 'app/inventory/item-types';
 import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';

@@ -11,9 +11,7 @@ import { statTier } from '../generated-sets/utils';
 import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { statKeys, statHashes, statValues } from '../utils';
-import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
-import { DimStat } from '../../inventory/item-types';
-import { getMasterworkSocketHashes } from '../../utils/socket-utils';
+import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet, ProcessStat } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 /**
@@ -400,7 +398,7 @@ function generateMixesFromPerksOrStats(
     getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
   ];
 
-  if (stats && item.destinyVersion === 2 && item.sockets && !item.energy) {
+  if (stats && item.sockets && !item.hasEnergy) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -428,7 +426,7 @@ function generateMixesFromPerksOrStats(
 
 function getBaseStatValues(
   stats: {
-    [index: string]: DimStat;
+    [index: string]: ProcessStat;
   },
   item: ProcessItem,
   assumeMasterwork: boolean | null,
@@ -441,19 +439,24 @@ function getBaseStatValues(
   }
 
   // Checking energy tells us if it is Armour 2.0
-  if (item.destinyVersion === 2 && item.sockets && item.energy) {
+  if (item.sockets && item.hasEnergy) {
     let masterworkSocketHashes: number[] = [];
 
     // only get masterwork sockets if we aren't manually adding the values
     if (!assumeMasterwork) {
-      masterworkSocketHashes = getMasterworkSocketHashes(
-        item.sockets,
-        DestinySocketCategoryStyle.EnergyMeter
+      const masterworkSocketCategory = item.sockets.categories.find(
+        (category) => category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter
       );
+
+      if (masterworkSocketCategory) {
+        masterworkSocketHashes = masterworkSocketCategory.sockets
+          .map((socket) => socket?.plug?.plugItemHash ?? NaN)
+          .filter((val) => !isNaN(val));
+      }
     }
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
+      const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
       if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {

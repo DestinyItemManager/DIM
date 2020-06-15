@@ -1,8 +1,14 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
-import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from './types';
-import { DimItem } from 'app/inventory/item-types';
-import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './processWorker/types';
+import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from '../types';
+import { DimItem, DimSocket, DimSockets } from 'app/inventory/item-types';
+import {
+  ProcessItemsByBucket,
+  ProcessItem,
+  ProcessArmorSet,
+  ProcessSocket,
+  ProcessSockets,
+} from '../processWorker/types';
 
 type ProcessResult = {
   processing: boolean;
@@ -91,12 +97,12 @@ function useWorker() {
  * Creates a worker, a cleanup function and returns it
  */
 function makeWorkerApiAndCleanup() {
-  const instance = new Worker('./processWorker/ProcessWorker', {
+  const instance = new Worker('../processWorker/ProcessWorker', {
     name: 'ProcessWorker',
     type: 'module',
   });
 
-  const worker = wrap<import('./processWorker/ProcessWorker').ProcessWorker>(instance);
+  const worker = wrap<import('../processWorker/ProcessWorker').ProcessWorker>(instance);
 
   const cleanup = () => {
     worker[releaseProxy]();
@@ -106,24 +112,35 @@ function makeWorkerApiAndCleanup() {
   return { worker, cleanup };
 }
 
+function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
+  return {
+    plug: dimSocket.plug && {
+      stats: dimSocket.plug.stats,
+      plugItemHash: dimSocket.plug.plugItem.hash,
+    },
+    plugOptions: dimSocket.plugOptions.map((dimPlug) => ({
+      stats: dimPlug.stats,
+      plugItemHash: dimPlug.plugItem.hash,
+    })),
+  };
+}
+
+function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
+  return {
+    sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
+    categories: dimSockets.categories.map((category) => ({
+      categoryStyle: category.category.categoryStyle,
+      sockets: category.sockets.map(mapDimSocketToProcessSocket),
+    })),
+  };
+}
+
 function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
-  const {
-    owner,
-    destinyVersion,
-    bucket,
-    id,
-    type,
-    name,
-    equipped,
-    equippingLabel,
-    basePower,
-    stats,
-  } = dimItem;
+  const { owner, bucket, id, type, name, equipped, equippingLabel, basePower, stats } = dimItem;
 
   if (dimItem.isDestiny2()) {
     return {
       owner,
-      destinyVersion,
       bucketHash: bucket.hash,
       id,
       type,
@@ -131,15 +148,14 @@ function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
       equipped,
       equippingLabel,
       basePower,
-      stats,
-      sockets: dimItem.sockets, // TODO Cut down to minimum necessary things for process
-      energy: dimItem.energy, // TODO Cut down to minimum necessary things for process
+      stats: stats?.map(({ statHash, value }) => ({ statHash, value })) || null,
+      sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
+      hasEnergy: Boolean(dimItem.energy),
     };
   }
 
   return {
     owner,
-    destinyVersion,
     bucketHash: bucket.hash,
     id,
     type,
@@ -149,7 +165,7 @@ function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
     basePower,
     stats,
     sockets: null,
-    energy: null,
+    hasEnergy: false,
   };
 }
 
