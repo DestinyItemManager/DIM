@@ -183,10 +183,8 @@ export function SearchFilter(
           {t('Header.FilterMatchCount', { count: filteredItems.length })}
         </span>
         {isComparable && (
-          <span className="filter-help">
-            <a onClick={compareMatching}>
-              <AppIcon icon={faClone} title={t('Header.CompareMatching')} />
-            </a>
+          <span onClick={compareMatching} className="filter-help">
+            <AppIcon icon={faClone} title={t('Header.CompareMatching')} />
           </span>
         )}
         <span className="filter-help">
@@ -199,9 +197,9 @@ export function SearchFilter(
               ))}
             </select>
           ) : (
-            <a onClick={onTagClicked}>
+            <span onClick={onTagClicked}>
               <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
-            </a>
+            </span>
           )}
         </span>
       </>
