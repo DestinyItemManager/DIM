@@ -1,5 +1,7 @@
 ## Next
 
+## 6.15.0 <span className="changelog-date">(2020-06-14)</span>
+
 * Items now show their power limit in the item popup, Compare, and in the Organizer (new column). Keep in mind some power limits may change in upcoming seasons.
 * Try the `sunsetsafter:` or `powerlimit:` filters to find things by their power limit.
 * Fix the season icon for reissued items.
