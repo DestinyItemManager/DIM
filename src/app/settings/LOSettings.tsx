@@ -35,7 +35,7 @@ function LOSettings({ onChange }: Props) {
     dispatch(
       setSetting(
         'loStatSortOrder',
-        sortOrder.filter((o) => o.enabled).map((o) => o.id)
+        sortOrder.filter((o) => o.enabled).map((o) => parseInt(o.id, 10))
       )
     );
   };

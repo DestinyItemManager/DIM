@@ -55,13 +55,13 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { Location } from 'history';
 import { useSubscription } from 'app/utils/hooks';
 
-export const statHashToType: { [hash: string]: StatTypes } = {
-  '2996146975': 'Mobility',
-  '392767087': 'Resilience',
-  '1943323491': 'Recovery',
-  '1735777505': 'Discipline',
-  '144602215': 'Intellect',
-  '4244567218': 'Strength',
+export const statHashToType: { [hash: number]: StatTypes } = {
+  2996146975: 'Mobility',
+  392767087: 'Resilience',
+  1943323491: 'Recovery',
+  1735777505: 'Discipline',
+  144602215: 'Intellect',
+  4244567218: 'Strength',
 };
 
 interface ProvidedProps {
@@ -71,7 +71,7 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
-  settingsStatOrder: string[];
+  settingsStatOrder: number[];
   settingsAssumeMasterwork: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
@@ -108,7 +108,7 @@ const init = ({
   location: Location<{
     loadout?: Loadout | undefined;
   }>;
-  settingsStatOrder: string[];
+  settingsStatOrder: number[];
   settingsAssumeMasterwork: boolean;
 }): State => {
   let lockedMap: LockedMap = {};
