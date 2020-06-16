@@ -46,7 +46,7 @@ import { getRating } from 'app/item-review/reducer';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { source } from 'app/inventory/spreadsheets';
 import { statHashByName } from 'app/search/search-filter-values';
-import { statWhiteList } from 'app/inventory/store/stats';
+import { statAllowList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
@@ -135,7 +135,7 @@ export function getColumns(
         };
       }
     ),
-    (s) => statWhiteList.indexOf(s.statHash)
+    (s) => statAllowList.indexOf(s.statHash)
   );
 
   const isGhost = itemsType === 'ghost';
@@ -187,7 +187,7 @@ export function getColumns(
               };
             }
           ),
-          (s) => statWhiteList.indexOf(s.statHash)
+          (s) => statAllowList.indexOf(s.statHash)
         )
       : [];
 

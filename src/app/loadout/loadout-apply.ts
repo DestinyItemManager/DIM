@@ -348,7 +348,7 @@ function clearSpaceAfterLoadout(stores: DimStore[], store: DimStore, items: DimI
   const itemsToRemove: DimItem[] = [];
 
   _.forIn(itemsByType, (loadoutItems, bucketId) => {
-    // Blacklist a handful of buckets from being cleared out
+    // Exclude a handful of buckets from being cleared out
     if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
       return;
     }

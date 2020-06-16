@@ -40,7 +40,7 @@ export const D2CategoryHashes = {
 };
 
 /** these are checked against default rolls to determine if something's curated */
-export const curatedPlugsWhitelist = [
+export const curatedPlugsAllowList = [
   7906839, // frames
   683359327, // guards
   1041766312, // blades

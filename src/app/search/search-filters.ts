@@ -1260,7 +1260,7 @@ function searchFilters(
 
         const oneSocketPerPlug = item.sockets?.sockets
           .filter((socket) =>
-            hashes.curatedPlugsWhitelist.includes(
+            hashes.curatedPlugsAllowList.includes(
               socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
             )
           )
