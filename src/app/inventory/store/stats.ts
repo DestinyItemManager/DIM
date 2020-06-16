@@ -16,7 +16,7 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import { D2CategoryHashes } from 'app/search/search-filter-hashes';
+import { D2CategoryHashes } from 'app/search/search-filter-values';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.

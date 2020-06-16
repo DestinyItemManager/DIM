@@ -45,7 +45,7 @@ import { compareBy } from 'app/utils/comparators';
 import { getRating } from 'app/item-review/reducer';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { source } from 'app/inventory/spreadsheets';
-import { statHashByName } from 'app/search/search-filter-hashes';
+import { statHashByName } from 'app/search/search-filter-values';
 import { statWhiteList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
 import { t } from 'app/i18next-t';
