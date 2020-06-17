@@ -124,7 +124,7 @@ function mapStateToProps() {
 
         return unlockedPlugs
           .map((i) => defs.InventoryItem.get(i))
-          .filter((item) => isArmor2Mod(item) && item.collectibleHash)
+          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
           .sort(sortMods);
       });
 
