@@ -14,6 +14,7 @@ interface CssExports {
   'importButton': string;
   'inlineIcon': string;
   'isPerk': string;
+  'itemIcon': string;
   'loadouts': string;
   'locked': string;
   'masterwork': string;
