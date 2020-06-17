@@ -13,6 +13,7 @@ import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generat
 import { statKeys } from './process';
 import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
+import { useReducer } from 'react';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
@@ -26,7 +27,7 @@ export interface LoadoutBuilderState {
   assumeMasterwork: boolean;
 }
 
-export const lbStateInit = ({
+const lbStateInit = ({
   stores,
   location,
 }: {
@@ -100,7 +101,7 @@ export type LoadoutBuilderAction =
   | { type: 'assumeMasterworkChanged'; assumeMasterwork: boolean };
 
 // TODO: Move more logic inside the reducer
-export function lbStateReducer(
+function lbStateReducer(
   state: LoadoutBuilderState,
   action: LoadoutBuilderAction
 ): LoadoutBuilderState {
@@ -165,4 +166,11 @@ export function lbStateReducer(
     case 'assumeMasterworkChanged':
       return { ...state, assumeMasterwork: action.assumeMasterwork };
   }
+}
+
+export function useLbState(
+  stores: DimStore[],
+  location: Location<{ loadout?: Loadout | undefined }>
+) {
+  return useReducer(lbStateReducer, { stores, location }, lbStateInit);
 }

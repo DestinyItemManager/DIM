@@ -1,7 +1,7 @@
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useMemo, useReducer, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
@@ -38,7 +38,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
-import { lbStateInit, lbStateReducer, LoadoutBuilderState } from './loadoutBuilderReducer';
+import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -146,7 +146,7 @@ function LoadoutBuilder({
       assumeMasterwork,
     },
     stateDispatch,
-  ] = useReducer(lbStateReducer, { stores, location }, lbStateInit);
+  ] = useLbState(stores, location);
 
   useSubscription(
     useCallback(
