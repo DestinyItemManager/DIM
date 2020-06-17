@@ -16,7 +16,7 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import { D2CategoryHashes } from 'app/search/search-filter-hashes';
+import { D2CategoryHashes } from 'app/search/search-filter-values';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -47,7 +47,7 @@ export const armorStats = [
 /**
  * Which stats to display, and in which order.
  */
-export const statWhiteList = [
+export const statAllowList = [
   4284893193, // Rounds Per Minute
   2961396640, // Charge Time
   447667954, // Draw Time
@@ -91,7 +91,7 @@ export const statsMs = [
 ];
 
 /** Show these stats in addition to any "natural" stats */
-const hiddenStatsWhitelist = [
+const hiddenStatsAllowList = [
   1345609583, // Aim Assistance
   3555269338, // Zoom
   2715839340, // Recoil Direction
@@ -223,10 +223,10 @@ function shouldShowStat(
   const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(54);
 
   return (
-    // Must be on the whitelist
-    statWhiteList.includes(statHash) &&
+    // Must be on the AllowList
+    statAllowList.includes(statHash) &&
     // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsWhitelist.includes(statHash)))
+    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
   );
 }
 
@@ -289,7 +289,7 @@ function buildStat(
     investmentValue: itemStat.value || 0,
     statHash,
     displayProperties: statDef.displayProperties,
-    sort: statWhiteList.indexOf(statHash),
+    sort: statAllowList.indexOf(statHash),
     value,
     base: value,
     maximumValue,
@@ -440,7 +440,7 @@ function buildLiveStats(
       investmentValue: itemStat.value || 0,
       statHash,
       displayProperties: statDef.displayProperties,
-      sort: statWhiteList.indexOf(statHash),
+      sort: statAllowList.indexOf(statHash),
       value: itemStat.value,
       base: itemStat.value,
       maximumValue,
@@ -487,7 +487,7 @@ function totalStat(stats: DimStat[]): DimStat {
     displayProperties: ({
       name: t('Stats.Total'),
     } as any) as DestinyDisplayPropertiesDefinition,
-    sort: statWhiteList.indexOf(-1000),
+    sort: statAllowList.indexOf(-1000),
     value: total,
     base: baseTotal,
     maximumValue: 100,

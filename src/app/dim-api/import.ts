@@ -20,7 +20,7 @@ import { observeStore } from 'app/utils/redux-utils';
  * Import data (either legacy-format from SyncService or the new DIM Sync export) into DIM Sync.
  * This is from a user clicking "Import" and will always overwrite the data saved locally or on the server.
  */
-export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
+export function importDataBackup(data: DimData | ExportResponse, silent = false): ThunkResult {
   return async (dispatch, getState) => {
     const dimApiData = getState().dimApi;
 
@@ -42,8 +42,10 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
         // Reload from the server
         return dispatch(loadDimApiData(true));
       } catch (e) {
-        console.error('[importLegacyData] Error importing legacy data into DIM API', e);
-        showImportFailedNotification(e);
+        if (!silent) {
+          console.error('[importLegacyData] Error importing legacy data into DIM API', e);
+          showImportFailedNotification(e);
+        }
         return;
       }
     } else {
@@ -53,11 +55,13 @@ export function importDataBackup(data: DimData | ExportResponse): ThunkResult {
       const tags = extractItemAnnotations(data);
 
       if (!loadouts.length && !tags.length) {
-        console.error(
-          '[importLegacyData] Error importing legacy data into DIM API - no data',
-          data
-        );
-        showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
+        if (!silent) {
+          console.error(
+            '[importLegacyData] Error importing legacy data into DIM API - no data',
+            data
+          );
+          showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
+        }
         return;
       }
 

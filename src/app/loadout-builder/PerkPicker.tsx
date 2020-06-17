@@ -204,7 +204,7 @@ function mapStateToProps() {
             (i) =>
               i.item.inventory.tierType !== TierType.Common &&
               (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
-              i.item.collectibleHash
+              i.item.plug.insertionMaterialRequirementHash !== 0 // not the empty mod sockets
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });

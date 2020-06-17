@@ -1,5 +1,5 @@
 {
-  "categoryBlacklist": [
+  "categoryDenyList": [
     18,
     34,
     40,
