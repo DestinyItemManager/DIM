@@ -58,12 +58,12 @@ const allVendors = [
   */
 
 // Vendors we don't want to load by default
-const vendorBlackList = [
+const vendorDenyList = [
   2021251983, // Postmaster,
 ];
 
 // Hashes for 'Decode Engram'
-const categoryBlacklist = [3574600435, 3612261728, 1333567905, 2634310414];
+const categoryDenyList = [3574600435, 3612261728, 1333567905, 2634310414];
 
 const xur = 2796397637;
 
@@ -222,12 +222,12 @@ function VendorService(): VendorServiceType {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
 
-        service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
+        service.totalVendors = characters.length * (vendorList.length - vendorDenyList.length);
         service.loadedVendors = 0;
 
         return Promise.all(
           vendorList.flatMap(async (vendorDef) => {
-            if (vendorBlackList.includes(vendorDef.hash)) {
+            if (vendorDenyList.includes(vendorDef.hash)) {
               return null;
             }
 
@@ -495,7 +495,7 @@ function VendorService(): VendorServiceType {
       const categories = _.compact(
         _.map(vendor.saleItemCategories, (category) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
-          if (categoryBlacklist.includes(categoryInfo.categoryHash)) {
+          if (categoryDenyList.includes(categoryInfo.categoryHash)) {
             return null;
           }
 

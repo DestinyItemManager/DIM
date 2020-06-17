@@ -461,7 +461,7 @@ AddDefaultCharset utf-8
 # attacks.
 #
 # This can be done by setting a `Content Security Policy` which
-# whitelists trusted sources of content for your website.
+# lists trusted sources of content for your website.
 #
 # The example header below allows ONLY scripts that are loaded from
 # the current website's origin (no inline scripts, no CDN, etc).

@@ -99,22 +99,22 @@ class ManifestService {
     readonly getManifestApi: () => Promise<DestinyManifest>
   ) {}
 
-  getManifest(tableWhitelist: string[]): Promise<object> {
+  getManifest(tableAllowList: string[]): Promise<object> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
 
-    this.manifestPromise = this.doGetManifest(tableWhitelist);
+    this.manifestPromise = this.doGetManifest(tableAllowList);
 
     return this.manifestPromise;
   }
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
-  private async doGetManifest(tableWhitelist: string[]) {
+  private async doGetManifest(tableAllowList: string[]) {
     store.dispatch(loadingStart(t('Manifest.Load')));
     try {
       console.time('Load manifest');
-      const manifest = await this.loadManifest(tableWhitelist);
+      const manifest = await this.loadManifest(tableAllowList);
       if (!manifest.DestinyVendorDefinition) {
         throw new Error('Manifest corrupted, please reload');
       }
@@ -151,7 +151,7 @@ class ManifestService {
     }
   }
 
-  private async loadManifest(tableWhitelist: string[]): Promise<any> {
+  private async loadManifest(tableAllowList: string[]): Promise<any> {
     let version: string | null = null;
     let components: {
       [key: string]: string;
@@ -173,16 +173,16 @@ class ManifestService {
       version = localStorage.getItem(this.localStorageKey);
       if (version) {
         this.version = version;
-        return this.loadManifestFromCache(version, tableWhitelist);
+        return this.loadManifestFromCache(version, tableAllowList);
       } else {
         throw e;
       }
     }
 
     try {
-      return await this.loadManifestFromCache(version, tableWhitelist);
+      return await this.loadManifestFromCache(version, tableAllowList);
     } catch (e) {
-      return this.loadManifestRemote(version, components, tableWhitelist);
+      return this.loadManifestRemote(version, components, tableAllowList);
     }
   }
 
@@ -194,7 +194,7 @@ class ManifestService {
     components: {
       [key: string]: string;
     },
-    tableWhitelist: string[]
+    tableAllowList: string[]
   ): Promise<object> {
     store.dispatch(loadingStart(t('Manifest.Download')));
     try {
@@ -208,7 +208,7 @@ class ManifestService {
         '?dim',
         `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
       ];
-      const futures = tableWhitelist
+      const futures = tableAllowList
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
           let response: Response | null = null;
@@ -230,7 +230,7 @@ class ManifestService {
       await Promise.all(futures);
 
       // We intentionally don't wait on this promise
-      this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
+      this.saveManifestToIndexedDB(manifest, version, tableAllowList);
       return manifest;
     } finally {
       store.dispatch(loadingEnd(t('Manifest.Download')));
@@ -241,13 +241,13 @@ class ManifestService {
   private async saveManifestToIndexedDB(
     typedArray: object,
     version: string,
-    tableWhitelist: string[]
+    tableAllowList: string[]
   ) {
     try {
       await set(this.idbKey, typedArray);
       console.log(`Sucessfully stored manifest file.`);
       localStorage.setItem(this.localStorageKey, version);
-      localStorage.setItem(this.localStorageKey + '-whitelist', JSON.stringify(tableWhitelist));
+      localStorage.setItem(this.localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
     } catch (e) {
       console.error('Error saving manifest file', e);
       showNotification({
@@ -267,16 +267,16 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private async loadManifestFromCache(version: string, tableWhitelist: string[]): Promise<object> {
+  private async loadManifestFromCache(version: string, tableAllowList: string[]): Promise<object> {
     if (alwaysLoadRemote) {
       throw new Error('Testing - always load remote');
     }
 
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
-    const currentWhitelist = JSON.parse(
+    const currentAllowList = JSON.parse(
       localStorage.getItem(this.localStorageKey + '-whitelist') || '[]'
     );
-    if (currentManifestVersion === version && deepEqual(currentWhitelist, tableWhitelist)) {
+    if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
       const manifest = await get<object>(this.idbKey);
       if (!manifest) {
         await this.deleteManifestFile();

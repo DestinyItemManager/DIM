@@ -151,7 +151,7 @@ class Activities extends React.Component<Props> {
   // efficient to just fish the info out of there.
 
   private init = (stores: D1Store[], defs: D1ManifestDefinitions) => {
-    const whitelist = [
+    const allowList = [
       'vaultofglass',
       'crota',
       'kingsfall',
@@ -162,10 +162,10 @@ class Activities extends React.Component<Props> {
     ];
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
-      (a: any) => a.activityTiers && whitelist.includes(a.identifier)
+      (a: any) => a.activityTiers && allowList.includes(a.identifier)
     );
     const activities = _.sortBy(rawActivities, (a: any) => {
-      const ix = whitelist.indexOf(a.identifier);
+      const ix = allowList.indexOf(a.identifier);
       return ix === -1 ? 999 : ix;
     }).map((a) => this.processActivities(defs, stores, a));
 
