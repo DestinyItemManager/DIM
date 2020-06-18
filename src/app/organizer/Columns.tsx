@@ -199,7 +199,7 @@ export function getColumns(
       cell: (value: string, item) => (
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
-            <div ref={ref} onClick={onClick}>
+            <div ref={ref} onClick={onClick} className={styles.itemIcon}>
               <BungieImage src={value} className={clsx({ [styles.masterwork]: item.masterwork })} />
               {item.masterwork && (
                 <div
