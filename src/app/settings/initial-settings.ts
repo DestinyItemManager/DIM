@@ -42,13 +42,4 @@ export const initialSettingsState: Settings = {
     'customstat',
     'notes',
   ],
-  loStatSortOrder: [
-    2996146975, //Mobility
-    392767087, //Resilience
-    1943323491, //Recovery
-    1735777505, //Discipline
-    144602215, //Intellect
-    4244567218, //Strength
-  ],
-  loAssumeMasterwork: false,
 };

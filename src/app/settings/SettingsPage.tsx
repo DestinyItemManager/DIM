@@ -37,7 +37,6 @@ import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import { emptyArray } from 'app/utils/empty';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import LOSettings from './LOSettings';
 
 interface StoreProps {
   settings: Settings;
@@ -269,7 +268,6 @@ function SettingsPage({
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
-    { id: 'lo', title: t('Settings.LoadoutOptimizer') },
     { id: 'ratings', title: t('Settings.Ratings') },
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
@@ -442,8 +440,6 @@ function SettingsPage({
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}
-
-          <LOSettings onChange={onChange} />
 
           <section id="ratings">
             <h2>{t('Settings.Ratings')}</h2>

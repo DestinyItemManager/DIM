@@ -46,7 +46,7 @@ export default function FilterBuilds({
 }) {
   const dispatch = useDispatch();
 
-  const onStatSortOrderChanged = (sortOrder: StatTypes[]) => {
+  const onStatOrderChanged = (sortOrder: StatTypes[]) => {
     dispatch(
       setSetting(
         'loStatSortOrder',
@@ -85,7 +85,7 @@ export default function FilterBuilds({
           defs={defs}
           order={order}
           onStatFiltersChanged={onStatFiltersChanged}
-          onStatOrderChanged={onStatSortOrderChanged}
+          onStatOrderChanged={onStatOrderChanged}
         />
         <div
           className={styles.assumeMasterwork}
