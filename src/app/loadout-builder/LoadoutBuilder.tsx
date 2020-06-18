@@ -58,6 +58,8 @@ interface StoreProps {
   stores: DimStore[];
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
+  minimumPower: number;
+  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -110,6 +112,8 @@ function mapStateToProps() {
     stores: sortedStoresSelector(state),
     statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
     assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
+    minimumPower: state.dimApi.settings.loMinPower,
+    minimumStatTotal: state.dimApi.settings.loMinStatTotal,
     isPhonePortrait: state.shell.isPhonePortrait,
     items: itemsSelector(state),
     defs: state.manifest.d2Manifest,
@@ -127,6 +131,8 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
+  minimumPower,
+  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -149,15 +155,7 @@ function LoadoutBuilder({
   );
 
   const [
-    {
-      lockedMap,
-      lockedSeasonalMods,
-      lockedArmor2Mods,
-      selectedStoreId,
-      statFilters,
-      minimumPower,
-      query,
-    },
+    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, query },
     stateDispatch,
   ] = useLbState(stores, location);
 
@@ -210,6 +208,8 @@ function LoadoutBuilder({
       items[store.classType],
       lockedMap,
       lockedArmor2Mods,
+      minimumStatTotal,
+      assumeMasterwork,
       filter
     );
 
@@ -250,10 +250,8 @@ function LoadoutBuilder({
         sets={processedSets}
         selectedStore={store as D2Store}
         minimumPower={minimumPower}
+        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
-        onMinimumPowerChanged={(minimumPower: number) =>
-          stateDispatch({ type: 'minimumPowerChanged', minimumPower })
-        }
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           stateDispatch({ type: 'statFiltersChanged', statFilters })
         }

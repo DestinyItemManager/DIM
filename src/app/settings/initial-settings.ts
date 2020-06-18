@@ -9,6 +9,9 @@ export interface Settings extends DimApiSettings {
   /** Selected columns for the Vault Organizer */
   readonly organizerColumnsWeapons: string[];
   readonly organizerColumnsArmor: string[];
+
+  readonly loMinPower: number;
+  readonly loMinStatTotal: number;
 }
 
 export const initialSettingsState: Settings = {
@@ -42,4 +45,6 @@ export const initialSettingsState: Settings = {
     'customstat',
     'notes',
   ],
+  loMinPower: 750,
+  loMinStatTotal: 55,
 };

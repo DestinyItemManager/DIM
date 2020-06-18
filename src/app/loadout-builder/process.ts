@@ -14,7 +14,6 @@ import {
 import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
-import { DimStat } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getItemDamageShortName, Armor2ModPlugCategories } from 'app/utils/item-utils';
@@ -45,6 +44,8 @@ export function filterItems(
   items: ItemsByBucket,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
+  minimumStatTotal: number,
+  assumeMasterwork: boolean,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -74,10 +75,19 @@ export function filterItems(
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
+    const lockedModStats = getLockedModStats(locked, lockedMods);
 
-    if (lockedMods?.length || (locked?.length && filteredItems[bucket])) {
+    if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
+          // if the item is not a ghost of class item, make sure it meets the minimum total stat
+          (bucket === LockableBuckets.classitem ||
+            bucket === LockableBuckets.ghost ||
+            Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats)).reduce(
+              (a, b) => a + b,
+              0
+            ) >= minimumStatTotal) &&
+          // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
       );
@@ -392,28 +402,10 @@ function byStatMix(
   lockedItems?: readonly LockedItemType[],
   lockedArmor2Mods?: LockedArmor2Mod[]
 ) {
-  const lockedModStats: { [statHash: number]: number } = {};
-  // Handle old armour mods
-  if (lockedItems) {
-    for (const lockedItem of lockedItems) {
-      if (lockedItem.type === 'mod') {
-        for (const stat of lockedItem.mod.investmentStats) {
-          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-          lockedModStats[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
-  // Handle armour 2.0 mods
-  if (lockedArmor2Mods) {
-    for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.mod.investmentStats) {
-        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-        lockedModStats[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
+  const lockedModStats: { [statHash: number]: number } = getLockedModStats(
+    lockedItems,
+    lockedArmor2Mods
+  );
 
   return (item: DimItem): string[] => {
     const stats = item.stats;
@@ -473,10 +465,7 @@ function generateMixesFromPerksOrStats(
     return [];
   }
 
-  const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
-  ];
+  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -515,17 +504,15 @@ function generateMixesFromPerksOrStats(
 }
 
 function getBaseStatValues(
-  stats: {
-    [index: string]: DimStat;
-  },
   item: DimItem,
   assumeMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number }
 ) {
+  const stats = _.keyBy(item.stats, (stat) => stat.statHash);
   const baseStats = {};
 
   for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash].value;
+    baseStats[statHash] = stats[statHash]?.value || 0;
   }
 
   // Checking energy tells us if it is Armour 2.0
@@ -564,6 +551,39 @@ function getBaseStatValues(
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
   return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
+}
+
+/**
+ * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
+ */
+function getLockedModStats(
+  lockedItems?: readonly LockedItemType[],
+  lockedArmor2Mods?: readonly LockedArmor2Mod[]
+): { [statHash: number]: number } {
+  const lockedModStats: { [statHash: number]: number } = {};
+  // Handle old armour mods
+  if (lockedItems) {
+    for (const lockedItem of lockedItems) {
+      if (lockedItem.type === 'mod') {
+        for (const stat of lockedItem.mod.investmentStats) {
+          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          lockedModStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
+  // Handle armour 2.0 mods
+  if (lockedArmor2Mods) {
+    for (const lockedMod of lockedArmor2Mods) {
+      for (const stat of lockedMod.mod.investmentStats) {
+        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+        lockedModStats[stat.statTypeHash] += stat.value;
+      }
+    }
+  }
+
+  return lockedModStats;
 }
 
 /**

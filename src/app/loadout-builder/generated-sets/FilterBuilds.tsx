@@ -26,22 +26,22 @@ const statTypeToHash: { [type in StatTypes]: number } = {
 export default function FilterBuilds({
   sets,
   minimumPower,
+  minimumStatTotal,
   selectedStore,
   stats,
   defs,
   order,
   assumeMasterwork,
-  onMinimumPowerChanged,
   onStatFiltersChanged,
 }: {
   sets: readonly ArmorSet[];
   minimumPower: number;
+  minimumStatTotal: number;
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMaxIgnored };
   defs: D2ManifestDefinitions;
   order: StatTypes[];
   assumeMasterwork: boolean;
-  onMinimumPowerChanged(minimumPower: number): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
   const dispatch = useDispatch();
@@ -53,10 +53,6 @@ export default function FilterBuilds({
         sortOrder.map((type) => statTypeToHash[type])
       )
     );
-  };
-
-  const onMasterworkAssumptionChange = (assumeMasterwork: boolean) => {
-    dispatch(setSetting('loAssumeMasterwork', assumeMasterwork));
   };
 
   const statRanges = useMemo(() => {
@@ -94,7 +90,7 @@ export default function FilterBuilds({
           <input
             type="checkbox"
             checked={assumeMasterwork}
-            onChange={(e) => onMasterworkAssumptionChange(e.target.checked)}
+            onChange={(e) => dispatch(setSetting('loAssumeMasterwork', e.target.checked))}
           />
           <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
         </div>
@@ -106,7 +102,18 @@ export default function FilterBuilds({
             min={750}
             max={parseInt(selectedStore.stats.maxGearPower!.value.toString(), 10)}
             initialValue={minimumPower}
-            onChange={onMinimumPowerChanged}
+            onChange={(minPower: number) => dispatch(setSetting('loMinPower', minPower))}
+          />
+        </div>
+        <div className={styles.powerSelect}>
+          <label id="minStatTotal" title={t('LoadoutBuilder.SelectMinStatTotalDescription')}>
+            {t('LoadoutBuilder.SelectMinStatTotal')}
+          </label>
+          <RangeSelector
+            min={46}
+            max={82}
+            initialValue={minimumStatTotal}
+            onChange={(minTotal: number) => dispatch(setSetting('loMinStatTotal', minTotal))}
           />
         </div>
       </div>
