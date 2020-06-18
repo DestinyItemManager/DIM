@@ -56,8 +56,8 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
-  settingsStatOrder: number[];
-  settingsAssumeMasterwork: boolean;
+  statOrder: StatTypes[];
+  assumeMasterwork: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -108,8 +108,8 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
-    settingsStatOrder: state.dimApi.settings.loStatSortOrder,
-    settingsAssumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
+    statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
+    assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
     isPhonePortrait: state.shell.isPhonePortrait,
     items: itemsSelector(state),
     defs: state.manifest.d2Manifest,
@@ -125,8 +125,8 @@ function LoadoutBuilder({
   account,
   storesLoaded,
   stores,
-  settingsStatOrder,
-  settingsAssumeMasterwork,
+  statOrder,
+  assumeMasterwork,
   isPhonePortrait,
   items,
   defs,
@@ -157,11 +157,9 @@ function LoadoutBuilder({
       statFilters,
       minimumPower,
       query,
-      statOrder,
-      assumeMasterwork,
     },
     stateDispatch,
-  ] = useLbState(stores, location, settingsStatOrder, settingsAssumeMasterwork);
+  ] = useLbState(stores, location);
 
   useSubscription(
     useCallback(
@@ -261,13 +259,7 @@ function LoadoutBuilder({
         }
         defs={defs}
         order={statOrder}
-        onStatOrderChanged={(statOrder: StatTypes[]) =>
-          stateDispatch({ type: 'statOrderChanged', statOrder })
-        }
         assumeMasterwork={assumeMasterwork}
-        onMasterworkAssumptionChange={(assumeMasterwork: boolean) =>
-          stateDispatch({ type: 'assumeMasterworkChanged', assumeMasterwork })
-        }
       />
 
       <LockArmorAndPerks

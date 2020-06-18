@@ -8,6 +8,17 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './FilterBuilds.m.scss';
 import { statHashes, statKeys } from '../process';
 import { statTier } from './utils';
+import { useDispatch } from 'react-redux';
+import { setSetting } from 'app/settings/actions';
+
+const statTypeToHash: { [type in StatTypes]: number } = {
+  Mobility: 2996146975,
+  Resilience: 392767087,
+  Recovery: 1943323491,
+  Discipline: 1735777505,
+  Intellect: 144602215,
+  Strength: 4244567218,
+};
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -21,9 +32,7 @@ export default function FilterBuilds({
   order,
   assumeMasterwork,
   onMinimumPowerChanged,
-  onStatOrderChanged,
   onStatFiltersChanged,
-  onMasterworkAssumptionChange,
 }: {
   sets: readonly ArmorSet[];
   minimumPower: number;
@@ -33,10 +42,23 @@ export default function FilterBuilds({
   order: StatTypes[];
   assumeMasterwork: boolean;
   onMinimumPowerChanged(minimumPower: number): void;
-  onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
-  onMasterworkAssumptionChange(assumeMasterwork: boolean): void;
 }) {
+  const dispatch = useDispatch();
+
+  const onStatSortOrderChanged = (sortOrder: StatTypes[]) => {
+    dispatch(
+      setSetting(
+        'loStatSortOrder',
+        sortOrder.map((type) => statTypeToHash[type])
+      )
+    );
+  };
+
+  const onMasterworkAssumptionChange = (assumeMasterwork: boolean) => {
+    dispatch(setSetting('loAssumeMasterwork', assumeMasterwork));
+  };
+
   const statRanges = useMemo(() => {
     if (!sets.length) {
       return _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
@@ -63,7 +85,7 @@ export default function FilterBuilds({
           defs={defs}
           order={order}
           onStatFiltersChanged={onStatFiltersChanged}
-          onStatOrderChanged={onStatOrderChanged}
+          onStatOrderChanged={onStatSortOrderChanged}
         />
         <div
           className={styles.assumeMasterwork}
