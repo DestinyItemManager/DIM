@@ -13,9 +13,6 @@ export const powerCapDisclaimer = [
   1491707941, // gos
 ];
 
-const link =
-  'https://www.reddit.com/r/DestinyTheGame/comments/h9wxur/will_we_have_to_regrind_our_raid_loot_bungie_help/fv0xa5v/';
-
 export function PowerCapDisclaimer({ item }: { item: DimItem }) {
   if (
     !item.isDestiny2() || // check the easy stuff first
@@ -24,7 +21,7 @@ export function PowerCapDisclaimer({ item }: { item: DimItem }) {
   )
     return null;
   return (
-    <PressTip elementType="span" tooltip={t('Stats.PowerCapDisclaimer', { link })}>
+    <PressTip elementType="span" tooltip={t('Stats.PowerCapDisclaimer')}>
       <AppIcon className="powerCapDisclaimer" icon={faExclamationTriangle} />
     </PressTip>
   );
