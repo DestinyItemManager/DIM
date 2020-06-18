@@ -34,7 +34,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import ModPicker from './ModPicker';
-import { LoadoutBuilderAction } from './LoadoutBuilder';
+import { LoadoutBuilderAction } from './loadoutBuilderReducer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
