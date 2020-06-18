@@ -28,7 +28,7 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from './LoadoutBuilderContainer';
+import { LoadoutBuilderAction } from './loadoutBuilderReducer';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -124,7 +124,7 @@ function mapStateToProps() {
 
         return unlockedPlugs
           .map((i) => defs.InventoryItem.get(i))
-          .filter((item) => isArmor2Mod(item) && item.collectibleHash)
+          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
           .sort(sortMods);
       });
 

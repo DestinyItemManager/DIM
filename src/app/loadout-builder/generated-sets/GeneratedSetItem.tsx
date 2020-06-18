@@ -16,7 +16,7 @@ import './GeneratedSetItemLockedMods.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { matchLockedItem } from '../preProcessFilter';
-import { LoadoutBuilderAction } from '../LoadoutBuilderContainer';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.

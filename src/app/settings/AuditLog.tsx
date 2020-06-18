@@ -64,7 +64,9 @@ function AuditLog({ accounts }: Props) {
       case 'delete_all':
         return t('AuditLog.DeleteAll');
       case 'tag_cleanup':
-        return t('AuditLog.TagCleanup');
+        return logEntry.payload.deleted === undefined
+          ? t('AuditLog.TagCleanupUnknown')
+          : t('AuditLog.TagCleanup', { count: logEntry.payload.deleted });
       default:
         return JSON.stringify((logEntry as any).payload);
     }

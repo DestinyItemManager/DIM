@@ -75,11 +75,11 @@ function mapStateToProps() {
 
       const modHashes = new Set<number>();
 
-      const plugWhitelist = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
+      const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
       for (const store of stores) {
         for (const item of store.items) {
           const itemDef = defs.InventoryItem.get(item.hash);
-          if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
+          if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
             modHashes.add(item.hash);
           }
         }

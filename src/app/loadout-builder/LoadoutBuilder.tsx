@@ -1,18 +1,11 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useMemo, Dispatch } from 'react';
+import React, { useMemo } from 'react';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets } from './generated-sets/utils';
-import {
-  StatTypes,
-  ItemsByBucket,
-  LockedMap,
-  MinMaxIgnored,
-  LockedModBase,
-  LockedArmor2ModMap,
-} from './types';
+import { StatTypes, ItemsByBucket } from './types';
 import { filterItems } from './preProcessFilter';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -23,15 +16,16 @@ import { SearchConfig, SearchFilters } from 'app/search/search-filters';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { LoadoutBuilderAction, LBState } from './LoadoutBuilderContainer';
 import { useProcess } from './hooks/useProcess';
-import { DimItem } from 'app/inventory/item-types';
 import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
+import { useLbState, LoadoutBuilderState } from './loadoutBuilderReducer';
+import { statKeys } from './utils';
+import { Location } from 'history';
+import { Loadout } from 'app/loadout/loadout-types';
 
 interface Props {
   stores: DimStore[];
-  selectedStore: DimStore<DimItem>;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -39,17 +33,9 @@ interface Props {
   defs: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
-  lockedMap: LockedMap;
-  lockedSeasonalMods: LockedModBase[];
-  lockedArmor2Mods: LockedArmor2ModMap;
-  selectedStoreId?: string;
-  statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
-  minimumPower: number;
-  query: string;
-  statOrder: StatTypes[];
-  assumeMasterwork: boolean;
-  enabledStats: Set<StatTypes>;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  location: Location<{
+    loadout?: Loadout | undefined;
+  }>;
 }
 
 /**
@@ -57,26 +43,38 @@ interface Props {
  */
 function LoadoutBuilder({
   stores,
-  selectedStore,
   isPhonePortrait,
   items,
   defs,
   searchConfig,
   filters,
-  lockedMap,
-  lockedSeasonalMods,
-  lockedArmor2Mods,
-  statFilters,
-  minimumPower,
-  query,
-  statOrder,
-  assumeMasterwork,
-  enabledStats,
-  lbDispatch,
+  location,
 }: Props) {
+  const [
+    {
+      selectedStoreId,
+      lockedMap,
+      lockedSeasonalMods,
+      lockedArmor2Mods,
+      statFilters,
+      minimumPower,
+      query,
+      statOrder,
+      assumeMasterwork,
+    },
+    lbDispatch,
+  ] = useLbState(stores, location);
+
   const filter = filters.filterFunction(query);
 
-  const characterItems: ItemsByBucket | undefined = items[selectedStore.classType];
+  const selectedStore = stores.find((store) => store.id === selectedStoreId);
+
+  const enabledStats = useMemo(
+    () => new Set(statKeys.filter((statType) => !statFilters[statType].ignored)),
+    [statFilters]
+  );
+
+  const characterItems: ItemsByBucket | undefined = selectedStore && items[selectedStore.classType];
 
   const filteredItems = useMemo(
     () => filterItems(characterItems, lockedMap, lockedArmor2Mods, filter),
@@ -87,7 +85,7 @@ function LoadoutBuilder({
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
-    selectedStore.id,
+    selectedStore?.id,
     assumeMasterwork
   );
 
@@ -118,6 +116,11 @@ function LoadoutBuilder({
     ]
   );
 
+  // I dont think this can actually happen?
+  if (!selectedStore) {
+    return null;
+  }
+
   const menuContent = (
     <div className={styles.menuContent}>
       <SearchFilterInput
@@ -134,7 +137,7 @@ function LoadoutBuilder({
         onMinimumPowerChanged={(minimumPower: number) =>
           lbDispatch({ type: 'minimumPowerChanged', minimumPower })
         }
-        onStatFiltersChanged={(statFilters: LBState['statFilters']) =>
+        onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
         defs={defs}

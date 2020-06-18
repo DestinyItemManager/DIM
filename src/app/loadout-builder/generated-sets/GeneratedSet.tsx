@@ -16,7 +16,7 @@ import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { assignModsToArmorSet } from './mod-utils';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
-import { LoadoutBuilderAction } from '../LoadoutBuilderContainer';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 interface Props {
   set: ArmorSet;

@@ -411,7 +411,12 @@ export function makeItem(
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
   });
 
-  createdItem.season = getSeason(createdItem);
+  createdItem.season = getSeason(
+    createdItem,
+    (item.versionNumber !== undefined &&
+      itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+      null
+  );
   createdItem.event = createdItem.source
     ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];

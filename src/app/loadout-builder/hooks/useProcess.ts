@@ -28,7 +28,7 @@ export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  selectedStoreId: string,
+  selectedStoreId: string | undefined,
   assumeMasterwork: boolean
 ) {
   const [{ result, processing }, setState] = useState({
@@ -39,42 +39,44 @@ export function useProcess(
   const worker = useWorker();
 
   useEffect(() => {
-    console.time('useProcess');
+    if (selectedStoreId) {
+      console.time('useProcess');
 
-    setState({ processing: true, result });
+      setState({ processing: true, result });
 
-    console.time('useProcess: item preprocessing');
-    const processItems: ProcessItemsByBucket = {};
-    const itemsById: ItemsById = {};
+      console.time('useProcess: item preprocessing');
+      const processItems: ProcessItemsByBucket = {};
+      const itemsById: ItemsById = {};
 
-    for (const [key, items] of Object.entries(filteredItems)) {
-      processItems[key] = [];
-      for (const item of items) {
-        processItems[key].push(mapDimItemToProcessItem(item));
-        itemsById[item.id] = item;
+      for (const [key, items] of Object.entries(filteredItems)) {
+        processItems[key] = [];
+        for (const item of items) {
+          processItems[key].push(mapDimItemToProcessItem(item));
+          itemsById[item.id] = item;
+        }
       }
-    }
 
-    console.timeEnd('useProcess: item preprocessing');
+      console.timeEnd('useProcess: item preprocessing');
 
-    console.time('useProcess: worker time');
-    worker
-      .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
-      .then(({ sets, combos, combosWithoutCaps }) => {
-        console.timeEnd('useProcess: worker time');
-        console.time('useProcess: item hydration');
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
-        console.timeEnd('useProcess: item hydration');
-        setState({
-          processing: false,
-          result: {
-            sets: hydratedSets,
-            combos,
-            combosWithoutCaps,
-          },
+      console.time('useProcess: worker time');
+      worker
+        .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
+        .then(({ sets, combos, combosWithoutCaps }) => {
+          console.timeEnd('useProcess: worker time');
+          console.time('useProcess: item hydration');
+          const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+          console.timeEnd('useProcess: item hydration');
+          setState({
+            processing: false,
+            result: {
+              sets: hydratedSets,
+              combos,
+              combosWithoutCaps,
+            },
+          });
+          console.timeEnd('useProcess');
         });
-        console.timeEnd('useProcess');
-      });
+    }
     /* do not include result in dependenvies */
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [worker, filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork]);

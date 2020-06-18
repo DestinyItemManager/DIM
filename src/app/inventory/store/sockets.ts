@@ -364,6 +364,32 @@ function buildDefinedPlug(
 }
 
 /**
+ * A helper function to add plug options to a socket. This maintains the socketed plug's position in the list.
+ */
+function addPlugOption(
+  built: DimPlug | null,
+  /** The active plug, which has already been built */
+  plug: DimPlug | null,
+  plugOptions: DimPlug[] // mutated
+) {
+  if (built && filterReusablePlug(built)) {
+    if (plug && built.plugItem.hash === plug.plugItem.hash) {
+      // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
+      plugOptions.shift();
+      plugOptions.push(plug);
+    } else {
+      // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+      if (
+        !built.plugItem.itemCategoryHashes ||
+        !built.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+      ) {
+        plugOptions.push(built);
+      }
+    }
+  }
+}
+
+/**
  * Build information about an individual socket, and its plugs, using live information.
  */
 function buildSocket(
@@ -409,23 +435,25 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  if (isPerk && reusablePlugs) {
-    for (const reusablePlug of reusablePlugs) {
-      const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData);
-      if (built && filterReusablePlug(built)) {
-        if (plug && built.plugItem.hash === plug.plugItem.hash) {
-          // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
-          plugOptions.shift();
-          plugOptions.push(plug);
-        } else {
-          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (
-            !built.plugItem.itemCategoryHashes ||
-            !built.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-          ) {
-            plugOptions.push(built);
-          }
-        }
+  if (isPerk) {
+    if (reusablePlugs) {
+      // Get options from live info
+      for (const reusablePlug of reusablePlugs) {
+        const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData);
+        addPlugOption(built, plug, plugOptions);
+      }
+    } else if (socketDef.reusablePlugSetHash) {
+      // Get options from plug set, instead of live info
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
+      for (const reusablePlug of plugSet.reusablePlugItems) {
+        const built = buildDefinedPlug(defs, reusablePlug);
+        addPlugOption(built, plug, plugOptions);
+      }
+    } else if (socketDef.reusablePlugItems) {
+      // Get options from definition itself
+      for (const reusablePlug of socketDef.reusablePlugItems) {
+        const built = buildDefinedPlug(defs, reusablePlug);
+        addPlugOption(built, plug, plugOptions);
       }
     }
   }

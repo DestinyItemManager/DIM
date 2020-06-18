@@ -22,12 +22,16 @@ const bucketsToCategories = {
  * Filter the items map down given the locking and filtering configs.
  */
 export function filterItems(
-  items: ItemsByBucket,
+  items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
+
+  if (!items) {
+    return filteredItems;
+  }
 
   Object.keys(items).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);

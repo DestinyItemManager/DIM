@@ -91,7 +91,7 @@
         box-sizing: border-box;
       }
 
-      .filter-help {
+      .filter-bar-button {
         top: 0;
       }
 
@@ -113,7 +113,7 @@
   }
 }
 
-.filter-help {
+.filter-bar-button {
   cursor: pointer;
   margin: 0 6px;
 
@@ -135,7 +135,7 @@
       color: #e8a534 !important;
     }
   }
-  .bulk-tag-select {
+  &.bulk-tag-select {
     background-color: #444;
     position: relative;
     option {

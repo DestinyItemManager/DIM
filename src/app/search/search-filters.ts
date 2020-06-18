@@ -1,4 +1,4 @@
-import * as hashes from './search-filter-hashes';
+import * as hashes from './search-filter-values';
 
 import { D1Item, D2Item, DimItem } from '../inventory/item-types';
 import {
@@ -69,10 +69,19 @@ export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne(
-  (predicate: string) =>
+  (s: string) =>
     // Only some languages effectively use the \b regex word boundary
-    new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(predicate)}`, 'i')
+    new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(s)}`, 'i')
 );
+
+// String.match results like [
+// "-not:tagged", (0: discarded)
+// "-",           (1: invertString)
+// "not:",        (2: discarded)
+// "not",         (3: filterName)
+// "tagged"       (4: filterValue)
+// ]
+const searchTermRegex = /^(-?)(([^:]+):)?(.+)$/;
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
 const plainString = (s: string): string => (isLatinBased() ? latinise(s) : s).toLowerCase();
@@ -83,9 +92,12 @@ const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
 const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
-/** matches a predicate that's probably a math check */
+/** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
+/** replaces a word with a corresponding season i.e. turns `<=forge` into `<=5`.
+ * use only on simple filter values where there's not other letters */
+const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
 // so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
 
@@ -113,7 +125,7 @@ export const searchFiltersConfigSelector = createSelector(
   searchFilters
 );
 
-/** A selector for a predicate function for searching items, given the current search query. */
+/** A selector for a function for searching items, given the current search query. */
 export const searchFilterSelector = createSelector(
   querySelector,
   searchFiltersConfigSelector,
@@ -170,11 +182,16 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   ];
 
   /**
-   * Filter translation sets. Each right hand value gets an "is:" and a "not:"
-   * Key is the filter to run (found in SearchFilters.filters)
-   * Values are the keywords that will trigger that key's filter, and set its predicate value
+   * sets of single key -> multiple values
+   *
+   * keys: the filter to run
+   *
+   * values: the strings that trigger this filter, and the value to feed into that filter
+   *
    */
-  const filterTrans: {
+  // i.e. { dmg: ['arc', 'solar', 'void'] }
+  // so search string 'arc' runs dmg('arc'), search string 'solar' runs dmg('solar') etc
+  const singleTermFilters: {
     [key: string]: string[];
   } = {
     dmg: hashes.damageTypeNames,
@@ -306,10 +323,10 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : []),
   ];
 
-  // Filters that operate with fixed predicate values or freeform text, plus the processed above ranges
+  // build search suggestions for single-term filters, or freeform text, or the above ranges
   const keywords: string[] = [
     // an "is:" and a "not:" for every filter and its synonyms
-    ...Object.values(filterTrans)
+    ...Object.values(singleTermFilters)
       .flat()
       .flatMap((word) => [`is:${word}`, `not:${word}`]),
     ...itemTagSelectorList.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
@@ -339,6 +356,13 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     // energy capacity elements and ranges
     ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
     ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
+    // keywords for checking when an item hits power limit. s11 is the first valid season for this
+    ...(isD2
+      ? Object.entries(seasonTags)
+          .filter(([, seasonNumber]) => seasonNumber > 10)
+          .reverse()
+          .map(([tag]) => `sunsetsafter:${tag}`)
+      : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -371,7 +395,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
-  _.forIn(filterTrans, (keywords, functionName) => {
+  _.forIn(singleTermFilters, (keywords, functionName) => {
     for (const keyword of keywords) {
       keywordToFilter[keyword] = functionName;
     }
@@ -385,36 +409,35 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   };
 }
 /**
- * compares number @compare to a parsed @predicate containing a math operator and a number.
- * compare is safe to be a non-number value, basically anthing can be ==='d or <'d
+ * compares a number to a parsed string which contains a math operator and a number.
+ * compare is safe to be a non-number value, just something can be ==='d or <'d
  */
-function compareByOperator(compare = 0, predicate: string) {
-  if (!predicate || predicate.length === 0) {
+function compareByOperator(number = 0, comparison: string) {
+  if (!comparison) {
     return false;
   }
 
   // We must iterate in decreasing length order so that ">=" matches before ">"
-  let operator = operatorsInLengthOrder.find((element) => predicate.startsWith(element));
+  let operator = operatorsInLengthOrder.find((element) => comparison.startsWith(element));
   if (operator) {
-    predicate = predicate.substring(operator.length);
+    comparison = comparison.substring(operator.length);
   } else {
     operator = 'none';
   }
 
-  const predicateValue = parseFloat(predicate);
-
+  const comparisonValue = parseFloat(comparison);
   switch (operator) {
     case 'none':
     case '=':
-      return compare === predicateValue;
+      return number === comparisonValue;
     case '<':
-      return compare < predicateValue;
+      return number < comparisonValue;
     case '<=':
-      return compare <= predicateValue;
+      return number <= comparisonValue;
     case '>':
-      return compare > predicateValue;
+      return number > comparisonValue;
     case '>=':
-      return compare >= predicateValue;
+      return number >= comparisonValue;
   }
   return false;
 }
@@ -425,9 +448,9 @@ function compareByOperator(compare = 0, predicate: string) {
 
 export interface SearchFilters {
   filters: {
-    [predicate: string]: (
+    [filterName: string]: (
       item: DimItem,
-      predicate?: string
+      filterValue?: string
     ) => boolean | '' | null | undefined | false | number;
   };
   filterFunction(query: string): (item: DimItem) => boolean;
@@ -534,16 +557,15 @@ function searchFilters(
   }
 
   /**
-   * in case it's unclear, this function returns another function.
-   * given a stat name, it returns a function for comparing that stat
+   * given a stat name, this returns a function for comparing that stat
    */
   const filterByStats = (statType: string, byBaseValue = false) => {
     const byWhichValue = byBaseValue ? 'base' : 'value';
     const statHashes: number[] =
       statType === 'any' ? hashes.anyArmorStatHashes : [hashes.statHashByName[statType]];
-    return (item: DimItem, predicate: string) => {
+    return (item: DimItem, filterValue: string) => {
       const matchingStats = item.stats?.filter(
-        (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], predicate)
+        (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], filterValue)
       );
       return matchingStats && Boolean(matchingStats.length);
     };
@@ -552,7 +574,7 @@ function searchFilters(
   // reset, filterFunction, and filters
   return {
     /**
-     * Build a complex predicate function from a full query string.
+     * Build a complex filter function from a full query string.
      */
     filterFunction: memoizeOne(function (query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
@@ -569,8 +591,8 @@ function searchFilters(
       const searchTerms = query.match(/\S*?(["']).*?\1|[^\s"']+/g) || [];
       interface Filter {
         invert: boolean;
-        value: string;
-        predicate: string;
+        filterValue: string;
+        filterName: string;
         orFilters?: Filter[];
       }
       const filterStack: Filter[] = [];
@@ -581,14 +603,14 @@ function searchFilters(
       // with the previous one in a hacked-up "or" node that we'll handle specially.
       let or = false;
 
-      function addPredicate(predicate: string, filterValue: string, invert: boolean) {
-        const filterDef: Filter = { predicate, value: filterValue, invert };
+      function addFilterToStack(filterName: string, filterValue: string, invert: boolean) {
+        const filterDef: Filter = { filterName, filterValue, invert };
         if (or && filterStack.length) {
           const lastFilter = filterStack.pop();
           filterStack.push({
-            predicate: 'or',
+            filterName: 'or',
             invert: false,
-            value: '',
+            filterValue: '',
             orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef],
           });
         } else {
@@ -598,9 +620,7 @@ function searchFilters(
       }
 
       for (const search of searchTerms) {
-        // i.e. ["-not:tagged", "-", "not:", "not", "tagged"
-        const [, invertString, , filterName, filterValue] =
-          search.match(/^(-?)(([^:]+):)?(.+)$/) || [];
+        const [, invertString, , filterName, filterValue] = search.match(searchTermRegex) || [];
         let invert = Boolean(invertString);
 
         if (filterValue === 'or') {
@@ -609,13 +629,13 @@ function searchFilters(
           switch (filterName) {
             case 'not':
               invert = !invert;
-            // fall through intentionally after setting "not" inversion. eslint demands this comment :|
+            // fall through intentionally after setting "not" inversion
             case 'is': {
               // do a lookup by filterValue (i.e. arc)
-              // to find the appropriate predicate (i.e. dmg)
-              const predicate = searchConfig.keywordToFilter[filterValue];
-              if (predicate) {
-                addPredicate(predicate, filterValue, invert);
+              // to find the appropriate filterFunction (i.e. dmg)
+              const filterFunction = searchConfig.keywordToFilter[filterValue];
+              if (filterFunction) {
+                addFilterToStack(filterFunction, filterValue, invert);
               }
               break;
             }
@@ -626,25 +646,28 @@ function searchFilters(
             case 'name':
             case 'description':
             case 'wishlistnotes':
-              addPredicate(filterName, trimQuotes(filterValue), invert);
+              addFilterToStack(filterName, trimQuotes(filterValue), invert);
               break;
             // normalize synonyms
             case 'light':
             case 'power':
-              addPredicate('light', filterValue, invert);
+              addFilterToStack('light', filterValue, invert);
               break;
             case 'quality':
             case 'percentage':
-              addPredicate('quality', filterValue, invert);
+              addFilterToStack('quality', filterValue, invert);
               break;
+            // mutate filterValues where keywords (forge) should be translated into seasons (5)
             case 'powerlimitseason':
-              addPredicate('sunsetsafter', filterValue, invert);
+            case 'sunsetsafter':
+              addFilterToStack('sunsetsafter', replaceSeasonTagWithNumber(filterValue), invert);
+              break;
+            case 'season':
+              addFilterToStack('season', replaceSeasonTagWithNumber(filterValue), invert);
               break;
             // pass these filter names and values unaltered
             case 'masterwork':
-            case 'season':
             case 'powerlimit':
-            case 'sunsetsafter':
             case 'year':
             case 'stack':
             case 'count':
@@ -661,7 +684,7 @@ function searchFilters(
             case 'source':
             case 'modslot':
             case 'holdsmod':
-              addPredicate(filterName, filterValue, invert);
+              addFilterToStack(filterName, filterValue, invert);
               break;
             // stat filter has sub-searchterm and needs further separation
             case 'basestat':
@@ -669,14 +692,14 @@ function searchFilters(
               const [statName, statValue, shouldntExist] = filterValue.split(':');
               const statFilterName = filterName === 'basestat' ? `base${statName}` : statName;
               if (!shouldntExist) {
-                addPredicate(statFilterName, statValue, invert);
+                addFilterToStack(statFilterName, statValue, invert);
               }
               break;
             }
             // if nothing else matches we cast a wide net and do the powerful keyword search
             default:
               if (!/^\s*$/.test(filterValue)) {
-                addPredicate('keyword', trimQuotes(filterValue), invert);
+                addFilterToStack('keyword', trimQuotes(filterValue), invert);
               }
           }
         }
@@ -687,11 +710,11 @@ function searchFilters(
           let result;
           if (filter.orFilters) {
             result = filter.orFilters.some((filter) => {
-              const result = this.filters[filter.predicate]?.(item, filter.value);
+              const result = this.filters[filter.filterName]?.(item, filter.filterValue);
               return filter.invert ? !result : result;
             });
           } else {
-            result = this.filters[filter.predicate]?.(item, filter.value);
+            result = this.filters[filter.filterName]?.(item, filter.filterValue);
           }
           return filter.invert ? !result : result;
         });
@@ -700,24 +723,25 @@ function searchFilters(
     /**
      * Each entry in this map is a filter function that will be provided the normalized
      * query term and an item, and should return whether or not it matches the filter.
-     * @param predicate The predicate - for example, is:arc gets the 'elemental' filter function, with predicate='arc'
+     * @param filterValue The parameter for the filter function - for example,
+     * is:arc gets the 'elemental' filter function, with filterValue='arc'
      * @param item The item to test against.
      * @return Returns true for a match, false for a non-match
      */
     filters: {
-      id(item: DimItem, predicate: string) {
-        return item.id === predicate;
+      id(item: DimItem, filterValue: string) {
+        return item.id === filterValue;
       },
-      hash(item: DimItem, predicate: string) {
-        return item.hash.toString() === predicate;
+      hash(item: DimItem, filterValue: string) {
+        return item.hash.toString() === filterValue;
       },
-      dmg(item: DimItem, predicate: string) {
-        return getItemDamageShortName(item) === predicate;
+      dmg(item: DimItem, filterValue: string) {
+        return getItemDamageShortName(item) === filterValue;
       },
-      type(item: DimItem, predicate: string) {
-        return item.type?.toLowerCase() === predicate;
+      type(item: DimItem, filterValue: string) {
+        return item.type?.toLowerCase() === filterValue;
       },
-      tier(item: DimItem, predicate: string) {
+      tier(item: DimItem, filterValue: string) {
         const tierMap = {
           white: 'common',
           green: 'uncommon',
@@ -725,7 +749,7 @@ function searchFilters(
           purple: 'legendary',
           yellow: 'exotic',
         };
-        return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
+        return item.tier.toLowerCase() === (tierMap[filterValue] || filterValue);
       },
       sublime(item: DimItem) {
         return hashes.sublimeEngrams.includes(item.hash);
@@ -758,13 +782,13 @@ function searchFilters(
       reforgeable(item: DimItem) {
         return item.talentGrid?.nodes.some((n) => n.hash === 617082448);
       },
-      ornament(item: D1Item, predicate: string) {
+      ornament(item: D1Item, filterValue: string) {
         const complete = item.talentGrid?.nodes.some((n) => n.ornament);
         const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
 
-        if (predicate === 'ornamentunlocked') {
+        if (filterValue === 'ornamentunlocked') {
           return complete;
-        } else if (predicate === 'ornamentmissing') {
+        } else if (filterValue === 'ornamentmissing') {
           return missing;
         } else {
           return complete || missing;
@@ -795,35 +819,35 @@ function searchFilters(
         return _maxPowerLoadoutItems.includes(item.id);
       },
       /** looks for a loadout (simultaneously equippable) maximized for this stat */
-      maxstatloadout(item: D2Item, predicate: string) {
-        // predicate stat must exist, and this must be armor
-        const maxStatHash = hashes.statHashByName[predicate];
+      maxstatloadout(item: D2Item, filterValue: string) {
+        // filterValue stat must exist, and this must be armor
+        const maxStatHash = hashes.statHashByName[filterValue];
         if (!maxStatHash || !item.bucket.inArmor) {
           return false;
         }
-        if (!_maxStatLoadoutItems[predicate]) {
-          _maxStatLoadoutItems[predicate] = [];
+        if (!_maxStatLoadoutItems[filterValue]) {
+          _maxStatLoadoutItems[filterValue] = [];
         }
-        if (!_maxStatLoadoutItems[predicate].length) {
+        if (!_maxStatLoadoutItems[filterValue].length) {
           stores.forEach((store) => {
-            _maxStatLoadoutItems[predicate].push(
+            _maxStatLoadoutItems[filterValue].push(
               ...maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
             );
           });
         }
 
-        return _maxStatLoadoutItems[predicate].includes(item.id);
+        return _maxStatLoadoutItems[filterValue].includes(item.id);
       },
 
       /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
-      maxstatvalue(item: D2Item, predicate: string, byBaseValue = false) {
+      maxstatvalue(item: D2Item, filterValue: string, byBaseValue = false) {
         gatherHighestStatsPerSlot();
-        // predicate stat must exist, and this must be armor
+        // filterValue stat must exist, and this must be armor
         if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats || !_maxStatValues) {
           return false;
         }
         const statHashes: number[] =
-          predicate === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[predicate]];
+          filterValue === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[filterValue]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.type}`;
 
@@ -835,8 +859,8 @@ function searchFilters(
 
         return matchingStats && Boolean(matchingStats.length);
       },
-      maxbasestatvalue(item: D2Item, predicate: string) {
-        return this.maxstatvalue(item, predicate, true);
+      maxbasestatvalue(item: D2Item, filterValue: string) {
+        return this.maxstatvalue(item, filterValue, true);
       },
       dupelower(item: DimItem) {
         initDupes();
@@ -867,17 +891,17 @@ function searchFilters(
           _duplicates[dupeId].length > 1
         );
       },
-      count(item: DimItem, predicate: string) {
+      count(item: DimItem, filterValue: string) {
         initDupes();
         const dupeId = makeDupeID(item);
         return (
           _duplicates &&
-          compareByOperator(_duplicates[dupeId] ? _duplicates[dupeId].length : 0, predicate)
+          compareByOperator(_duplicates[dupeId] ? _duplicates[dupeId].length : 0, filterValue)
         );
       },
-      owner(item: DimItem, predicate: string) {
+      owner(item: DimItem, filterValue: string) {
         let desiredStore = '';
-        switch (predicate) {
+        switch (filterValue) {
           case 'invault':
             desiredStore = 'vault';
             break;
@@ -891,10 +915,10 @@ function searchFilters(
         }
         return item.owner === desiredStore;
       },
-      location(item: DimItem, predicate: string) {
+      location(item: DimItem, filterValue: string) {
         let storeIndex = 0;
 
-        switch (predicate) {
+        switch (filterValue) {
           case 'inleftchar':
             storeIndex = 0;
             break;
@@ -929,16 +953,16 @@ function searchFilters(
           !item.location?.inPostmaster
         );
       },
-      classType(item: DimItem, predicate: string) {
+      classType(item: DimItem, filterValue: string) {
         const classes = ['titan', 'hunter', 'warlock'];
         if (item.classified) {
           return false;
         }
 
-        return item.classType === classes.indexOf(predicate);
+        return item.classType === classes.indexOf(filterValue);
       },
-      glimmer(item: DimItem, predicate: string) {
-        switch (predicate) {
+      glimmer(item: DimItem, filterValue: string) {
+        switch (filterValue) {
           case 'glimmerboost':
             return hashes.boosts.includes(item.hash);
           case 'glimmersupply':
@@ -948,27 +972,27 @@ function searchFilters(
         }
         return false;
       },
-      tag(item: DimItem, predicate: string) {
+      tag(item: DimItem, filterValue: string) {
         const tag = getTag(item, itemInfos);
-        return (tag || 'none') === predicate;
+        return (tag || 'none') === filterValue;
       },
-      notes(item: DimItem, predicate: string) {
+      notes(item: DimItem, filterValue: string) {
         const notes = getNotes(item, itemInfos);
-        return notes?.toLocaleLowerCase().includes(predicate);
+        return notes?.toLocaleLowerCase().includes(filterValue);
       },
       hasnotes(item: DimItem) {
         return Boolean(getNotes(item, itemInfos));
       },
-      stattype(item: DimItem, predicate: string) {
+      stattype(item: DimItem, filterValue: string) {
         return item.stats?.some((s) =>
-          Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
+          Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0)
         );
       },
       stackable(item: DimItem) {
         return item.maxStackSize > 1;
       },
-      stack(item: DimItem, predicate: string) {
-        return compareByOperator(item.amount, predicate);
+      stack(item: DimItem, filterValue: string) {
+        return compareByOperator(item.amount, filterValue);
       },
       engram(item: DimItem) {
         return item.isEngram;
@@ -976,32 +1000,32 @@ function searchFilters(
       infusable(item: DimItem) {
         return item.infusable;
       },
-      categoryHash(item: D2Item, predicate: string) {
-        const categoryHash = searchConfig.categoryHashFilters[predicate.replace(/\s/g, '')];
+      categoryHash(item: D2Item, filterValue: string) {
+        const categoryHash = searchConfig.categoryHashFilters[filterValue.replace(/\s/g, '')];
 
         if (!categoryHash) {
           return false;
         }
         return item.itemCategoryHashes.includes(categoryHash);
       },
-      keyword(item: DimItem, predicate: string) {
+      keyword(item: DimItem, filterValue: string) {
         return (
-          this.name(item, predicate) ||
-          this.description(item, predicate) ||
-          this.notes(item, predicate) ||
-          item.typeName.toLowerCase().includes(predicate) ||
-          this.perk(item, predicate)
+          this.name(item, filterValue) ||
+          this.description(item, filterValue) ||
+          this.notes(item, filterValue) ||
+          item.typeName.toLowerCase().includes(filterValue) ||
+          this.perk(item, filterValue)
         );
       },
       // name and description searches since sometimes "keyword" picks up too much
-      name(item: DimItem, predicate: string) {
-        return plainString(item.name).includes(plainString(predicate));
+      name(item: DimItem, filterValue: string) {
+        return plainString(item.name).includes(plainString(filterValue));
       },
-      description(item: DimItem, predicate: string) {
-        return item.description.toLowerCase().includes(predicate);
+      description(item: DimItem, filterValue: string) {
+        return item.description.toLowerCase().includes(filterValue);
       },
-      perk(item: DimItem, predicate: string) {
-        const regex = startWordRegexp(predicate);
+      perk(item: DimItem, filterValue: string) {
+        const regex = startWordRegexp(filterValue);
         return (
           item.talentGrid?.nodes.some(
             (node) => regex.test(node.name) || regex.test(node.description)
@@ -1024,8 +1048,8 @@ function searchFilters(
             ))
         );
       },
-      perkname(item: DimItem, predicate: string) {
-        const regex = startWordRegexp(predicate);
+      perkname(item: DimItem, filterValue: string) {
+        const regex = startWordRegexp(filterValue);
         return (
           item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
@@ -1041,168 +1065,159 @@ function searchFilters(
             ))
         );
       },
-      modslot(item: DimItem, predicate: string) {
+      modslot(item: DimItem, filterValue: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
         return (
-          (predicate === 'none' && !modSocketTypeHash) ||
-          (modSocketTypeHash && (predicate === 'any' || modSocketTypeHash.tag === predicate))
+          (filterValue === 'none' && !modSocketTypeHash) ||
+          (modSocketTypeHash && (filterValue === 'any' || modSocketTypeHash.tag === filterValue))
         );
       },
-      holdsmod(item: DimItem, predicate: string) {
+      holdsmod(item: DimItem, filterValue: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
         return (
-          (predicate === 'none' && !modSocketTypeHash) ||
+          (filterValue === 'none' && !modSocketTypeHash) ||
           (modSocketTypeHash &&
-            (predicate === 'any' || modSocketTypeHash.compatibleTags.includes(predicate)))
+            (filterValue === 'any' || modSocketTypeHash.compatibleTags.includes(filterValue)))
         );
       },
       powerfulreward(item: D2Item) {
         return item.pursuit?.rewards.some((r) => hashes.powerfulSources.includes(r.itemHash));
       },
-      light(item: DimItem, predicate: string) {
+      light(item: DimItem, filterValue: string) {
         if (!item.primStat) {
           return false;
         }
-        return compareByOperator(item.primStat.value, predicate);
+        return compareByOperator(item.primStat.value, filterValue);
       },
-      masterwork(item: D2Item, predicate: string) {
+      masterwork(item: D2Item, filterValue: string) {
         if (!item.masterworkInfo) {
           return false;
         }
-        if (mathCheck.test(predicate)) {
+        if (mathCheck.test(filterValue)) {
           return compareByOperator(
             item.masterworkInfo.tier && item.masterworkInfo.tier < 11
               ? item.masterworkInfo.tier
               : 10,
-            predicate
+            filterValue
           );
         }
         return (
-          hashes.statHashByName[predicate] && // make sure it exists or undefined can match undefined
-          hashes.statHashByName[predicate] === item.masterworkInfo.statHash
+          hashes.statHashByName[filterValue] && // make sure it exists or undefined can match undefined
+          hashes.statHashByName[filterValue] === item.masterworkInfo.statHash
         );
       },
-      season(item: D2Item, predicate: string) {
-        if (mathCheck.test(predicate)) {
-          return compareByOperator(item.season, predicate);
-        }
-        return seasonTags[predicate] && seasonTags[predicate] === item.season;
+      season(item: D2Item, filterValue: string) {
+        return compareByOperator(item.season, filterValue);
       },
-      year(item: DimItem, predicate: string) {
+      year(item: DimItem, filterValue: string) {
         if (item.isDestiny1()) {
-          return compareByOperator(item.year, predicate);
+          return compareByOperator(item.year, filterValue);
         } else if (item.isDestiny2()) {
-          return compareByOperator(D2SeasonInfo[item.season]?.year, predicate);
+          return compareByOperator(D2SeasonInfo[item.season]?.year, filterValue);
         }
       },
-      level(item: DimItem, predicate: string) {
-        return compareByOperator(item.equipRequiredLevel, predicate);
+      level(item: DimItem, filterValue: string) {
+        return compareByOperator(item.equipRequiredLevel, filterValue);
       },
-      energycapacity(item: D2Item, predicate: string) {
+      energycapacity(item: D2Item, filterValue: string) {
         if (item.energy) {
           return (
-            (mathCheck.test(predicate) &&
-              compareByOperator(item.energy.energyCapacity, predicate)) ||
-            predicate === hashes.energyCapacityTypes[item.energy.energyType]
+            (mathCheck.test(filterValue) &&
+              compareByOperator(item.energy.energyCapacity, filterValue)) ||
+            filterValue === hashes.energyCapacityTypes[item.energy.energyType]
           );
         }
       },
       hascapacity(item: D2Item) {
         return Boolean(item.energy);
       },
-      powerlimit(item: D2Item, predicate: string) {
+      powerlimit(item: D2Item, filterValue: string) {
         // anything with no powerCap has no known limit, so treat it like it's 99999999
-        return mathCheck.test(predicate) && compareByOperator(item.powerCap ?? 99999999, predicate);
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "powerlimit:arrivals"
+        return compareByOperator(item.powerCap ?? 99999999, filterValue);
       },
-      sunsetsafter(item: D2Item, predicate: string) {
+      sunsetsafter(item: D2Item, filterValue: string) {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
-        return (
-          itemFinalSeason &&
-          mathCheck.test(predicate) &&
-          compareByOperator(itemFinalSeason, predicate)
-        );
-        // hypothetically we can use this mathcheck to divert if we decided to support something like "sunsetsafter:arrivals"
+        return itemFinalSeason && compareByOperator(itemFinalSeason, filterValue);
       },
-      quality(item: D1Item, predicate: string) {
+      quality(item: D1Item, filterValue: string) {
         if (!item.quality) {
           return false;
         }
-        return compareByOperator(item.quality.min, predicate);
+        return compareByOperator(item.quality.min, filterValue);
       },
-      hasRating(item: DimItem, predicate: string) {
+      hasRating(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
           const dtrRating = getRating(item, ratings);
-          return predicate.length !== 0 && dtrRating?.overallScore;
+          return filterValue.length !== 0 && dtrRating?.overallScore;
         }
       },
       randomroll(item: D2Item) {
         return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
       },
-      rating(item: DimItem, predicate: string) {
+      rating(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
           const dtrRating = getRating(item, ratings);
           const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-          return showRating && compareByOperator(dtrRating?.overallScore, predicate);
+          return showRating && compareByOperator(dtrRating?.overallScore, filterValue);
         }
       },
-      ratingcount(item: DimItem, predicate: string) {
+      ratingcount(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
           const dtrRating = getRating(item, ratings);
-          return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
+          return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, filterValue);
         }
       },
-      vendor(item: D1Item, predicate: string) {
+      vendor(item: D1Item, filterValue: string) {
         if (!item) {
           return false;
         }
-        if (hashes.vendorHashes.restricted[predicate]) {
+        if (hashes.vendorHashes.restricted[filterValue]) {
           return (
-            hashes.vendorHashes.required[predicate].some((vendorHash) =>
+            hashes.vendorHashes.required[filterValue].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             ) &&
-            !hashes.vendorHashes.restricted[predicate].some((vendorHash) =>
+            !hashes.vendorHashes.restricted[filterValue].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             )
           );
         } else {
-          return hashes.vendorHashes.required[predicate].some((vendorHash) =>
+          return hashes.vendorHashes.required[filterValue].some((vendorHash) =>
             item.sourceHashes.includes(vendorHash)
           );
         }
       },
-      source(item: D2Item, predicate: string) {
-        if (!item && (!D2Sources[predicate] || !D2EventPredicateLookup[predicate])) {
+      source(item: D2Item, filterValue: string) {
+        if (!item && (!D2Sources[filterValue] || !D2EventPredicateLookup[filterValue])) {
           return false;
         }
-        if (D2Sources[predicate]) {
+        if (D2Sources[filterValue]) {
           return (
-            (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
-            D2Sources[predicate].itemHashes.includes(item.hash) ||
-            missingSources[predicate]?.includes(item.hash)
+            (item.source && D2Sources[filterValue].sourceHashes.includes(item.source)) ||
+            D2Sources[filterValue].itemHashes.includes(item.hash) ||
+            missingSources[filterValue]?.includes(item.hash)
           );
-        } else if (D2EventPredicateLookup[predicate]) {
-          return D2EventPredicateLookup[predicate] === item?.event;
+        } else if (D2EventPredicateLookup[filterValue]) {
+          return D2EventPredicateLookup[filterValue] === item?.event;
         }
         return false;
       },
-      activity(item: D1Item, predicate: string) {
+      activity(item: D1Item, filterValue: string) {
         if (!item) {
           return false;
         }
-        if (predicate === 'vanilla') {
+        if (filterValue === 'vanilla') {
           return item.year === 1;
-        } else if (hashes.D1ActivityHashes.restricted[predicate]) {
+        } else if (hashes.D1ActivityHashes.restricted[filterValue]) {
           return (
-            hashes.D1ActivityHashes.required[predicate].some((sourceHash) =>
+            hashes.D1ActivityHashes.required[filterValue].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             ) &&
-            !hashes.D1ActivityHashes.restricted[predicate].some((sourceHash) =>
+            !hashes.D1ActivityHashes.restricted[filterValue].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             )
           );
         } else {
-          return hashes.D1ActivityHashes.required[predicate].some((sourceHash) =>
+          return hashes.D1ActivityHashes.required[filterValue].some((sourceHash) =>
             item.sourceHashes.includes(sourceHash)
           );
         }
@@ -1245,7 +1260,7 @@ function searchFilters(
 
         const oneSocketPerPlug = item.sockets?.sockets
           .filter((socket) =>
-            hashes.curatedPlugsWhitelist.includes(
+            hashes.curatedPlugsAllowList.includes(
               socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
             )
           )
@@ -1352,23 +1367,23 @@ function searchFilters(
 
         return itemDupes.some(this.wishlist);
       },
-      wishlistnotes(item: D2Item, predicate: string) {
+      wishlistnotes(item: D2Item, filterValue: string) {
         const potentialWishListRoll = inventoryWishListRolls[item.id];
 
         return (
           Boolean(potentialWishListRoll) &&
           potentialWishListRoll.notes &&
-          potentialWishListRoll.notes.toLocaleLowerCase().includes(predicate)
+          potentialWishListRoll.notes.toLocaleLowerCase().includes(filterValue)
         );
       },
-      ammoType(item: D2Item, predicate: string) {
+      ammoType(item: D2Item, filterValue: string) {
         return (
           item.ammoType ===
           {
             primary: DestinyAmmunitionType.Primary,
             special: DestinyAmmunitionType.Special,
             heavy: DestinyAmmunitionType.Heavy,
-          }[predicate]
+          }[filterValue]
         );
       },
       // create a stat filter for each stat name
