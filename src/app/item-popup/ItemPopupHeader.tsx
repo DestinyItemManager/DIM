@@ -16,6 +16,7 @@ import { DestinyClass, DamageType } from 'bungie-api-ts/destiny2';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 
 export default function ItemPopupHeader({
   item,
@@ -131,7 +132,8 @@ export default function ItemPopupHeader({
       </div>
       {powerCapString && (
         <div className="item-subtitle">
-          <div className="">{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
+          <div>{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
+          <PowerCapDisclaimer item={item} />
         </div>
       )}
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}

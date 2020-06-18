@@ -50,6 +50,7 @@ import { statAllowList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
+import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -238,6 +239,7 @@ export function getColumns(
                 powerCap: value,
                 finalSeason: getItemPowerCapFinalSeason(item),
               })}
+              <PowerCapDisclaimer item={item} />
             </>
           ),
         defaultSort: SortDirection.DESC,
