@@ -27,6 +27,7 @@
 .account {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  white-space: nowrap;
 
   > div {
     margin-right: 8px;
