@@ -46,7 +46,9 @@ function ItemActions({
 
   const noted = () => {
     const note = prompt(t('Organizer.NotePrompt'));
-    onNote(note || undefined);
+    if (note !== null) {
+      onNote(note || undefined);
+    }
   };
 
   return (

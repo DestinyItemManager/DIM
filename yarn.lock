@@ -953,9 +953,9 @@
     minimist "^1.2.0"
 
 "@destinyitemmanager/dim-api-types@^1.0.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.3.0.tgz#df79a80d0d763fe9a98e4fb9c2b685f57f1d54b6"
-  integrity sha512-mm68g4wPO23/znl+16/pxJPi6yrm/ZgrzaF4hybAbPjtH7ZI555vjnsAmFKwBK/FwCOVcditLc8gm0ElwKqc3w==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.4.0.tgz#bf85cb571b8af8b2a542d5ed2d0e1398c136576e"
+  integrity sha512-A1FZG6zmjt9FRFOZ6CXAfAICy5OpzZtDT2RLgvcP0v5v7CIhKEqQ9vKmus9pY0ec6LPS84Zdx4SUDkqGSiOmWA==
 
 "@fortawesome/fontawesome-common-types@^0.2.28":
   version "0.2.28"
@@ -2714,10 +2714,10 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
-body-scroll-lock@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.0.3.tgz#221d87435bcfb50e27ab5d4508735f622aed11a2"
-  integrity sha512-EUryImgD6Gv87HOjJB/yB2WIGECiZMhmcUK+DrqVRFDDa64xR+FsK0LgvLPnBxZDTxIl+W80/KJ8i6gp2IwOHQ==
+body-scroll-lock@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.0.2.tgz#97df9bb3b17a0140c4a09b3568d146ae9af6b981"
+  integrity sha512-PtItUun94iIupKry8J/h6SfRCLWZnly77KbPsTSKALmxfR282L8R0Ujkv7bydSZvLxAJS4sBJ3y/E6X8gYkGrQ==
 
 bonjour@^3.5.0:
   version "3.5.0"

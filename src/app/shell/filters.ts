@@ -107,7 +107,7 @@ const D1_MATERIAL_SORT_ORDER = [
 // Bucket IDs that'll never be sorted.
 // Don't resort postmaster items - that way people can see
 // what'll get bumped when it's full.
-const ITEM_SORT_BLACKLIST = new Set([
+const ITEM_SORT_DENYLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
@@ -156,7 +156,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   const itemLocationId = items[0].location.hash;
-  if (!items.length || ITEM_SORT_BLACKLIST.has(itemLocationId)) {
+  if (!items.length || ITEM_SORT_DENYLIST.has(itemLocationId)) {
     return items;
   }
 

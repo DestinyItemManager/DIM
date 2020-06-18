@@ -283,13 +283,13 @@ export function getCharacterStatsData(
     [key: number]: number;
   }
 ): { [hash: number]: DimCharacterStat } {
-  const statWhitelist = armorStats;
+  const statAllowList = armorStats;
   const ret: { [hash: number]: DimCharacterStat } = {};
 
   // TODO: Fill in effect and countdown for D2 stats
 
   // Fill in missing stats
-  statWhitelist.forEach((statHash) => {
+  statAllowList.forEach((statHash) => {
     const def = defs.Stat.get(statHash);
     const value = stats[statHash] || 0;
     const stat: DimCharacterStat = {

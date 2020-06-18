@@ -41,7 +41,9 @@
     "SetNotes": "Set notes to \"{{notes}}\" for item ID {{id}}",
     "SetTag": "Set tag to {{tag}} for item ID {{id}}",
     "Setting": "Set {{key}} to {{value}}",
-    "TagCleanup": "Cleaned up tags for dismantled items"
+    "TagCleanup": "Cleaned up {{count}} tag for dismantled items",
+    "TagCleanupUnknown": "Cleaned up some tags for dismantled items",
+    "TagCleanup_plural": "Cleaned up {{count}} tags for dismantled items"
   },
   "Bucket": {
     "Armor": "Armor",

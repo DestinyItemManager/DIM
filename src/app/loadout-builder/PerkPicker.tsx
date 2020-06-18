@@ -40,7 +40,7 @@ import { specialtyModSocketHashes } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from './LoadoutBuilder';
+import { LoadoutBuilderAction } from './loadoutBuilderReducer';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -204,7 +204,7 @@ function mapStateToProps() {
             (i) =>
               i.item.inventory.tierType !== TierType.Common &&
               (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
-              i.item.collectibleHash
+              i.item.plug.insertionMaterialRequirementHash !== 0 // not the empty mod sockets
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });

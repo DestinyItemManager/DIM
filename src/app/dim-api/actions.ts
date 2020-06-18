@@ -350,7 +350,7 @@ function tryLoadLegacyData(): ThunkResult {
     await delay(1000); // I don't know how to make sure sync service is fully initialized
     const data = await SyncService.get();
     if (!getState().dimApi.apiPermissionGranted && data && !_.isEmpty(data)) {
-      await dispatch(importDataBackup(data));
+      await dispatch(importDataBackup(data, true));
     }
   };
 }

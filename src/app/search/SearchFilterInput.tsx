@@ -270,17 +270,15 @@ export default React.forwardRef(function SearchFilterInput(
       />
 
       {liveQuery.length === 0 ? (
-        <span onClick={showFilterHelp} className="filter-help" title={t('Header.Filters')}>
+        <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
           <AppIcon icon={helpIcon} />
         </span>
       ) : (
         children
       )}
       {(liveQuery.length > 0 || alwaysShowClearButton) && (
-        <span className="filter-help">
-          <a onClick={clearFilter} title={t('Header.Clear')}>
-            <AppIcon icon={disabledIcon} />
-          </a>
+        <span className="filter-bar-button" onClick={clearFilter} title={t('Header.Clear')}>
+          <AppIcon icon={disabledIcon} />
         </span>
       )}
       {filterHelpOpen &&

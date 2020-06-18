@@ -1,10 +1,18 @@
 ## Next
 
-* Items now show their power cap in the item popup, Compare, and in the Organizer (new column). Keep in mind some power caps may change in upcoming seasons.
+## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
+
+## 6.15.0 <span className="changelog-date">(2020-06-14)</span>
+
+* Items now show their power limit in the item popup, Compare, and in the Organizer (new column). Keep in mind some power limits may change in upcoming seasons.
+* Try the `sunsetsafter:` or `powerlimit:` filters to find things by their power limit.
 * Fix the season icon for reissued items.
 * Fix not being able to dismiss the item popup on the Organizer in certain cases.
 * Remove the 15 second timeout for loading data from Bungie.net.
 * Fix umbral engrams showing up weird in the engram row.
+* Prevent Chrome on Android from showing a "download this image" prompt when long-pressing on images.
+* Fix non-selected perks not showing on old fixed-roll weapons.
+* Add Charge Rate and Guard Endurance stat to swords.
 
 ## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
 
