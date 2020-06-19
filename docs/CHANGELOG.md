@@ -1,5 +1,7 @@
 ## Next
 
+* Remove `is:ikelos` filter
+
 ## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
 
 ## 6.15.0 <span className="changelog-date">(2020-06-14)</span>
