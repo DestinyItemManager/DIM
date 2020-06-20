@@ -40,6 +40,15 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 
+export const statHashToType: { [hash: number]: StatTypes } = {
+  2996146975: 'Mobility',
+  392767087: 'Resilience',
+  1943323491: 'Recovery',
+  1735777505: 'Discipline',
+  144602215: 'Intellect',
+  4244567218: 'Strength',
+};
+
 interface ProvidedProps {
   account: DestinyAccount;
 }
@@ -47,6 +56,8 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
+  statOrder: StatTypes[];
+  assumeMasterwork: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -97,6 +108,8 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
+    statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
+    assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
     isPhonePortrait: state.shell.isPhonePortrait,
     items: itemsSelector(state),
     defs: state.manifest.d2Manifest,
@@ -112,6 +125,8 @@ function LoadoutBuilder({
   account,
   storesLoaded,
   stores,
+  statOrder,
+  assumeMasterwork,
   isPhonePortrait,
   items,
   defs,
@@ -142,8 +157,6 @@ function LoadoutBuilder({
       statFilters,
       minimumPower,
       query,
-      statOrder,
-      assumeMasterwork,
     },
     stateDispatch,
   ] = useLbState(stores, location);
@@ -246,13 +259,7 @@ function LoadoutBuilder({
         }
         defs={defs}
         order={statOrder}
-        onStatOrderChanged={(statOrder: StatTypes[]) =>
-          stateDispatch({ type: 'statOrderChanged', statOrder })
-        }
         assumeMasterwork={assumeMasterwork}
-        onMasterworkAssumptionChange={(assumeMasterwork: boolean) =>
-          stateDispatch({ type: 'assumeMasterworkChanged', assumeMasterwork })
-        }
       />
 
       <LockArmorAndPerks

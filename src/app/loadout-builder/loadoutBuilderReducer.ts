@@ -10,7 +10,6 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
 import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
-import { statKeys } from './process';
 import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
@@ -23,8 +22,6 @@ export interface LoadoutBuilderState {
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
   query: string;
-  statOrder: StatTypes[];
-  assumeMasterwork: boolean;
 }
 
 const lbStateInit = ({
@@ -76,9 +73,7 @@ const lbStateInit = ({
     },
     minimumPower: 750,
     query: '',
-    statOrder: statKeys,
     selectedStoreId: getCurrentStore(stores)?.id,
-    assumeMasterwork: false,
   };
 };
 
@@ -87,7 +82,6 @@ export type LoadoutBuilderAction =
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'minimumPowerChanged'; minimumPower: number }
   | { type: 'queryChanged'; query: string }
-  | { type: 'statOrderChanged'; statOrder: StatTypes[] }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -97,8 +91,7 @@ export type LoadoutBuilderAction =
       lockedMap: LockedMap;
       lockedSeasonalMods: LockedModBase[];
     }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
-  | { type: 'assumeMasterworkChanged'; assumeMasterwork: boolean };
+  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap };
 
 // TODO: Move more logic inside the reducer
 function lbStateReducer(
@@ -127,8 +120,6 @@ function lbStateReducer(
       return { ...state, minimumPower: action.minimumPower };
     case 'queryChanged':
       return { ...state, query: action.query };
-    case 'statOrderChanged':
-      return { ...state, statOrder: action.statOrder };
     case 'lockedMapChanged':
       return { ...state, lockedMap: action.lockedMap };
     case 'addItemToLockedMap': {
@@ -163,8 +154,6 @@ function lbStateReducer(
       };
     case 'lockedArmor2ModsChanged':
       return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
-    case 'assumeMasterworkChanged':
-      return { ...state, assumeMasterwork: action.assumeMasterwork };
   }
 }
 

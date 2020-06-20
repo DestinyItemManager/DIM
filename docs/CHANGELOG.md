@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer: Save stat order and assume masterwork choices on change.
+
 ## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
 
 ## 6.15.0 <span className="changelog-date">(2020-06-14)</span>
