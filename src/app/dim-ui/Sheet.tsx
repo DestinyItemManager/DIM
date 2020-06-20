@@ -230,7 +230,9 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   useEffect(
     () => () => {
       if (sheetContents.current) {
-        document.body.classList.remove('body-scroll-lock');
+        setTimeout(() => {
+          document.body.classList.remove('body-scroll-lock');
+        }, 0);
         sheetContents.current.removeEventListener('touchstart', blockEvents);
         if (mobile) {
           enableBodyScroll(sheetContents.current);
