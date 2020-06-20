@@ -120,9 +120,9 @@
     top: calc(#{54px + $header-height} + constant(safe-area-inset-top));
     top: calc(#{54px + $header-height} + env(safe-area-inset-top));
     z-index: 1000;
-    max-height: calc(100vh - #{177px + $header-height});
-    max-height: calc(100vh - #{177px + $header-height} - constant(safe-area-inset-top));
-    max-height: calc(100vh - #{177px + $header-height} - env(safe-area-inset-top));
+    max-height: calc(100vh - #{120px + $header-height});
+    max-height: calc(100vh - #{120px + $header-height} - constant(safe-area-inset-top));
+    max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
     left: calc((100% - 230px) / 2);
   }
 }
