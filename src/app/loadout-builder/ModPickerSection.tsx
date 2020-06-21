@@ -4,7 +4,6 @@ import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { LockedArmor2Mod, ModPickerCategory } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import ClosableContainer from './ClosableContainer';
 
 export default function ModPickerSection({
   defs,
@@ -59,21 +58,15 @@ export default function ModPickerSection({
       <h3>{title}</h3>
       <div className={styles.perks}>
         {mods.map((item) => (
-          <ClosableContainer
+          <SelectableArmor2Mod
             key={item.key}
-            enabled={Boolean(locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash))}
-            onClose={() => onModRemoved(item)}
-          >
-            <SelectableArmor2Mod
-              defs={defs}
-              selected={Boolean(
-                locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash)
-              )}
-              mod={item}
-              unselectable={isModUnSelectable(item)}
-              onLockedArmor2Mod={onModSelected}
-            />
-          </ClosableContainer>
+            defs={defs}
+            selected={Boolean(locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash))}
+            mod={item}
+            unselectable={isModUnSelectable(item)}
+            onModSelected={onModSelected}
+            onModRemoved={onModRemoved}
+          />
         ))}
       </div>
     </div>
