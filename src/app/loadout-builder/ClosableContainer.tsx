@@ -6,11 +6,11 @@ import styles from './ClosableContainer.m.scss';
  */
 export default function ClosableContainer({
   children,
-  enabled,
+  enabled = true,
   onClose,
 }: {
   children: React.ReactNode;
-  enabled: boolean;
+  enabled?: boolean;
   onClose(): void;
 }) {
   return (
