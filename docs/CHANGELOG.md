@@ -3,7 +3,7 @@
 * Remove `is:ikelos` filter
 * Loadout Optimizer: Save stat order and "assume masterworked" choices.
 * Fixed a bug that caused the inventory view to jump to the top of the screen when items were inspected.
-* Add a disclaimer to power limit displays that they may change in the future.
+* Add a disclaimer to power limit displays that they may change in the future. Please see https://www.bungie.net/en/Help/Article/49106 for updates
 * Save column selection for Ghosts in the Organizer separate from Armor.
 * Display how many tags were cleaned up in the DIM Sync audit log.
 * Fix a bug where canceling setting a note in the Organizer would wipe notes from selected items.
