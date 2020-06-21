@@ -9,15 +9,17 @@ import _ from 'lodash';
 import { armorStats } from './store/stats';
 import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { showGearPower } from 'app/gear-power/gear-power';
 
 interface Props {
   stats?: DimStore['stats'];
   destinyVersion: DestinyVersion;
+  storeId?: string;
 }
 
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
-    const { stats, destinyVersion } = this.props;
+    const { stats, destinyVersion, storeId } = this.props;
 
     if (!stats) {
       return null;
@@ -88,11 +90,25 @@ ${stat.description}`;
         <div className="stat-bars destiny2">
           {[powerInfos, statInfos].map((stats, index) => (
             <div key={index} className="stat-row">
-              {stats.map(
-                ({ stat, tooltip }) =>
+              {stats.map(({ stat, tooltip }) => {
+                const isGearPower =
+                  stat.hash === -3 && storeId
+                    ? {
+                        onClick: () => {
+                          showGearPower(storeId);
+                        },
+                        style: { cursor: 'pointer' },
+                      }
+                    : {};
+                return (
                   stat && (
                     <PressTip key={stat.hash} tooltip={tooltip}>
-                      <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+                      <div
+                        className="stat"
+                        aria-label={`${stat.name} ${stat.value}`}
+                        role="group"
+                        {...isGearPower}
+                      >
                         <img src={stat.icon} alt={stat.name} />
                         <div>
                           {stat.value}
@@ -101,7 +117,8 @@ ${stat.description}`;
                       </div>
                     </PressTip>
                   )
-              )}
+                );
+              })}
             </div>
           ))}
         </div>
