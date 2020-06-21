@@ -111,15 +111,6 @@ export const powerfulSources = [
   4249081773, // InventoryItem "Powerful Armor"
 ];
 
-/** season 3 swag from rasputin */
-export const ikelos = [
-  847450546, // InventoryItem "IKELOS_SR_v1.0.1"
-  1723472487, // InventoryItem "IKELOS_SMG_v1.0.1"
-  1887808042, // InventoryItem "IKELOS_SG_v1.0.1"
-  3866356643, // InventoryItem "IKELOS_HC_v1.0.1"
-  4036115577, //  InventoryItem "Sleeper Simulant"
-];
-
 export const boosts = [
   1043138475, // -black-wax-idol
   1772853454, // -blue-polyphage

@@ -1,6 +1,8 @@
 ## Next
 
+* Remove `is:ikelos` filter
 * Loadout Optimizer: Save stat order and assume masterwork choices on change.
+
 
 ## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
 

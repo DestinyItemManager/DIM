@@ -298,7 +298,6 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           modded: ['modded'],
           hasShader: ['shaded', 'hasshader'],
           hasOrnament: ['ornamented', 'hasornament'],
-          ikelos: ['ikelos'],
           masterworked: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
@@ -1277,9 +1276,6 @@ function searchFilters(
       },
       armor(item: DimItem) {
         return item.bucket?.sort === 'Armor';
-      },
-      ikelos(item: D2Item) {
-        return hashes.ikelos.includes(item.hash);
       },
       cosmetic(item: DimItem) {
         return hashes.cosmeticTypes.includes(item.type);
