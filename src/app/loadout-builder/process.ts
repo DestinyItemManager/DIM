@@ -75,10 +75,8 @@ export function filterItems(
           // if the item is not a ghost of class item, make sure it meets the minimum total stat
           (bucket === LockableBuckets.classitem ||
             bucket === LockableBuckets.ghost ||
-            Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats)).reduce(
-              (a, b) => a + b,
-              0
-            ) >= minimumStatTotal) &&
+            _.sum(Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats))) >=
+              minimumStatTotal) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
@@ -559,6 +557,7 @@ function getLockedModStats(
       if (lockedItem.type === 'mod') {
         for (const stat of lockedItem.mod.investmentStats) {
           lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
           lockedModStats[stat.statTypeHash] += stat.value;
         }
       }
@@ -570,6 +569,7 @@ function getLockedModStats(
     for (const lockedMod of lockedArmor2Mods) {
       for (const stat of lockedMod.mod.investmentStats) {
         lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
         lockedModStats[stat.statTypeHash] += stat.value;
       }
     }
