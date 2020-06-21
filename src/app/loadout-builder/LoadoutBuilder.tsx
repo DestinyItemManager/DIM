@@ -10,9 +10,9 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, ItemsByBucket, MinMaxIgnored } from './types';
+import { ArmorSet, StatTypes, ItemsByBucket, MinMaxIgnored, statKeys, statHashes } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
-import { process, filterItems, statKeys } from './process';
+import { process, filterItems } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -40,14 +40,13 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 
-export const statHashToType: { [hash: number]: StatTypes } = {
-  2996146975: 'Mobility',
-  392767087: 'Resilience',
-  1943323491: 'Recovery',
-  1735777505: 'Discipline',
-  144602215: 'Intellect',
-  4244567218: 'Strength',
-};
+export const statHashToType: { [hash: number]: StatTypes } = Object.entries(statHashes).reduce(
+  (inverted, [statType, hash]) => {
+    inverted[hash] = statType;
+    return inverted;
+  },
+  {}
+);
 
 interface ProvidedProps {
   account: DestinyAccount;

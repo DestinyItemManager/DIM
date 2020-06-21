@@ -6,19 +6,10 @@ import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './FilterBuilds.m.scss';
-import { statHashes, statKeys } from '../process';
 import { statTier } from './utils';
 import { useDispatch } from 'react-redux';
 import { setSetting } from 'app/settings/actions';
-
-const statTypeToHash: { [type in StatTypes]: number } = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491,
-  Discipline: 1735777505,
-  Intellect: 144602215,
-  Strength: 4244567218,
-};
+import { statHashes, statKeys } from '../types';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -50,7 +41,7 @@ export default function FilterBuilds({
     dispatch(
       setSetting(
         'loStatSortOrder',
-        sortOrder.map((type) => statTypeToHash[type])
+        sortOrder.map((type) => statHashes[type])
       )
     );
   };

@@ -10,6 +10,9 @@ import {
   LockedMap,
   LockedArmor2Mod,
   LockedArmor2ModMap,
+  statHashes,
+  statKeys,
+  statValues,
 } from './types';
 import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
@@ -17,17 +20,6 @@ import { compareBy } from 'app/utils/comparators';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getItemDamageShortName, Armor2ModPlugCategories } from 'app/utils/item-utils';
-
-export const statHashes: { [type in StatTypes]: number } = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491,
-  Discipline: 1735777505,
-  Intellect: 144602215,
-  Strength: 4244567218,
-};
-export const statValues = Object.values(statHashes);
-export const statKeys = Object.keys(statHashes) as StatTypes[];
 
 const bucketsToCategories = {
   [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
