@@ -59,10 +59,16 @@ export default function ModPickerSection({
       <h3>{title}</h3>
       <div className={styles.perks}>
         {mods.map((item) => (
-          <ClosableContainer key={item.key} onClose={() => onModRemoved(item)}>
+          <ClosableContainer
+            key={item.key}
+            enabled={Boolean(locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash))}
+            onClose={() => onModRemoved(item)}
+          >
             <SelectableArmor2Mod
               defs={defs}
-              selected={Boolean(locked?.some((p) => p.mod.hash === item.mod.hash))}
+              selected={Boolean(
+                locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash)
+              )}
               mod={item}
               unselectable={isModUnSelectable(item)}
               onLockedArmor2Mod={onModSelected}

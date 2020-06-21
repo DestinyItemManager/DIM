@@ -23,7 +23,11 @@ export default function LockedItem({
     case 'item':
     case 'exclude':
       return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.item.id}>
+        <ClosableContainer
+          enabled={true}
+          onClose={() => onRemove(lockedItem)}
+          key={lockedItem.item.id}
+        >
           <DraggableInventoryItem item={lockedItem.item}>
             <ItemPopupTrigger item={lockedItem.item}>
               {(ref, onClick) => (
@@ -35,7 +39,11 @@ export default function LockedItem({
       );
     case 'mod':
       return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.mod.hash}>
+        <ClosableContainer
+          enabled={true}
+          onClose={() => onRemove(lockedItem)}
+          key={lockedItem.mod.hash}
+        >
           <div className={styles.emptyItem}>
             <SocketDetailsMod itemDef={lockedItem.mod} defs={defs} />
             {lockedItem.bucket && (
@@ -46,7 +54,11 @@ export default function LockedItem({
       );
     case 'perk':
       return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
+        <ClosableContainer
+          enabled={true}
+          onClose={() => onRemove(lockedItem)}
+          key={lockedItem.perk.hash}
+        >
           <div className={styles.emptyItem}>
             <BungieImageAndAmmo
               hash={lockedItem.perk.hash}
@@ -59,7 +71,11 @@ export default function LockedItem({
       );
     case 'burn':
       return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.burn.dmg}>
+        <ClosableContainer
+          enabled={true}
+          onClose={() => onRemove(lockedItem)}
+          key={lockedItem.burn.dmg}
+        >
           <div className={styles.emptyItem}>
             <div>
               <img
