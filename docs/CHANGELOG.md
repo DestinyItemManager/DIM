@@ -1,5 +1,7 @@
 ## Next
 
+## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
+
 * Remove `is:ikelos` filter
 * Loadout Optimizer: Save stat order and "assume masterworked" choices.
 * Fixed a bug that caused the inventory view to jump to the top of the screen when items were inspected.
