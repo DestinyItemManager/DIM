@@ -1,17 +1,14 @@
 import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage } from 'app/i18n';
-import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 
 export interface Settings extends DimApiSettings {
-  /** list of stat hashes of interest, keyed by class enum */
-  readonly customTotalStatsByClass: KeyedStatHashLists;
-
   /** Selected columns for the Vault Organizer */
   readonly organizerColumnsWeapons: string[];
   readonly organizerColumnsArmor: string[];
 
   readonly loMinPower: number;
   readonly loMinStatTotal: number;
+  readonly organizerColumnsGhost: string[];
 }
 
 export const initialSettingsState: Settings = {
@@ -47,4 +44,5 @@ export const initialSettingsState: Settings = {
   ],
   loMinPower: 750,
   loMinStatTotal: 55,
+  organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'ghost', 'perks', 'notes'],
 };

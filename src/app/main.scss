@@ -73,11 +73,6 @@
   }
 }
 
-html,
-body {
-  height: 100%;
-}
-
 // Suppress outline on focusable divs
 div[tabindex='-1']:focus {
   outline: 0;
