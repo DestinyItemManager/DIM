@@ -101,7 +101,7 @@ export default function FilterBuilds({
             {t('LoadoutBuilder.SelectMinStatTotal')}
           </label>
           <RangeSelector
-            min={46}
+            min={40}
             max={82}
             initialValue={minimumStatTotal}
             onChange={(minTotal: number) => dispatch(setSetting('loMinStatTotal', minTotal))}
