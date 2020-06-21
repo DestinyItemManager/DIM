@@ -21,6 +21,10 @@
   @include phone-portrait {
     min-width: auto;
   }
+
+  .body-scroll-lock & {
+    margin-top: var(--store-header-height);
+  }
 }
 
 .store-row {
@@ -182,13 +186,7 @@
     }
   }
 }
-.stores {
-  display: block; // 77px margin to make room for the fixed header
-  margin-top: 77px;
-  @supports (position: sticky) {
-    margin-top: 0;
-  }
-}
+
 .dim-button.bucket-button {
   align-self: center;
   margin-bottom: 8px;
