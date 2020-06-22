@@ -14,7 +14,6 @@ import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../i
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
-import { scrollToPosition } from 'app/dim-ui/scroll';
 import {
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
@@ -31,6 +30,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { itemPop } from 'app/dim-ui/scroll';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
@@ -203,7 +203,7 @@ class Compare extends React.Component<Props, State> {
                   item={item}
                   key={item.id}
                   stats={stats}
-                  itemClick={this.itemClick}
+                  itemClick={itemPop}
                   remove={this.remove}
                   setHighlight={this.setHighlight}
                   highlight={highlight}
@@ -319,34 +319,6 @@ class Compare extends React.Component<Props, State> {
       this.cancel();
     } else {
       this.setState({ comparisonItems: comparisonItems.filter((c) => c.id !== item.id) });
-    }
-  };
-
-  private itemClick = (item: DimItem) => {
-    // TODO: this is tough to do with an ID since we'll have multiple
-    const element = document.getElementById(item.index)?.parentNode as HTMLElement;
-    if (!element) {
-      throw new Error(`No element with id ${item.index}`);
-    }
-    const elementRect = element.getBoundingClientRect();
-    const absoluteElementTop = elementRect.top + window.pageYOffset;
-    scrollToPosition({ left: 0, top: absoluteElementTop - 150 });
-    element.classList.add('item-pop');
-
-    const removePop = () => {
-      element.classList.remove('item-pop');
-      for (const event of [
-        'webkitAnimationEnd',
-        'oanimationend',
-        'msAnimationEnd',
-        'animationend',
-      ]) {
-        element.removeEventListener(event, removePop);
-      }
-    };
-
-    for (const event of ['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend']) {
-      element.addEventListener(event, removePop);
     }
   };
 

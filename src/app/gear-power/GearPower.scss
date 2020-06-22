@@ -1,3 +1,68 @@
-.gearPowerSheet textarea {
-  height: 400px;
+.gearPowerSheet {
+  img {
+    height: 20px;
+    width: 20px;
+
+    vertical-align: middle;
+  }
+  .invert {
+    filter: invert(1);
+  }
+  .positive {
+    color: green;
+  }
+  .negative {
+    color: red;
+  }
+
+  .gearGrid {
+    width: max-content;
+    margin: 10px auto;
+    display: grid;
+    gap: 4px 10px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+
+    & > div {
+      grid-row-end: span 2;
+    }
+    .Kinetic,
+    .Energy,
+    .Power {
+      grid-column-start: 1;
+    }
+
+    .Helmet,
+    .Gauntlets,
+    .Chest,
+    .Leg,
+    .ClassItem {
+      grid-column-start: 2;
+    }
+
+    .Kinetic {
+      grid-row-start: 3;
+    }
+    .Energy {
+      grid-row-start: 5;
+    }
+    .Power {
+      grid-row-start: 7;
+    }
+    .Helmet {
+      grid-row-start: 1;
+    }
+    .Gauntlets {
+      grid-row-start: 3;
+    }
+    .Chest {
+      grid-row-start: 5;
+    }
+    .Leg {
+      grid-row-start: 7;
+    }
+    .ClassItem {
+      grid-row-start: 9;
+    }
+  }
 }

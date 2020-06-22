@@ -1,22 +1,24 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { showGearPower$ } from './gear-power';
 import Sheet from '../dim-ui/Sheet';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { storesSelector } from '../inventory/selectors';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import './GearPower.scss';
 
 import { connect } from 'react-redux';
-import { t } from 'app/i18next-t';
-import clsx from 'clsx';
+// import { t } from 'app/i18next-t';
+// import clsx from 'clsx';
 
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
+import BucketIcon from 'app/dim-ui/BucketIcon';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { itemPop } from 'app/dim-ui/scroll';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -36,41 +38,12 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-// interface State {
-//   selectedStore?: D2Store;
-// }
-
-// type Action =
-//   /** Reset the tool (for when the sheet is closed) */
-//   | { type: 'reset' }
-//   /** Set up the tool with a new focus item */
-//   | { type: 'init'; selectedStore?: D2Store };
-
-// /**
-//  * All state for this component is managed through this reducer and the Actions above.
-//  */
-// function stateReducer(_: State, action: Action): State {
-//   switch (action.type) {
-//     case 'reset':
-//       return {
-//         selectedStore: undefined,
-//       };
-//     case 'init': {
-//       return {
-//         selectedStore: action.selectedStore,
-//       };
-//     }
-//   }
-// }
-
 function GearPower({ stores }: StoreProps) {
-  // const [{ selectedStore }, stateDispatch] = useReducer(stateReducer, {});
   const [selectedStore, setSelectedStore] = useState<D2Store | undefined>();
   const reset = () => setSelectedStore(undefined);
 
   useSubscription(() =>
     showGearPower$.subscribe(({ selectedStoreId }) => {
-      // stateDispatch({ type: 'init', selectedStore: stores.find((s) => s.id === selectedStoreId) });
       setSelectedStore(stores.find((s) => s.id === selectedStoreId));
     })
   );
@@ -87,38 +60,47 @@ function GearPower({ stores }: StoreProps) {
   );
   const maxBasePower = getLight(selectedStore, maxLightItems);
   const powerFloor = Math.floor(maxBasePower);
+  const header = (
+    <>
+      <img src={selectedStore.icon} />
+      {`${selectedStore.name} (${maxBasePower})`}
+    </>
+  );
   return (
-    <Sheet onClose={reset} header={selectedStore.name} sheetClassName="gearPowerSheet">
-      <textarea
-        value={
-          maxBasePower +
-          '\n\n' +
-          JSON.stringify(
-            maxLightItems.map((i) => {
-              const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
-              const diffSymbol = powerDiff > 0 ? '+' : '';
-              return `${i.type} ${i.primStat?.value} (${diffSymbol}${powerDiff})`;
-            }),
-            null,
-            2
-          )
-        }
-      ></textarea>
+    <Sheet onClose={reset} header={header} sheetClassName="gearPowerSheet">
+      <div className="gearGrid">
+        {maxLightItems.map((i, j) => {
+          const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
+          const diffSymbol = powerDiff > 0 ? '+' : '';
+          const diffClass = powerDiff > 0 ? 'positive' : 'negative';
+          return (
+            <div key={j} className={i.type}>
+              <BucketIcon className="invert" item={i} />
+              <span onClick={() => itemPop(i)}>
+                <BungieImage src={i.icon} />
+              </span>
+              {i.primStat?.value}
+              <span className={diffClass}>
+                ({diffSymbol}
+                {powerDiff})
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </Sheet>
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(GearPower);
 
-// const maxLightItems = _.sortBy(maxLightItemSet(stores, store), (i) =>
-// gearSlotOrder.indexOf(i.type)
-// );
-// const maxBasePower = getLight(store, maxLightItems);
-
-// import { getBuckets, D2Categories } from '../destiny2/d2-buckets';
-// // order to display a list of all 8 gear slots
-// const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
-// const gearSlotOrder = [
-//   ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
-//   ...D2Categories.Armor,
-// ];
+// implement this once item popup & sheet coexist more peacefully
+//
+// import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+// <ItemPopupTrigger item={i}>
+// {(ref, onClick) => (
+//   <span ref={ref} onClick={onClick}>
+//     <BungieImage src={i.icon} />
+//   </span>
+// )}
+// </ItemPopupTrigger>
