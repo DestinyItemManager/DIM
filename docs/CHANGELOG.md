@@ -1,5 +1,7 @@
 ## Next
 
+## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
+
 ## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
 
 * Remove `is:ikelos` filter
