@@ -44,8 +44,7 @@ const FILTER_NODE_NAMES = [
 ];
 
 // ignore raid & calus sources in favor of more detailed sources
-delete D2Sources.raid;
-delete D2Sources.calus;
+const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
 export function downloadCsvFiles(
   stores: DimStore[],
@@ -276,7 +275,7 @@ function equippable(item: DimItem) {
 export function source(item: DimItem) {
   if (item.isDestiny2()) {
     return (
-      Object.keys(D2Sources).find(
+      sourceKeys.find(
         (src) =>
           D2Sources[src].sourceHashes.includes(item.source) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
