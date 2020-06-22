@@ -39,7 +39,6 @@ import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
-import { Settings } from 'app/settings/initial-settings';
 import { settingsSelector } from 'app/settings/reducer';
 
 // Need to force the type as lodash converts the StatTypes type to string.
@@ -52,7 +51,10 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
-  settings: Settings;
+  statOrder: StatTypes[];
+  assumeMasterwork: boolean;
+  minimumPower: number;
+  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -100,16 +102,24 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState): StoreProps => ({
-    storesLoaded: storesLoadedSelector(state),
-    stores: sortedStoresSelector(state),
-    settings: settingsSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
-    items: itemsSelector(state),
-    defs: state.manifest.d2Manifest,
-    searchConfig: searchConfigSelector(state),
-    filters: searchFiltersConfigSelector(state),
-  });
+  return (state: RootState): StoreProps => {
+    const { loStatSortOrder, loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(
+      state
+    );
+    return {
+      storesLoaded: storesLoadedSelector(state),
+      stores: sortedStoresSelector(state),
+      statOrder: loStatSortOrder.map((hash) => statHashToType[hash]),
+      assumeMasterwork: loAssumeMasterwork,
+      minimumPower: loMinPower,
+      minimumStatTotal: loMinStatTotal,
+      isPhonePortrait: state.shell.isPhonePortrait,
+      items: itemsSelector(state),
+      defs: state.manifest.d2Manifest,
+      searchConfig: searchConfigSelector(state),
+      filters: searchFiltersConfigSelector(state),
+    };
+  };
 }
 
 /**
@@ -119,7 +129,10 @@ function LoadoutBuilder({
   account,
   storesLoaded,
   stores,
-  settings,
+  statOrder,
+  assumeMasterwork,
+  minimumPower,
+  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -127,7 +140,6 @@ function LoadoutBuilder({
   filters,
   location,
 }: Props) {
-  const statOrder = settings.loStatSortOrder.map((hash) => statHashToType[hash]);
   // Memoizing to ensure these functions are only created once
   const [filterItemsMemoized, filterSetsMemoized, processMemoized, getEnabledStats] = useMemo(
     () => [
@@ -196,8 +208,8 @@ function LoadoutBuilder({
       items[store.classType],
       lockedMap,
       lockedArmor2Mods,
-      settings.loMinStatTotal,
-      settings.loAssumeMasterwork,
+      minimumStatTotal,
+      assumeMasterwork,
       filter
     );
 
@@ -206,14 +218,14 @@ function LoadoutBuilder({
       lockedMap,
       lockedArmor2Mods,
       store.id,
-      settings.loAssumeMasterwork
+      assumeMasterwork
     );
     processedSets = result.sets;
     combos = result.combos;
     combosWithoutCaps = result.combosWithoutCaps;
     filteredSets = filterSetsMemoized(
       processedSets,
-      settings.loMinPower,
+      minimumPower,
       lockedMap,
       lockedArmor2Mods,
       lockedSeasonalMods,
@@ -237,15 +249,15 @@ function LoadoutBuilder({
       <FilterBuilds
         sets={processedSets}
         selectedStore={store as D2Store}
-        minimumPower={settings.loMinPower}
-        minimumStatTotal={settings.loMinStatTotal}
+        minimumPower={minimumPower}
+        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           stateDispatch({ type: 'statFiltersChanged', statFilters })
         }
         defs={defs}
         order={statOrder}
-        assumeMasterwork={settings.loAssumeMasterwork}
+        assumeMasterwork={assumeMasterwork}
       />
 
       <LockArmorAndPerks
