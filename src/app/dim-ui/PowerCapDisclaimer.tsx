@@ -15,13 +15,15 @@ export const powerCapDisclaimer = [
 ];
 
 export function PowerCapDisclaimer({ item }: { item: DimItem }) {
+  console.log('hello');
+  console.log(D2Sources);
   if (
     // rule out easy stuff first, to try and avoid doing hash lookups
     item.isDestiny2() &&
     item.powerCap === 1060 &&
     // if this is any raid armor
     ((item.bucket.inArmor &&
-      (D2Sources.raid.sourceHashes.includes(item.source) ||
+      (D2Sources?.raid?.sourceHashes?.includes(item.source) ||
         missingSources.raid.includes(item.hash))) ||
       // or last wish and garden weapons
       (item.bucket.inWeapons &&
