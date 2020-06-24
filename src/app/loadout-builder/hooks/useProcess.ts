@@ -10,14 +10,15 @@ import {
   ProcessSockets,
 } from '../processWorker/types';
 
-type ProcessResult = {
+interface ProcessState {
   processing: boolean;
   result: {
     sets: ArmorSet[];
     combos: number;
     combosWithoutCaps: number;
   } | null;
-};
+  currentCleanup: (() => void) | null;
+}
 
 type ItemsById = { [id: string]: DimItem };
 
@@ -31,20 +32,24 @@ export function useProcess(
   selectedStoreId: string | undefined,
   assumeMasterwork: boolean
 ) {
-  const [{ result, processing }, setState] = useState({
+  const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
     result: null,
-  } as ProcessResult);
+    currentCleanup: null,
+  } as ProcessState);
 
-  const worker = useWorker();
+  const { worker, cleanup } = useWorkerAndCleanup(selectedStoreId);
 
   useEffect(() => {
+    if (currentCleanup) {
+      currentCleanup();
+    }
+
     if (selectedStoreId) {
-      console.time('useProcess');
+      const processStart = performance.now();
 
-      setState({ processing: true, result });
+      setState({ processing: true, result, currentCleanup: cleanup });
 
-      console.time('useProcess: item preprocessing');
       const processItems: ProcessItemsByBucket = {};
       const itemsById: ItemsById = {};
 
@@ -58,16 +63,13 @@ export function useProcess(
         }
       }
 
-      console.timeEnd('useProcess: item preprocessing');
-
-      console.time('useProcess: worker time');
+      const workerStart = performance.now();
       worker
         .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork)
         .then(({ sets, combos, combosWithoutCaps }) => {
-          console.timeEnd('useProcess: worker time');
-          console.time('useProcess: item hydration');
+          console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
           const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
-          console.timeEnd('useProcess: item hydration');
+
           setState({
             processing: false,
             result: {
@@ -75,8 +77,10 @@ export function useProcess(
               combos,
               combosWithoutCaps,
             },
+            currentCleanup: null,
           });
-          console.timeEnd('useProcess');
+
+          console.timeEnd(`useProcess ${performance.now() - processStart}ms`);
         });
     }
     /* do not include result in dependenvies */
@@ -86,21 +90,19 @@ export function useProcess(
   return { result, processing };
 }
 
-// TODO Rather than always using the same worker maybe we should be caching the active worker so we can terminate
-// it early if the user clicks something else. I think currently this may be blocked by the existing task.
-function useWorker() {
-  const { worker, cleanup } = useMemo(() => makeWorkerApiAndCleanup(), []);
-
-  // need to cleanup the worker when unloading
-  useEffect(() => cleanup, [worker, cleanup]);
-
-  return worker;
-}
-
 /**
  * Creates a worker, a cleanup function and returns it
  */
-function makeWorkerApiAndCleanup() {
+function useWorkerAndCleanup(selectedStoreId?: string) {
+  const { worker, cleanup } = useMemo(() => createWorker(), [selectedStoreId]);
+
+  // terminate the worker on unload
+  useEffect(() => cleanup, [worker, cleanup]);
+
+  return { worker, cleanup };
+}
+
+function createWorker() {
   const instance = new Worker('../processWorker/ProcessWorker', {
     name: 'ProcessWorker',
     type: 'module',
@@ -109,6 +111,7 @@ function makeWorkerApiAndCleanup() {
   const worker = wrap<import('../processWorker/ProcessWorker').ProcessWorker>(instance);
 
   const cleanup = () => {
+    console.log('Terminating web worker');
     worker[releaseProxy]();
     instance.terminate();
   };
