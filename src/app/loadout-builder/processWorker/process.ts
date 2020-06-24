@@ -124,7 +124,9 @@ export function process(
   }
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-  const groupedSets: { [tiers: string]: Mutable<ProcessArmorSet> } = {};
+  const groupedSets: { [totalTier: number]: { [tiers: string]: Mutable<ProcessArmorSet> } } = {};
+  let lowestTier = 100;
+  let setCount = 0;
 
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
@@ -163,20 +165,61 @@ export function process(
               // A string version of the tier-level of each stat, separated by commas
               // This is an awkward implementation to save garbage allocations.
               let tiers = '';
+              let totalTier = 0;
               let index = 1;
               for (const statKey in stats) {
                 tiers += statTier(stats[statKey]);
+                totalTier += statTier(stats[statKey]);
                 if (index < statKeys.length) {
                   tiers += ',';
                 }
                 index++;
               }
 
-              const existingSetAtTier = groupedSets[tiers];
+              if (totalTier <= lowestTier) {
+                if (setCount <= 500) {
+                  lowestTier = totalTier;
+                } else {
+                  continue;
+                }
+              } else if (setCount > 500 && groupedSets[lowestTier]) {
+                const lowestGroup = groupedSets[lowestTier];
+                const lowestGroupKeys = Object.keys(lowestGroup);
+                if (lowestGroupKeys.length) {
+                  const biggestSet = lowestGroupKeys.sort(
+                    (a, b) => lowestGroup[b].sets.length - lowestGroup[a].sets.length
+                  )[0];
+                  setCount -= 1;
+                  lowestGroup[biggestSet].sets.sort((a, b) => a.maxPower - b.maxPower).pop();
+                  if (!lowestGroup[biggestSet].sets.length) {
+                    delete lowestGroup[biggestSet];
+                  }
+                }
+
+                if (!Object.keys(groupedSets[lowestTier]).length) {
+                  delete groupedSets[lowestTier];
+                  lowestTier = parseInt(
+                    Object.keys(groupedSets).sort((a, b) => a.localeCompare(b))[0],
+                    10
+                  );
+                }
+              }
+
+              setCount++;
+
+              let groupedSetsInTotalTier = groupedSets[totalTier];
+
+              if (!groupedSetsInTotalTier) {
+                groupedSets[totalTier] = {};
+                groupedSetsInTotalTier = groupedSets[totalTier];
+              }
+
+              const existingSetAtTier = groupedSetsInTotalTier[tiers];
               if (existingSetAtTier) {
                 existingSetAtTier.sets.push({
                   armor: armor.map((items) => items.map((item) => item.id)),
                   statChoices,
+                  maxPower,
                 });
                 if (maxPower > existingSetAtTier.maxPower) {
                   existingSetAtTier.firstValidSet = firstValidSet.map((item) => item.id);
@@ -185,11 +228,12 @@ export function process(
                 }
               } else {
                 // First of its kind
-                groupedSets[tiers] = {
+                groupedSetsInTotalTier[tiers] = {
                   sets: [
                     {
                       armor: armor.map((items) => items.map((item) => item.id)),
                       statChoices,
+                      maxPower,
                     },
                   ],
                   stats: stats as {
@@ -211,8 +255,8 @@ export function process(
   // TODO move to a smarter system where we throw away stuff that wont be in this
   // to keep the memory footprint down. Also some sets may be missed if people ignore certain stats.
   const finalSets = Object.values(groupedSets)
-    .sort((aSet, bSet) => _.sum(Object.values(bSet.stats)) - _.sum(Object.values(aSet.stats)))
-    .slice(0, 250);
+    .map((byTier) => Object.values(byTier))
+    .flat();
 
   console.log(
     'found',
