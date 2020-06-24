@@ -97,6 +97,8 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => {
     const items = itemsSelector(state, props);
     const isWeapon = items[0]?.bucket.inWeapons;
+    const isArmor = items[0]?.bucket.inArmor;
+    const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
     return {
       items,
       defs: state.manifest.d2Manifest!,
@@ -105,9 +107,7 @@ function mapStateToProps() {
       ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
-      enabledColumns: settingsSelector(state)[
-        isWeapon ? 'organizerColumnsWeapons' : 'organizerColumnsArmor'
-      ],
+      enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
       newItems: state.inventory.newItems,
@@ -170,8 +170,8 @@ function ItemTable({
   );
 
   const firstItem = items[0];
-  const isWeapon = firstItem?.bucket.inWeapons;
-  const isArmor = firstItem?.bucket.inArmor;
+  const isWeapon = Boolean(firstItem?.bucket.inWeapons);
+  const isArmor = Boolean(firstItem?.bucket.inArmor);
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
   const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
   const destinyVersion = firstItem?.destinyVersion || 2;
@@ -234,7 +234,7 @@ function ItemTable({
     ({ checked, id }: { checked: boolean; id: string }) => {
       dispatch(
         setSetting(
-          isWeapon ? 'organizerColumnsWeapons' : 'organizerColumnsArmor',
+          columnSetting(itemType),
           _.uniq(
             _.compact(
               columns.map((c) => {
@@ -250,7 +250,7 @@ function ItemTable({
         )
       );
     },
-    [dispatch, columns, enabledColumns, isWeapon]
+    [dispatch, columns, enabledColumns, itemType]
   );
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
@@ -686,3 +686,14 @@ function TableRow({
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemTable);
+
+function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
+  switch (itemType) {
+    case 'weapon':
+      return 'organizerColumnsWeapons';
+    case 'armor':
+      return 'organizerColumnsArmor';
+    case 'ghost':
+      return 'organizerColumnsGhost';
+  }
+}

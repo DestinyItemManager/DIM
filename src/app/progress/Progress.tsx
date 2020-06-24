@@ -16,11 +16,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { sortedStoresSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import { AppIcon, faExternalLinkAlt } from 'app/shell/icons';
 import { queueAction } from 'app/inventory/action-queue';
-import destinySetsLogo from '../../images/destinySetsLogo.svg';
-import braytechLogo from '../../images/braytechLogo.svg';
-import d2ChecklistLogo from '../../images/d2ChecklistLogo.svg';
 import Pursuits from './Pursuits';
 import Milestones from './Milestones';
 import Ranks from './Ranks';
@@ -139,20 +135,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'triumphs', title: triumphTitle },
     { id: 'seals', title: sealTitle },
   ];
-  const externalLinks = [
-    {
-      href: `https://braytech.org/${account.originalPlatformType}/${account.membershipId}/${selectedStore.id}/`,
-      title: 'BrayTech.org',
-      logo: braytechLogo,
-    },
-    { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
-    { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' },
-    {
-      href: `https://www.d2checklist.com/${account.originalPlatformType}/${account.membershipId}`,
-      title: 'D2Checklist',
-      logo: d2ChecklistLogo,
-    },
-  ];
 
   return (
     <ErrorBoundary name="Progress">
@@ -172,19 +154,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
               {menuItems.map((menuItem) => (
                 <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                   <span>{menuItem.title}</span>
-                </PageWithMenu.MenuButton>
-              ))}
-              {externalLinks.map((menuItem) => (
-                <PageWithMenu.MenuButton
-                  key={menuItem.href}
-                  className="menu-link"
-                  href={menuItem.href}
-                  target="_blank"
-                >
-                  {menuItem.logo && <img src={menuItem.logo} />}
-                  <span>
-                    {menuItem.title} <AppIcon icon={faExternalLinkAlt} />
-                  </span>
                 </PageWithMenu.MenuButton>
               ))}
             </div>

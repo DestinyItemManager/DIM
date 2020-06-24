@@ -1,5 +1,21 @@
 ## Next
 
+## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
+
+## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
+
+* Remove `is:ikelos` filter
+* Loadout Optimizer: Save stat order and "assume masterworked" choices.
+* Fixed a bug that caused the inventory view to jump to the top of the screen when items were inspected.
+* Add a disclaimer to power limit displays that they may change in the future. Please see https://www.bungie.net/en/Help/Article/49106 for updates
+* Save column selection for Ghosts in the Organizer separate from Armor.
+* Display how many tags were cleaned up in the DIM Sync audit log.
+* Fix a bug where canceling setting a note in the Organizer would wipe notes from selected items.
+* Add a pointer cursor on item icons in the Organzier to indicate they're clickable.
+* Fix minimum page width when there are fewer than three characters.
+* Fix Arrival mods not appearing in the Loadout Optimizer.
+* Fix a bug when DIM Sync is off that could repeatedly show a notification that an import had failed. Please consider enabling DIM Sync though, your data WILL get lost if it's disabled.
+
 ## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
 
 ## 6.15.0 <span className="changelog-date">(2020-06-14)</span>

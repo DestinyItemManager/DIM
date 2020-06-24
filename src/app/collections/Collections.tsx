@@ -117,24 +117,6 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
           />
         )}
       </ErrorBoundary>
-      <div className="collections-partners">
-        <a
-          className="collections-partner dim-button"
-          target="_blank"
-          rel="noopener"
-          href="https://destinysets.com"
-        >
-          {t('Vendors.DestinySets')}
-        </a>
-        <a
-          className="collections-partner dim-button"
-          target="_blank"
-          rel="noopener"
-          href="https://lowlidev.com.au/destiny/maps"
-        >
-          {t('Vendors.DestinyMap')}
-        </a>
-      </div>
     </div>
   );
 }

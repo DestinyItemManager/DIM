@@ -1,10 +1,11 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
+import { connect } from 'react-redux';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets } from './generated-sets/utils';
+import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { StatTypes, ItemsByBucket } from './types';
 import { filterItems } from './preProcessFilter';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -12,7 +13,12 @@ import FilterBuilds from './generated-sets/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import SearchFilterInput from 'app/search/SearchFilterInput';
-import { SearchConfig, SearchFilters } from 'app/search/search-filters';
+import {
+  SearchConfig,
+  SearchFilters,
+  searchConfigSelector,
+  searchFiltersConfigSelector,
+} from 'app/search/search-filters';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -23,19 +29,86 @@ import { useLbState, LoadoutBuilderState } from './loadoutBuilderReducer';
 import { statKeys } from './utils';
 import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createSelector } from 'reselect';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimItem } from 'app/inventory/item-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { RootState } from 'app/store/reducers';
 
-interface Props {
+export const statHashToType: { [hash: number]: StatTypes } = {
+  2996146975: 'Mobility',
+  392767087: 'Resilience',
+  1943323491: 'Recovery',
+  1735777505: 'Discipline',
+  144602215: 'Intellect',
+  4244567218: 'Strength',
+};
+
+interface ProvidedProps {
+  account: DestinyAccount;
+  defs: D2ManifestDefinitions;
   stores: DimStore[];
+  location: Location<{
+    loadout?: Loadout | undefined;
+  }>;
+}
+
+interface StoreProps {
+  statOrder: StatTypes[];
+  assumeMasterwork: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  defs: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
-  location: Location<{
-    loadout?: Loadout | undefined;
-  }>;
+}
+
+type Props = ProvidedProps & StoreProps;
+
+function mapStateToProps() {
+  const itemsSelector = createSelector(
+    storesSelector,
+    (
+      stores
+    ): Readonly<{
+      [classType: number]: ItemsByBucket;
+    }> => {
+      const items: {
+        [classType: number]: { [bucketHash: number]: DimItem[] };
+      } = {};
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
+            continue;
+          }
+          for (const classType of item.classType === DestinyClass.Unknown
+            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+            : [item.classType]) {
+            if (!items[classType]) {
+              items[classType] = {};
+            }
+            if (!items[classType][item.bucket.hash]) {
+              items[classType][item.bucket.hash] = [];
+            }
+            items[classType][item.bucket.hash].push(item);
+          }
+        }
+      }
+
+      return items;
+    }
+  );
+
+  return (state: RootState): StoreProps => ({
+    statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
+    assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
+    isPhonePortrait: state.shell.isPhonePortrait,
+    items: itemsSelector(state),
+    searchConfig: searchConfigSelector(state),
+    filters: searchFiltersConfigSelector(state),
+  });
 }
 
 /**
@@ -43,6 +116,8 @@ interface Props {
  */
 function LoadoutBuilder({
   stores,
+  statOrder,
+  assumeMasterwork,
   isPhonePortrait,
   items,
   defs,
@@ -59,8 +134,6 @@ function LoadoutBuilder({
       statFilters,
       minimumPower,
       query,
-      statOrder,
-      assumeMasterwork,
     },
     lbDispatch,
   ] = useLbState(stores, location);
@@ -142,13 +215,7 @@ function LoadoutBuilder({
         }
         defs={defs}
         order={statOrder}
-        onStatOrderChanged={(statOrder: StatTypes[]) =>
-          lbDispatch({ type: 'statOrderChanged', statOrder })
-        }
         assumeMasterwork={assumeMasterwork}
-        onMasterworkAssumptionChange={(assumeMasterwork: boolean) =>
-          lbDispatch({ type: 'assumeMasterworkChanged', assumeMasterwork })
-        }
       />
 
       <LockArmorAndPerks
@@ -211,4 +278,4 @@ function LoadoutBuilder({
   );
 }
 
-export default React.memo(LoadoutBuilder);
+export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);

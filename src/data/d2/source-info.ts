@@ -429,7 +429,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   prophecy: {
     itemHashes: [],
     sourceHashes: [
-      3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
+      506073192, // Source: Season of Arrivals dungeon.
     ],
   },
   raid: {
