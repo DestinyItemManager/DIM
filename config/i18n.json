@@ -741,7 +741,7 @@
       "Energy": "Energy",
       "Tag": "Tag",
       "WishList": "Wish List",
-      "Reacquireable": "Reacquireable",
+      "Reacquirable": "Reacquirable",
       "PercentComplete": "% Complete",
       "StatQuality": "Stat Quality",
       "StatQualityStat": "{{stat}}%",
