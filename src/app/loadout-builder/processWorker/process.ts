@@ -22,7 +22,6 @@ export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  selectedStoreId: string,
   assumeMasterwork: boolean
 ): { sets: ProcessArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
@@ -41,11 +40,7 @@ export function process(
   };
 
   const helms = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.helmet] || [],
-      (i) => -i.basePower,
-      (i) => !i.equipped
-    ),
+    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
       lockedItems[LockableBuckets.helmet],
@@ -53,11 +48,7 @@ export function process(
     )
   );
   const gaunts = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.gauntlets] || [],
-      (i) => -i.basePower,
-      (i) => !i.equipped
-    ),
+    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
       lockedItems[LockableBuckets.gauntlets],
@@ -65,11 +56,7 @@ export function process(
     )
   );
   const chests = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.chest] || [],
-      (i) => -i.basePower,
-      (i) => !i.equipped
-    ),
+    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
       lockedItems[LockableBuckets.chest],
@@ -77,11 +64,7 @@ export function process(
     )
   );
   const legs = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.leg] || [],
-      (i) => -i.basePower,
-      (i) => !i.equipped
-    ),
+    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
       lockedItems[LockableBuckets.leg],
@@ -89,25 +72,12 @@ export function process(
     )
   );
   const classitems = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.classitem] || [],
-      (i) => -i.basePower,
-      (i) => !i.equipped
-    ),
+    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
       lockedItems[LockableBuckets.classitem],
       lockedArmor2ModMap[Armor2ModPlugCategories.classitem]
     )
-  );
-
-  // Ghosts don't have power, so sort them with exotics first
-  const ghosts = multiGroupBy(
-    _.sortBy(
-      filteredItems[LockableBuckets.ghost] || [],
-      (i) => !(i.owner === selectedStoreId && i.equipped)
-    ),
-    byStatMix(assumeMasterwork, lockedItems[LockableBuckets.ghost])
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -122,15 +92,13 @@ export function process(
   const chestsKeys = makeKeys(chests);
   const legsKeys = makeKeys(legs);
   const classItemsKeys = makeKeys(classitems);
-  const ghostsKeys = makeKeys(ghosts);
 
   const combosWithoutCaps =
     helmsKeys.length *
     gauntsKeys.length *
     chestsKeys.length *
     legsKeys.length *
-    classItemsKeys.length *
-    ghostsKeys.length;
+    classItemsKeys.length;
 
   let combos = combosWithoutCaps;
 
@@ -144,8 +112,7 @@ export function process(
       gauntsKeys.length *
       chestsKeys.length *
       legsKeys.length *
-      classItemsKeys.length *
-      ghostsKeys.length;
+      classItemsKeys.length;
   }
 
   if (combos < combosWithoutCaps) {
@@ -164,79 +131,75 @@ export function process(
       for (const chestsKey of chestsKeys) {
         for (const legsKey of legsKeys) {
           for (const classItemsKey of classItemsKeys) {
-            for (const ghostsKey of ghostsKeys) {
-              const armor = [
-                helms[helmsKey],
-                gaunts[gauntsKey],
-                chests[chestsKey],
-                legs[legsKey],
-                classitems[classItemsKey],
-                ghosts[ghostsKey],
+            const armor = [
+              helms[helmsKey],
+              gaunts[gauntsKey],
+              chests[chestsKey],
+              legs[legsKey],
+              classitems[classItemsKey],
+            ];
+
+            const firstValidSet = getFirstValidSet(armor);
+            if (firstValidSet) {
+              const statChoices = [
+                keyToStats(helmsKey),
+                keyToStats(gauntsKey),
+                keyToStats(chestsKey),
+                keyToStats(legsKey),
+                keyToStats(classItemsKey),
               ];
 
-              const firstValidSet = getFirstValidSet(armor);
-              if (firstValidSet) {
-                const statChoices = [
-                  keyToStats(helmsKey),
-                  keyToStats(gauntsKey),
-                  keyToStats(chestsKey),
-                  keyToStats(legsKey),
-                  keyToStats(classItemsKey),
-                  keyToStats(ghostsKey),
-                ];
+              const maxPower = getPower(firstValidSet);
 
-                const maxPower = getPower(firstValidSet);
-
-                const stats = {};
-                for (const stat of statChoices) {
-                  let index = 0;
-                  for (const key of statKeys) {
-                    stats[key] = Math.min((stats[key] || 0) + stat[index], 100);
-                    index++;
-                  }
-                }
-
-                // A string version of the tier-level of each stat, separated by commas
-                // This is an awkward implementation to save garbage allocations.
-                let tiers = '';
-                let index = 1;
-                for (const statKey in stats) {
-                  tiers += statTier(stats[statKey]);
-                  if (index < statKeys.length) {
-                    tiers += ',';
-                  }
+              const stats = {};
+              for (const stat of statChoices) {
+                let index = 0;
+                for (const key of statKeys) {
+                  stats[key] = Math.min((stats[key] || 0) + stat[index], 100);
                   index++;
                 }
+              }
 
-                const existingSetAtTier = groupedSets[tiers];
-                if (existingSetAtTier) {
-                  existingSetAtTier.sets.push({
-                    armor: armor.map((items) => items.map((item) => item.id)),
-                    statChoices,
-                  });
-                  if (maxPower > existingSetAtTier.maxPower) {
-                    existingSetAtTier.firstValidSet = firstValidSet.map((item) => item.id);
-                    existingSetAtTier.maxPower = maxPower;
-                    existingSetAtTier.firstValidSetStatChoices = statChoices;
-                  }
-                } else {
-                  // First of its kind
-                  groupedSets[tiers] = {
-                    sets: [
-                      {
-                        armor: armor.map((items) => items.map((item) => item.id)),
-                        statChoices,
-                      },
-                    ],
-                    stats: stats as {
-                      [statType in StatTypes]: number;
-                    },
-                    // TODO: defer calculating first valid set / statchoices / maxpower?
-                    firstValidSet: firstValidSet.map((item) => item.id),
-                    firstValidSetStatChoices: statChoices,
-                    maxPower,
-                  };
+              // A string version of the tier-level of each stat, separated by commas
+              // This is an awkward implementation to save garbage allocations.
+              let tiers = '';
+              let index = 1;
+              for (const statKey in stats) {
+                tiers += statTier(stats[statKey]);
+                if (index < statKeys.length) {
+                  tiers += ',';
                 }
+                index++;
+              }
+
+              const existingSetAtTier = groupedSets[tiers];
+              if (existingSetAtTier) {
+                existingSetAtTier.sets.push({
+                  armor: armor.map((items) => items.map((item) => item.id)),
+                  statChoices,
+                });
+                if (maxPower > existingSetAtTier.maxPower) {
+                  existingSetAtTier.firstValidSet = firstValidSet.map((item) => item.id);
+                  existingSetAtTier.maxPower = maxPower;
+                  existingSetAtTier.firstValidSetStatChoices = statChoices;
+                }
+              } else {
+                // First of its kind
+                groupedSets[tiers] = {
+                  sets: [
+                    {
+                      armor: armor.map((items) => items.map((item) => item.id)),
+                      statChoices,
+                    },
+                  ],
+                  stats: stats as {
+                    [statType in StatTypes]: number;
+                  },
+                  // TODO: defer calculating first valid set / statchoices / maxpower?
+                  firstValidSet: firstValidSet.map((item) => item.id),
+                  firstValidSetStatChoices: statChoices,
+                  maxPower,
+                };
               }
             }
           }

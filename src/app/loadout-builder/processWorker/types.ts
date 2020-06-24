@@ -23,12 +23,10 @@ export interface ProcessSockets {
   categories: ProcessSocketCategory[];
 }
 export interface ProcessItem {
-  owner: string;
   bucketHash: number;
   id: string;
   type: string;
   name: string;
-  equipped: boolean;
   equippingLabel?: string;
   sockets: ProcessSockets | null;
   hasEnergy: boolean;

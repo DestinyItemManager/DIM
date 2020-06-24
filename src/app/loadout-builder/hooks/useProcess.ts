@@ -62,7 +62,7 @@ export function useProcess(
 
       console.time('useProcess: worker time');
       worker
-        .process(processItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork)
+        .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork)
         .then(({ sets, combos, combosWithoutCaps }) => {
           console.timeEnd('useProcess: worker time');
           console.time('useProcess: item hydration');
@@ -140,7 +140,7 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
 }
 
 function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
-  const { owner, bucket, id, type, name, equipped, equippingLabel, basePower, stats } = dimItem;
+  const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   if (stats) {
@@ -150,12 +150,10 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   }
 
   return {
-    owner,
     bucketHash: bucket.hash,
     id,
     type,
     name,
-    equipped,
     equippingLabel,
     basePower,
     stats: statMap,
