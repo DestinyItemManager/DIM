@@ -1,7 +1,7 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
 import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from '../types';
-import { DimItem, DimSocket, DimSockets } from 'app/inventory/item-types';
+import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
   ProcessItemsByBucket,
   ProcessItem,
@@ -51,8 +51,10 @@ export function useProcess(
       for (const [key, items] of Object.entries(filteredItems)) {
         processItems[key] = [];
         for (const item of items) {
-          processItems[key].push(mapDimItemToProcessItem(item));
-          itemsById[item.id] = item;
+          if (item.isDestiny2()) {
+            processItems[key].push(mapDimItemToProcessItem(item));
+            itemsById[item.id] = item;
+          }
         }
       }
 
@@ -137,23 +139,14 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   };
 }
 
-function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
+function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   const { owner, bucket, id, type, name, equipped, equippingLabel, basePower, stats } = dimItem;
 
-  if (dimItem.isDestiny2()) {
-    return {
-      owner,
-      bucketHash: bucket.hash,
-      id,
-      type,
-      name,
-      equipped,
-      equippingLabel,
-      basePower,
-      stats: stats?.map(({ statHash, value }) => ({ statHash, value })) || null,
-      sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
-      hasEnergy: Boolean(dimItem.energy),
-    };
+  const statMap: { [statHash: number]: number } = {};
+  if (stats) {
+    for (const { statHash, value } of stats) {
+      statMap[statHash] = value;
+    }
   }
 
   return {
@@ -165,9 +158,9 @@ function mapDimItemToProcessItem(dimItem: DimItem): ProcessItem {
     equipped,
     equippingLabel,
     basePower,
-    stats,
-    sockets: null,
-    hasEnergy: false,
+    stats: statMap,
+    sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
+    hasEnergy: Boolean(dimItem.energy),
   };
 }
 

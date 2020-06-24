@@ -11,7 +11,7 @@ import { statTier } from '../generated-sets/utils';
 import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { statKeys, statHashes, statValues } from '../utils';
-import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet, ProcessStat } from './types';
+import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 /**
@@ -316,7 +316,7 @@ function byStatMix(
   return (item: ProcessItem): string[] => {
     const stats = item.stats;
 
-    if (!stats || stats.length < 3) {
+    if (!stats) {
       return emptyStats;
     }
 
@@ -389,14 +389,11 @@ function generateMixesFromPerksOrStats(
 ) {
   const stats = item.stats;
 
-  if (!stats || stats.length < 3) {
+  if (!stats) {
     return [];
   }
 
-  const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
-  ];
+  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
 
   if (stats && item.sockets && !item.hasEnergy) {
     for (const socket of item.sockets.sockets) {
@@ -425,9 +422,6 @@ function generateMixesFromPerksOrStats(
 }
 
 function getBaseStatValues(
-  stats: {
-    [index: string]: ProcessStat;
-  },
   item: ProcessItem,
   assumeMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number }
@@ -435,7 +429,7 @@ function getBaseStatValues(
   const baseStats = {};
 
   for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash].value;
+    baseStats[statHash] = item.stats[statHash];
   }
 
   // Checking energy tells us if it is Armour 2.0

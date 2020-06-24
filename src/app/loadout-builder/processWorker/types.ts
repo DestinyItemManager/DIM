@@ -1,10 +1,5 @@
 import { StatTypes } from '../types';
 
-export interface ProcessStat {
-  statHash: number;
-  value: number;
-}
-
 export interface ProcessPlug {
   stats: {
     [statHash: number]: number;
@@ -38,7 +33,7 @@ export interface ProcessItem {
   sockets: ProcessSockets | null;
   hasEnergy: boolean;
   basePower: number;
-  stats: ProcessStat[] | null;
+  stats: { [statHash: number]: number };
 }
 
 export type ProcessItemsByBucket = Readonly<{
