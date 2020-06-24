@@ -209,13 +209,9 @@ export function process(
   }
 
   // TODO move to a smarter system where we throw away stuff that wont be in this
-  // to keep the memory footprint down.
+  // to keep the memory footprint down. Also some sets may be missed if people ignore certain stats.
   const finalSets = Object.values(groupedSets)
-    .sort(
-      (aSet, bSet) =>
-        Object.values(bSet.stats).reduce((a, b) => a + b, 0) -
-        Object.values(aSet.stats).reduce((a, b) => a + b, 0)
-    )
+    .sort((aSet, bSet) => _.sum(Object.values(bSet.stats)) - _.sum(Object.values(aSet.stats)))
     .slice(0, 250);
 
   console.log(

@@ -80,23 +80,28 @@ export function useProcess(
             currentCleanup: null,
           });
 
-          console.timeEnd(`useProcess ${performance.now() - processStart}ms`);
+          console.log(`useProcess ${performance.now() - processStart}ms`);
         });
     }
-    /* do not include result in dependenvies */
+    /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [worker, filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork]);
+  }, [filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork]);
 
   return { result, processing };
 }
 
 /**
- * Creates a worker, a cleanup function and returns it
+ * Creates a worker and a cleanup function for the worker.
+ *
+ * The worker and cleanup are memoized so that when the selectedStoreId is changed,
+ * a new process round is triggered.
+ *
+ * The worker will be cleaned up when the component unmounts.
  */
 function useWorkerAndCleanup(selectedStoreId?: string) {
   const { worker, cleanup } = useMemo(() => createWorker(), [selectedStoreId]);
 
-  // terminate the worker on unload
+  // cleanup the worker on unmount
   useEffect(() => cleanup, [worker, cleanup]);
 
   return { worker, cleanup };
@@ -111,7 +116,6 @@ function createWorker() {
   const worker = wrap<import('../processWorker/ProcessWorker').ProcessWorker>(instance);
 
   const cleanup = () => {
-    console.log('Terminating web worker');
     worker[releaseProxy]();
     instance.terminate();
   };
