@@ -136,7 +136,8 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
       if (
         itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
         item.isDestiny2() &&
-        mod.mod.plug.energyCost.energyType === item.energy?.energyType
+        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+          mod.mod.plug.energyCost.energyType === item.energy?.energyType)
       ) {
         if (!modArrays[item.bucket.hash]) {
           modArrays[item.bucket.hash] = [];
