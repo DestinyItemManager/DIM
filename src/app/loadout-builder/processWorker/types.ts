@@ -52,7 +52,7 @@ export interface ProcessArmorSet {
     readonly armor: readonly string[][];
     /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
     readonly statChoices: readonly number[][];
-    readonly maxPower: readonly number;
+    readonly maxPower: number;
   }[];
 
   /** The first (highest-power) valid set from this stat mix. */

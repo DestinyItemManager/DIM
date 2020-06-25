@@ -80,6 +80,7 @@ export function process(
     )
   );
 
+  // TODO I think we can widen this now. It runs fine with no limit and 2,000,000 items but we should check memory usage. Maybe make it 1,000,000?
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
   const combosLimit = 500000;
 
@@ -176,6 +177,7 @@ export function process(
                 index++;
               }
 
+              // TODO cleanup: this is a big gross but it works really well currently.
               if (totalTier <= lowestTier) {
                 if (setCount <= 500) {
                   lowestTier = totalTier;
@@ -185,12 +187,15 @@ export function process(
               } else if (setCount > 500 && groupedSets[lowestTier]) {
                 const lowestGroup = groupedSets[lowestTier];
                 const lowestGroupKeys = Object.keys(lowestGroup);
+
                 if (lowestGroupKeys.length) {
                   const biggestSet = lowestGroupKeys.sort(
                     (a, b) => lowestGroup[b].sets.length - lowestGroup[a].sets.length
                   )[0];
+
                   setCount -= 1;
                   lowestGroup[biggestSet].sets.sort((a, b) => a.maxPower - b.maxPower).pop();
+
                   if (!lowestGroup[biggestSet].sets.length) {
                     delete lowestGroup[biggestSet];
                   }
