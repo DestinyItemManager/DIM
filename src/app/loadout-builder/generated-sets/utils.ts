@@ -133,8 +133,12 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
       const itemModCategories =
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
-      // Not currently checking energy of mod and armour matches.
-      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash)) {
+      if (
+        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
+        item.isDestiny2() &&
+        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+          mod.mod.plug.energyCost.energyType === item.energy?.energyType)
+      ) {
         if (!modArrays[item.bucket.hash]) {
           modArrays[item.bucket.hash] = [];
         }
