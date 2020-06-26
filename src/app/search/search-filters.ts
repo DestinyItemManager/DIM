@@ -935,7 +935,7 @@ function searchFilters(
             return false;
         }
 
-        return item.bucket.accountWide
+        return item.bucket.accountWide && !item.location.inPostmaster
           ? item.owner !== 'vault'
           : item.owner === stores[storeIndex].id;
       },
