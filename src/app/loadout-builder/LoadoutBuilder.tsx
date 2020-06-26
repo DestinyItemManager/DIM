@@ -24,7 +24,7 @@ import {
   SearchFilters,
   searchConfigSelector,
   searchFiltersConfigSelector,
-} from 'app/search/search-filters';
+} from 'app/search/search-filter';
 import memoizeOne from 'memoize-one';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
