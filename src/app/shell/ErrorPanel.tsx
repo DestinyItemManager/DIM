@@ -1,12 +1,13 @@
 import React from 'react';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { AppIcon, twitterIcon, refreshIcon } from '../shell/icons';
+import { AppIcon, twitterIcon, refreshIcon, helpIcon } from '../shell/icons';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';
 const dimHelpLink = 'http://twitter.com/ThisIsDIM';
+const troubleshootingLink = 'https://destinyitemmanager.fandom.com/wiki/Troubleshooting';
 const Timeline = React.lazy(async () => {
   const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
   return { default: m.Timeline };
@@ -85,6 +86,9 @@ export default function ErrorPanel({
           )}
           <ExternalLink href={dimHelpLink} className="dim-button">
             <AppIcon icon={twitterIcon} /> @ThisIsDim
+          </ExternalLink>
+          <ExternalLink href={troubleshootingLink} className="dim-button">
+            <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
           </ExternalLink>
           {showReload && (
             <div className="dim-button" onClick={() => window.location.reload()}>
