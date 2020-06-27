@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
@@ -42,11 +42,13 @@ function D1Farming({ store, makeRoomForItems, setSetting }: Props) {
     setSetting('farmingMakeRoomForItems', value);
   };
 
+  const nodeRef = useRef<HTMLDivElement>(null);
+
   return (
     <TransitionGroup component={null}>
       {store && (
-        <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
-          <div id="item-farming">
+        <CSSTransition nodeRef={nodeRef} classNames="farming" timeout={{ enter: 500, exit: 500 }}>
+          <div ref={nodeRef} id="item-farming">
             <div>
               <p>
                 {makeRoomForItems

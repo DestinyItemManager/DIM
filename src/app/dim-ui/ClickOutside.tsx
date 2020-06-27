@@ -10,11 +10,14 @@ export const ClickOutsideContext = React.createContext(new Subject<React.MouseEv
 export default function ClickOutside({
   onClickOutside,
   children,
+  ref,
   ...other
 }: React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement>;
   onClickOutside(event: React.MouseEvent): void;
 }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const localRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = ref || localRef;
   const context = useContext(ClickOutsideContext);
 
   const subscribeFn = useCallback(() => {
@@ -27,7 +30,7 @@ export default function ClickOutside({
       }
     };
     return context.subscribe(handleClickOutside);
-  }, [context, onClickOutside]);
+  }, [context, onClickOutside, wrapperRef]);
 
   useSubscription(subscribeFn);
 
