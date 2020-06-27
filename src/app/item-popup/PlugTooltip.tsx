@@ -34,8 +34,7 @@ export default function PlugTooltip({
     defs.Collectible.get(plug.plugItem.collectibleHash).sourceString;
 
   // display perk's synergy with masterwork stat
-  const synergyStat =
-    item.masterworkInfo?.statHash &&
+  const synergyStat = item.masterworkInfo?.statHash &&
     plug.plugItem.investmentStats &&
     plug.plugItem.investmentStats.some(
       (stat) =>
@@ -43,8 +42,7 @@ export default function PlugTooltip({
         stat.statTypeHash &&
         item.masterworkInfo &&
         item.masterworkInfo.statHash === stat.statTypeHash
-    ) &&
-    ` (${item.masterworkInfo.statName})`;
+    ) && <span className="synergyStat"> ({item.masterworkInfo.statName})</span>;
 
   return (
     <>
