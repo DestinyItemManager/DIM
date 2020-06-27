@@ -1,6 +1,15 @@
 ## Next
 
+* You can now filter out armor in the Loadout Optimizer by minimum total stats. This narrows down how many items are considered for builds and speeds up the optimizer.
+* Renamed the "is:reacquireable" filter to "is:reacquirable"
+* Searches like "is:inleftchar" now work with consumables in the postmaster.
+* Fixed the inventory screen jumping a bit when the item popup is open on mobile.
+* Add a link to the troubleshooting guide to error pages.
+* Seasonal mods in the loadout optimizer now force armor to match their element, again.
+
 ## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
+
+* Fix a crash when opening some items in Organizer.
 
 ## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
 
