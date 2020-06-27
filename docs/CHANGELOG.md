@@ -6,6 +6,7 @@
 * Fixed the inventory screen jumping a bit when the item popup is open on mobile.
 * Add a link to the troubleshooting guide to error pages.
 * Seasonal mods in the loadout optimizer now force armor to match their element, again.
+* The stat in parentheses in a weapon perk tooltip, is the stat matching the masterwork. UI slightly updated to help show this.
 
 ## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
 
