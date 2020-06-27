@@ -12,7 +12,7 @@ import {
   searchConfigSelector,
   SearchFilters,
   searchFiltersConfigSelector,
-} from '../search/search-filters';
+} from '../search/search-filter';
 import SearchFilterInput, { SearchFilterRef } from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';

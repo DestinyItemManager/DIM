@@ -32,7 +32,7 @@ import { storesSelector, profileResponseSelector } from 'app/inventory/selectors
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { escapeRegExp } from 'app/search/search-filters';
+import { escapeRegExp } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
