@@ -10,9 +10,9 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, ItemsByBucket, MinMaxIgnored } from './types';
+import { ArmorSet, StatTypes, ItemsByBucket, MinMaxIgnored, statKeys, statHashes } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
-import { process, filterItems, statKeys } from './process';
+import { process, filterItems } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -39,15 +39,10 @@ import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
+import { settingsSelector } from 'app/settings/reducer';
 
-export const statHashToType: { [hash: number]: StatTypes } = {
-  2996146975: 'Mobility',
-  392767087: 'Resilience',
-  1943323491: 'Recovery',
-  1735777505: 'Discipline',
-  144602215: 'Intellect',
-  4244567218: 'Strength',
-};
+// Need to force the type as lodash converts the StatTypes type to string.
+const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -58,6 +53,8 @@ interface StoreProps {
   stores: DimStore[];
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
+  minimumPower: number;
+  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -105,17 +102,24 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState): StoreProps => ({
-    storesLoaded: storesLoadedSelector(state),
-    stores: sortedStoresSelector(state),
-    statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
-    assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
-    isPhonePortrait: state.shell.isPhonePortrait,
-    items: itemsSelector(state),
-    defs: state.manifest.d2Manifest,
-    searchConfig: searchConfigSelector(state),
-    filters: searchFiltersConfigSelector(state),
-  });
+  return (state: RootState): StoreProps => {
+    const { loStatSortOrder, loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(
+      state
+    );
+    return {
+      storesLoaded: storesLoadedSelector(state),
+      stores: sortedStoresSelector(state),
+      statOrder: loStatSortOrder.map((hash) => statHashToType[hash]),
+      assumeMasterwork: loAssumeMasterwork,
+      minimumPower: loMinPower,
+      minimumStatTotal: loMinStatTotal,
+      isPhonePortrait: state.shell.isPhonePortrait,
+      items: itemsSelector(state),
+      defs: state.manifest.d2Manifest,
+      searchConfig: searchConfigSelector(state),
+      filters: searchFiltersConfigSelector(state),
+    };
+  };
 }
 
 /**
@@ -127,6 +131,8 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
+  minimumPower,
+  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -149,15 +155,7 @@ function LoadoutBuilder({
   );
 
   const [
-    {
-      lockedMap,
-      lockedSeasonalMods,
-      lockedArmor2Mods,
-      selectedStoreId,
-      statFilters,
-      minimumPower,
-      query,
-    },
+    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, query },
     stateDispatch,
   ] = useLbState(stores, location);
 
@@ -210,6 +208,8 @@ function LoadoutBuilder({
       items[store.classType],
       lockedMap,
       lockedArmor2Mods,
+      minimumStatTotal,
+      assumeMasterwork,
       filter
     );
 
@@ -250,10 +250,8 @@ function LoadoutBuilder({
         sets={processedSets}
         selectedStore={store as D2Store}
         minimumPower={minimumPower}
+        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
-        onMinimumPowerChanged={(minimumPower: number) =>
-          stateDispatch({ type: 'minimumPowerChanged', minimumPower })
-        }
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           stateDispatch({ type: 'statFiltersChanged', statFilters })
         }
