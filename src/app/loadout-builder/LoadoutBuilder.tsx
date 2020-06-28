@@ -1,9 +1,12 @@
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { connect } from 'react-redux';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
+import { RootState } from 'app/store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { filterItems } from './preProcessFilter';
@@ -24,15 +27,11 @@ import {
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { DimItem } from 'app/inventory/item-types';
 import { useProcess } from './hooks/useProcess';
 import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { DimItem } from 'app/inventory/item-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { RootState } from 'app/store/reducers';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { settingsSelector } from 'app/settings/reducer';
 
@@ -43,9 +42,7 @@ interface ProvidedProps {
   account: DestinyAccount;
   defs: D2ManifestDefinitions;
   stores: DimStore[];
-  location: Location<{
-    loadout?: Loadout | undefined;
-  }>;
+  preloadedLoadout?: Loadout;
 }
 
 interface StoreProps {
@@ -128,12 +125,12 @@ function LoadoutBuilder({
   defs,
   searchConfig,
   filters,
-  location,
+  preloadedLoadout,
 }: Props) {
   const [
     { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, query },
     lbDispatch,
-  ] = useLbState(stores, location);
+  ] = useLbState(stores, preloadedLoadout);
 
   const filter = filters.filterFunction(query);
 

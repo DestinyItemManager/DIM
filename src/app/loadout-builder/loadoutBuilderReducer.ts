@@ -10,7 +10,6 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
 import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
-import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
 
@@ -26,17 +25,15 @@ export interface LoadoutBuilderState {
 
 const lbStateInit = ({
   stores,
-  location,
+  preloadedLoadout,
 }: {
   stores: DimStore[];
-  location: Location<{
-    loadout?: Loadout | undefined;
-  }>;
+  preloadedLoadout?: Loadout;
 }): LoadoutBuilderState => {
   let lockedMap: LockedMap = {};
 
-  if (stores.length && location.state?.loadout) {
-    for (const loadoutItem of location.state.loadout.items) {
+  if (stores.length && preloadedLoadout) {
+    for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
         if (item && isLoadoutBuilderItem(item)) {
@@ -157,9 +154,6 @@ function lbStateReducer(
   }
 }
 
-export function useLbState(
-  stores: DimStore[],
-  location: Location<{ loadout?: Loadout | undefined }>
-) {
-  return useReducer(lbStateReducer, { stores, location }, lbStateInit);
+export function useLbState(stores: DimStore[], preloadedLoadout?: Loadout) {
+  return useReducer(lbStateReducer, { stores, preloadedLoadout }, lbStateInit);
 }

@@ -67,7 +67,14 @@ function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <LoadoutBuilder account={account} stores={stores} defs={defs} location={location} />;
+  return (
+    <LoadoutBuilder
+      account={account}
+      stores={stores}
+      defs={defs}
+      preloadedLoadout={location.state?.loadout}
+    />
+  );
 }
 
 export default withRouter(connect<StoreProps>(mapStateToProps)(LoadoutBuilderContainer));
