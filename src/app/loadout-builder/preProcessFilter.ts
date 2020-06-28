@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   LockableBuckets,
   LockedMap,
@@ -9,6 +10,7 @@ import { Armor2ModPlugCategories, getItemDamageShortName } from 'app/utils/item-
 import { doEnergiesMatch } from './generated-sets/mod-utils';
 import { canSlotMod } from './generated-sets/utils';
 import { DimItem } from 'app/inventory/item-types';
+import { getLockedModStats, getBaseStatValues } from './utils';
 
 const bucketsToCategories = {
   [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
@@ -25,6 +27,8 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
+  minimumStatTotal: number,
+  assumeMasterwork: boolean,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -58,10 +62,17 @@ export function filterItems(
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
+    const lockedModStats = getLockedModStats(locked, lockedMods);
 
-    if (lockedMods?.length || (locked?.length && filteredItems[bucket])) {
+    if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
+          // if the item is not a ghost of class item, make sure it meets the minimum total stat
+          (bucket === LockableBuckets.classitem ||
+            bucket === LockableBuckets.ghost ||
+            _.sum(Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats))) >=
+              minimumStatTotal) &&
+          // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
       );

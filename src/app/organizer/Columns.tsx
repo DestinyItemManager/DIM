@@ -307,8 +307,8 @@ export function getColumns(
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
     destinyVersion === 2 && {
-      id: 'reacquireable',
-      header: t('Organizer.Columns.Reacquireable'),
+      id: 'reacquirable',
+      header: t('Organizer.Columns.Reacquirable'),
       value: (item) =>
         item.isDestiny2() &&
         item.collectibleState !== null &&
@@ -316,7 +316,7 @@ export function getColumns(
         !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled),
       defaultSort: SortDirection.DESC,
       cell: booleanCell,
-      filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable'),
+      filter: (value) => (value ? 'is:reacquirable' : 'not:reaquireable'),
     },
     $featureFlags.reviewsEnabled && {
       id: 'rating',

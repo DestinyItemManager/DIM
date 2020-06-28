@@ -426,7 +426,7 @@ module.exports = (env) => {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        eslint: true,
+        eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
       })
     );
 

@@ -10,7 +10,7 @@ import {
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
-import { statKeys } from '../utils';
+import { statKeys } from '../types';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
 
@@ -133,8 +133,12 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
       const itemModCategories =
         getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
 
-      // Not currently checking energy of mod and armour matches.
-      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash)) {
+      if (
+        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
+        item.isDestiny2() &&
+        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+          mod.mod.plug.energyCost.energyType === item.energy?.energyType)
+      ) {
         if (!modArrays[item.bucket.hash]) {
           modArrays[item.bucket.hash] = [];
         }

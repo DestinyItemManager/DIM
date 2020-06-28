@@ -6,8 +6,10 @@ import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { StatTypes, ItemsByBucket } from './types';
 import { filterItems } from './preProcessFilter';
+import { StatTypes, ItemsByBucket, statKeys, statHashes } from './types';
+import { storesSelector } from '../inventory/selectors';
+import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
@@ -18,32 +20,24 @@ import {
   SearchFilters,
   searchConfigSelector,
   searchFiltersConfigSelector,
-} from 'app/search/search-filters';
+} from 'app/search/search-filter';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { useProcess } from './hooks/useProcess';
 import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { useLbState, LoadoutBuilderState } from './loadoutBuilderReducer';
-import { statKeys } from './utils';
 import { Location } from 'history';
 import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { createSelector } from 'reselect';
-import { storesSelector } from 'app/inventory/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { RootState } from 'app/store/reducers';
+import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
+import { settingsSelector } from 'app/settings/reducer';
 
-export const statHashToType: { [hash: number]: StatTypes } = {
-  2996146975: 'Mobility',
-  392767087: 'Resilience',
-  1943323491: 'Recovery',
-  1735777505: 'Discipline',
-  144602215: 'Intellect',
-  4244567218: 'Strength',
-};
+// Need to force the type as lodash converts the StatTypes type to string.
+const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -57,6 +51,8 @@ interface ProvidedProps {
 interface StoreProps {
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
+  minimumPower: number;
+  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -101,14 +97,21 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState): StoreProps => ({
-    statOrder: state.dimApi.settings.loStatSortOrder.map((hash) => statHashToType[hash]),
-    assumeMasterwork: state.dimApi.settings.loAssumeMasterwork,
-    isPhonePortrait: state.shell.isPhonePortrait,
-    items: itemsSelector(state),
-    searchConfig: searchConfigSelector(state),
-    filters: searchFiltersConfigSelector(state),
-  });
+  return (state: RootState): StoreProps => {
+    const { loStatSortOrder, loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(
+      state
+    );
+    return {
+      statOrder: loStatSortOrder.map((hash) => statHashToType[hash]),
+      assumeMasterwork: loAssumeMasterwork,
+      minimumPower: loMinPower,
+      minimumStatTotal: loMinStatTotal,
+      isPhonePortrait: state.shell.isPhonePortrait,
+      items: itemsSelector(state),
+      searchConfig: searchConfigSelector(state),
+      filters: searchFiltersConfigSelector(state),
+    };
+  };
 }
 
 /**
@@ -118,6 +121,8 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
+  minimumPower,
+  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -126,15 +131,7 @@ function LoadoutBuilder({
   location,
 }: Props) {
   const [
-    {
-      selectedStoreId,
-      lockedMap,
-      lockedSeasonalMods,
-      lockedArmor2Mods,
-      statFilters,
-      minimumPower,
-      query,
-    },
+    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, query },
     lbDispatch,
   ] = useLbState(stores, location);
 
@@ -150,8 +147,16 @@ function LoadoutBuilder({
   const characterItems: ItemsByBucket | undefined = selectedStore && items[selectedStore.classType];
 
   const filteredItems = useMemo(
-    () => filterItems(characterItems, lockedMap, lockedArmor2Mods, filter),
-    [characterItems, lockedMap, lockedArmor2Mods, filter]
+    () =>
+      filterItems(
+        characterItems,
+        lockedMap,
+        lockedArmor2Mods,
+        minimumStatTotal,
+        assumeMasterwork,
+        filter
+      ),
+    [characterItems, lockedMap, lockedArmor2Mods, minimumStatTotal, assumeMasterwork, filter]
   );
 
   const { result, processing } = useProcess(
@@ -206,10 +211,8 @@ function LoadoutBuilder({
         sets={result?.sets}
         selectedStore={selectedStore as D2Store}
         minimumPower={minimumPower}
+        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
-        onMinimumPowerChanged={(minimumPower: number) =>
-          lbDispatch({ type: 'minimumPowerChanged', minimumPower })
-        }
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }

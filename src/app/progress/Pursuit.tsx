@@ -5,7 +5,7 @@ import ItemExpiration from 'app/item-popup/ItemExpiration';
 import PursuitItem from './PursuitItem';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/reducers';
-import { searchFilterSelector } from 'app/search/search-filters';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { connect } from 'react-redux';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';

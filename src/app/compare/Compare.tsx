@@ -19,7 +19,7 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
-import { makeDupeID } from 'app/search/search-filters';
+import { makeDupeID } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 // import intrinsicLookupTable from 'data/d2/intrinsic-perk-lookup.json';

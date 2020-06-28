@@ -1,19 +1,8 @@
 import _ from 'lodash';
-import { StatTypes } from './types';
-import { DimPlug, DimItem, DimStat } from 'app/inventory/item-types';
+import { DimPlug, DimItem } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-
-export const statHashes: { [type in StatTypes]: number } = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491,
-  Discipline: 1735777505,
-  Intellect: 144602215,
-  Strength: 4244567218,
-};
-export const statValues = Object.values(statHashes);
-export const statKeys = Object.keys(statHashes) as StatTypes[];
+import { statValues, LockedItemType, LockedArmor2Mod } from './types';
 
 /**
  * This is a wrapper for the awkward helper used by
@@ -57,10 +46,7 @@ export function generateMixesFromPerksOrStats(
     return [];
   }
 
-  const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats),
-  ];
+  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -98,14 +84,12 @@ export function generateMixesFromPerksOrStats(
   return mixes;
 }
 
-function getBaseStatValues(
-  stats: {
-    [index: string]: DimStat;
-  },
+export function getBaseStatValues(
   item: DimItem,
   assumeMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number }
 ) {
+  const stats = _.keyBy(item.stats, (stat) => stat.statHash);
   const baseStats = {};
 
   for (const statHash of statValues) {
@@ -148,4 +132,39 @@ function getBaseStatValues(
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
   return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
+}
+
+/**
+ * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
+ */
+export function getLockedModStats(
+  lockedItems?: readonly LockedItemType[],
+  lockedArmor2Mods?: readonly LockedArmor2Mod[]
+): { [statHash: number]: number } {
+  const lockedModStats: { [statHash: number]: number } = {};
+  // Handle old armour mods
+  if (lockedItems) {
+    for (const lockedItem of lockedItems) {
+      if (lockedItem.type === 'mod') {
+        for (const stat of lockedItem.mod.investmentStats) {
+          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
+          lockedModStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
+  // Handle armour 2.0 mods
+  if (lockedArmor2Mods) {
+    for (const lockedMod of lockedArmor2Mods) {
+      for (const stat of lockedMod.mod.investmentStats) {
+        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
+        lockedModStats[stat.statTypeHash] += stat.value;
+      }
+    }
+  }
+
+  return lockedModStats;
 }

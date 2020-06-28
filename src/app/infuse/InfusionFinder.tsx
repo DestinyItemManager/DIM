@@ -21,7 +21,7 @@ import {
   searchConfigSelector,
   SearchFilters,
   searchFiltersConfigSelector,
-} from '../search/search-filters';
+} from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';

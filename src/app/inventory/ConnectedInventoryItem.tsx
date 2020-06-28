@@ -5,7 +5,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
-import { searchFilterSelector } from '../search/search-filters';
+import { searchFilterSelector } from '../search/search-filter';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { settingsSelector } from 'app/settings/reducer';

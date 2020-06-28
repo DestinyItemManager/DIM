@@ -10,7 +10,7 @@ import {
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
-import { statKeys, statHashes, statValues } from '../utils';
+import { statKeys, statHashes, statValues } from '../types';
 import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 

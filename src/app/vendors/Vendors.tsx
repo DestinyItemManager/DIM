@@ -30,7 +30,7 @@ import {
   filterVendorGroupsToSearch,
 } from './d2-vendors';
 import styles from './Vendors.m.scss';
-import { searchFilterSelector } from 'app/search/search-filters';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { DimItem } from 'app/inventory/item-types';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';

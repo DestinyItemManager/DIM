@@ -148,7 +148,8 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -559,6 +560,8 @@
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "SelectMinStatTotal": "Minimum Armor Stat Total",
+    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
@@ -737,7 +740,7 @@
       "PerksMods": "Perks, Mods & Shaders",
       "Quality": "Quality %",
       "Rating": "Rating",
-      "Reacquireable": "Reacquireable",
+      "Reacquirable": "Reacquirable",
       "Season": "Season",
       "Source": "Source",
       "StatQuality": "Stat Quality",
