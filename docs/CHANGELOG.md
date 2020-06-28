@@ -1,5 +1,7 @@
 ## Next
 
+## 6.17.0 <span className="changelog-date">(2020-06-28)</span>
+
 * You can now filter out armor in the Loadout Optimizer by minimum total stats. This narrows down how many items are considered for builds and speeds up the optimizer.
 * Renamed the "is:reacquireable" filter to "is:reacquirable"
 * Searches like "is:inleftchar" now work with consumables in the postmaster.
