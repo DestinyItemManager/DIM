@@ -177,7 +177,7 @@ export function process(
                 index++;
               }
 
-              // TODO cleanup: this is a big gross but it works really well currently.
+              // While we have less than 500 sets keep adding and keep track of the lowest total tier.
               if (totalTier <= lowestTier) {
                 if (setCount <= 500) {
                   lowestTier = totalTier;
@@ -185,22 +185,27 @@ export function process(
                   continue;
                 }
               } else if (setCount > 500 && groupedSets[lowestTier]) {
-                const lowestGroup = groupedSets[lowestTier];
-                const lowestGroupKeys = Object.keys(lowestGroup);
+                const lowestTierGroup = groupedSets[lowestTier];
+                const lowestTierStatMixes = Object.keys(lowestTierGroup);
 
-                if (lowestGroupKeys.length) {
-                  const biggestSet = lowestGroupKeys.sort(
-                    (a, b) => lowestGroup[b].sets.length - lowestGroup[a].sets.length
+                if (lowestTierStatMixes.length) {
+                  // Find the one with the most sets so we can remove the set with the lowest power
+                  const statMixWithMostSets = lowestTierStatMixes.sort(
+                    (a, b) => lowestTierGroup[b].sets.length - lowestTierGroup[a].sets.length
                   )[0];
 
                   setCount -= 1;
-                  lowestGroup[biggestSet].sets.sort((a, b) => a.maxPower - b.maxPower).pop();
+                  lowestTierGroup[statMixWithMostSets].sets
+                    .sort((a, b) => a.maxPower - b.maxPower)
+                    .pop();
 
-                  if (!lowestGroup[biggestSet].sets.length) {
-                    delete lowestGroup[biggestSet];
+                  // If there are no sets left remove the group
+                  if (!lowestTierGroup[statMixWithMostSets].sets.length) {
+                    delete lowestTierGroup[statMixWithMostSets];
                   }
                 }
 
+                // Remove the whole tier if there is nothing left in it and recalculate the lowest tier
                 if (!Object.keys(groupedSets[lowestTier]).length) {
                   delete groupedSets[lowestTier];
                   lowestTier = parseInt(
