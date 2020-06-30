@@ -160,7 +160,6 @@ function LoadoutBuilder({
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
-    selectedStore?.id,
     assumeMasterwork
   );
 
@@ -251,7 +250,10 @@ function LoadoutBuilder({
       <PageWithMenu.Contents>
         {filteredSets && processing && (
           <div className={styles.processing}>
-            <AppIcon icon={refreshIcon} spinning={true} />
+            <div className={styles.processingContents}>
+              <AppIcon icon={refreshIcon} spinning={true} />
+              {`Processing sets for ${selectedStore.name}`}
+            </div>
           </div>
         )}
         {filteredSets ? (

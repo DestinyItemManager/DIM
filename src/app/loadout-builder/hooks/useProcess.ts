@@ -29,7 +29,6 @@ export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  selectedStoreId: string | undefined,
   assumeMasterwork: boolean
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
@@ -38,54 +37,57 @@ export function useProcess(
     currentCleanup: null,
   } as ProcessState);
 
-  const { worker, cleanup } = useWorkerAndCleanup(selectedStoreId);
+  const { worker, cleanup } = useWorkerAndCleanup(
+    filteredItems,
+    lockedItems,
+    lockedArmor2ModMap,
+    assumeMasterwork
+  );
+
+  if (currentCleanup && currentCleanup !== cleanup) {
+    currentCleanup();
+  }
 
   useEffect(() => {
-    if (currentCleanup) {
-      currentCleanup();
-    }
+    const processStart = performance.now();
 
-    if (selectedStoreId) {
-      const processStart = performance.now();
+    setState({ processing: true, result, currentCleanup: cleanup });
 
-      setState({ processing: true, result, currentCleanup: cleanup });
+    const processItems: ProcessItemsByBucket = {};
+    const itemsById: ItemsById = {};
 
-      const processItems: ProcessItemsByBucket = {};
-      const itemsById: ItemsById = {};
-
-      for (const [key, items] of Object.entries(filteredItems)) {
-        processItems[key] = [];
-        for (const item of items) {
-          if (item.isDestiny2()) {
-            processItems[key].push(mapDimItemToProcessItem(item));
-            itemsById[item.id] = item;
-          }
+    for (const [key, items] of Object.entries(filteredItems)) {
+      processItems[key] = [];
+      for (const item of items) {
+        if (item.isDestiny2()) {
+          processItems[key].push(mapDimItemToProcessItem(item));
+          itemsById[item.id] = item;
         }
       }
-
-      const workerStart = performance.now();
-      worker
-        .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork)
-        .then(({ sets, combos, combosWithoutCaps }) => {
-          console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
-          const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
-
-          setState({
-            processing: false,
-            result: {
-              sets: hydratedSets,
-              combos,
-              combosWithoutCaps,
-            },
-            currentCleanup: null,
-          });
-
-          console.log(`useProcess ${performance.now() - processStart}ms`);
-        });
     }
+
+    const workerStart = performance.now();
+    worker
+      .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork)
+      .then(({ sets, combos, combosWithoutCaps }) => {
+        console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
+        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+
+        setState({
+          processing: false,
+          result: {
+            sets: hydratedSets,
+            combos,
+            combosWithoutCaps,
+          },
+          currentCleanup: null,
+        });
+
+        console.log(`useProcess ${performance.now() - processStart}ms`);
+      });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedArmor2ModMap, selectedStoreId, assumeMasterwork]);
+  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork]);
 
   return { result, processing };
 }
@@ -93,13 +95,22 @@ export function useProcess(
 /**
  * Creates a worker and a cleanup function for the worker.
  *
- * The worker and cleanup are memoized so that when the selectedStoreId is changed,
- * a new process round is triggered.
+ * The worker and cleanup are memoized so that when the any of the inputs are changed a new one is created.
  *
  * The worker will be cleaned up when the component unmounts.
  */
-function useWorkerAndCleanup(selectedStoreId?: string) {
-  const { worker, cleanup } = useMemo(() => createWorker(), [selectedStoreId]);
+function useWorkerAndCleanup(
+  filteredItems: ItemsByBucket,
+  lockedItems: LockedMap,
+  lockedArmor2ModMap: LockedArmor2ModMap,
+  assumeMasterwork: boolean
+) {
+  const { worker, cleanup } = useMemo(() => createWorker(), [
+    filteredItems,
+    lockedItems,
+    lockedArmor2ModMap,
+    assumeMasterwork,
+  ]);
 
   // cleanup the worker on unmount
   useEffect(() => cleanup, [worker, cleanup]);
