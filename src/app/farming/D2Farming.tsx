@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
@@ -23,11 +23,12 @@ function mapStateToProps() {
 type Props = StoreProps;
 
 function D2Farming({ store }: Props) {
+  const nodeRef = useRef<HTMLDivElement>(null);
   return (
     <TransitionGroup component={null}>
       {store && (
-        <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
-          <div id="item-farming" className="d2-farming">
+        <CSSTransition nodeRef={nodeRef} classNames="farming" timeout={{ enter: 500, exit: 500 }}>
+          <div ref={nodeRef} id="item-farming" className="d2-farming">
             <span>
               <p>
                 {t('FarmingMode.D2Desc', {
