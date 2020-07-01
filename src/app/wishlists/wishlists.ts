@@ -76,8 +76,12 @@ export function getInventoryWishListRolls(
  * and other things (like masterworks) which add more variance than we need.
  */
 function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
+  if (!plug?.plugItem?.itemCategoryHashes) {
+    console.warn('checked a bad plug');
+    console.log(plug);
+  }
   if (
-    plug.plugItem.itemCategoryHashes.find(
+    plug.plugItem.itemCategoryHashes?.find(
       (ich) =>
         ich === INTRINSIC_PLUG_CATEGORY || // intrinsics
         ich === 945330047 || // weapon gameplay socket
@@ -92,7 +96,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
     return false;
   }
 
-  return plug.plugItem.itemCategoryHashes.some(
+  return plug.plugItem.itemCategoryHashes?.some(
     (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563 || ich === 4176831154
   ); // weapon, then armor, then bonus (found on armor perks), then ghost mod
 }
