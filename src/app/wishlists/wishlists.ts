@@ -76,6 +76,10 @@ export function getInventoryWishListRolls(
  * and other things (like masterworks) which add more variance than we need.
  */
 function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
+  if (!plug?.plugItem?.itemCategoryHashes) {
+    console.warn('checked a bad plug');
+    console.log(plug);
+  }
   if (
     plug.plugItem.itemCategoryHashes?.find(
       (ich) =>
