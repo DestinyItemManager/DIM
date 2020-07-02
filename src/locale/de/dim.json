@@ -41,7 +41,9 @@
     "SetNotes": "Setze Notiz auf \"{{notes}}\" für Item ID {{id}}",
     "SetTag": "Setze Tag auf \"{{tag}}\" für Item ID {{id}}",
     "Setting": "Setze {{key}} auf {{value}}",
-    "TagCleanup": "Tags für zerlegte Items aufgeräumt"
+    "TagCleanup": "{{count}} Tag für zerlegte Items aufgeräumt",
+    "TagCleanupUnknown": "Einige Tags für zerlegte Items aufgeräumt",
+    "TagCleanup_plural": "{{count}} Tags für zerlegte Items aufgeräumt"
   },
   "Bucket": {
     "Armor": "Rüstung",
@@ -73,6 +75,8 @@
     "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
     "NotConnectedOrBlocked": "Du bist eventuell nicht mit dem Internet verbunden, oder ein Werbeblocker oder eine Privatsphäre-Erweiterung blockieren möglicherweise Bungie.net.",
     "NotLoggedIn": "Bitte autorisiere DIM, um diese App zu nutzen.",
+    "Slow": "Bungie.net ist gerade langsam",
+    "SlowDetails": "Bungie.net braucht eine lange Zeit, um Deine Informationen zurückzugeben. Dies kann passieren, wenn viele Spieler gleichzeitig im Spiel sind oder wenn Bungie.net Probleme hat. Möglicherweise hast Du auch ein Problem mit der Internetverbindung. Wir werden weiter auf eine Antwort warten.",
     "SlowResponse": "Bungie.net war zu langsam, um zu reagieren.",
     "Throttled": "Bungie.net beschränkt, wie viele Anfragen DIM machen kann.",
     "Twitter": "Hol dir Status-Updates auf:",
@@ -144,7 +148,8 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "Description": "Dies ist wahrscheinlich ein Problem, das alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert."
+    "Description": "Dies ist wahrscheinlich ein Problem, das alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert.",
+    "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
     "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
@@ -248,6 +253,7 @@
     "PartialMatch": "Zeigt Items, deren Name/Perk eine teilweise Übereinstimmung zum Suchtext haben. Suche nach ganzen Phrasen mittels Anführungszeichen. Der 'perk:' Filter durchsucht nur Perks.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
+    "PowerLimit": "Zeigt Items basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
     "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
@@ -307,6 +313,7 @@
     "StatsBase": "Filtert Rüstung basierend auf seinem Basisstatwert, ohne ausgerüstete Mods.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
+    "SunsetAfter": "Zeigt Items basierend auf der letzten Saison an, in der sie die saisonale Power-Grenze erreichen.",
     "Tags": {
       "Archive": "Dimmt Gegenstände, die Du selten brauchst.",
       "Dismantle": "Zeigt Items an, die du eventuell zerlegen willst.",
@@ -553,6 +560,8 @@
     "SearchPlaceholder": "Filter (z.B. \"Sonnenwende der Helden\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "SelectMinStatTotal": "Minimum Rüstungs-Stats Total",
+    "SelectMinStatTotalDescription": "Legt den Mindestwert für ein einzelnes Rüstungsteil fest (ohne Klassengegenstände).",
     "SelectPerks": "Wähle Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
@@ -678,6 +687,7 @@
     "OverviewTab": "Übersicht",
     "Owned": "Dieser Gegenstand ist in deinem Inventar.",
     "OwnedMod": "Diese Mod ist in deinem Modifikations-Inventar.",
+    "PowerCap": "",
     "PullItem": "Ziehe von {{bucket}} nach {{store}}",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
@@ -837,6 +847,9 @@
     "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
+    "PowerCap": "Power Limit",
+    "PowerCapDisclaimer": "Informationen zum Power Limit sind möglicherweise falsch für Rüstungen aus Raids oder Waffen aus den Raids \"Letzter Wunsch\" und \"Garten der Erlösung\". ",
+    "PowerCapWithSeason": "{{powerCap}} (Saison {{finalSeason}} max)",
     "PowerModifier": "Power gewährt durch saisonalen Erfahrungsfortschritt",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
     "Quality": "Wert-Qualität",
@@ -930,8 +943,6 @@
   "Vendors": {
     "Catalysts": "Katalysatoren",
     "Collections": "Sammlungen",
-    "DestinyMap": "Finde Sammelobjekte auf lowlines' Destiny Karte",
-    "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Engram": "Belohnungs-Engramm",
     "FilterToUnacquired": "Nur nicht erworbene Elemente anzeigen",
     "Vendors": "Händler"

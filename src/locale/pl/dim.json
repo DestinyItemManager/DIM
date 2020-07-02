@@ -6,7 +6,7 @@
   "Accounts": {
     "Blizzard": "PC",
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny oraz ekwipunku",
-    "ErrorLoadManifest": "Nie można załadować bazy danych Destiny z Bungie",
+    "ErrorLoadManifest": "Nie można załadować bazy danych informacji Destiny od Bungie",
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
     "MissingDescription": "Konto, które próbujesz zobaczyć, nie jest kontem połączonym z Twoim profilem Bungie.net.",
     "MissingTitle": "Nie znaleziono konta",
@@ -32,16 +32,18 @@
     "Date": "Data",
     "DeleteAll": "Usunięto zachowane dane",
     "DeleteLoadout": "Usunięto uzbrojenie {{name}}",
-    "Description": "Ten dziennik śledzi wszystkie zmiany zapisane w DIM Sync - w tym zmiany ustawień, tagów i uzbrojenia. Po pewnym czasie ten log zostanie wyczyszczony.",
+    "Description": "Ten dziennik śledzi wszystkie zmiany zapisane w DIM Sync - w tym zmiany ustawień, tagów i uzbrojenia. Po pewnym czasie ten log jest czyszczony.",
     "Details": "Szczegóły",
-    "Import": "Zaimportowano {{loadouts}} uzbrojenia i {{tags}} oznaczonych przedmiotów",
+    "Import": "Zaimportowano {{loadouts}} uzbrojenia i {{tags}} otagowanych przedmiotów",
     "Loadout": "Zmieniono uzbrojenie {{name}}",
     "RemoveNotes": "Usunięto notatki z ID przedmiotu {{id}}",
     "RemoveTag": "Usunięto tag z ID przedmiotu {{id}}",
     "SetNotes": "Ustawiono notatki na \"{{notes}}\" dla ID przedmiotu {{id}}",
     "SetTag": "Ustawiono tag na {{tag}} dla ID przedmiotu {{id}}",
     "Setting": "Ustawiono {{key}} na {{value}}",
-    "TagCleanup": "Wyczyszczono tagi dla zdemontowanych przedmiotów"
+    "TagCleanup": "Wyczyszczono {{count}} tag dla zdemontowanych przedmiotów",
+    "TagCleanupUnknown": "Wyczyszczono kilka tagów dla zdemontowanych przedmiotów",
+    "TagCleanup_plural": "Wyczyszczono {{count}} tagów dla zdemontowanych przedmiotów"
   },
   "Bucket": {
     "Armor": "Pancerz",
@@ -73,6 +75,8 @@
     "NotConnected": "Możesz nie być podłączony do internetu.",
     "NotConnectedOrBlocked": "Możesz być niepodłączony do internetu, bądź bloker reklam lub rozszerzenie prywatności mogą blokować Bungie.net.",
     "NotLoggedIn": "Proszę autoryzuj DIM aby móc używać tej aplikacji.",
+    "Slow": "Bungie.net jest teraz powolny",
+    "SlowDetails": "Bungie.net zajmuje dużo czasu, aby zwrócić Twoje informacje. Może się to zdarzyć, gdy wielu graczy jest w grze jednocześnie, lub jeśli Bungie.net ma problemy. Możesz również mieć problem z połączeniem Internetowym. Będziemy czekać na odpowiedź.",
     "SlowResponse": "Bungie.net było za wolne aby odpowiedzieć.",
     "Throttled": "Bungie.net limituje ilość żądań, jakich DIM może wykonać.",
     "Twitter": "Uzyskaj aktualizacje statusu na:",
@@ -144,7 +148,8 @@
     "Title": "Coś poszło nie tak"
   },
   "ErrorPanel": {
-    "Description": "Jest to prawdopodobnie problem dotyczący wszystkich aplikacji innych firm. Sprawdź, czy Bungie.net się wczytuje lub, czy aplikacja towarzysząca Destiny 2 działa."
+    "Description": "Jest to prawdopodobnie problem dotyczący wszystkich aplikacji innych firm. Sprawdź, czy Bungie.net się wczytuje lub, czy aplikacja towarzysząca Destiny 2 działa.",
+    "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
   "FarmingMode": {
     "D2Desc": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
@@ -235,10 +240,10 @@
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
     "MaxPower": "Pokazuje przedmioty, które maksymalizują Poziom Mocy dla każdej klasy postaci.",
-    "ModSlot": "Pokazuje zbroję z określonym gniazdem sezonowym.",
+    "ModSlot": "Pokazuje pancerz z określonym gniazdem sezonowym.",
     "Mods": {
-      "Y2": "Pokazuje elementy z dołączoną modyfikacją w 2. roku.",
-      "Y3": "Pokazuje elementy z wybranymi modyfikacjami pancerza 2.0."
+      "Y2": "Pokazuje przedmioty z dołączoną modyfikacją roku 2.",
+      "Y3": "Pokazuje przedmioty z dowolnymi wybranymi modyfikacjami Pancerzu 2.0."
     },
     "NamedStat": "Pokazuje pancerz zawierający punkty w podanej statystyce.",
     "Negate": "Aby odwrócić szukanie, wstaw znak minusa przed danym wyrażeniem: {{notexample}} wyszuka wszystkie nieengramowe przedmioty.",
@@ -248,6 +253,7 @@
     "PartialMatch": "Pokazuje przedmioty, których nazwa/perk częściowo pasuje do szukanego tekstu. Szukaj pełnymi wyrażeniami używając cudzysłowu. Filtr 'perk:' wyszuka tylko perki.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
     "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy (Atak dla Broni; Obrona dla Pancerzu).",
+    "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone.",
     "Quality": "Pokazuje przedmioty na podstawie ich zsumowanego odsetku jakości statystyki. '{{percentage}}' to alias do '{{quality}}'.",
     "RandomRoll": "Pokazuje przedmioty, które wypadają z losowymi rollami.",
     "RarityTier": "Pokazuje przedmioty na podstawie ich poziomie rzadkości.",
@@ -304,14 +310,15 @@
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
     "Stats": "Pokazuje przedmioty na podstawie ich wartości statystyki. Dostępne filtry to:",
-    "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statusu, bez dołączonych modyfikacji.",
+    "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statystyki, nie licząc dołączonych modyfikacji.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
+    "SunsetAfter": "Pokazuje przedmioty w oparciu o ostatni sezon, w którym mogą osiągnąć Sezonowy Limit Mocy.",
     "Tags": {
-      "Archive": "Przyciemnia rzeczy, których rzadko potrzebujesz.",
-      "Dismantle": "Pokazuje przedmioty, które chcesz w końcu rozmontować.",
+      "Archive": "Przyciemnia przedmioty, które rzadko potrzebujesz.",
+      "Dismantle": "Pokazuje przedmioty, które chcesz ostatecznie rozmontować.",
       "Favorite": "Pokazuje ulubione przedmioty.",
-      "Infuse": "Pokazuje przedmioty, które chcesz w końcu nasycić.",
+      "Infuse": "Pokazuje przedmioty, które chcesz ostatecznie nasycić.",
       "Keep": "Pokazuje przedmioty, które chcesz zachować.",
       "NoTag": "Pokazuje przedmioty bez tagów."
     },
@@ -365,7 +372,7 @@
     "BungieNetAlert": "Alarm od Bungie",
     "Clear": "Wyczyść filtry szukania",
     "CompareMatching": "Porównaj filtrowane przedmioty",
-    "FilterHelp": "Szukaj przedmiotu/perk, {{example}}i więcej",
+    "FilterHelp": "Szukaj przedmiotu/perk, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
@@ -446,7 +453,7 @@
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
-    "Chest": "Skrzynia",
+    "Chest": "Tors",
     "ChooseAMod": "Wybierz swoje modyfikacje",
     "ChooseAPerk": "Wybierz perk",
     "ClassItem": "Przedmiot klasy",
@@ -522,7 +529,7 @@
   "LoadoutBuilder": {
     "AltPerkKey": "Wybierz ten perk aby wyświetlić statystyki",
     "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
-    "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie elementy są mistrzowskie.",
+    "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
     "BadPerk": "Perk, który \"lekko\" coś zmienia nie jest dobrym wyborem.",
     "BurnTypeArc": "Elektryczny",
     "BurnTypeSolar": "Słoneczny",
@@ -553,6 +560,8 @@
     "SearchPlaceholder": "Filtruj (np. \"czuwanie bohaterów\")",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
+    "SelectMinStatTotal": "Minimalna suma statystyk pancerzu",
+    "SelectMinStatTotalDescription": "Ustawia minimalną sumę statystyk dla pojedynczego elementu pancerzu (z pominięciem przedmiotów klasy).",
     "SelectPerks": "Wybierz Perki",
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
@@ -637,10 +646,10 @@
     "WeaponsOnly": "Broń"
   },
   "Manifest": {
-    "Download": "Pobieranie najnowszej bazy informacji o Destiny od Bungie...",
-    "Error": "Błąd wczytywania bazy informacji o Destiny:\n{{error}}\nOdśwież żeby spróbować ponownie.",
-    "Load": "Wczytywanie bazy informacji o Destiny...",
-    "Outdated": "Nieaktualna baza informacji o Destiny",
+    "Download": "Pobieranie najnowszej bazy danych informacji Destiny od Bungie...",
+    "Error": "Błąd wczytywania bazy danych informacji Destiny:\n{{error}}\nOdśwież żeby spróbować ponownie.",
+    "Load": "Wczytywanie bazy danych informacji Destiny...",
+    "Outdated": "Nieaktualna baza danych informacji Destiny",
     "OutdatedExplanation": "Bungie zaktualizowało swoją bazę danych informacji Destiny. Załaduj ponownie DIM, aby odebrać nowe informacje. Pamiętaj, że niektóre rzeczy w DIM mogą nie działać przez kilka godzin po aktualizacji Destiny przez Bungie, podczas gdy nowe dane rozprzestrzeniają się w ich systemach."
   },
   "Milestone": {
@@ -678,6 +687,7 @@
     "OverviewTab": "Przegląd",
     "Owned": "Ten przedmiot jest w twoim ekwipunku.",
     "OwnedMod": "Ten mod znajduje się w ekwipunku modyfikacji.",
+    "PowerCap": "",
     "PullItem": "Wyciągnij z {{bucket}} do {{store}}",
     "ReadLore": "Czytaj lore na Ishtar Collective",
     "ReviewsTab": "Recenzje",
@@ -730,7 +740,7 @@
       "PerksMods": "Perki, Modyfikacje i Barwy",
       "Quality": "Jakość %",
       "Rating": "Ocena",
-      "Reacquirable": "Odkupialne",
+      "Reacquirable": "Odzyskiwalne",
       "Season": "Sezon",
       "Source": "Źródło",
       "StatQuality": "Jakość statystyki",
@@ -752,7 +762,7 @@
     "Organizer": "Organizator",
     "SelectAll": "Zaznacz wszystko",
     "SelectItem": "Wybierz lub odznacz {{name}}",
-    "ShiftTip": "Wskazówka: Przytrzymaj klawisz Shift i kliknij komórkę, aby filtrować elementy",
+    "ShiftTip": "Wskazówka: Przytrzymaj klawisz Shift i kliknij komórkę, aby filtrować przedmioty",
     "Stats": {
       "Aim": "Cel",
       "Inventory": "Ekwipunek",
@@ -794,7 +804,7 @@
     "CsvImport": "Importuj tagi/notatki z pliku CSV",
     "Data": "Arkusze kalkulacyjne",
     "DefaultItemSizeNote": "Rozmiar przedmiotu 50px będzie wyglądał najostrzej, bez rozmycia obrazu przedmiotu lub tekstu.",
-    "DontForgetDupes": "Nie zapomnij, że możesz wyszukiwać is:dupe aby szybko znaleźć zduplikowane elementy, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
+    "DontForgetDupes": "Nie zapomnij, że możesz wyszukać is:dupe aby szybko znaleźć zduplikowane przedmioty, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
     "EnableAdvancedStats": "Pokaż ocenę jakości statystyk pancerza (D1)",
     "ExportSS": "Arkusze kalkulacyjne ekwipunku",
     "ExportSSHelp": "Pobierz listę CSV swoich przedmiotów, którą można łatwo przeglądać w wybranej aplikacji arkusza kalkulacyjnego.",
@@ -837,6 +847,9 @@
     "NotApplicable": "ND.",
     "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
+    "PowerCap": "Limit mocy",
+    "PowerCapDisclaimer": "Informacje dotyczące limitu mocy mogą być nieprawidłowe w przypadku pancerza z dowolnego najazdu lub broni z najazdu \"Ostatnie Życzenie\" i \"Ogród Zbawienia\"",
+    "PowerCapWithSeason": "{{powerCap}} (maks. sezon {{finalSeason}})",
     "PowerModifier": "Moc przyznana przez postęp sezonowego doświadczenia",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
     "Quality": "Jakość statystyk",
@@ -854,7 +867,7 @@
     },
     "AuditLog": "Historia zmian synchronizacji DIM",
     "AuditLogLabel": "Zobacz poprzednie zmiany danych",
-    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
+    "AutoBackup": "Zrobiliśmy kopię zapasową Twoich danych do pliku w folderze pobrane o nazwie dim-data.json, na wszelki wypadek.",
     "BackUpFirst": "MUSISZ wykonać kopię zapasową swoich danych, zanim je usuniesz. Na wszelki wypadek.",
     "BrowserMayClearData": "Przeglądarka może usunąć te informacje, jeśli zabraknie Ci miejsca lub nie będziesz często odwiedzać DIM.",
     "DeleteAllData": "Usuń WSZYSTKIE dane z serwerów synchronizacji DIM",
@@ -881,11 +894,11 @@
     "ImportFailed": "Importowanie nieudanie! {{error}}",
     "ImportNoFile": "Nie wybrano pliku!",
     "ImportNotification": {
-      "FailedBody": "Unable to import data. {{error}}",
-      "FailedTitle": "Import Failed",
-      "NoData": "No loadouts or tags found in the backup",
-      "SuccessBodyForced": "Zaimportowano ustawienia, {{loadouts}} uzbrojenia i {{tags}} oznaczonych elementów z kopii zapasowej do synchronizacji DIM, zastępując to, co już tam było.",
-      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
+      "FailedBody": "Nie można zaimportować danych. {{error}}",
+      "FailedTitle": "Importowanie nie powiodło się",
+      "NoData": "Nie znaleziono uzbrojeń ani tagów w kopii zapasowej",
+      "SuccessBodyForced": "Zaimportowano ustawienia, {{loadouts}} uzbrojenia i {{tags}} otagowanych przedmiotów z kopii zapasowej do synchronizacji DIM, zastępując to, co już tam było.",
+      "SuccessBodyLocal": "Zaimportowano ustawienia, {{loadouts}} uzbrojenia i {{tags}} otagowanych przedmiotów z kopii zapasowej do pamięci lokalnej, zastępując to, co już tam było. Nie możemy zagwarantować, że pamięć lokalna nie zostanie utracona - rozważ włączenie DIM Sync.",
       "SuccessTitle": "Import zakończony sukcesem"
     },
     "ImportTooManyFiles": "Wybierz tylko jeden plik do importu.",
@@ -925,13 +938,11 @@
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",
     "ServiceCallFailed": "Połączenie usługowe VendorEngrams.xyz nie powiodło się.",
-    "Vote": "Widzisz sprzedawcę sprzedającego przedmioty w pobliżu poziomu światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
+    "Vote": "Widzisz sprzedawcę sprzedającego przedmioty bliskie twojemu poziomowi światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
   },
   "Vendors": {
     "Catalysts": "Katalizator",
     "Collections": "Kolekcja",
-    "DestinyMap": "Znajdź znajdźki na mapie Destiny od lowlines",
-    "DestinySets": "Przeglądaj więcej zestawów przedmiotów na Destiny Sets",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
     "Vendors": "Sprzedawcy"
@@ -968,8 +979,8 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Śledź nas, aby być na bieżąco z aktualizacjami i informacjami o stanie aplikacji real-time.",
       "Version": "Wersja {{version}} ({{flavor}}), zbudowana {{date}}",
-      "Wiki": "Przewodnik użytkownika DIM Wiki",
-      "WikiHelp": "Dowiedz się, jak korzystać z DIM oraz rozwijać naszą społecznosć.",
+      "Wiki": "Wiki Przewodnika użytkownika DIM",
+      "WikiHelp": "Dowiedz się, jak korzystać z DIM oraz rozwijać naszego kierowanego przez społeczność przewodnika użytkownika.",
       "YouTube": "YouTube",
       "YouTubeHelp": "Naucz się korzystać z DIM na naszym kanale Youtube."
     },
