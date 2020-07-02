@@ -532,9 +532,9 @@ export function makeItem(
   // a weapon can have an inherent breaker type, or gain one from socketed mods
   // (or armor mods can sort of add them but let's not go there quite yet)
   // this is presented as an else-type dichotomy here, but who knows what the future holds
-  if (itemDef.breakerTypeHash)
+  if (itemDef.breakerTypeHash) {
     createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
-  else if (createdItem.bucket.inWeapons && createdItem.sockets) {
+  } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
     const breakerTypeHash = createdItem.sockets.sockets.find(
       (s) => s.plug?.plugItem.breakerTypeHash
     )?.plug?.plugItem.breakerTypeHash;
