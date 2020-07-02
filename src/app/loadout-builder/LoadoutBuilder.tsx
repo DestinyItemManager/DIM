@@ -160,7 +160,8 @@ function LoadoutBuilder({
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
-    assumeMasterwork
+    assumeMasterwork,
+    statOrder
   );
 
   const combos = result?.combos || 0;

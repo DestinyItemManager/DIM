@@ -42,6 +42,8 @@ function mapStateToProps() {
 
 /**
  * The Loadout Optimizer screen
+ * TODO This isn't really a container but I can't think of a better name. It's more like
+ * a LoadoutBuilderEnsureStuffIsLoaded
  */
 function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
   useSubscription(

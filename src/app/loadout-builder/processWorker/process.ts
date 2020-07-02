@@ -10,9 +10,11 @@ import {
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from 'app/utils/comparators';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
-import { statKeys, statHashes, statValues } from '../types';
+import { statHashes, statValues } from '../types';
 import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+
+const RETURNED_ARMOR_SETS = 200;
 
 /**
  * This processes all permutations of armor to build sets
@@ -22,7 +24,8 @@ export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  assumeMasterwork: boolean
+  assumeMasterwork: boolean,
+  statOrder: StatTypes[]
 ): { sets: ProcessArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
@@ -157,7 +160,7 @@ export function process(
               const stats = {};
               for (const stat of statChoices) {
                 let index = 0;
-                for (const key of statKeys) {
+                for (const key of statOrder) {
                   stats[key] = Math.min((stats[key] || 0) + stat[index], 100);
                   index++;
                 }
@@ -171,51 +174,20 @@ export function process(
               for (const statKey in stats) {
                 tiers += statTier(stats[statKey]);
                 totalTier += statTier(stats[statKey]);
-                if (index < statKeys.length) {
+                if (index < statOrder.length) {
                   tiers += ',';
                 }
                 index++;
               }
 
-              // While we have less than 500 sets keep adding and keep track of the lowest total tier.
-              if (totalTier <= lowestTier) {
-                if (setCount <= 500) {
+              // While we have less than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
+              if (totalTier < lowestTier) {
+                if (setCount <= RETURNED_ARMOR_SETS) {
                   lowestTier = totalTier;
                 } else {
                   continue;
                 }
-              } else if (setCount > 500 && groupedSets[lowestTier]) {
-                const lowestTierGroup = groupedSets[lowestTier];
-                const lowestTierStatMixes = Object.keys(lowestTierGroup);
-
-                if (lowestTierStatMixes.length) {
-                  // Find the one with the most sets so we can remove the set with the lowest power
-                  const statMixWithMostSets = lowestTierStatMixes.sort(
-                    (a, b) => lowestTierGroup[b].sets.length - lowestTierGroup[a].sets.length
-                  )[0];
-
-                  setCount -= 1;
-                  lowestTierGroup[statMixWithMostSets].sets
-                    .sort((a, b) => a.maxPower - b.maxPower)
-                    .pop();
-
-                  // If there are no sets left remove the group
-                  if (!lowestTierGroup[statMixWithMostSets].sets.length) {
-                    delete lowestTierGroup[statMixWithMostSets];
-                  }
-                }
-
-                // Remove the whole tier if there is nothing left in it and recalculate the lowest tier
-                if (!Object.keys(groupedSets[lowestTier]).length) {
-                  delete groupedSets[lowestTier];
-                  lowestTier = parseInt(
-                    Object.keys(groupedSets).sort((a, b) => a.localeCompare(b))[0],
-                    10
-                  );
-                }
               }
-
-              setCount++;
 
               let groupedSetsInTotalTier = groupedSets[totalTier];
 
@@ -254,6 +226,39 @@ export function process(
                   firstValidSetStatChoices: statChoices,
                   maxPower,
                 };
+              }
+
+              setCount++;
+
+              if (setCount > RETURNED_ARMOR_SETS && groupedSets[lowestTier]) {
+                const lowestTierGroup = groupedSets[lowestTier];
+                const lowestTierStatMixes = Object.keys(lowestTierGroup);
+
+                if (lowestTierStatMixes.length) {
+                  // Stats are sorted by order so this perfers sets by stat order preference
+                  const sortedStatMixes = lowestTierStatMixes.sort((a, b) => b.localeCompare(a));
+
+                  const leasePreferredStatMix = sortedStatMixes[sortedStatMixes.length - 1];
+
+                  setCount -= 1;
+                  lowestTierGroup[leasePreferredStatMix].sets
+                    .sort((a, b) => a.maxPower - b.maxPower)
+                    .pop();
+
+                  // If there are no sets left remove the group
+                  if (!lowestTierGroup[leasePreferredStatMix].sets.length) {
+                    delete lowestTierGroup[leasePreferredStatMix];
+                  }
+                }
+
+                // Remove the whole tier if there is nothing left in it and recalculate the lowest tier
+                if (!Object.keys(groupedSets[lowestTier]).length) {
+                  delete groupedSets[lowestTier];
+                  lowestTier = parseInt(
+                    Object.keys(groupedSets).sort((a, b) => a.localeCompare(b))[0],
+                    10
+                  );
+                }
               }
             }
           }

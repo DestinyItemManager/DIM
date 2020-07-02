@@ -1,6 +1,6 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
-import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet } from '../types';
+import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet, StatTypes } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
   ProcessItemsByBucket,
@@ -29,7 +29,8 @@ export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  assumeMasterwork: boolean
+  assumeMasterwork: boolean,
+  statOrder: StatTypes[]
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -41,7 +42,8 @@ export function useProcess(
     filteredItems,
     lockedItems,
     lockedArmor2ModMap,
-    assumeMasterwork
+    assumeMasterwork,
+    statOrder
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -68,7 +70,7 @@ export function useProcess(
 
     const workerStart = performance.now();
     worker
-      .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork)
+      .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder)
       .then(({ sets, combos, combosWithoutCaps }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
@@ -87,7 +89,7 @@ export function useProcess(
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork]);
+  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder]);
 
   return { result, processing };
 }
@@ -103,13 +105,15 @@ function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  assumeMasterwork: boolean
+  assumeMasterwork: boolean,
+  statOrder: StatTypes[]
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
+    statOrder,
   ]);
 
   // cleanup the worker on unmount
