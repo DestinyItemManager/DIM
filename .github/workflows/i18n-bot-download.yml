@@ -3,7 +3,7 @@ name: i18n download bot
 on:
   schedule:
     - cron: "0 19 * * 6"
-    - cron: "30 23 * * 6"
+    - cron: "15 2 * * 3"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,13 +30,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: sort dim.json
-        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
+        run: jq -S . src/locale/dim.json > src/locale/dim_sorted.json && mv src/locale/dim_sorted.json src/locale/dim.json
 
       - name: sort locale dim.json
         run: |
           allLocales=("de" "es" "es-mx" "fr" "it" "ja" "ko" "pl" "pt-br" "ru" "zh-chs" "zh-cht")
           for lang in ${allLocales[@]}; do
-            dimJSON="$(jq -S . src/locale/$lang/dim.json)" && echo "${dimJSON}" > src/locale/$lang/dim.json
+            jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
           done
 
       - name: Check for new files (DIM)
