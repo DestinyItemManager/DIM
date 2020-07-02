@@ -362,6 +362,9 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           .reverse()
           .map(([tag]) => `sunsetsafter:${tag}`)
       : []),
+    ...(isD2
+      ? Object.keys(hashes.breakerTypes).map((breakerType) => `breaker:${breakerType}`)
+      : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -671,6 +674,7 @@ function searchFilters(
             case 'stack':
             case 'count':
             case 'energycapacity':
+            case 'breaker':
             case 'maxbasestatvalue':
             case 'maxstatloadout':
             case 'maxstatvalue':
@@ -1125,6 +1129,11 @@ function searchFilters(
               compareByOperator(item.energy.energyCapacity, filterValue)) ||
             filterValue === hashes.energyCapacityTypes[item.energy.energyType]
           );
+        }
+      },
+      breaker(item: D2Item, filterValue: string) {
+        if (item.breakerType) {
+          return hashes.breakerTypes[filterValue] === item.breakerType.hash;
         }
       },
       hascapacity(item: D2Item) {

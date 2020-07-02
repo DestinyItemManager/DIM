@@ -737,6 +737,7 @@
     "Columns": {
       "Stats": "Stats",
       "BaseStats": "Base Stats",
+      "Breaker": "Breaker",
       "Icon": "Icon",
       "Name": "Name",
       "Element": "Element",

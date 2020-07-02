@@ -17,6 +17,7 @@ import {
   DestinyItemPlugBase,
   DestinyDamageTypeDefinition,
   DestinyEnergyTypeDefinition,
+  DestinyBreakerTypeDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
@@ -216,6 +217,8 @@ export interface D2Item extends DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
   powerCap: number | null;
+  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
+  breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */

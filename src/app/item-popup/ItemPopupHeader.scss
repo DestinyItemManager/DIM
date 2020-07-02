@@ -76,6 +76,9 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
     .item-title {
       color: white;
     }
+    .small-icon {
+      filter: none;
+    }
   }
 
   .item-title {
@@ -128,6 +131,14 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
       );
     }
   }
+
+  .small-icon {
+    height: 20px;
+    width: 20px;
+    margin-right: 4px;
+    filter: invert(1);
+  }
+
   .info {
     font-size: 16px;
     margin-left: 8px;

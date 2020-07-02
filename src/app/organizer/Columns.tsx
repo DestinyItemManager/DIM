@@ -423,6 +423,20 @@ export function getColumns(
           ) : undefined,
         filter: (value) => `perkname:"${value}"`,
       },
+    (destinyVersion === 2 || isWeapon) && {
+      id: 'dmg',
+      header: t('Organizer.Columns.Breaker'),
+      value: (item) => item.isDestiny2() && item.breakerType?.displayProperties.name,
+      cell: (value, item) =>
+        item.isDestiny2() &&
+        value && (
+          <BungieImage
+            className={styles.inlineIcon}
+            src={item.breakerType!.displayProperties.icon}
+          />
+        ),
+      filter: (_, item) => `is:${getItemDamageShortName(item)}`,
+    },
     {
       id: 'perks',
       header:

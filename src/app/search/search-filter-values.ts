@@ -254,3 +254,13 @@ export const allStatNames = [...Object.keys(statHashByName), 'any'];
 export const energyCapacityTypes = Object.values(energyNamesByEnum);
 
 export const shaderBucket = 2973005342;
+
+export const breakerTypes = {
+  barrier: 485622768,
+  antibarrier: 485622768,
+  shieldpiercing: 485622768,
+  overload: 2611060930,
+  disruption: 2611060930,
+  unstoppable: 3178805705,
+  stagger: 3178805705,
+};

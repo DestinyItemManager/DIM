@@ -720,6 +720,7 @@
     "Columns": {
       "Archetype": "Archetype",
       "BaseStats": "Base Stats",
+      "Breaker": "Breaker",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
       "Element": "Element",
