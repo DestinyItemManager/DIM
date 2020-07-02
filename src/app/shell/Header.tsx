@@ -135,6 +135,8 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   const history = useHistory();
 
+  const nodeRef = useRef<HTMLDivElement>(null);
+
   const bugReportLink = $DIM_FLAVOR !== 'release';
 
   const isStandalone =
@@ -266,8 +268,13 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       </GlobalHotkeys>
       <TransitionGroup component={null}>
         {dropdownOpen && (
-          <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
+          <CSSTransition
+            nodeRef={nodeRef}
+            classNames="dropdown"
+            timeout={{ enter: 500, exit: 500 }}
+          >
             <ClickOutside
+              ref={nodeRef}
               key="dropdown"
               className="dropdown"
               onClickOutside={hideDropdown}

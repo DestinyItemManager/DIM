@@ -41,7 +41,9 @@
     "SetNotes": "Establecer notas a \"{{notes}}\" para el objeto ID {{id}}",
     "SetTag": "Establecer etiqueta a {{tag}} del objeto ID {{id}}",
     "Setting": "Establecer {{key}} a {{value}}",
-    "TagCleanup": "Etiquetas limpiadas para los objetos desmantelados"
+    "TagCleanup": "{{count}} Etiqueta limpiada por objetos desmantelados",
+    "TagCleanupUnknown": "Algunas etiquetas limpiadas por objetos desmantelados",
+    "TagCleanup_plural": "{{count}} Etiquetas limpiadas por objetos desmantelados"
   },
   "Bucket": {
     "Armor": "Armadura",
@@ -73,6 +75,8 @@
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "NotConnectedOrBlocked": "Podría no estar conectado a Internet, o una extensión de privacidad o bloqueador de anuncios bloqueando Bungie.net.",
     "NotLoggedIn": "Por favor autoriza DIM a fin de usar esta app.",
+    "Slow": "Bungie.net está lento ahora mismo",
+    "SlowDetails": "Bungie.net está tomando mucho tiempo en devolverte la información. Esto puede pasar cuando muchos jugadores están en el juego a la vez o si Bungie.net está teniendo problemas. También podrías estar teniendo un problema de conexión a internet. Estaremos esperando por una respuesta.",
     "SlowResponse": "Bungie.net fue demasiado lento en responder.",
     "Throttled": "Bungie.net está limitando ahora cuántas solicitudes puede hacer de DIM.",
     "Twitter": "Entérate de las actualizaciones de estados en:",
@@ -144,7 +148,8 @@
     "Title": "Algo fue mal"
   },
   "ErrorPanel": {
-    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona."
+    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona.",
+    "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
     "D2Desc": "DIM está impidiendo que los objetos vayan a Administración asegurándose de que siempre hay un espacio libre por tipo de objeto en {{store}}. Se están moviendo objetos al depósito para hacer espacio.",
@@ -248,6 +253,7 @@
     "PartialMatch": "Muestra objetos donde su nombre/ventaja tiene una coincidencia parcial con el texto filtrado. Busca frases entera usando comillas. El filtro \"perk:\" sólo encontará ventajas.",
     "Postmaster": "Objetos que están actualmente en la Administración.",
     "PowerLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
+    "PowerLimit": "Muestra objetos basados en el máximo nivel de poder en el que pueden ser infundidos.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad total de su estadística. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
     "RandomRoll": "Muestra objetos que suelten tiradas aleatorias.",
     "RarityTier": "Muestra objetos basado en su nivel de rareza.",
@@ -307,6 +313,7 @@
     "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluír modificadores aplicados.",
     "StatsLoadout": "Encuentra sets de objetos para equipar por el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
+    "SunsetAfter": "Muestra objetos basados en la última temporada en el que pudieron alcanzar el Tope de Poder de Temporada.",
     "Tags": {
       "Archive": "Oscurece objetos que raramente necesites.",
       "Dismantle": "Muestra objetos que desarías desmantelar.",
@@ -553,6 +560,8 @@
     "SearchPlaceholder": "Filtro (ej., \"vigilia de los héroes\")",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
+    "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
+    "SelectMinStatTotalDescription": "Establece la estadística total mínima para una única pieza de armadura (excluyendo objetos de clase).",
     "SelectPerks": "Seleccionar Ventajas",
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
@@ -678,6 +687,7 @@
     "OverviewTab": "Resumen",
     "Owned": "Este objeto está en tu inventario.",
     "OwnedMod": "Este modificador está en el inventario de modificadores.",
+    "PowerCap": "",
     "PullItem": "Traer de {{bucket}} a {{store}}",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
@@ -837,6 +847,9 @@
     "NotApplicable": "No aplicable",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
     "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
+    "PowerCap": "Límiter de Poder",
+    "PowerCapDisclaimer": "La información sobre el Límite de Poder puede ser incorrecta para la armadura de cualquier incursión, o para las armas de las incursiones \"Último Deseo\" y \"Jardín de la Salvación.\"",
+    "PowerCapWithSeason": "{{powerCap}} (Temporada {{finalSeason}} máximo)",
     "PowerModifier": "Poder otorgado por la progresión de experiencia de temporada",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
     "Quality": "Calidad de las estadísticas",
@@ -930,8 +943,6 @@
   "Vendors": {
     "Catalysts": "Catalizadores",
     "Collections": "Colecciones",
-    "DestinyMap": "Busca coleccionables en el mapa de Destiny de \"lowlines\"",
-    "DestinySets": "Navega más lotes de objetos en Destiny Sets",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
     "Vendors": "Comerciantes"
