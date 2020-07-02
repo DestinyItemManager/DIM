@@ -424,7 +424,7 @@ export function getColumns(
         filter: (value) => `perkname:"${value}"`,
       },
     (destinyVersion === 2 || isWeapon) && {
-      id: 'dmg',
+      id: 'breaker',
       header: t('Organizer.Columns.Breaker'),
       value: (item) => item.isDestiny2() && item.breakerType?.displayProperties.name,
       cell: (value, item) =>

@@ -217,7 +217,7 @@ export interface D2Item extends DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
   powerCap: number | null;
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
+  /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
