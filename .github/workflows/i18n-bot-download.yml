@@ -3,7 +3,7 @@ name: i18n download bot
 on:
   schedule:
     - cron: "0 19 * * 6"
-    - cron: "15 2 * * 3"
+    - cron: "40 2 * * 4"
 jobs:
   build:
     runs-on: ubuntu-latest
