@@ -41,7 +41,9 @@
     "SetNotes": "アイテムID {{id}} のメモを {{notes}} に設定する",
     "SetTag": "アイテムID {{id}} にタグ {{tag}} をに設定する",
     "Setting": "{{key}} を {{value}} にセットします。",
-    "TagCleanup": "解体品のタグのクリーンアップ"
+    "TagCleanup": "分解したアイテムに関連する {{count}} 個のタグを片付けました",
+    "TagCleanupUnknown": "分解したアイテムに関連する、いくつかのタグを片付けました",
+    "TagCleanup_plural": "分解したアイテムに関連する {{count}} 個のタグを片付けました"
   },
   "Bucket": {
     "Armor": "防具",
@@ -73,6 +75,8 @@
     "NotConnected": "インターネットに接続してない可能性あります。",
     "NotConnectedOrBlocked": "インターネットに接続されていない可能性があります。 または広告ブロックまたは Bungie.netのプライバシー拡張がブロックされています。",
     "NotLoggedIn": "このアプリを使用するために DIM を承認してください。",
+    "Slow": "現在、Bungie.netの応答が遅いです。",
+    "SlowDetails": "Bungie.netは、あなたの情報への応答に長い時間かかっています。多くのプレイヤーが同時にゲームをしている場合、もしくは、Bungie.netに問題がある可能性があります。あなたのインターネット接続に問題がある可能性もあり、DIMは、引き続き応答を待ちます。",
     "SlowResponse": "Bungie.netは遅すぎて応答できませんでした。",
     "Throttled": "Bungie.netは、DIMが作成できるリクエストの数を制限しています。",
     "Twitter": "最新情報に更新します。:",
@@ -144,7 +148,8 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "サードパーティ製アプリだけで問題が起きている可能性があります。 Bungie.netにアクセスできるか、Destiny 2公式コンパニオンアプリが動作するか確認してください。"
+    "Description": "サードパーティ製アプリだけで問題が起きている可能性があります。 Bungie.netにアクセスできるか、Destiny 2公式コンパニオンアプリが動作するか確認してください。",
+    "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
     "D2Desc": "DIMは、アイテムタイプごとに必ず一つの空きスペースがあることを確認することで、アイテムがポストマスターに行くのを防いでいる {{store}}。スペースを空けるためにアイテムを保管庫に移動しています。",
@@ -248,6 +253,7 @@
     "PartialMatch": "名前/パークがフィルタテキストと部分的に一致するアイテムを表示します。引用符を使用してフレーズ全体を検索します。「perk:」フィルタはパークのみを検索します。",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerLevel": "パワーレベルに基づいてアイテムを表示します（武器に対する攻撃、防具に対する防御）",
+    "PowerLimit": "融合可能な最大パワーレベルに基づき、アイテムを表示しています。",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
     "RandomRoll": "ランダムロールでドロップされた項目を表示します。",
     "RarityTier": "希少性を基に表示",
@@ -307,6 +313,7 @@
     "StatsBase": "ベースの統計値に基づいてアーマーをフィルターします。アタッチされたmodは含まれません。",
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
+    "SunsetAfter": "最終シーズンにシーズンパワー上限に到達する事ができるアイテムを表示します。",
     "Tags": {
       "Archive": "めったに必要ないアイテムを暗くします。",
       "Dismantle": "後で分解した方が良いアイテムを表示",
@@ -541,7 +548,7 @@
     "LimitedCombos": "{{combosWithoutCaps, number}} の可能な統計の組み合わせがありますが、DIMがクラッシュしないようにするために{{combos, number}} のみを調べました。 その結果、いくつかの可能性が示されていません。 いくつかのアイテムやパークをロックするか、古いアーマーを解体して制限を超えないようにしてください。",
     "LockEquipped": "装備",
     "LockItem": "ロックされたアイテム",
-    "LockPerk": "改造パーツまたはパークを選択",
+    "LockPerk": "エネルギーまたはパークを選択",
     "NewEmptyLoadout": "新規のロードアウトを作成する",
     "NoBuildsFound": "ビルドが見つかりませんでした。フィルタ条件を緩和してみてください。",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -553,6 +560,8 @@
     "SearchPlaceholder": "フィルター(例：「夜通しする英雄達」)",
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
+    "SelectMinStatTotal": "Minimum Armor Stat Total",
+    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "パークを選択",
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
@@ -678,6 +687,7 @@
     "OverviewTab": "概要",
     "Owned": "このアイテムはあなたの所持品にあります。",
     "OwnedMod": "このmodは修正インベントリにあります。",
+    "PowerCap": "",
     "PullItem": "{{bucket}} から{{store}} に引き出します",
     "ReadLore": "イシュタルコレクティブで伝承を読む",
     "ReviewsTab": "レビュー",
@@ -730,7 +740,7 @@
       "PerksMods": "パーク、改造パーツとシェーダー",
       "Quality": "クオリティ %",
       "Rating": "評価",
-      "Reacquirable": "再取得する",
+      "Reacquirable": "再取得可能",
       "Season": "シーズン",
       "Source": "ソース",
       "StatQuality": "Statsクオリティ",
@@ -749,7 +759,7 @@
     "NoMobile": "この機能はモバイル端末向けに最適化されていません。",
     "Note": "備考を書く",
     "NotePrompt": "メモ：",
-    "Organizer": "主催者",
+    "Organizer": "オーガナイザー",
     "SelectAll": "すべて選択",
     "SelectItem": "{{name}} を選択/解除",
     "ShiftTip": "ヒント: Shiftキーを押したまま、任意のセルをクリックするとフィルターを掛けることができます",
@@ -837,6 +847,9 @@
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、ここをクリックしてください。",
+    "PowerCap": "パワー上限",
+    "PowerCapDisclaimer": "何らからのレイド防具や、“最後の望み”と”救済の庭園”のレイド武器におけるパワー上限の情報は誤っているかもしれません。",
+    "PowerCapWithSeason": "{{powerCap}} (シーズン {{finalSeason}} 最大)",
     "PowerModifier": "シーズンごとの経験の進歩によって与えられる力",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
@@ -847,7 +860,7 @@
   },
   "Storage": {
     "ApiPermissionPrompt": {
-      "Description": "DIM は、作成したタグ、ロードアウト、設定を独自のサーバーに保存し、異なるバージョンの DIM 間でそれぞれログインせずにデータを同期させることができるようになりました。DIM Sync を有効にしていない場合は、設定ページから既存のデータをインポートすることができます。この機能は、OpenCollective の支援者によって実現しました。",
+      "Description": "DIM は、作成したタグ、ロードアウト、設定を私達の所有するサーバーに保存し、異なるバージョンの DIM 間でそれぞれログインせずにデータを同期させることができるようになりました。DIM Sync を有効にしていない場合は、設定ページから既存のデータをインポートすることができます。この機能は、OpenCollective の支援者によって実現しました。",
       "No": "今はダメだ",
       "Title": "DIM Sync を有効にしますか？",
       "Yes": "同期を有効にする"
@@ -885,7 +898,7 @@
       "FailedTitle": "インポートに失敗しました",
       "NoData": "バックアップにロードアウトやタグが見つかりません",
       "SuccessBodyForced": "バックアップから設定、 {{loadouts}} ロードアウト、 {{tags}} タグ付けされたアイテムをDIM Syncにインポートし、既にあったものを置き換えます。",
-      "SuccessBodyLocal": "設定、ロードアウト{{loadouts}}、タグ付けされた{{tags}} アイテムが保存されているバックアップデータをインポートして、ローカルストレージ内のデータを書き換えました。ローカルストレージのデータが上書きされない保証はできません - DIM Sync の利用を検討してください。",
+      "SuccessBodyLocal": "インポートされた設定、 {{loadouts}} ロードアウト、および {{tags}} タグ付けされたアイテムがバックアップからローカルストレージに保存され、既存のものが置き換えられます。 私達はローカルストレージが失われないことは保証できません。DIM Sync を有効にすることを検討してください。",
       "SuccessTitle": "インポート成功"
     },
     "ImportTooManyFiles": "インポートするファイルを選んでください．",
@@ -930,8 +943,6 @@
   "Vendors": {
     "Catalysts": "触媒",
     "Collections": "コレクション",
-    "DestinyMap": "Lowlines' Destiny mapでコレクションを探す",
-    "DestinySets": "Destiny Setsでアイテムセットをもっと見る",
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未読アイテムのみ表示する",
     "Vendors": "ベンダー"
@@ -969,7 +980,7 @@
       "TwitterHelp": "最新情報やリアルタイムのアプリケーション情報を常に把握できるように、フォローしてください。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIMユーザーガイドWiki",
-      "WikiHelp": "DIMの使い方やコミュニティ主導のユーザーガイドに貢献する方法を学びましょう。",
+      "WikiHelp": "DIMの使い方を学び、コミュニティ主導のユーザーガイドに貢献しましょう。",
       "YouTube": "YouTube",
       "YouTubeHelp": "DIMの使い方はYouTubeチャンネルでご確認ください。"
     },

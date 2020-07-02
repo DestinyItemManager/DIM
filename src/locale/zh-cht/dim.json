@@ -41,7 +41,9 @@
     "SetNotes": "Set notes to \"{{notes}}\" for item ID {{id}}",
     "SetTag": "Set tag to {{tag}} for item ID {{id}}",
     "Setting": "Set {{key}} to {{value}}",
-    "TagCleanup": "Cleaned up tags for dismantled items"
+    "TagCleanup": "Cleaned up {{count}} tag for dismantled items",
+    "TagCleanupUnknown": "Cleaned up some tags for dismantled items",
+    "TagCleanup_plural": "Cleaned up {{count}} tags for dismantled items"
   },
   "Bucket": {
     "Armor": "防具",
@@ -73,6 +75,8 @@
     "NotConnected": "您可能沒有連接到互聯網。",
     "NotConnectedOrBlocked": "你可能沒有連接到互聯網，或是廣告攔截和隱私拓展阻止了Bungie.net.",
     "NotLoggedIn": "請授權DIM以使用此應用程式",
+    "Slow": "Bungie.net is slow right now",
+    "SlowDetails": "Bungie.net is taking a long time to return your information. This can happen when a lot of players are in the game at once, or if Bungie.net is having issues. You also might be having an internet connection issue. We'll keep waiting for a response.",
     "SlowResponse": "Bungie.net響應緩慢。",
     "Throttled": "Bungie.net限制了DIM可以發起多少個請求。",
     "Twitter": "查看伺服器更新狀態:",
@@ -144,7 +148,8 @@
     "Title": "發生了一些錯誤"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
     "D2Desc": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
@@ -248,6 +253,7 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
     "RandomRoll": "顯示可以隨機特性掉落的物品",
     "RarityTier": "按照稀有度顯示.",
@@ -307,6 +313,7 @@
     "StatsBase": "根據基礎屬性值（不包括附加模組）篩選防具。",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
+    "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
     "Tags": {
       "Archive": "將很少需要的物品淡化顯示",
       "Dismantle": "顯示你想要拆除的物品.",
@@ -553,6 +560,8 @@
     "SearchPlaceholder": "篩檢程式（如“英雄哨戒“）",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
+    "SelectMinStatTotal": "Minimum Armor Stat Total",
+    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "選擇特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "設置一套最低光等的整體配裝(非單件物品壓低光等)",
@@ -678,6 +687,7 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "該模組在您的模組庫存中。",
+    "PowerCap": "",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReviewsTab": "評測",
@@ -837,6 +847,9 @@
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉範圍{{range}}",
     "PercentHelp": "點擊獲取更多關於品質屬性的資訊.",
+    "PowerCap": "Power Limit",
+    "PowerCapDisclaimer": "Power Limit information may be incorrect for armor from any raid, or weapons from the raids \"Last Wish\" and \"Garden of Salvation.\"",
+    "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "季節神器提升光等",
     "Prestige": "威望等級: {{level}}\n{{exp}}xp 于5明亮之塵之前.",
     "Quality": "品質",
@@ -930,8 +943,6 @@
   "Vendors": {
     "Catalysts": "催化劑",
     "Collections": "收藏品",
-    "DestinyMap": "在lowlines'Destiny map查看收集品",
-    "DestinySets": "在Destiny Set查看更多的裝備套組",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
     "Vendors": "商販"
