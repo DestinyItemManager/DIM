@@ -22,10 +22,7 @@ interface Props {
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
-  item.isDestiny2?.() &&
-  item.sockets &&
-  item.itemCategoryHashes &&
-  item.itemCategoryHashes.includes(39)
+  item.isDestiny2?.() && item.sockets && item.itemCategoryHashes.includes(39)
     ? _.compact(
         item.sockets.sockets.map((s) => {
           const hash = s.plug?.plugItem?.hash;

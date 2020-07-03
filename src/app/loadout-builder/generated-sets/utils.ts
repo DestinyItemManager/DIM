@@ -26,6 +26,11 @@ const unwantedSockets = new Set([
   3356843615, // Ornaments
   2457930460, // Empty masterwork slot
 ]);
+const unwantedCategories = new Set([
+  1742617626, // ItemCategory "Armor Mods: Ornaments"
+  1875601085, // ItemCategory "Armor Mods: Glow Effects"
+  1404791674, // ItemCategory "Ghost Mods: Projections"
+]);
 
 /**
  *  Filter out plugs that we don't want to show in the perk picker.
@@ -55,10 +60,7 @@ export function filterPlugs(socket: DimSocket) {
   // Remove unwanted sockets by category hash
   if (
     unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
-    (plugItem.itemCategoryHashes &&
-      (plugItem.itemCategoryHashes.includes(1742617626) || // exotic armor ornanments
-      plugItem.itemCategoryHashes.includes(1875601085) || // glows
-        plugItem.itemCategoryHashes.includes(1404791674))) // ghost projections
+    plugItem.itemCategoryHashes?.some((h) => unwantedCategories.has(h))
   ) {
     return false;
   }
