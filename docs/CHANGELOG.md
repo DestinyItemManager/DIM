@@ -1,5 +1,7 @@
 ## Next
 
+## 6.18.0 <span className="changelog-date">(2020-07-02)</span>
+
 * Breaker type is now shown on the item popup and in the Organizer.
 * New filter for breaker types on weapons, `breaker:`.
 * Fixed another crash on the vendors screen also caused by the Twitch gift sub shader.
