@@ -251,10 +251,8 @@ function LoadoutBuilder({
       <PageWithMenu.Contents>
         {filteredSets && processing && (
           <div className={styles.processing}>
-            <div className={styles.processingContents}>
-              <AppIcon icon={refreshIcon} spinning={true} />
-              {`Processing sets for ${selectedStore.name}`}
-            </div>
+            <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
+            <AppIcon icon={refreshIcon} spinning={true} />
           </div>
         )}
         {filteredSets ? (

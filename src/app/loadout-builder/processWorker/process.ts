@@ -16,6 +16,16 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
+function reverseStringCompare(a, b) {
+  if (b < a) {
+    return -1;
+  } else if (b > a) {
+    return 1;
+  }
+
+  return 0;
+}
+
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
@@ -233,31 +243,30 @@ export function process(
               if (setCount > RETURNED_ARMOR_SETS && groupedSets[lowestTier]) {
                 const lowestTierGroup = groupedSets[lowestTier];
                 const lowestTierStatMixes = Object.keys(lowestTierGroup);
+                let lowestTierStatMixesSize = lowestTierStatMixes.length;
 
                 if (lowestTierStatMixes.length) {
                   // Stats are sorted by order so this perfers sets by stat order preference
-                  const sortedStatMixes = lowestTierStatMixes.sort((a, b) => b.localeCompare(a));
-
-                  const leasePreferredStatMix = sortedStatMixes[sortedStatMixes.length - 1];
+                  const leastPreferredStatMix = lowestTierStatMixes.sort(reverseStringCompare)[
+                    lowestTierStatMixes.length - 1
+                  ];
 
                   setCount -= 1;
-                  lowestTierGroup[leasePreferredStatMix].sets
+                  lowestTierGroup[leastPreferredStatMix].sets
                     .sort((a, b) => a.maxPower - b.maxPower)
                     .pop();
 
                   // If there are no sets left remove the group
-                  if (!lowestTierGroup[leasePreferredStatMix].sets.length) {
-                    delete lowestTierGroup[leasePreferredStatMix];
+                  if (!lowestTierGroup[leastPreferredStatMix].sets.length) {
+                    delete lowestTierGroup[leastPreferredStatMix];
+                    lowestTierStatMixesSize -= 1;
                   }
                 }
 
                 // Remove the whole tier if there is nothing left in it and recalculate the lowest tier
-                if (!Object.keys(groupedSets[lowestTier]).length) {
+                if (lowestTierStatMixesSize === 0) {
                   delete groupedSets[lowestTier];
-                  lowestTier = parseInt(
-                    Object.keys(groupedSets).sort((a, b) => a.localeCompare(b))[0],
-                    10
-                  );
+                  lowestTier = parseInt(Object.keys(groupedSets).sort()[0], 10);
                 }
               }
             }

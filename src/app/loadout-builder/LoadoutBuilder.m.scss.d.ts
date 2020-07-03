@@ -5,7 +5,6 @@ interface CssExports {
   'menuContent': string;
   'page': string;
   'processing': string;
-  'processingContents': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

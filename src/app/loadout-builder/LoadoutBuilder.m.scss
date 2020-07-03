@@ -35,24 +35,22 @@
 }
 
 .processing {
-  position: fixed;
+  align-items: center;
+  background-color: black;
   display: flex;
-  justify-content: center;
-  right: 0;
-  left: 0;
-  margin: 0 auto;
+  font-size: 1.2em;
+  padding: 10px 10px;
+  position: fixed;
+  right: 14px;
   top: 50px;
+  white-space: pre-line;
   z-index: 50;
-}
 
-.processingContents {
-  background-color: #313233;
-  border-radius: 5px;
-  font-size: 1.4em;
-  padding: 3px 5px;
-  text-align: center;
+  > div {
+    margin-right: 8px;
+  }
 
   > span {
-    margin-right: 5px;
+    font-size: 1.4em;
   }
 }
