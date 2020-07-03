@@ -305,7 +305,7 @@ export function makeItem(
   // which are used for things that aren't currently set to ever cap
   if (powerCap && powerCap > 50000) powerCap = null;
 
-  // null out falsey values like a blank string for a url
+  // null out falsy values like a blank string for a url
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
@@ -376,6 +376,7 @@ export function makeItem(
     element,
     energy: instanceDef?.energy ?? null,
     powerCap,
+    breakerType: null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -526,6 +527,18 @@ export function makeItem(
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
     }
+  }
+
+  // a weapon can have an inherent breaker type, or gain one from socketed mods
+  // (or armor mods can sort of add them but let's not go there quite yet)
+  // this is presented as an else-type dichotomy here, but who knows what the future holds
+  if (itemDef.breakerTypeHash) {
+    createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
+  } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
+    const breakerTypeHash = createdItem.sockets.sockets.find(
+      (s) => s.plug?.plugItem.breakerTypeHash
+    )?.plug?.plugItem.breakerTypeHash;
+    if (breakerTypeHash) createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
   }
 
   // Infusion

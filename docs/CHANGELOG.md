@@ -1,6 +1,10 @@
 ## Next
 
+* New filter for breaker types on weapons, `breaker:`
+
 ## 6.17.1 <span className="changelog-date">(2020-07-01)</span>
+
+* Fix a crash with the Twitch gift sub shader.
 
 ## 6.17.0 <span className="changelog-date">(2020-06-28)</span>
 
