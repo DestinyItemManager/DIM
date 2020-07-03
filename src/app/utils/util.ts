@@ -39,13 +39,16 @@ export function objectifyArray<T>(array: T[], key: string | ((obj: any) => strin
           ? JSON.stringify(val[key])
           : false;
 
-      if (keyName !== false) acc[keyName] = val;
-      else {
+      if (keyName !== false) {
+        acc[keyName] = val;
+      } else {
         for (const eachKeyName of val[key]) {
           acc[eachKeyName] = val;
         }
       }
-    } else acc[key(val)] = val;
+    } else {
+      acc[key(val)] = val;
+    }
     return acc;
   }, {});
 }

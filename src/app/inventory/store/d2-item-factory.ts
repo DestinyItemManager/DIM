@@ -303,7 +303,9 @@ export function makeItem(
 
   // here is where we need to manually adjust unreasonable powerCap values,
   // which are used for things that aren't currently set to ever cap
-  if (powerCap && powerCap > 50000) powerCap = null;
+  if (powerCap && powerCap > 50000) {
+    powerCap = null;
+  }
 
   // null out falsy values like a blank string for a url
   const iconOverlay =
@@ -538,7 +540,9 @@ export function makeItem(
     const breakerTypeHash = createdItem.sockets.sockets.find(
       (s) => s.plug?.plugItem.breakerTypeHash
     )?.plug?.plugItem.breakerTypeHash;
-    if (breakerTypeHash) createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
+    if (breakerTypeHash) {
+      createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
+    }
   }
 
   // Infusion

@@ -64,6 +64,7 @@
       }
     ],
     "arrow-body-style": ["error", "as-needed"],
+    "curly": ["error", "all"],
     "no-return-await": "error",
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",

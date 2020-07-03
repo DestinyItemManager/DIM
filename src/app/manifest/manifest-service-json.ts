@@ -217,7 +217,9 @@ class ManifestService {
           for (const query of cacheBusterStrings) {
             try {
               response = await fetch(`https://www.bungie.net${components[table]}${query}`);
-              if (response.ok) break;
+              if (response.ok) {
+                break;
+              }
               error = error ?? response;
             } catch (e) {
               error = error ?? e;

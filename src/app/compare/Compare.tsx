@@ -688,8 +688,9 @@ function makeFakeStat(
   getStat: StatGetter,
   lowerBetter = false
 ) {
-  if (typeof displayProperties === 'string')
+  if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
+  }
   return {
     id,
     displayProperties,
