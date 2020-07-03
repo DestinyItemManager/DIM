@@ -92,8 +92,10 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
     return false;
   }
 
-  return plug.plugItem.itemCategoryHashes?.some(
-    (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563 || ich === 4176831154
+  return (
+    plug.plugItem.itemCategoryHashes?.some(
+      (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563 || ich === 4176831154
+    ) ?? false
   ); // weapon, then armor, then bonus (found on armor perks), then ghost mod
 }
 
