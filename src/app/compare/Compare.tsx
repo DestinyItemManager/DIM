@@ -514,9 +514,9 @@ class Compare extends React.Component<Props, State> {
         (i) =>
           // specifically for destiny 2 grenade launchers, let's not compare special with heavy.
           // all other weapon types with multiple ammos, are novelty exotic exceptions
-          exampleItem.isDestiny2() ||
-          i.isDestiny2() ||
-          exampleItem.itemCategoryHashes.includes(153950757) ||
+          !exampleItem.isDestiny2() ||
+          !i.isDestiny2() ||
+          !exampleItem.itemCategoryHashes.includes(153950757) ||
           exampleItem.ammoType === i.ammoType
       );
 

@@ -12,7 +12,7 @@ export function getSeason(item: D2Item, watermark: string | null): number {
     return D2CalculatedSeason;
   }
   if (
-    item.itemCategoryHashes.length ||
+    !item.itemCategoryHashes.length ||
     item.typeName === 'Unknown' ||
     item.itemCategoryHashes.some((itemHash) => D2SeasonToSource.categoryDenyList.includes(itemHash))
   ) {
