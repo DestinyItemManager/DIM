@@ -33,3 +33,24 @@
     min-width: 0;
   }
 }
+
+.processing {
+  align-items: center;
+  background-color: black;
+  display: flex;
+  font-size: 1.2em;
+  padding: 10px 10px;
+  position: fixed;
+  right: 14px;
+  top: 50px;
+  white-space: pre-line;
+  z-index: 50;
+
+  > div {
+    margin-right: 8px;
+  }
+
+  > span {
+    font-size: 1.4em;
+  }
+}

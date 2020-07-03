@@ -12,7 +12,7 @@ import {
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../types';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { canSetTakeMods } from './mod-utils';
+import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -176,15 +176,19 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
  * Filter sets down based on stat filters, locked perks, etc.
  */
 export function filterGeneratedSets(
-  sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   lockedSeasonalMods: readonly LockedModBase[],
   stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
-  enabledStats: Set<StatTypes>
+  enabledStats: Set<StatTypes>,
+  sets?: readonly ArmorSet[]
 ) {
+  if (!sets) {
+    return;
+  }
+
   let matchedSets = Array.from(sets);
 
   matchedSets = matchedSets.filter((set) => {
@@ -197,7 +201,10 @@ export function filterGeneratedSets(
     }
 
     // TODO this is too restrictive as there may be other combinations that can take the mods
-    if ($featureFlags.armor2ModPicker && !canSetTakeMods(set.firstValidSet, lockedArmor2ModMap)) {
+    if (
+      $featureFlags.armor2ModPicker &&
+      !canSetTakeGeneralAndSeasonalMods(set.firstValidSet, lockedArmor2ModMap)
+    ) {
       return false;
     }
 

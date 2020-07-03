@@ -20,6 +20,7 @@ const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-web
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const _ = require('lodash');
+const WorkerPlugin = require('worker-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -394,6 +395,8 @@ module.exports = (env) => {
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
       }),
+
+      new WorkerPlugin(),
 
       new LodashModuleReplacementPlugin({
         collections: true,
