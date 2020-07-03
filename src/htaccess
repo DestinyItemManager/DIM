@@ -736,6 +736,7 @@ AddEncoding br .br
     # Redirect unknown paths to index.html
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$
     RewriteRule (.*) index.html [QSA,L]
 </IfModule>
 
