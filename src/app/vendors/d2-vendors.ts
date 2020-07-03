@@ -132,7 +132,7 @@ export function toVendor(
   const currencies = _.compact(
     Array.from(vendorCurrencyHashes)
       .map((h) => defs.InventoryItem.get(h))
-      .filter((i) => !i.itemCategoryHashes.includes(41))
+      .filter((i) => !i.itemCategoryHashes?.includes(41))
   );
 
   return {

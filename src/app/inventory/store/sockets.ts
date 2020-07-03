@@ -379,10 +379,7 @@ function addPlugOption(
       plugOptions.push(plug);
     } else {
       // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-      if (
-        !built.plugItem.itemCategoryHashes ||
-        !built.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-      ) {
+      if (!built.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)) {
         plugOptions.push(built);
       }
     }

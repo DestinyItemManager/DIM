@@ -1317,7 +1317,7 @@ function searchFilters(
               socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
               socket.plug.plugItem.hash !== DEFAULT_GLOW &&
               !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-              !socket.plug.plugItem.itemCategoryHashes.includes(DEFAULT_GLOW_CATEGORY)
+              !socket.plug.plugItem.itemCategoryHashes?.includes(DEFAULT_GLOW_CATEGORY)
           )
         );
       },
