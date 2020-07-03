@@ -1,6 +1,9 @@
 ## Next
 
-* New filter for breaker types on weapons, `breaker:`
+* Breaker type is now shown on the item popup and in the Organizer.
+* New filter for breaker types on weapons, `breaker:`.
+* Fixed another crash on the vendors screen also caused by the Twitch gift sub shader.
+* Protect against certain weird cases where DIM can get stuck in a non-working state until you really, thoroughly, clear your cache.
 
 ## 6.17.1 <span className="changelog-date">(2020-07-01)</span>
 
