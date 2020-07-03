@@ -16,14 +16,67 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
-function reverseStringCompare(a, b) {
-  if (b < a) {
-    return -1;
-  } else if (b > a) {
-    return 1;
+type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+
+type SetTracker = {
+  tier: number;
+  statMixes: { statMix: string; armorSet: Mutable<ProcessArmorSet> }[];
+}[];
+
+function insertIntoSetTracker(
+  tier: number,
+  statMix: string,
+  armorSet: ProcessArmorSet,
+  setTracker: SetTracker
+): void {
+  if (setTracker.length === 0) {
+    setTracker.push({ tier, statMixes: [{ statMix, armorSet }] });
+    return;
   }
 
-  return 0;
+  for (let tierIndex = 0; tierIndex < setTracker.length; tierIndex++) {
+    const currentTier = setTracker[tierIndex];
+
+    if (tier > currentTier.tier) {
+      setTracker.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSet }] });
+      return;
+    }
+
+    if (tier === currentTier.tier) {
+      const currentStatMixes = currentTier.statMixes;
+
+      for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
+        const currentStatMix = currentStatMixes[statMixIndex];
+
+        if (statMix > currentStatMix.statMix) {
+          currentStatMixes.splice(statMixIndex, 0, { statMix, armorSet });
+          return;
+        }
+
+        if (currentStatMix.statMix === statMix) {
+          if (armorSet.maxPower > currentStatMix.armorSet.maxPower) {
+            currentStatMix.armorSet.sets = armorSet.sets.concat(currentStatMix.armorSet.sets);
+            currentStatMix.armorSet.firstValidSet = armorSet.firstValidSet;
+            currentStatMix.armorSet.maxPower = armorSet.maxPower;
+            currentStatMix.armorSet.firstValidSetStatChoices = armorSet.firstValidSetStatChoices;
+          } else {
+            currentStatMix.armorSet.sets = currentStatMix.armorSet.sets.concat(armorSet.sets);
+          }
+          return;
+        }
+
+        if (statMixIndex === currentStatMixes.length - 1) {
+          currentStatMixes.push({ statMix, armorSet });
+          return;
+        }
+      }
+    }
+
+    if (tierIndex === setTracker.length - 1) {
+      setTracker.push({ tier, statMixes: [{ statMix, armorSet }] });
+      return;
+    }
+  }
 }
 
 /**
@@ -137,8 +190,8 @@ export function process(
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
-  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-  const groupedSets: { [totalTier: number]: { [tiers: string]: Mutable<ProcessArmorSet> } } = {};
+  const setTracker: SetTracker = [];
+
   let lowestTier = 100;
   let setCount = 0;
 
@@ -199,74 +252,41 @@ export function process(
                 }
               }
 
-              let groupedSetsInTotalTier = groupedSets[totalTier];
-
-              if (!groupedSetsInTotalTier) {
-                groupedSets[totalTier] = {};
-                groupedSetsInTotalTier = groupedSets[totalTier];
-              }
-
-              const existingSetAtTier = groupedSetsInTotalTier[tiers];
-              if (existingSetAtTier) {
-                existingSetAtTier.sets.push({
-                  armor: armor.map((items) => items.map((item) => item.id)),
-                  statChoices,
-                  maxPower,
-                });
-                if (maxPower > existingSetAtTier.maxPower) {
-                  existingSetAtTier.firstValidSet = firstValidSet.map((item) => item.id);
-                  existingSetAtTier.maxPower = maxPower;
-                  existingSetAtTier.firstValidSetStatChoices = statChoices;
-                }
-              } else {
-                // First of its kind
-                groupedSetsInTotalTier[tiers] = {
-                  sets: [
-                    {
-                      armor: armor.map((items) => items.map((item) => item.id)),
-                      statChoices,
-                      maxPower,
-                    },
-                  ],
-                  stats: stats as {
-                    [statType in StatTypes]: number;
+              const newArmorSet = {
+                sets: [
+                  {
+                    armor: armor.map((items) => items.map((item) => item.id)),
+                    statChoices,
+                    maxPower,
                   },
-                  // TODO: defer calculating first valid set / statchoices / maxpower?
-                  firstValidSet: firstValidSet.map((item) => item.id),
-                  firstValidSetStatChoices: statChoices,
-                  maxPower,
-                };
-              }
+                ],
+                stats: stats as {
+                  [statType in StatTypes]: number;
+                },
+                // TODO: defer calculating first valid set / statchoices / maxpower?
+                firstValidSet: firstValidSet.map((item) => item.id),
+                firstValidSetStatChoices: statChoices,
+                maxPower,
+              };
+
+              insertIntoSetTracker(totalTier, tiers, newArmorSet, setTracker);
 
               setCount++;
 
-              if (setCount > RETURNED_ARMOR_SETS && groupedSets[lowestTier]) {
-                const lowestTierGroup = groupedSets[lowestTier];
-                const lowestTierStatMixes = Object.keys(lowestTierGroup);
-                let lowestTierStatMixesSize = lowestTierStatMixes.length;
+              if (setCount > RETURNED_ARMOR_SETS) {
+                const lowestTierSet = setTracker[setTracker.length - 1];
+                const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
 
-                if (lowestTierStatMixes.length) {
-                  // Stats are sorted by order so this perfers sets by stat order preference
-                  const leastPreferredStatMix = lowestTierStatMixes.sort(reverseStringCompare)[
-                    lowestTierStatMixes.length - 1
-                  ];
+                worstMix.armorSet.sets.pop();
+                setCount--;
 
-                  setCount -= 1;
-                  lowestTierGroup[leastPreferredStatMix].sets
-                    .sort((a, b) => a.maxPower - b.maxPower)
-                    .pop();
+                if (worstMix.armorSet.sets.length === 0) {
+                  lowestTierSet.statMixes.pop();
 
-                  // If there are no sets left remove the group
-                  if (!lowestTierGroup[leastPreferredStatMix].sets.length) {
-                    delete lowestTierGroup[leastPreferredStatMix];
-                    lowestTierStatMixesSize -= 1;
+                  if (lowestTierSet.statMixes.length === 0) {
+                    setTracker.pop();
+                    lowestTier = setTracker[setTracker.length - 1].tier;
                   }
-                }
-
-                // Remove the whole tier if there is nothing left in it and recalculate the lowest tier
-                if (lowestTierStatMixesSize === 0) {
-                  delete groupedSets[lowestTier];
-                  lowestTier = parseInt(Object.keys(groupedSets).sort()[0], 10);
                 }
               }
             }
@@ -276,11 +296,7 @@ export function process(
     }
   }
 
-  // TODO move to a smarter system where we throw away stuff that wont be in this
-  // to keep the memory footprint down. Also some sets may be missed if people ignore certain stats.
-  const finalSets = Object.values(groupedSets)
-    .map((byTier) => Object.values(byTier))
-    .flat();
+  const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSet)).flat();
 
   console.log(
     'found',
