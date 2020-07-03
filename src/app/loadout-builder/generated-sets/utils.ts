@@ -11,7 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, specialtyModSocketHashes } from 'app/utils/item-utils';
 import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
 
 /**
@@ -471,15 +471,19 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
   return (
     item.isDestiny2() &&
     matchesEnergy(item, mod) &&
-    // Matches socket plugsets
-    item.sockets &&
-    item.sockets.sockets.some(
-      (socket) =>
-        (socket.socketDefinition.reusablePlugSetHash &&
-          lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
-        (socket.socketDefinition.randomizedPlugSetHash &&
-          lockedItem.plugSetHash === socket.socketDefinition.randomizedPlugSetHash)
-    )
+    // is a seasonal mod and item has correct socket
+    ((specialtyModSocketHashes.includes(lockedItem.mod.plug.plugCategoryHash) &&
+      getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes.includes(
+        lockedItem.mod.plug.plugCategoryHash
+      )) ||
+      // or matches socket plugsets
+      item.sockets?.sockets.some(
+        (socket) =>
+          (socket.socketDefinition.reusablePlugSetHash &&
+            lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
+          (socket.socketDefinition.randomizedPlugSetHash &&
+            lockedItem.plugSetHash === socket.socketDefinition.randomizedPlugSetHash)
+      ))
   );
 }
 
