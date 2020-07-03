@@ -897,7 +897,7 @@
     "GDriveImportExplain": "You can restore legacy data stored in your browser or in Google Drive. Use this if you are just now upgrading DIM to v6 and had data stored before that.",
     "GDriveSignedIn": "Logged in to Google Drive as {{email}}",
     "GDriveSignInError": "Error signing in to Google Drive:",
-    "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
+    "GoogleApiBlocked": "You can't sign in to Google Drive because a content blocker is blocking it. If you need to import legacy data from Google Drive, disable content blockers and reload.",
     "IgnoredUsers": "Ignored reviewers",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
