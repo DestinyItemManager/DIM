@@ -269,13 +269,12 @@ export default React.forwardRef(function SearchFilterInput(
         onBlur={() => textcomplete.current?.hide()}
       />
 
-      {liveQuery.length === 0 ? (
-        <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
-          <AppIcon icon={helpIcon} />
-        </span>
-      ) : (
-        children
-      )}
+      {liveQuery.length !== 0 && children}
+
+      <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
+        <AppIcon icon={helpIcon} />
+      </span>
+
       {(liveQuery.length > 0 || alwaysShowClearButton) && (
         <span className="filter-bar-button" onClick={clearFilter} title={t('Header.Clear')}>
           <AppIcon icon={disabledIcon} />
