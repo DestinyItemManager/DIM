@@ -149,7 +149,7 @@
   },
   "ErrorPanel": {
     "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。",
-    "Troubleshooting": "Troubleshooting Guide"
+    "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
@@ -194,6 +194,7 @@
     "AmmoType": "按照弹药类型显示物品",
     "ArmorCategory": "按照类别显示防具.",
     "Ascended": "显示可以提高光等的物品.",
+    "Breaker": "按照对抗类型或对应的勇士类型筛选。",
     "BulkClear": "移除物品标签",
     "BulkClear_plural": "移除 {{count}} 件物品标签",
     "BulkRevert": "恢复物品标签",
@@ -556,12 +557,13 @@
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
     "OptimizerExplanationArmour2Mods": "属性等级计算不包括防具2.0模组",
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
+    "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "重置锁定物品",
     "SearchPlaceholder": "过滤器（如“英雄哨戒“）",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "SelectMinStatTotal": "Minimum Armor Stat Total",
-    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
+    "SelectMinStatTotal": "最小护甲属性总和",
+    "SelectMinStatTotalDescription": "设置单件护甲的最小属性总和（职业物品除外）。",
     "SelectPerks": "选择特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
@@ -720,6 +722,7 @@
     "Columns": {
       "Archetype": "原型",
       "BaseStats": "基础数值",
+      "Breaker": "对抗勇士",
       "CustomTotal": "自定义总计",
       "Damage": "伤害",
       "Element": "元素",
@@ -740,7 +743,7 @@
       "PerksMods": "特性、模组与着色器",
       "Quality": "质量 %",
       "Rating": "评分",
-      "Reacquirable": "Reacquirable",
+      "Reacquirable": "可重新获取",
       "Season": "赛季",
       "Source": "来源",
       "StatQuality": "属性质量",
@@ -887,7 +890,7 @@
     "GDriveImportExplain": "你可以还原浏览器或 Google 云端硬盘中的旧数据。如果你刚刚升级到 DIM v6，并在旧版中存有数据，请使用这个选项。",
     "GDriveSignInError": "登陆Google云端硬碟时出错:",
     "GDriveSignedIn": "已以 {{email}} 登录 Google 云端硬盘",
-    "GoogleApiBlocked": "Google云端硬盘不可用，可能是内容拦截器或广告拦截拓展阻止了Google云端硬盘的JavaScript。请在您的内容拦截器中设置DIM为白名单后重试。",
+    "GoogleApiBlocked": "You can't sign in to Google Drive because a content blocker is blocking it. If you need to import legacy data from Google Drive, disable content blockers and reload.",
     "Import": "导入数据备份",
     "ImportConfirmDimApi": "你确定要用此版本的数据覆盖标签、配装和设置吗？旧数据将被完全覆盖。",
     "ImportExport": "备份和导入",
