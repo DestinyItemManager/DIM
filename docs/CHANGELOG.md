@@ -1,5 +1,11 @@
 ## Next
 
+* Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
+* The filter help button is now always shown in the search bar, even when a search is active.
+* The item count in the search bar is now more accurate to what you see on the inventory screen.
+* Make it clearer that not having Google Drive set up doesn't matter that much since it's only for importing legacy data.
+* Better handling for if the DIM Sync API is down.
+
 ## 6.18.0 <span className="changelog-date">(2020-07-02)</span>
 
 * Breaker type is now shown on the item popup and in the Organizer.
