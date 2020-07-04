@@ -26,12 +26,13 @@ export function PowerCapDisclaimer({ item }: { item: DimItem }) {
       // or last wish and garden weapons
       (item.bucket.inWeapons &&
         (powerCapDisclaimer.includes(item.source) || missingSources.lastwish.includes(item.hash))))
-  )
+  ) {
     return (
       <PressTip elementType="span" tooltip={t('Stats.PowerCapDisclaimer')}>
         <AppIcon className="powerCapDisclaimer" icon={faExclamationTriangle} />
       </PressTip>
     );
+  }
 
   return null;
 }
