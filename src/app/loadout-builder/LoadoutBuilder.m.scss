@@ -1,3 +1,4 @@
+@import 'ceaser-easing';
 @import '../variables.scss';
 
 .page {
@@ -35,16 +36,19 @@
 }
 
 .processing {
-  align-items: center;
-  background-color: black;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
   font-size: 1.2em;
   padding: 10px 10px;
   position: fixed;
-  right: 14px;
-  top: 50px;
-  white-space: pre-line;
-  z-index: 50;
+  top: $header-height;
+  left: 50%;
+  transform: translateX(-50%);
+
+  white-space: nowrap;
+  z-index: 10;
 
   > div {
     margin-right: 8px;
@@ -53,4 +57,26 @@
   > span {
     font-size: 1.4em;
   }
+
+  @include phone-portrait {
+    width: 100%;
+  }
+}
+
+.processingEnter {
+  transform: translateY(-250px) translateX(-50%);
+}
+
+.processingEnter.processingEnterActive {
+  transform: translateY(-0) translateX(-50%);
+  transition: transform 200ms $easeOutCubic;
+}
+
+.processingExit {
+  transform: translateY(-0) translateX(-50%);
+}
+
+.processingExit.processingExitActive {
+  transform: translateY(-250px) translateX(-50%);
+  transition: transform 200ms $easeInCubic;
 }
