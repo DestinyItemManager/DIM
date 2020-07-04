@@ -95,12 +95,15 @@ function mapStateToProps() {
     }
   );
 
+  const statOrderSelector = createSelector(
+    (state: RootState) => settingsSelector(state).loStatSortOrder,
+    (loStatSortOrder: number[]) => loStatSortOrder.map((hash) => statHashToType[hash])
+  );
+
   return (state: RootState): StoreProps => {
-    const { loStatSortOrder, loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(
-      state
-    );
+    const { loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(state);
     return {
-      statOrder: loStatSortOrder.map((hash) => statHashToType[hash]),
+      statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
       minimumPower: loMinPower,
       minimumStatTotal: loMinStatTotal,
