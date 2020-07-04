@@ -93,7 +93,7 @@ export function getBaseStatValues(
   const baseStats = {};
 
   for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash].value;
+    baseStats[statHash] = stats[statHash]?.value || 0;
   }
 
   // Checking energy tells us if it is Armour 2.0
