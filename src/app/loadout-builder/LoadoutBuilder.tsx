@@ -1,7 +1,7 @@
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
@@ -34,6 +34,7 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { settingsSelector } from 'app/settings/reducer';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // Need to force the type as lodash converts the StatTypes type to string.
 const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
@@ -191,6 +192,8 @@ function LoadoutBuilder({
     ]
   );
 
+  const loadingNodeRef = useRef<HTMLDivElement>(null);
+
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -249,12 +252,25 @@ function LoadoutBuilder({
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
-        {filteredSets && processing && (
-          <div className={styles.processing}>
-            <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
-            <AppIcon icon={refreshIcon} spinning={true} />
-          </div>
-        )}
+        <TransitionGroup component={null}>
+          {filteredSets && processing && (
+            <CSSTransition
+              nodeRef={loadingNodeRef}
+              classNames={{
+                enter: styles.processingEnter,
+                enterActive: styles.processingEnterActive,
+                exit: styles.processingExit,
+                exitActive: styles.processingExitActive,
+              }}
+              timeout={{ enter: 500, exit: 500 }}
+            >
+              <div className={styles.processing} ref={loadingNodeRef}>
+                <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
+                <AppIcon icon={refreshIcon} spinning={true} />
+              </div>
+            </CSSTransition>
+          )}
+        </TransitionGroup>
         {filteredSets ? (
           <GeneratedSets
             sets={filteredSets}
