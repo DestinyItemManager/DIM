@@ -68,7 +68,7 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
           <h3>{t('Storage.GDriveImport')}</h3>
           <p>{t('Storage.GDriveImportExplain')}</p>
           {googleApiBlocked ? (
-            <p className="warning-block">{t('Storage.GoogleApiBlocked')}</p>
+            <p>{t('Storage.GoogleApiBlocked')}</p>
           ) : (
             <div>
               {adapter.enabled ? (
