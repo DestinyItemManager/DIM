@@ -8,25 +8,28 @@ import {
   LockedArmor2ModMap,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
-import { compareBy } from 'app/utils/comparators';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { compareBy } from '../../utils/comparators';
+import { Armor2ModPlugCategories } from '../../utils/item-utils';
 import { statHashes, statValues } from '../types';
-import { ProcessItemsByBucket, ProcessItem, ProcessArmorSet } from './types';
+import {
+  ProcessItemsByBucket,
+  ProcessItem,
+  ProcessArmorSet,
+  IntermediateProcessArmorSet,
+} from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
-type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-
 type SetTracker = {
   tier: number;
-  statMixes: { statMix: string; armorSet: Mutable<ProcessArmorSet> }[];
+  statMixes: { statMix: string; armorSet: IntermediateProcessArmorSet }[];
 }[];
 
 function insertIntoSetTracker(
   tier: number,
   statMix: string,
-  armorSet: ProcessArmorSet,
+  armorSet: IntermediateProcessArmorSet,
   setTracker: SetTracker
 ): void {
   if (setTracker.length === 0) {
@@ -146,9 +149,8 @@ export function process(
     )
   );
 
-  // TODO I think we can widen this now. It runs fine with no limit and 2,000,000 items but we should check memory usage. Maybe make it 1,000,000?
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
-  const combosLimit = 500000;
+  const combosLimit = 2_000_000;
 
   // Get the keys of the object, sorted by total stats descending
   const makeKeys = (obj: { [key: string]: ProcessItem[] }) =>
@@ -220,7 +222,7 @@ export function process(
 
               const maxPower = getPower(firstValidSet);
 
-              const stats = {};
+              const stats: any = {};
               for (const stat of statChoices) {
                 let index = 0;
                 for (const key of statOrder) {
@@ -251,11 +253,10 @@ export function process(
                   continue;
                 }
               }
-
-              const newArmorSet = {
+              const newArmorSet: IntermediateProcessArmorSet = {
                 sets: [
                   {
-                    armor: armor.map((items) => items.map((item) => item.id)),
+                    armor,
                     statChoices,
                     maxPower,
                   },
@@ -263,8 +264,7 @@ export function process(
                 stats: stats as {
                   [statType in StatTypes]: number;
                 },
-                // TODO: defer calculating first valid set / statchoices / maxpower?
-                firstValidSet: firstValidSet.map((item) => item.id),
+                firstValidSet,
                 firstValidSetStatChoices: statChoices,
                 maxPower,
               };
@@ -308,7 +308,7 @@ export function process(
     'ms'
   );
 
-  return { sets: finalSets, combos, combosWithoutCaps };
+  return { sets: flattenSets(finalSets), combos, combosWithoutCaps };
 }
 
 function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
@@ -516,4 +516,15 @@ function getBaseStatValues(
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
   return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
+}
+
+function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
+  return sets.map((set) => ({
+    ...set,
+    sets: set.sets.map((armorSet) => ({
+      ...armorSet,
+      armor: armorSet.armor.map((items) => items.map((item) => item.id)),
+    })),
+    firstValidSet: set.firstValidSet.map((item) => item.id),
+  }));
 }
