@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPickerState } from './item-picker';
 import Sheet from '../dim-ui/Sheet';
@@ -61,119 +61,108 @@ type DispatchProps = typeof mapDispatchToProps;
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
-interface State {
-  query: string;
-  equip: boolean;
-  height?: number;
-}
+function ItemPicker({
+  equip,
+  preferEquip,
+  allItems,
+  prompt,
+  searchConfig,
+  filters,
+  itemSortOrder,
+  hideStoreEquip,
+  sortBy,
+  isPhonePortrait,
+  ignoreSelectedPerks,
+  onItemSelected,
+  onCancel,
+  onSheetClosed,
+}: Props) {
+  const [query, setQuery] = useState('');
+  const [equipToggled, setEquipToggled] = useState(equip ?? preferEquip);
+  const [height, setHeight] = useState<number | undefined>(undefined);
 
-class ItemPicker extends React.Component<Props, State> {
-  state: State = {
-    query: '',
-    equip: this.props.equip === undefined ? this.props.preferEquip : this.props.equip,
+  const itemContainer = useRef<HTMLDivElement>(null);
+  const filterInput = useRef<SearchFilterRef>(null);
+
+  useEffect(() => {
+    if (itemContainer.current && !height) {
+      setHeight(itemContainer.current.clientHeight);
+    }
+  }, [height]);
+
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const autoFocus =
+    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
+  const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
+    onItemSelected({ item, equip: equipToggled });
+    onClose();
   };
-  private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterRef>();
 
-  componentDidMount() {
-    if (this.itemContainer.current) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
-    }
-  }
+  const onSheetClosedFn = () => {
+    onCancel();
+    onSheetClosed();
+  };
 
-  componentDidUpdate() {
-    if (this.itemContainer.current && !this.state.height) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
-    }
-  }
+  const setEquip = () => {
+    setEquipToggled(true);
+    setSetting('itemPickerEquip', true);
+  };
+  const setStore = () => {
+    setEquipToggled(false);
+    setSetting('itemPickerEquip', false);
+  };
 
-  render() {
-    const {
-      allItems,
-      prompt,
-      searchConfig,
-      filters,
-      itemSortOrder,
-      hideStoreEquip,
-      sortBy,
-    } = this.props;
-    const { query, equip, height } = this.state;
-
-    // On iOS at least, focusing the keyboard pushes the content off the screen
-    const autoFocus =
-      !this.props.isPhonePortrait &&
-      !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
-    const header = (
-      <div>
-        <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
-        <div className="item-picker-search">
-          <SearchFilterInput
-            ref={this.filterInput}
-            searchConfig={searchConfig}
-            placeholder={t('ItemPicker.SearchPlaceholder')}
-            autoFocus={autoFocus}
-            onQueryChanged={this.onQueryChanged}
-          />
-          {!hideStoreEquip && (
-            <div className="split-buttons">
-              <button className={clsx('dim-button', { selected: equip })} onClick={this.setEquip}>
-                {t('MovePopup.Equip')}
-              </button>
-              <button className={clsx('dim-button', { selected: !equip })} onClick={this.setStore}>
-                {t('MovePopup.Store')}
-              </button>
-            </div>
-          )}
-        </div>
+  const header = (
+    <div>
+      <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
+      <div className="item-picker-search">
+        <SearchFilterInput
+          ref={filterInput}
+          searchConfig={searchConfig}
+          placeholder={t('ItemPicker.SearchPlaceholder')}
+          autoFocus={autoFocus}
+          onQueryChanged={setQuery}
+        />
+        {!hideStoreEquip && (
+          <div className="split-buttons">
+            <button className={clsx('dim-button', { selected: equipToggled })} onClick={setEquip}>
+              {t('MovePopup.Equip')}
+            </button>
+            <button className={clsx('dim-button', { selected: !equipToggled })} onClick={setStore}>
+              {t('MovePopup.Store')}
+            </button>
+          </div>
+        )}
       </div>
-    );
+    </div>
+  );
 
-    const filter = filters.filterFunction(query);
-
+  const filter = useMemo(() => filters.filterFunction(query), [filters, query]);
+  const items = useMemo(() => {
     let items = sortItems(allItems.filter(filter), itemSortOrder);
     if (sortBy) {
       items = _.sortBy(items, sortBy);
     }
+    return items;
+  }, [allItems, filter, itemSortOrder, sortBy]);
 
-    return (
-      <Sheet onClose={this.onSheetClosed} header={header} sheetClassName="item-picker">
-        {({ onClose }) => (
-          <div className="sub-bucket" ref={this.itemContainer} style={{ height }}>
-            {items.map((item) => (
-              <ConnectedInventoryItem
-                key={item.index}
-                item={item}
-                onClick={() => this.onItemSelected(item, onClose)}
-                ignoreSelectedPerks={this.props.ignoreSelectedPerks}
-              />
-            ))}
-          </div>
-        )}
-      </Sheet>
-    );
-  }
-
-  private onQueryChanged = (query: string) => this.setState({ query });
-
-  private onItemSelected = (item: DimItem, onClose: () => void) => {
-    this.props.onItemSelected({ item, equip: this.state.equip });
-    onClose();
-  };
-
-  private onSheetClosed = () => {
-    this.props.onCancel();
-    this.props.onSheetClosed();
-  };
-
-  private setEquip = () => {
-    this.setState({ equip: true });
-    this.props.setSetting('itemPickerEquip', true);
-  };
-  private setStore = () => {
-    this.setState({ equip: false });
-    this.props.setSetting('itemPickerEquip', false);
-  };
+  return (
+    <Sheet onClose={onSheetClosedFn} header={header} sheetClassName="item-picker">
+      {({ onClose }) => (
+        <div className="sub-bucket" ref={itemContainer} style={{ height }}>
+          {items.map((item) => (
+            <ConnectedInventoryItem
+              key={item.index}
+              item={item}
+              onClick={() => onItemSelectedFn(item, onClose)}
+              ignoreSelectedPerks={ignoreSelectedPerks}
+            />
+          ))}
+        </div>
+      )}
+    </Sheet>
+  );
 }
 
 export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemPicker);
