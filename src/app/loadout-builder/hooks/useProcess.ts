@@ -1,6 +1,14 @@
 import { wrap, releaseProxy } from 'comlink';
 import { useEffect, useState, useMemo } from 'react';
-import { ItemsByBucket, LockedMap, LockedArmor2ModMap, ArmorSet, StatTypes } from '../types';
+import {
+  ItemsByBucket,
+  LockedMap,
+  LockedArmor2ModMap,
+  ArmorSet,
+  StatTypes,
+  MinMaxIgnored,
+  MinMax,
+} from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
   ProcessItemsByBucket,
@@ -16,6 +24,7 @@ interface ProcessState {
     sets: ArmorSet[];
     combos: number;
     combosWithoutCaps: number;
+    statRanges?: { [stat in StatTypes]: MinMax };
   } | null;
   currentCleanup: (() => void) | null;
 }
@@ -30,7 +39,8 @@ export function useProcess(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
-  statOrder: StatTypes[]
+  statOrder: StatTypes[],
+  statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -43,7 +53,8 @@ export function useProcess(
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
-    statOrder
+    statOrder,
+    statFilters
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -70,8 +81,15 @@ export function useProcess(
 
     const workerStart = performance.now();
     worker
-      .process(processItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder)
-      .then(({ sets, combos, combosWithoutCaps }) => {
+      .process(
+        processItems,
+        lockedItems,
+        lockedArmor2ModMap,
+        assumeMasterwork,
+        statOrder,
+        statFilters
+      )
+      .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
 
@@ -81,6 +99,7 @@ export function useProcess(
             sets: hydratedSets,
             combos,
             combosWithoutCaps,
+            statRanges,
           },
           currentCleanup: null,
         });
@@ -89,7 +108,7 @@ export function useProcess(
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder]);
+  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder, statFilters]);
 
   return { result, processing };
 }
@@ -106,7 +125,8 @@ function useWorkerAndCleanup(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
-  statOrder: StatTypes[]
+  statOrder: StatTypes[],
+  statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
@@ -114,6 +134,7 @@ function useWorkerAndCleanup(
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
+    statFilters,
   ]);
 
   // cleanup the worker on unmount
