@@ -10,7 +10,7 @@ import { Armor2ModPlugCategories, getItemDamageShortName } from 'app/utils/item-
 import { doEnergiesMatch } from './generated-sets/mod-utils';
 import { canSlotMod } from './generated-sets/utils';
 import { DimItem } from 'app/inventory/item-types';
-import { getLockedModStats, getBaseStatValues } from './utils';
+import { getBaseStatValues } from './utils';
 
 const bucketsToCategories = {
   [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
@@ -62,18 +62,17 @@ export function filterItems(
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
-    const lockedModStats = getLockedModStats(locked, lockedMods);
 
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
-          // if the item is not a class item, make sure it meets the minimum total stat
-          (bucket === LockableBuckets.classitem ||
-            _.sum(Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats))) >=
-              minimumStatTotal) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
-          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
+          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
+          // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
+          (bucket === LockableBuckets.classitem ||
+            locked?.length ||
+            _.sum(Object.values(getBaseStatValues(item, assumeMasterwork))) >= minimumStatTotal)
       );
     }
   });
