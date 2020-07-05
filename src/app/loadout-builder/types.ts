@@ -122,7 +122,6 @@ export const LockableBuckets = {
   chest: 14239492,
   leg: 20886954,
   classitem: 1585787867,
-  ghost: 4023194814,
 };
 
 export const statHashes: { [type in StatTypes]: number } = {
