@@ -3,6 +3,7 @@
 interface CssExports {
   'menu': string;
   'menuContent': string;
+  'mobileInfo': string;
   'page': string;
   'processing': string;
   'processingEnter': string;

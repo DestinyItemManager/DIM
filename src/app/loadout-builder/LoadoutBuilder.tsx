@@ -138,6 +138,8 @@ function LoadoutBuilder({
 
   const filter = filters.filterFunction(query);
 
+  const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
+
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
   const enabledStats = useMemo(
@@ -204,6 +206,10 @@ function LoadoutBuilder({
 
   const menuContent = (
     <div className={styles.menuContent}>
+      {mobile && (
+        <div className={styles.mobileInfo}>{t('LoadoutBuilder.CloseFilterToProcess')}</div>
+      )}
+
       <SearchFilterInput
         searchConfig={searchConfig}
         placeholder={t('LoadoutBuilder.SearchPlaceholder')}

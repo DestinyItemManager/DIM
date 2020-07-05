@@ -537,6 +537,7 @@
     "BurnTypeVoid": "Void",
     "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
+    "CloseFilterToProcess": "Collapse the filter if you cannot see build results.",
     "Combinations": "1 combination",
     "Combinations_plural": "{{count, number}} combinations",
     "CreateLoadout": "+ Loadout",
