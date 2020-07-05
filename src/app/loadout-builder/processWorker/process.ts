@@ -10,7 +10,7 @@ import {
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
 import { Armor2ModPlugCategories } from '../../utils/item-utils';
-import { statHashes, statValues } from '../types';
+import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
   ProcessItem,
@@ -108,10 +108,13 @@ export function process(
     return value;
   };
 
+  const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
+
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
+      orderedStatValues,
       lockedItems[LockableBuckets.helmet],
       lockedArmor2ModMap[Armor2ModPlugCategories.helmet]
     )
@@ -120,6 +123,7 @@ export function process(
     _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
+      orderedStatValues,
       lockedItems[LockableBuckets.gauntlets],
       lockedArmor2ModMap[Armor2ModPlugCategories.gauntlets]
     )
@@ -128,6 +132,7 @@ export function process(
     _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
+      orderedStatValues,
       lockedItems[LockableBuckets.chest],
       lockedArmor2ModMap[Armor2ModPlugCategories.chest]
     )
@@ -136,6 +141,7 @@ export function process(
     _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
+      orderedStatValues,
       lockedItems[LockableBuckets.leg],
       lockedArmor2ModMap[Armor2ModPlugCategories.leg]
     )
@@ -144,6 +150,7 @@ export function process(
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix(
       assumeMasterwork,
+      orderedStatValues,
       lockedItems[LockableBuckets.classitem],
       lockedArmor2ModMap[Armor2ModPlugCategories.classitem]
     )
@@ -330,6 +337,7 @@ const emptyStats = [JSON.stringify(new Array(_.size(statHashes)).fill(0))];
  */
 function byStatMix(
   assumeMasterwork: boolean,
+  orderedStatValues: number[],
   lockedItems?: readonly LockedItemType[],
   lockedArmor2Mods?: LockedArmor2Mod[]
 ) {
@@ -363,7 +371,12 @@ function byStatMix(
       return emptyStats;
     }
 
-    const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork, lockedModStats);
+    const mixes: number[][] = generateMixesFromPerksOrStats(
+      item,
+      assumeMasterwork,
+      orderedStatValues,
+      lockedModStats
+    );
 
     if (mixes.length === 1) {
       return mixes.map((m) => JSON.stringify(m));
@@ -428,6 +441,7 @@ function getPower(items: ProcessItem[]) {
 function generateMixesFromPerksOrStats(
   item: ProcessItem,
   assumeArmor2IsMasterwork: boolean | null,
+  orderedStatValues: number[],
   lockedModStats: { [statHash: number]: number }
 ) {
   const stats = item.stats;
@@ -436,7 +450,9 @@ function generateMixesFromPerksOrStats(
     return [];
   }
 
-  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
+  const mixes: number[][] = [
+    getBaseStatValues(item, assumeArmor2IsMasterwork, orderedStatValues, lockedModStats),
+  ];
 
   if (stats && item.sockets && !item.hasEnergy) {
     for (const socket of item.sockets.sockets) {
@@ -447,7 +463,7 @@ function generateMixesFromPerksOrStats(
             const mixNum = mixes.length;
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
               const existingMix = mixes[mixIndex];
-              const optionStat = statValues.map((statHash, index) => {
+              const optionStat = orderedStatValues.map((statHash, index) => {
                 const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
                 const optionPlugValue = plug.stats?.[statHash] || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
@@ -467,11 +483,12 @@ function generateMixesFromPerksOrStats(
 function getBaseStatValues(
   item: ProcessItem,
   assumeMasterwork: boolean | null,
+  orderedStatValues: number[],
   lockedModStats: { [statHash: number]: number }
 ) {
   const baseStats = {};
 
-  for (const statHash of statValues) {
+  for (const statHash of orderedStatValues) {
     baseStats[statHash] = item.stats[statHash];
   }
 
@@ -496,7 +513,7 @@ function getBaseStatValues(
       const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
       if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
-        for (const statHash of statValues) {
+        for (const statHash of orderedStatValues) {
           if (socket.plug.stats[statHash]) {
             baseStats[statHash] -= socket.plug.stats[statHash];
           }
@@ -505,7 +522,7 @@ function getBaseStatValues(
     }
 
     if (assumeMasterwork) {
-      for (const statHash of statValues) {
+      for (const statHash of orderedStatValues) {
         baseStats[statHash] += 2;
       }
     }
@@ -515,7 +532,7 @@ function getBaseStatValues(
     });
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
-  return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
+  return orderedStatValues.map((statHash) => Math.max(baseStats[statHash], 0));
 }
 
 function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
