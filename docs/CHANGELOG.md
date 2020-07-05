@@ -1,6 +1,7 @@
 ## Next
 
 * Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
+* Removed ghosts from loadout optimizer as they don't have enough interesting perks to build into loadouts.
 * The filter help button is now always shown in the search bar, even when a search is active.
 * The item count in the search bar is now more accurate to what you see on the inventory screen.
 * Make it clearer that not having Google Drive set up doesn't matter that much since it's only for importing legacy data.
