@@ -87,7 +87,7 @@ export function generateMixesFromPerksOrStats(
 export function getBaseStatValues(
   item: DimItem,
   assumeMasterwork: boolean | null,
-  lockedModStats: { [statHash: number]: number }
+  lockedModStats?: { [statHash: number]: number }
 ) {
   const stats = _.keyBy(item.stats, (stat) => stat.statHash);
   const baseStats = {};
@@ -126,9 +126,11 @@ export function getBaseStatValues(
       }
     }
     // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
-    _.forIn(lockedModStats, (value, statHash) => {
-      baseStats[statHash] += value;
-    });
+    if (lockedModStats) {
+      _.forIn(lockedModStats, (value, statHash) => {
+        baseStats[statHash] += value;
+      });
+    }
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
   return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
