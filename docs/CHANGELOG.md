@@ -1,5 +1,7 @@
 ## Next
 
+## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
+
 * Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
 * Removed ghosts from loadout optimizer as they don't have enough interesting perks to build into loadouts.
 * The filter help button is now always shown in the search bar, even when a search is active.
