@@ -340,9 +340,6 @@ export function process(
     }
   }
 
-  console.log(`totalTiers: ${setTracker.map((set) => set.tier)}`);
-  console.log(`totalSets: ${setCount}`);
-
   const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSet)).flat();
 
   console.log(

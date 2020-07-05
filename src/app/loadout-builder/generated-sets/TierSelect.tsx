@@ -8,6 +8,7 @@ import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
 import BungieImage from 'app/dim-ui/BungieImage';
+import clsx from 'clsx';
 
 const IGNORE = 'ignore';
 const INCLUDE = 'include';
@@ -186,7 +187,7 @@ function MinMaxSelectInner({
         t('LoadoutBuilder.SelectMax')
        */}
       {_.range(min, max + 1).map((tier) => (
-        <option key={tier} value={tier}>
+        <option key={tier} value={tier} className={clsx(ignored && styles.hiddenOption)}>
           {t('LoadoutBuilder.TierNumber', {
             tier,
           })}
@@ -195,10 +196,10 @@ function MinMaxSelectInner({
       <option key="-" value="-" className={styles.hiddenOption}>
         -
       </option>
-      <option key={IGNORE} value={IGNORE} className={ignored ? styles.hiddenOption : ''}>
+      <option key={IGNORE} value={IGNORE} className={clsx(ignored && styles.hiddenOption)}>
         {t('LoadoutBuilder.StatTierIgnoreOption')}
       </option>
-      <option key={INCLUDE} value={INCLUDE} className={ignored ? '' : styles.hiddenOption}>
+      <option key={INCLUDE} value={INCLUDE} className={clsx(!ignored && styles.hiddenOption)}>
         {t('LoadoutBuilder.StatTierIncludeOption')}
       </option>
     </select>
