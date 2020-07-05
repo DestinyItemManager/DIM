@@ -486,7 +486,7 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
 /** Whether this item is eligible for being in loadout builder */
 export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
-  return item.bucket.inArmor || item.bucket.hash === 4023194814;
+  return item.bucket.inArmor;
 }
 
 /**

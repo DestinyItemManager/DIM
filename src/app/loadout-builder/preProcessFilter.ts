@@ -67,9 +67,8 @@ export function filterItems(
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
-          // if the item is not a ghost of class item, make sure it meets the minimum total stat
+          // if the item is not a class item, make sure it meets the minimum total stat
           (bucket === LockableBuckets.classitem ||
-            bucket === LockableBuckets.ghost ||
             _.sum(Object.values(getBaseStatValues(item, assumeMasterwork, lockedModStats))) >=
               minimumStatTotal) &&
           // handle locked items and mods cases
