@@ -34,9 +34,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
   const isMasterworkedStat =
-    item?.isDestiny2() &&
-    item.masterworkInfo &&
-    stat.statHash === item.masterworkInfo.stats?.[0].hash;
+    item?.isDestiny2() && stat.statHash === item.masterworkInfo?.stats?.[0].hash;
   const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.stats?.[0].value) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
@@ -173,7 +171,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
     item?.isDestiny2() &&
     (item?.bucket.inArmor
       ? item.masterwork && item.energy
-      : item.masterworkInfo && stat.statHash === item.masterworkInfo.stats?.[0].hash);
+      : stat.statHash === item.masterworkInfo?.stats?.[0].hash);
   const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.stats?.[0].value) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
