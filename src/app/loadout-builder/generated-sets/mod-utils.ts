@@ -185,6 +185,10 @@ export function canSetTakeGeneralAndSeasonalMods(
 ) {
   const assignments: Record<number, LockedArmor2Mod[]> = {};
 
+  for (const item of set) {
+    assignments[item.hash] = new Array<LockedArmor2Mod>();
+  }
+
   // we ignore slot specific mods as they are prefiltered so should match up
   assignGeneralMods(set, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
   assignAllSeasonalMods(set, lockedArmor2Mods.seasonal, assignments);
