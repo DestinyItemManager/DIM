@@ -40,7 +40,7 @@ export default function PlugTooltip({
       (stat) =>
         stat.value > 0 &&
         stat.statTypeHash &&
-        item.masterworkInfo?.stats?.[0].hash === stat.statTypeHash
+        item.masterworkInfo?.stats?.some((s) => s.hash === stat.statTypeHash)
     ) && <span className="synergyStat"> ({item.masterworkInfo.stats[0].name})</span>;
 
   return (

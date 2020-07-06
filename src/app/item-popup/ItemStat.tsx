@@ -33,9 +33,16 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
+
+  const masterworkIndex =
+    (item?.isDestiny2() &&
+      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
+    0;
+
   const isMasterworkedStat =
-    item?.isDestiny2() && stat.statHash === item.masterworkInfo?.stats?.[0].hash;
-  const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.stats?.[0].value) || 0;
+    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const masterworkValue =
+    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
@@ -167,12 +174,16 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
     getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
+
+  const masterworkIndex =
+    (item?.isDestiny2() &&
+      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
+    0;
+
   const isMasterworkedStat =
-    item?.isDestiny2() &&
-    (item?.bucket.inArmor
-      ? item.masterwork && item.energy
-      : stat.statHash === item.masterworkInfo?.stats?.[0].hash);
-  const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.stats?.[0].value) || 0;
+    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const masterworkValue =
+    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);

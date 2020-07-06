@@ -1104,9 +1104,8 @@ function searchFilters(
             filterValue
           );
         }
-        return (
-          hashes.statHashByName[filterValue] && // make sure it exists or undefined can match undefined
-          hashes.statHashByName[filterValue] === item.masterworkInfo?.stats?.[0].hash
+        return item.masterworkInfo?.stats?.some(
+          (s) => s.hash === hashes.statHashByName?.[filterValue]
         );
       },
       season(item: D2Item, filterValue: string) {
