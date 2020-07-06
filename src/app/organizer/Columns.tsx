@@ -497,10 +497,8 @@ export function getColumns(
         value: (item) =>
           item.isDestiny2()
             ? `${item.masterworkInfo?.stats?.[0]?.name ?? ''}${
-                item.masterworkInfo?.stats?.[1]?.name
-                  ? ', ' + item.masterworkInfo.stats[1].name ?? ''
-                  : ''
-              }`
+                item.masterworkInfo?.stats?.[1]?.name ? ', ' : ''
+              }${item.masterworkInfo?.stats?.[1]?.name ?? ''}`
             : undefined,
       },
     destinyVersion === 2 &&
