@@ -104,18 +104,18 @@ function buildForsakenMasterworkStats(
         ) ?? null;
     }
 
-    const statDef = defs.Stat.get(masterwork.statTypeHash);
-
     return {
       typeName: null,
       typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
       typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
       tier: masterwork.value,
-      stats: {
-        hash: masterwork.statTypeHash,
-        name: statDef.displayProperties.name,
-        value: masterworkSocket.plug.stats?.[masterwork.statTypeHash] || 0,
-      }[0],
+      stats: [
+        {
+          hash: masterwork.statTypeHash,
+          name: defs.Stat.get(masterwork.statTypeHash).displayProperties.name,
+          value: masterworkSocket.plug.stats?.[masterwork.statTypeHash] || 0,
+        },
+      ],
     };
   }
   return null;
