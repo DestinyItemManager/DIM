@@ -494,7 +494,7 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
-        value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined),
+        value: (item) => (item.isDestiny2() ? item.masterworkInfo?.stats?.[0].name : undefined),
       },
     destinyVersion === 2 &&
       isWeapon && {
