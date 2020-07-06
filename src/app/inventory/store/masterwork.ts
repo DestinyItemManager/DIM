@@ -133,18 +133,18 @@ function buildMasterworkInfo(
     return null;
   }
   const plugObjective = socket.plug.plugObjectives[0];
+  const investmentStats = socket.plug.plugItem.investmentStats;
+  const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
 
-  const stats = socket.plug.plugItem.investmentStats.map((stat) => ({
+  if (!investmentStats?.length || !objectiveDef) {
+    return null;
+  }
+
+  const stats = investmentStats.map((stat) => ({
     hash: stat.statTypeHash,
     name: defs.Stat.get(stat.statTypeHash).displayProperties.name,
     value: socket.plug?.stats?.[stat.statTypeHash] || 0,
   }));
-
-  const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-
-  if (!objectiveDef || !stats) {
-    return null;
-  }
 
   return {
     progress: plugObjective.progress,
