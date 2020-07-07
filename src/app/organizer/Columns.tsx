@@ -14,6 +14,7 @@ import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
   getItemPowerCapFinalSeason,
+  getMasterworkStatNames,
 } from 'app/utils/item-utils';
 
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -495,11 +496,7 @@ export function getColumns(
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
         value: (item) =>
-          item.isDestiny2()
-            ? `${item.masterworkInfo?.stats?.[0]?.name ?? ''}${
-                item.masterworkInfo?.stats?.[1]?.name ? ', ' : ''
-              }${item.masterworkInfo?.stats?.[1]?.name ?? ''}`
-            : undefined,
+          item.isDestiny2() ? getMasterworkStatNames(item.masterworkInfo) : undefined,
       },
     destinyVersion === 2 &&
       isWeapon && {

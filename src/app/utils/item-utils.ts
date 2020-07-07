@@ -3,7 +3,7 @@ import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket, DimMasterwork } from 'app/inventory/item-types';
 
 import modMetadataBySlotTag from 'data/d2/specialty-modslot-metadata.json';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
@@ -101,3 +101,12 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
   item.isDestiny2() ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
+
+export function getMasterworkStatNames(mw: DimMasterwork | null) {
+  let mwStatName = '';
+  const loops = mw?.stats?.length || 0;
+  for (let i = 0; i < loops; i++) {
+    mwStatName += `${mw?.stats?.[i]?.name ?? ''}${mw?.stats?.[i + 1]?.name ? ', ' : ''}`;
+  }
+  return mwStatName;
+}
