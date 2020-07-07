@@ -1,7 +1,7 @@
 import { LockableBuckets, LockedModBase, LockedArmor2ModMap } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod } from '../types';
 import { count } from '../../utils/util';
 import {
   DestinyInventoryItemDefinition,
@@ -9,7 +9,6 @@ import {
   DestinyItemSubType,
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
-import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../types';
 import { getSpecialtySocketMetadata, specialtyModSocketHashes } from 'app/utils/item-utils';
 import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
@@ -102,20 +101,6 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
-function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
-  const comparators: Comparator<ArmorSet>[] = [];
-
-  comparators.push(compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)));
-
-  statOrder.forEach((statType) => {
-    if (enabledStats.has(statType)) {
-      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statType])));
-    }
-  });
-
-  return comparators;
-}
-
 /**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
  * seasonalMods. Currently it does not care for the element affinity or the armour
@@ -174,15 +159,12 @@ function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[])
 
 /**
  * Filter sets down based on stat filters, locked perks, etc.
+ * TODO This needs to become a sorter, not a filter. All 'filtering' should be done in process.
  */
 export function filterGeneratedSets(
-  minimumPower: number,
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   lockedSeasonalMods: readonly LockedModBase[],
-  stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
-  statOrder: StatTypes[],
-  enabledStats: Set<StatTypes>,
   sets?: readonly ArmorSet[]
 ) {
   if (!sets) {
@@ -192,10 +174,6 @@ export function filterGeneratedSets(
   let matchedSets = Array.from(sets);
 
   matchedSets = matchedSets.filter((set) => {
-    if (set.maxPower < minimumPower) {
-      return false;
-    }
-
     if (lockedSeasonalMods.length && !canAllModsBeUsed(set, lockedSeasonalMods)) {
       return false;
     }
@@ -211,11 +189,7 @@ export function filterGeneratedSets(
     return true;
   });
 
-  matchedSets = matchedSets.sort(
-    chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
-  );
-
-  matchedSets = getBestSets(matchedSets, lockedMap, stats);
+  matchedSets = getBestSets(matchedSets, lockedMap);
 
   return matchedSets;
 }
@@ -223,23 +197,8 @@ export function filterGeneratedSets(
 /**
  * Get the best sorted computed sets for a specific tier
  */
-function getBestSets(
-  setMap: readonly ArmorSet[],
-  lockedMap: LockedMap,
-  stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>
-): ArmorSet[] {
-  // Remove sets that do not match tier filters
-  let sortedSets: ArmorSet[];
-  if (Object.values(stats).every((s) => s.min === 0 && s.max === 10)) {
-    sortedSets = Array.from(setMap);
-  } else {
-    sortedSets = setMap.filter((set) =>
-      _.every(stats, (value, key) => {
-        const tier = statTier(set.stats[key]);
-        return value.ignored || (value.min <= tier && value.max >= tier);
-      })
-    );
-  }
+function getBestSets(setMap: readonly ArmorSet[], lockedMap: LockedMap): ArmorSet[] {
+  let sortedSets: ArmorSet[] = Array.from(setMap);
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
