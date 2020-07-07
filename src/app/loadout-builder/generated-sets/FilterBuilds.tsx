@@ -1,21 +1,20 @@
 import { t } from 'app/i18next-t';
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
-import { ArmorSet, StatTypes, MinMaxIgnored } from '../types';
+import { StatTypes, MinMaxIgnored, MinMax } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './FilterBuilds.m.scss';
-import { statTier } from './utils';
 import { useDispatch } from 'react-redux';
 import { setSetting } from 'app/settings/actions';
-import { statHashes, statKeys } from '../types';
+import { statHashes } from '../types';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
  */
 export default function FilterBuilds({
-  sets,
+  statRanges,
   minimumPower,
   minimumStatTotal,
   selectedStore,
@@ -25,7 +24,7 @@ export default function FilterBuilds({
   assumeMasterwork,
   onStatFiltersChanged,
 }: {
-  sets?: readonly ArmorSet[];
+  statRanges?: { [statType in StatTypes]: MinMax };
   minimumPower: number;
   minimumStatTotal: number;
   selectedStore: D2Store;
@@ -46,21 +45,8 @@ export default function FilterBuilds({
     );
   };
 
-  const statRanges = useMemo(() => {
-    if (!sets || !sets.length) {
-      return _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
-    }
-    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0, ignored: false }));
-    for (const set of sets) {
-      for (const prop of statKeys) {
-        const tier = statTier(set.stats[prop]);
-        const range = statRanges[prop];
-        range.min = Math.min(tier, range.min);
-        range.max = Math.max(tier, range.max);
-      }
-    }
-    return statRanges;
-  }, [sets]);
+  const workingStatRanges =
+    statRanges || _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
 
   return (
     <div>
@@ -68,7 +54,7 @@ export default function FilterBuilds({
         <TierSelect
           rowClassName={styles.row}
           stats={stats}
-          statRanges={statRanges}
+          statRanges={workingStatRanges}
           defs={defs}
           order={order}
           onStatFiltersChanged={onStatFiltersChanged}

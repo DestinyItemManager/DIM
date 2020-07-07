@@ -165,7 +165,8 @@ function LoadoutBuilder({
     lockedMap,
     lockedArmor2Mods,
     assumeMasterwork,
-    statOrder
+    statOrder,
+    statFilters
   );
 
   const combos = result?.combos || 0;
@@ -211,7 +212,7 @@ function LoadoutBuilder({
       />
 
       <FilterBuilds
-        sets={result?.sets}
+        statRanges={result?.statRanges}
         selectedStore={selectedStore as D2Store}
         minimumPower={minimumPower}
         minimumStatTotal={minimumStatTotal}

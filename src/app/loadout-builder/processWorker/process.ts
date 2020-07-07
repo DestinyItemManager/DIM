@@ -6,6 +6,8 @@ import {
   LockedMap,
   LockedArmor2Mod,
   LockedArmor2ModMap,
+  MinMaxIgnored,
+  MinMax,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
@@ -91,8 +93,14 @@ export function process(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
-  statOrder: StatTypes[]
-): { sets: ProcessArmorSet[]; combos: number; combosWithoutCaps: number } {
+  statOrder: StatTypes[],
+  statFilters: { [stat in StatTypes]: MinMaxIgnored }
+): {
+  sets: ProcessArmorSet[];
+  combos: number;
+  combosWithoutCaps: number;
+  statRanges?: { [stat in StatTypes]: MinMax };
+} {
   const pstart = performance.now();
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
@@ -109,6 +117,16 @@ export function process(
   };
 
   const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
+  const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
+
+  const statRanges: { [stat in StatTypes]: MinMax } = {
+    Mobility: statFilters.Mobility.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+    Resilience: statFilters.Resilience.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+    Recovery: statFilters.Recovery.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+    Discipline: statFilters.Discipline.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+    Intellect: statFilters.Intellect.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+    Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
+  };
 
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
@@ -243,13 +261,32 @@ export function process(
               let tiers = '';
               let totalTier = 0;
               let index = 1;
-              for (const statKey in stats) {
-                tiers += statTier(stats[statKey]);
-                totalTier += statTier(stats[statKey]);
+              let statRangeExceeded = false;
+              for (const statKey of orderedConsideredStats) {
+                const tier = statTier(stats[statKey]);
+
+                if (tier > statRanges[statKey].max) {
+                  statRanges[statKey].max = tier;
+                }
+
+                if (tier < statRanges[statKey].min) {
+                  statRanges[statKey].min = tier;
+                }
+
+                if (tier > statFilters[statKey].max || tier < statFilters[statKey].min) {
+                  statRangeExceeded = true;
+                  break;
+                }
+                tiers += tier;
+                totalTier += tier;
                 if (index < statOrder.length) {
                   tiers += ',';
                 }
                 index++;
+              }
+
+              if (statRangeExceeded) {
+                continue;
               }
 
               // While we have less than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
@@ -315,7 +352,7 @@ export function process(
     'ms'
   );
 
-  return { sets: flattenSets(finalSets), combos, combosWithoutCaps };
+  return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
 }
 
 function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
