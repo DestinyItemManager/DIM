@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
 import React from 'react';
 import { RootState } from 'app/store/reducers';
 import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
@@ -10,6 +10,7 @@ import styles from './SpecialtyModSlotIcon.m.scss';
 interface ProvidedProps {
   item: DimItem;
   className?: string;
+  lowRes?: boolean;
 }
 interface StoreProps {
   defs: D2ManifestDefinitions;
@@ -21,13 +22,13 @@ function mapStateToProps() {
 }
 type Props = ProvidedProps & StoreProps;
 
-function SpecialtyModSlotIcon({ item, className, defs }: Props) {
+function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
   const specialtySocket = getSpecialtySocket(item);
   const emptySlotHash = specialtySocket?.socketDefinition.singleInitialItemHash;
   const emptySlotIcon = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
   return emptySlotIcon ? (
     <div
-      className={`${className} ${styles.specialtyModIcon}`}
+      className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
       title={emptySlotIcon.itemTypeDisplayName}
       style={bungieBackgroundStyle(
         emptySlotIcon.displayProperties.icon,
@@ -37,3 +38,39 @@ function SpecialtyModSlotIcon({ item, className, defs }: Props) {
   ) : null;
 }
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);
+
+const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
+
+/** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
+export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | false = (item) =>
+  (item.isDestiny2() &&
+    item.bucket?.sort === 'Armor' &&
+    item.sockets?.sockets.find((socket) =>
+      socket?.plug?.plugItem?.plug?.plugCategoryIdentifier.match(
+        armorSlotSpecificPlugCategoryIdentifier
+      )
+    )) ??
+  false;
+
+/** this returns a string for easy printing purposes. '' if not found */
+export const getArmorSlotSpecificModSocketDisplayName: (item: DimItem) => string = (item) => {
+  const foundSocket = getArmorSlotSpecificModSocket(item);
+  return (foundSocket && foundSocket.plug!.plugItem.itemTypeDisplayName) || '';
+};
+
+function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, defs }: Props) {
+  const foundSocket = getArmorSlotSpecificModSocket(item);
+  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+  const emptySocketHash = foundSocket && foundSocket.socketDefinition.singleInitialItemHash;
+  const emptySocketIcon = emptySocketHash && defs.InventoryItem.get(emptySocketHash);
+  return emptySocketIcon ? (
+    <div
+      className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
+      title={emptySocketIcon.itemTypeDisplayName}
+      style={bungieBackgroundStyle(emptySocketIcon.displayProperties.icon)}
+    />
+  ) : null;
+}
+export const ArmorSlotSpecificModSocketIcon = connect<StoreProps>(mapStateToProps)(
+  disconnectedArmorSlotSpecificModSocketIcon
+);
