@@ -1,5 +1,7 @@
 ## Next
 
+* When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
+
 ## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
 
 * Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
