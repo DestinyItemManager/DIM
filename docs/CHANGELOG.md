@@ -1,6 +1,7 @@
 ## Next
 
 * When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
+* Allow masterworks to affect more than one stat
 
 ## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
 
