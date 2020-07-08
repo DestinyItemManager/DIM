@@ -1,6 +1,6 @@
 # Run this workflow whenever dim.json has keys updated and you have updated the keys in the other i18n files as well
 # Does not notify #i18n in discord
-name: i18n upload bot
+name: i18n upload all (manual only)
 on:
   workflow_dispatch:
 
