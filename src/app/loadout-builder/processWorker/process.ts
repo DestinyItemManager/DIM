@@ -8,10 +8,14 @@ import {
   LockedArmor2ModMap,
   MinMaxIgnored,
   MinMax,
+  LockedModBase,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
-import { Armor2ModPlugCategories } from '../../utils/item-utils';
+import {
+  Armor2ModPlugCategories,
+  getSpecialtySocketMetadataByCategoryHash,
+} from '../../utils/item-utils';
 import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
@@ -19,7 +23,7 @@ import {
   ProcessArmorSet,
   IntermediateProcessArmorSet,
 } from './types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -91,6 +95,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -297,6 +302,14 @@ export function process(
                   continue;
                 }
               }
+
+              if (
+                lockedSeasonalMods.length &&
+                !canAllSeasonalModsBeUsed(firstValidSet, lockedSeasonalMods)
+              ) {
+                continue;
+              }
+
               const newArmorSet: IntermediateProcessArmorSet = {
                 sets: [
                   {
@@ -491,7 +504,7 @@ function generateMixesFromPerksOrStats(
     getBaseStatValues(item, assumeArmor2IsMasterwork, orderedStatValues, lockedModStats),
   ];
 
-  if (stats && item.sockets && !item.hasEnergy) {
+  if (stats && item.sockets && item.energyType === undefined) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -529,8 +542,8 @@ function getBaseStatValues(
     baseStats[statHash] = item.stats[statHash];
   }
 
-  // Checking energy tells us if it is Armour 2.0
-  if (item.sockets && item.hasEnergy) {
+  // Checking energy tells us if it is Armour 2.0 (it can have value 0)
+  if (item.sockets && item.energyType !== undefined) {
     let masterworkSocketHashes: number[] = [];
 
     // only get masterwork sockets if we aren't manually adding the values
@@ -581,4 +594,58 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
     })),
     firstValidSet: set.firstValidSet.map((item) => item.id),
   }));
+}
+
+/**
+ * This function checks if the first set of process items can slot all the mods in
+ * seasonalMods.
+ */
+function canAllSeasonalModsBeUsed(items: ProcessItem[], seasonalMods: readonly LockedModBase[]) {
+  if (seasonalMods.length > 5) {
+    return false;
+  }
+
+  const modArrays = {};
+
+  for (const mod of seasonalMods) {
+    for (const item of items) {
+      const itemModCategories =
+        getSpecialtySocketMetadataByCategoryHash(item.specialtySocketCategoryHash)
+          ?.compatiblePlugCategoryHashes || [];
+
+      if (
+        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
+        item.energyType &&
+        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+          mod.mod.plug.energyCost.energyType === item.energyType)
+      ) {
+        if (!modArrays[item.bucketHash]) {
+          modArrays[item.bucketHash] = [];
+        }
+
+        modArrays[item.bucketHash].push(mod);
+      }
+    }
+  }
+
+  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
+    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
+      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
+        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
+          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
+            const applicableMods = [helmetMod, armsMod, chestMod, legsMod, classMod].filter(
+              Boolean
+            );
+            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
+
+            if (containsAllLocked) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
 }

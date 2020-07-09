@@ -163,6 +163,7 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
+    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -178,22 +179,12 @@ function LoadoutBuilder({
         minimumPower,
         lockedMap,
         lockedArmor2Mods,
-        lockedSeasonalMods,
         statFilters,
         statOrder,
         enabledStats,
         result?.sets
       ),
-    [
-      minimumPower,
-      lockedMap,
-      lockedArmor2Mods,
-      lockedSeasonalMods,
-      statFilters,
-      statOrder,
-      enabledStats,
-      result?.sets,
-    ]
+    [minimumPower, lockedMap, lockedArmor2Mods, statFilters, statOrder, enabledStats, result?.sets]
   );
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);

@@ -8,6 +8,7 @@ import {
   StatTypes,
   MinMaxIgnored,
   MinMax,
+  LockedModBase,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -17,6 +18,7 @@ import {
   ProcessSocket,
   ProcessSockets,
 } from '../processWorker/types';
+import { getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -37,6 +39,7 @@ type ItemsById = { [id: string]: DimItem };
 export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -51,6 +54,7 @@ export function useProcess(
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -84,6 +88,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
+        lockedSeasonalMods,
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -108,7 +113,15 @@ export function useProcess(
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder, statFilters]);
+  }, [
+    filteredItems,
+    lockedItems,
+    lockedSeasonalMods,
+    lockedArmor2ModMap,
+    assumeMasterwork,
+    statOrder,
+    statFilters,
+  ]);
 
   return { result, processing };
 }
@@ -123,6 +136,7 @@ export function useProcess(
 function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -131,6 +145,7 @@ function useWorkerAndCleanup(
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -201,7 +216,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     basePower,
     stats: statMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
-    hasEnergy: Boolean(dimItem.energy),
+    energyType: dimItem.energy?.energyType,
+    specialtySocketCategoryHash: getSpecialtySocketCategoryHash(dimItem),
   };
 }
 

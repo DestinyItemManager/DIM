@@ -57,6 +57,7 @@ interface ModMetadata {
   compatiblePlugCategoryHashes: number[];
   emptyModSocketHashes: number[];
 }
+
 const modMetadataIndexedByEmptySlotHash = objectifyArray(
   modMetadataBySlotTag as ModMetadata[],
   'emptyModSocketHashes'
@@ -88,6 +89,12 @@ export const getSpecialtySocketMetadata = (item: DimItem): ModMetadata | undefin
   modMetadataIndexedByEmptySlotHash[
     getSpecialtySocket(item)?.socketDefinition.singleInitialItemHash || -99999999
   ];
+
+/** returns ModMetadata if the category hash is known */
+export const getSpecialtySocketMetadataByCategoryHash = (
+  specialtySocketCategoryHash?: number
+): ModMetadata | undefined =>
+  modMetadataIndexedByEmptySlotHash[specialtySocketCategoryHash || -99999999];
 
 /** this returns a string for easy printing purposes. '' if not found */
 export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>

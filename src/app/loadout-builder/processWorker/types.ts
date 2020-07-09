@@ -1,4 +1,5 @@
 import { StatTypes } from '../types';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export interface ProcessPlug {
   stats: {
@@ -29,9 +30,10 @@ export interface ProcessItem {
   name: string;
   equippingLabel?: string;
   sockets: ProcessSockets | null;
-  hasEnergy: boolean;
+  energyType?: DestinyEnergyType;
   basePower: number;
   stats: { [statHash: number]: number };
+  specialtySocketCategoryHash?: number;
 }
 
 export type ProcessItemsByBucket = Readonly<{
