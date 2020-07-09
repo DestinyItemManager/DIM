@@ -9,6 +9,7 @@ import {
   DestinyItemSubType,
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
+import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../types';
 import { getSpecialtySocketMetadata, specialtyModSocketHashes } from 'app/utils/item-utils';
 import { canSetTakeGeneralAndSeasonalMods } from './mod-utils';
@@ -101,6 +102,20 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
+function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
+  const comparators: Comparator<ArmorSet>[] = [];
+
+  comparators.push(compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)));
+
+  statOrder.forEach((statType) => {
+    if (enabledStats.has(statType)) {
+      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statType])));
+    }
+  });
+
+  return comparators;
+}
+
 /**
  * This function checks if the first valid set in an ArmorSet slot all the mods in
  * seasonalMods. Currently it does not care for the element affinity or the armour
@@ -165,6 +180,8 @@ export function filterGeneratedSets(
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   lockedSeasonalMods: readonly LockedModBase[],
+  statOrder: StatTypes[],
+  enabledStats: Set<StatTypes>,
   sets?: readonly ArmorSet[]
 ) {
   if (!sets) {
@@ -189,15 +206,20 @@ export function filterGeneratedSets(
     return true;
   });
 
-  matchedSets = getBestSets(matchedSets, lockedMap);
+  // TODO Can these two sorts be merged?
+  matchedSets = matchedSets.sort(
+    chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
+  );
+
+  matchedSets = sortSetsByMostMatchedPerks(matchedSets, lockedMap);
 
   return matchedSets;
 }
 
 /**
- * Get the best sorted computed sets for a specific tier
+ * Sort sets by set with most number of matched perks
  */
-function getBestSets(setMap: readonly ArmorSet[], lockedMap: LockedMap): ArmorSet[] {
+function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: LockedMap): ArmorSet[] {
   let sortedSets: ArmorSet[] = Array.from(setMap);
 
   // Prioritize list based on number of matched perks
