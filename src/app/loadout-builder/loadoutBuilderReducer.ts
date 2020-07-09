@@ -32,7 +32,11 @@ const lbStateInit = ({
 }): LoadoutBuilderState => {
   let lockedMap: LockedMap = {};
 
+  let selectedStoreId = getCurrentStore(stores)?.id;
+
   if (stores.length && preloadedLoadout) {
+    selectedStoreId = stores.find((store) => store.classType === preloadedLoadout.classType)?.id;
+
     for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
@@ -70,7 +74,7 @@ const lbStateInit = ({
     },
     minimumPower: 750,
     query: '',
-    selectedStoreId: getCurrentStore(stores)?.id,
+    selectedStoreId: selectedStoreId,
   };
 };
 
