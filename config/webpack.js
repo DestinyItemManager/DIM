@@ -396,7 +396,9 @@ module.exports = (env) => {
         '$featureFlags.issueBanner': JSON.stringify(true),
       }),
 
-      new WorkerPlugin(),
+      new WorkerPlugin({
+        globalObject: 'self',
+      }),
 
       new LodashModuleReplacementPlugin({
         collections: true,
