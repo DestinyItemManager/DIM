@@ -94,7 +94,8 @@ export function process(
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [stat in StatTypes]: MinMaxIgnored }
+  statFilters: { [stat in StatTypes]: MinMaxIgnored },
+  minimumPower: number
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -246,6 +247,10 @@ export function process(
               ];
 
               const maxPower = getPower(firstValidSet);
+
+              if (maxPower < minimumPower) {
+                continue;
+              }
 
               const stats: any = {};
               for (const stat of statChoices) {

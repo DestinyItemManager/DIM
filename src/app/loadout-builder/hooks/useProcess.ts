@@ -40,7 +40,8 @@ export function useProcess(
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statFilters: { [statType in StatTypes]: MinMaxIgnored },
+  minimumPower: number
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -54,7 +55,8 @@ export function useProcess(
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
-    statFilters
+    statFilters,
+    minimumPower
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -87,7 +89,8 @@ export function useProcess(
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
-        statFilters
+        statFilters,
+        minimumPower
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
@@ -108,7 +111,15 @@ export function useProcess(
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedArmor2ModMap, assumeMasterwork, statOrder, statFilters]);
+  }, [
+    filteredItems,
+    lockedItems,
+    lockedArmor2ModMap,
+    assumeMasterwork,
+    statOrder,
+    statFilters,
+    minimumPower,
+  ]);
 
   return { result, processing };
 }
@@ -126,7 +137,8 @@ function useWorkerAndCleanup(
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statFilters: { [statType in StatTypes]: MinMaxIgnored },
+  minimumPower: number
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
@@ -135,6 +147,7 @@ function useWorkerAndCleanup(
     assumeMasterwork,
     statOrder,
     statFilters,
+    minimumPower,
   ]);
 
   // cleanup the worker on unmount

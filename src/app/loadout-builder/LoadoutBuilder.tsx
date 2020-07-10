@@ -166,7 +166,8 @@ function LoadoutBuilder({
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
-    statFilters
+    statFilters,
+    minimumPower
   );
 
   const combos = result?.combos || 0;
@@ -175,25 +176,14 @@ function LoadoutBuilder({
   const filteredSets = useMemo(
     () =>
       filterGeneratedSets(
-        minimumPower,
         lockedMap,
         lockedArmor2Mods,
         lockedSeasonalMods,
-        statFilters,
         statOrder,
         enabledStats,
         result?.sets
       ),
-    [
-      minimumPower,
-      lockedMap,
-      lockedArmor2Mods,
-      lockedSeasonalMods,
-      statFilters,
-      statOrder,
-      enabledStats,
-      result?.sets,
-    ]
+    [lockedMap, lockedArmor2Mods, lockedSeasonalMods, statOrder, enabledStats, result?.sets]
   );
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);
