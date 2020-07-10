@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should parse "grenade launcher reserves" 1`] = `
+Array [
+  "\\"grenade launcher reserves\\"",
+]
+`;
+
+exports[`should parse (is:hunter power>:=540) or (is:warlock power:>=560) 1`] = `
+Array [
+  "(is:hunter",
+  "power>:=540)",
+  "or",
+  "(is:warlock",
+  "power:>=560)",
+]
+`;
+
+exports[`should parse (is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival) 1`] = `
+Array [
+  "(is:weapon",
+  "and",
+  "is:sniperrifle)",
+  "or",
+  "not",
+  "(is:armor",
+  "and",
+  "modslot:arrival)",
+]
+`;
+
+exports[`should parse (is:weapon is:sniperrifle) or (is:armor modslot:arrival) 1`] = `
+Array [
+  "(is:weapon",
+  "is:sniperrifle)",
+  "or",
+  "(is:armor",
+  "modslot:arrival)",
+]
+`;
+
+exports[`should parse -(power:>1000 and -modslot:arrival) 1`] = `
+Array [
+  "-(power:>1000",
+  "and",
+  "-modslot:arrival)",
+]
+`;
+
+exports[`should parse -is:equipped is:haspower is:incurrentchar 1`] = `
+Array [
+  "-is:equipped",
+  "is:haspower",
+  "is:incurrentchar",
+]
+`;
+
+exports[`should parse -is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55 1`] = `
+Array [
+  "-is:exotic",
+  "-is:locked",
+  "-is:maxpower",
+  "-is:tagged",
+  "stat:total:<55",
+]
+`;
+
+exports[`should parse -source:garden -source:lastwish sunsetsafter:arrival 1`] = `
+Array [
+  "-source:garden",
+  "-source:lastwish",
+  "sunsetsafter:arrival",
+]
+`;
+
+exports[`should parse -witherhoard 1`] = `
+Array [
+  "-witherhoard",
+]
+`;
+
+exports[`should parse is:blue is:haspower -is:maxpower 1`] = `
+Array [
+  "is:blue",
+  "is:haspower",
+  "-is:maxpower",
+]
+`;
+
+exports[`should parse is:rocketlauncher -"cluster" -"tracking module" 1`] = `
+Array [
+  "is:rocketlauncher",
+  "-\\"cluster\\"",
+  "-\\"tracking module\\"",
+]
+`;
+
+exports[`should parse is:rocketlauncher -"cluster" -'tracking module' 1`] = `
+Array [
+  "is:rocketlauncher",
+  "-\\"cluster\\"",
+  "-'tracking module'",
+]
+`;
+
+exports[`should parse name:"Gahlran's Right Hand" 1`] = `
+Array [
+  "name:\\"gahlran's right hand\\"",
+]
+`;
+
+exports[`should parse name:"Hard Light" 1`] = `
+Array [
+  "name:\\"hard light\\"",
+]
+`;
+
+exports[`should parse name:'Hard Light' 1`] = `
+Array [
+  "name:'hard light'",
+]
+`;
+
+exports[`should parse not witherhoard 1`] = `
+Array [
+  "not",
+  "witherhoard",
+]
+`;
+
+exports[`should parse perk:수집가 1`] = `
+Array [
+  "perk:수집가",
+]
+`;
+
+exports[`should parse ‘grenade launcher reserves’ 1`] = `
+Array [
+  "'grenade launcher reserves'",
+]
+`;
+
+exports[`should parse “grenade launcher reserves” 1`] = `
+Array [
+  "\\"grenade launcher reserves\\"",
+]
+`;
