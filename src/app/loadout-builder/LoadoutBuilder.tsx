@@ -29,7 +29,6 @@ import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { useProcess } from './hooks/useProcess';
-import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
@@ -247,7 +246,7 @@ function LoadoutBuilder({
 
       <PageWithMenu.Contents>
         <TransitionGroup component={null}>
-          {filteredSets && processing && (
+          {processing && (
             <CSSTransition
               nodeRef={loadingNodeRef}
               classNames={{
@@ -265,7 +264,7 @@ function LoadoutBuilder({
             </CSSTransition>
           )}
         </TransitionGroup>
-        {filteredSets ? (
+        {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
             combos={combos}
@@ -279,8 +278,6 @@ function LoadoutBuilder({
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
           />
-        ) : (
-          <Loading message={'Processing armor sets'} />
         )}
       </PageWithMenu.Contents>
 
