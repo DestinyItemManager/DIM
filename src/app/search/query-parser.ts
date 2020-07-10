@@ -28,14 +28,78 @@ is:blue is:haspower -is:maxpower
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
+type Token = [TokenType] | [TokenType, string];
+
 export function parseQuery(query: string) {
   query = query.trim().toLowerCase();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
   query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
   query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
+
+  /*
   // \S*?(["']).*?\1 -> match `is:"stuff here"` or `is:'stuff here'`
   // [^\s"']+ -> match is:stuff
   const searchTerms = query.match(/\S*?(["']).*?\1|[^\s"']+/g) || [];
   return searchTerms;
+  */
+
+  const tokens: Token[] = [];
+  for (const t of lexer(query)) {
+    tokens.push(t);
+  }
+  return tokens;
+}
+
+type TokenType = '(' | ')' | 'not' | 'str';
+
+export function* lexer(query: string): Generator<Token> {
+  query = query.trim().toLowerCase();
+
+  // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+  query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
+  query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
+
+  let i = 0;
+  while (i < query.length) {
+    const char = query[i];
+
+    switch (char) {
+      case '(':
+      case ')':
+        yield [char];
+        break;
+      case '"':
+      case "'":
+        {
+          const quote = char;
+          const remain = query.slice(i + 1);
+          const re = new RegExp('(.*?)' + quote, 'g');
+          re.lastIndex = i + 1;
+          if (re.test(query)) {
+            const str = query.slice(i + 1, re.lastIndex - 1);
+            console.log(i, remain, str);
+            if (str) {
+              i += str.length + 1;
+              yield ['str', str];
+            } else {
+              throw new Error('Unterminated quotes: |' + remain + '| ' + i);
+            }
+          }
+        }
+        break;
+      case '-':
+        yield ['not'];
+        break;
+      case ' ':
+        break;
+    }
+
+    i++;
+  }
+
+  // \S*?(["']).*?\1 -> match `is:"stuff here"` or `is:'stuff here'`
+  // [^\s"']+ -> match is:stuff
+  //const searchTerms = query.match(/\S*?(["']).*?\1|[^\s"']+/g) || [];
+  //return searchTerms;
 }

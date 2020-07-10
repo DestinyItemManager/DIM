@@ -17,7 +17,7 @@ const cases = [
   ['perk:수집가'],
   ['is:rocketlauncher -"cluster" -"tracking module"'],
   ['is:rocketlauncher -"cluster" -\'tracking module\''],
-  ['(is:hunter power>:=540) or (is:warlock power:>=560)'],
+  ['(is:hunter power:>=540) or (is:warlock power:>=560)'],
   ['"grenade launcher reserves"'],
   // These test copy/pasting from somewhere that automatically converts quotes to "smart quotes"
   ['“grenade launcher reserves”'],
@@ -26,5 +26,5 @@ const cases = [
 
 test.each(cases)('should parse %s', (query) => {
   const parsed = parseQuery(query);
-  expect(parsed).toMatchSnapshot();
+  expect(parsed).toMatchSnapshot('lexer');
 });
