@@ -596,6 +596,39 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
   }));
 }
 
+function findAllIndices<T>(arr: T[], func: (val: T) => any) {
+  const indices: number[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (func(arr[i])) {
+      indices.push(i);
+    }
+  }
+  return indices;
+}
+
+function findUntilExhausted(needles: number[][], haystack: ProcessItem[]) {
+  const needle = needles[0];
+  // we ran out of needles, indicating success. yay
+  if (!needle) {
+    return true;
+  }
+  // haystack indices which could be used to satisfy this need
+  const candidates = findAllIndices(
+    haystack,
+    (item) => item.specialtySocketCategoryHash && needle.includes(item.specialtySocketCategoryHash)
+  );
+
+  // an appropriate slot wasn't found among the armor. this branch failed to meet all needs.
+  if (!candidates) {
+    return false;
+  }
+
+  // for each possible used armor, recurse this function with remaining haystack and remaining needles
+  return candidates.some((candidate) =>
+    findUntilExhausted(needles.slice(1), haystack.splice(candidate, 1))
+  );
+}
+
 /**
  * This function checks if the first set of process items can slot all the mods in
  * seasonalMods.
@@ -605,7 +638,7 @@ function canAllSeasonalModsBeUsed(items: ProcessItem[], seasonalMods: readonly L
     return false;
   }
 
-  const modArrays = {};
+  const modArrays: Record<number, LockedModBase[]> = {};
 
   for (const mod of seasonalMods) {
     for (const item of items) {
