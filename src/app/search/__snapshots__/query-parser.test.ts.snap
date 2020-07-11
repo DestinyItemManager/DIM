@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should parse "grenade launcher reserves": lexer 1`] = `
+exports[`parse |"grenade launcher reserves"|: lexer 1`] = `
 Array [
   Array [
     "str",
@@ -9,67 +9,56 @@ Array [
 ]
 `;
 
-exports[`should parse (is:hunter power:>=540) or (is:warlock power:>=560): lexer 1`] = `
+exports[`parse |"수집가"|: lexer 1`] = `
 Array [
   Array [
-    "(",
-  ],
-  Array [
-    ")",
-  ],
-  Array [
-    "(",
-  ],
-  Array [
-    ")",
+    "str",
+    "수집가",
   ],
 ]
 `;
 
-exports[`should parse (is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival): lexer 1`] = `
+exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: lexer 1`] = `
 Array [
   Array [
     "(",
   ],
   Array [
-    ")",
+    "word",
+    "is:hunter",
   ],
   Array [
-    "(",
+    "and",
   ],
   Array [
-    ")",
-  ],
-]
-`;
-
-exports[`should parse (is:weapon is:sniperrifle) or (is:armor modslot:arrival): lexer 1`] = `
-Array [
-  Array [
-    "(",
+    "word",
+    "power:>=540",
   ],
   Array [
     ")",
   ],
   Array [
-    "(",
+    "and",
   ],
   Array [
-    ")",
+    "or",
   ],
-]
-`;
-
-exports[`should parse -(power:>1000 and -modslot:arrival): lexer 1`] = `
-Array [
   Array [
-    "not",
+    "and",
   ],
   Array [
     "(",
   ],
   Array [
-    "not",
+    "word",
+    "is:warlock",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "power:>=560",
   ],
   Array [
     ")",
@@ -77,66 +66,356 @@ Array [
 ]
 `;
 
-exports[`should parse -is:equipped is:haspower is:incurrentchar: lexer 1`] = `
+exports[`parse |(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)|: lexer 1`] = `
 Array [
   Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "is:weapon",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "is:sniperrifle",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
     "not",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "is:armor",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "modslot:arrival",
+  ],
+  Array [
+    ")",
   ],
 ]
 `;
 
-exports[`should parse -is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55: lexer 1`] = `
+exports[`parse |(is:weapon is:sniperrifle) or (is:armor modslot:arrival)|: lexer 1`] = `
 Array [
   Array [
-    "not",
+    "(",
   ],
   Array [
-    "not",
+    "word",
+    "is:weapon",
   ],
   Array [
-    "not",
+    "and",
   ],
   Array [
-    "not",
+    "word",
+    "is:sniperrifle",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "is:armor",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "modslot:arrival",
+  ],
+  Array [
+    ")",
   ],
 ]
 `;
 
-exports[`should parse -source:garden -source:lastwish sunsetsafter:arrival: lexer 1`] = `
+exports[`parse |-(power:>1000 and -modslot:arrival)|: lexer 1`] = `
 Array [
   Array [
     "not",
   ],
   Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "power:>1000",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
     "not",
+  ],
+  Array [
+    "word",
+    "modslot:arrival",
+  ],
+  Array [
+    ")",
   ],
 ]
 `;
 
-exports[`should parse -witherhoard: lexer 1`] = `
+exports[`parse |-is:equipped is:haspower is:incurrentchar|: lexer 1`] = `
 Array [
   Array [
     "not",
   ],
-]
-`;
-
-exports[`should parse is:blue is:haspower -is:maxpower: lexer 1`] = `
-Array [
   Array [
-    "not",
+    "word",
+    "is:equipped",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "is:haspower",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "is:incurrentchar",
   ],
 ]
 `;
 
-exports[`should parse is:rocketlauncher -"cluster" -"tracking module": lexer 1`] = `
+exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: lexer 1`] = `
 Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:exotic",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:locked",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:maxpower",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:tagged",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "stat:total:<55",
+  ],
+]
+`;
+
+exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "source:garden",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "source:lastwish",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "sunsetsafter:arrival",
+  ],
+]
+`;
+
+exports[`parse |-witherhoard|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "witherhoard",
+  ],
+]
+`;
+
+exports[`parse |is:blue is:haspower -is:maxpower|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "is:blue",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "is:haspower",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:maxpower",
+  ],
+]
+`;
+
+exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "is:rocketlauncher",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "perk:\\"cluster\\"",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "perk:\\"tracking",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "module\\"",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
+exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "is:rocketlauncher",
+  ],
+  Array [
+    "and",
+  ],
   Array [
     "not",
   ],
   Array [
     "str",
     "cluster",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -148,14 +427,24 @@ Array [
 ]
 `;
 
-exports[`should parse is:rocketlauncher -"cluster" -'tracking module': lexer 1`] = `
+exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: lexer 1`] = `
 Array [
+  Array [
+    "word",
+    "is:rocketlauncher",
+  ],
+  Array [
+    "and",
+  ],
   Array [
     "not",
   ],
   Array [
     "str",
     "cluster",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -167,38 +456,95 @@ Array [
 ]
 `;
 
-exports[`should parse name:"Gahlran's Right Hand": lexer 1`] = `
+exports[`parse |name:"Gahlran's Right Hand"|: lexer 1`] = `
 Array [
   Array [
-    "str",
-    "gahlran's right hand",
+    "word",
+    "name:\\"gahlran's",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "right",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "hand\\"",
   ],
 ]
 `;
 
-exports[`should parse name:"Hard Light": lexer 1`] = `
+exports[`parse |name:"Hard Light"|: lexer 1`] = `
 Array [
   Array [
-    "str",
-    "hard light",
+    "word",
+    "name:\\"hard",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "light\\"",
   ],
 ]
 `;
 
-exports[`should parse name:'Hard Light': lexer 1`] = `
+exports[`parse |name:'Hard Light'|: lexer 1`] = `
 Array [
   Array [
-    "str",
-    "hard light",
+    "word",
+    "name:'hard",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "light'",
   ],
 ]
 `;
 
-exports[`should parse not witherhoard: lexer 1`] = `Array []`;
+exports[`parse |not witherhoard|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "word",
+    "witherhoard",
+  ],
+]
+`;
 
-exports[`should parse perk:수집가: lexer 1`] = `Array []`;
+exports[`parse |perk:"수집가"|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "perk:\\"수집가\\"",
+  ],
+]
+`;
 
-exports[`should parse ‘grenade launcher reserves’: lexer 1`] = `
+exports[`parse |perk:수집가|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "perk:수집가",
+  ],
+]
+`;
+
+exports[`parse |‘grenade launcher reserves’|: lexer 1`] = `
 Array [
   Array [
     "str",
@@ -207,11 +553,20 @@ Array [
 ]
 `;
 
-exports[`should parse “grenade launcher reserves”: lexer 1`] = `
+exports[`parse |“grenade launcher reserves”|: lexer 1`] = `
 Array [
   Array [
     "str",
     "grenade launcher reserves",
+  ],
+]
+`;
+
+exports[`parse |수집가|: lexer 1`] = `
+Array [
+  Array [
+    "word",
+    "수집가",
   ],
 ]
 `;
