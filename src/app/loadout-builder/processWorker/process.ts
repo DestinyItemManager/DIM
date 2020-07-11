@@ -620,7 +620,8 @@ function findUntilExhausted(needles: string[][], haystack: ProcessItem[]) {
   }
 
   // for each possible used armor, recurse this function with remaining haystack and remaining needles
-  return candidates.some((candidate) =>
-    findUntilExhausted(needles.slice(1), haystack.splice(candidate, 1))
-  );
+  return candidates.some((candidate) => {
+    haystack.splice(candidate, 1);
+    return findUntilExhausted(needles.slice(1), haystack);
+  });
 }
