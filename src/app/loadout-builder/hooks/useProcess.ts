@@ -18,7 +18,7 @@ import {
   ProcessSocket,
   ProcessSockets,
 } from '../processWorker/types';
-import { getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
+import { getSpecialtySocketCategoryHash, getSpecialtySocketMetadata } from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -217,6 +217,7 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     stats: statMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energyType: dimItem.energy?.energyType,
+    season: getSpecialtySocketMetadata(dimItem)?.tag,
     specialtySocketCategoryHash: getSpecialtySocketCategoryHash(dimItem),
   };
 }

@@ -14,7 +14,7 @@ import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
 import {
   Armor2ModPlugCategories,
-  getSpecialtySocketMetadataByCategoryHash,
+  getSpecialtySocketMetadataByPlugCategoryHash,
 } from '../../utils/item-utils';
 import { statHashes } from '../types';
 import {
@@ -23,7 +23,7 @@ import {
   ProcessArmorSet,
   IntermediateProcessArmorSet,
 } from './types';
-import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -107,6 +107,22 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
+
+  const processedSeasonalMods: string[][] = [];
+  for (const mod of lockedSeasonalMods) {
+    const compatibleTags = getSpecialtySocketMetadataByPlugCategoryHash(
+      mod.mod.plug.plugCategoryHash
+    )?.compatibleTags;
+
+    if (compatibleTags) {
+      processedSeasonalMods.push(compatibleTags);
+    }
+  }
+
+  lockedSeasonalMods.map(
+    (mod) =>
+      getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)?.compatibleTags
+  );
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
@@ -305,7 +321,7 @@ export function process(
 
               if (
                 lockedSeasonalMods.length &&
-                !canAllSeasonalModsBeUsed(firstValidSet, lockedSeasonalMods)
+                !findUntilExhausted(processedSeasonalMods, [...firstValidSet])
               ) {
                 continue;
               }
@@ -606,7 +622,7 @@ function findAllIndices<T>(arr: T[], func: (val: T) => any) {
   return indices;
 }
 
-function findUntilExhausted(needles: number[][], haystack: ProcessItem[]) {
+function findUntilExhausted(needles: string[][], haystack: ProcessItem[]) {
   const needle = needles[0];
   // we ran out of needles, indicating success. yay
   if (!needle) {
@@ -615,7 +631,7 @@ function findUntilExhausted(needles: number[][], haystack: ProcessItem[]) {
   // haystack indices which could be used to satisfy this need
   const candidates = findAllIndices(
     haystack,
-    (item) => item.specialtySocketCategoryHash && needle.includes(item.specialtySocketCategoryHash)
+    (item) => item.season && needle.includes(item.season)
   );
 
   // an appropriate slot wasn't found among the armor. this branch failed to meet all needs.
@@ -627,58 +643,4 @@ function findUntilExhausted(needles: number[][], haystack: ProcessItem[]) {
   return candidates.some((candidate) =>
     findUntilExhausted(needles.slice(1), haystack.splice(candidate, 1))
   );
-}
-
-/**
- * This function checks if the first set of process items can slot all the mods in
- * seasonalMods.
- */
-function canAllSeasonalModsBeUsed(items: ProcessItem[], seasonalMods: readonly LockedModBase[]) {
-  if (seasonalMods.length > 5) {
-    return false;
-  }
-
-  const modArrays: Record<number, LockedModBase[]> = {};
-
-  for (const mod of seasonalMods) {
-    for (const item of items) {
-      const itemModCategories =
-        getSpecialtySocketMetadataByCategoryHash(item.specialtySocketCategoryHash)
-          ?.compatiblePlugCategoryHashes || [];
-
-      if (
-        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
-        item.energyType &&
-        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-          mod.mod.plug.energyCost.energyType === item.energyType)
-      ) {
-        if (!modArrays[item.bucketHash]) {
-          modArrays[item.bucketHash] = [];
-        }
-
-        modArrays[item.bucketHash].push(mod);
-      }
-    }
-  }
-
-  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
-    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
-      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
-        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
-          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
-            const applicableMods = [helmetMod, armsMod, chestMod, legsMod, classMod].filter(
-              Boolean
-            );
-            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
-
-            if (containsAllLocked) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return false;
 }
