@@ -18,7 +18,11 @@ import {
   ProcessSocket,
   ProcessSockets,
 } from '../processWorker/types';
-import { getSpecialtySocketCategoryHash, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  getSpecialtySocketCategoryHash,
+  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
+} from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -88,7 +92,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
-        lockedSeasonalMods,
+        mapSeasonalModToSeasonsArray(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -185,6 +189,21 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
       plugItemHash: dimPlug.plugItem.hash,
     })),
   };
+}
+
+function mapSeasonalModToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): string[][] {
+  const processedSeasonalMods: string[][] = [];
+  for (const mod of lockedSeasonalMods) {
+    const compatibleTags = getSpecialtySocketMetadataByPlugCategoryHash(
+      mod.mod.plug.plugCategoryHash
+    )?.compatibleTags;
+
+    if (compatibleTags) {
+      processedSeasonalMods.push(compatibleTags);
+    }
+  }
+
+  return processedSeasonalMods;
 }
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {

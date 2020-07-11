@@ -8,14 +8,10 @@ import {
   LockedArmor2ModMap,
   MinMaxIgnored,
   MinMax,
-  LockedModBase,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
-import {
-  Armor2ModPlugCategories,
-  getSpecialtySocketMetadataByPlugCategoryHash,
-} from '../../utils/item-utils';
+import { Armor2ModPlugCategories } from '../../utils/item-utils';
 import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
@@ -95,7 +91,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
-  lockedSeasonalMods: readonly LockedModBase[],
+  processedSeasonalMods: string[][],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -107,22 +103,6 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
-
-  const processedSeasonalMods: string[][] = [];
-  for (const mod of lockedSeasonalMods) {
-    const compatibleTags = getSpecialtySocketMetadataByPlugCategoryHash(
-      mod.mod.plug.plugCategoryHash
-    )?.compatibleTags;
-
-    if (compatibleTags) {
-      processedSeasonalMods.push(compatibleTags);
-    }
-  }
-
-  lockedSeasonalMods.map(
-    (mod) =>
-      getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)?.compatibleTags
-  );
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
@@ -320,7 +300,7 @@ export function process(
               }
 
               if (
-                lockedSeasonalMods.length &&
+                processedSeasonalMods.length &&
                 !findUntilExhausted(processedSeasonalMods, [...firstValidSet])
               ) {
                 continue;
