@@ -1,5 +1,6 @@
 ## Next
 
+* Fix sorting by Power Limit in the compare pane.
 * When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
 
 ## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
