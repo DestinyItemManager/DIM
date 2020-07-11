@@ -151,8 +151,6 @@ class Compare extends React.Component<Props, State> {
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
                 if (!stat) {
-                  console.log(sortedHash);
-                  console.warn('problem comparing..');
                   return -1;
                 }
 
