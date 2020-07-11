@@ -18,6 +18,31 @@ Array [
 ]
 `;
 
+exports[`parse |( power:>1000 and -modslot:arrival ) |: lexer 1`] = `
+Array [
+  Array [
+    "(",
+  ],
+  Array [
+    "word",
+    "power:>1000",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "modslot:arrival",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: lexer 1`] = `
 Array [
   Array [
@@ -38,13 +63,7 @@ Array [
     ")",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "or",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "(",
@@ -79,12 +98,6 @@ Array [
     "and",
   ],
   Array [
-    "and",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
     "word",
     "is:sniperrifle",
   ],
@@ -92,19 +105,10 @@ Array [
     ")",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "or",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "(",
@@ -112,12 +116,6 @@ Array [
   Array [
     "word",
     "is:armor",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "and",
@@ -152,13 +150,7 @@ Array [
     ")",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "or",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "(",
@@ -180,8 +172,15 @@ Array [
 ]
 `;
 
-exports[`parse |-(power:>1000 and -modslot:arrival)|: lexer 1`] = `
+exports[`parse |- is:exotic - (power:>1000)|: lexer 1`] = `
 Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "word",
+    "is:exotic",
+  ],
   Array [
     "not",
   ],
@@ -193,10 +192,22 @@ Array [
     "power:>1000",
   ],
   Array [
-    "and",
+    ")",
+  ],
+]
+`;
+
+exports[`parse |-(power:>1000 and -modslot:arrival)|: lexer 1`] = `
+Array [
+  Array [
+    "not",
   ],
   Array [
-    "and",
+    "(",
+  ],
+  Array [
+    "word",
+    "power:>1000",
   ],
   Array [
     "and",
@@ -250,9 +261,6 @@ Array [
     "is:exotic",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
   ],
   Array [
@@ -260,17 +268,11 @@ Array [
     "is:locked",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
   ],
   Array [
     "word",
     "is:maxpower",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "not",
@@ -297,9 +299,6 @@ Array [
   Array [
     "word",
     "source:garden",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "not",
@@ -344,9 +343,6 @@ Array [
     "is:haspower",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
   ],
   Array [
@@ -363,9 +359,6 @@ Array [
     "is:rocketlauncher",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "(",
   ],
   Array [
@@ -373,13 +366,7 @@ Array [
     "perk:\\"cluster\\"",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "or",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "word",
@@ -405,17 +392,11 @@ Array [
     "is:rocketlauncher",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
   ],
   Array [
     "str",
     "cluster",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "not",
@@ -434,17 +415,11 @@ Array [
     "is:rocketlauncher",
   ],
   Array [
-    "and",
-  ],
-  Array [
     "not",
   ],
   Array [
     "str",
     "cluster",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "not",
@@ -515,9 +490,6 @@ exports[`parse |not witherhoard|: lexer 1`] = `
 Array [
   Array [
     "not",
-  ],
-  Array [
-    "and",
   ],
   Array [
     "word",

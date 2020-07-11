@@ -11,6 +11,8 @@ const cases = [
   ['(is:weapon is:sniperrifle) or (is:armor modslot:arrival)'],
   ['(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)'],
   ['-(power:>1000 and -modslot:arrival)'],
+  ['( power:>1000 and -modslot:arrival ) '],
+  ['- is:exotic - (power:>1000)'],
   ['name:"Hard Light"'],
   ["name:'Hard Light'"],
   ['name:"Gahlran\'s Right Hand"'],

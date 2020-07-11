@@ -77,11 +77,11 @@ export function* lexer(query: string): Generator<Token> {
     const char = query[i];
     const startingIndex = i;
 
-    if (char === '(' || char === ')') {
+    if ((match = extract(query, i, /\s*(\(|\))\s*/y)) !== undefined) {
       // Start/end group
       // TODO: use whitespace tolerant regex??
-      consume(char);
-      yield [char];
+      consume(match);
+      yield [match.trim() as TokenType];
     } else if (char === '"' || char === "'") {
       // Quoted string
       consume(char);
@@ -94,15 +94,14 @@ export function* lexer(query: string): Generator<Token> {
       } else {
         throw new Error('Unterminated quotes: |' + query.slice(i) + '| ' + i);
       }
-    } else if (char === '-') {
-      // TODO: whitespace-tolerant regex
+    } else if ((match = extract(query, i, /\s*-\s*/y)) !== undefined) {
       // minus sign is the same as "not"
-      consume(char);
+      consume(match);
       yield ['not'];
-    } else if ((match = extract(query, i, /(not|or|and)/y)) !== undefined) {
+    } else if ((match = extract(query, i, /\s*(not|or|and)\s*/y)) !== undefined) {
       // boolean keywords
       consume(match);
-      yield [match as TokenType];
+      yield [match.trim() as TokenType];
     } else if ((match = extract(query, i, /[^\s)]+/y)) !== undefined) {
       // bare words that aren't keywords
       consume(match);
