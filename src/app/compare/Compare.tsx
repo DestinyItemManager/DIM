@@ -122,43 +122,51 @@ class Compare extends React.Component<Props, State> {
       return null;
     }
 
-    const comparisonItems = Array.from(unsortedComparisonItems).sort(
-      reverseComparator(
-        chainComparator(
-          compareBy((item: DimItem) => {
-            const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
-            const showRating =
-              $featureFlags.reviewsEnabled &&
-              dtrRating &&
-              shouldShowRating(dtrRating) &&
-              dtrRating.overallScore;
+    const comparisonItems = !sortedHash
+      ? unsortedComparisonItems
+      : Array.from(unsortedComparisonItems).sort(
+          reverseComparator(
+            chainComparator(
+              compareBy((item: DimItem) => {
+                const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
+                const showRating =
+                  $featureFlags.reviewsEnabled &&
+                  dtrRating &&
+                  shouldShowRating(dtrRating) &&
+                  dtrRating.overallScore;
 
-            const stat =
-              item.primStat && sortedHash === item.primStat.statHash
-                ? item.primStat
-                : sortedHash === 'Rating'
-                ? { value: showRating || 0 }
-                : sortedHash === 'EnergyCapacity'
-                ? {
-                    value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
-                  }
-                : (item.stats || []).find((s) => s.statHash === sortedHash);
+                const stat =
+                  item.primStat && sortedHash === item.primStat.statHash
+                    ? item.primStat
+                    : sortedHash === 'Rating'
+                    ? { value: showRating || 0 }
+                    : sortedHash === 'EnergyCapacity'
+                    ? {
+                        value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
+                      }
+                    : sortedHash === 'PowerCap'
+                    ? {
+                        value: (item.isDestiny2() && item.powerCap) || 99999999,
+                      }
+                    : (item.stats || []).find((s) => s.statHash === sortedHash);
 
-            if (!stat) {
-              return -1;
-            }
+                if (!stat) {
+                  console.log(sortedHash);
+                  console.warn('problem comparing..');
+                  return -1;
+                }
 
-            const shouldReverse =
-              isDimStat(stat) && stat.smallerIsBetter
-                ? this.state.sortBetterFirst
-                : !this.state.sortBetterFirst;
-            return shouldReverse ? -stat.value : stat.value;
-          }),
-          compareBy((i) => i.index),
-          compareBy((i) => i.name)
-        )
-      )
-    );
+                const shouldReverse =
+                  isDimStat(stat) && stat.smallerIsBetter
+                    ? this.state.sortBetterFirst
+                    : !this.state.sortBetterFirst;
+                return shouldReverse ? -stat.value : stat.value;
+              }),
+              compareBy((i) => i.index),
+              compareBy((i) => i.name)
+            )
+          )
+        );
 
     const stats = this.getAllStatsSelector(this.state, this.props);
 
