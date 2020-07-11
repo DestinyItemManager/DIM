@@ -28,7 +28,7 @@ is:blue is:haspower -is:maxpower
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-export type Token = [TokenType] | [TokenType, string];
+export type Token = [TokenType] | [TokenType, string] | ['keyword', string, string];
 
 /**
  * The query parser first lexes the string, then parses it into an AST representing the logical
@@ -55,7 +55,7 @@ export function parseQuery(query: string) {
   return tokens;
 }
 
-type TokenType = '(' | ')' | 'not' | 'or' | 'and' | 'str' | 'word';
+type TokenType = '(' | ')' | 'not' | 'or' | 'and' | 'str' | 'keyword';
 
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
@@ -73,39 +73,61 @@ export function* lexer(query: string): Generator<Token> {
 
   const consume = (str: string) => (i += str.length);
 
+  const consumeString = (startingQuoteChar: string) => {
+    // Quoted string
+    consume(startingQuoteChar);
+    // TODO: cache regexp?
+    if ((match = extract(query, i, new RegExp('(.*?)' + startingQuoteChar, 'y'))) !== undefined) {
+      consume(match);
+      // Slice off the last character
+      return match.slice(0, match.length - 1);
+    } else {
+      throw new Error('Unterminated quotes: |' + query.slice(i) + '| ' + i);
+    }
+  };
+
   while (i < query.length) {
     const char = query[i];
     const startingIndex = i;
 
-    if ((match = extract(query, i, /\s*(\(|\))\s*/y)) !== undefined) {
+    if ((match = extract(query, i, /(\(\s*|\s*\))/y)) !== undefined) {
       // Start/end group
       // TODO: use whitespace tolerant regex??
       consume(match);
       yield [match.trim() as TokenType];
     } else if (char === '"' || char === "'") {
       // Quoted string
-      consume(char);
-      const quote = char;
-      // TODO: cache regexp?
-      if ((match = extract(query, i, new RegExp('(.*?)' + quote, 'y'))) !== undefined) {
-        consume(match);
-        // Slice off the last character
-        yield ['str', match.slice(0, match.length - 1)];
-      } else {
-        throw new Error('Unterminated quotes: |' + query.slice(i) + '| ' + i);
-      }
-    } else if ((match = extract(query, i, /\s*-\s*/y)) !== undefined) {
+      yield ['str', consumeString(char)];
+    } else if ((match = extract(query, i, /-\s*/y)) !== undefined) {
       // minus sign is the same as "not"
       consume(match);
       yield ['not'];
-    } else if ((match = extract(query, i, /\s*(not|or|and)\s*/y)) !== undefined) {
+    } else if ((match = extract(query, i, /(not|\s*or|\s*and)\s*/y)) !== undefined) {
       // boolean keywords
       consume(match);
       yield [match.trim() as TokenType];
+    } else if ((match = extract(query, i, /[a-z]+:([a-z]+:)?/y)) !== undefined) {
+      // Keyword searches - is:, stat:discipline:, etc
+      consume(match);
+      const keyword = match.slice(0, match.length - 1);
+      const nextChar = query[i];
+
+      let args = '';
+
+      if (nextChar === '"' || nextChar === "'") {
+        args = consumeString(nextChar);
+      } else if ((match = extract(query, i, /[^\s()]+/y)) !== undefined) {
+        consume(match);
+        args = match;
+      } else {
+        throw new Error('missing keyword arguments for ' + match);
+      }
+
+      yield ['keyword', keyword, args];
     } else if ((match = extract(query, i, /[^\s)]+/y)) !== undefined) {
       // bare words that aren't keywords
       consume(match);
-      yield ['word', match];
+      yield ['str', match];
     } else if ((match = extract(query, i, /\s+/y)) !== undefined) {
       consume(match);
       yield ['and'];
@@ -134,6 +156,7 @@ export function* lexer(query: string): Generator<Token> {
   }
 }
 
+// TODO: maybe move into lexer as a closure, consume inside
 /**
  * If `str` matches `re` starting at `index`, return the matched portion of the string. Otherwise return undefined.
  * This avoids having to make slices of strings just to start the regex in the middle of a string.

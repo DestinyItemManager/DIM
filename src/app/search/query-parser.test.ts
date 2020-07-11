@@ -13,10 +13,12 @@ const cases = [
   ['-(power:>1000 and -modslot:arrival)'],
   ['( power:>1000 and -modslot:arrival ) '],
   ['- is:exotic - (power:>1000)'],
+  ['is:armor2.0'],
+  ['not forgotten'], // => -"forgotten"
+  ['cluster tracking'], // => "cluster" and "tracking"
   ['name:"Hard Light"'],
   ["name:'Hard Light'"],
   ['name:"Gahlran\'s Right Hand"'],
-  ['not witherhoard'],
   ['-witherhoard'],
   ['perk:수집가'],
   ['perk:"수집가"'],

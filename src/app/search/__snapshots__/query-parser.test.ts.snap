@@ -24,8 +24,9 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "power:>1000",
+    "keyword",
+    "power",
+    ">1000",
   ],
   Array [
     "and",
@@ -34,8 +35,9 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "modslot:arrival",
+    "keyword",
+    "modslot",
+    "arrival",
   ],
   Array [
     ")",
@@ -49,15 +51,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:hunter",
+    "keyword",
+    "is",
+    "hunter",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "power:>=540",
+    "keyword",
+    "power",
+    ">=540",
   ],
   Array [
     ")",
@@ -69,15 +73,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:warlock",
+    "keyword",
+    "is",
+    "warlock",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "power:>=560",
+    "keyword",
+    "power",
+    ">=560",
   ],
   Array [
     ")",
@@ -91,15 +97,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:weapon",
+    "keyword",
+    "is",
+    "weapon",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "is:sniperrifle",
+    "keyword",
+    "is",
+    "sniperrifle",
   ],
   Array [
     ")",
@@ -114,15 +122,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:armor",
+    "keyword",
+    "is",
+    "armor",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "modslot:arrival",
+    "keyword",
+    "modslot",
+    "arrival",
   ],
   Array [
     ")",
@@ -136,15 +146,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:weapon",
+    "keyword",
+    "is",
+    "weapon",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "is:sniperrifle",
+    "keyword",
+    "is",
+    "sniperrifle",
   ],
   Array [
     ")",
@@ -156,15 +168,17 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "is:armor",
+    "keyword",
+    "is",
+    "armor",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "modslot:arrival",
+    "keyword",
+    "modslot",
+    "arrival",
   ],
   Array [
     ")",
@@ -178,8 +192,12 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "is:exotic",
+    "keyword",
+    "is",
+    "exotic",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -188,8 +206,9 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "power:>1000",
+    "keyword",
+    "power",
+    ">1000",
   ],
   Array [
     ")",
@@ -206,8 +225,9 @@ Array [
     "(",
   ],
   Array [
-    "word",
-    "power:>1000",
+    "keyword",
+    "power",
+    ">1000",
   ],
   Array [
     "and",
@@ -216,8 +236,9 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "modslot:arrival",
+    "keyword",
+    "modslot",
+    "arrival",
   ],
   Array [
     ")",
@@ -231,22 +252,25 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "is:equipped",
+    "keyword",
+    "is",
+    "equipped",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "is:haspower",
+    "keyword",
+    "is",
+    "haspower",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "is:incurrentchar",
+    "keyword",
+    "is",
+    "incurrentchar",
   ],
 ]
 `;
@@ -257,36 +281,50 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "is:exotic",
-  ],
-  Array [
-    "not",
-  ],
-  Array [
-    "word",
-    "is:locked",
-  ],
-  Array [
-    "not",
-  ],
-  Array [
-    "word",
-    "is:maxpower",
-  ],
-  Array [
-    "not",
-  ],
-  Array [
-    "word",
-    "is:tagged",
+    "keyword",
+    "is",
+    "exotic",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "stat:total:<55",
+    "not",
+  ],
+  Array [
+    "keyword",
+    "is",
+    "locked",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "keyword",
+    "is",
+    "maxpower",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "keyword",
+    "is",
+    "tagged",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "keyword",
+    "stat:total",
+    "<55",
   ],
 ]
 `;
@@ -297,22 +335,28 @@ Array [
     "not",
   ],
   Array [
-    "word",
-    "source:garden",
-  ],
-  Array [
-    "not",
-  ],
-  Array [
-    "word",
-    "source:lastwish",
+    "keyword",
+    "source",
+    "garden",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "sunsetsafter:arrival",
+    "not",
+  ],
+  Array [
+    "keyword",
+    "source",
+    "lastwish",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "keyword",
+    "sunsetsafter",
+    "arrival",
   ],
 ]
 `;
@@ -323,8 +367,34 @@ Array [
     "not",
   ],
   Array [
-    "word",
+    "str",
     "witherhoard",
+  ],
+]
+`;
+
+exports[`parse |cluster tracking|: lexer 1`] = `
+Array [
+  Array [
+    "str",
+    "cluster",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "str",
+    "tracking",
+  ],
+]
+`;
+
+exports[`parse |is:armor2.0|: lexer 1`] = `
+Array [
+  Array [
+    "keyword",
+    "is",
+    "armor2.0",
   ],
 ]
 `;
@@ -332,22 +402,28 @@ Array [
 exports[`parse |is:blue is:haspower -is:maxpower|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "is:blue",
+    "keyword",
+    "is",
+    "blue",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "is:haspower",
+    "keyword",
+    "is",
+    "haspower",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
   ],
   Array [
-    "word",
-    "is:maxpower",
+    "keyword",
+    "is",
+    "maxpower",
   ],
 ]
 `;
@@ -355,29 +431,28 @@ Array [
 exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "is:rocketlauncher",
-  ],
-  Array [
-    "(",
-  ],
-  Array [
-    "word",
-    "perk:\\"cluster\\"",
-  ],
-  Array [
-    "or",
-  ],
-  Array [
-    "word",
-    "perk:\\"tracking",
+    "keyword",
+    "is",
+    "rocketlauncher",
   ],
   Array [
     "and",
   ],
   Array [
-    "word",
-    "module\\"",
+    "(",
+  ],
+  Array [
+    "keyword",
+    "perk",
+    "cluster",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "keyword",
+    "perk",
+    "tracking module",
   ],
   Array [
     ")",
@@ -388,8 +463,12 @@ Array [
 exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "is:rocketlauncher",
+    "keyword",
+    "is",
+    "rocketlauncher",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -397,6 +476,9 @@ Array [
   Array [
     "str",
     "cluster",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -411,8 +493,12 @@ Array [
 exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "is:rocketlauncher",
+    "keyword",
+    "is",
+    "rocketlauncher",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -420,6 +506,9 @@ Array [
   Array [
     "str",
     "cluster",
+  ],
+  Array [
+    "and",
   ],
   Array [
     "not",
@@ -434,22 +523,9 @@ Array [
 exports[`parse |name:"Gahlran's Right Hand"|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "name:\\"gahlran's",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
-    "word",
-    "right",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
-    "word",
-    "hand\\"",
+    "keyword",
+    "name",
+    "gahlran's right hand",
   ],
 ]
 `;
@@ -457,15 +533,9 @@ Array [
 exports[`parse |name:"Hard Light"|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "name:\\"hard",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
-    "word",
-    "light\\"",
+    "keyword",
+    "name",
+    "hard light",
   ],
 ]
 `;
@@ -473,27 +543,21 @@ Array [
 exports[`parse |name:'Hard Light'|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "name:'hard",
-  ],
-  Array [
-    "and",
-  ],
-  Array [
-    "word",
-    "light'",
+    "keyword",
+    "name",
+    "hard light",
   ],
 ]
 `;
 
-exports[`parse |not witherhoard|: lexer 1`] = `
+exports[`parse |not forgotten|: lexer 1`] = `
 Array [
   Array [
     "not",
   ],
   Array [
-    "word",
-    "witherhoard",
+    "str",
+    "forgotten",
   ],
 ]
 `;
@@ -501,8 +565,9 @@ Array [
 exports[`parse |perk:"수집가"|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "perk:\\"수집가\\"",
+    "keyword",
+    "perk",
+    "수집가",
   ],
 ]
 `;
@@ -510,8 +575,9 @@ Array [
 exports[`parse |perk:수집가|: lexer 1`] = `
 Array [
   Array [
-    "word",
-    "perk:수집가",
+    "keyword",
+    "perk",
+    "수집가",
   ],
 ]
 `;
@@ -537,7 +603,7 @@ Array [
 exports[`parse |수집가|: lexer 1`] = `
 Array [
   Array [
-    "word",
+    "str",
     "수집가",
   ],
 ]
