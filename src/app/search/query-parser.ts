@@ -80,6 +80,21 @@ class PeekableGenerator<T> {
   }
 }
 
+const operators = {
+  implicit_and: {
+    precedence: 1,
+    op: 'and',
+  },
+  or: {
+    precedence: 2,
+    op: 'or',
+  },
+  and: {
+    precedence: 3,
+    op: 'and',
+  },
+};
+
 /**
  * The query parser first lexes the string, then parses it into an AST (abstract syntax tree)
  * representing the logical structure of the query. This AST can then be walked to match up
@@ -93,11 +108,63 @@ export function parseQuery(query: string): QueryAST {
   // https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
   // TODO: implement operator precedence, with lower precedence for implicit and?
   // TODO: separate into parseAtom and an operator-focused loop?
+
+  /**
+   * This extracts the next "atom" aka "value" from the token stream. An atom is either
+   * an individual filter expression, or a grouped expression. Basically anything that's
+   * not a binary operator. "not" is also in here because it's really just a modifier on an atom.
+   */
+  function parseAtom(tokens: PeekableGenerator<Token>): QueryAST {
+    const token: Token | undefined = tokens.peek();
+
+    if (!token) {
+      throw new Error('expected an atom');
+    }
+
+    switch (token[0]) {
+      case 'filter': {
+        tokens.pop();
+        const keyword = token[1];
+        if (keyword === 'not') {
+          // not: is a synonym for -is:
+          return {
+            op: 'not',
+            operand: {
+              op: 'filter',
+              type: 'is',
+              args: token[2],
+            },
+          };
+        } else {
+          return {
+            op: 'filter',
+            type: keyword,
+            args: token[2],
+          };
+        }
+      }
+      case 'not': {
+        tokens.pop();
+        return {
+          op: 'not',
+          // The operand should always be an atom
+          operand: parseAtom(tokens),
+        };
+      }
+      case '(': {
+        tokens.pop();
+        return parse(new PeekableGenerator(untilCloseParen(tokens)));
+      }
+      default:
+        throw new Error('Unexpected token type, looking for an atom: ' + token + ', ' + query);
+    }
+  }
+
   /**
    * Parse a stream of tokens into an AST. If `singleExpression` is passed, this expects
    * to parse exactly one filter or parenthesized subquery and then returns.
    */
-  const parse = (tokens: PeekableGenerator<Token>, singleExpression = false): QueryAST => {
+  function parse(tokens: PeekableGenerator<Token>, minPrecedence = 1): QueryAST {
     let ast: QueryAST = {
       op: 'and',
       operands: [],
@@ -105,87 +172,48 @@ export function parseQuery(query: string): QueryAST {
 
     let token: Token | undefined;
     while ((token = tokens.peek())) {
-      console.log('START', token, ast);
-      if (singleExpression && !['filter', 'not', '('].includes(token[0])) {
-        break;
-      }
-      tokens.pop();
+      console.log('START', token, ast, minPrecedence);
 
       switch (token[0]) {
         case 'filter':
-          {
-            if (ast.op !== 'and' && ast.op !== 'or') {
-              throw new Error('expected to be in an and/or expression');
-            }
-            const keyword = token[1];
-            if (keyword === 'not') {
-              // not: is a synonym for -is:
-              ast.operands.push({
-                op: 'not',
-                operand: {
-                  op: 'filter',
-                  type: 'is',
-                  args: token[2],
-                },
-              });
-            } else {
-              ast.operands.push({
-                op: 'filter',
-                type: keyword,
-                args: token[2],
-              });
-            }
-          }
-          break;
         case 'not':
+        case '(':
+          // Parse initial/bare atoms directly
           {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
-            // parse next espression?
-            // Parse all the rest then fish out the leftmost?
-            ast.operands.push({
-              op: 'not',
-              // TODO: how to limit it to a single expression?
-              operand: parse(tokens, true),
-            });
+            const atom = parseAtom(tokens);
+            console.log('ATOM', atom, ast);
+            ast.operands.push(atom);
           }
           break;
         case 'and':
         case 'implicit_and':
-          {
-            if (ast.op === 'and') {
-              ast.operands.push(parse(tokens, true));
-            } else {
-              ast = {
-                op: 'and',
-                operands: [ast, parse(tokens, true)],
-              };
-            }
-          }
-          break;
         case 'or':
-          {
-            if (ast.op === 'or') {
-              ast.operands.push(parse(tokens, true));
-            } else {
-              ast = {
-                op: 'or',
-                operands: [ast, parse(tokens, true)],
-              };
-            }
-          }
-          break;
-        case '(':
           {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
-            const subQuery = parse(new PeekableGenerator(untilCloseParen(tokens)));
-            if (ast.operands.length > 0) {
-              ast.operands.push(subQuery);
+
+            const { op } = operators[token[0]];
+
+            /*
+            if (precedence < minPrecedence) {
+              break mainloop;
+            }
+            */
+            tokens.pop();
+
+            const rhs = parseAtom(tokens);
+
+            if (ast.op === op) {
+              ast.operands.push(rhs);
             } else {
-              ast = subQuery;
+              ast = {
+                op: op as 'and' | 'or',
+                operands: [ast, rhs],
+              };
             }
           }
           break;
@@ -198,6 +226,7 @@ export function parseQuery(query: string): QueryAST {
 
     console.log('ALLDONE', token, ast);
 
+    // Eliminate redundancy
     if (ast.op === 'and' || ast.op === 'or') {
       if (ast.operands.length === 1) {
         return ast.operands[0];
@@ -208,7 +237,7 @@ export function parseQuery(query: string): QueryAST {
       }
     }
     return ast;
-  };
+  }
 
   const tokens = lexer(query);
   const ast = parse(new PeekableGenerator(tokens));
@@ -230,21 +259,6 @@ function* untilCloseParen(tokens: PeekableGenerator<Token>): Generator<Token> {
     yield token;
   }
 }
-
-/**
- * Yield tokens from the passed in generator until we reach an and/or token.
- */
-// TODO: this really needs "peek"...
-/*
-function* untilBooleanOp(tokens: Generator<Token>): Generator<Token> {
-  for (const token of tokens) {
-    if (token[0] === 'and') {
-      return;
-    }
-    yield token;
-  }
-}
-*/
 
 // Two different kind of quotes
 const quoteRegexes = {

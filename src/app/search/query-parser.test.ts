@@ -4,6 +4,7 @@ import { parseQuery, lexer, Token } from './query-parser';
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
 
 // TODO: explicit "and" should have higher precedence than "or", but implicit "and" should have *lower* precedence than "or"
+// TODO: test "not not not", nested parens, etc
 
 // Some of these are contrived, some are from past search parsing issues
 const cases = [

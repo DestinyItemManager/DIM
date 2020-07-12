@@ -92,14 +92,19 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "args": "hunter",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "args": ">=540",
-          "op": "filter",
-          "type": "power",
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "hunter",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": ">=540",
+              "op": "filter",
+              "type": "power",
+            },
+          ],
         },
       ],
     },
@@ -176,14 +181,19 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "args": "weapon",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "args": "sniperrifle",
-          "op": "filter",
-          "type": "is",
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "weapon",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": "sniperrifle",
+              "op": "filter",
+              "type": "is",
+            },
+          ],
         },
       ],
     },
@@ -266,14 +276,19 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "args": "weapon",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "args": "sniperrifle",
-          "op": "filter",
-          "type": "is",
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "weapon",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": "sniperrifle",
+              "op": "filter",
+              "type": "is",
+            },
+          ],
         },
       ],
     },
