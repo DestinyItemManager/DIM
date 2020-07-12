@@ -299,6 +299,9 @@ export function process(
                 }
               }
 
+              // Spreading firstValidSet would generally be unwanted but findUntilExhausted modifies it in place.
+              // The alternative would be that it creates a new one with each recursion leading to more new arrays.
+              // More arrays bad.
               if (
                 processedSeasonalMods.length &&
                 !findUntilExhausted(processedSeasonalMods, [...firstValidSet])
