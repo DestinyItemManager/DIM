@@ -34,7 +34,7 @@ export interface ProcessItem {
   basePower: number;
   stats: { [statHash: number]: number };
   season?: number;
-  modSeasons?: string[];
+  compatibleModSeasons?: string[];
 }
 
 export type ProcessItemsByBucket = Readonly<{

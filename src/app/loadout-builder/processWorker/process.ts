@@ -301,7 +301,7 @@ export function process(
 
               if (
                 processedSeasonalMods.length &&
-                !findUntilExhausted(processedSeasonalMods, firstValidSet)
+                !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
               ) {
                 continue;
               }
@@ -592,8 +592,8 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
   }));
 }
 
-function findUntilExhausted(sortedModSeasons: string[], items: ProcessItem[]) {
-  const itemModSeasons = [...items]
+function canTakeAllSeasonalMods(sortedModSeasons: string[], items: ProcessItem[]) {
+  const itemCompatibleModSeasons = [...items]
     .sort((a, b) => {
       if (a.season && b.season) {
         return a.season - b.season;
@@ -602,13 +602,13 @@ function findUntilExhausted(sortedModSeasons: string[], items: ProcessItem[]) {
       }
       return -1;
     })
-    .map((item) => item.modSeasons);
+    .map((item) => item.compatibleModSeasons);
 
   let modIndex = 0;
   let itemIndex = 0;
 
   while (modIndex < sortedModSeasons.length && itemIndex < items.length) {
-    if (itemModSeasons[itemIndex]?.includes(sortedModSeasons[modIndex])) {
+    if (itemCompatibleModSeasons[itemIndex]?.includes(sortedModSeasons[modIndex])) {
       modIndex += 1;
     }
     itemIndex += 1;

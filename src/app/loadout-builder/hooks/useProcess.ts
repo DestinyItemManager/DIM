@@ -246,7 +246,7 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energyType: dimItem.energy?.energyType,
     season: modMetadata?.season,
-    modSeasons: modMetadata?.compatibleTags,
+    compatibleModSeasons: modMetadata?.compatibleTags,
   };
 }
 
