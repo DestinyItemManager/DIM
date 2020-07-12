@@ -103,7 +103,6 @@ const operators = {
 export function parseQuery(query: string): QueryAST {
   // This implements operator precedence via this mechanism:
   // https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
-  // TODO: stop and return what we have in case of an error
 
   /**
    * This extracts the next "atom" aka "value" from the token stream. An atom is either
@@ -301,7 +300,6 @@ export function* lexer(query: string): Generator<Token> {
   const consumeString = (startingQuoteChar: string) => {
     // Quoted string
     consume(startingQuoteChar);
-    // TODO: cache regexp?
     if ((match = extract(quoteRegexes[startingQuoteChar])) !== undefined) {
       // Slice off the last character
       return match.slice(0, match.length - 1);
