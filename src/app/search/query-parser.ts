@@ -55,27 +55,57 @@ interface NoOp {
   op: 'noop';
 }
 
+class PeekableGenerator<T> {
+  private gen: Generator<T>;
+  private next: T | undefined;
+
+  constructor(gen: Generator<T>) {
+    this.gen = gen;
+  }
+
+  peek(): T | undefined {
+    if (!this.next) {
+      this.next = this.gen.next().value;
+    }
+    return this.next;
+  }
+
+  pop(): T | undefined {
+    if (this.next) {
+      const ret = this.next;
+      this.next = undefined;
+      return ret;
+    }
+    return this.gen.next().value;
+  }
+}
+
 /**
  * The query parser first lexes the string, then parses it into an AST representing the logical
  * structure of the query.
  */
 export function parseQuery(query: string) {
   // TODO: how to limit how many expressions this consumes?
-  const parse = (tokens: Generator<Token>): QueryAST => {
+  const parse = (tokens: PeekableGenerator<Token>, rightAssociative = false): QueryAST => {
     let ast: QueryAST = {
       op: 'and',
       operands: [],
     };
 
-    let token: Token;
-    while ((token = tokens.next().value)) {
+    let token: Token | undefined;
+    while ((token = tokens.peek())) {
       console.log('START', token, ast);
+      if (rightAssociative && !['filter', 'not', '('].includes(token[0])) {
+        break;
+      }
+
       switch (token[0]) {
         case 'filter':
           {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
+            tokens.pop();
             const keyword = token[1];
             if (keyword === 'not') {
               // not: is a synonym for -is:
@@ -101,17 +131,19 @@ export function parseQuery(query: string) {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
+            tokens.pop();
             // parse next espression?
             // Parse all the rest then fish out the leftmost?
             ast.operands.push({
               op: 'not',
               // TODO: how to limit it to a single expression?
-              operand: parse(tokens),
+              operand: parse(tokens, true),
             });
           }
           break;
         case 'and':
           {
+            tokens.pop();
             if (ast.op === 'and') {
               ast.operands.push(parse(tokens));
             } else {
@@ -124,6 +156,7 @@ export function parseQuery(query: string) {
           break;
         case 'or':
           {
+            tokens.pop();
             if (ast.op === 'or') {
               ast.operands.push(parse(tokens));
             } else {
@@ -136,10 +169,11 @@ export function parseQuery(query: string) {
           break;
         case '(':
           {
+            tokens.pop();
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
-            const subQuery = parse(untilCloseParen(tokens));
+            const subQuery = parse(new PeekableGenerator(untilCloseParen(tokens)));
             if (ast.operands.length > 0) {
               ast.operands.push(subQuery);
             } else {
@@ -169,7 +203,7 @@ export function parseQuery(query: string) {
   };
 
   const tokens = lexer(query);
-  const ast = parse(tokens);
+  const ast = parse(new PeekableGenerator(tokens));
   return ast;
 }
 
@@ -179,9 +213,9 @@ export type Token = [NoArgTokenType] | ['filter', string, string];
 /**
  * Yield tokens from the passed in generator until we reach a closing parenthesis token.
  */
-function* untilCloseParen(tokens: Generator<Token>): Generator<Token> {
-  let token: Token;
-  while ((token = tokens.next().value)) {
+function* untilCloseParen(tokens: PeekableGenerator<Token>): Generator<Token> {
+  let token: Token | undefined;
+  while ((token = tokens.pop())) {
     if (token[0] === ')') {
       return;
     }

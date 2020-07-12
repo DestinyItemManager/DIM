@@ -344,25 +344,25 @@ Array [
 
 exports[`parse |- is:exotic - (power:>1000)|: ast 1`] = `
 Object {
-  "op": "not",
-  "operand": Object {
-    "op": "and",
-    "operands": Array [
-      Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "not",
+      "operand": Object {
         "args": "exotic",
         "op": "filter",
         "type": "is",
       },
-      Object {
-        "op": "not",
-        "operand": Object {
-          "args": ">1000",
-          "op": "filter",
-          "type": "power",
-        },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": ">1000",
+        "op": "filter",
+        "type": "power",
       },
-    ],
-  },
+    },
+  ],
 }
 `;
 
@@ -452,32 +452,32 @@ Array [
 
 exports[`parse |-is:equipped is:haspower is:incurrentchar|: ast 1`] = `
 Object {
-  "op": "not",
-  "operand": Object {
-    "op": "and",
-    "operands": Array [
-      Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "not",
+      "operand": Object {
         "args": "equipped",
         "op": "filter",
         "type": "is",
       },
-      Object {
-        "op": "and",
-        "operands": Array [
-          Object {
-            "args": "haspower",
-            "op": "filter",
-            "type": "is",
-          },
-          Object {
-            "args": "incurrentchar",
-            "op": "filter",
-            "type": "is",
-          },
-        ],
-      },
-    ],
-  },
+    },
+    Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "args": "haspower",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "incurrentchar",
+          "op": "filter",
+          "type": "is",
+        },
+      ],
+    },
+  ],
 }
 `;
 
@@ -512,61 +512,61 @@ Array [
 
 exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: ast 1`] = `
 Object {
-  "op": "not",
-  "operand": Object {
-    "op": "and",
-    "operands": Array [
-      Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "not",
+      "operand": Object {
         "args": "exotic",
         "op": "filter",
         "type": "is",
       },
-      Object {
-        "op": "not",
-        "operand": Object {
+    },
+    Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "op": "not",
+          "operand": Object {
+            "args": "locked",
+            "op": "filter",
+            "type": "is",
+          },
+        },
+        Object {
           "op": "and",
           "operands": Array [
             Object {
-              "args": "locked",
-              "op": "filter",
-              "type": "is",
-            },
-            Object {
               "op": "not",
               "operand": Object {
-                "op": "and",
-                "operands": Array [
-                  Object {
-                    "args": "maxpower",
+                "args": "maxpower",
+                "op": "filter",
+                "type": "is",
+              },
+            },
+            Object {
+              "op": "and",
+              "operands": Array [
+                Object {
+                  "op": "not",
+                  "operand": Object {
+                    "args": "tagged",
                     "op": "filter",
                     "type": "is",
                   },
-                  Object {
-                    "op": "not",
-                    "operand": Object {
-                      "op": "and",
-                      "operands": Array [
-                        Object {
-                          "args": "tagged",
-                          "op": "filter",
-                          "type": "is",
-                        },
-                        Object {
-                          "args": "<55",
-                          "op": "filter",
-                          "type": "stat:total",
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
+                },
+                Object {
+                  "args": "<55",
+                  "op": "filter",
+                  "type": "stat:total",
+                },
+              ],
             },
           ],
         },
-      },
-    ],
-  },
+      ],
+    },
+  ],
 }
 `;
 
@@ -626,35 +626,35 @@ Array [
 
 exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: ast 1`] = `
 Object {
-  "op": "not",
-  "operand": Object {
-    "op": "and",
-    "operands": Array [
-      Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "not",
+      "operand": Object {
         "args": "garden",
         "op": "filter",
         "type": "source",
       },
-      Object {
-        "op": "not",
-        "operand": Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "lastwish",
-              "op": "filter",
-              "type": "source",
-            },
-            Object {
-              "args": "arrival",
-              "op": "filter",
-              "type": "sunsetsafter",
-            },
-          ],
+    },
+    Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "op": "not",
+          "operand": Object {
+            "args": "lastwish",
+            "op": "filter",
+            "type": "source",
+          },
         },
-      },
-    ],
-  },
+        Object {
+          "args": "arrival",
+          "op": "filter",
+          "type": "sunsetsafter",
+        },
+      ],
+    },
+  ],
 }
 `;
 
@@ -963,25 +963,25 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "not",
-      "operand": Object {
-        "op": "and",
-        "operands": Array [
-          Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "op": "not",
+          "operand": Object {
             "args": "cluster",
             "op": "filter",
             "type": "keyword",
           },
-          Object {
-            "op": "not",
-            "operand": Object {
-              "args": "tracking module",
-              "op": "filter",
-              "type": "keyword",
-            },
+        },
+        Object {
+          "op": "not",
+          "operand": Object {
+            "args": "tracking module",
+            "op": "filter",
+            "type": "keyword",
           },
-        ],
-      },
+        },
+      ],
     },
   ],
 }
@@ -1029,25 +1029,25 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "not",
-      "operand": Object {
-        "op": "and",
-        "operands": Array [
-          Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "op": "not",
+          "operand": Object {
             "args": "cluster",
             "op": "filter",
             "type": "keyword",
           },
-          Object {
-            "op": "not",
-            "operand": Object {
-              "args": "tracking module",
-              "op": "filter",
-              "type": "keyword",
-            },
+        },
+        Object {
+          "op": "not",
+          "operand": Object {
+            "args": "tracking module",
+            "op": "filter",
+            "type": "keyword",
           },
-        ],
-      },
+        },
+      ],
     },
   ],
 }
@@ -1108,22 +1108,22 @@ Object {
           ],
         },
         Object {
-          "op": "not",
-          "operand": Object {
-            "op": "and",
-            "operands": Array [
-              Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "op": "not",
+              "operand": Object {
                 "args": "armor",
                 "op": "filter",
                 "type": "is",
               },
-              Object {
-                "args": "arrival",
-                "op": "filter",
-                "type": "modslot",
-              },
-            ],
-          },
+            },
+            Object {
+              "args": "arrival",
+              "op": "filter",
+              "type": "modslot",
+            },
+          ],
         },
       ],
     },
