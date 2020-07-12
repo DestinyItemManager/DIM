@@ -20,35 +20,57 @@
 
 import _ from 'lodash';
 
+/* **** Parser **** */
+
+/**
+ * A tree of the parsed query. Boolean/unary operators have children (operands)that
+ * describe their relationship.
+ */
 type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
   error?: Error;
 };
 
+/** If ALL of of the operands are true, this resolves to true. There may be any number of operands. */
 interface AndOp {
   op: 'and';
   operands: QueryAST[];
 }
 
+/** If any of the operands is true, this resolves to true. There may be any number of operands. */
 interface OrOp {
   op: 'or';
   operands: QueryAST[];
 }
 
+/** An operator which negates the result of its only operand. */
 interface NotOp {
   op: 'not';
   operand: QueryAST;
 }
 
+/** This represents one of our filter function definitions, such as is:, season:, etc. */
 interface FilterOp {
   op: 'filter';
+  /**
+   * The name of the filter function, without any trailing :. The only weird case is
+   * stats, which will appear like "stat:strength".
+   */
   type: string;
+  /**
+   * Any arguments to the filter function as a single string. e.g: haspower, arrivals, >=1000
+   */
   args: string;
 }
 
+/** This is mostly for error cases and empty string */
 interface NoOp {
   op: 'noop';
 }
 
+/**
+ * The lexer is implemented as a generator, but generators don't support peeking without advancing
+ * the iterator. This wraps the generator in an object that buffers the next element if you call peek().
+ */
 class PeekableGenerator<T> {
   private gen: Generator<T>;
   private next: T | undefined;
@@ -57,6 +79,9 @@ class PeekableGenerator<T> {
     this.gen = gen;
   }
 
+  /**
+   * Get what the next item from the generator will be, without advancing it.
+   */
   peek(): T | undefined {
     if (!this.next) {
       this.next = this.gen.next().value;
@@ -64,6 +89,9 @@ class PeekableGenerator<T> {
     return this.next;
   }
 
+  /**
+   * Get the next element from the generator and advance it to the next element.
+   */
   pop(): T | undefined {
     if (this.next) {
       const ret = this.next;
@@ -75,9 +103,11 @@ class PeekableGenerator<T> {
 }
 
 /**
- * The implicit and (two statements separated by whitespace) has lower precedence than either the explicit or or and.
+ * A table of operator precedence for our three binary operators. Operators with higher precedence group together
+ * before those with lower precedence. The "op" property maps them to an AST node.
  */
 const operators = {
+  // The implicit `and` (two statements separated by whitespace) has lower precedence than either the explicit or or and.
   implicit_and: {
     precedence: 1,
     op: 'and',
@@ -160,8 +190,8 @@ export function parseQuery(query: string): QueryAST {
   }
 
   /**
-   * Parse a stream of tokens into an AST. If `singleExpression` is passed, this expects
-   * to parse exactly one filter or parenthesized subquery and then returns.
+   * Parse a stream of tokens into an AST. `minPrecedence` determined the minimum operator precedence
+   * of operators that will be included in this portion of the parse.
    */
   function parse(tokens: PeekableGenerator<Token>, minPrecedence = 1): QueryAST {
     let ast: QueryAST = { op: 'noop' };
@@ -179,9 +209,11 @@ export function parseQuery(query: string): QueryAST {
         }
 
         tokens.pop();
-        const nextMinPrecedence = operator.precedence + 1;
+        const nextMinPrecedence = operator.precedence + 1; // all our operators are left-associative
         const rhs = parse(tokens, nextMinPrecedence);
 
+        // Our operators allow for more than 2 operands, to avoid deep logic trees.
+        // This logic tries to combine them where possible.
         if (isSameOp(operator.op, ast)) {
           ast.operands.push(rhs);
         } else {
@@ -210,9 +242,6 @@ function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp |
   return binOp === op.op;
 }
 
-type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
-export type Token = [NoArgTokenType] | ['filter', string, string];
-
 /**
  * Yield tokens from the passed in generator until we reach a closing parenthesis token.
  */
@@ -225,6 +254,12 @@ function* untilCloseParen(tokens: PeekableGenerator<Token>): Generator<Token> {
     yield token;
   }
 }
+
+/* **** Lexer **** */
+
+// Lexer token types
+type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
+export type Token = [NoArgTokenType] | ['filter', string, string];
 
 // Two different kind of quotes
 const quoteRegexes = {
@@ -250,6 +285,9 @@ const whitespace = /\s+/y;
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
  * This throws an exception if it finds an invalid input.
+ *
+ * Example: "is:blue -is:maxpower" turns into:
+ * ["filter", "is", "blue"], ["implicit_and"], ["not"], ["filter", "is", "maxpower"]
  */
 export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
@@ -264,7 +302,7 @@ export function* lexer(query: string): Generator<Token> {
   const consume = (str: string) => (i += str.length);
 
   /**
-   * If `str` matches `re` starting at `index`, return the matched portion of the string. Otherwise return undefined.
+   * If `query` matches `re` starting at `i`, return the matched portion of the string. Otherwise return undefined.
    * This avoids having to make slices of strings just to start the regex in the middle of a string.
    *
    * Note that regexes passed to this must have the "sticky" flag set (y) and should not use ^, which will match the
@@ -357,6 +395,8 @@ export function* lexer(query: string): Generator<Token> {
 
 /**
  * Build a standardized version of the query as a string. This is useful for deduping queries.
+ * Example: 'is:weapon and is:sniperrifle or not is:armor and modslot:arrival' =>
+ *          '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)'
  */
 export function canonicalizeQuery(query: QueryAST, depth = 0) {
   switch (query.op) {
