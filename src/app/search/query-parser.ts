@@ -1,14 +1,4 @@
 /*
-is:blue is:haspower -is:maxpower
--is:equipped is:haspower is:incurrentchar
--source:garden -source:lastwish sunsetsafter:arrival
--is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55
-(is:weapon is:sniperrifle) or (is:armor modslot:arrival)
-(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)
--(power:>1000 and -modslot:arrival)
-*/
-
-/*
 ; Lazy BNF diagram of our search grammar
 <query> ::= <term> | <term> <term>
 <clause> ::= <opt-whitespace> <clause>
@@ -27,6 +17,8 @@ is:blue is:haspower -is:maxpower
 ; Strings are basically anything within matching quotes, either single or double
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
+
+import _ from 'lodash';
 
 type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
   error?: Error;
@@ -173,9 +165,11 @@ export function parseQuery(query: string): QueryAST {
    * to parse exactly one filter or parenthesized subquery and then returns.
    */
   function parse(tokens: PeekableGenerator<Token>, minPrecedence = 1): QueryAST {
-    let ast: QueryAST = parseAtom(tokens);
+    let ast: QueryAST = { op: 'noop' };
 
     try {
+      ast = parseAtom(tokens);
+
       let token: Token | undefined;
       while ((token = tokens.peek())) {
         const operator = operators[token[0] as keyof typeof operators];
@@ -205,8 +199,11 @@ export function parseQuery(query: string): QueryAST {
     return ast;
   }
 
-  const tokens = lexer(query);
-  const ast = parse(new PeekableGenerator(tokens));
+  const tokens = new PeekableGenerator(lexer(query));
+  if (!tokens.peek()) {
+    return { op: 'noop' };
+  }
+  const ast = parse(tokens);
   return ast;
 }
 
@@ -357,5 +354,27 @@ export function* lexer(query: string): Generator<Token> {
     if (startingIndex === i) {
       throw new Error('bug: forgot to consume characters');
     }
+  }
+}
+
+/**
+ * Build a standardized version of the query as a string. This is useful for deduping queries.
+ */
+export function canonicalizeQuery(query: QueryAST, depth = 0) {
+  switch (query.op) {
+    case 'filter':
+      return `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
+    case 'not':
+      return `-${canonicalizeQuery(query.operand, depth + 1)}`;
+    case 'and':
+    case 'or': {
+      const sortedOperands = _.sortBy(
+        query.operands.map((q) => canonicalizeQuery(q, depth + 1)),
+        (q) => q.replace(/[(-](.*)/, '$1')
+      ).join(query.op === 'and' ? ' ' : ` ${query.op} `);
+      return depth === 0 ? sortedOperands : `(${sortedOperands})`;
+    }
+    case 'noop':
+      return '';
   }
 }

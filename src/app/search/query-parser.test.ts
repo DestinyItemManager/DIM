@@ -1,4 +1,4 @@
-import { parseQuery, lexer, Token } from './query-parser';
+import { parseQuery, lexer, Token, canonicalizeQuery } from './query-parser';
 
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
@@ -71,6 +71,22 @@ const equivalentSearches = [
     'is:rocketlauncher perk:"cluster" or perk:"tracking module"',
     'is:rocketlauncher (perk:"cluster" or perk:"tracking module")',
   ],
+  ['is:blue (is:rocketlauncher', 'is:blue is:rocketlauncher'],
+];
+
+// Test what we generate as the canonical form of queries. The first is the input,
+// the second is the canonical version
+const canonicalize = [
+  ['is:blue is:haspower not:maxpower', 'is:blue is:haspower -is:maxpower'],
+  [
+    'is:weapon and is:sniperrifle or not is:armor and modslot:arrival',
+    '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)',
+  ],
+  [
+    'is:rocketlauncher perk:"cluster" or perk:\'tracking module\'',
+    'is:rocketlauncher (perk:"tracking module" or perk:cluster)',
+  ],
+  ['( power:>1000 and -modslot:arrival ) ', '-modslot:arrival power:>1000'],
 ];
 
 test.each(cases)('parse |%s|', (query) => {
@@ -87,8 +103,12 @@ test.each(cases)('parse |%s|', (query) => {
 });
 
 test.each(equivalentSearches)('|%s| is equivalent to |%s|', (firstQuery, secondQuery) => {
-  // Test the full parse tree
   const firstAST = parseQuery(firstQuery);
   const secondAST = parseQuery(secondQuery);
   expect(firstAST).toEqual(secondAST);
+});
+
+test.each(canonicalize)('|%s| is canonically |%s|', (query, canonical) => {
+  const canonicalized = canonicalizeQuery(parseQuery(query));
+  expect(canonicalized).toEqual(canonical);
 });
