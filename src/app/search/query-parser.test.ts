@@ -3,15 +3,15 @@ import { parseQuery, lexer, Token } from './query-parser';
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
 
-// TODO: explicit "and" should have higher precedence than "or", but implicit "and" should have *lower* precedence than "or"
-// TODO: test "not not not", nested parens, etc
 // TODO: failed parse - a failed parse should return the parts that didn't fail plus an error code??
 
 // Some of these are contrived, some are from past search parsing issues
 const cases = [
   ['is:blue is:haspower -is:maxpower'],
   ['is:blue is:haspower not:maxpower'],
-  ['not:maxpower'], // => is:blue and (is:weapon or is:armor) and -is:maxpower
+  ['not:maxpower'],
+  ['not -not:maxpower'],
+  ['not not not:maxpower'],
   ['is:blue is:weapon or is:armor not:maxpower'], // => is:blue and (is:weapon or is:armor) and -is:maxpower
   ['not not:maxpower'],
   ['-is:equipped is:haspower is:incurrentchar'],
@@ -22,6 +22,7 @@ const cases = [
   ['is:weapon and is:sniperrifle or not is:armor and modslot:arrival'], // => (is:weapon and is:sniperrifle) or (-is:armor and modslot:arrival)
   ['is:weapon is:sniperrifle or not is:armor modslot:arrival'], // => is:weapon and (is:sniperrifle or -is:armor) and modslot:arrival
   ['is:weapon is:sniperrifle or is:armor and modslot:arrival'], // => is:weapon and (is:sniperrifle or (-is:armor modslot:arrival))
+  ['is:weapon (is:sniperrifle or (is:armor and modslot:arrival))'], // => is:weapon and (is:sniperrifle or (-is:armor modslot:arrival))
   ['-(power:>1000 and -modslot:arrival)'],
   ['( power:>1000 and -modslot:arrival ) '],
   ['- is:exotic - (power:>1000)'],
@@ -65,6 +66,10 @@ const equivalentSearches = [
   [
     'is:weapon is:sniperrifle or is:armor and modslot:arrival',
     'is:weapon and (is:sniperrifle or (is:armor and modslot:arrival))',
+  ],
+  [
+    'is:rocketlauncher perk:"cluster" or perk:"tracking module"',
+    'is:rocketlauncher (perk:"cluster" or perk:"tracking module")',
   ],
 ];
 

@@ -1102,6 +1102,90 @@ Array [
 ]
 `;
 
+exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "weapon",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "armor",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": "arrival",
+              "op": "filter",
+              "type": "modslot",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "sniperrifle",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "filter",
+    "modslot",
+    "arrival",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival|: ast 1`] = `
 Object {
   "op": "or",
@@ -1379,6 +1463,39 @@ Array [
 ]
 `;
 
+exports[`parse |not -not:maxpower|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "op": "not",
+    "operand": Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+  },
+}
+`;
+
+exports[`parse |not -not:maxpower|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "not",
+    "maxpower",
+  ],
+]
+`;
+
 exports[`parse |not forgotten|: ast 1`] = `
 Object {
   "op": "not",
@@ -1399,6 +1516,39 @@ Array [
     "filter",
     "keyword",
     "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not not not:maxpower|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "op": "not",
+    "operand": Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+  },
+}
+`;
+
+exports[`parse |not not not:maxpower|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "not",
+    "maxpower",
   ],
 ]
 `;

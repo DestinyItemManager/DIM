@@ -28,7 +28,9 @@ is:blue is:haspower -is:maxpower
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-type QueryAST = AndOp | OrOp | NotOp | FilterOp | NoOp;
+type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
+  error?: Error;
+};
 
 interface AndOp {
   op: 'and';
@@ -155,7 +157,11 @@ export function parseQuery(query: string): QueryAST {
       }
       case '(': {
         tokens.pop();
-        return parse(new PeekableGenerator(untilCloseParen(tokens)));
+        const result = parse(new PeekableGenerator(untilCloseParen(tokens)));
+        if (tokens.peek()?.[0] === ')') {
+          tokens.pop();
+        }
+        return result;
       }
       default:
         throw new Error('Unexpected token type, looking for an atom: ' + token + ', ' + query);
@@ -169,39 +175,33 @@ export function parseQuery(query: string): QueryAST {
   function parse(tokens: PeekableGenerator<Token>, minPrecedence = 1): QueryAST {
     let ast: QueryAST = parseAtom(tokens);
 
-    let token: Token | undefined;
-    while ((token = tokens.peek())) {
-      const operator = operators[token[0] as keyof typeof operators];
-      // TODO: if !operator, fail
-      if (!operator || operator.precedence < minPrecedence) {
-        break;
-      }
+    try {
+      let token: Token | undefined;
+      while ((token = tokens.peek())) {
+        const operator = operators[token[0] as keyof typeof operators];
+        if (!operator) {
+          throw new Error('Expected an operator, got ' + token);
+        } else if (operator.precedence < minPrecedence) {
+          break;
+        }
 
-      tokens.pop();
-      const nextMinPrecedence = operator.precedence + 1;
-      const rhs = parse(tokens, nextMinPrecedence);
+        tokens.pop();
+        const nextMinPrecedence = operator.precedence + 1;
+        const rhs = parse(tokens, nextMinPrecedence);
 
-      if (isSameOp(operator.op, ast)) {
-        ast.operands.push(rhs);
-      } else {
-        ast = {
-          op: operator.op,
-          operands: isSameOp(operator.op, rhs) ? [ast, ...rhs.operands] : [ast, rhs],
-        };
+        if (isSameOp(operator.op, ast)) {
+          ast.operands.push(rhs);
+        } else {
+          ast = {
+            op: operator.op,
+            operands: isSameOp(operator.op, rhs) ? [ast, ...rhs.operands] : [ast, rhs],
+          };
+        }
       }
+    } catch (e) {
+      ast.error = e;
     }
 
-    // Eliminate redundancy
-    // TODO: not needed?
-    if (ast.op === 'and' || ast.op === 'or') {
-      if (ast.operands.length === 1) {
-        return ast.operands[0];
-      } else if (ast.operands.length === 0) {
-        return {
-          op: 'noop',
-        };
-      }
-    }
     return ast;
   }
 
