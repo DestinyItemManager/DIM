@@ -91,12 +91,6 @@ export const getSpecialtySocketMetadata = (item: DimItem): ModMetadata | undefin
   ];
 
 /** returns ModMetadata if the category hash is known */
-export const getSpecialtySocketMetadataByCategoryHash = (
-  specialtySocketCategoryHash?: number
-): ModMetadata | undefined =>
-  modMetadataIndexedByEmptySlotHash[specialtySocketCategoryHash || -99999999];
-
-/** returns ModMetadata if the category hash is known */
 export const getSpecialtySocketMetadataByPlugCategoryHash = (
   plugCategoryHash: number
 ): ModMetadata | undefined =>

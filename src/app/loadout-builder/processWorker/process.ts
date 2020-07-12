@@ -91,7 +91,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
-  processedSeasonalMods: string[][],
+  processedSeasonalMods: string[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -592,37 +592,28 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
   }));
 }
 
-function findAllIndices<T>(arr: T[], func: (val: T) => any) {
-  const indices: number[] = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (func(arr[i])) {
-      indices.push(i);
+function findUntilExhausted(sortedModSeasons: string[], items: ProcessItem[]) {
+  const itemModSeasons = [...items]
+    .sort((a, b) => {
+      if (a.season && b.season) {
+        return a.season - b.season;
+      } else if (!a.season) {
+        return 1;
+      }
+      return -1;
+    })
+    .map((item) => item.modSeasons);
+
+  let modIndex = 0;
+  let itemIndex = 0;
+
+  while (modIndex < sortedModSeasons.length && itemIndex < items.length) {
+    if (itemModSeasons[itemIndex]?.includes(sortedModSeasons[modIndex])) {
+      modIndex += 1;
     }
-  }
-  return indices;
-}
-
-function findUntilExhausted(needles: string[][], haystack: ProcessItem[]) {
-  const needle = needles[0];
-  // we ran out of needles, indicating success. yay
-  if (!needle) {
-    return true;
-  }
-  // haystack indices which could be used to satisfy this need
-  const candidates = findAllIndices(
-    haystack,
-    (item) => item.season && needle.includes(item.season)
-  );
-
-  // an appropriate slot wasn't found among the armor. this branch failed to meet all needs.
-  if (!candidates) {
-    return false;
+    itemIndex += 1;
   }
 
-  // for each possible used armor, recurse this function with remaining haystack and remaining needles
-  return candidates.some((candidate) => {
-    const newHaystack = [...haystack];
-    newHaystack.splice(candidate, 1);
-    return findUntilExhausted(needles.slice(1), newHaystack);
-  });
+  // This needs to be larger than the last index in the array as it will overshoot if they all fit.
+  return modIndex === sortedModSeasons.length;
 }

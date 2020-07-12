@@ -19,7 +19,6 @@ import {
   ProcessSockets,
 } from '../processWorker/types';
 import {
-  getSpecialtySocketCategoryHash,
   getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
 } from 'app/utils/item-utils';
@@ -92,7 +91,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
-        mapSeasonalModToSeasonsArray(lockedSeasonalMods),
+        mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -191,19 +190,27 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
-function mapSeasonalModToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): string[][] {
-  const processedSeasonalMods: string[][] = [];
-  for (const mod of lockedSeasonalMods) {
-    const compatibleTags = getSpecialtySocketMetadataByPlugCategoryHash(
-      mod.mod.plug.plugCategoryHash
-    )?.compatibleTags;
+function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): string[] {
+  const sortedMetadata = lockedSeasonalMods
+    .map((mod) => getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash))
+    .sort((a, b) => {
+      // Not sure if I need the second two return conditions
+      if (a?.season && b?.season) {
+        return a.season - b.season;
+      } else if (!a?.season) {
+        return 1;
+      }
+      return -1;
+    });
 
-    if (compatibleTags) {
-      processedSeasonalMods.push(compatibleTags);
+  const sortedModSeasonTags: string[] = [];
+  for (const metadata of sortedMetadata) {
+    if (metadata) {
+      sortedModSeasonTags.push(metadata.tag);
     }
   }
 
-  return processedSeasonalMods;
+  return sortedModSeasonTags;
 }
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
@@ -226,6 +233,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     }
   }
 
+  const modMetadata = getSpecialtySocketMetadata(dimItem);
+
   return {
     bucketHash: bucket.hash,
     id,
@@ -236,8 +245,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     stats: statMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energyType: dimItem.energy?.energyType,
-    season: getSpecialtySocketMetadata(dimItem)?.tag,
-    specialtySocketCategoryHash: getSpecialtySocketCategoryHash(dimItem),
+    season: modMetadata?.season,
+    modSeasons: modMetadata?.compatibleTags,
   };
 }
 
