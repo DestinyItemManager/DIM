@@ -93,7 +93,7 @@ const operators = {
     precedence: 3,
     op: 'and',
   },
-};
+} as const;
 
 /**
  * The query parser first lexes the string, then parses it into an AST (abstract syntax tree)
@@ -165,60 +165,30 @@ export function parseQuery(query: string): QueryAST {
    * to parse exactly one filter or parenthesized subquery and then returns.
    */
   function parse(tokens: PeekableGenerator<Token>, minPrecedence = 1): QueryAST {
-    let ast: QueryAST = {
-      op: 'and',
-      operands: [],
-    };
+    let ast: QueryAST = parseAtom(tokens);
 
     let token: Token | undefined;
     while ((token = tokens.peek())) {
       console.log('START', token, ast, minPrecedence);
 
-      switch (token[0]) {
-        case 'filter':
-        case 'not':
-        case '(':
-          // Parse initial/bare atoms directly
-          {
-            if (ast.op !== 'and' && ast.op !== 'or') {
-              throw new Error('expected to be in an and/or expression');
-            }
-            const atom = parseAtom(tokens);
-            console.log('ATOM', atom, ast);
-            ast.operands.push(atom);
-          }
-          break;
-        case 'and':
-        case 'implicit_and':
-        case 'or':
-          {
-            if (ast.op !== 'and' && ast.op !== 'or') {
-              throw new Error('expected to be in an and/or expression');
-            }
+      const operator = operators[token[0] as keyof typeof operators];
+      // TODO: if !operator, fail
+      if (!operator || operator.precedence < minPrecedence) {
+        console.log('EXIT not operator or precedence, ', minPrecedence, operator?.precedence);
+        break;
+      }
 
-            const { op } = operators[token[0]];
+      tokens.pop();
+      const nextMinPrecedence = operator.precedence + 1;
+      const rhs = parse(tokens, nextMinPrecedence);
 
-            /*
-            if (precedence < minPrecedence) {
-              break mainloop;
-            }
-            */
-            tokens.pop();
-
-            const rhs = parseAtom(tokens);
-
-            if (ast.op === op) {
-              ast.operands.push(rhs);
-            } else {
-              ast = {
-                op: op as 'and' | 'or',
-                operands: [ast, rhs],
-              };
-            }
-          }
-          break;
-        default:
-          throw new Error('Invalid syntax: ' + token + ', ' + query);
+      if (isSameOp(operator.op, ast)) {
+        ast.operands.push(rhs);
+      } else {
+        ast = {
+          op: operator.op,
+          operands: isSameOp(operator.op, rhs) ? [ast, ...rhs.operands] : [ast, rhs],
+        };
       }
 
       console.log('END', token, ast, tokens);
@@ -227,6 +197,7 @@ export function parseQuery(query: string): QueryAST {
     console.log('ALLDONE', token, ast);
 
     // Eliminate redundancy
+    // TODO: not needed?
     if (ast.op === 'and' || ast.op === 'or') {
       if (ast.operands.length === 1) {
         return ast.operands[0];
@@ -242,6 +213,10 @@ export function parseQuery(query: string): QueryAST {
   const tokens = lexer(query);
   const ast = parse(new PeekableGenerator(tokens));
   return ast;
+}
+
+function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp | OrOp {
+  return binOp === op.op;
 }
 
 type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';

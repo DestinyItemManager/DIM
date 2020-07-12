@@ -5,6 +5,7 @@ import { parseQuery, lexer, Token } from './query-parser';
 
 // TODO: explicit "and" should have higher precedence than "or", but implicit "and" should have *lower* precedence than "or"
 // TODO: test "not not not", nested parens, etc
+// TODO: failed parse - a failed parse should return the parts that didn't fail plus an error code??
 
 // Some of these are contrived, some are from past search parsing issues
 const cases = [

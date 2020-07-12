@@ -92,19 +92,14 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "hunter",
-              "op": "filter",
-              "type": "is",
-            },
-            Object {
-              "args": ">=540",
-              "op": "filter",
-              "type": "power",
-            },
-          ],
+          "args": "hunter",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": ">=540",
+          "op": "filter",
+          "type": "power",
         },
       ],
     },
@@ -181,19 +176,14 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "weapon",
-              "op": "filter",
-              "type": "is",
-            },
-            Object {
-              "args": "sniperrifle",
-              "op": "filter",
-              "type": "is",
-            },
-          ],
+          "args": "weapon",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
         },
       ],
     },
@@ -276,19 +266,14 @@ Object {
       "op": "and",
       "operands": Array [
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "weapon",
-              "op": "filter",
-              "type": "is",
-            },
-            Object {
-              "args": "sniperrifle",
-              "op": "filter",
-              "type": "is",
-            },
-          ],
+          "args": "weapon",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
         },
       ],
     },
@@ -881,14 +866,9 @@ Object {
       "op": "or",
       "operands": Array [
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "cluster",
-              "op": "filter",
-              "type": "perk",
-            },
-          ],
+          "args": "cluster",
+          "op": "filter",
+          "type": "perk",
         },
         Object {
           "args": "tracking module",
@@ -1057,26 +1037,26 @@ Array [
 
 exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival|: ast 1`] = `
 Object {
-  "op": "and",
+  "op": "or",
   "operands": Array [
     Object {
-      "op": "or",
+      "op": "and",
       "operands": Array [
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "args": "weapon",
-              "op": "filter",
-              "type": "is",
-            },
-            Object {
-              "args": "sniperrifle",
-              "op": "filter",
-              "type": "is",
-            },
-          ],
+          "args": "weapon",
+          "op": "filter",
+          "type": "is",
         },
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
+        },
+      ],
+    },
+    Object {
+      "op": "and",
+      "operands": Array [
         Object {
           "op": "not",
           "operand": Object {
@@ -1085,12 +1065,12 @@ Object {
             "type": "is",
           },
         },
+        Object {
+          "args": "arrival",
+          "op": "filter",
+          "type": "modslot",
+        },
       ],
-    },
-    Object {
-      "args": "arrival",
-      "op": "filter",
-      "type": "modslot",
     },
   ],
 }
