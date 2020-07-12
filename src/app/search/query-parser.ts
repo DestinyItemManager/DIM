@@ -81,12 +81,23 @@ class PeekableGenerator<T> {
 }
 
 /**
- * The query parser first lexes the string, then parses it into an AST representing the logical
- * structure of the query.
+ * The query parser first lexes the string, then parses it into an AST (abstract syntax tree)
+ * representing the logical structure of the query. This AST can then be walked to match up
+ * to defined filters and generate an actual filter function.
+ *
+ * We choose to produce an AST instead of executing the search inline with parsing both to
+ * make testing easier, and to allow for things like canonicalization of search queries.
  */
-export function parseQuery(query: string) {
+export function parseQuery(query: string): QueryAST {
   // TODO: how to limit how many expressions this consumes?
-  const parse = (tokens: PeekableGenerator<Token>, rightAssociative = false): QueryAST => {
+  // https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
+  // TODO: implement operator precedence, with lower precedence for implicit and?
+  // TODO: separate into parseAtom and an operator-focused loop?
+  /**
+   * Parse a stream of tokens into an AST. If `singleExpression` is passed, this expects
+   * to parse exactly one filter or parenthesized subquery and then returns.
+   */
+  const parse = (tokens: PeekableGenerator<Token>, singleExpression = false): QueryAST => {
     let ast: QueryAST = {
       op: 'and',
       operands: [],
@@ -95,9 +106,10 @@ export function parseQuery(query: string) {
     let token: Token | undefined;
     while ((token = tokens.peek())) {
       console.log('START', token, ast);
-      if (rightAssociative && !['filter', 'not', '('].includes(token[0])) {
+      if (singleExpression && !['filter', 'not', '('].includes(token[0])) {
         break;
       }
+      tokens.pop();
 
       switch (token[0]) {
         case 'filter':
@@ -105,7 +117,6 @@ export function parseQuery(query: string) {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
-            tokens.pop();
             const keyword = token[1];
             if (keyword === 'not') {
               // not: is a synonym for -is:
@@ -131,7 +142,6 @@ export function parseQuery(query: string) {
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
-            tokens.pop();
             // parse next espression?
             // Parse all the rest then fish out the leftmost?
             ast.operands.push({
@@ -143,33 +153,30 @@ export function parseQuery(query: string) {
           break;
         case 'and':
           {
-            tokens.pop();
             if (ast.op === 'and') {
-              ast.operands.push(parse(tokens));
+              ast.operands.push(parse(tokens, true));
             } else {
               ast = {
                 op: 'and',
-                operands: [ast, parse(tokens)],
+                operands: [ast, parse(tokens, true)],
               };
             }
           }
           break;
         case 'or':
           {
-            tokens.pop();
             if (ast.op === 'or') {
-              ast.operands.push(parse(tokens));
+              ast.operands.push(parse(tokens, true));
             } else {
               ast = {
                 op: 'or',
-                operands: [ast, parse(tokens)],
+                operands: [ast, parse(tokens, true)],
               };
             }
           }
           break;
         case '(':
           {
-            tokens.pop();
             if (ast.op !== 'and' && ast.op !== 'or') {
               throw new Error('expected to be in an and/or expression');
             }
@@ -312,6 +319,7 @@ export function* lexer(query: string): Generator<Token> {
       yield ['filter', 'keyword', match];
     } else if ((match = extract(query, i, /\s+/y)) !== undefined) {
       consume(match);
+      // TODO: maybe don't yield a token for this, and let it be implicit?
       yield ['and'];
     } else {
       throw new Error(

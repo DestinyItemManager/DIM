@@ -463,19 +463,14 @@ Object {
       },
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "args": "haspower",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "args": "incurrentchar",
-          "op": "filter",
-          "type": "is",
-        },
-      ],
+      "args": "haspower",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "args": "incurrentchar",
+      "op": "filter",
+      "type": "is",
     },
   ],
 }
@@ -523,48 +518,33 @@ Object {
       },
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "locked",
-            "op": "filter",
-            "type": "is",
-          },
-        },
-        Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "op": "not",
-              "operand": Object {
-                "args": "maxpower",
-                "op": "filter",
-                "type": "is",
-              },
-            },
-            Object {
-              "op": "and",
-              "operands": Array [
-                Object {
-                  "op": "not",
-                  "operand": Object {
-                    "args": "tagged",
-                    "op": "filter",
-                    "type": "is",
-                  },
-                },
-                Object {
-                  "args": "<55",
-                  "op": "filter",
-                  "type": "stat:total",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      "op": "not",
+      "operand": Object {
+        "args": "locked",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "tagged",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+    Object {
+      "args": "<55",
+      "op": "filter",
+      "type": "stat:total",
     },
   ],
 }
@@ -637,22 +617,17 @@ Object {
       },
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "lastwish",
-            "op": "filter",
-            "type": "source",
-          },
-        },
-        Object {
-          "args": "arrival",
-          "op": "filter",
-          "type": "sunsetsafter",
-        },
-      ],
+      "op": "not",
+      "operand": Object {
+        "args": "lastwish",
+        "op": "filter",
+        "type": "source",
+      },
+    },
+    Object {
+      "args": "arrival",
+      "op": "filter",
+      "type": "sunsetsafter",
     },
   ],
 }
@@ -778,22 +753,17 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "args": "haspower",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "maxpower",
-            "op": "filter",
-            "type": "is",
-          },
-        },
-      ],
+      "args": "haspower",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
     },
   ],
 }
@@ -838,22 +808,17 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "args": "haspower",
-          "op": "filter",
-          "type": "is",
-        },
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": ":maxpower",
-            "op": "filter",
-            "type": "keyword",
-          },
-        },
-      ],
+      "args": "haspower",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": ":maxpower",
+        "op": "filter",
+        "type": "keyword",
+      },
     },
   ],
 }
@@ -963,25 +928,20 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "cluster",
-            "op": "filter",
-            "type": "keyword",
-          },
-        },
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "tracking module",
-            "op": "filter",
-            "type": "keyword",
-          },
-        },
-      ],
+      "op": "not",
+      "operand": Object {
+        "args": "cluster",
+        "op": "filter",
+        "type": "keyword",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "tracking module",
+        "op": "filter",
+        "type": "keyword",
+      },
     },
   ],
 }
@@ -1029,25 +989,20 @@ Object {
       "type": "is",
     },
     Object {
-      "op": "and",
-      "operands": Array [
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "cluster",
-            "op": "filter",
-            "type": "keyword",
-          },
-        },
-        Object {
-          "op": "not",
-          "operand": Object {
-            "args": "tracking module",
-            "op": "filter",
-            "type": "keyword",
-          },
-        },
-      ],
+      "op": "not",
+      "operand": Object {
+        "args": "cluster",
+        "op": "filter",
+        "type": "keyword",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "tracking module",
+        "op": "filter",
+        "type": "keyword",
+      },
     },
   ],
 }
@@ -1090,16 +1045,16 @@ Object {
   "op": "and",
   "operands": Array [
     Object {
-      "args": "weapon",
-      "op": "filter",
-      "type": "is",
-    },
-    Object {
       "op": "or",
       "operands": Array [
         Object {
           "op": "and",
           "operands": Array [
+            Object {
+              "args": "weapon",
+              "op": "filter",
+              "type": "is",
+            },
             Object {
               "args": "sniperrifle",
               "op": "filter",
@@ -1108,24 +1063,19 @@ Object {
           ],
         },
         Object {
-          "op": "and",
-          "operands": Array [
-            Object {
-              "op": "not",
-              "operand": Object {
-                "args": "armor",
-                "op": "filter",
-                "type": "is",
-              },
-            },
-            Object {
-              "args": "arrival",
-              "op": "filter",
-              "type": "modslot",
-            },
-          ],
+          "op": "not",
+          "operand": Object {
+            "args": "armor",
+            "op": "filter",
+            "type": "is",
+          },
         },
       ],
+    },
+    Object {
+      "args": "arrival",
+      "op": "filter",
+      "type": "modslot",
     },
   ],
 }
