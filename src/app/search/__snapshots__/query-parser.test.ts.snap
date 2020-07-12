@@ -133,7 +133,7 @@ Array [
     "hunter",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -155,7 +155,7 @@ Array [
     "warlock",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -307,7 +307,7 @@ Array [
     "weapon",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -329,7 +329,7 @@ Array [
     "armor",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -377,7 +377,7 @@ Array [
     "exotic",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -487,7 +487,7 @@ Array [
     "equipped",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -495,7 +495,7 @@ Array [
     "haspower",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -561,7 +561,7 @@ Array [
     "exotic",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -572,7 +572,7 @@ Array [
     "locked",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -583,7 +583,7 @@ Array [
     "maxpower",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -594,7 +594,7 @@ Array [
     "tagged",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -644,7 +644,7 @@ Array [
     "garden",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -655,7 +655,7 @@ Array [
     "lastwish",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -715,7 +715,7 @@ Array [
     "cluster",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -777,7 +777,7 @@ Array [
     "blue",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -785,7 +785,7 @@ Array [
     "haspower",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -832,7 +832,7 @@ Array [
     "blue",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "filter",
@@ -840,7 +840,7 @@ Array [
     "haspower",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -894,7 +894,7 @@ Array [
     "rocketlauncher",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "(",
@@ -955,7 +955,7 @@ Array [
     "rocketlauncher",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -966,7 +966,7 @@ Array [
     "cluster",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -1016,7 +1016,7 @@ Array [
     "rocketlauncher",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",
@@ -1027,7 +1027,7 @@ Array [
     "cluster",
   ],
   Array [
-    "and",
+    "implicit_and",
   ],
   Array [
     "not",

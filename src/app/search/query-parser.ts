@@ -152,6 +152,7 @@ export function parseQuery(query: string): QueryAST {
           }
           break;
         case 'and':
+        case 'implicit_and':
           {
             if (ast.op === 'and') {
               ast.operands.push(parse(tokens, true));
@@ -214,7 +215,7 @@ export function parseQuery(query: string): QueryAST {
   return ast;
 }
 
-type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and';
+type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
 export type Token = [NoArgTokenType] | ['filter', string, string];
 
 /**
@@ -364,7 +365,7 @@ export function* lexer(query: string): Generator<Token> {
       // bare words that aren't keywords are effectively "keyword" type filters
       yield ['filter', 'keyword', match];
     } else if ((match = extract(whitespace)) !== undefined) {
-      yield ['and'];
+      yield ['implicit_and'];
     } else {
       throw new Error('unrecognized tokens: |' + query.slice(i) + '| ' + i);
     }
