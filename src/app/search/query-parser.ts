@@ -80,6 +80,9 @@ class PeekableGenerator<T> {
   }
 }
 
+/**
+ * The implicit and (two statements separated by whitespace) has lower precedence than either the explicit or or and.
+ */
 const operators = {
   implicit_and: {
     precedence: 1,
@@ -104,10 +107,9 @@ const operators = {
  * make testing easier, and to allow for things like canonicalization of search queries.
  */
 export function parseQuery(query: string): QueryAST {
-  // TODO: how to limit how many expressions this consumes?
+  // This implements operator precedence via this mechanism:
   // https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
-  // TODO: implement operator precedence, with lower precedence for implicit and?
-  // TODO: separate into parseAtom and an operator-focused loop?
+  // TODO: stop and return what we have in case of an error
 
   /**
    * This extracts the next "atom" aka "value" from the token stream. An atom is either
@@ -126,7 +128,7 @@ export function parseQuery(query: string): QueryAST {
         tokens.pop();
         const keyword = token[1];
         if (keyword === 'not') {
-          // not: is a synonym for -is:
+          // `not:` a synonym for `-is:`. We could fix this up in filter execution but I chose to normalize it here.
           return {
             op: 'not',
             operand: {
@@ -169,12 +171,9 @@ export function parseQuery(query: string): QueryAST {
 
     let token: Token | undefined;
     while ((token = tokens.peek())) {
-      console.log('START', token, ast, minPrecedence);
-
       const operator = operators[token[0] as keyof typeof operators];
       // TODO: if !operator, fail
       if (!operator || operator.precedence < minPrecedence) {
-        console.log('EXIT not operator or precedence, ', minPrecedence, operator?.precedence);
         break;
       }
 
@@ -190,11 +189,7 @@ export function parseQuery(query: string): QueryAST {
           operands: isSameOp(operator.op, rhs) ? [ast, ...rhs.operands] : [ast, rhs],
         };
       }
-
-      console.log('END', token, ast, tokens);
     }
-
-    console.log('ALLDONE', token, ast);
 
     // Eliminate redundancy
     // TODO: not needed?
@@ -246,7 +241,7 @@ const parens = /(\(\s*|\s*\))/y;
 const negation = /-\s*/y;
 // `not`, `or`, and `and` keywords. or and not can be preceded by whitespace, and any of them can be followed by whitespace.
 // `not` can't be preceded by whitespace because that whitespace is an implicit `and`.
-const booleanKeywords = /(not|\s*or|\s*and)\s*/y;
+const booleanKeywords = /(not|\s+or|\s+and)\s+/y;
 // Filter names like is:, stat:discipline:, etc
 const filterName = /[a-z]+:([a-z]+:)?/y;
 // Arguments to filters are pretty unconstrained

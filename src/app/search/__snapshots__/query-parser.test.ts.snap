@@ -815,9 +815,9 @@ Object {
     Object {
       "op": "not",
       "operand": Object {
-        "args": ":maxpower",
+        "args": "maxpower",
         "op": "filter",
-        "type": "keyword",
+        "type": "is",
       },
     },
   ],
@@ -843,12 +843,79 @@ Array [
     "implicit_and",
   ],
   Array [
+    "filter",
     "not",
+    "maxpower",
+  ],
+]
+`;
+
+exports[`parse |is:blue is:weapon or is:armor not:maxpower|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "blue",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "args": "weapon",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "armor",
+          "op": "filter",
+          "type": "is",
+        },
+      ],
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+  ],
+}
+`;
+
+exports[`parse |is:blue is:weapon or is:armor not:maxpower|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "is",
+    "blue",
+  ],
+  Array [
+    "implicit_and",
   ],
   Array [
     "filter",
-    "keyword",
-    ":maxpower",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "not",
+    "maxpower",
   ],
 ]
 `;
@@ -1113,6 +1180,151 @@ Array [
 ]
 `;
 
+exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "weapon",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "armor",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": "arrival",
+              "op": "filter",
+              "type": "modslot",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "is",
+    "sniperrifle",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "filter",
+    "modslot",
+    "arrival",
+  ],
+]
+`;
+
+exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "weapon",
+      "op": "filter",
+      "type": "is",
+    },
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "args": "sniperrifle",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "op": "not",
+          "operand": Object {
+            "args": "armor",
+            "op": "filter",
+            "type": "is",
+          },
+        },
+      ],
+    },
+    Object {
+      "args": "arrival",
+      "op": "filter",
+      "type": "modslot",
+    },
+  ],
+}
+`;
+
+exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "is",
+    "sniperrifle",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "modslot",
+    "arrival",
+  ],
+]
+`;
+
 exports[`parse |name:"Gahlran's Right Hand"|: ast 1`] = `
 Object {
   "args": "gahlran's right hand",
@@ -1197,9 +1409,9 @@ Object {
   "operand": Object {
     "op": "not",
     "operand": Object {
-      "args": ":maxpower",
+      "args": "maxpower",
       "op": "filter",
-      "type": "keyword",
+      "type": "is",
     },
   },
 }
@@ -1211,12 +1423,30 @@ Array [
     "not",
   ],
   Array [
+    "filter",
     "not",
+    "maxpower",
   ],
+]
+`;
+
+exports[`parse |not:maxpower|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "maxpower",
+    "op": "filter",
+    "type": "is",
+  },
+}
+`;
+
+exports[`parse |not:maxpower|: lexer 1`] = `
+Array [
   Array [
     "filter",
-    "keyword",
-    ":maxpower",
+    "not",
+    "maxpower",
   ],
 ]
 `;

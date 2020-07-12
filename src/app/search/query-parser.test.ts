@@ -11,13 +11,17 @@ import { parseQuery, lexer, Token } from './query-parser';
 const cases = [
   ['is:blue is:haspower -is:maxpower'],
   ['is:blue is:haspower not:maxpower'],
+  ['not:maxpower'], // => is:blue and (is:weapon or is:armor) and -is:maxpower
+  ['is:blue is:weapon or is:armor not:maxpower'], // => is:blue and (is:weapon or is:armor) and -is:maxpower
   ['not not:maxpower'],
   ['-is:equipped is:haspower is:incurrentchar'],
   ['-source:garden -source:lastwish sunsetsafter:arrival'],
   ['-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55'],
   ['(is:weapon is:sniperrifle) or (is:armor modslot:arrival)'],
   ['(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)'],
-  ['is:weapon and is:sniperrifle or not is:armor and modslot:arrival'], // => is:weapon (is:sniperrifle or -is:armor) modslot:arrival
+  ['is:weapon and is:sniperrifle or not is:armor and modslot:arrival'], // => (is:weapon and is:sniperrifle) or (-is:armor and modslot:arrival)
+  ['is:weapon is:sniperrifle or not is:armor modslot:arrival'], // => is:weapon and (is:sniperrifle or -is:armor) and modslot:arrival
+  ['is:weapon is:sniperrifle or is:armor and modslot:arrival'], // => is:weapon and (is:sniperrifle or (-is:armor modslot:arrival))
   ['-(power:>1000 and -modslot:arrival)'],
   ['( power:>1000 and -modslot:arrival ) '],
   ['- is:exotic - (power:>1000)'],
@@ -42,6 +46,28 @@ const cases = [
   ['‘grenade launcher reserves’'],
 ];
 
+// Each of these asserts that the first query is the same as the second query once parsed
+const equivalentSearches = [
+  [
+    'is:blue is:weapon or is:armor not:maxpower',
+    'is:blue and (is:weapon or is:armor) and -is:maxpower',
+  ],
+  ['not forgotten', "-'forgotten'"],
+  ['cluster tracking', '"cluster" and "tracking"'],
+  [
+    'is:weapon and is:sniperrifle or not is:armor and modslot:arrival',
+    '(is:weapon and is:sniperrifle) or (-is:armor and modslot:arrival)',
+  ],
+  [
+    'is:weapon is:sniperrifle or not is:armor modslot:arrival',
+    'is:weapon and (is:sniperrifle or -is:armor) and modslot:arrival',
+  ],
+  [
+    'is:weapon is:sniperrifle or is:armor and modslot:arrival',
+    'is:weapon and (is:sniperrifle or (is:armor and modslot:arrival))',
+  ],
+];
+
 test.each(cases)('parse |%s|', (query) => {
   // Test just the lexer
   const tokens: Token[] = [];
@@ -53,4 +79,11 @@ test.each(cases)('parse |%s|', (query) => {
   // Test the full parse tree
   const ast = parseQuery(query);
   expect(ast).toMatchSnapshot('ast');
+});
+
+test.each(equivalentSearches)('|%s| is equivalent to |%s|', (firstQuery, secondQuery) => {
+  // Test the full parse tree
+  const firstAST = parseQuery(firstQuery);
+  const secondAST = parseQuery(secondQuery);
+  expect(firstAST).toEqual(secondAST);
 });
