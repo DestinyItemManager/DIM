@@ -245,11 +245,31 @@ function* untilBooleanOp(tokens: Generator<Token>): Generator<Token> {
 }
 */
 
+// Two different kind of quotes
+const quoteRegexes = {
+  '"': /.*?"/y,
+  "'": /.*?'/y,
+};
+// Parens: `(` can be followed by whitespace, while `)` can be preceded by it
+const parens = /(\(\s*|\s*\))/y;
+// A `-` followed by any amount of whitespace is the same as "not"
+const negation = /-\s*/y;
+// `not`, `or`, and `and` keywords. or and not can be preceded by whitespace, and any of them can be followed by whitespace.
+// `not` can't be preceded by whitespace because that whitespace is an implicit `and`.
+const booleanKeywords = /(not|\s*or|\s*and)\s*/y;
+// Filter names like is:, stat:discipline:, etc
+const filterName = /[a-z]+:([a-z]+:)?/y;
+// Arguments to filters are pretty unconstrained
+const filterArgs = /[^\s()]+/y;
+// Words without quotes are basically any non-whitespace that doesn't terminate a group
+const bareWords = /[^\s)]+/y;
+// Whitespace that doesn't match anything else is an implicit `and`
+const whitespace = /\s+/y;
+
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
  * This throws an exception if it finds an invalid input.
  */
-// TODO: maybe generators are a mistake
 export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
 
@@ -262,12 +282,45 @@ export function* lexer(query: string): Generator<Token> {
 
   const consume = (str: string) => (i += str.length);
 
+  /**
+   * If `str` matches `re` starting at `index`, return the matched portion of the string. Otherwise return undefined.
+   * This avoids having to make slices of strings just to start the regex in the middle of a string.
+   *
+   * Note that regexes passed to this must have the "sticky" flag set (y) and should not use ^, which will match the
+   * beginning of the string, ignoring the index we want to start from. The sticky flag ensures our regex will match
+   * based on the beginning of the string.
+   */
+  const extract = (re: RegExp): string | undefined => {
+    // These checks only run in unit tests
+    if ($DIM_FLAVOR === 'test') {
+      if (!re.sticky) {
+        throw new Error('regexp must be sticky');
+      }
+      if (re.source.startsWith('^')) {
+        throw new Error('regexp cannot start with ^ and be repositioned');
+      }
+    }
+
+    re.lastIndex = i;
+    const match = re.exec(query);
+    if (match) {
+      const result = match[0];
+      if (result.length > 0) {
+        consume(result);
+        return result;
+      }
+    }
+    return undefined;
+  };
+
+  /**
+   * Consume and return the contents of a quoted string.
+   */
   const consumeString = (startingQuoteChar: string) => {
     // Quoted string
     consume(startingQuoteChar);
     // TODO: cache regexp?
-    if ((match = extract(query, i, new RegExp('(.*?)' + startingQuoteChar, 'y'))) !== undefined) {
-      consume(match);
+    if ((match = extract(quoteRegexes[startingQuoteChar])) !== undefined) {
       // Slice off the last character
       return match.slice(0, match.length - 1);
     } else {
@@ -279,25 +332,20 @@ export function* lexer(query: string): Generator<Token> {
     const char = query[i];
     const startingIndex = i;
 
-    if ((match = extract(query, i, /(\(\s*|\s*\))/y)) !== undefined) {
+    if ((match = extract(parens)) !== undefined) {
       // Start/end group
-      // TODO: use whitespace tolerant regex??
-      consume(match);
       yield [match.trim() as NoArgTokenType];
     } else if (char === '"' || char === "'") {
       // Quoted string
       yield ['filter', 'keyword', consumeString(char)];
-    } else if ((match = extract(query, i, /-\s*/y)) !== undefined) {
+    } else if ((match = extract(negation)) !== undefined) {
       // minus sign is the same as "not"
-      consume(match);
       yield ['not'];
-    } else if ((match = extract(query, i, /(not|\s*or|\s*and)\s*/y)) !== undefined) {
+    } else if ((match = extract(booleanKeywords)) !== undefined) {
       // boolean keywords
-      consume(match);
       yield [match.trim() as NoArgTokenType];
-    } else if ((match = extract(query, i, /[a-z]+:([a-z]+:)?/y)) !== undefined) {
+    } else if ((match = extract(filterName)) !== undefined) {
       // Keyword searches - is:, stat:discipline:, etc
-      consume(match);
       const keyword = match.slice(0, match.length - 1);
       const nextChar = query[i];
 
@@ -305,74 +353,24 @@ export function* lexer(query: string): Generator<Token> {
 
       if (nextChar === '"' || nextChar === "'") {
         args = consumeString(nextChar);
-      } else if ((match = extract(query, i, /[^\s()]+/y)) !== undefined) {
-        consume(match);
+      } else if ((match = extract(filterArgs)) !== undefined) {
         args = match;
       } else {
         throw new Error('missing keyword arguments for ' + match);
       }
 
       yield ['filter', keyword, args];
-    } else if ((match = extract(query, i, /[^\s)]+/y)) !== undefined) {
+    } else if ((match = extract(bareWords)) !== undefined) {
       // bare words that aren't keywords are effectively "keyword" type filters
-      consume(match);
       yield ['filter', 'keyword', match];
-    } else if ((match = extract(query, i, /\s+/y)) !== undefined) {
-      consume(match);
-      // TODO: maybe don't yield a token for this, and let it be implicit?
+    } else if ((match = extract(whitespace)) !== undefined) {
       yield ['and'];
     } else {
-      throw new Error(
-        'unrecognized: |' +
-          query.slice(i) +
-          '| ' +
-          i +
-          ' wtf: ' +
-          /^[^\s)]+/g.test(query.slice(i)) +
-          '|' +
-          (match = extract(query, i, /^[^\s)]+/g)) +
-          '|' +
-          ' :: ' +
-          /^\s+/g.test(query.slice(i)) +
-          '|' +
-          (match = extract(query, i, /^\s+/g)) +
-          '|'
-      );
+      throw new Error('unrecognized tokens: |' + query.slice(i) + '| ' + i);
     }
 
     if (startingIndex === i) {
       throw new Error('bug: forgot to consume characters');
     }
   }
-}
-
-// TODO: maybe move into lexer as a closure, consume inside
-/**
- * If `str` matches `re` starting at `index`, return the matched portion of the string. Otherwise return undefined.
- * This avoids having to make slices of strings just to start the regex in the middle of a string.
- *
- * Note that regexes passed to this must have the "sticky" flag set (y) and should not use ^, which will match the
- * beginning of the string, ignoring the index we want to start from. The sticky flag ensures our regex will match
- * based on the beginning of the string.
- */
-function extract(str: string, index: number, re: RegExp): string | undefined {
-  // These checks only run in unit tests
-  if ($DIM_FLAVOR === 'test') {
-    if (!re.sticky) {
-      throw new Error('regexp must be sticky');
-    }
-    if (re.source.startsWith('^')) {
-      throw new Error('regexp cannot start with ^ and be repositioned');
-    }
-  }
-
-  re.lastIndex = index;
-  const match = re.exec(str);
-  if (match) {
-    const result = match[0];
-    if (result.length > 0) {
-      return result;
-    }
-  }
-  return undefined;
 }
