@@ -90,3 +90,13 @@ export interface IntermediateProcessArmorSet {
   /** The maximum power loadout possible in this stat mix. */
   maxPower: number;
 }
+
+export interface ProcessModMetadata {
+  seasonTag: string;
+  energy: DestinyEnergyType;
+}
+
+export interface ProcessModMetadataByEnergy {
+  anyEnergy: ProcessModMetadata[];
+  otherEnergy: ProcessModMetadata[];
+}

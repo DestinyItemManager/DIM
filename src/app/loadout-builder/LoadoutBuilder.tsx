@@ -29,7 +29,6 @@ import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { useProcess } from './hooks/useProcess';
-import { Loading } from 'app/dim-ui/Loading';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
@@ -167,24 +166,16 @@ function LoadoutBuilder({
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
-    statFilters
+    statFilters,
+    minimumPower
   );
 
   const combos = result?.combos || 0;
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
 
   const filteredSets = useMemo(
-    () =>
-      filterGeneratedSets(
-        minimumPower,
-        lockedMap,
-        lockedArmor2Mods,
-        statFilters,
-        statOrder,
-        enabledStats,
-        result?.sets
-      ),
-    [minimumPower, lockedMap, lockedArmor2Mods, statFilters, statOrder, enabledStats, result?.sets]
+    () => filterGeneratedSets(lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets),
+    [lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets]
   );
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);
@@ -248,7 +239,7 @@ function LoadoutBuilder({
 
       <PageWithMenu.Contents>
         <TransitionGroup component={null}>
-          {filteredSets && processing && (
+          {processing && (
             <CSSTransition
               nodeRef={loadingNodeRef}
               classNames={{
@@ -266,7 +257,7 @@ function LoadoutBuilder({
             </CSSTransition>
           )}
         </TransitionGroup>
-        {filteredSets ? (
+        {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
             combos={combos}
@@ -280,8 +271,6 @@ function LoadoutBuilder({
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
           />
-        ) : (
-          <Loading message={'Processing armor sets'} />
         )}
       </PageWithMenu.Contents>
 

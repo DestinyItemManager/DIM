@@ -17,11 +17,13 @@ import {
   ProcessArmorSet,
   ProcessSocket,
   ProcessSockets,
+  ProcessModMetadataByEnergy,
 } from '../processWorker/types';
 import {
   getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
 } from 'app/utils/item-utils';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 interface ProcessState {
   processing: boolean;
@@ -46,7 +48,8 @@ export function useProcess(
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statFilters: { [statType in StatTypes]: MinMaxIgnored },
+  minimumPower: number
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -61,7 +64,8 @@ export function useProcess(
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
-    statFilters
+    statFilters,
+    minimumPower
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -95,7 +99,8 @@ export function useProcess(
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
-        statFilters
+        statFilters,
+        minimumPower
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
@@ -124,6 +129,7 @@ export function useProcess(
     assumeMasterwork,
     statOrder,
     statFilters,
+    minimumPower,
   ]);
 
   return { result, processing };
@@ -143,7 +149,8 @@ function useWorkerAndCleanup(
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statFilters: { [statType in StatTypes]: MinMaxIgnored },
+  minimumPower: number
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
@@ -153,6 +160,7 @@ function useWorkerAndCleanup(
     assumeMasterwork,
     statOrder,
     statFilters,
+    minimumPower,
   ]);
 
   // cleanup the worker on unmount
@@ -190,27 +198,47 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
-function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): string[] {
+function mapSeasonalModsToSeasonsArray(
+  lockedSeasonalMods: readonly LockedModBase[]
+): ProcessModMetadataByEnergy {
   const sortedMetadata = lockedSeasonalMods
-    .map((mod) => getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash))
+    .map((mod) => ({
+      mod,
+      metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
+    }))
     .sort((a, b) => {
-      // Not sure if I need the second two return conditions
-      if (a?.season && b?.season) {
-        return a.season - b.season;
-      } else if (!a?.season) {
+      if (a.metadata?.season && b.metadata?.season) {
+        if (a.metadata.season === b.metadata.season) {
+          return a.mod.mod.plug.energyCost.energyType - b.mod.mod.plug.energyCost.energyType;
+        }
+        return a.metadata.season - b.metadata.season;
+      } else if (!a.metadata?.season) {
         return 1;
       }
       return -1;
     });
 
-  const sortedModSeasonTags: string[] = [];
-  for (const metadata of sortedMetadata) {
-    if (metadata) {
-      sortedModSeasonTags.push(metadata.tag);
+  const modMetadataByEnergy: ProcessModMetadataByEnergy = {
+    anyEnergy: [],
+    otherEnergy: [],
+  };
+  for (const entry of sortedMetadata) {
+    if (entry?.metadata) {
+      if (entry.mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any) {
+        modMetadataByEnergy.anyEnergy.push({
+          seasonTag: entry.metadata.tag,
+          energy: entry.mod.mod.plug.energyCost.energyType,
+        });
+      } else {
+        modMetadataByEnergy.otherEnergy.push({
+          seasonTag: entry.metadata.tag,
+          energy: entry.mod.mod.plug.energyCost.energyType,
+        });
+      }
     }
   }
 
-  return sortedModSeasonTags;
+  return modMetadataByEnergy;
 }
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
