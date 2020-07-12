@@ -33,7 +33,8 @@ export interface ProcessItem {
   energyType?: DestinyEnergyType;
   basePower: number;
   stats: { [statHash: number]: number };
-  specialtySocketCategoryHash?: number;
+  season?: number;
+  compatibleModSeasons?: string[];
 }
 
 export type ProcessItemsByBucket = Readonly<{

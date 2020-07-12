@@ -91,10 +91,10 @@ export const getSpecialtySocketMetadata = (item: DimItem): ModMetadata | undefin
   ];
 
 /** returns ModMetadata if the category hash is known */
-export const getSpecialtySocketMetadataByCategoryHash = (
-  specialtySocketCategoryHash?: number
+export const getSpecialtySocketMetadataByPlugCategoryHash = (
+  plugCategoryHash: number
 ): ModMetadata | undefined =>
-  modMetadataIndexedByEmptySlotHash[specialtySocketCategoryHash || -99999999];
+  modMetadataBySlotTag.find((meta) => meta.thisSlotPlugCategoryHashes.includes(plugCategoryHash));
 
 /** this returns a string for easy printing purposes. '' if not found */
 export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>

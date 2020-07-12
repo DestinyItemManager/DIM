@@ -8,14 +8,10 @@ import {
   LockedArmor2ModMap,
   MinMaxIgnored,
   MinMax,
-  LockedModBase,
 } from '../types';
 import { statTier } from '../generated-sets/utils';
 import { compareBy } from '../../utils/comparators';
-import {
-  Armor2ModPlugCategories,
-  getSpecialtySocketMetadataByCategoryHash,
-} from '../../utils/item-utils';
+import { Armor2ModPlugCategories } from '../../utils/item-utils';
 import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
@@ -23,7 +19,7 @@ import {
   ProcessArmorSet,
   IntermediateProcessArmorSet,
 } from './types';
-import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -95,7 +91,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
-  lockedSeasonalMods: readonly LockedModBase[],
+  processedSeasonalMods: string[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -304,8 +300,8 @@ export function process(
               }
 
               if (
-                lockedSeasonalMods.length &&
-                !canAllSeasonalModsBeUsed(firstValidSet, lockedSeasonalMods)
+                processedSeasonalMods.length &&
+                !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
               ) {
                 continue;
               }
@@ -596,56 +592,28 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
   }));
 }
 
-/**
- * This function checks if the first set of process items can slot all the mods in
- * seasonalMods.
- */
-function canAllSeasonalModsBeUsed(items: ProcessItem[], seasonalMods: readonly LockedModBase[]) {
-  if (seasonalMods.length > 5) {
-    return false;
-  }
-
-  const modArrays = {};
-
-  for (const mod of seasonalMods) {
-    for (const item of items) {
-      const itemModCategories =
-        getSpecialtySocketMetadataByCategoryHash(item.specialtySocketCategoryHash)
-          ?.compatiblePlugCategoryHashes || [];
-
-      if (
-        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
-        item.energyType &&
-        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-          mod.mod.plug.energyCost.energyType === item.energyType)
-      ) {
-        if (!modArrays[item.bucketHash]) {
-          modArrays[item.bucketHash] = [];
-        }
-
-        modArrays[item.bucketHash].push(mod);
+function canTakeAllSeasonalMods(sortedModSeasons: string[], items: ProcessItem[]) {
+  const itemCompatibleModSeasons = [...items]
+    .sort((a, b) => {
+      if (a.season && b.season) {
+        return a.season - b.season;
+      } else if (!a.season) {
+        return 1;
       }
+      return -1;
+    })
+    .map((item) => item.compatibleModSeasons);
+
+  let modIndex = 0;
+  let itemIndex = 0;
+
+  while (modIndex < sortedModSeasons.length && itemIndex < items.length) {
+    if (itemCompatibleModSeasons[itemIndex]?.includes(sortedModSeasons[modIndex])) {
+      modIndex += 1;
     }
+    itemIndex += 1;
   }
 
-  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
-    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
-      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
-        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
-          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
-            const applicableMods = [helmetMod, armsMod, chestMod, legsMod, classMod].filter(
-              Boolean
-            );
-            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
-
-            if (containsAllLocked) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return false;
+  // This needs to be larger than the last index in the array as it will overshoot if they all fit.
+  return modIndex === sortedModSeasons.length;
 }

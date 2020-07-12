@@ -18,7 +18,10 @@ import {
   ProcessSocket,
   ProcessSockets,
 } from '../processWorker/types';
-import { getSpecialtySocketCategoryHash } from 'app/utils/item-utils';
+import {
+  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
+} from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -88,7 +91,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
-        lockedSeasonalMods,
+        mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -187,6 +190,29 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
+function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): string[] {
+  const sortedMetadata = lockedSeasonalMods
+    .map((mod) => getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash))
+    .sort((a, b) => {
+      // Not sure if I need the second two return conditions
+      if (a?.season && b?.season) {
+        return a.season - b.season;
+      } else if (!a?.season) {
+        return 1;
+      }
+      return -1;
+    });
+
+  const sortedModSeasonTags: string[] = [];
+  for (const metadata of sortedMetadata) {
+    if (metadata) {
+      sortedModSeasonTags.push(metadata.tag);
+    }
+  }
+
+  return sortedModSeasonTags;
+}
+
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
     sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
@@ -207,6 +233,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     }
   }
 
+  const modMetadata = getSpecialtySocketMetadata(dimItem);
+
   return {
     bucketHash: bucket.hash,
     id,
@@ -217,7 +245,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     stats: statMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energyType: dimItem.energy?.energyType,
-    specialtySocketCategoryHash: getSpecialtySocketCategoryHash(dimItem),
+    season: modMetadata?.season,
+    compatibleModSeasons: modMetadata?.compatibleTags,
   };
 }
 
