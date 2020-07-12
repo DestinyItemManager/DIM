@@ -1,15 +1,21 @@
 import { parseQuery, lexer, Token } from './query-parser';
 
-// TODO: crazy whitespace combinations
+// To update the snapshots, run:
+// npx jest --updateSnapshot src/app/search/query-parser.test.ts
+
+// TODO: explicit "and" should have higher precedence than "or", but implicit "and" should have *lower* precedence than "or"
 
 // Some of these are contrived, some are from past search parsing issues
 const cases = [
   ['is:blue is:haspower -is:maxpower'],
+  ['is:blue is:haspower not:maxpower'],
+  ['not not:maxpower'],
   ['-is:equipped is:haspower is:incurrentchar'],
   ['-source:garden -source:lastwish sunsetsafter:arrival'],
   ['-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55'],
   ['(is:weapon is:sniperrifle) or (is:armor modslot:arrival)'],
   ['(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)'],
+  ['is:weapon and is:sniperrifle or not is:armor and modslot:arrival'], // => is:weapon (is:sniperrifle or -is:armor) modslot:arrival
   ['-(power:>1000 and -modslot:arrival)'],
   ['( power:>1000 and -modslot:arrival ) '],
   ['- is:exotic - (power:>1000)'],
@@ -43,5 +49,6 @@ test.each(cases)('parse |%s|', (query) => {
   expect(tokens).toMatchSnapshot('lexer');
 
   // Test the full parse tree
-  parseQuery(query);
+  const ast = parseQuery(query);
+  expect(ast).toMatchSnapshot('ast');
 });

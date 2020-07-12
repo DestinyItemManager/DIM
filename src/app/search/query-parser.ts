@@ -28,39 +28,187 @@ is:blue is:haspower -is:maxpower
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-export type Token = [TokenType] | [TokenType, string] | ['keyword', string, string];
+type QueryAST = AndOp | OrOp | NotOp | FilterOp | NoOp;
+
+interface AndOp {
+  op: 'and';
+  operands: QueryAST[];
+}
+
+interface OrOp {
+  op: 'or';
+  operands: QueryAST[];
+}
+
+interface NotOp {
+  op: 'not';
+  operand: QueryAST;
+}
+
+interface FilterOp {
+  op: 'filter';
+  type: string;
+  args: string;
+}
+
+interface NoOp {
+  op: 'noop';
+}
 
 /**
  * The query parser first lexes the string, then parses it into an AST representing the logical
  * structure of the query.
  */
 export function parseQuery(query: string) {
-  query = query.trim().toLowerCase();
+  // TODO: how to limit how many expressions this consumes?
+  const parse = (tokens: Generator<Token>): QueryAST => {
+    let ast: QueryAST = {
+      op: 'and',
+      operands: [],
+    };
 
-  // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
-  query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
+    let token: Token;
+    while ((token = tokens.next().value)) {
+      console.log('START', token, ast);
+      switch (token[0]) {
+        case 'filter':
+          {
+            if (ast.op !== 'and' && ast.op !== 'or') {
+              throw new Error('expected to be in an and/or expression');
+            }
+            const keyword = token[1];
+            if (keyword === 'not') {
+              // not: is a synonym for -is:
+              ast.operands.push({
+                op: 'not',
+                operand: {
+                  op: 'filter',
+                  type: 'is',
+                  args: token[2],
+                },
+              });
+            } else {
+              ast.operands.push({
+                op: 'filter',
+                type: keyword,
+                args: token[2],
+              });
+            }
+          }
+          break;
+        case 'not':
+          {
+            if (ast.op !== 'and' && ast.op !== 'or') {
+              throw new Error('expected to be in an and/or expression');
+            }
+            // parse next espression?
+            // Parse all the rest then fish out the leftmost?
+            ast.operands.push({
+              op: 'not',
+              // TODO: how to limit it to a single expression?
+              operand: parse(tokens),
+            });
+          }
+          break;
+        case 'and':
+          {
+            if (ast.op === 'and') {
+              ast.operands.push(parse(tokens));
+            } else {
+              ast = {
+                op: 'and',
+                operands: [ast, parse(tokens)],
+              };
+            }
+          }
+          break;
+        case 'or':
+          {
+            if (ast.op === 'or') {
+              ast.operands.push(parse(tokens));
+            } else {
+              ast = {
+                op: 'or',
+                operands: [ast, parse(tokens)],
+              };
+            }
+          }
+          break;
+        case '(':
+          {
+            if (ast.op !== 'and' && ast.op !== 'or') {
+              throw new Error('expected to be in an and/or expression');
+            }
+            const subQuery = parse(untilCloseParen(tokens));
+            if (ast.operands.length > 0) {
+              ast.operands.push(subQuery);
+            } else {
+              ast = subQuery;
+            }
+          }
+          break;
+        default:
+          throw new Error('Invalid syntax: ' + token + ', ' + query);
+      }
 
-  /*
-  // \S*?(["']).*?\1 -> match `is:"stuff here"` or `is:'stuff here'`
-  // [^\s"']+ -> match is:stuff
-  const searchTerms = query.match(/\S*?(["']).*?\1|[^\s"']+/g) || [];
-  return searchTerms;
-  */
+      console.log('END', token, ast, tokens);
+    }
 
-  const tokens: Token[] = [];
-  for (const t of lexer(query)) {
-    tokens.push(t);
-  }
-  return tokens;
+    console.log('ALLDONE', token, ast);
+
+    if (ast.op === 'and' || ast.op === 'or') {
+      if (ast.operands.length === 1) {
+        return ast.operands[0];
+      } else if (ast.operands.length === 0) {
+        return {
+          op: 'noop',
+        };
+      }
+    }
+    return ast;
+  };
+
+  const tokens = lexer(query);
+  const ast = parse(tokens);
+  return ast;
 }
 
-type TokenType = '(' | ')' | 'not' | 'or' | 'and' | 'str' | 'keyword';
+type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and';
+export type Token = [NoArgTokenType] | ['filter', string, string];
+
+/**
+ * Yield tokens from the passed in generator until we reach a closing parenthesis token.
+ */
+function* untilCloseParen(tokens: Generator<Token>): Generator<Token> {
+  let token: Token;
+  while ((token = tokens.next().value)) {
+    if (token[0] === ')') {
+      return;
+    }
+    yield token;
+  }
+}
+
+/**
+ * Yield tokens from the passed in generator until we reach an and/or token.
+ */
+// TODO: this really needs "peek"...
+/*
+function* untilBooleanOp(tokens: Generator<Token>): Generator<Token> {
+  for (const token of tokens) {
+    if (token[0] === 'and') {
+      return;
+    }
+    yield token;
+  }
+}
+*/
 
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
  * This throws an exception if it finds an invalid input.
  */
+// TODO: maybe generators are a mistake
 export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
 
@@ -94,10 +242,10 @@ export function* lexer(query: string): Generator<Token> {
       // Start/end group
       // TODO: use whitespace tolerant regex??
       consume(match);
-      yield [match.trim() as TokenType];
+      yield [match.trim() as NoArgTokenType];
     } else if (char === '"' || char === "'") {
       // Quoted string
-      yield ['str', consumeString(char)];
+      yield ['filter', 'keyword', consumeString(char)];
     } else if ((match = extract(query, i, /-\s*/y)) !== undefined) {
       // minus sign is the same as "not"
       consume(match);
@@ -105,7 +253,7 @@ export function* lexer(query: string): Generator<Token> {
     } else if ((match = extract(query, i, /(not|\s*or|\s*and)\s*/y)) !== undefined) {
       // boolean keywords
       consume(match);
-      yield [match.trim() as TokenType];
+      yield [match.trim() as NoArgTokenType];
     } else if ((match = extract(query, i, /[a-z]+:([a-z]+:)?/y)) !== undefined) {
       // Keyword searches - is:, stat:discipline:, etc
       consume(match);
@@ -123,11 +271,11 @@ export function* lexer(query: string): Generator<Token> {
         throw new Error('missing keyword arguments for ' + match);
       }
 
-      yield ['keyword', keyword, args];
+      yield ['filter', keyword, args];
     } else if ((match = extract(query, i, /[^\s)]+/y)) !== undefined) {
-      // bare words that aren't keywords
+      // bare words that aren't keywords are effectively "keyword" type filters
       consume(match);
-      yield ['str', match];
+      yield ['filter', 'keyword', match];
     } else if ((match = extract(query, i, /\s+/y)) !== undefined) {
       consume(match);
       yield ['and'];
