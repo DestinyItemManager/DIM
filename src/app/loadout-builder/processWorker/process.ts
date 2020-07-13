@@ -18,9 +18,9 @@ import {
   ProcessItem,
   ProcessArmorSet,
   IntermediateProcessArmorSet,
-  ProcessModMetadataByEnergy,
+  ProcessModMetadata,
 } from './types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -92,7 +92,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
-  processedSeasonalMods: ProcessModMetadataByEnergy,
+  processedSeasonalMods: ProcessModMetadata[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -307,8 +307,7 @@ export function process(
               }
 
               if (
-                (processedSeasonalMods.anyEnergy.length ||
-                  processedSeasonalMods.otherEnergy.length) &&
+                processedSeasonalMods.length &&
                 !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
               ) {
                 continue;
@@ -603,17 +602,17 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
 /**
  * See if we can slot all the locked seasonal mods.
  *
- * @param processedMods These mods must be sorted in the same manner as the item sort function below
+ * @param processedMods These mods must be sorted in the same manner as the item sort function below.
  * @param items The process items to test for mod slotting.
  */
-function canTakeAllSeasonalMods(processedMods: ProcessModMetadataByEnergy, items: ProcessItem[]) {
+function canTakeAllSeasonalMods(processedMods: ProcessModMetadata[], items: ProcessItem[]) {
   const sortedItems = [...items].sort((a, b) => {
     if (a.season && b.season) {
       // any energy is 0 but armour always has energy
       if (a.season === b.season && a.energyType && b.energyType) {
-        return a.energyType - b.energyType;
+        return b.energyType - a.energyType;
       }
-      return a.season - b.season;
+      return b.season - a.season;
     } else if (!a.season) {
       return 1;
     }
@@ -624,40 +623,21 @@ function canTakeAllSeasonalMods(processedMods: ProcessModMetadataByEnergy, items
   let itemIndex = 0;
 
   // loop over the items and mods in parallel and see if they can be slotted.
-  // if they can we cut them out and let any energy mods deal with the leftovers
-  while (modIndex < processedMods.otherEnergy.length && itemIndex < sortedItems.length) {
-    const { energy, seasonTag } = processedMods.otherEnergy[modIndex];
+  // due to energy mods needing to consider skipped items we reset item index after each splice.
+  while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
+    const { energy, seasonTag } = processedMods[modIndex];
     if (
-      sortedItems[itemIndex].energyType === energy &&
+      (sortedItems[itemIndex].energyType === energy || energy === DestinyEnergyType.Any) &&
       sortedItems[itemIndex].compatibleModSeasons?.includes(seasonTag)
     ) {
       modIndex += 1;
+      itemIndex = 0;
       sortedItems.splice(itemIndex, 1);
     } else {
       itemIndex += 1;
     }
   }
 
-  // abort early if the energy specific mods were not happy
-  if (modIndex < processedMods.otherEnergy.length) {
-    return false;
-  }
-
-  let anyModIndex = 0;
-  let anyItemIndex = 0;
-
-  // same as above without the energy and no need for splicing
-  while (anyModIndex < processedMods.anyEnergy.length && anyItemIndex < sortedItems.length) {
-    if (
-      sortedItems[anyItemIndex].compatibleModSeasons?.includes(
-        processedMods.anyEnergy[anyModIndex].seasonTag
-      )
-    ) {
-      anyModIndex += 1;
-    }
-    anyItemIndex += 1;
-  }
-
-  // This needs to be larger than the last index in the array as it will overshoot if they all fit.
-  return anyModIndex === processedMods.anyEnergy.length;
+  // This will indicate we have iterated over all the mods
+  return processedMods.length === modIndex;
 }

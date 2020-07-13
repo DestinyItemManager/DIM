@@ -17,13 +17,12 @@ import {
   ProcessArmorSet,
   ProcessSocket,
   ProcessSockets,
-  ProcessModMetadataByEnergy,
+  ProcessModMetadata,
 } from '../processWorker/types';
 import {
   getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
 } from 'app/utils/item-utils';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 interface ProcessState {
   processing: boolean;
@@ -200,7 +199,7 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 
 function mapSeasonalModsToSeasonsArray(
   lockedSeasonalMods: readonly LockedModBase[]
-): ProcessModMetadataByEnergy {
+): ProcessModMetadata[] {
   const sortedMetadata = lockedSeasonalMods
     .map((mod) => ({
       mod,
@@ -208,37 +207,27 @@ function mapSeasonalModsToSeasonsArray(
     }))
     .sort((a, b) => {
       if (a.metadata?.season && b.metadata?.season) {
-        if (a.metadata.season === b.metadata.season) {
-          return a.mod.mod.plug.energyCost.energyType - b.mod.mod.plug.energyCost.energyType;
+        if (b.metadata.season === a.metadata.season) {
+          return b.mod.mod.plug.energyCost.energyType - a.mod.mod.plug.energyCost.energyType;
         }
-        return a.metadata.season - b.metadata.season;
+        return b.metadata.season - a.metadata.season;
       } else if (!a.metadata?.season) {
         return 1;
       }
       return -1;
     });
 
-  const modMetadataByEnergy: ProcessModMetadataByEnergy = {
-    anyEnergy: [],
-    otherEnergy: [],
-  };
+  const modMetadata: ProcessModMetadata[] = [];
   for (const entry of sortedMetadata) {
     if (entry?.metadata) {
-      if (entry.mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any) {
-        modMetadataByEnergy.anyEnergy.push({
-          seasonTag: entry.metadata.tag,
-          energy: entry.mod.mod.plug.energyCost.energyType,
-        });
-      } else {
-        modMetadataByEnergy.otherEnergy.push({
-          seasonTag: entry.metadata.tag,
-          energy: entry.mod.mod.plug.energyCost.energyType,
-        });
-      }
+      modMetadata.push({
+        seasonTag: entry.metadata.tag,
+        energy: entry.mod.mod.plug.energyCost.energyType,
+      });
     }
   }
 
-  return modMetadataByEnergy;
+  return modMetadata;
 }
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {

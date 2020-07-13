@@ -95,8 +95,3 @@ export interface ProcessModMetadata {
   seasonTag: string;
   energy: DestinyEnergyType;
 }
-
-export interface ProcessModMetadataByEnergy {
-  anyEnergy: ProcessModMetadata[];
-  otherEnergy: ProcessModMetadata[];
-}
