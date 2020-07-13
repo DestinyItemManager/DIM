@@ -92,6 +92,7 @@ export interface IntermediateProcessArmorSet {
 }
 
 export interface ProcessModMetadata {
-  seasonTag: string;
-  energy: DestinyEnergyType;
+  season: number;
+  tag: string;
+  energyType: DestinyEnergyType;
 }
