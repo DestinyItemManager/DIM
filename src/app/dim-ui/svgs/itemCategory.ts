@@ -87,5 +87,3 @@ export function getItemSvgIcon(item: D2Item) {
     }
   }
 }
-
-// 39: ghost,

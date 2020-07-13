@@ -130,10 +130,7 @@ const factorCombos = {
 };
 type factorComboCategory = keyof typeof factorCombos;
 const factorComboCategories = Object.keys(factorCombos);
-// const allCombosToCalculate: Factor[][] = _.uniqWith(Object.values(factorCombos).flat(), _.isEqual);
 
-// surprisingly chill. this seems to just render 2x when item popup spawns.
-// much fewer than i worried. why twice though??
 export default function ItemTriage({ item }: { item: D2Item }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
@@ -153,8 +150,9 @@ export default function ItemTriage({ item }: { item: D2Item }) {
 
   // this lets us lay out the factor categories before we have their calculated numbers
   // useEffect fills those in later for us
-  // we rely on factorCombosToDisplay and itemFactors to have the same number of elements
-  const factorCombosToDisplay = getItemFactorComboDisplays(item);
+  // we rely on factorCombosLabels and itemFactors having the same number of elements,
+  // because they are check the same factors
+  const factorCombosLabels = getItemFactorComboDisplays(item);
 
   return (
     <div className={styles.itemTriagePane}>
@@ -163,8 +161,8 @@ export default function ItemTriage({ item }: { item: D2Item }) {
         <div className={`${styles.comboCount} ${styles.header}`}>Similar items</div>
         <div className={`${styles.keepMeter} ${styles.header}`} />
         <div className={styles.headerDivider} />
-        {factorCombosToDisplay.length > 0 &&
-          factorCombosToDisplay.map((comboDisplay, i) => (
+        {factorCombosLabels.length > 0 &&
+          factorCombosLabels.map((comboDisplay, i) => (
             <React.Fragment key={i}>
               {comboDisplay}
               <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
@@ -264,11 +262,6 @@ function getSimilarItems(exampleItem: D2Item) {
          * obviously it needs to change
          */
         quality: 100 - count * (100 / 3),
-        // /**
-        //  * what to render to represent this combination of factors
-        //  * i.e. a warlock icon and a purple swirl, for void warlock armor
-        //  */
-        // display: renderFactorCombo(exampleItem, factorCombo),
       };
     });
 }
