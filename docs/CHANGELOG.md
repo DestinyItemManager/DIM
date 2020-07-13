@@ -1,5 +1,13 @@
 ## Next
 
+## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
+
+* Fix sorting by Power Limit in the compare pane.
+* When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
+* Allow masterworks to affect more than one stat
+* Exclude subclasses from `is:weapon` filter.
+* Fixed Loadout Optimizer not including all the right tiers when tier filtering was in place.
+
 ## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
 
 * Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.

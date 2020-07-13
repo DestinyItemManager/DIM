@@ -156,8 +156,10 @@ export function assignModsToArmorSet(
   const assignments: Record<number, LockedArmor2Mod[]> = {};
 
   for (const item of setToMatch) {
-    assignments[item.hash] = new Array<LockedArmor2Mod>();
+    assignments[item.hash] = [];
   }
+
+  assignGeneralMods(setToMatch, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
 
   assignModsForSlot(setToMatch[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet], assignments);
   assignModsForSlot(
@@ -184,6 +186,10 @@ export function canSetTakeGeneralAndSeasonalMods(
   lockedArmor2Mods: LockedArmor2ModMap
 ) {
   const assignments: Record<number, LockedArmor2Mod[]> = {};
+
+  for (const item of set) {
+    assignments[item.hash] = [];
+  }
 
   // we ignore slot specific mods as they are prefiltered so should match up
   assignGeneralMods(set, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);

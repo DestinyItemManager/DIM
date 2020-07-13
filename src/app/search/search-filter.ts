@@ -1104,9 +1104,8 @@ function searchFilters(
             filterValue
           );
         }
-        return (
-          hashes.statHashByName[filterValue] && // make sure it exists or undefined can match undefined
-          hashes.statHashByName[filterValue] === item.masterworkInfo.statHash
+        return item.masterworkInfo?.stats?.some(
+          (s) => s.hash === hashes.statHashByName?.[filterValue]
         );
       },
       season(item: D2Item, filterValue: string) {
@@ -1281,7 +1280,11 @@ function searchFilters(
         );
       },
       weapon(item: DimItem) {
-        return item.bucket?.sort === 'Weapons' && item.bucket.hash !== 1506418338;
+        return (
+          item.bucket?.sort === 'Weapons' &&
+          item.bucket.type !== 'SeasonalArtifacts' &&
+          item.bucket.type !== 'Class'
+        );
       },
       armor(item: DimItem) {
         return item.bucket?.sort === 'Armor';

@@ -260,14 +260,16 @@ export interface DimMasterwork {
   typeIcon: string;
   /** The localized description associated with the type. */
   typeDesc: string | null;
-  /** The stat that is enhanced by this masterwork. */
-  statHash?: number;
-  /** The name of the stat enhanced by this masterwork. */
-  statName?: string;
   /** The tier of the masterwork (not the same as the stat!). */
   tier?: number;
-  /** How much the stat is enhanced by this masterwork. */
-  statValue?: number;
+  /** The stats that are enhanced by this masterwork. */
+  stats?: {
+    hash?: number;
+    /** The name of the stat enhanced by this masterwork. */
+    name?: string;
+    /** How much the stat is enhanced by this masterwork. */
+    value?: number;
+  }[];
 }
 
 export interface DimStat {
