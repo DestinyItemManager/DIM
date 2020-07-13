@@ -27,22 +27,21 @@ function getItem(
 
 /* Mods need to be sorted by sortSeasonalModsOrItems. Items are sorted inside canTakeAllSeasonalMods */
 
+/*
+  Can take all the mods cases
+*/
 describe('Can slot seasonal mods', () => {
   it('passes for correct seasons with correct energy', () => {
     const mods = [
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 3),
-      getMod(11, 'arrivals', 3),
-      getMod(10, 'worthy', 3),
       getMod(10, 'worthy', 3),
     ].sort(sortSeasonalModsOrItems);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
       getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(9, 3, ['worthy', 'dawn', 'undying']),
     ];
 
     const result = canTakeAllSeasonalMods(mods, items);
@@ -95,7 +94,66 @@ describe('Can slot seasonal mods', () => {
     const result = canTakeAllSeasonalMods(mods, items);
     expect(result).toEqual(true);
   });
+});
 
+/*
+  Can't take all the mods cases
+*/
+describe("Can't slot seasonal mods", () => {
+  it('fails when an energy mismatches', () => {
+    const mods = [
+      getMod(11, 'arrivals', 3),
+      getMod(11, 'arrivals', 3),
+      getMod(11, 'arrivals', 1),
+    ].sort(sortSeasonalModsOrItems);
+
+    const items = [
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
+
+  it('fails when a season mismatches', () => {
+    const mods = [getMod(11, 'arrivals', 3), getMod(11, 'arrivals', 3), getMod(9, 'dawn', 3)].sort(
+      sortSeasonalModsOrItems
+    );
+
+    const items = [
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
+
+  it('fails when an item has no mod slot', () => {
+    const mods = [
+      getMod(11, 'arrivals', 3),
+      getMod(11, 'arrivals', 3),
+      getMod(11, 'arrivals', 3),
+    ].sort(sortSeasonalModsOrItems);
+
+    const items = [
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(8, 3, undefined),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
+});
+
+/*
+  Ensuring the sorting works
+*/
+describe('Sorting works for mods and items', () => {
   it('passes when items are sorted for energy', () => {
     const mods = [
       getMod(11, 'arrivals', 3),
@@ -158,54 +216,5 @@ describe('Can slot seasonal mods', () => {
 
     const result = canTakeAllSeasonalMods(mods, items);
     expect(result).toEqual(true);
-  });
-});
-
-describe("Can't slot seasonal mods", () => {
-  it('fails when an energy mismatches', () => {
-    const mods = [
-      getMod(11, 'arrivals', 3),
-      getMod(11, 'arrivals', 3),
-      getMod(11, 'arrivals', 1),
-    ].sort(sortSeasonalModsOrItems);
-
-    const items = [
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-    ];
-
-    const result = canTakeAllSeasonalMods(mods, items);
-    expect(result).toEqual(false);
-  });
-
-  it('fails when a season mismatches', () => {
-    const mods = [getMod(11, 'arrivals', 3), getMod(11, 'arrivals', 3), getMod(9, 'dawn', 3)].sort(
-      sortSeasonalModsOrItems
-    );
-
-    const items = [
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-    ];
-
-    const result = canTakeAllSeasonalMods(mods, items);
-    expect(result).toEqual(false);
-  });
-
-  it('fails when an item has no mod slot', () => {
-    const mods = [getMod(11, 'arrivals', 3), getMod(11, 'arrivals', 3), getMod(9, 'dawn', 3)].sort(
-      sortSeasonalModsOrItems
-    );
-
-    const items = [
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(11, 3, ['arrivals', 'worthy']),
-      getItem(8, 3, undefined),
-    ];
-
-    const result = canTakeAllSeasonalMods(mods, items);
-    expect(result).toEqual(false);
   });
 });
