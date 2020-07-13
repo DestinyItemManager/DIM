@@ -3,12 +3,11 @@
   width: 25px;
   display: inline-block;
   vertical-align: middle;
-}
-
-img.inlineIcon {
-  height: 20px;
-  width: 20px;
-  margin: 2.5px;
+  &.smaller {
+    height: 20px;
+    width: 20px;
+    margin: 2.5px;
+  }
 }
 
 .itemTriagePane {
@@ -27,8 +26,10 @@ img.inlineIcon {
       align-self: end;
       /* min-height: 32px; */
       .inlineIcon {
-        height: 16px;
-        width: 16px;
+        height: 18px;
+        width: 18px;
+        position: relative;
+        top: -2px;
       }
     }
   }
@@ -89,4 +90,10 @@ img.inlineIcon {
   display: inline-block;
   vertical-align: middle;
   margin: 2.5px;
+}
+
+.weaponSvg {
+  // these have varying aspect ratios and are fill:black by default
+  width: auto !important;
+  filter: invert(1);
 }

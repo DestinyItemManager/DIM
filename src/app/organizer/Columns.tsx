@@ -52,6 +52,7 @@ import styles from './ItemTable.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -399,17 +400,11 @@ export function getColumns(
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         value: (item) =>
-          !item.isExotic && item.isDestiny2() && !item.energy
-            ? item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
-                ?.plugItem.displayProperties.name
-            : undefined,
+          item.isDestiny2() ? getWeaponArchetype(item)?.displayProperties.name : undefined,
         cell: (_val, item) =>
-          !item.isExotic && item.isDestiny2() && !item.energy ? (
+          item.isDestiny2() ? (
             <div>
-              {_.compact([
-                item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
-                  ?.plug,
-              ]).map((p) => (
+              {_.compact([getWeaponArchetypeSocket(item)?.plug]).map((p) => (
                 <PressTip
                   key={p.plugItem.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}

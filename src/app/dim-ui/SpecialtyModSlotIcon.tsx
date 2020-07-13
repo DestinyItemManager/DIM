@@ -6,6 +6,7 @@ import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { connect } from 'react-redux';
 import { getSpecialtySocket } from 'app/utils/item-utils';
 import styles from './SpecialtyModSlotIcon.m.scss';
+import PressTip from './PressTip';
 
 interface ProvidedProps {
   item: DimItem;
@@ -27,14 +28,15 @@ function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
   const emptySlotHash = specialtySocket?.socketDefinition.singleInitialItemHash;
   const emptySlotIcon = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
   return emptySlotIcon ? (
-    <div
-      className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
-      title={emptySlotIcon.itemTypeDisplayName}
-      style={bungieBackgroundStyle(
-        emptySlotIcon.displayProperties.icon,
-        'linear-gradient(#0005, #0005)' // forced dark background to help w/ visibility
-      )}
-    />
+    <PressTip elementType="span" tooltip={emptySlotIcon.itemTypeDisplayName}>
+      <div
+        className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
+        style={bungieBackgroundStyle(
+          emptySlotIcon.displayProperties.icon,
+          'linear-gradient(#0005, #0005)' // forced dark background to help w/ visibility
+        )}
+      />
+    </PressTip>
   ) : null;
 }
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);
@@ -64,11 +66,12 @@ function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, d
   const emptySocketHash = foundSocket && foundSocket.socketDefinition.singleInitialItemHash;
   const emptySocketIcon = emptySocketHash && defs.InventoryItem.get(emptySocketHash);
   return emptySocketIcon ? (
-    <div
-      className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
-      title={emptySocketIcon.itemTypeDisplayName}
-      style={bungieBackgroundStyle(emptySocketIcon.displayProperties.icon)}
-    />
+    <PressTip elementType="span" tooltip={emptySocketIcon.itemTypeDisplayName}>
+      <div
+        className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
+        style={bungieBackgroundStyle(emptySocketIcon.displayProperties.icon)}
+      />
+    </PressTip>
   ) : null;
 }
 export const ArmorSlotSpecificModSocketIcon = connect<StoreProps>(mapStateToProps)(

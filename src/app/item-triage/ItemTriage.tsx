@@ -14,6 +14,11 @@ import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { classIcons } from 'app/inventory/StoreBucket';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import PressTip from 'app/dim-ui/PressTip';
+import { getItemSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import clsx from 'clsx';
 
 /** a factor of interest */
 interface Factor {
@@ -29,7 +34,11 @@ const itemFactors: Record<string, Factor> = {
   class: {
     id: 'class',
     runIf: () => true,
-    render: (item) => <AppIcon icon={classIcons[item.classType]} className={styles.classIcon} />,
+    render: (item) => (
+      <PressTip elementType="span" tooltip={item.classTypeNameLocalized}>
+        <AppIcon icon={classIcons[item.classType]} className={styles.classIcon} />
+      </PressTip>
+    ),
     value: (item) => item.classType.toString(),
   },
   name: {
@@ -45,8 +54,25 @@ const itemFactors: Record<string, Factor> = {
   element: {
     id: 'element',
     runIf: (item) => item.element,
-    render: (item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
+    render: (item) => (
+      <PressTip elementType="span" tooltip={item.element?.displayProperties.name}>
+        <ElementIcon className={clsx(styles.inlineIcon, styles.smaller)} element={item.element} />
+      </PressTip>
+    ),
     value: (item) => item.element?.displayProperties.name ?? '',
+  },
+  weaponType: {
+    id: 'weaponType',
+    runIf: (item) => item.bucket.inWeapons,
+    render: (item) => (
+      <PressTip elementType="span" tooltip={item.typeName}>
+        <img
+          className={clsx(styles.inlineIcon, styles.smaller, styles.weaponSvg)}
+          src={getItemSvgIcon(item)}
+        />
+      </PressTip>
+    ),
+    value: (item) => item.typeName ?? '',
   },
   specialtySocket: {
     id: 'specialtySocket',
@@ -64,11 +90,37 @@ const itemFactors: Record<string, Factor> = {
     ),
     value: getArmorSlotSpecificModSocketDisplayName,
   },
+  archetype: {
+    id: 'archetype',
+    runIf: (item) => item.bucket.inWeapons,
+    render: (item) => {
+      const archetypeSocket = getWeaponArchetypeSocket(item);
+      return (
+        <>
+          {archetypeSocket && (
+            <PressTip
+              elementType="span"
+              tooltip={<PlugTooltip item={item} plug={archetypeSocket.plug!} />}
+            >
+              <BungieImage
+                className={styles.inlineIcon}
+                src={archetypeSocket.plug!.plugItem.displayProperties.icon}
+              />
+            </PressTip>
+          )}
+        </>
+      );
+    },
+    value: (item) => getWeaponArchetype(item)?.hash ?? 'unknown',
+  },
 };
 
 // which factors to check for which buckets
 const factorCombos = {
-  Weapons: [[itemFactors.element]],
+  Weapons: [
+    [itemFactors.element, itemFactors.weaponType],
+    [itemFactors.archetype, itemFactors.weaponType],
+  ],
   Armor: [
     [itemFactors.class, itemFactors.element, itemFactors.specialtySocket, itemFactors.armorSlot],
     [itemFactors.class, itemFactors.element, itemFactors.specialtySocket],
@@ -85,7 +137,13 @@ const factorComboCategories = Object.keys(factorCombos);
 export default function ItemTriage({ item }: { item: D2Item }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
-  //
+
+  // because of the ability to swipe between item popup tabs,
+  // all tabs in a popup are rendered when the item popup is up.
+  // this actually processes items really fast, and the item popup appearance animation probably
+  // takes longer than the calculation, but every millisecond counts, so,
+  // to keep the UI snappy, expecially since this tab may not even be viewed,
+  // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {
       setNotableStats(getNotableStats(item));
@@ -107,13 +165,13 @@ export default function ItemTriage({ item }: { item: D2Item }) {
         <div className={styles.headerDivider} />
         {factorCombosToDisplay.length > 0 &&
           factorCombosToDisplay.map((comboDisplay, i) => (
-            <>
+            <React.Fragment key={i}>
               {comboDisplay}
               <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
               <div className={styles.keepMeter}>
                 {itemFactors && <KeepJunkDial value={itemFactors[i].count} />}
               </div>
-            </>
+            </React.Fragment>
           ))}
       </div>
       {notableStats && (
@@ -132,13 +190,13 @@ export default function ItemTriage({ item }: { item: D2Item }) {
           <div className={styles.headerDivider} />
 
           {notableStats.map(({ best, quality, percent, stat }) => (
-            <>
+            <React.Fragment key={stat.statHash}>
               <div className={styles.bestStat}>
                 <span className={styles.statIconWrapper}>
                   {(stat.displayProperties.icon && (
                     <BungieImage
                       key={stat.statHash}
-                      className={styles.inlineIcon}
+                      className={clsx(styles.inlineIcon, styles.smaller)}
                       src={stat.displayProperties.icon}
                     />
                   )) ||
@@ -154,7 +212,7 @@ export default function ItemTriage({ item }: { item: D2Item }) {
               <div className={styles.keepMeter}>
                 <KeepJunkDial value={quality} />
               </div>
-            </>
+            </React.Fragment>
           ))}
         </div>
       )}
@@ -303,202 +361,9 @@ function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
 function renderFactorCombo(exampleItem: D2Item, factorCombo: Factor[]) {
   return (
     <div className={styles.factorCombo}>
-      {factorCombo.map((factor) => factor.render(exampleItem))}
+      {factorCombo.map((factor, i) => (
+        <React.Fragment key={i}>{factor.render(exampleItem)}</React.Fragment>
+      ))}
     </div>
   );
 }
-
-// console.log(combosToCalculate);
-// export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
-// interface Factor {
-//   render: React.ReactElement;
-//   compareToExample(i: D2Item): boolean;
-//   overallAdjust(overall: number, item: D2Item): number;
-// }
-// type FactorGenerator = (exampleItem: D2Item, statHash?: number) => Factor;
-
-// these contain a rendered version of a desirable item factor,
-// and a function to compare other items to the triaged one
-// const itemElement: FactorGenerator = (exampleItem) => ({
-//   render: <ElementIcon className={styles.inlineIcon} element={exampleItem.dmg} />,
-//   compareToExample: (i: D2Item) => i.dmg === exampleItem.dmg,
-//   overallAdjust: (overall: number, _item: D2Item) => overall++
-// });
-// const itemSpecialtySocket: FactorGenerator = (exampleItem) => ({
-//   render: <SpecialtyModSocketIcon className={styles.inlineIcon} item={exampleItem} lowRes={true} />,
-//   compareToExample: (i: D2Item) =>
-//     getSpecialtyModSocketDisplayName(i) === getSpecialtyModSocketDisplayName(exampleItem),
-//   overallAdjust: (overall: number, _item: D2Item) => overall++
-// });
-// const itemArmorSlotSpecificSocket: FactorGenerator = (exampleItem) => ({
-//   render: (
-//     <ArmorSlotSpecificModSocketIcon
-//       className={styles.inlineIcon}
-//       item={exampleItem}
-//       lowRes={true}
-//     />
-//   ),
-//   compareToExample: (i: D2Item) =>
-//     getArmorSlotSpecificModSocketDisplayName(i) ===
-//     getArmorSlotSpecificModSocketDisplayName(exampleItem),
-//   overallAdjust: (overall: number, _item: D2Item) => overall++
-// });
-
-// const itemStat: FactorGenerator = (exampleItem: D2Item, statHash) => {
-//   const statDisplayProperties = exampleItem.stats?.find((s) => s.statHash === statHash)
-//     ?.displayProperties;
-//   return {
-//     render: (
-//       <>
-//         {statDisplayProperties && statDisplayProperties.icon && (
-//           <BungieImage className={styles.inlineIcon} src={statDisplayProperties.icon} />
-//         )}
-//         {statDisplayProperties && statDisplayProperties.name}
-//       </>
-//     ),
-//     compareToExample: (_i: D2Item) => true,
-//     overallAdjust: (overall: number, item: D2Item) =>
-//       Math.max(overall, item.stats?.find((s) => s.statHash === statHash)?.base ?? 0)
-//   };
-// };
-
-// a function
-// function checkFactors(exampleItem: D2Item) {
-//   const allItemFactors = getAllItemFactors(exampleItem);
-//   const matchedFactors = factorCombos[exampleItem.bucket.sort as keyof typeof factorCombos].filter(
-//     (factorCombo) => !(allItemFactors[applyFactorCombo(exampleItem, factorCombo)] > 999)
-//   );
-//   return matchedFactors.map((factorCombo) => renderFactorCombo(exampleItem, factorCombo));
-// }
-
-// /**
-//  * given an item, derives all items from stores, then gathers stat maxes
-//  */
-// function getStatMaxes(exampleItem: D2Item) {
-//   const statMaxes: {
-//     'exotic or below': { [key: number]: number };
-//     'legendary or below': { [key: number]: number };
-//   } = {
-//     'exotic or below': {},
-//     'legendary or below': {},
-//   };
-//   getAllItems(exampleItem.getStoresService().getStores())
-//     .filter(
-//       (i) =>
-//         i.bucket.hash === exampleItem.bucket.hash &&
-//         (exampleItem.classType === DestinyClass.Unknown ||
-//           i.classType === DestinyClass.Unknown ||
-//           i.classType === exampleItem.classType)
-//     )
-//     .forEach((item) => {
-//       if (item.stats) {
-//         const tierInfo =
-//           item.tier === 'Exotic' ? ['exotic or below'] : ['legendary or below', 'everything'];
-//         item.stats.forEach((stat) => {
-//           tierInfo.forEach((tier) => {
-//             const bestStatNow: number =
-//               statMaxes[tier][stat.statHash] ?? (stat.smallerIsBetter ? 9999999 : -9999999);
-//             const newBestStat = (stat.smallerIsBetter ? Math.min : Math.max)(
-//               bestStatNow,
-//               stat.base
-//             );
-//             statMaxes[tier][stat.statHash] = newBestStat;
-//           });
-//         });
-//       }
-//     });
-//   return statMaxes;
-// }
-
-// function getItemDesirableFactors(exampleItem: D2Item) {
-// const statsToFindMaxesFor = armorStatHashes.concat(exampleItem.primStat?.statHash ?? []);
-
-// itemCollections.sort -- in the same major category (Weapons|Armor|General|Inventory)
-// const itemCollections: { [key: string]: D2Item[] } = {
-//   sort: exampleItem
-//     .getStoresService()
-//     .getAllItems()
-//     .filter(
-//       (i) =>
-//         i.bucket.sort === exampleItem.bucket.sort &&
-//         (exampleItem.classType === DestinyClass.Unknown ||
-//           i.classType === DestinyClass.Unknown ||
-//           i.classType === exampleItem.classType)
-//     )
-// };
-// // itemCollections.slot -- in the same slot (Energy Weapons|Power Weapons|Helmet|Ghost|etc)
-// itemCollections.slot = itemCollections.sort.filter(
-//   (i) => i.bucket.hash === exampleItem.bucket.hash
-// );
-
-// exampleItem
-//   .getStoresService()
-//   .getAllItems()
-//   .filter(
-//     (i) =>
-//       i.bucket.sort === exampleItem.bucket.sort &&
-//       (exampleItem.classType === DestinyClass.Unknown ||
-//         i.classType === DestinyClass.Unknown ||
-//         i.classType === exampleItem.classType)
-//   );
-
-// const factorFinders: {
-//   factors: Factor[];
-//   overall: any;
-// }[] = [];
-
-// if (exampleItem.bucket.sort && ['Weapons'].includes(exampleItem.bucket.sort)) {
-//   factorFinders.push({
-//     factors: [itemElement(exampleItem)],
-//     overall: 0
-//   });
-// }
-
-// if (exampleItem.bucket.sort && ['Armor'].includes(exampleItem.bucket.sort)) {
-//   if (getSpecialtyModSocketDisplayName(exampleItem)) {
-//     factorFinders.push(
-//       {
-//         factors: [itemArmorSlotSpecificSocket(exampleItem), itemSpecialtySocket(exampleItem)],
-//         overall: 0
-//       },
-//       {
-//         factors: [itemElement(exampleItem), itemSpecialtySocket(exampleItem)],
-//         overall: 0
-//       },
-//       ...statsToFindMaxesFor.map((statHash) => ({
-//         factors: [itemStat(exampleItem, statHash)],
-//         overall: 0
-//       }))
-//     );
-//   }
-// }
-
-// factorFinders.forEach((factorFinder) =>
-//   itemCollections.slot.forEach((item) => {
-//     if (factorFinder.factors.every((factor) => factor.compareToExample(item))) {
-//       factorFinder.overall = factorFinder.factors[0].overallAdjust(factorFinder.overall, item);
-//     }
-//   })
-// );
-// t('Triage.HighestInSlot'),
-// t('Triage.NumberOfThese'),
-
-// remove filters this item doesn't meet the standards for
-// console.log(factorFinders);
-// return factorFinders;
-/*.filter(
-    (factorFinder) =>
-      // (factorFinder.compare === 'max' && f.overall <= f.accessor(item)) ||
-      factorFinder.overall === 1
-  );*/
-// }
-/*
-function NumberOfItemType({ item }: { item: D2Item }) {
-  t('Triage.NumberOfThese');
-}
-*/
-
-// function logthru<T>(x: T): T {
-//   console.log(x);
-//   return x;
-// }

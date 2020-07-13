@@ -13,11 +13,13 @@ interface CssExports {
   'junkIcon': string;
   'keepIcon': string;
   'keepMeter': string;
+  'smaller': string;
   'statIconWrapper': string;
   'statValue': string;
   'tagIcon': string;
   'thisStat': string;
   'triageTable': string;
+  'weaponSvg': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
