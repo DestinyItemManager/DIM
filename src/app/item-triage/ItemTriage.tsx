@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { D2Item } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import SpecialtyModSlotIcon, {
@@ -76,52 +76,27 @@ const factorCombos = {
   ],
   General: [[itemFactors.element]],
 };
-const combosToCalculate: Factor[][] = _.uniqWith(Object.values(factorCombos).flat(), _.isEqual);
+type factorComboCategory = keyof typeof factorCombos;
+const factorComboCategories = Object.keys(factorCombos);
+// const allCombosToCalculate: Factor[][] = _.uniqWith(Object.values(factorCombos).flat(), _.isEqual);
 
 // surprisingly chill. this seems to just render 2x when item popup spawns.
 // much fewer than i worried. why twice though??
 export default function ItemTriage({ item }: { item: D2Item }) {
-  const allItemFactors = getAllItemFactors(item);
-  const similarFactors = factorCombos[item.bucket.sort as keyof typeof factorCombos]
-    .filter((factorCombo) => factorCombo.every((factor) => factor.runIf(item)))
-    .map((factorCombo) => {
-      const count = allItemFactors[applyFactorCombo(item, factorCombo)] - 1;
-      return {
-        /** how many similar items you have including this one */
-        count,
-        /** quality is a number from 0 to 1 representing keepworthiness */
-        quality: 100 - count * (100 / 3),
-        /**
-         * what to render to represent this combination of factors
-         * i.e. a warlock icon and a purple swirl, for void warlock armor
-         */
-        display: renderFactorCombo(item, factorCombo),
-      };
-    });
+  const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
+  const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
+  //
+  useEffect(() => {
+    if (item.bucket.inArmor) {
+      setNotableStats(getNotableStats(item));
+    }
+    setItemFactors(getSimilarItems(item));
+  }, [item]);
 
-  const allStatMaxes = item.bucket.inArmor && getRelevantStatMaxes(item);
-
-  // a stat is notable on seed item when it's at least this % of the best owned
-  const notabilityThreshold = 0.8;
-  // contains an entry for each notable stat found on the seed item
-  const notableStats =
-    allStatMaxes &&
-    item.stats
-      ?.filter((stat) => stat.base / allStatMaxes[stat.statHash] >= notabilityThreshold)
-      .map((stat) => {
-        const best = allStatMaxes[stat.statHash];
-        const rawRatio = stat.base / best;
-        return {
-          /** quality is a number from 0 to 1 representing keepworthiness */
-          quality: 100 - (10 - Math.floor(rawRatio * 10)) * (100 / 3),
-          /** seed item's value for this stat */
-          stat,
-          /** best of this stat */
-          best,
-          /** whole # percentage of seed item's stat compared to the best of that stat */
-          percent: Math.floor(rawRatio * 100),
-        };
-      });
+  // this lets us lay out the factor categories before we have their calculated numbers
+  // useEffect fills those in later for us
+  // we rely on factorCombosToDisplay and itemFactors to have the same number of elements
+  const factorCombosToDisplay = getItemFactorComboDisplays(item);
 
   return (
     <div className={styles.itemTriagePane}>
@@ -130,15 +105,16 @@ export default function ItemTriage({ item }: { item: D2Item }) {
         <div className={`${styles.comboCount} ${styles.header}`}>Similar items</div>
         <div className={`${styles.keepMeter} ${styles.header}`} />
         <div className={styles.headerDivider} />
-        {similarFactors.map(({ count, quality, display }) => (
-          <>
-            {display}
-            <div className={styles.comboCount}>{count}</div>
-            <div className={styles.keepMeter}>
-              <KeepJunkDial value={quality} />
-            </div>
-          </>
-        ))}
+        {factorCombosToDisplay.length > 0 &&
+          factorCombosToDisplay.map((comboDisplay, i) => (
+            <>
+              {comboDisplay}
+              <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
+              <div className={styles.keepMeter}>
+                {itemFactors && <KeepJunkDial value={itemFactors[i].count} />}
+              </div>
+            </>
+          ))}
       </div>
       {notableStats && (
         <div className={styles.triageTable}>
@@ -186,8 +162,12 @@ export default function ItemTriage({ item }: { item: D2Item }) {
   );
 }
 
-// uing
-function getAllItemFactors(exampleItem: D2Item) {
+/**
+ * for all items relevant for comparison to the seed item, processes them into a Record,
+ * keyed by item factor combination i.e. "arcwarlockopulent"
+ * with values representing how many of that type you own
+ */
+function collectRelevantItemFactors(exampleItem: D2Item) {
   const combinationCounts: { [key: string]: number } = {};
   getAllItems(exampleItem.getStoresService().getStores())
     .filter(
@@ -201,19 +181,53 @@ function getAllItemFactors(exampleItem: D2Item) {
           i.classType === exampleItem.classType)
     )
     .forEach((item: D2Item) => {
-      combosToCalculate.forEach((factorCombo) => {
+      factorCombos[exampleItem.bucket.sort as factorComboCategory].forEach((factorCombo) => {
         const combination = applyFactorCombo(item, factorCombo);
         combinationCounts[combination] = (combinationCounts[combination] ?? 0) + 1;
       });
     });
   return combinationCounts;
 }
+function getSimilarItems(exampleItem: D2Item) {
+  if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
+    return [];
+  }
+  const relevantFactors = collectRelevantItemFactors(exampleItem);
+  return factorCombos[exampleItem.bucket.sort as factorComboCategory]
+    .filter((factorCombo) => factorCombo.every((factor) => factor.runIf(exampleItem)))
+    .map((factorCombo) => {
+      const count = relevantFactors[applyFactorCombo(exampleItem, factorCombo)] - 1;
+      return {
+        /** how many similar items you have including this one */
+        count,
+        /**
+         * quality is a number representing keepworthiness
+         * i forget how i decided tihs or how it is calculated
+         * obviously it needs to change
+         */
+        quality: 100 - count * (100 / 3),
+        // /**
+        //  * what to render to represent this combination of factors
+        //  * i.e. a warlock icon and a purple swirl, for void warlock armor
+        //  */
+        // display: renderFactorCombo(exampleItem, factorCombo),
+      };
+    });
+}
+function getItemFactorComboDisplays(exampleItem: D2Item) {
+  if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
+    return [];
+  }
+  return factorCombos[exampleItem.bucket.sort as factorComboCategory]
+    .filter((factorCombo) => factorCombo.every((factor) => factor.runIf(exampleItem)))
+    .map((factorCombo) => renderFactorCombo(exampleItem, factorCombo));
+}
 
 /**
  * given a seed item (one that all items will be compared to),
  * derives all items from stores, then gathers stat maxes for items worth comparing
  */
-function getRelevantStatMaxes(exampleItem: D2Item) {
+function collectRelevantStatMaxes(exampleItem: D2Item) {
   // highest values found in relevant items, keyed by stat hash
   const statMaxes: Record<number, number> = {};
   getAllItems(exampleItem.getStoresService().getStores())
@@ -243,6 +257,31 @@ function getRelevantStatMaxes(exampleItem: D2Item) {
       }
     });
   return statMaxes;
+}
+
+// a stat is notable on seed item when it's at least this % of the best owned
+const notabilityThreshold = 0.8;
+/**
+ * returns an entry for each notable stat found on the seed item
+ */
+function getNotableStats(exampleItem: D2Item) {
+  const statMaxes = collectRelevantStatMaxes(exampleItem);
+  return exampleItem.stats
+    ?.filter((stat) => stat.base / statMaxes[stat.statHash] >= notabilityThreshold)
+    .map((stat) => {
+      const best = statMaxes[stat.statHash];
+      const rawRatio = stat.base / best;
+      return {
+        /** quality is a number from 0 to 1 representing keepworthiness */
+        quality: 100 - (10 - Math.floor(rawRatio * 10)) * (100 / 3),
+        /** seed item's value for this stat */
+        stat,
+        /** best of this stat */
+        best,
+        /** whole # percentage of seed item's stat compared to the best of that stat */
+        percent: Math.floor(rawRatio * 100),
+      };
+    });
 }
 
 /**
