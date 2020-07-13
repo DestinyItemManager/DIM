@@ -1,4 +1,4 @@
-import { canTakeAllSeasonalMods, sortSeasonalModsOrItems } from './processUtils';
+import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
 import { ProcessModMetadata, ProcessItem } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
@@ -36,7 +36,7 @@ describe('Can slot seasonal mods', () => {
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 3),
       getMod(10, 'worthy', 3),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -53,7 +53,7 @@ describe('Can slot seasonal mods', () => {
       getMod(11, 'arrivals', 2),
       getMod(11, 'arrivals', 1),
       getMod(11, 'arrivals', 0),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -70,7 +70,7 @@ describe('Can slot seasonal mods', () => {
       getMod(11, 'arrivals', 0),
       getMod(11, 'arrivals', 0),
       getMod(11, 'arrivals', 0),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -82,8 +82,8 @@ describe('Can slot seasonal mods', () => {
     expect(result).toEqual(true);
   });
 
-  it('passes when with a single mod', () => {
-    const mods = [getMod(11, 'arrivals', 1)].sort(sortSeasonalModsOrItems);
+  it('passes with a single mod', () => {
+    const mods = [getMod(11, 'arrivals', 1)].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -105,7 +105,7 @@ describe("Can't slot seasonal mods", () => {
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 1),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -119,7 +119,7 @@ describe("Can't slot seasonal mods", () => {
 
   it('fails when a season mismatches', () => {
     const mods = [getMod(11, 'arrivals', 3), getMod(11, 'arrivals', 3), getMod(9, 'dawn', 3)].sort(
-      sortSeasonalModsOrItems
+      sortProcessModMetadataOrProcessItem
     );
 
     const items = [
@@ -137,7 +137,7 @@ describe("Can't slot seasonal mods", () => {
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 3),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -159,7 +159,7 @@ describe('Sorting works for mods and items', () => {
       getMod(11, 'arrivals', 3),
       getMod(11, 'arrivals', 2),
       getMod(11, 'arrivals', 1),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 1, ['arrivals', 'worthy']),
@@ -176,7 +176,7 @@ describe('Sorting works for mods and items', () => {
       getMod(11, 'arrivals', 1),
       getMod(11, 'arrivals', 2),
       getMod(11, 'arrivals', 3),
-    ].sort(sortSeasonalModsOrItems);
+    ].sort(sortProcessModMetadataOrProcessItem);
 
     const items = [
       getItem(11, 3, ['arrivals', 'worthy']),
@@ -190,7 +190,7 @@ describe('Sorting works for mods and items', () => {
 
   it('passes when mods are sorted for season', () => {
     const mods = [getMod(9, 'dawn', 1), getMod(10, 'worthy', 1), getMod(11, 'arrivals', 1)].sort(
-      sortSeasonalModsOrItems
+      sortProcessModMetadataOrProcessItem
     );
 
     const items = [
@@ -205,7 +205,7 @@ describe('Sorting works for mods and items', () => {
 
   it('passes when items are sorted for season', () => {
     const mods = [getMod(11, 'arrivals', 1), getMod(10, 'worthy', 1), getMod(9, 'dawn', 1)].sort(
-      sortSeasonalModsOrItems
+      sortProcessModMetadataOrProcessItem
     );
 
     const items = [

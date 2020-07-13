@@ -21,7 +21,7 @@ import {
   ProcessModMetadata,
 } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { canTakeAllSeasonalMods, sortSeasonalModsOrItems } from './processUtils';
+import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -107,7 +107,7 @@ export function process(
 } {
   const pstart = performance.now();
 
-  processedSeasonalMods.sort(sortSeasonalModsOrItems);
+  processedSeasonalMods.sort(sortProcessModMetadataOrProcessItem);
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
