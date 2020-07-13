@@ -54,7 +54,15 @@ export default function ItemPopupBody({
   ];
   if (
     item.isDestiny2() &&
-    (item.bucket.inArmor || item.bucket.inWeapons || item.bucket.inGeneral)
+    (item.bucket.inArmor ||
+      (item.bucket.sort === 'Weapons' &&
+        item.bucket.type !== 'SeasonalArtifacts' &&
+        item.bucket.type !== 'Class'))
+    //   ||
+    // (item.bucket.sort === 'General' &&
+    //   (item.bucket.type === 'Ghost' ||        // enable these once there's
+    //     item.bucket.type === 'Vehicle' ||     // factor rules for them
+    //     item.bucket.type === 'Ships'))
   ) {
     tabs.push({
       tab: ItemPopupTab.Triage,
