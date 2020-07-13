@@ -167,7 +167,7 @@ export default function ItemTriage({ item }: { item: D2Item }) {
               {comboDisplay}
               <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
               <div className={styles.keepMeter}>
-                {itemFactors && <KeepJunkDial value={itemFactors[i].count} />}
+                {itemFactors && <KeepJunkDial value={itemFactors[i].quality} />}
               </div>
             </React.Fragment>
           ))}
@@ -256,12 +256,8 @@ function getSimilarItems(exampleItem: D2Item) {
       return {
         /** how many similar items you have including this one */
         count,
-        /**
-         * quality is a number representing keepworthiness
-         * i forget how i decided tihs or how it is calculated
-         * obviously it needs to change
-         */
-        quality: 100 - count * (100 / 3),
+        /** quality is a number from 0 to 100 representing keepworthiness */
+        quality: Math.max(0, 100 - count * (100 / 3)),
       };
     });
 }
@@ -323,7 +319,7 @@ function getNotableStats(exampleItem: D2Item) {
       const best = statMaxes[stat.statHash];
       const rawRatio = stat.base / best;
       return {
-        /** quality is a number from 0 to 1 representing keepworthiness */
+        /** quality is a number from 0 to 100 representing keepworthiness */
         quality: 100 - (10 - Math.floor(rawRatio * 10)) * (100 / 3),
         /** seed item's value for this stat */
         stat,
