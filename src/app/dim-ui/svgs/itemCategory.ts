@@ -73,6 +73,22 @@ export const cosmeticSvgByCategoryHash = {
 
 export const consumableSvgByCategoryHash = {};
 
+/** an SVG of the weapon's type, or a handcannon by default */
+export function getWeaponSvgIcon(item: D2Item) {
+  // reverse through the ICHs because most specific is last,
+  // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
+  for (const ich of [...item.itemCategoryHashes].reverse()) {
+    if (weaponTypeSvgByCategoryHash[ich]) {
+      return weaponTypeSvgByCategoryHash[ich];
+    }
+  }
+  return handCannon; // cute idea? or terrible?
+}
+
+/**
+ * an SVG of the item's type, or undefined.
+ * i like this idea but not sure where to employ it yet.
+ */
 export function getItemSvgIcon(item: D2Item) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
     const svg: string =

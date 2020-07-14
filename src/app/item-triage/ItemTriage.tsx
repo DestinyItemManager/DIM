@@ -17,7 +17,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import PressTip from 'app/dim-ui/PressTip';
-import { getItemSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import clsx from 'clsx';
 
 /** a factor of interest */
@@ -68,7 +68,7 @@ const itemFactors: Record<string, Factor> = {
       <PressTip elementType="span" tooltip={item.typeName}>
         <img
           className={clsx(styles.inlineIcon, styles.smaller, styles.weaponSvg)}
-          src={getItemSvgIcon(item)}
+          src={getWeaponSvgIcon(item)}
         />
       </PressTip>
     ),
