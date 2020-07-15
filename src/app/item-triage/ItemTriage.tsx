@@ -19,6 +19,10 @@ import PlugTooltip from 'app/item-popup/PlugTooltip';
 import PressTip from 'app/dim-ui/PressTip';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import clsx from 'clsx';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/reducers';
+import { useSelector } from 'react-redux';
+import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 
 /** a factor of interest */
 interface Factor {
@@ -131,9 +135,13 @@ const factorCombos = {
 type factorComboCategory = keyof typeof factorCombos;
 const factorComboCategories = Object.keys(factorCombos);
 
-export default function ItemTriage({ item }: { item: D2Item }) {
+export function ItemTriage({ item }: { item: D2Item }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
+
+  const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
+    (state) => settingsSelector(state).customTotalStatsByClass
+  );
 
   // because of the ability to swipe between item popup tabs,
   // all tabs in a popup are rendered when the item popup is up.
@@ -143,10 +151,10 @@ export default function ItemTriage({ item }: { item: D2Item }) {
   // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {
-      setNotableStats(getNotableStats(item));
+      setNotableStats(getNotableStats(item, customTotalStatsByClass));
     }
     setItemFactors(getSimilarItems(item));
-  }, [item]);
+  }, [item, customTotalStatsByClass]);
 
   // this lets us lay out the factor categories before we have their calculated numbers
   // useEffect fills those in later for us
@@ -187,7 +195,7 @@ export default function ItemTriage({ item }: { item: D2Item }) {
           <div className={`${styles.keepMeter} ${styles.header}`} />
           <div className={styles.headerDivider} />
 
-          {notableStats.map(({ best, quality, percent, stat }) => (
+          {notableStats.notableStats?.map(({ best, quality, percent, stat }) => (
             <React.Fragment key={stat.statHash}>
               <div className={styles.bestStat}>
                 <span className={styles.statIconWrapper}>
@@ -212,6 +220,25 @@ export default function ItemTriage({ item }: { item: D2Item }) {
               </div>
             </React.Fragment>
           ))}
+          {item.bucket.inArmor && (
+            <>
+              <div className={styles.bestStat}>
+                <span className={styles.statIconWrapper}> </span>
+                <span className={styles.statValue}>{notableStats.customTotalMax.best}</span>{' '}
+                <StatTotalToggle forClass={item.classType} className={styles.inlineBlock} />
+              </div>
+              <div className={styles.thisStat}>
+                <span className={styles.statValue}>{notableStats.customTotalMax.stat}</span> (
+                <span style={{ color: getValueColors(notableStats.customTotalMax.quality)[1] }}>
+                  {notableStats.customTotalMax.percent}%
+                </span>
+                )
+              </div>
+              <div className={styles.keepMeter}>
+                <KeepJunkDial value={notableStats.customTotalMax.quality} />
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -274,9 +301,9 @@ function getItemFactorComboDisplays(exampleItem: D2Item) {
  * given a seed item (one that all items will be compared to),
  * derives all items from stores, then gathers stat maxes for items worth comparing
  */
-function collectRelevantStatMaxes(exampleItem: D2Item) {
+function collectRelevantStatMaxes(exampleItem: D2Item, customStatTotalHashes: number[]) {
   // highest values found in relevant items, keyed by stat hash
-  const statMaxes: Record<number, number> = {};
+  const statMaxes: Record<number | string, number> = { custom: 0 };
   getAllItems(exampleItem.getStoresService().getStores())
     .filter(
       (i) =>
@@ -292,6 +319,7 @@ function collectRelevantStatMaxes(exampleItem: D2Item) {
     )
     .forEach((item) => {
       if (item.stats) {
+        let thisItemCustomStatTotal = 0;
         item.stats.forEach((stat) => {
           const bestStatSoFar: number =
             statMaxes[stat.statHash] ?? (stat.smallerIsBetter ? 9999999 : -9999999);
@@ -300,7 +328,12 @@ function collectRelevantStatMaxes(exampleItem: D2Item) {
             stat.base
           );
           statMaxes[stat.statHash] = newBestStat;
+
+          if (customStatTotalHashes.includes(stat.statHash)) {
+            thisItemCustomStatTotal += stat.base;
+          }
         });
+        statMaxes['custom'] = Math.max(statMaxes['custom'], thisItemCustomStatTotal);
       }
     });
   return statMaxes;
@@ -311,24 +344,44 @@ const notabilityThreshold = 0.8;
 /**
  * returns an entry for each notable stat found on the seed item
  */
-function getNotableStats(exampleItem: D2Item) {
-  const statMaxes = collectRelevantStatMaxes(exampleItem);
-  return exampleItem.stats
-    ?.filter((stat) => stat.base / statMaxes[stat.statHash] >= notabilityThreshold)
-    .map((stat) => {
-      const best = statMaxes[stat.statHash];
-      const rawRatio = stat.base / best;
-      return {
-        /** quality is a number from 0 to 100 representing keepworthiness */
-        quality: 100 - (10 - Math.floor(rawRatio * 10)) * (100 / 3),
-        /** seed item's value for this stat */
-        stat,
-        /** best of this stat */
-        best,
-        /** whole # percentage of seed item's stat compared to the best of that stat */
-        percent: Math.floor(rawRatio * 100),
-      };
-    });
+function getNotableStats(
+  exampleItem: D2Item,
+  customTotalStatsByClass: StatHashListsKeyedByDestinyClass
+) {
+  const customStatTotalHashes = customTotalStatsByClass[exampleItem.classType] ?? [];
+  const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes);
+
+  const customTotal =
+    exampleItem.stats?.reduce(
+      (total, stat) => (customStatTotalHashes.includes(stat.statHash) ? total + stat.base : total),
+      0
+    ) ?? 0;
+  const customRatio = customTotal / statMaxes.custom || 0;
+  return {
+    notableStats: exampleItem.stats
+      ?.filter((stat) => stat.base / statMaxes[stat.statHash] >= notabilityThreshold)
+      .map((stat) => {
+        const best = statMaxes[stat.statHash];
+        const rawRatio = stat.base / best || 0;
+
+        return {
+          /** quality is a number from 0 to 100 representing keepworthiness */
+          quality: 100 - (10 - Math.floor(rawRatio * 10)) * (100 / 3),
+          /** seed item's copy of this stat */
+          stat,
+          /** best of this stat */
+          best,
+          /** whole # percentage of seed item's stat compared to the best of that stat */
+          percent: Math.floor(rawRatio * 100),
+        };
+      }),
+    customTotalMax: {
+      quality: 100 - (10 - Math.floor(customRatio * 10)) * (100 / 3),
+      stat: customTotal,
+      best: statMaxes.custom,
+      percent: Math.floor(customRatio * 100),
+    },
+  };
 }
 
 /**

@@ -9,7 +9,7 @@ import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import './ItemPopupBody.scss';
-import ItemTriage from 'app/item-triage/ItemTriage';
+import { ItemTriage } from 'app/item-triage/ItemTriage';
 
 export const enum ItemPopupTab {
   Overview,

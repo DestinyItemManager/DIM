@@ -8,6 +8,7 @@ interface CssExports {
   'factorCombo': string;
   'header': string;
   'headerDivider': string;
+  'inlineBlock': string;
   'inlineIcon': string;
   'itemTriagePane': string;
   'junkIcon': string;
