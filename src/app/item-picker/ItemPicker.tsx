@@ -76,6 +76,7 @@ function ItemPicker({
   onItemSelected,
   onCancel,
   onSheetClosed,
+  setSetting,
 }: Props) {
   const [query, setQuery] = useState('');
   const [equipToggled, setEquipToggled] = useState(equip ?? preferEquip);

@@ -1,6 +1,7 @@
 ## Next
 
 * Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
+* Fix quick item picker not remembering your preference for "equip" vs "store".
 
 ## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
 
