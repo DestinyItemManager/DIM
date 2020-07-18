@@ -64,11 +64,7 @@ interface Navigator {
 }
 
 declare module '*/CHANGELOG.md' {
-  const value: {
-    version: string;
-    date?: string;
-    changes: string[];
-  }[];
+  const value: string;
   export default value;
 }
 
