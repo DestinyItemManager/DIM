@@ -140,9 +140,7 @@ export function buildStats(
     investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
 
     if (createdItem.bucket.inArmor) {
-      if (createdItem.sockets?.sockets.length) {
-        buildBaseStats(investmentStatsByHash, createdItem.sockets.sockets);
-      }
+      buildBaseStats(investmentStats, investmentStatsByHash, createdItem);
 
       // Add the "Total" stat for armor
       const tStat = totalStat(investmentStats);
@@ -283,7 +281,6 @@ function buildStat(
     bar = !statDisplay.displayAsNumeric;
     value = interpolateStatValue(value, statDisplay);
   }
-  value = Math.max(0, value);
 
   return {
     investmentValue: itemStat.value || 0,
@@ -461,17 +458,28 @@ function buildLiveStats(
  * representing the raw armor stats before mods changed them
  */
 function buildBaseStats(
-  statsByHash: { [k: number]: DimStat }, // mutated
-  sockets: DimSocket[]
+  stats: DimStat[], //mutated
+  statsByHash: { [k: number]: DimStat }, // mutated, same as above but keyed by hash
+  item: D2Item
 ) {
-  for (const socket of sockets) {
-    if (socket.plug?.plugItem.investmentStats) {
-      for (const perkStat of socket.plug.plugItem.investmentStats) {
-        const statHash = perkStat.statTypeHash;
-        const itemStat = statsByHash[statHash];
-        const perkValue = perkStat.value || 0;
-        if (itemStat && itemStat.base > perkValue) {
-          itemStat.base -= perkValue;
+  // Class Items always have a base stat of 0;
+  if (item.bucket.hash === 1585787867) {
+    for (const stat of stats) {
+      stat.base = 0;
+    }
+  } else if (item.sockets?.sockets.length) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plug?.plugItem.investmentStats) {
+        for (const perkStat of socket.plug.plugItem.investmentStats) {
+          const statHash = perkStat.statTypeHash;
+          const itemStat = statsByHash[statHash];
+          const perkValue = perkStat.value || 0;
+          if (itemStat && itemStat.base > perkValue) {
+            itemStat.base -= perkValue;
+          }
+          if (itemStat && itemStat.investmentValue === 0 && perkValue < 0) {
+            itemStat.baseMayBeWrong = true;
+          }
         }
       }
     }
@@ -481,6 +489,7 @@ function buildBaseStats(
 function totalStat(stats: DimStat[]): DimStat {
   const total = _.sumBy(stats, (s) => s.value);
   const baseTotal = _.sumBy(stats, (s) => s.base);
+  const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
   return {
     investmentValue: total,
     statHash: -1000,
@@ -490,6 +499,7 @@ function totalStat(stats: DimStat[]): DimStat {
     sort: statAllowList.indexOf(-1000),
     value: total,
     base: baseTotal,
+    baseMayBeWrong,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
@@ -505,10 +515,12 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
   const interp = statDisplay.displayInterpolation;
 
   // Clamp the value to prevent overfilling
-  value = Math.max(0, Math.min(value, statDisplay.maximumValue));
+  value = Math.min(value, statDisplay.maximumValue);
 
   let endIndex = interp.findIndex((p) => p.value > value);
-  if (endIndex < 0) {
+
+  // value < 0 is for mods with negative stats
+  if (endIndex < 0 || value < 0) {
     endIndex = interp.length - 1;
   }
   const startIndex = Math.max(0, endIndex - 1);

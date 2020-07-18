@@ -9,6 +9,7 @@ import {
   MinMaxIgnored,
   MinMax,
   LockedModBase,
+  statHashToType,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -95,6 +96,7 @@ export function useProcess(
         processItems,
         lockedItems,
         mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
+        getTotalSeasonalModStatChanges(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -219,6 +221,33 @@ function mapSeasonalModsToSeasonsArray(
   return modMetadata;
 }
 
+/**
+ * This sums up the total stat contributions across locked seasonal mods. These are then applied
+ * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
+ * effect stat values in game.
+ */
+function getTotalSeasonalModStatChanges(lockedSeasonalMods: readonly LockedModBase[]) {
+  const totals: { [stat in StatTypes]: number } = {
+    Mobility: 0,
+    Recovery: 0,
+    Resilience: 0,
+    Intellect: 0,
+    Discipline: 0,
+    Strength: 0,
+  };
+
+  for (const mod of lockedSeasonalMods) {
+    for (const stat of mod.mod.investmentStats) {
+      const statType = statHashToType[stat.statTypeHash];
+      if (statType) {
+        totals[statType] += stat.value;
+      }
+    }
+  }
+
+  return totals;
+}
+
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
     sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
@@ -233,9 +262,12 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
+  const baseStatMap: { [statHash: number]: number } = {};
+
   if (stats) {
-    for (const { statHash, value } of stats) {
+    for (const { statHash, value, base } of stats) {
       statMap[statHash] = value;
+      baseStatMap[statHash] = base;
     }
   }
 
@@ -249,6 +281,7 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     equippingLabel,
     basePower,
     stats: statMap,
+    baseStats: baseStatMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energyType: dimItem.energy?.energyType,
     season: modMetadata?.season,

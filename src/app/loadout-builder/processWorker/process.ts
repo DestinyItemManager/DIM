@@ -94,6 +94,7 @@ export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
   processedSeasonalMods: ProcessModMetadata[],
+  seasonalModStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -273,6 +274,7 @@ export function process(
               let index = 1;
               let statRangeExceeded = false;
               for (const statKey of orderedConsideredStats) {
+                stats[statKey] += seasonalModStatTotals[statKey];
                 const tier = statTier(stats[statKey]);
 
                 if (tier > statRanges[statKey].max) {
@@ -541,11 +543,7 @@ function getBaseStatValues(
   orderedStatValues: number[],
   lockedModStats: { [statHash: number]: number }
 ) {
-  const baseStats = {};
-
-  for (const statHash of orderedStatValues) {
-    baseStats[statHash] = item.stats[statHash];
-  }
+  const baseStats = { ...item.baseStats };
 
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
   if (item.sockets && item.energyType !== undefined) {
@@ -564,13 +562,15 @@ function getBaseStatValues(
       }
     }
 
-    for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItemHash ?? NaN;
+    if (masterworkSocketHashes.length) {
+      for (const socket of item.sockets.sockets) {
+        const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
-      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
-        for (const statHash of orderedStatValues) {
-          if (socket.plug.stats[statHash]) {
-            baseStats[statHash] -= socket.plug.stats[statHash];
+        if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
+          for (const statHash of orderedStatValues) {
+            if (socket.plug.stats[statHash]) {
+              baseStats[statHash] += socket.plug.stats[statHash];
+            }
           }
         }
       }

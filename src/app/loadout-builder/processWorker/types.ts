@@ -33,6 +33,7 @@ export interface ProcessItem {
   energyType?: DestinyEnergyType;
   basePower: number;
   stats: { [statHash: number]: number };
+  baseStats: { [statHash: number]: number };
   season?: number;
   compatibleModSeasons?: string[];
 }

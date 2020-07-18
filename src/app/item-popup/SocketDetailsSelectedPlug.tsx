@@ -53,6 +53,7 @@ export default function SocketDetailsSelectedPlug({
       const updatedInvestmentValue = itemStat.investmentValue + stat.value - currentModValue;
       let itemStatValue = updatedInvestmentValue;
       let modValue = stat.value;
+
       if (statDisplay) {
         itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
         modValue =

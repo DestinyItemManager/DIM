@@ -1,9 +1,13 @@
-import { ProcessModMetadata, ProcessItem } from './types';
+import { ProcessModMetadata } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 interface SortParam {
   energyType?: DestinyEnergyType;
   season?: number;
+}
+
+export interface ProcessItemSubset extends SortParam {
+  compatibleModSeasons?: string[];
 }
 
 export function sortProcessModMetadataOrProcessItem(a: SortParam, b: SortParam) {
@@ -26,7 +30,10 @@ export function sortProcessModMetadataOrProcessItem(a: SortParam, b: SortParam) 
  * @param processedMods These mods must be sorted in the same manner as the item sort function below.
  * @param items The process items to test for mod slotting.
  */
-export function canTakeAllSeasonalMods(processedMods: ProcessModMetadata[], items: ProcessItem[]) {
+export function canTakeAllSeasonalMods(
+  processedMods: ProcessModMetadata[],
+  items: ProcessItemSubset[]
+) {
   const sortedItems = [...items].sort(sortProcessModMetadataOrProcessItem);
 
   let modIndex = 0;
