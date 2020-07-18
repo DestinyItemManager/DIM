@@ -1,5 +1,7 @@
 ## Next
 
+* Fix quick item picker not remembering your preference for "equip" vs "store".
+
 ## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
 
 * Fix sorting by Power Limit in the compare pane.
