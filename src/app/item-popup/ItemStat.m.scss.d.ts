@@ -9,7 +9,6 @@ interface CssExports {
   'modded': string;
   'moddedStatBar': string;
   'negativeModded': string;
-  'negativeModdedStatBar': string;
   'quality': string;
   'qualitySummary': string;
   'ratingChartBarColor': string;

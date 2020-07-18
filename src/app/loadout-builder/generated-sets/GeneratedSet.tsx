@@ -17,6 +17,7 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { assignModsToArmorSet } from './mod-utils';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import PressTip from 'app/dim-ui/PressTip';
 
 interface Props {
   set: ArmorSet;
@@ -96,11 +97,9 @@ function GeneratedSet({
         <div>
           <span>
             {set.firstValidSet.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
-              <AppIcon
-                className={styles.warning}
-                icon={faExclamationTriangle}
-                title={t('LoadoutBuilder.StatIncorrectWarning')}
-              />
+              <PressTip elementType="span" tooltip={t('LoadoutBuilder.StatIncorrectWarning')}>
+                <AppIcon className={styles.warning} icon={faExclamationTriangle} />
+              </PressTip>
             )}
             <span className={styles.statSegment}>
               <span>

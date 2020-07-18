@@ -12,6 +12,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getSocketsWithStyle } from '../utils/socket-utils';
+import PressTip from 'app/dim-ui/PressTip';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -171,13 +172,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
               </span>
             )}
             {stat.baseMayBeWrong && (
-              <AppIcon
-                icon={faExclamationTriangle}
-                className={styles.totalStatWarn}
-                title={
-                  'Stat breakdown may be wrong due to negative stat modifiers from mods. This is an API limitation.'
-                }
-              />
+              <PressTip elementType="span" tooltip={t('Stats.TotalIncorrectWarning')}>
+                <AppIcon className={styles.totalStatWarn} icon={faExclamationTriangle} />
+              </PressTip>
             )}
           </div>
         )}
