@@ -84,7 +84,7 @@
 }
 
 .negativeModded {
-  color: #ff3232;
+  color: $red;
   .statName {
     font-weight: bold;
   }
@@ -108,7 +108,7 @@
 }
 
 .totalStatNegativeModded {
-  color: #ff3232;
+  color: $red;
 }
 
 .totalStatMasterwork {

@@ -221,6 +221,11 @@ function mapSeasonalModsToSeasonsArray(
   return modMetadata;
 }
 
+/**
+ * This sums up the total stat contributions across locked seasonal mods. These are then applied
+ * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
+ * effect stat values in game.
+ */
 function getTotalSeasonalModStatChanges(lockedSeasonalMods: readonly LockedModBase[]) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
