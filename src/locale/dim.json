@@ -706,6 +706,7 @@
       "Track": "Track {{itemType}}",
       "Untrack": "Untrack {{itemType}}"
     },
+    "TriageTab": "Triage",
     "Vault": "Vault"
   },
   "Notes": {
