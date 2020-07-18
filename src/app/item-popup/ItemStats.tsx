@@ -26,9 +26,9 @@ export default function ItemStats({
 
   return (
     <div className={clsx(className, styles.stats, { [styles.hasIcons]: hasIcons })}>
-      {stats.map(
-        (stat) => stat.value >= 0 && <ItemStat key={stat.statHash} stat={stat} item={item} />
-      )}
+      {stats.map((stat) => (
+        <ItemStat key={stat.statHash} stat={stat} item={item} />
+      ))}
 
       {item?.isDestiny1() && item.quality?.min && <D1QualitySummaryStat item={item} />}
     </div>

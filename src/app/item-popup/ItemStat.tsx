@@ -72,7 +72,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
-  const displayValue = value;
+  const displayValue = Math.max(0, value);
 
   // Get the values that contribute to the total stat value
   let totalDetails:
