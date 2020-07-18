@@ -94,6 +94,7 @@ export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
   processedSeasonalMods: ProcessModMetadata[],
+  seasonalModStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -273,6 +274,7 @@ export function process(
               let index = 1;
               let statRangeExceeded = false;
               for (const statKey of orderedConsideredStats) {
+                stats[statKey] += seasonalModStatTotals[statKey];
                 const tier = statTier(stats[statKey]);
 
                 if (tier > statRanges[statKey].max) {

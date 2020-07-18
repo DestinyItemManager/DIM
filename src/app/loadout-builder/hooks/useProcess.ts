@@ -9,6 +9,7 @@ import {
   MinMaxIgnored,
   MinMax,
   LockedModBase,
+  statHashToType,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -95,6 +96,7 @@ export function useProcess(
         processItems,
         lockedItems,
         mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
+        getTotalSeasonalModStatChanges(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -217,6 +219,28 @@ function mapSeasonalModsToSeasonsArray(
   }
 
   return modMetadata;
+}
+
+function getTotalSeasonalModStatChanges(lockedSeasonalMods: readonly LockedModBase[]) {
+  const totals: { [stat in StatTypes]: number } = {
+    Mobility: 0,
+    Recovery: 0,
+    Resilience: 0,
+    Intellect: 0,
+    Discipline: 0,
+    Strength: 0,
+  };
+
+  for (const mod of lockedSeasonalMods) {
+    for (const stat of mod.mod.investmentStats) {
+      const statType = statHashToType[stat.statTypeHash];
+      if (statType) {
+        totals[statType] += stat.value;
+      }
+    }
+  }
+
+  return totals;
 }
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
