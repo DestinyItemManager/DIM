@@ -568,7 +568,7 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
-    "StatIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. Please remove any mods with negative stat values to get accurate results. This is a limitation of the information sent by bungie.net.",
+    "StatIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by bungie.net.\n\nPlease remove any mods with negative stat values to get accurate results.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",

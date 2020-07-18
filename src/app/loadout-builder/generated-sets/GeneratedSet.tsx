@@ -93,9 +93,13 @@ function GeneratedSet({
 
   const incorrectStats = _.uniq(
     set.firstValidSet
-      .map((item) => item.stats?.map((stat) => stat.baseMayBeWrong && stat.displayProperties.name))
+      .map((item) =>
+        item.stats
+          ?.filter((stat) => stat.statHash !== -1000)
+          .map((stat) => stat.baseMayBeWrong && stat.displayProperties.name)
+      )
       .flat()
-      .filter((statName) => Boolean(statName))
+      .filter(Boolean)
   );
 
   return (
@@ -107,8 +111,7 @@ function GeneratedSet({
               <PressTip
                 elementType="span"
                 tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
-                  stats: incorrectStats,
-                  arrayJoin: ', ',
+                  stats: incorrectStats.join('/'),
                 })}
               >
                 <AppIcon className={styles.warning} icon={faExclamationTriangle} />
