@@ -8,6 +8,8 @@ interface CssExports {
   'masterworked': string;
   'modded': string;
   'moddedStatBar': string;
+  'negativeModded': string;
+  'negativeModdedStatBar': string;
   'quality': string;
   'qualitySummary': string;
   'ratingChartBarColor': string;

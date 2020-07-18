@@ -528,11 +528,7 @@ function getBaseStatValues(
   orderedStatValues: number[],
   lockedModStats: { [statHash: number]: number }
 ) {
-  const baseStats = {};
-
-  for (const statHash of orderedStatValues) {
-    baseStats[statHash] = item.stats[statHash];
-  }
+  const baseStats = { ...item.baseStats };
 
   // Checking energy tells us if it is Armour 2.0
   if (item.sockets && item.hasEnergy) {
@@ -554,10 +550,10 @@ function getBaseStatValues(
     for (const socket of item.sockets.sockets) {
       const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
-      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
+      if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of orderedStatValues) {
           if (socket.plug.stats[statHash]) {
-            baseStats[statHash] -= socket.plug.stats[statHash];
+            baseStats[statHash] += socket.plug.stats[statHash];
           }
         }
       }

@@ -47,24 +47,30 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  let baseBar = value;
+  let baseBar = stat.base;
 
-  if (moddedStatValue) {
-    baseBar -= moddedStatValue;
-  }
-
-  if (masterworkDisplayValue) {
-    baseBar -= masterworkDisplayValue;
+  if (moddedStatValue && moddedStatValue < 0) {
+    baseBar = Math.max(0, baseBar + moddedStatValue);
   }
 
   const segments: [number, string?][] = [[baseBar]];
 
-  if (moddedStatValue) {
+  if (moddedStatValue && moddedStatValue > 0) {
     segments.push([moddedStatValue, styles.moddedStatBar]);
-  }
-
-  if (masterworkDisplayValue) {
-    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    if (masterworkDisplayValue) {
+      segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    }
+  } else if (moddedStatValue && moddedStatValue < 0) {
+    segments.push([Math.min(stat.base, moddedStatValue), styles.negativeModdedStatBar]);
+    if (masterworkDisplayValue) {
+      segments.push([
+        Math.max(
+          0,
+          Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
+        ),
+        styles.masterworkStatBar,
+      ]);
+    }
   }
 
   const displayValue = value;
@@ -75,12 +81,15 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     | undefined;
 
   if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
-    totalDetails = breakDownTotalValue(value, item, armor2MasterworkSockets || []);
+    totalDetails = breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
   }
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue),
+    [styles.modded]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
+    [styles.negativeModded]: Boolean(
+      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base
+    ),
     [styles.totalRow]: Boolean(totalDetails),
   };
 
@@ -167,7 +176,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
  * A single stat value, for the table view
  */
 export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
-  const value = stat.value;
   const armor2MasterworkSockets =
     item?.isDestiny2() &&
     item.sockets &&
@@ -188,35 +196,44 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  let baseBar = value;
+  let baseBar = stat.base;
 
-  if (moddedStatValue) {
-    baseBar -= moddedStatValue;
-  }
-
-  if (masterworkDisplayValue) {
-    baseBar -= masterworkDisplayValue;
+  if (moddedStatValue && moddedStatValue < 0) {
+    baseBar = Math.max(0, baseBar + moddedStatValue);
   }
 
   const segments: [number, string?][] = [[baseBar]];
 
-  if (moddedStatValue) {
+  if (moddedStatValue && moddedStatValue > 0) {
     segments.push([moddedStatValue, styles.moddedStatBar]);
-  }
-
-  if (masterworkDisplayValue) {
-    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    if (masterworkDisplayValue) {
+      segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    }
+  } else if (moddedStatValue && moddedStatValue < 0) {
+    segments.push([Math.min(stat.base, moddedStatValue), styles.negativeModdedStatBar]);
+    if (masterworkDisplayValue) {
+      segments.push([
+        Math.max(
+          0,
+          Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
+        ),
+        styles.masterworkStatBar,
+      ]);
+    }
   }
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue),
+    [styles.modded]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
+    [styles.negativeModded]: Boolean(
+      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base
+    ),
   };
 
   return (
     <>
       <div className={clsx(styles.value, optionalClasses)}>
-        {value}
+        {stat.value}
         {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
       </div>
     </>
@@ -289,14 +306,14 @@ function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   );
 }
 
-function breakDownTotalValue(statValue: number, item: DimItem, masterworkSockets: DimSocket[]) {
+function breakDownTotalValue(baseValue: number, item: DimItem, masterworkSockets: DimSocket[]) {
   const modSockets = getNonReuseableModSockets(item);
   // Armor 1.0 doesn't increase stats when masterworked
   const totalModsValue = getSumOfArmorStats(modSockets, armorStats);
   const totalMasterworkValue = masterworkSockets
     ? getSumOfArmorStats(masterworkSockets, armorStats)
     : 0;
-  const baseTotalValue = statValue - totalModsValue - totalMasterworkValue;
+  const baseTotalValue = baseValue;
 
   return { baseTotalValue, totalModsValue, totalMasterworkValue };
 }

@@ -199,9 +199,12 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
+  const baseStatMap: { [statHash: number]: number } = {};
+
   if (stats) {
-    for (const { statHash, value } of stats) {
+    for (const { statHash, value, base } of stats) {
       statMap[statHash] = value;
+      baseStatMap[statHash] = base;
     }
   }
 
@@ -213,6 +216,7 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     equippingLabel,
     basePower,
     stats: statMap,
+    baseStats: baseStatMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     hasEnergy: Boolean(dimItem.energy),
   };

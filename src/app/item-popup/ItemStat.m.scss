@@ -68,6 +68,9 @@
 .moddedStatBar {
   background-color: $blue;
 }
+.negativeModdedStatBar {
+  background-color: $red;
+}
 
 .masterworked {
   color: $orange;
@@ -78,6 +81,13 @@
 
 .modded {
   color: $blue;
+  .statName {
+    font-weight: bold;
+  }
+}
+
+.negativeModded {
+  color: $red;
   .statName {
     font-weight: bold;
   }
@@ -94,12 +104,12 @@
 .totalStatDetailed {
   margin-left: 8px;
   grid-column: -2 / -1;
+}
 
-  .totalStatModded {
-    color: $blue;
-  }
+.totalStatModded {
+  color: $blue;
+}
 
-  .totalStatMasterwork {
-    color: $orange;
-  }
+.totalStatMasterwork {
+  color: $orange;
 }

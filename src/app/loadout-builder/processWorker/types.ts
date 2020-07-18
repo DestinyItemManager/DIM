@@ -32,6 +32,7 @@ export interface ProcessItem {
   hasEnergy: boolean;
   basePower: number;
   stats: { [statHash: number]: number };
+  baseStats: { [statHash: number]: number };
 }
 
 export type ProcessItemsByBucket = Readonly<{
