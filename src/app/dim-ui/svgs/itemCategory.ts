@@ -73,7 +73,7 @@ export const cosmeticSvgByCategoryHash = {
 
 export const consumableSvgByCategoryHash = {};
 
-/** an SVG of the weapon's type, or slot, or a handcannon by default */
+/** an SVG of the weapon's type, or slot, if possible */
 export function getWeaponSvgIcon(item: D2Item) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
