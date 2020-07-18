@@ -93,6 +93,13 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     [styles.totalRow]: Boolean(totalDetails),
   };
 
+  const incorrectStats = _.uniq(
+    item?.stats
+      ?.filter((stat) => stat.statHash !== -1000)
+      .map((stat) => stat.baseMayBeWrong && stat.displayProperties.name)
+      .filter(Boolean)
+  );
+
   return (
     <>
       <div
@@ -172,7 +179,12 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
               </span>
             )}
             {stat.baseMayBeWrong && (
-              <PressTip elementType="span" tooltip={t('Stats.TotalIncorrectWarning')}>
+              <PressTip
+                elementType="span"
+                tooltip={t('Stats.TotalIncorrectWarning', {
+                  stats: incorrectStats.join('/'),
+                })}
+              >
                 <AppIcon className={styles.totalStatWarn} icon={faExclamationTriangle} />
               </PressTip>
             )}
