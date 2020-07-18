@@ -489,6 +489,7 @@ function buildBaseStats(
 function totalStat(stats: DimStat[]): DimStat {
   const total = _.sumBy(stats, (s) => s.value);
   const baseTotal = _.sumBy(stats, (s) => s.base);
+  const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
   return {
     investmentValue: total,
     statHash: -1000,
@@ -498,6 +499,7 @@ function totalStat(stats: DimStat[]): DimStat {
     sort: statAllowList.indexOf(-1000),
     value: total,
     base: baseTotal,
+    baseMayBeWrong,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,

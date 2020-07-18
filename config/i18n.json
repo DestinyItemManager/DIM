@@ -559,7 +559,7 @@
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
-    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
+    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included where possible, to get accurate results remove all mods with negative stat contributions.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
@@ -571,6 +571,7 @@
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
+    "StatIncorrectWarning": "These stats may be incorrect due to mods with negative stat values. Please remove any mods with negative stat values to get accurate results. This is an API limitation",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
@@ -867,7 +868,8 @@
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "TotalIncorrectWarning": "Stat breakdown may be wrong due to negative stat modifiers from mods. This is an API limitation."
   },
   "Storage": {
     "ApiPermissionPrompt": {

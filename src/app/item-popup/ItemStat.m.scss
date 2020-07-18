@@ -110,6 +110,15 @@
   color: $blue;
 }
 
+.totalStatNegativeModded {
+  color: $red;
+}
+
 .totalStatMasterwork {
   color: $orange;
+}
+
+.totalStatWarn {
+  color: $red;
+  margin-left: 8px;
 }

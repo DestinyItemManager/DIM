@@ -9,7 +9,7 @@ import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import styles from './ItemStat.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import { AppIcon, helpIcon } from 'app/shell/icons';
+import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getSocketsWithStyle } from '../utils/socket-utils';
 
@@ -47,7 +47,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  let baseBar = stat.base;
+  let baseBar = item ? stat.base : stat.value;
 
   if (moddedStatValue && moddedStatValue < 0) {
     baseBar = Math.max(0, baseBar + moddedStatValue);
@@ -60,17 +60,16 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     if (masterworkDisplayValue) {
       segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
     }
-  } else if (moddedStatValue && moddedStatValue < 0) {
-    segments.push([Math.min(stat.base, moddedStatValue), styles.negativeModdedStatBar]);
-    if (masterworkDisplayValue) {
-      segments.push([
-        Math.max(
-          0,
-          Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
-        ),
-        styles.masterworkStatBar,
-      ]);
-    }
+  } else if (moddedStatValue && moddedStatValue < 0 && masterworkDisplayValue) {
+    segments.push([
+      Math.max(
+        0,
+        Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
+      ),
+      styles.masterworkStatBar,
+    ]);
+  } else if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
   const displayValue = value;
@@ -158,13 +157,27 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
             title={stat.displayProperties.description}
           >
             <span>{totalDetails.baseTotalValue}</span>
-            {Boolean(totalDetails.totalModsValue) && (
+            {Boolean(totalDetails.totalModsValue > 0) && (
               <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
+            )}
+            {Boolean(totalDetails.totalModsValue < 0) && (
+              <span
+                className={styles.totalStatNegativeModded}
+              >{` - ${-totalDetails.totalModsValue}`}</span>
             )}
             {Boolean(totalDetails.totalMasterworkValue) && (
               <span className={styles.totalStatMasterwork}>
                 {` + ${totalDetails.totalMasterworkValue}`}
               </span>
+            )}
+            {stat.baseMayBeWrong && (
+              <AppIcon
+                icon={faExclamationTriangle}
+                className={styles.totalStatWarn}
+                title={
+                  'Stat breakdown may be wrong due to negative stat modifiers from mods. This is an API limitation.'
+                }
+              />
             )}
           </div>
         )}
@@ -220,6 +233,8 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
         styles.masterworkStatBar,
       ]);
     }
+  } else if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
   const optionalClasses = {

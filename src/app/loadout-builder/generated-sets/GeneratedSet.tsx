@@ -3,7 +3,7 @@ import { DimStore } from '../../inventory/store-types';
 import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
+import { powerIndicatorIcon, AppIcon, faExclamationTriangle } from '../../shell/icons';
 import _ from 'lodash';
 import { getNumValidSets, calculateTotalTier, statTier, sumEnabledStats } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -95,6 +95,13 @@ function GeneratedSet({
       <div className={styles.header}>
         <div>
           <span>
+            {set.firstValidSet.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+              <AppIcon
+                className={styles.warning}
+                icon={faExclamationTriangle}
+                title={t('LoadoutBuilder.StatIncorrectWarning')}
+              />
+            )}
             <span className={styles.statSegment}>
               <span>
                 <b>
