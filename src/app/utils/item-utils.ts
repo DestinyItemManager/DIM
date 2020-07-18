@@ -3,9 +3,9 @@ import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
-import { DimItem, DimSocket, DimMasterwork } from 'app/inventory/item-types';
+import { DimItem, DimMasterwork } from 'app/inventory/item-types';
 
-import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
+import modSocketMetadata from 'data/d2/specialty-modslot-metadata';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
 
@@ -28,6 +28,11 @@ export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
   [DestinyEnergyType.Void]: 'void',
 };
 
+export const getItemDamageShortName = (item: DimItem): string | undefined =>
+  item.isDestiny2() && item.energy
+    ? energyNamesByEnum[item.element?.enumValue ?? -1]
+    : damageNamesByEnum[item.element?.enumValue ?? -1];
+
 export const Armor2ModPlugCategories = {
   general: 2487827355,
   helmet: 2912171003,
@@ -36,11 +41,7 @@ export const Armor2ModPlugCategories = {
   leg: 2111701510,
   classitem: 912441879,
 } as const;
-
-export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  item.isDestiny2() && item.energy
-    ? energyNamesByEnum[item.element?.enumValue ?? -1]
-    : damageNamesByEnum[item.element?.enumValue ?? -1];
+const armor2PlugCategoryHashes: number[] = Object.values(Armor2ModPlugCategories);
 
 // these are helpers for identifying SpecialtySockets (seasonal mods).
 // i would like this file to be the only one that interfaces with
@@ -48,6 +49,8 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // process its data here and export it to thing that needs it
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHash');
+
+const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.tag);
@@ -62,16 +65,16 @@ export const specialtyModPlugCategoryHashes = modSocketMetadata
   .flat();
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket = (item: DimItem): DimSocket | undefined =>
-  (item.isDestiny2() &&
-    item.bucket?.sort === 'Armor' &&
-    item.sockets?.sockets.find((socket) =>
+export const getSpecialtySocket = (item: DimItem) => {
+  if (item.isDestiny2() && item.bucket?.sort === 'Armor') {
+    return item.sockets?.sockets.find((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
-    )) ||
-  undefined;
+    );
+  }
+};
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | undefined =>
+export const getSpecialtySocketMetadata = (item: DimItem) =>
   modMetadataBySocketTypeHash[
     getSpecialtySocket(item)?.socketDefinition.socketTypeHash || -99999999
   ];
@@ -81,10 +84,8 @@ export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | u
  *
  * if you use this you can only trust the returned season, tag, and emptyModSocketHash
  */
-export const getSpecialtySocketMetadataByPlugCategoryHash = (
-  plugCategoryHash: number
-): ModSocketMetadata | undefined =>
-  modSocketMetadata.find((meta) => meta.plugCategoryHashes.includes(plugCategoryHash));
+export const getSpecialtySocketMetadataByPlugCategoryHash = (plugCategoryHash: number) =>
+  modMetadataByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes
@@ -96,9 +97,8 @@ export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
-  Object.values(Armor2ModPlugCategories).some(
-    (category) => category === item.plug.plugCategoryHash
-  ) || specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash);
+  armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
+  specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash);
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
