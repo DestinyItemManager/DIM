@@ -189,13 +189,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
  * A single stat value, for the table view
  */
 export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
-  const armor2MasterworkSockets =
-    item?.isDestiny2() &&
-    item.sockets &&
-    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
-  const armor2MasterworkValue =
-    armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
-
   const masterworkIndex =
     (item?.isDestiny2() &&
       item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
@@ -203,39 +196,8 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
 
   const isMasterworkedStat =
     item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-  const masterworkValue =
-    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
-  const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
-
-  let baseBar = stat.base;
-
-  if (moddedStatValue && moddedStatValue < 0) {
-    baseBar = Math.max(0, baseBar + moddedStatValue);
-  }
-
-  const segments: [number, string?][] = [[baseBar]];
-
-  if (moddedStatValue && moddedStatValue > 0) {
-    segments.push([moddedStatValue, styles.moddedStatBar]);
-    if (masterworkDisplayValue) {
-      segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
-    }
-  } else if (moddedStatValue && moddedStatValue < 0) {
-    segments.push([Math.min(stat.base, moddedStatValue), styles.negativeModdedStatBar]);
-    if (masterworkDisplayValue) {
-      segments.push([
-        Math.max(
-          0,
-          Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
-        ),
-        styles.masterworkStatBar,
-      ]);
-    }
-  } else if (masterworkDisplayValue) {
-    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
-  }
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
