@@ -85,7 +85,6 @@ export function getWeaponSvgIcon(item: D2Item) {
       }
     }
   }
-  return handCannon; // cute idea? or terrible?
 }
 
 /**

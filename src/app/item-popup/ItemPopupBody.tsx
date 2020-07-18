@@ -53,7 +53,7 @@ export default function ItemPopupBody({
     },
   ];
   if (
-    $DIM_FLAVOR === 'dev' &&
+    $featureFlags.triage &&
     item.isDestiny2() &&
     (item.bucket.inArmor ||
       (item.bucket.sort === 'Weapons' &&

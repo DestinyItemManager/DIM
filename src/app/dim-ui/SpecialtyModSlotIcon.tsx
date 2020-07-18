@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { getSpecialtySocket } from 'app/utils/item-utils';
 import styles from './SpecialtyModSlotIcon.m.scss';
 import PressTip from './PressTip';
+import clsx from 'clsx';
 
 interface ProvidedProps {
   item: DimItem;
@@ -30,7 +31,7 @@ function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
   return emptySlotIcon ? (
     <PressTip elementType="span" tooltip={emptySlotIcon.itemTypeDisplayName}>
       <div
-        className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
+        className={clsx(className, styles.specialtyModIcon, { [styles.lowRes]: lowRes })}
         style={bungieBackgroundStyle(
           emptySlotIcon.displayProperties.icon,
           'linear-gradient(#0005, #0005)' // forced dark background to help w/ visibility
@@ -46,7 +47,7 @@ const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|che
 /** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
 export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | false = (item) =>
   (item.isDestiny2() &&
-    item.bucket?.sort === 'Armor' &&
+    item.bucket.inArmor &&
     item.sockets?.sockets.find((socket) =>
       socket?.plug?.plugItem?.plug?.plugCategoryIdentifier.match(
         armorSlotSpecificPlugCategoryIdentifier

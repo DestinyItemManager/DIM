@@ -68,14 +68,19 @@ const itemFactors: Record<string, Factor> = {
   weaponType: {
     id: 'weaponType',
     runIf: (item) => item.bucket.inWeapons,
-    render: (item) => (
-      <PressTip elementType="span" tooltip={item.typeName}>
-        <img
-          className={clsx(styles.inlineIcon, styles.smaller, styles.weaponSvg)}
-          src={getWeaponSvgIcon(item)}
-        />
-      </PressTip>
-    ),
+    render: (item) => {
+      const weaponIcon = getWeaponSvgIcon(item);
+      return weaponIcon ? (
+        <PressTip elementType="span" tooltip={item.typeName}>
+          <img
+            className={clsx(styles.inlineIcon, styles.smaller, styles.weaponSvg)}
+            src={getWeaponSvgIcon(item)}
+          />
+        </PressTip>
+      ) : (
+        <>{item.typeName}</>
+      );
+    },
     value: (item) => item.typeName ?? '',
   },
   specialtySocket: {
@@ -403,8 +408,8 @@ function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
 function renderFactorCombo(exampleItem: D2Item, factorCombo: Factor[]) {
   return (
     <div className={styles.factorCombo}>
-      {factorCombo.map((factor, i) => (
-        <React.Fragment key={i}>{factor.render(exampleItem)}</React.Fragment>
+      {factorCombo.map((factor) => (
+        <React.Fragment key={factor.id}>{factor.render(exampleItem)}</React.Fragment>
       ))}
     </div>
   );
