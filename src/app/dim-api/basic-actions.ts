@@ -30,6 +30,21 @@ export const profileLoadedFromIDB = createAction('dim-api/LOADED_PROFILE_FROM_ID
   ProfileIndexedDBState | undefined
 >();
 
+/** Track or untrack a Triumph */
+export const trackTriumph = createAction('dim-api/TRACK_TRIUMPH')<{
+  recordHash: number;
+  tracked: boolean;
+}>();
+
+/** Record that a search was used */
+export const searchUsed = createAction('dim-api/SEARCH_USED')<string>();
+
+/** Save or unsave a search */
+export const saveSearch = createAction('dim-api/SAVE_SEARCH')<{
+  query: string;
+  saved: boolean;
+}>();
+
 /**
  * This signals that we are about to flush the update queue.
  */

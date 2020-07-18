@@ -3,7 +3,7 @@ import { DestinyClass, BungieMembershipType } from 'bungie-api-ts/destiny2';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
 import { prepareToFlushUpdates, finishedUpdates } from './basic-actions';
 import { setSetting } from 'app/settings/actions';
-import { setItemTag } from 'app/inventory/actions';
+import { setItemTag, setItemHashTag } from 'app/inventory/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import copy from 'fast-copy';
 
@@ -101,6 +101,73 @@ describe('setItemTag', () => {
         },
         before: {
           id: '1234',
+          tag: 'favorite',
+        },
+        platformMembershipId: currentAccount.membershipId,
+        destinyVersion: currentAccount.destinyVersion,
+      },
+    ]);
+  });
+});
+
+describe('setItemHashTag', () => {
+  it('sets tags if there were none before', () => {
+    const state = initialState;
+
+    const updatedState = dimApi(
+      state,
+      setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
+      currentAccount
+    );
+
+    expect(updatedState.itemHashTags[1234].tag).toBe('favorite');
+    expect(copy(updatedState.updateQueue)).toEqual([
+      {
+        action: 'item_hash_tag',
+        payload: {
+          hash: 1234,
+          tag: 'favorite',
+        },
+        platformMembershipId: currentAccount.membershipId,
+        destinyVersion: currentAccount.destinyVersion,
+      },
+    ]);
+  });
+
+  it('clears set tags', () => {
+    const state = initialState;
+
+    let updatedState = dimApi(
+      state,
+      setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
+      currentAccount
+    );
+
+    updatedState = dimApi(
+      updatedState,
+      setItemHashTag({ itemHash: 1234, tag: undefined }),
+      currentAccount
+    );
+
+    expect(updatedState.itemHashTags[1234]).toBeUndefined();
+    expect(copy(updatedState.updateQueue)).toEqual([
+      {
+        action: 'item_hash_tag',
+        payload: {
+          hash: 1234,
+          tag: 'favorite',
+        },
+        platformMembershipId: currentAccount.membershipId,
+        destinyVersion: currentAccount.destinyVersion,
+      },
+      {
+        action: 'item_hash_tag',
+        payload: {
+          hash: 1234,
+          tag: null,
+        },
+        before: {
+          hash: 1234,
           tag: 'favorite',
         },
         platformMembershipId: currentAccount.membershipId,
