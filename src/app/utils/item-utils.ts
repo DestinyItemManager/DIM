@@ -66,7 +66,7 @@ export const specialtyModPlugCategoryHashes = modSocketMetadata
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
 export const getSpecialtySocket = (item: DimItem) => {
-  if (item.isDestiny2() && item.bucket?.sort === 'Armor') {
+  if (item.isDestiny2() && item.bucket.inArmor) {
     return item.sockets?.sockets.find((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
