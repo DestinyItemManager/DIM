@@ -1,5 +1,7 @@
 ## Next
 
+* Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
+
 ## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
 
 * Fix sorting by Power Limit in the compare pane.
