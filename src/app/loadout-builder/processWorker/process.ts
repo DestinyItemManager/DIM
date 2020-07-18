@@ -547,13 +547,15 @@ function getBaseStatValues(
       }
     }
 
-    for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItemHash ?? NaN;
+    if (masterworkSocketHashes.length) {
+      for (const socket of item.sockets.sockets) {
+        const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
-      if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
-        for (const statHash of orderedStatValues) {
-          if (socket.plug.stats[statHash]) {
-            baseStats[statHash] += socket.plug.stats[statHash];
+        if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
+          for (const statHash of orderedStatValues) {
+            if (socket.plug.stats[statHash]) {
+              baseStats[statHash] += socket.plug.stats[statHash];
+            }
           }
         }
       }
