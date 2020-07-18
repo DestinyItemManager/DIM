@@ -21,7 +21,13 @@ export default React.memo(function AppIcon({
   if (typeof icon === 'string') {
     return (
       <span
-        className={clsx(icon, 'app-icon', className, spinning ? 'fa-spin' : false)}
+        className={clsx(
+          icon,
+          'app-icon',
+          'no-pointer-events',
+          className,
+          spinning ? 'fa-spin' : false
+        )}
         title={title}
       />
     );

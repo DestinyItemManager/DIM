@@ -1,5 +1,9 @@
-import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
-import { ProcessModMetadata, ProcessItem } from './types';
+import {
+  canTakeAllSeasonalMods,
+  sortProcessModMetadataOrProcessItem,
+  ProcessItemSubset,
+} from './processUtils';
+import { ProcessModMetadata } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 function getMod(season: number, tag: string, energyType: DestinyEnergyType): ProcessModMetadata {
@@ -10,16 +14,9 @@ function getItem(
   season: number,
   energyType: DestinyEnergyType,
   compatibleModSeasons?: string[]
-): ProcessItem {
+): ProcessItemSubset {
   return {
-    bucketHash: 0,
-    id: 'id',
-    type: 'type',
-    name: 'name',
-    sockets: null,
     energyType,
-    basePower: 1050,
-    stats: {},
     season,
     compatibleModSeasons,
   };
