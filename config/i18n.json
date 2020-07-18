@@ -571,7 +571,7 @@
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
-    "StatIncorrectWarning": "These stats may be incorrect due to mods with negative stat values. Please remove any mods with negative stat values to get accurate results. This is an API limitation",
+    "StatIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. Please remove any mods with negative stat values to get accurate results. This is a limitation of the information sent by bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
@@ -869,7 +869,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Stat breakdown may be wrong due to negative stat modifiers from mods. This is an API limitation."
+    "TotalIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of the total stat. This is a limitation of the information sent by bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

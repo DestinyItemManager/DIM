@@ -91,13 +91,26 @@ function GeneratedSet({
     ? assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods)
     : {};
 
+  const incorrectStats = _.uniq(
+    set.firstValidSet
+      .map((item) => item.stats?.map((stat) => stat.baseMayBeWrong && stat.displayProperties.name))
+      .flat()
+      .filter((statName) => Boolean(statName))
+  );
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
             {set.firstValidSet.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
-              <PressTip elementType="span" tooltip={t('LoadoutBuilder.StatIncorrectWarning')}>
+              <PressTip
+                elementType="span"
+                tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
+                  stats: incorrectStats,
+                  arrayJoin: ', ',
+                })}
+              >
                 <AppIcon className={styles.warning} icon={faExclamationTriangle} />
               </PressTip>
             )}
