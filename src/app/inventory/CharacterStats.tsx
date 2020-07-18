@@ -90,35 +90,38 @@ ${stat.description}`;
         <div className="stat-bars destiny2">
           {[powerInfos, statInfos].map((stats, index) => (
             <div key={index} className="stat-row">
-              {stats.map(({ stat, tooltip }) => {
-                const isGearPower =
-                  stat.hash === -3 && storeId
-                    ? {
-                        onClick: () => {
-                          showGearPower(storeId);
-                        },
-                        style: { cursor: 'pointer' },
-                      }
-                    : {};
-                return (
-                  stat && (
-                    <PressTip key={stat.hash} tooltip={tooltip}>
-                      <div
-                        className="stat"
-                        aria-label={`${stat.name} ${stat.value}`}
-                        role="group"
-                        {...isGearPower}
-                      >
-                        <img src={stat.icon} alt={stat.name} />
-                        <div>
-                          {stat.value}
-                          {stat.hasClassified && <sup>*</sup>}
-                        </div>
+              {stats.map(({ stat, tooltip }) =>
+                // if this is the "max gear power" stat (hash -3),
+                // add in an onClick and an extra class, and skip the PressTip
+                stat.hash === -3 && storeId ? (
+                  <React.Fragment key={stat.hash}>
+                    <div
+                      className="stat pointerCursor"
+                      aria-label={`${stat.name} ${stat.value}`}
+                      role="group"
+                      onClick={() => {
+                        showGearPower(storeId);
+                      }}
+                    >
+                      <img src={stat.icon} alt={stat.name} />
+                      <div>
+                        {stat.value}
+                        {stat.hasClassified && <sup>*</sup>}
                       </div>
-                    </PressTip>
-                  )
-                );
-              })}
+                    </div>
+                  </React.Fragment>
+                ) : (
+                  <PressTip key={stat.hash} tooltip={tooltip}>
+                    <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+                      <img src={stat.icon} alt={stat.name} />
+                      <div>
+                        {stat.value}
+                        {stat.hasClassified && <sup>*</sup>}
+                      </div>
+                    </div>
+                  </PressTip>
+                )
+              )}
             </div>
           ))}
         </div>

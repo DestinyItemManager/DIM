@@ -61,10 +61,10 @@ function GearPower({ stores }: StoreProps) {
   const maxBasePower = getLight(selectedStore, maxLightItems);
   const powerFloor = Math.floor(maxBasePower);
   const header = (
-    <>
+    <h1>
       <img src={selectedStore.icon} />
       {`${selectedStore.name} (${maxBasePower})`}
-    </>
+    </h1>
   );
   return (
     <Sheet onClose={reset} header={header} sheetClassName="gearPowerSheet">
