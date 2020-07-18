@@ -1,4 +1,4 @@
-import { LockableBuckets, LockedModBase, LockedArmor2ModMap } from './../types';
+import { LockedArmor2ModMap } from './../types';
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod } from '../types';
@@ -117,69 +117,12 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
 }
 
 /**
- * This function checks if the first valid set in an ArmorSet slot all the mods in
- * seasonalMods. Currently it does not care for the element affinity or the armour
- * of the mod, as that can be switched in game.
- *
- * The mods passed in should only be seasonal mods.
- */
-function canAllModsBeUsed(set: ArmorSet, seasonalMods: readonly LockedModBase[]) {
-  if (seasonalMods.length > 5) {
-    return false;
-  }
-
-  const modArrays = {};
-
-  for (const mod of seasonalMods) {
-    for (const item of set.firstValidSet) {
-      const itemModCategories =
-        getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
-
-      if (
-        itemModCategories.includes(mod.mod.plug.plugCategoryHash) &&
-        item.isDestiny2() &&
-        (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-          mod.mod.plug.energyCost.energyType === item.energy?.energyType)
-      ) {
-        if (!modArrays[item.bucket.hash]) {
-          modArrays[item.bucket.hash] = [];
-        }
-
-        modArrays[item.bucket.hash].push(mod);
-      }
-    }
-  }
-
-  for (const helmetMod of modArrays[LockableBuckets.helmet] || [null]) {
-    for (const armsMod of modArrays[LockableBuckets.gauntlets] || [null]) {
-      for (const chestMod of modArrays[LockableBuckets.chest] || [null]) {
-        for (const legsMod of modArrays[LockableBuckets.leg] || [null]) {
-          for (const classMod of modArrays[LockableBuckets.classitem] || [null]) {
-            const applicableMods = [helmetMod, armsMod, chestMod, legsMod, classMod].filter(
-              Boolean
-            );
-            const containsAllLocked = seasonalMods.every((item) => applicableMods.includes(item));
-
-            if (containsAllLocked) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
-/**
  * Filter sets down based on stat filters, locked perks, etc.
  * TODO This needs to become a sorter, not a filter. All 'filtering' should be done in process.
  */
 export function filterGeneratedSets(
   lockedMap: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
-  lockedSeasonalMods: readonly LockedModBase[],
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>,
   sets?: readonly ArmorSet[]
@@ -191,10 +134,6 @@ export function filterGeneratedSets(
   let matchedSets = Array.from(sets);
 
   matchedSets = matchedSets.filter((set) => {
-    if (lockedSeasonalMods.length && !canAllModsBeUsed(set, lockedSeasonalMods)) {
-      return false;
-    }
-
     // TODO this is too restrictive as there may be other combinations that can take the mods
     if (
       $featureFlags.armor2ModPicker &&
