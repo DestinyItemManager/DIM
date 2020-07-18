@@ -8,6 +8,7 @@ import {
   StatTypes,
   MinMaxIgnored,
   MinMax,
+  LockedModBase,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -16,7 +17,12 @@ import {
   ProcessArmorSet,
   ProcessSocket,
   ProcessSockets,
+  ProcessModMetadata,
 } from '../processWorker/types';
+import {
+  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
+} from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -37,6 +43,7 @@ type ItemsById = { [id: string]: DimItem };
 export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -52,6 +59,7 @@ export function useProcess(
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -86,6 +94,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
+        mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -114,6 +123,7 @@ export function useProcess(
   }, [
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -134,6 +144,7 @@ export function useProcess(
 function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -143,6 +154,7 @@ function useWorkerAndCleanup(
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -185,6 +197,28 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
+function mapSeasonalModsToSeasonsArray(
+  lockedSeasonalMods: readonly LockedModBase[]
+): ProcessModMetadata[] {
+  const metadatas = lockedSeasonalMods.map((mod) => ({
+    mod,
+    metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
+  }));
+
+  const modMetadata: ProcessModMetadata[] = [];
+  for (const entry of metadatas) {
+    if (entry?.metadata) {
+      modMetadata.push({
+        season: entry.metadata.season,
+        tag: entry.metadata.tag,
+        energyType: entry.mod.mod.plug.energyCost.energyType,
+      });
+    }
+  }
+
+  return modMetadata;
+}
+
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
     sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
@@ -205,6 +239,8 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     }
   }
 
+  const modMetadata = getSpecialtySocketMetadata(dimItem);
+
   return {
     bucketHash: bucket.hash,
     id,
@@ -214,7 +250,9 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     basePower,
     stats: statMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
-    hasEnergy: Boolean(dimItem.energy),
+    energyType: dimItem.energy?.energyType,
+    season: modMetadata?.season,
+    compatibleModSeasons: modMetadata?.compatibleTags,
   };
 }
 

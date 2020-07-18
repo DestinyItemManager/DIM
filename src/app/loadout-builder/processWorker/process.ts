@@ -18,8 +18,10 @@ import {
   ProcessItem,
   ProcessArmorSet,
   IntermediateProcessArmorSet,
+  ProcessModMetadata,
 } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -91,6 +93,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
+  processedSeasonalMods: ProcessModMetadata[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -103,6 +106,8 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
+
+  processedSeasonalMods.sort(sortProcessModMetadataOrProcessItem);
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
@@ -302,6 +307,14 @@ export function process(
                   continue;
                 }
               }
+
+              if (
+                processedSeasonalMods.length &&
+                !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
+              ) {
+                continue;
+              }
+
               const newArmorSet: IntermediateProcessArmorSet = {
                 sets: [
                   {
@@ -496,7 +509,7 @@ function generateMixesFromPerksOrStats(
     getBaseStatValues(item, assumeArmor2IsMasterwork, orderedStatValues, lockedModStats),
   ];
 
-  if (stats && item.sockets && !item.hasEnergy) {
+  if (stats && item.sockets && item.energyType === undefined) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -534,8 +547,8 @@ function getBaseStatValues(
     baseStats[statHash] = item.stats[statHash];
   }
 
-  // Checking energy tells us if it is Armour 2.0
-  if (item.sockets && item.hasEnergy) {
+  // Checking energy tells us if it is Armour 2.0 (it can have value 0)
+  if (item.sockets && item.energyType !== undefined) {
     let masterworkSocketHashes: number[] = [];
 
     // only get masterwork sockets if we aren't manually adding the values
