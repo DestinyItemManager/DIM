@@ -555,7 +555,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible. To get accurate results, remove all mods with negative stat contributions.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
@@ -568,6 +568,7 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
+    "StatIncorrectWarning": "Please remove any mods with negative stat values to get accurate results.\n\nDue to negative stat modifiers, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
@@ -860,7 +861,8 @@
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "TotalIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

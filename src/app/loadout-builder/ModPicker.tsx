@@ -20,7 +20,7 @@ import { escapeRegExp } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
-import { specialtyModSocketHashes, isArmor2Mod } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
 import ModPickerSection from './ModPickerSection';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import ModPickerHeader from './ModPickerHeader';
@@ -199,7 +199,7 @@ class ModPicker extends React.Component<Props, State> {
       queryFilteredMods
         .filter((mod) =>
           category === ModPickerCategories.seasonal
-            ? specialtyModSocketHashes.includes(mod.plug.plugCategoryHash)
+            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)
             : mod.plug.plugCategoryHash === category
         )
         .map((mod) => ({ key: modKey++, mod, category }));

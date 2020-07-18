@@ -24,11 +24,11 @@ export function preventNaN<T extends number | string>(testValue: number, default
 export function objectifyArray<T>(
   array: T[],
   key: string | ((obj: any) => number)
-): { [key: number]: T };
+): Record<number, T | undefined>;
 export function objectifyArray<T>(
   array: T[],
   key: string | ((obj: any) => string)
-): { [key: string]: T };
+): Record<string, T | undefined>;
 export function objectifyArray<T>(array: T[], key: string | ((obj: any) => string | number)) {
   return array.reduce((acc, val) => {
     if (typeof key === 'string') {

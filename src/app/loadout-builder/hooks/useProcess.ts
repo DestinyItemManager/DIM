@@ -8,6 +8,8 @@ import {
   StatTypes,
   MinMaxIgnored,
   MinMax,
+  LockedModBase,
+  statHashToType,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -16,7 +18,12 @@ import {
   ProcessArmorSet,
   ProcessSocket,
   ProcessSockets,
+  ProcessModMetadata,
 } from '../processWorker/types';
+import {
+  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
+} from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -37,6 +44,7 @@ type ItemsById = { [id: string]: DimItem };
 export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -52,6 +60,7 @@ export function useProcess(
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -86,6 +95,8 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
+        mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
+        getTotalSeasonalModStatChanges(lockedSeasonalMods),
         lockedArmor2ModMap,
         assumeMasterwork,
         statOrder,
@@ -114,6 +125,7 @@ export function useProcess(
   }, [
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -134,6 +146,7 @@ export function useProcess(
 function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
+  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -143,6 +156,7 @@ function useWorkerAndCleanup(
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
+    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -185,6 +199,55 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
+function mapSeasonalModsToSeasonsArray(
+  lockedSeasonalMods: readonly LockedModBase[]
+): ProcessModMetadata[] {
+  const metadatas = lockedSeasonalMods.map((mod) => ({
+    mod,
+    metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
+  }));
+
+  const modMetadata: ProcessModMetadata[] = [];
+  for (const entry of metadatas) {
+    if (entry?.metadata) {
+      modMetadata.push({
+        season: entry.metadata.season,
+        tag: entry.metadata.tag,
+        energyType: entry.mod.mod.plug.energyCost.energyType,
+      });
+    }
+  }
+
+  return modMetadata;
+}
+
+/**
+ * This sums up the total stat contributions across locked seasonal mods. These are then applied
+ * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
+ * effect stat values in game.
+ */
+function getTotalSeasonalModStatChanges(lockedSeasonalMods: readonly LockedModBase[]) {
+  const totals: { [stat in StatTypes]: number } = {
+    Mobility: 0,
+    Recovery: 0,
+    Resilience: 0,
+    Intellect: 0,
+    Discipline: 0,
+    Strength: 0,
+  };
+
+  for (const mod of lockedSeasonalMods) {
+    for (const stat of mod.mod.investmentStats) {
+      const statType = statHashToType[stat.statTypeHash];
+      if (statType) {
+        totals[statType] += stat.value;
+      }
+    }
+  }
+
+  return totals;
+}
+
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
     sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
@@ -199,11 +262,16 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
+  const baseStatMap: { [statHash: number]: number } = {};
+
   if (stats) {
-    for (const { statHash, value } of stats) {
+    for (const { statHash, value, base } of stats) {
       statMap[statHash] = value;
+      baseStatMap[statHash] = base;
     }
   }
+
+  const modMetadata = getSpecialtySocketMetadata(dimItem);
 
   return {
     bucketHash: bucket.hash,
@@ -213,8 +281,11 @@ function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     equippingLabel,
     basePower,
     stats: statMap,
+    baseStats: baseStatMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
-    hasEnergy: Boolean(dimItem.energy),
+    energyType: dimItem.energy?.energyType,
+    season: modMetadata?.season,
+    compatibleModSeasons: modMetadata?.compatibleTags,
   };
 }
 

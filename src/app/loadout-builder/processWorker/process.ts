@@ -18,8 +18,10 @@ import {
   ProcessItem,
   ProcessArmorSet,
   IntermediateProcessArmorSet,
+  ProcessModMetadata,
 } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -91,6 +93,8 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
+  processedSeasonalMods: ProcessModMetadata[],
+  seasonalModStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -103,6 +107,8 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
+
+  processedSeasonalMods.sort(sortProcessModMetadataOrProcessItem);
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
@@ -268,6 +274,7 @@ export function process(
               let index = 1;
               let statRangeExceeded = false;
               for (const statKey of orderedConsideredStats) {
+                stats[statKey] += seasonalModStatTotals[statKey];
                 const tier = statTier(stats[statKey]);
 
                 if (tier > statRanges[statKey].max) {
@@ -302,6 +309,14 @@ export function process(
                   continue;
                 }
               }
+
+              if (
+                processedSeasonalMods.length &&
+                !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
+              ) {
+                continue;
+              }
+
               const newArmorSet: IntermediateProcessArmorSet = {
                 sets: [
                   {
@@ -496,7 +511,7 @@ function generateMixesFromPerksOrStats(
     getBaseStatValues(item, assumeArmor2IsMasterwork, orderedStatValues, lockedModStats),
   ];
 
-  if (stats && item.sockets && !item.hasEnergy) {
+  if (stats && item.sockets && item.energyType === undefined) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -528,14 +543,10 @@ function getBaseStatValues(
   orderedStatValues: number[],
   lockedModStats: { [statHash: number]: number }
 ) {
-  const baseStats = {};
+  const baseStats = { ...item.baseStats };
 
-  for (const statHash of orderedStatValues) {
-    baseStats[statHash] = item.stats[statHash];
-  }
-
-  // Checking energy tells us if it is Armour 2.0
-  if (item.sockets && item.hasEnergy) {
+  // Checking energy tells us if it is Armour 2.0 (it can have value 0)
+  if (item.sockets && item.energyType !== undefined) {
     let masterworkSocketHashes: number[] = [];
 
     // only get masterwork sockets if we aren't manually adding the values
@@ -551,13 +562,15 @@ function getBaseStatValues(
       }
     }
 
-    for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItemHash ?? NaN;
+    if (masterworkSocketHashes.length) {
+      for (const socket of item.sockets.sockets) {
+        const plugHash = socket?.plug?.plugItemHash ?? NaN;
 
-      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
-        for (const statHash of orderedStatValues) {
-          if (socket.plug.stats[statHash]) {
-            baseStats[statHash] -= socket.plug.stats[statHash];
+        if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
+          for (const statHash of orderedStatValues) {
+            if (socket.plug.stats[statHash]) {
+              baseStats[statHash] += socket.plug.stats[statHash];
+            }
           }
         }
       }

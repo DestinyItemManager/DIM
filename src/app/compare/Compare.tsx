@@ -18,7 +18,10 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  getItemSpecialtyModSlotDisplayName,
+  getSpecialtySocketMetadata,
+} from 'app/utils/item-utils';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -357,15 +360,13 @@ class Compare extends React.Component<Props, State> {
     const exampleItem = comparisonItems[0];
     const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
     const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
-    const specialtyModSlotName = this.props.defs?.InventoryItem.get(
-      exampleItemModSlot?.emptyModSocketHashes[0] ?? -99999999
-    )?.itemTypeDisplayName;
+    const specialtyModSlotName = getItemSpecialtyModSlotDisplayName(exampleItem);
 
     // helper functions for filtering items
     const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
       item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
-      exampleItemModSlot?.tag === getSpecialtySocketMetadata(item)?.tag;
+      exampleItemModSlot === getSpecialtySocketMetadata(item);
     const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class

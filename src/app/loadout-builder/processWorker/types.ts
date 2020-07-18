@@ -1,4 +1,5 @@
 import { StatTypes } from '../types';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export interface ProcessPlug {
   stats: {
@@ -29,9 +30,12 @@ export interface ProcessItem {
   name: string;
   equippingLabel?: string;
   sockets: ProcessSockets | null;
-  hasEnergy: boolean;
+  energyType?: DestinyEnergyType;
   basePower: number;
   stats: { [statHash: number]: number };
+  baseStats: { [statHash: number]: number };
+  season?: number;
+  compatibleModSeasons?: string[];
 }
 
 export type ProcessItemsByBucket = Readonly<{
@@ -86,4 +90,10 @@ export interface IntermediateProcessArmorSet {
 
   /** The maximum power loadout possible in this stat mix. */
   maxPower: number;
+}
+
+export interface ProcessModMetadata {
+  season: number;
+  tag: string;
+  energyType: DestinyEnergyType;
 }

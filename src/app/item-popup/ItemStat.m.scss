@@ -83,6 +83,13 @@
   }
 }
 
+.negativeModded {
+  color: $red;
+  .statName {
+    font-weight: bold;
+  }
+}
+
 .totalRow {
   padding-top: 4px;
 }
@@ -94,12 +101,21 @@
 .totalStatDetailed {
   margin-left: 8px;
   grid-column: -2 / -1;
+}
 
-  .totalStatModded {
-    color: $blue;
-  }
+.totalStatModded {
+  color: $blue;
+}
 
-  .totalStatMasterwork {
-    color: $orange;
-  }
+.totalStatNegativeModded {
+  color: $red;
+}
+
+.totalStatMasterwork {
+  color: $orange;
+}
+
+.totalStatWarn {
+  color: yellow;
+  margin-left: 8px;
 }

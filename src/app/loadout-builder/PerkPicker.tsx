@@ -36,7 +36,7 @@ import { escapeRegExp } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
-import { specialtyModSocketHashes } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
@@ -336,7 +336,9 @@ class PerkPicker extends React.Component<Props, State> {
     const queryFilteredSeasonalMods = _.uniqBy(
       Object.values(queryFilteredMods).flatMap((bucktedMods) =>
         bucktedMods
-          .filter(({ item }) => specialtyModSocketHashes.includes(item.plug.plugCategoryHash))
+          .filter(({ item }) =>
+            getSpecialtySocketMetadataByPlugCategoryHash(item.plug.plugCategoryHash)
+          )
           .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
       ),
       ({ mod }) => mod.hash

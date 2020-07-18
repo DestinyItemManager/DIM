@@ -10,7 +10,7 @@ import { RootState } from 'app/store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { filterItems } from './preProcessFilter';
-import { StatTypes, ItemsByBucket, statKeys, statHashes } from './types';
+import { StatTypes, ItemsByBucket, statKeys, statHashToType } from './types';
 import { storesSelector } from '../inventory/selectors';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -34,9 +34,6 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-
-// Need to force the type as lodash converts the StatTypes type to string.
-const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -162,6 +159,7 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
+    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -173,16 +171,8 @@ function LoadoutBuilder({
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
 
   const filteredSets = useMemo(
-    () =>
-      filterGeneratedSets(
-        lockedMap,
-        lockedArmor2Mods,
-        lockedSeasonalMods,
-        statOrder,
-        enabledStats,
-        result?.sets
-      ),
-    [lockedMap, lockedArmor2Mods, lockedSeasonalMods, statOrder, enabledStats, result?.sets]
+    () => filterGeneratedSets(lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets),
+    [lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets]
   );
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);
