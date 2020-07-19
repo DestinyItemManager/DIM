@@ -29,7 +29,7 @@ export default function CompareItem({
       <div className="compare-item-header">
         <div className="icon comp-lock-icon">
           {item.lockable && <LockButton item={item} type="lock" />}
-          {item.isDestiny1() && item.trackable && <LockButton item={item} type="track" />}
+          {item.trackable && <LockButton item={item} type="track" />}
         </div>
         <ItemTagSelector item={item} />
         <div className="close" onClick={() => remove(item)} />

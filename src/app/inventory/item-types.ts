@@ -110,7 +110,9 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** Whether this item can be locked. */
   lockable: boolean;
-  /** Is this item tracked? (D1 quests/bounties). */
+  /** Can this item be tracked? (For quests/bounties.) */
+  trackable: boolean;
+  /** Is this item tracked? (For quests/bounties). */
   tracked: boolean;
   /**
    * Is this item locked?
@@ -197,8 +199,6 @@ export interface D1Item extends DimItem {
   year: number;
   /** Hashes that allow us to figure out where this item can be found (what activities, locations, etc.) */
   sourceHashes: number[];
-  /** Can this item be tracked? (For quests/bounties.) */
-  trackable: boolean;
 
   getStoresService(): D1StoreServiceType;
 }

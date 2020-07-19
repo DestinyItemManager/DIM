@@ -3,8 +3,10 @@ import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
 import styles from './LockButton.m.scss';
 import clsx from 'clsx';
-import { lockIcon, unlockedIcon, starIcon, starOutlineIcon, AppIcon } from '../shell/icons';
+import { lockIcon, unlockedIcon, AppIcon, trackedIcon, unTrackedIcon } from '../shell/icons';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import reduxStore from '../store/store';
+import { touchItem } from 'app/inventory/actions';
 
 interface Props {
   item: DimItem;
@@ -39,8 +41,8 @@ export default class LockButton extends React.Component<Props, State> {
           ? lockIcon
           : unlockedIcon
         : item.tracked
-        ? starIcon
-        : starOutlineIcon;
+        ? trackedIcon
+        : unTrackedIcon;
 
     return (
       <div onClick={this.lockUnlock} title={title}>
@@ -74,6 +76,7 @@ export default class LockButton extends React.Component<Props, State> {
       }
     } finally {
       this.setState({ locking: false });
+      reduxStore.dispatch(touchItem(item.id));
     }
   };
 }

@@ -232,11 +232,11 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     onwrongclass: ['onwrongclass'],
     hasnotes: ['hasnotes'],
     cosmetic: ['cosmetic'],
+    tracked: ['tracked'],
+    untracked: ['untracked'],
     ...(isD1
       ? {
           hasLight: ['light', 'haslight'],
-          tracked: ['tracked'],
-          untracked: ['untracked'],
           sublime: ['sublime'],
           incomplete: ['incomplete'],
           complete: ['complete'],
@@ -797,10 +797,10 @@ function searchFilters(
           return complete || missing;
         }
       },
-      untracked(item: D1Item) {
+      untracked(item: DimItem) {
         return item.trackable && !item.tracked;
       },
-      tracked(item: D1Item) {
+      tracked(item: DimItem) {
         return item.trackable && item.tracked;
       },
       unlocked(item: DimItem) {

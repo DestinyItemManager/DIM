@@ -12,6 +12,7 @@ import {
   equipItems as d2EquipItems,
   transfer as d2Transfer,
   setLockState as d2SetLockState,
+  setTrackedState as d2SetTrackedState,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
@@ -83,7 +84,11 @@ export async function setItemLockState(
   const store = item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
   if (item.isDestiny2()) {
-    await d2SetLockState(store, item, state);
+    if (type === 'lock') {
+      await d2SetLockState(store, item, state);
+    } else {
+      await d2SetTrackedState(store, item, state);
+    }
   } else if (item.isDestiny1()) {
     await d1SetItemState(item, store, state, type);
   }
