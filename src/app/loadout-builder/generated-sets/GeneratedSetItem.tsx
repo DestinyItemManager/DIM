@@ -8,7 +8,7 @@ import styles from './GeneratedSetItem.m.scss';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
-import { lockedItemsEqual } from './utils';
+import { lockedItemsEqual } from '../utils';
 import { generateMixesFromPerks } from '../utils';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';

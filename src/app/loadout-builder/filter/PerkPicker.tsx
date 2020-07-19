@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
-import Sheet from '../dim-ui/Sheet';
-import '../item-picker/ItemPicker.scss';
+import Sheet from '../../dim-ui/Sheet';
+import '../../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
@@ -10,7 +10,7 @@ import {
   LockedMap,
   ItemsByBucket,
   LockedModBase,
-} from './types';
+} from '../types';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import PerksForBucket from './PerksForBucket';
@@ -20,13 +20,13 @@ import {
   addLockedItem,
   isLoadoutBuilderItem,
   filterPlugs,
-} from './generated-sets/utils';
+} from '../utils';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
-import ArmorBucketIcon from './ArmorBucketIcon';
+import ArmorBucketIcon from '../ArmorBucketIcon';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
@@ -40,7 +40,7 @@ import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-uti
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from './loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(

@@ -7,10 +7,10 @@ import {
   LockedItemType,
 } from './types';
 import { Armor2ModPlugCategories, getItemDamageShortName } from 'app/utils/item-utils';
-import { doEnergiesMatch } from './generated-sets/mod-utils';
-import { canSlotMod } from './generated-sets/utils';
+import { doEnergiesMatch } from './mod-utils';
+import { canSlotMod } from './utils';
 import { DimItem } from 'app/inventory/item-types';
-import { getBaseStatValues } from './utils';
+import { getStatValuesWithModsAndMW } from './utils';
 
 const bucketsToCategories = {
   [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
@@ -72,7 +72,8 @@ export function filterItems(
           // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
           (bucket === LockableBuckets.classitem ||
             locked?.length ||
-            _.sum(Object.values(getBaseStatValues(item, assumeMasterwork))) >= minimumStatTotal)
+            _.sum(Object.values(getStatValuesWithModsAndMW(item, assumeMasterwork))) >=
+              minimumStatTotal)
       );
     }
   });

@@ -1,7 +1,7 @@
-@import '../variables.scss';
+@import '../../variables.scss';
 
 .footer {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
 
   > * {
@@ -10,7 +10,7 @@
 }
 
 .selectedPerks {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../../dim-ui/common.m.scss';
   flex: 1;
   align-items: center;
 }

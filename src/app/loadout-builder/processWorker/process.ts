@@ -9,7 +9,7 @@ import {
   MinMaxIgnored,
   MinMax,
 } from '../types';
-import { statTier } from '../generated-sets/utils';
+import { statTier } from '../utils';
 import { compareBy } from '../../utils/comparators';
 import { Armor2ModPlugCategories } from '../../utils/item-utils';
 import { statHashes } from '../types';
@@ -508,7 +508,12 @@ function generateMixesFromPerksOrStats(
   }
 
   const mixes: number[][] = [
-    getBaseStatValues(item, assumeArmor2IsMasterwork, orderedStatValues, lockedModStats),
+    getStatValuesWithModsAndMWProcess(
+      item,
+      assumeArmor2IsMasterwork,
+      orderedStatValues,
+      lockedModStats
+    ),
   ];
 
   if (stats && item.sockets && item.energyType === undefined) {
@@ -537,7 +542,11 @@ function generateMixesFromPerksOrStats(
   return mixes;
 }
 
-function getBaseStatValues(
+/**
+ * Gets the stat values of an item with masterwork and locked mods considered.
+ * Unfortunately this needs to be kept in line with getStatValuesWithModsAndMW in ../utils.ts.
+ */
+function getStatValuesWithModsAndMWProcess(
   item: ProcessItem,
   assumeMasterwork: boolean | null,
   orderedStatValues: number[],

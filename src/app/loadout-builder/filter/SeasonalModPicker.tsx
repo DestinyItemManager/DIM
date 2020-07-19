@@ -1,8 +1,8 @@
 import React from 'react';
-import { SelectableMod } from './locked-armor/SelectableBungieImage';
+import { SelectableMod } from '../locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { LockedModBase } from './types';
+import { LockedModBase } from '../types';
 import { t } from 'app/i18next-t';
 
 /**

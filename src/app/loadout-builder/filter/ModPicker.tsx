@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
-import Sheet from '../dim-ui/Sheet';
-import '../item-picker/ItemPicker.scss';
+import Sheet from '../../dim-ui/Sheet';
+import '../../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
@@ -8,9 +8,9 @@ import {
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
-} from './types';
+} from '../types';
 import _ from 'lodash';
-import { isLoadoutBuilderItem } from './generated-sets/utils';
+import { isLoadoutBuilderItem } from '../utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
@@ -28,7 +28,7 @@ import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from './loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
