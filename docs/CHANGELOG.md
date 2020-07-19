@@ -2,6 +2,9 @@
 
 * Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
 * Fix quick item picker not remembering your preference for "equip" vs "store".
+* Some quests can now be tracked or untracked from DIM.
+* Locking or unlocking items from DIM is now reflected immediately on the item tiles.
+* Items with the Arrivals mod slot now match the `holdsmod:dawn` search.
 
 ## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
 
