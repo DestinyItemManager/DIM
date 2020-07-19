@@ -161,7 +161,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
       {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <Link
-            to={`/${urlParams.membershipId}/d${urlParams.membershipId}/vendors/${item.previewVendor}`}
+            to={`/${urlParams.membershipId}/d${urlParams.destinyVersion}/vendors/${item.previewVendor}`}
           >
             {t('ItemService.PreviewVendor', { type: item.typeName })}
           </Link>
