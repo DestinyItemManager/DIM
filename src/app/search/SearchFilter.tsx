@@ -20,7 +20,7 @@ import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
-import { touch } from 'app/inventory/actions';
+import { touch, touchItem } from 'app/inventory/actions';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { useLocation } from 'react-router';
 import { emptyArray, emptySet } from 'app/utils/empty';
@@ -55,12 +55,14 @@ type DispatchProps = {
   setSearchQuery(query: string): void;
   bulkTagItems(items: DimItem[], tag: TagValue): void;
   touchStores(): void;
+  touchItem(id: string): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
   setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
   bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
   touchStores: touch,
+  touchItem: (id) => dispatch(touchItem(id)),
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -153,6 +155,7 @@ export function SearchFilter(
 
             // TODO: Gotta do this differently in react land
             item.locked = state;
+            touchItem(item.id);
           }
           showNotification({
             type: 'success',

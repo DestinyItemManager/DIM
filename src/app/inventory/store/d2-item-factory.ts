@@ -381,6 +381,7 @@ export function makeItem(
     breakerType: null,
     visible: true,
     lockable: item.lockable,
+    trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
