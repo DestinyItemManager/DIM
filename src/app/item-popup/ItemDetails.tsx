@@ -23,7 +23,7 @@ import EmblemPreview from './EmblemPreview';
 import { destinyVersionSelector } from 'app/accounts/reducer';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import Objective from 'app/progress/Objective';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface ProvidedProps {
   item: DimItem;
@@ -53,6 +53,8 @@ function isD2Manifest(
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
   // mods should be 610365472 ("Weapon Mods") if they aren't 4104513227 ("Armor Mods")
   const modTypeIcon = item.itemCategoryHashes.includes(4104513227) ? helmetIcon : handCannonIcon;
+
+  const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
   return (
     <div className="item-details-body">
@@ -158,7 +160,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
-          <Link to={`vendors/${item.previewVendor}`}>
+          <Link
+            to={`/${urlParams.membershipId}/d${urlParams.membershipId}/vendors/${item.previewVendor}`}
+          >
             {t('ItemService.PreviewVendor', { type: item.typeName })}
           </Link>
         </div>
