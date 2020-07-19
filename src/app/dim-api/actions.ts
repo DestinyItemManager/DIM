@@ -72,6 +72,8 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
           settings: settingsToSave,
           profiles: nextState.profiles,
           updateQueue: nextState.updateQueue,
+          itemHashTags: nextState.itemHashTags,
+          searches: nextState.searches,
         };
         console.log('Saving profile data to IDB');
         set('dim-api-profile', savedState);

@@ -16,7 +16,7 @@ import { exportDimApiData } from 'app/dim-api/dim-api';
 import { exportBackupData } from './export-data';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { Link } from 'react-router-dom';
-import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import { ExportResponse, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { parseProfileKey } from 'app/dim-api/reducer';
 import { importDataBackup } from 'app/dim-api/import';
 import { showNotification } from 'app/notifications/notifications';
@@ -139,6 +139,9 @@ function exportLocalData(): ThunkResult<ExportResponse> {
       settings: dimApiState.settings,
       loadouts: [],
       tags: [],
+      triumphs: [],
+      itemHashTags: [],
+      searches: [],
     };
 
     for (const profileKey in dimApiState.profiles) {
@@ -159,6 +162,22 @@ function exportLocalData(): ThunkResult<ExportResponse> {
             destinyVersion,
           });
         }
+
+        exportResponse.triumphs.push({
+          platformMembershipId,
+          triumphs: dimApiState.profiles[profileKey].triumphs,
+        });
+      }
+    }
+
+    exportResponse.itemHashTags = Object.values(dimApiState.itemHashTags);
+
+    for (const destinyVersion in dimApiState.searches) {
+      for (const search of dimApiState.searches[destinyVersion]) {
+        exportResponse.searches.push({
+          destinyVersion: parseInt(destinyVersion, 10) as DestinyVersion,
+          search,
+        });
       }
     }
 

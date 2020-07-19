@@ -25,7 +25,10 @@ export const profileLoaded = createAction('dim-api/PROFILE_LOADED')<{
 
 export const profileLoadError = createAction('dim-api/PROFILE_ERROR')<Error>();
 
-export type ProfileIndexedDBState = Pick<DimApiState, 'settings' | 'profiles' | 'updateQueue'>;
+export type ProfileIndexedDBState = Pick<
+  DimApiState,
+  'settings' | 'profiles' | 'itemHashTags' | 'searches' | 'updateQueue'
+>;
 export const profileLoadedFromIDB = createAction('dim-api/LOADED_PROFILE_FROM_IDB')<
   ProfileIndexedDBState | undefined
 >();
