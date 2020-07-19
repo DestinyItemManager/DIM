@@ -82,7 +82,7 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
 
   return (
-    <div className="vendor d2-vendors dim-page">
+    <div className="collections-page d2-vendors dim-page">
       <ErrorBoundary name="Catalysts">
         <Catalysts defs={defs} profileResponse={profileResponse} />
       </ErrorBoundary>

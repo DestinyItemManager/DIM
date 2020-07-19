@@ -28,6 +28,7 @@ import { parse } from 'simple-query-string';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';
+import clsx from 'clsx';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -75,7 +76,7 @@ function SingleVendor({
   // we at least need to display that character!
   let characterId = parse(search).characterId as string;
   if (!characterId) {
-    if (stores) {
+    if (stores.length) {
       characterId = getCurrentStore(stores)!.id;
     }
   }
@@ -137,7 +138,9 @@ function SingleVendor({
   const vendor = vendorResponse?.vendor.data;
 
   const destinationDef =
-    vendor && defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+    vendor?.vendorLocationIndex && vendorDef.locations[vendor.vendorLocationIndex]
+      ? defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash)
+      : undefined;
   const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
   const placeString = [destinationDef?.displayProperties.name, placeDef?.displayProperties.name]
@@ -165,7 +168,7 @@ function SingleVendor({
   }
 
   return (
-    <div className="vendor dim-page">
+    <div className={clsx(styles.page, 'dim-page')}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
