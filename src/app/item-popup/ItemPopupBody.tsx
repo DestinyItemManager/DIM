@@ -9,9 +9,11 @@ import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import './ItemPopupBody.scss';
+import { ItemTriage } from 'app/item-triage/ItemTriage';
 
 export const enum ItemPopupTab {
   Overview,
+  Triage,
   Reviews,
 }
 
@@ -50,6 +52,25 @@ export default function ItemPopupBody({
       component: <ItemDetails item={item} extraInfo={extraInfo} />,
     },
   ];
+  if (
+    $featureFlags.triage &&
+    item.isDestiny2() &&
+    (item.bucket.inArmor ||
+      (item.bucket.sort === 'Weapons' &&
+        item.bucket.type !== 'SeasonalArtifacts' &&
+        item.bucket.type !== 'Class'))
+    //   ||
+    // (item.bucket.sort === 'General' &&
+    //   (item.bucket.type === 'Ghost' ||        // enable these once there's
+    //     item.bucket.type === 'Vehicle' ||     // factor rules for them
+    //     item.bucket.type === 'Ships'))
+  ) {
+    tabs.push({
+      tab: ItemPopupTab.Triage,
+      title: t('MovePopup.TriageTab'),
+      component: <ItemTriage item={item} />,
+    });
+  }
   if ($featureFlags.reviewsEnabled && item.reviewable) {
     tabs.push({
       tab: ItemPopupTab.Reviews,

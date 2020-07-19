@@ -394,6 +394,8 @@ module.exports = (env) => {
         '$featureFlags.armor2ModPicker': JSON.stringify(env.dev),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
+        // Show the triage tab in the item popup
+        '$featureFlags.triage': JSON.stringify(env.dev),
       }),
 
       new WorkerPlugin({

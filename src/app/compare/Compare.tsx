@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { DimItem, DimStat, D2Item } from '../inventory/item-types';
+import { DimItem, DimStat } from '../inventory/item-types';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
@@ -15,25 +15,19 @@ import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import {
-  DestinyDisplayPropertiesDefinition,
-  DestinyInventoryItemDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-// import intrinsicLookupTable from 'data/d2/intrinsic-perk-lookup.json';
-// we are falling back to using just an exactly matching intrinsic perk for now
-// archetypes are difficult.
-import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
@@ -502,14 +496,8 @@ class Compare extends React.Component<Props, State> {
       return intrinsic?.plug?.plugItem.hash || -99999999;
     };
       */
-    const getIntrinsicPerk = (item: D2Item): DestinyInventoryItemDefinition | undefined => {
-      const intrinsic = item.sockets?.sockets.find((s) =>
-        s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-      );
-      return intrinsic?.plug?.plugItem;
-    };
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() ? getIntrinsicPerk(exampleItem) : undefined;
+    const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
     const intrinsicHash = intrinsic?.hash;
 
@@ -545,7 +533,7 @@ class Compare extends React.Component<Props, State> {
         buttonLabel: <>{[intrinsicName, exampleItem.typeName].join(' + ')}</>,
         items: exampleItem.isDestiny2()
           ? allWeapons.filter(
-              (i) => i.isDestiny2() && i.sockets && getIntrinsicPerk(i)?.hash === intrinsicHash
+              (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
             )
           : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
