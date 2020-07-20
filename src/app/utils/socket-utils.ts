@@ -36,12 +36,12 @@ export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash
   );
 }
 
-/** */
+/** whether a socket is a mod socket. i.e. those grey things. not perks, not reusables, not shaders */
 export function isModSocket(socket: DimSocket) {
   return socket.plug && isArmor2Mod(socket.plug?.plugItem);
 }
 
-/** */
+/** isModSocket and contains its default plug */
 export function isEmptyModSocket(socket: DimSocket) {
   return (
     isModSocket(socket) &&
@@ -49,7 +49,7 @@ export function isEmptyModSocket(socket: DimSocket) {
   );
 }
 
-/** */
+/** isModSocket and contains something other than its default plug */
 export function isUsedModSocket(socket: DimSocket) {
   return (
     isModSocket(socket) &&
