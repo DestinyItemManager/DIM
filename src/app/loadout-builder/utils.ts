@@ -1,7 +1,5 @@
 import _ from 'lodash';
 import { DimPlug, DimItem, D2Item, DimSocket } from 'app/inventory/item-types';
-import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { statValues, LockedItemType, LockedMod, LockedArmor2Mod } from './types';
 import {
   DestinyInventoryItemDefinition,
@@ -300,10 +298,9 @@ export function statTier(stat: number) {
  */
 export function generateMixesFromPerks(
   item: DimItem,
-  lockedModStats: { [statHash: number]: number },
   onMix: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
-  return generateMixesFromPerksOrStats(item, null, lockedModStats, onMix);
+  return generateMixesFromPerksOrStats(item, onMix);
 }
 
 /**
@@ -317,13 +314,14 @@ export function generateMixesFromPerks(
  * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
  * returns all the mixes. This is like this so we can share this complicated bit of logic
  * and not get it out of sync.
+ *
+ * TODO This is now only used for Armor 1.0 alt perk mixes. It should probably have the
+ * stat mix functionality removed and the onMix function merged into this.
  */
 function generateMixesFromPerksOrStats(
   item: DimItem,
-  assumeArmor2IsMasterwork: boolean | null,
-  lockedModStats: { [statHash: number]: number },
   /** Callback when a new mix is found. */
-  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
   const stats = item.stats;
 
@@ -331,7 +329,7 @@ function generateMixesFromPerksOrStats(
     return [];
   }
 
-  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
+  const mixes: number[][] = [getOrderedStatValues(item)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -350,13 +348,11 @@ function generateMixesFromPerksOrStats(
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
 
-              if (onMix) {
-                const existingMixAlts = altPerks[mixIndex];
-                const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
-                altPerks.push(plugs);
-                if (!onMix(optionStat, plugs)) {
-                  return [];
-                }
+              const existingMixAlts = altPerks[mixIndex];
+              const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
+              altPerks.push(plugs);
+              if (!onMix(optionStat, plugs)) {
+                return [];
               }
               mixes.push(optionStat);
             }
@@ -369,56 +365,19 @@ function generateMixesFromPerksOrStats(
   return mixes;
 }
 
-export function getBaseStatValues(
-  item: DimItem,
-  assumeMasterwork: boolean | null,
-  lockedModStats?: { [statHash: number]: number }
-) {
+/**
+ * This gets stat values for an item ordered by the statValues array.
+ */
+function getOrderedStatValues(item: DimItem) {
   const stats = _.keyBy(item.stats, (stat) => stat.statHash);
-  const baseStats = {};
+  const keyedStats = {};
 
   for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash]?.value || 0;
+    keyedStats[statHash] = stats[statHash]?.value || 0;
   }
 
-  // Checking energy tells us if it is Armour 2.0
-  if (item.isDestiny2() && item.sockets && item.energy) {
-    let masterworkSocketHashes: number[] = [];
-
-    // only get masterwork sockets if we aren't manually adding the values
-    if (!assumeMasterwork) {
-      masterworkSocketHashes = getMasterworkSocketHashes(
-        item.sockets,
-        DestinySocketCategoryStyle.EnergyMeter
-      );
-    }
-
-    for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
-
-      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
-        for (const statHash of statValues) {
-          if (socket.plug.stats[statHash]) {
-            baseStats[statHash] -= socket.plug.stats[statHash];
-          }
-        }
-      }
-    }
-
-    if (assumeMasterwork) {
-      for (const statHash of statValues) {
-        baseStats[statHash] += 2;
-      }
-    }
-    // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
-    if (lockedModStats) {
-      _.forIn(lockedModStats, (value, statHash) => {
-        baseStats[statHash] += value;
-      });
-    }
-  }
-  // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
-  return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
+  // mapping out from stat values to ensure ordering
+  return statValues.map((statHash) => keyedStats[statHash]);
 }
 
 /**
