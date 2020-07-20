@@ -54,6 +54,7 @@ import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import { isUsedModSocket } from 'app/utils/socket-utils';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -62,7 +63,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
   return column.columnGroup ? column.columnGroup.id : column.id;
 }
 
-const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
+const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
 /**
  * This function generates the columns.
@@ -564,19 +565,28 @@ function PerksCell({
   if (!item.isDestiny2() || !item.sockets) {
     return null;
   }
-  const sockets = item.sockets.categories.flatMap((c) =>
+
+  let sockets = item.sockets.categories.flatMap((c) =>
     c.sockets.filter(
       (s) =>
-        s.plug &&
+        s.plug && // ignore empty sockets
         s.plugOptions.length > 0 &&
-        ((!traitsOnly && s.plug.plugItem.collectibleHash) ||
+        (s.plug.plugItem.collectibleHash || // collectibleHash catches shaders and most mods
+        isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
-            !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY) &&
-            (!traitsOnly ||
-              s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
-              s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')))
+            (item.isExotic || // ignore archetype if it's not exotic
+              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))))
     )
   );
+
+  if (traitsOnly) {
+    sockets = sockets.filter(
+      (s) =>
+        s.plug &&
+        (s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
+          s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')
+    );
+  }
 
   if (!sockets.length) {
     return null;

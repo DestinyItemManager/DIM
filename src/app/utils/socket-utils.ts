@@ -1,6 +1,7 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { DimSocketCategory } from 'app/inventory/item-types';
 import { DimSockets, DimSocket } from '../inventory/item-types';
+import { isArmor2Mod } from './item-utils';
 
 export function getMasterworkSocketHashes(
   itemSockets: DimSockets,
@@ -35,6 +36,23 @@ export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash
   );
 }
 
-// export function isModSocket(socket: DimSocket){
-// return socket.plug.plugItem.collectibleHash
-// }
+/** */
+export function isModSocket(socket: DimSocket) {
+  return socket.plug && isArmor2Mod(socket.plug?.plugItem);
+}
+
+/** */
+export function isEmptyModSocket(socket: DimSocket) {
+  return (
+    isModSocket(socket) &&
+    socket.socketDefinition.singleInitialItemHash === socket.plug?.plugItem.hash
+  );
+}
+
+/** */
+export function isUsedModSocket(socket: DimSocket) {
+  return (
+    isModSocket(socket) &&
+    socket.socketDefinition.singleInitialItemHash !== socket.plug?.plugItem.hash
+  );
+}
