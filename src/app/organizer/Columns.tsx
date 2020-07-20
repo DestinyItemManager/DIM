@@ -116,10 +116,9 @@ export function getColumns(
         return {
           id: `stat_${statHash}`,
           header: statInfo.displayProperties.hasIcon ? (
-            <BungieImage
-              src={statInfo.displayProperties.icon}
-              title={statInfo.displayProperties.name}
-            />
+            <span title={statInfo.displayProperties.name}>
+              <BungieImage src={statInfo.displayProperties.icon} />
+            </span>
           ) : (
             statLabels[statHash] || statInfo.displayProperties.name
           ),
