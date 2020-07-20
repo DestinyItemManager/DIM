@@ -38,7 +38,7 @@ export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash
 
 /** whether a socket is a mod socket. i.e. those grey things. not perks, not reusables, not shaders */
 export function isModSocket(socket: DimSocket) {
-  return socket.plug && isArmor2Mod(socket.plug?.plugItem);
+  return socket.plug && isArmor2Mod(socket.plug.plugItem);
 }
 
 /** isModSocket and contains its default plug */
