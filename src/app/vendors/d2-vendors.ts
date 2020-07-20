@@ -119,8 +119,9 @@ export function toVendor(
     return undefined;
   }
 
-  const destinationDef =
-    vendor && defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+  const destinationDef = vendor?.vendorLocationIndex
+    ? defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash)
+    : undefined;
   const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
   const vendorCurrencyHashes = new Set<number>();
