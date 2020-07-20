@@ -34,7 +34,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch, setItemNote } from 'app/inventory/actions';
+import { touch, setItemNote, touchItem } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
@@ -263,6 +263,7 @@ function ItemTable({
 
         // TODO: Gotta do this differently in react land
         item.locked = lock;
+        dispatch(touchItem(item.id));
       }
       showNotification({
         type: 'success',

@@ -43,6 +43,12 @@ export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterI
 export const touch = createAction('inventory/TOUCH')();
 
 /**
+ * Force stores to be updated to reflect a change in a single item by instance ID. This is a hack that should go
+ * away as we normalize inventory state.
+ */
+export const touchItem = createAction('inventory/TOUCH_ITEM')<string>();
+
+/**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const error = createAction('inventory/ERROR')<DimError>();
@@ -102,6 +108,19 @@ export const setItemTagsBulk = createAction('tag_notes/SET_TAG_BULK')<
 export const setItemNote = createAction('tag_notes/SET_NOTE')<{
   /** Item instance ID */
   itemId: string;
+  note?: string;
+}>();
+
+/**
+ * Tag an item by hash (for uninstanced items like shaders)
+ */
+export const setItemHashTag = createAction('tag_notes/SET_HASH_TAG')<{
+  itemHash: number;
+  tag?: TagValue;
+}>();
+
+export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
+  itemHash: number;
   note?: string;
 }>();
 

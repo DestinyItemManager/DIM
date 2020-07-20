@@ -213,7 +213,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               path={`${path}/vendors/:vendorId`}
               exact
               render={({ match }) => (
-                <SingleVendor account={account} vendorHash={match.params.vendorId} />
+                <SingleVendor
+                  key={match.params.vendorId}
+                  account={account}
+                  vendorHash={match.params.vendorId}
+                />
               )}
             />
           )}

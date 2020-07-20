@@ -32,7 +32,7 @@ export default function ItemPopupHeader({
   language: string;
   onToggleExpanded(): void;
 }) {
-  const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.element;
+  const hasLeftIcon = item.trackable || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
@@ -94,7 +94,7 @@ export default function ItemPopupHeader({
         {hasLeftIcon && (
           <div className="icon">
             {item.lockable && <LockButton item={item} type="lock" />}
-            {item.isDestiny1() && item.trackable && <LockButton item={item} type="track" />}
+            {item.trackable && <LockButton item={item} type="track" />}
           </div>
         )}
         <div className="item-title-link">

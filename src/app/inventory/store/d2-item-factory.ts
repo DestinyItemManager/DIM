@@ -333,6 +333,12 @@ export function makeItem(
   ) {
     typeName = itemDef.displayProperties.name;
     name = itemDef.setData.questLineName;
+  } else if (itemDef.objectives?.questlineItemHash) {
+    const questLineItem = defs.InventoryItem.get(itemDef.objectives.questlineItemHash);
+    if (questLineItem && questLineItem.displayProperties.name !== itemDef.displayProperties.name) {
+      typeName = itemDef.displayProperties.name;
+      name = questLineItem.displayProperties.name;
+    }
   }
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
@@ -381,6 +387,7 @@ export function makeItem(
     breakerType: null,
     visible: true,
     lockable: item.lockable,
+    trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',

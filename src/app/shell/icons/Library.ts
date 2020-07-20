@@ -78,6 +78,8 @@ const faExclamationTriangle = 'fas fa-exclamation-triangle';
 const faTshirt = 'fas fa-tshirt';
 const faGripLinesVertical = 'fas fa-grip-lines-vertical';
 const faExternalLinkAlt = 'fas fa-external-link-alt';
+const faBookmarkSolid = 'fas fa-bookmark';
+const faBookmark = 'far fa-bookmark';
 
 const faXbox = 'fab fa-xbox';
 const faPlaystation = 'fab fa-playstation';
@@ -155,6 +157,8 @@ export {
   faGlobe as globeIcon,
   faStickyNote as stickyNoteIcon,
   faArrowRight as moveIcon,
+  faBookmark as unTrackedIcon,
+  faBookmarkSolid as trackedIcon,
   faMinusSquare,
   faRandom,
   faEquals,

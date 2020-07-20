@@ -16,11 +16,14 @@ import {
   DestinyVersion,
   LoadoutItem,
   ItemAnnotation,
+  Search,
+  ItemHashTag,
 } from '@destinyitemmanager/dim-api-types';
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { emptyArray } from 'app/utils/empty';
+import { parseQuery, canonicalizeQuery } from 'app/search/query-parser';
 
 export interface DimApiState {
   globalSettings: GlobalSettings & { showIssueBanner: boolean };
@@ -38,9 +41,14 @@ export interface DimApiState {
   /**
    * App settings. Settings are global, not per-platform-membership
    */
-  // TODO: add last account info to settings? we'd have to load them before accounts...
-  // TODO: add changelog high water mark
   settings: Settings;
+
+  /**
+   * Tags-by-item-hash are only available for D2 and are not profile-specific. Mostly for tagging shaders.
+   */
+  itemHashTags: {
+    [itemHash: string]: ItemHashTag;
+  };
 
   /*
    * DIM API profile data, per account. The key is `${platformMembershipId}-d${destinyVersion}`.
@@ -55,7 +63,16 @@ export interface DimApiState {
       tags: {
         [itemId: string]: ItemAnnotation;
       };
+      /** Tracked triumphs */
+      triumphs: number[];
     };
+  };
+
+  /**
+   * Saved searches are per-Destiny-version
+   */
+  searches: {
+    [version in DestinyVersion]: Search[];
   };
 
   /**
@@ -105,7 +122,12 @@ export const initialState: DimApiState = {
 
   settings: initialSettingsState,
 
+  itemHashTags: {},
   profiles: {},
+  searches: {
+    1: [],
+    2: [],
+  },
 
   updateQueue: [],
   updateInProgressWatermark: 0,
@@ -171,6 +193,9 @@ export const dimApi = (
           ...state.settings,
           ...profileResponse.settings,
         },
+        itemHashTags: profileResponse.itemHashTags
+          ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
+          : state.itemHashTags,
         profiles: account
           ? {
               ...state.profiles,
@@ -178,9 +203,16 @@ export const dimApi = (
               [makeProfileKeyFromAccount(account)]: {
                 loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
                 tags: _.keyBy(profileResponse.tags || [], (t) => t.id),
+                triumphs: profileResponse.triumphs || [],
               },
             }
           : state.profiles,
+        searches: account
+          ? {
+              ...state.searches,
+              [account.destinyVersion]: profileResponse.searches || [],
+            }
+          : state.searches,
       };
     }
 
@@ -288,6 +320,35 @@ export const dimApi = (
     case getType(inventoryActions.tagCleanup):
       return tagCleanup(state, action.payload, account!);
 
+    case getType(inventoryActions.setItemHashTag):
+      return produce(state, (draft) => {
+        setItemHashTag(draft, action.payload.itemHash, action.payload.tag as TagValue, account!);
+      });
+
+    case getType(inventoryActions.setItemHashNote):
+      return produce(state, (draft) => {
+        setItemHashNote(draft, action.payload.itemHash, action.payload.note, account!);
+      });
+
+    // *** Searches ***
+
+    case getType(actions.searchUsed):
+      return produce(state, (draft) => {
+        searchUsed(draft, account!.destinyVersion, action.payload);
+      });
+
+    case getType(actions.saveSearch):
+      return produce(state, (draft) => {
+        saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
+      });
+
+    // *** Triumphs ***
+
+    case getType(actions.trackTriumph):
+      return produce(state, (draft) => {
+        trackTriumph(draft, account!, action.payload.recordHash, action.payload.tracked);
+      });
+
     default:
       return state;
   }
@@ -387,6 +448,8 @@ function compactUpdate(
   },
   update: ProfileUpdateWithRollback
 ) {
+  let unique = 0;
+
   // Figure out the ID of the object being acted on
   let key: string;
   switch (update.action) {
@@ -403,6 +466,20 @@ function compactUpdate(
     case 'delete_loadout':
       // The payload is the ID, and it should coalesce with other loadout actions
       key = `loadout-${update.payload}`;
+      break;
+    case 'save_search':
+      key = `${update.action}-${update.payload.query}`;
+      break;
+    case 'item_hash_tag':
+      // These store their ID in an object
+      key = `${update.action}-${update.payload.hash}`;
+      break;
+    case 'track_triumph':
+      key = `${update.action}-${update.payload.recordHash}`;
+      break;
+    case 'search':
+      // These don't combine (though maybe they should be extended to include an array of usage times?)
+      key = `unique-${unique++}`;
       break;
   }
 
@@ -502,6 +579,48 @@ function compactUpdate(
     case 'tag': {
       if (existingUpdate.action === 'tag') {
         // Successive tag/notes updates overwrite
+        combinedUpdate = {
+          ...existingUpdate,
+          payload: {
+            ...existingUpdate.payload,
+            ...update.payload,
+          },
+          before: existingUpdate.before,
+        };
+      }
+      break;
+    }
+    case 'item_hash_tag': {
+      if (existingUpdate.action === 'item_hash_tag') {
+        // Successive tag/notes updates overwrite
+        combinedUpdate = {
+          ...existingUpdate,
+          payload: {
+            ...existingUpdate.payload,
+            ...update.payload,
+          },
+          before: existingUpdate.before,
+        };
+      }
+      break;
+    }
+    case 'track_triumph': {
+      if (existingUpdate.action === 'track_triumph') {
+        // Successive track state updates overwrite
+        combinedUpdate = {
+          ...existingUpdate,
+          payload: {
+            ...existingUpdate.payload,
+            ...update.payload,
+          },
+          before: existingUpdate.before,
+        };
+      }
+      break;
+    }
+    case 'save_search': {
+      if (existingUpdate.action === 'save_search') {
+        // Successive save state updates overwrite
         combinedUpdate = {
           ...existingUpdate,
           payload: {
@@ -653,6 +772,45 @@ function setTag(
   draft.updateQueue.push(updateAction);
 }
 
+function setItemHashTag(
+  draft: Draft<DimApiState>,
+  itemHash: number,
+  tag: TagValue | undefined,
+  account: DestinyAccount
+) {
+  const tags = draft.itemHashTags;
+  const existingTag = tags[itemHash];
+
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'item_hash_tag',
+    payload: {
+      hash: itemHash,
+      tag: tag ?? null,
+    },
+    before: existingTag ? { ...existingTag } : undefined,
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
+  };
+
+  if (tag) {
+    if (existingTag) {
+      existingTag.tag = tag;
+    } else {
+      tags[itemHash] = {
+        hash: itemHash,
+        tag,
+      };
+    }
+  } else {
+    delete existingTag?.tag;
+    if (!existingTag?.tag && !existingTag?.notes) {
+      delete tags[itemHash];
+    }
+  }
+
+  draft.updateQueue.push(updateAction);
+}
+
 function setNote(
   draft: Draft<DimApiState>,
   itemId: string,
@@ -687,7 +845,46 @@ function setNote(
   } else {
     delete existingTag?.notes;
     if (!existingTag?.tag && !existingTag?.notes) {
-      delete profile.tags[itemId];
+      delete tags[itemId];
+    }
+  }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function setItemHashNote(
+  draft: Draft<DimApiState>,
+  itemHash: number,
+  notes: string | undefined,
+  account: DestinyAccount
+) {
+  const tags = draft.itemHashTags;
+  const existingTag = tags[itemHash];
+
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'item_hash_tag',
+    payload: {
+      hash: itemHash,
+      notes: notes && notes.length > 0 ? notes : null,
+    },
+    before: existingTag ? { ...existingTag } : undefined,
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
+  };
+
+  if (notes && notes.length > 0) {
+    if (existingTag) {
+      existingTag.notes = notes;
+    } else {
+      tags[itemHash] = {
+        hash: itemHash,
+        notes,
+      };
+    }
+  } else {
+    delete existingTag?.notes;
+    if (!existingTag?.tag && !existingTag?.notes) {
+      delete tags[itemHash];
     }
   }
 
@@ -714,6 +911,114 @@ function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: Dest
       destinyVersion: account.destinyVersion,
     });
   });
+}
+
+function trackTriumph(
+  draft: Draft<DimApiState>,
+  account: DestinyAccount,
+  recordHash: number,
+  tracked: boolean
+) {
+  const profileKey = makeProfileKeyFromAccount(account);
+  const profile = ensureProfile(draft, profileKey);
+
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'track_triumph',
+    payload: {
+      recordHash: recordHash,
+      tracked,
+    },
+    before: {
+      recordHash: recordHash,
+      tracked: !tracked,
+    },
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
+  };
+
+  const triumphs = profile.triumphs.filter((h) => h !== recordHash);
+  if (tracked) {
+    triumphs.push(recordHash);
+  }
+  profile.triumphs = triumphs;
+
+  draft.updateQueue.push(updateAction);
+}
+
+function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+  // Canonicalize the query so we always save it the same way
+  try {
+    query = canonicalizeQuery(parseQuery(query));
+  } catch (e) {
+    console.error('Query not parseable - not saving', query, e);
+    return;
+  }
+
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'search',
+    payload: {
+      query,
+    },
+    destinyVersion,
+  };
+
+  const searches = draft.searches[destinyVersion];
+  const existingSearch = searches.find((s) => s.query === query);
+
+  if (existingSearch) {
+    existingSearch.lastUsage = Date.now();
+    existingSearch.usageCount++;
+  } else {
+    searches.push({
+      query,
+      usageCount: 1,
+      saved: false,
+      lastUsage: Date.now(),
+    });
+  }
+
+  // TODO: this is where we would cap the search history!
+  // while (searches.length > MAX_SEARCH_HISTORY) {
+  //   remove bottom-sorted search
+  // }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function saveSearch(
+  draft: Draft<DimApiState>,
+  destinyVersion: DestinyVersion,
+  query: string,
+  saved: boolean
+) {
+  // Canonicalize the query so we always save it the same way
+  try {
+    query = canonicalizeQuery(parseQuery(query));
+  } catch (e) {
+    console.error('Query not parseable - not saving', query, e);
+    return;
+  }
+
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'save_search',
+    payload: {
+      query,
+      saved,
+    },
+    destinyVersion,
+  };
+
+  const searches = draft.searches[destinyVersion];
+  const existingSearch = searches.find((s) => s.query === query);
+
+  if (existingSearch) {
+    existingSearch.saved = saved;
+  } else {
+    // Hmm, may need to tweak this
+    throw new Error("Unable to save a search that's not in your history");
+  }
+
+  draft.updateQueue.push(updateAction);
 }
 
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
@@ -776,6 +1081,7 @@ function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {
     draft.profiles[profileKey] = {
       loadouts: {},
       tags: {},
+      triumphs: [],
     };
   }
   return draft.profiles[profileKey];
