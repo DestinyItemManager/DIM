@@ -111,6 +111,19 @@ export const setItemNote = createAction('tag_notes/SET_NOTE')<{
   note?: string;
 }>();
 
+/**
+ * Tag an item by hash (for uninstanced items like shaders)
+ */
+export const setItemHashTag = createAction('tag_notes/SET_HASH_TAG')<{
+  itemHash: number;
+  tag?: TagValue;
+}>();
+
+export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
+  itemHash: number;
+  note?: string;
+}>();
+
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
 

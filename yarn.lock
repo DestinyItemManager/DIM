@@ -958,9 +958,9 @@
     minimist "^1.2.0"
 
 "@destinyitemmanager/dim-api-types@^1.0.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.4.0.tgz#bf85cb571b8af8b2a542d5ed2d0e1398c136576e"
-  integrity sha512-A1FZG6zmjt9FRFOZ6CXAfAICy5OpzZtDT2RLgvcP0v5v7CIhKEqQ9vKmus9pY0ec6LPS84Zdx4SUDkqGSiOmWA==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.5.0.tgz#a335f451b5ea25b5e6677aee741f15e78060548a"
+  integrity sha512-JgFZjVnMci1uSKqtflnHQ23/A/mrJQ4lAtsGQ8P7oGWumSMp/PElklHaah9uj1ChgZH57aDZYvzEWb/DwvTBqQ==
 
 "@fortawesome/fontawesome-common-types@^0.2.30":
   version "0.2.30"
