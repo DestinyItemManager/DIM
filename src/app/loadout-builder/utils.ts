@@ -331,9 +331,7 @@ function generateMixesFromPerksOrStats(
     return [];
   }
 
-  const mixes: number[][] = [
-    getStatValuesWithModsAndMW(item, assumeArmor2IsMasterwork, lockedModStats),
-  ];
+  const mixes: number[][] = [getBaseStatValues(item, assumeArmor2IsMasterwork, lockedModStats)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -371,11 +369,7 @@ function generateMixesFromPerksOrStats(
   return mixes;
 }
 
-/**
- * Gets the stat values of an item with masterwork and locked mods considered.
- * Unfortunately this needs to be kept in line with getStatValuesWithModsAndMWProcess in ./processWorker/process.ts.
- */
-export function getStatValuesWithModsAndMW(
+export function getBaseStatValues(
   item: DimItem,
   assumeMasterwork: boolean | null,
   lockedModStats?: { [statHash: number]: number }
@@ -384,7 +378,7 @@ export function getStatValuesWithModsAndMW(
   const baseStats = {};
 
   for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash]?.base || 0;
+    baseStats[statHash] = stats[statHash]?.value || 0;
   }
 
   // Checking energy tells us if it is Armour 2.0
@@ -402,10 +396,10 @@ export function getStatValuesWithModsAndMW(
     for (const socket of item.sockets.sockets) {
       const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
 
-      if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
+      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
           if (socket.plug.stats[statHash]) {
-            baseStats[statHash] += socket.plug.stats[statHash];
+            baseStats[statHash] -= socket.plug.stats[statHash];
           }
         }
       }
