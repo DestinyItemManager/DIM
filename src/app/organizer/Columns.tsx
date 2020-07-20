@@ -49,6 +49,7 @@ import { source } from 'app/inventory/spreadsheets';
 import { statHashByName } from 'app/search/search-filter-values';
 import { statAllowList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
+import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
@@ -151,7 +152,7 @@ export function getColumns(
           id: `base_${column.statHash}`,
           columnGroup: baseStatsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
-          cell: (value) => value,
+          cell: (value) => <div className={itemStatStyle.value}>{value}</div>,
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
       : [];
@@ -570,9 +571,10 @@ function PerksCell({
         s.plugOptions.length > 0 &&
         ((!traitsOnly && s.plug.plugItem.collectibleHash) ||
           (s.isPerk &&
-            (item.isExotic ||
-              (!s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY) &&
-                (!traitsOnly || s.plug.plugItem.plug.plugCategoryIdentifier === 'frames')))))
+            !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY) &&
+            (!traitsOnly ||
+              s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
+              s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')))
     )
   );
 

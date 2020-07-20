@@ -34,3 +34,7 @@ export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash
     socket?.plug?.plugItem?.itemCategoryHashes?.includes(categoryHash)
   );
 }
+
+// export function isModSocket(socket: DimSocket){
+// return socket.plug.plugItem.collectibleHash
+// }
