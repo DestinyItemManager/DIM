@@ -12,7 +12,6 @@ import { statAllowList } from 'app/inventory/store/stats';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
-  item,
   plug,
   defs,
   wishListsEnabled,
@@ -33,25 +32,9 @@ export default function PlugTooltip({
     plug.plugItem.collectibleHash &&
     defs.Collectible.get(plug.plugItem.collectibleHash).sourceString;
 
-  // display perk's synergy with masterwork stat
-  const synergyStat =
-    item.masterworkInfo?.statHash &&
-    plug.plugItem.investmentStats &&
-    plug.plugItem.investmentStats.some(
-      (stat) =>
-        stat.value > 0 &&
-        stat.statTypeHash &&
-        item.masterworkInfo &&
-        item.masterworkInfo.statHash === stat.statTypeHash
-    ) &&
-    ` (${item.masterworkInfo.statName})`;
-
   return (
     <>
-      <h2>
-        {plug.plugItem.displayProperties.name}
-        {synergyStat}
-      </h2>
+      <h2>{plug.plugItem.displayProperties.name}</h2>
 
       {plug.plugItem.displayProperties.description ? (
         <div>{plug.plugItem.displayProperties.description}</div>

@@ -6,15 +6,17 @@ import styles from './ClosableContainer.m.scss';
  */
 export default function ClosableContainer({
   children,
+  enabled = true,
   onClose,
 }: {
   children: React.ReactNode;
+  enabled?: boolean;
   onClose(): void;
 }) {
   return (
     <div className={styles.container}>
       {children}
-      <div className={styles.close} onClick={onClose} role="button" tabIndex={0} />
+      {enabled && <div className={styles.close} onClick={onClose} role="button" tabIndex={0} />}
     </div>
   );
 }

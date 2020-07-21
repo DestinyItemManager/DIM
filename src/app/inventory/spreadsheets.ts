@@ -16,7 +16,7 @@ import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';
 import { download } from 'app/utils/util';
 import { getRating } from '../item-review/reducer';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, getMasterworkStatNames } from 'app/utils/item-utils';
 import store from '../store/store';
 import { t } from 'app/i18next-t';
 
@@ -44,8 +44,7 @@ const FILTER_NODE_NAMES = [
 ];
 
 // ignore raid & calus sources in favor of more detailed sources
-delete D2Sources.raid;
-delete D2Sources.calus;
+const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
 export function downloadCsvFiles(
   stores: DimStore[],
@@ -276,7 +275,7 @@ function equippable(item: DimItem) {
 export function source(item: DimItem) {
   if (item.isDestiny2()) {
     return (
-      Object.keys(D2Sources).find(
+      sourceKeys.find(
         (src) =>
           D2Sources[src].sourceHashes.includes(item.source) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
@@ -316,7 +315,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['Power Limit'] = item.powerCap;
     }
     if (item.isDestiny2()) {
-      row['Masterwork Type'] = item.masterworkInfo?.statName;
+      row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
@@ -439,7 +438,7 @@ function downloadWeapons(
       row['Power Limit'] = item.powerCap;
     }
     if (item.isDestiny2()) {
-      row['Masterwork Type'] = item.masterworkInfo?.statName;
+      row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;

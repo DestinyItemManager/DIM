@@ -13,8 +13,10 @@ import { set } from 'idb-keyval';
 import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { StoreProto as D2StoreProto } from './store/d2-store-factory';
+import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
 import { StoreProto as D1StoreProto } from './store/d1-store-factory';
+import { getItemAcrossStores, getStore } from './stores-helpers';
+import { ItemProto } from './store/d2-item-factory';
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
  * We specifically watch the legacy state, not the new one.
@@ -84,6 +86,9 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         // Make a new array to break change detection for the root stores components
         stores: [...state.stores],
       };
+
+    case getType(actions.touchItem):
+      return touchItem(state, action.payload);
 
     case getType(actions.charactersUpdated):
       return updateCharacters(state, action.payload);
@@ -294,4 +299,28 @@ function setsEqual<T>(first: Set<T>, second: Set<T>) {
     }
   }
   return equal;
+}
+
+function touchItem(state: InventoryState, itemId: string) {
+  let item = getItemAcrossStores(state.stores, { id: itemId })!;
+  if (!item) {
+    return state;
+  }
+  let store = getStore(state.stores, item.owner)!;
+  item = Object.assign(Object.create(ItemProto), item) as DimItem;
+  store = Object.assign(Object.create(StoreProto), {
+    ...store,
+    items: store.items.map((i) => (i.id === item.id ? item : i)),
+    buckets: {
+      ...store.buckets,
+      [item.location.hash]: store.buckets[item.location.hash].map((i) =>
+        i.id === item.id ? item : i
+      ),
+    },
+  });
+
+  return {
+    ...state,
+    stores: state.stores.map((s) => (s.id === store.id ? store : s)),
+  };
 }

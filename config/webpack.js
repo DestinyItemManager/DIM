@@ -20,6 +20,7 @@ const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-web
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const _ = require('lodash');
+const WorkerPlugin = require('worker-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -319,6 +320,12 @@ module.exports = (env) => {
         chunks: ['gdriveReturn'],
       }),
 
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: '404.html',
+        template: '!html-loader!src/404.html',
+      }),
+
       // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
       new HtmlWebpackPlugin({
         filename: '.htaccess',
@@ -387,6 +394,12 @@ module.exports = (env) => {
         '$featureFlags.armor2ModPicker': JSON.stringify(env.dev),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
+        // Show the triage tab in the item popup
+        '$featureFlags.triage': JSON.stringify(env.dev),
+      }),
+
+      new WorkerPlugin({
+        globalObject: 'self',
       }),
 
       new LodashModuleReplacementPlugin({
@@ -423,7 +436,7 @@ module.exports = (env) => {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        eslint: true,
+        eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
       })
     );
 

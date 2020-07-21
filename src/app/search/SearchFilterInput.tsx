@@ -13,7 +13,7 @@ import React, {
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
-import { SearchConfig } from './search-filters';
+import { SearchConfig } from './search-filter';
 import Sheet from 'app/dim-ui/Sheet';
 import Textarea from 'textcomplete/lib/textarea';
 import Textcomplete from 'textcomplete/lib/textcomplete';
@@ -269,13 +269,12 @@ export default React.forwardRef(function SearchFilterInput(
         onBlur={() => textcomplete.current?.hide()}
       />
 
-      {liveQuery.length === 0 ? (
-        <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
-          <AppIcon icon={helpIcon} />
-        </span>
-      ) : (
-        children
-      )}
+      {liveQuery.length !== 0 && children}
+
+      <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
+        <AppIcon icon={helpIcon} />
+      </span>
+
       {(liveQuery.length > 0 || alwaysShowClearButton) && (
         <span className="filter-bar-button" onClick={clearFilter} title={t('Header.Clear')}>
           <AppIcon icon={disabledIcon} />

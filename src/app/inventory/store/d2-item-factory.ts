@@ -303,9 +303,11 @@ export function makeItem(
 
   // here is where we need to manually adjust unreasonable powerCap values,
   // which are used for things that aren't currently set to ever cap
-  if (powerCap && powerCap > 50000) powerCap = null;
+  if (powerCap && powerCap > 50000) {
+    powerCap = null;
+  }
 
-  // null out falsey values like a blank string for a url
+  // null out falsy values like a blank string for a url
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
@@ -331,6 +333,12 @@ export function makeItem(
   ) {
     typeName = itemDef.displayProperties.name;
     name = itemDef.setData.questLineName;
+  } else if (itemDef.objectives?.questlineItemHash) {
+    const questLineItem = defs.InventoryItem.get(itemDef.objectives.questlineItemHash);
+    if (questLineItem && questLineItem.displayProperties.name !== itemDef.displayProperties.name) {
+      typeName = itemDef.displayProperties.name;
+      name = questLineItem.displayProperties.name;
+    }
   }
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
@@ -376,8 +384,10 @@ export function makeItem(
     element,
     energy: instanceDef?.energy ?? null,
     powerCap,
+    breakerType: null,
     visible: true,
     lockable: item.lockable,
+    trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
@@ -525,6 +535,20 @@ export function makeItem(
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+    }
+  }
+
+  // a weapon can have an inherent breaker type, or gain one from socketed mods
+  // (or armor mods can sort of add them but let's not go there quite yet)
+  // this is presented as an else-type dichotomy here, but who knows what the future holds
+  if (itemDef.breakerTypeHash) {
+    createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
+  } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
+    const breakerTypeHash = createdItem.sockets.sockets.find(
+      (s) => s.plug?.plugItem.breakerTypeHash
+    )?.plug?.plugItem.breakerTypeHash;
+    if (breakerTypeHash) {
+      createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }
   }
 

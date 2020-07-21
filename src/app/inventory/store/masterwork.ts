@@ -104,18 +104,18 @@ function buildForsakenMasterworkStats(
         ) ?? null;
     }
 
-    const statDef = defs.Stat.get(masterwork.statTypeHash);
-
     return {
       typeName: null,
       typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
       typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
-      statHash: masterwork.statTypeHash,
-      statName: statDef.displayProperties.name,
-      statValue: masterworkSocket.plug.stats
-        ? masterworkSocket.plug.stats[masterwork.statTypeHash]
-        : 0,
       tier: masterwork.value,
+      stats: [
+        {
+          hash: masterwork.statTypeHash,
+          name: defs.Stat.get(masterwork.statTypeHash).displayProperties.name,
+          value: masterworkSocket.plug.stats?.[masterwork.statTypeHash] || 0,
+        },
+      ],
     };
   }
   return null;
@@ -129,36 +129,29 @@ function buildMasterworkInfo(
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   const socket = sockets.sockets.find((socket) => Boolean(socket.plug?.plugObjectives.length));
-  if (
-    !socket ||
-    !socket.plug ||
-    !socket.plug.plugObjectives ||
-    !socket.plug.plugObjectives.length
-  ) {
+  if (!socket?.plug?.plugObjectives?.length) {
     return null;
   }
   const plugObjective = socket.plug.plugObjectives[0];
   const investmentStats = socket.plug.plugItem.investmentStats;
-  if (!investmentStats || !investmentStats.length) {
-    return null;
-  }
-  const statHash = investmentStats[0].statTypeHash;
-
   const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-  const statDef = defs.Stat.get(statHash);
 
-  if (!objectiveDef || !statDef) {
+  if (!investmentStats?.length || !objectiveDef) {
     return null;
   }
+
+  const stats = investmentStats.map((stat) => ({
+    hash: stat.statTypeHash,
+    name: defs.Stat.get(stat.statTypeHash).displayProperties.name,
+    value: socket.plug?.stats?.[stat.statTypeHash] || 0,
+  }));
 
   return {
     progress: plugObjective.progress,
     typeName: socket.plug.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
     typeIcon: objectiveDef.displayProperties.icon,
     typeDesc: objectiveDef.progressDescription,
-    statHash,
-    statName: statDef.displayProperties.name,
-    statValue: socket.plug.stats ? socket.plug.stats[statHash] : 0,
-    tier: investmentStats[0].value,
+    tier: socket.plug?.plugItem.investmentStats[0].value,
+    stats,
   };
 }

@@ -48,7 +48,7 @@ import {
   titanIcon,
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
-import { searchFilterSelector } from '../search/search-filters';
+import { searchFilterSelector } from '../search/search-filter';
 import PressTip from '../dim-ui/PressTip';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';

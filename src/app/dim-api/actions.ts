@@ -72,6 +72,8 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
           settings: settingsToSave,
           profiles: nextState.profiles,
           updateQueue: nextState.updateQueue,
+          itemHashTags: nextState.itemHashTags,
+          searches: nextState.searches,
         };
         console.log('Saving profile data to IDB');
         set('dim-api-profile', savedState);
@@ -225,14 +227,20 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         console.error('[loadDimApiData] Unable to get profile from DIM API', e);
 
-        // Wait, with exponential backoff
-        getProfileBackoff++;
-        const waitTime = getBackoffWaitTime(getProfileBackoff);
-        console.log('[loadDimApiData] Waiting', waitTime, 'ms before re-attempting profile fetch');
-        await delay(waitTime);
+        if (e.name !== 'FatalTokenError') {
+          // Wait, with exponential backoff
+          getProfileBackoff++;
+          const waitTime = getBackoffWaitTime(getProfileBackoff);
+          console.log(
+            '[loadDimApiData] Waiting',
+            waitTime,
+            'ms before re-attempting profile fetch'
+          );
+          await delay(waitTime);
 
-        // Retry
-        dispatch(loadDimApiData(forceLoad));
+          // Retry
+          dispatch(loadDimApiData(forceLoad));
+        }
         return;
       } finally {
         readyResolve();

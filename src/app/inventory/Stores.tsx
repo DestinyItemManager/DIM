@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { DimStore, DimVault } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'app/i18next-t';
@@ -45,6 +45,18 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
 
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      /* Set a CSS variable so we can style things based on the height of the header */
+      const element = document.querySelector('.store-header');
+      if (element) {
+        document
+          .querySelector('html')!
+          .style.setProperty('--store-header-height', element.clientHeight + 'px');
+      }
+    }, 0);
+  });
 
   if (!stores.length || !buckets) {
     return null;

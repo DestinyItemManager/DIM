@@ -41,7 +41,9 @@
     "SetNotes": "아이템 ID {{id}}의 메모가 {{notes}}로 설정됨",
     "SetTag": "아이템 ID {{id}}의 태그가 {{tag}}로 설정됨",
     "Setting": "{{key}}의 값이 {{value}}(으)로 설정됨",
-    "TagCleanup": "분해한 아이템의 태그를 정리함"
+    "TagCleanup": "분해한 아이템의 태그 {{count}}개를 정리함",
+    "TagCleanupUnknown": "분해한 아이템의 태그 일부를 정리함",
+    "TagCleanup_plural": "분해한 아이템의 태그 {{count}}개를 정리함"
   },
   "Bucket": {
     "Armor": "방어구",
@@ -73,6 +75,8 @@
     "NotConnected": "인터넷에 연결되어 있지 않을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
     "NotLoggedIn": "이 앱을 사용하려면 DIM에 권한을 부여해주세요.",
+    "Slow": "Bungie.net이 느림",
+    "SlowDetails": "Bungie.net이 정보를 반환하는 시간이 오래 걸립니다. 너무 많은 플레이어가 한 번에 접속 중이거나, Bungie.net에 문제가 있을 경우 이와 같은 일이 일어날 수 있습니다. 인터넷 연결 문제가 있을 수도 있습니다. 저희는 계속 응답을 기다리고 있겠습니다.",
     "SlowResponse": "Bungie.net의 응답이 너무 느립니다.",
     "Throttled": "Bungie.net이 DIM의 요청의 수를 제한하고 있습니다.",
     "Twitter": "상태 업데이트 받기:",
@@ -144,7 +148,8 @@
     "Title": "문제가 발생했습니다"
   },
   "ErrorPanel": {
-    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 데스티니 가디언즈 컴패니언 앱이 동작하는지 확인하세요."
+    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 데스티니 가디언즈 컴패니언 앱이 동작하는지 확인하세요.",
+    "Troubleshooting": "문제 해결 가이드"
   },
   "FarmingMode": {
     "D2Desc": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
@@ -189,6 +194,7 @@
     "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "상향 노드가 있는 아이템을 보여주고, 상향 여부 표시",
+    "Breaker": "차단기나 용사 종류에 따라 필터링",
     "BulkClear": "1개의 아이템에서 태그를 삭제하였습니다.",
     "BulkClear_plural": "{{count}}개의 아이템에서 태그를 삭제하였습니다.",
     "BulkRevert": "1개의 아이템의 태그를 되돌렸습니다.",
@@ -248,6 +254,7 @@
     "PartialMatch": "이름이나 특성이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "전투력에 따른 아이템 표시 (무기는 공격력, 방어구는 방어력)",
+    "PowerLimit": "최대로 주입할 수 있는 전투력에 따른 아이템 표시",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성 아이템 표시",
     "RarityTier": "희귀도에 따른 아이템 표시",
@@ -307,6 +314,7 @@
     "StatsBase": "방어구를 장착된 개조 부품을 제외한 기본 능력치 값으로 필터링합니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
+    "SunsetAfter": "전투력 상한선에 도달할 수 있는 시즌에 따른 아이템 표시",
     "Tags": {
       "Archive": "거의 필요 없는 아이템을 흐리게 표시합니다.",
       "Dismantle": "분해할 아이템 표시",
@@ -549,10 +557,13 @@
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
     "OptimizerExplanationArmour2Mods": "방어구 2.0 개조 부품은 능력치 등급 계산에 포함되어 있지 않습니다.",
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
+    "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "잠긴 아이템 초기화",
     "SearchPlaceholder": "필터 (예: \"영웅의 지점\")",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
+    "SelectMinStatTotal": "방어구 총 능력치 최솟값",
+    "SelectMinStatTotalDescription": "방어구 하나의 총 능력치 최솟값을 설정합니다.(직업 아이템 제외)",
     "SelectPerks": "특성 선택",
     "SelectPower": "최소 파워",
     "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
@@ -678,6 +689,7 @@
     "OverviewTab": "개요",
     "Owned": "이 아이템은 소지품에 있습니다.",
     "OwnedMod": "이 개조 부품은 소지품의 개조 부품 항목에 있습니다.",
+    "PowerCap": "",
     "PullItem": "{{bucket}}에서 {{store}}(으)로 이동",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReviewsTab": "평가",
@@ -710,6 +722,7 @@
     "Columns": {
       "Archetype": "아키타입",
       "BaseStats": "기본 스탯",
+      "Breaker": "차단기",
       "CustomTotal": "사용자 정의 총합",
       "Damage": "피해 유형",
       "Element": "원소",
@@ -730,7 +743,7 @@
       "PerksMods": "특성, 개조 부품 & 안료",
       "Quality": "품질 %",
       "Rating": "평점",
-      "Reacquireable": "재습득 가능",
+      "Reacquirable": "재습득 가능",
       "Season": "시즌",
       "Source": "출처",
       "StatQuality": "스탯 품질",
@@ -837,6 +850,9 @@
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
     "PercentHelp": "클릭하셔서 품질에 대한 자세한 내용을 확인하세요.",
+    "PowerCap": "전투력 제한",
+    "PowerCapDisclaimer": "모든 레이드의 방어구와 \"마지막 소원\", \"구원의 정원\" 레이드의 무기의 전투력 상한선 정보가 정확하지 않을 수 있습니다.",
+    "PowerCapWithSeason": "{{powerCap}} (최대 시즌 {{finalSeason}})",
     "PowerModifier": "시즌 경험치 획득으로 주어진 전투력",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
     "Quality": "스탯 품질",
@@ -874,7 +890,7 @@
     "GDriveImportExplain": "브라우저나 구글 드라이브에서 이전 데이터를 복원할 수 있습니다. 방금 DIM을 v6으로 업그레이드하고 이전에 저장한 데이터가 있으면 사용하세요.",
     "GDriveSignInError": "구글 드라이브 로그인 중 문제 발생:",
     "GDriveSignedIn": "구글 드라이브에 {{email}}로 로그인됨",
-    "GoogleApiBlocked": "콘텐츠 블락커가 구글 드라이브의 자바 스크립트를 막아서 구글 드라이브 사용이 불가합니다. 콘텐츠 블락커에서 DIM을 제외하고 다시 시도해 주세요.",
+    "GoogleApiBlocked": "콘텐츠 차단기가 막고 있어 구글 드라이브에 로그인할 수 없습니다. 구글 드라이브에서 이전 데이터를 가져오시려면 콘텐츠 차단기를 해제하고 새로고침하세요.",
     "Import": "데이터 백업 불러오기",
     "ImportConfirmDimApi": "정말로 현재 태그, 로드아웃, 설정을 이 버전으로 덮어쓰시겠습니까? 기존 데이터를 완전히 대체할 것입니다.",
     "ImportExport": "백업 & 복원",
@@ -930,8 +946,6 @@
   "Vendors": {
     "Catalysts": "촉매제",
     "Collections": "수집품",
-    "DestinyMap": "lowlines의 데스티니 지도에서 수집 요소 찾기",
-    "DestinySets": "Destiny Sets에서 더욱 많은 아이템 세트를 확인하세요.",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
     "Vendors": "상인"

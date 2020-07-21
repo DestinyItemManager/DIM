@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ClickOutsideContext } from './ClickOutside';
 import { Subject } from 'rxjs';
-import styles from './ClickOutsideRoot.m.scss';
 
 /**
  * The root element that lets ClickOutside work. This defines the
@@ -16,9 +15,7 @@ export default function ClickOutsideRoot({ children }: { children: React.ReactNo
 
   return (
     <ClickOutsideContext.Provider value={clickOutsideSubject}>
-      <div onClick={onClick} className={styles.container}>
-        {children}
-      </div>
+      <div onClick={onClick}>{children}</div>
     </ClickOutsideContext.Provider>
   );
 }

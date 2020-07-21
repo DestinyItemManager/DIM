@@ -1,5 +1,69 @@
 ## Next
 
+## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
+
+* Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
+* Fix quick item picker not remembering your preference for "equip" vs "store".
+* Some quests can now be tracked or untracked from DIM.
+* Locking or unlocking items from DIM is now reflected immediately on the item tiles.
+* Items with the Arrivals mod slot now match the `holdsmod:dawn` search.
+
+## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
+
+* Fix sorting by Power Limit in the compare pane.
+* When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
+* Allow masterworks to affect more than one stat
+* Exclude subclasses from `is:weapon` filter.
+* Fixed Loadout Optimizer not including all the right tiers when tier filtering was in place.
+
+## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
+
+* Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
+* Removed ghosts from loadout optimizer as they don't have enough interesting perks to build into loadouts.
+* The filter help button is now always shown in the search bar, even when a search is active.
+* The item count in the search bar is now more accurate to what you see on the inventory screen.
+* Make it clearer that not having Google Drive set up doesn't matter that much since it's only for importing legacy data.
+* Better handling for if the DIM Sync API is down.
+
+## 6.18.0 <span className="changelog-date">(2020-07-02)</span>
+
+* Breaker type is now shown on the item popup and in the Organizer.
+* New filter for breaker types on weapons, `breaker:`.
+* Fixed another crash on the vendors screen also caused by the Twitch gift sub shader.
+* Protect against certain weird cases where DIM can get stuck in a non-working state until you really, thoroughly, clear your cache.
+
+## 6.17.1 <span className="changelog-date">(2020-07-01)</span>
+
+* Fix a crash with the Twitch gift sub shader.
+
+## 6.17.0 <span className="changelog-date">(2020-06-28)</span>
+
+* You can now filter out armor in the Loadout Optimizer by minimum total stats. This narrows down how many items are considered for builds and speeds up the optimizer.
+* Renamed the "is:reacquireable" filter to "is:reacquirable"
+* Searches like "is:inleftchar" now work with consumables in the postmaster.
+* Fixed the inventory screen jumping a bit when the item popup is open on mobile.
+* Add a link to the troubleshooting guide to error pages.
+* Seasonal mods in the loadout optimizer now force armor to match their element, again.
+* The stat in parentheses in a weapon perk tooltip, is the stat matching the masterwork. UI slightly updated to help show this.
+
+## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
+
+* Fix a crash when opening some items in Organizer.
+
+## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
+
+* Remove `is:ikelos` filter
+* Loadout Optimizer: Save stat order and "assume masterworked" choices.
+* Fixed a bug that caused the inventory view to jump to the top of the screen when items were inspected.
+* Add a disclaimer to power limit displays that they may change in the future. Please see https://www.bungie.net/en/Help/Article/49106 for updates
+* Save column selection for Ghosts in the Organizer separate from Armor.
+* Display how many tags were cleaned up in the DIM Sync audit log.
+* Fix a bug where canceling setting a note in the Organizer would wipe notes from selected items.
+* Add a pointer cursor on item icons in the Organzier to indicate they're clickable.
+* Fix minimum page width when there are fewer than three characters.
+* Fix Arrival mods not appearing in the Loadout Optimizer.
+* Fix a bug when DIM Sync is off that could repeatedly show a notification that an import had failed. Please consider enabling DIM Sync though, your data WILL get lost if it's disabled.
+
 ## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
 
 ## 6.15.0 <span className="changelog-date">(2020-06-14)</span>

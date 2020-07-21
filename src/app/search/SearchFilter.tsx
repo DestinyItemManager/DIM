@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
@@ -8,7 +8,7 @@ import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
-import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';
+import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filter';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -20,8 +20,12 @@ import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
-import { touch } from 'app/inventory/actions';
+import { touch, touchItem } from 'app/inventory/actions';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { useLocation } from 'react-router';
+import { emptyArray, emptySet } from 'app/utils/empty';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimStore } from 'app/inventory/store-types';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -42,8 +46,8 @@ interface StoreProps {
   searchConfig: SearchConfig;
   searchQueryVersion: number;
   searchQuery: string;
-  filteredItems: DimItem[];
-  isComparable: boolean;
+  stores: DimStore[];
+  buckets?: InventoryBuckets;
   searchFilter(item: DimItem): boolean;
 }
 
@@ -51,26 +55,22 @@ type DispatchProps = {
   setSearchQuery(query: string): void;
   bulkTagItems(items: DimItem[], tag: TagValue): void;
   touchStores(): void;
+  touchItem(id: string): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
   setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
   bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
   touchStores: touch,
+  touchItem: (id) => dispatch(touchItem(id)),
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   const searchFilter = searchFilterSelector(state);
-  // TODO: Narrow this down by screen?
-  const filteredItems = getAllItems(storesSelector(state), searchFilter);
-
-  let isComparable = false;
-  if (filteredItems.length && !CompareService.dialogOpen) {
-    const type = filteredItems[0].typeName;
-    isComparable = filteredItems.every((i) => i.typeName === type);
-  }
+  const stores = storesSelector(state);
+  const buckets = state.inventory.buckets;
 
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
@@ -80,8 +80,8 @@ function mapStateToProps(state: RootState): StoreProps {
     searchFilter,
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
-    filteredItems,
-    isComparable,
+    stores,
+    buckets,
   };
 }
 
@@ -93,8 +93,9 @@ export function SearchFilter(
     setSearchQuery,
     searchQuery,
     searchQueryVersion,
-    filteredItems,
-    isComparable,
+    stores,
+    buckets,
+    searchFilter,
     touchStores,
     bulkTagItems,
     onClear,
@@ -102,6 +103,40 @@ export function SearchFilter(
   ref: React.Ref<SearchFilterRef>
 ) {
   const [showSelect, setShowSelect] = useState(false);
+  const location = useLocation();
+
+  const displayableBuckets = useMemo(
+    () =>
+      buckets
+        ? new Set(
+            Object.keys(buckets.byCategory).flatMap((category) =>
+              buckets.byCategory[category].map((b) => b.hash)
+            )
+          )
+        : emptySet<number>(),
+    [buckets]
+  );
+
+  // We don't have access to the selected store so we'd match multiple characters' worth.
+  // Just suppress the count for now
+  const onProgress = location.pathname.endsWith('progress');
+
+  const filteredItems = useMemo(
+    () =>
+      !onProgress && displayableBuckets.size
+        ? getAllItems(
+            stores,
+            (item: DimItem) => displayableBuckets.has(item.bucket.hash) && searchFilter(item)
+          )
+        : emptyArray<DimItem>(),
+    [displayableBuckets, onProgress, searchFilter, stores]
+  );
+
+  let isComparable = false;
+  if (filteredItems.length && !CompareService.dialogOpen) {
+    const type = filteredItems[0].typeName;
+    isComparable = filteredItems.every((i) => i.typeName === type);
+  }
 
   const bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
     async (e) => {
@@ -120,6 +155,7 @@ export function SearchFilter(
 
             // TODO: Gotta do this differently in react land
             item.locked = state;
+            touchItem(item.id);
           }
           showNotification({
             type: 'success',
@@ -179,9 +215,11 @@ export function SearchFilter(
       searchQuery={searchQuery}
     >
       <>
-        <span className="filter-match-count">
-          {t('Header.FilterMatchCount', { count: filteredItems.length })}
-        </span>
+        {!onProgress && (
+          <span className="filter-match-count">
+            {t('Header.FilterMatchCount', { count: filteredItems.length })}
+          </span>
+        )}
         {isComparable && (
           <span
             onClick={compareMatching}

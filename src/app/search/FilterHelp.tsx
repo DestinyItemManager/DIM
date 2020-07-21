@@ -326,6 +326,20 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
             {destinyVersion === 2 && (
               <tr>
                 <td>
+                  <span>breaker:barrier</span>
+                  <span>breaker:antibarrier</span>
+                  <span>breaker:shieldpiercing</span>
+                  <span>breaker:overload</span>
+                  <span>breaker:disruption</span>
+                  <span>breaker:unstoppable</span>
+                  <span>breaker:stagger</span>
+                </td>
+                <td>{t('Filter.Breaker')}</td>
+              </tr>
+            )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
                   <span>is:hasmod</span>
                   <span>is:modded</span>
                 </td>

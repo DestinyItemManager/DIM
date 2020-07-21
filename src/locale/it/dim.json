@@ -41,7 +41,9 @@
     "SetNotes": "Impostate note su \"{{notes}}\" per oggetto ID {{id}}",
     "SetTag": "Impostata etichetta su {{tag}} per oggetto ID {{id}}",
     "Setting": "Impostato {{key}} a {{value}}",
-    "TagCleanup": "Ripulite etichette degli oggetti smantellati"
+    "TagCleanup": "Ripulita {{count}} etichetta per oggetti smantellati",
+    "TagCleanupUnknown": "Ripulite alcune etichette per oggetti smantellati",
+    "TagCleanup_plural": "Ripulite {{count}} etichette per oggetti smantellati"
   },
   "Bucket": {
     "Armor": "Armatura",
@@ -73,6 +75,8 @@
     "NotConnected": "Potresti non essere connesso a internet.",
     "NotConnectedOrBlocked": "Potresti non essere connesso ad internet, oppure una estensione per blocco pubblicità o privacy potrebbe bloccare Bungie.net.",
     "NotLoggedIn": "Si prega di autorizzare DIM per poter utilizzare questa applicazione.",
+    "Slow": "Bungie.net è rallentato in questo momento",
+    "SlowDetails": "Bungie.net sta impiegando molto tempo per inviarci le tue informazioni. Questo può succedere quando molti giocatori sono in gioco contemporaneamente, oppure Bungie.net sta avendo problemi. Potresti anche avere problemi di connessione. Continueremo ad attendere una risposta.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
     "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
@@ -144,7 +148,8 @@
     "Title": "Qualcosa è andato storto"
   },
   "ErrorPanel": {
-    "Description": "È probabile che questo sia un problema che riguarda tutte le applicazioni di terze parti. Controlla se Bungie.net o la Destiny 2 Companion App funzionano."
+    "Description": "È probabile che questo sia un problema che riguarda tutte le applicazioni di terze parti. Controlla se Bungie.net o la Destiny 2 Companion App funzionano.",
+    "Troubleshooting": "Guida alla risoluzione dei problemi"
   },
   "FarmingMode": {
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
@@ -189,6 +194,7 @@
     "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
+    "Breaker": "Filtra per tipo di modifica anti-campioni oppure per tipo di campione corrispondente.",
     "BulkClear": "Etichetta rimossa da 1 oggetto.",
     "BulkClear_plural": "Etichette rimosse da {{count}} oggetti.",
     "BulkRevert": "Etichetta ripristinata su 1 oggetto.",
@@ -248,6 +254,7 @@
     "PartialMatch": "Mostra gli oggetti i quali nomi/perk hanno una corrispondenza parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' cercherà solo perks.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
+    "PowerLimit": "Mostra gli oggetti basandosi sul massimo livello di potere al quale possono essere infusi.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
     "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
     "RarityTier": "Mostra gli oggetti basandosi sulla loro rarità.",
@@ -307,6 +314,7 @@
     "StatsBase": "Filtra armature basandosi sul valore di base delle statistiche, senza includere le mod installate.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
+    "SunsetAfter": "Mostra gli oggetti basandosi sull'ultima stagione nella quale possono raggiungere il Limite Potere Stagionale.",
     "Tags": {
       "Archive": "Oscura gli oggetti che ti servono raramente.",
       "Dismantle": "Mostra gli oggetti che potresti voler smantellare.",
@@ -549,10 +557,13 @@
     "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
     "OptimizerExplanationArmour2Mods": "Le Modifiche dell'Armatura 2.0 non sono considerate nel calcolo dei livelli delle statistiche.",
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
+    "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
     "SearchPlaceholder": "Filtro (es. \"veglia degli eroi\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
+    "SelectMinStatTotalDescription": "Imposta il minimo totale delle statistiche per un singolo pezzo di armatura (esclusi oggetti di classe).",
     "SelectPerks": "Seleziona Perks",
     "SelectPower": "Potere Minimo",
     "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
@@ -678,6 +689,7 @@
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
     "OwnedMod": "Questa modifica è nel tuo inventario delle modifiche.",
+    "PowerCap": "",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
@@ -710,6 +722,7 @@
     "Columns": {
       "Archetype": "Archetipo",
       "BaseStats": "Statistiche Base",
+      "Breaker": "Modifica anti-campioni",
       "CustomTotal": "Totale Personalizzato",
       "Damage": "Tipo di Danno",
       "Element": "Elemento",
@@ -730,7 +743,7 @@
       "PerksMods": "Perk, Modifiche & Shader",
       "Quality": "Qualità %",
       "Rating": "Giudizio",
-      "Reacquireable": "Riacquisibile",
+      "Reacquirable": "Riacquisibile",
       "Season": "Stagione",
       "Source": "Fonte",
       "StatQuality": "Qualità Statistiche",
@@ -837,6 +850,9 @@
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
+    "PowerCap": "Limite di Potere",
+    "PowerCapDisclaimer": "Le informazioni sul limite di Potere per le armature di ogni raid, o le armi di \"Ultimo Desiderio\" e \"Giardino della Salvezza\" potrebbero non essere corrette.",
+    "PowerCapWithSeason": "{{powerCap}} (Max stagione {{finalSeason}})",
     "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
     "Quality": "Qualità statistiche",
@@ -874,7 +890,7 @@
     "GDriveImportExplain": "Puoi ripristinare i vecchi dati memorizzati nel browser o in Google Drive. Usa questa funzione se stai aggiornando DIM alla versione 6 e possiedi dati generati in precedenza.",
     "GDriveSignInError": "Errore durante l'accesso a Google Drive:",
     "GDriveSignedIn": "Accesso effettuato su Google Drive come {{email}}",
-    "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il JavaScript di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
+    "GoogleApiBlocked": "Non puoi effettuare l'accesso perché un programma di blocco contenuti lo sta impedendo. Se devi importare vecchi dati da Google Drive, disattiva il blocco contenuti e ricarica la pagina.",
     "Import": "Importa Backup Dati",
     "ImportConfirmDimApi": "Sei sicuro di voler sovrascrivere le tue etichette, loadout e impostazioni attuali? Sostituirà completamente quelli che avevi.",
     "ImportExport": "Backup & Importazione",
@@ -930,8 +946,6 @@
   "Vendors": {
     "Catalysts": "Catalizzatori",
     "Collections": "Collezioni",
-    "DestinyMap": "Trova gli oggetti collezionabili sulla mappa di lowlines",
-    "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
     "Vendors": "Mercanti"

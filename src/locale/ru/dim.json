@@ -41,7 +41,9 @@
     "SetNotes": "Set notes to \"{{notes}}\" for item ID {{id}}",
     "SetTag": "Set tag to {{tag}} for item ID {{id}}",
     "Setting": "Set {{key}} to {{value}}",
-    "TagCleanup": "Cleaned up tags for dismantled items"
+    "TagCleanup": "Cleaned up {{count}} tag for dismantled items",
+    "TagCleanupUnknown": "Cleaned up some tags for dismantled items",
+    "TagCleanup_plural": "Cleaned up {{count}} tags for dismantled items"
   },
   "Bucket": {
     "Armor": "Броня",
@@ -73,6 +75,8 @@
     "NotConnected": "Вы, возможно, не подключены к Интернету.",
     "NotConnectedOrBlocked": "Возможно Вы не подключены к интернету, или блокировщик рекламы или настройки приватности блокируют Bungie.net.",
     "NotLoggedIn": "Для использования подтвердите доступ DIM к данным учетной записи на bungie.net.",
+    "Slow": "Bungie.net is slow right now",
+    "SlowDetails": "Bungie.net is taking a long time to return your information. This can happen when a lot of players are in the game at once, or if Bungie.net is having issues. You also might be having an internet connection issue. We'll keep waiting for a response.",
     "SlowResponse": "Bungie.net слишком долго отвечает на запрос.",
     "Throttled": "Bungie.net устанавливает ограничение на то, сколько запросов DIM может сделать.",
     "Twitter": "Получить обновления статуса сервиса:",
@@ -144,7 +148,8 @@
     "Title": "Что-то пошло не так"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
     "D2Desc": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
@@ -189,6 +194,7 @@
     "AmmoType": "По типу используемых боеприпасов.",
     "ArmorCategory": "Броня по слотам. Шлемы, перчатки, тело, ноги, классовые предметы.",
     "Ascended": "Поднимающие уровень их Света и был ли он поднят или нет.",
+    "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Удалён тег с одного предмета.",
     "BulkClear_plural": "Удалены теги с нескольких предметов в количестве {{count}}.",
     "BulkRevert": "Отменено удаление тега с одного предмета.",
@@ -248,6 +254,7 @@
     "PartialMatch": "С названиями/бонусами совпадающими с введенным текстом. Для поиска фразы целиком \"заключите фразу в кавычки\". Фильтр 'perk:' ищет только по названиям бонусов.",
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "По Силе.",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
     "Quality": "По общей сумме процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
     "RandomRoll": "Со случайными бонусами.",
     "RarityTier": "По редкости.",
@@ -307,6 +314,7 @@
     "StatsBase": "Фильтрует броню на основе базовых статистик, не включая прикрепленные моды.",
     "StatsLoadout": "Подбирает набор предметов которые экипируются для достижения максимального значения определенной характеристики.",
     "StatsMax": "Находит броню с наибольшим количеством для определенного стата. Включает в себя все предметы с самым высоким статом.",
+    "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
     "Tags": {
       "Archive": "Делает тусклыми предметы, которыми вы редко пользуетесь.",
       "Dismantle": "Отмеченные в DIM для уничтожения.",
@@ -549,10 +557,13 @@
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
     "OptimizerExplanationArmour2Mods": "Моды Брони 2.0 не включены в расчет статистики.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
+    "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
+    "SelectMinStatTotal": "Minimum Armor Stat Total",
+    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "Подбор по Бонусам",
     "SelectPower": "Минимальная Сила",
     "SelectPowerDescription": "Устанавливает минимальный уровень силы для всего набора (не отдельные части)",
@@ -678,6 +689,7 @@
     "OverviewTab": "Обзор",
     "Owned": "Предмет есть в инвентаре.",
     "OwnedMod": "Этот мод находится в вашем инвентаре модификаций.",
+    "PowerCap": "",
     "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
@@ -710,6 +722,7 @@
     "Columns": {
       "Archetype": "Archetype",
       "BaseStats": "Base Stats",
+      "Breaker": "Breaker",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
       "Element": "Element",
@@ -730,7 +743,7 @@
       "PerksMods": "Perks, Mods & Shaders",
       "Quality": "Quality %",
       "Rating": "Rating",
-      "Reacquireable": "Reacquireable",
+      "Reacquirable": "Reacquirable",
       "Season": "Season",
       "Source": "Source",
       "StatQuality": "Stat Quality",
@@ -837,6 +850,9 @@
     "NotApplicable": "Н/Д",
     "OfMaxRoll": "{{range}} от максимального",
     "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
+    "PowerCap": "Power Limit",
+    "PowerCapDisclaimer": "Power Limit information may be incorrect for armor from any raid, or weapons from the raids \"Last Wish\" and \"Garden of Salvation.\"",
+    "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "Уровень Силы, получаемый путём прогресса по сюжетному контенту",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
     "Quality": "Качество характеристик",
@@ -874,7 +890,7 @@
     "GDriveImportExplain": "You can restore legacy data stored in your browser or in Google Drive. Use this if you are just now upgrading DIM to v6 and had data stored before that.",
     "GDriveSignInError": "Ошибка входа в Google Диск:",
     "GDriveSignedIn": "Logged in to Google Drive as {{email}}",
-    "GoogleApiBlocked": "Google Диск недоступен, потому что блокировщик контента (рекламы) заблокировал JavaScript-код Google Диска. Пожалуйста, добавьте DIM в исключения блокировщиков и попробуйте снова.",
+    "GoogleApiBlocked": "You can't sign in to Google Drive because a content blocker is blocking it. If you need to import legacy data from Google Drive, disable content blockers and reload.",
     "Import": "Загрузить Бэкап",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
@@ -930,8 +946,6 @@
   "Vendors": {
     "Catalysts": "Катализаторы",
     "Collections": "Коллекция",
-    "DestinyMap": "Найти коллекционные предметы на Картах @lowlines",
-    "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
     "FilterToUnacquired": "Только отсутствующие в Коллекции",
     "Vendors": "Вендоры"

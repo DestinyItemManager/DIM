@@ -14,6 +14,7 @@ import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
   getItemPowerCapFinalSeason,
+  getMasterworkStatNames,
 } from 'app/utils/item-utils';
 
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -51,6 +52,7 @@ import styles from './ItemTable.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -114,10 +116,9 @@ export function getColumns(
         return {
           id: `stat_${statHash}`,
           header: statInfo.displayProperties.hasIcon ? (
-            <BungieImage
-              src={statInfo.displayProperties.icon}
-              title={statInfo.displayProperties.name}
-            />
+            <span title={statInfo.displayProperties.name}>
+              <BungieImage src={statInfo.displayProperties.icon} />
+            </span>
           ) : (
             statLabels[statHash] || statInfo.displayProperties.name
           ),
@@ -307,8 +308,8 @@ export function getColumns(
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
     destinyVersion === 2 && {
-      id: 'reacquireable',
-      header: t('Organizer.Columns.Reacquireable'),
+      id: 'reacquirable',
+      header: t('Organizer.Columns.Reacquirable'),
       value: (item) =>
         item.isDestiny2() &&
         item.collectibleState !== null &&
@@ -316,7 +317,7 @@ export function getColumns(
         !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled),
       defaultSort: SortDirection.DESC,
       cell: booleanCell,
-      filter: (value) => (value ? 'is:reacquireable' : 'not:reaquireable'),
+      filter: (value) => (value ? 'is:reacquirable' : 'not:reaquireable'),
     },
     $featureFlags.reviewsEnabled && {
       id: 'rating',
@@ -398,17 +399,11 @@ export function getColumns(
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         value: (item) =>
-          !item.isExotic && item.isDestiny2() && !item.energy
-            ? item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]?.plug
-                ?.plugItem.displayProperties.name
-            : undefined,
+          item.isDestiny2() ? getWeaponArchetype(item)?.displayProperties.name : undefined,
         cell: (_val, item) =>
-          !item.isExotic && item.isDestiny2() && !item.energy ? (
+          item.isDestiny2() ? (
             <div>
-              {_.compact([
-                item.sockets?.categories.find((c) => c.category.hash === 3956125808)?.sockets[0]
-                  ?.plug,
-              ]).map((p) => (
+              {_.compact([getWeaponArchetypeSocket(item)?.plug]).map((p) => (
                 <PressTip
                   key={p.plugItem.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
@@ -423,6 +418,20 @@ export function getColumns(
           ) : undefined,
         filter: (value) => `perkname:"${value}"`,
       },
+    (destinyVersion === 2 || isWeapon) && {
+      id: 'breaker',
+      header: t('Organizer.Columns.Breaker'),
+      value: (item) => item.isDestiny2() && item.breakerType?.displayProperties.name,
+      cell: (value, item) =>
+        item.isDestiny2() &&
+        value && (
+          <BungieImage
+            className={styles.inlineIcon}
+            src={item.breakerType!.displayProperties.icon}
+          />
+        ),
+      filter: (_, item) => `is:${getItemDamageShortName(item)}`,
+    },
     {
       id: 'perks',
       header:
@@ -480,7 +489,8 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
-        value: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : undefined),
+        value: (item) =>
+          item.isDestiny2() ? getMasterworkStatNames(item.masterworkInfo) : undefined,
       },
     destinyVersion === 2 &&
       isWeapon && {

@@ -30,8 +30,8 @@ const Inventory = React.lazy(() =>
 const Progress = React.lazy(() =>
   import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
 );
-const LoadoutBuilder = React.lazy(() =>
-  import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilder')
+const LoadoutBuilderContainer = React.lazy(() =>
+  import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
 );
 const D1LoadoutBuilder = React.lazy(() =>
   import(/* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
@@ -200,7 +200,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           )}
           <Route path={`${path}/optimizer`} exact>
             {account.destinyVersion === 2 ? (
-              <LoadoutBuilder account={account} />
+              <LoadoutBuilderContainer account={account} />
             ) : (
               <D1LoadoutBuilder />
             )}
@@ -213,7 +213,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               path={`${path}/vendors/:vendorId`}
               exact
               render={({ match }) => (
-                <SingleVendor account={account} vendorHash={match.params.vendorId} />
+                <SingleVendor
+                  key={match.params.vendorId}
+                  account={account}
+                  vendorHash={match.params.vendorId}
+                />
               )}
             />
           )}

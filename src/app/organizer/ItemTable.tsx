@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { storesSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { searchFilterSelector } from 'app/search/search-filters';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
@@ -34,10 +34,10 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch, setItemNote } from 'app/inventory/actions';
+import { touch, setItemNote, touchItem } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
-import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
+import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
 import { StatInfo } from 'app/compare/Compare';
@@ -66,7 +66,7 @@ interface StoreProps {
   };
   isPhonePortrait: boolean;
   enabledColumns: string[];
-  customTotalStatsByClass: KeyedStatHashLists;
+  customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
   loadouts: Loadout[];
   newItems: Set<string>;
 }
@@ -142,7 +142,7 @@ function ItemTable({
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny: DestinyClass = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+  const classIfAny: DestinyClass = categoryToClass[classCategoryHash] ?? DestinyClass.Unknown;
 
   // Calculate the true height of the table header, for sticky-ness
   const tableRef = useRef<HTMLDivElement>(null);
@@ -263,6 +263,7 @@ function ItemTable({
 
         // TODO: Gotta do this differently in react land
         item.locked = lock;
+        dispatch(touchItem(item.id));
       }
       showNotification({
         type: 'success',

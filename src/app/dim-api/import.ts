@@ -15,6 +15,7 @@ import {
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { observeStore } from 'app/utils/redux-utils';
+import _ from 'lodash';
 
 /**
  * Import data (either legacy-format from SyncService or the new DIM Sync export) into DIM Sync.
@@ -53,6 +54,9 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
       const settings = data.settings || data['settings-v1.0'];
       const loadouts = extractLoadouts(data);
       const tags = extractItemAnnotations(data);
+      const triumphs: ExportResponse['triumphs'] = data.triumphs || [];
+      const itemHashTags: ExportResponse['itemHashTags'] = data.itemHashTags || [];
+      const importedSearches: ExportResponse['searches'] = data.searches || [];
 
       if (!loadouts.length && !tags.length) {
         if (!silent) {
@@ -75,6 +79,7 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
             profiles[key] = {
               loadouts: {},
               tags: {},
+              triumphs: [],
             };
           }
           profiles[key].loadouts[loadout.id] = loadout;
@@ -88,16 +93,42 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
             profiles[key] = {
               loadouts: {},
               tags: {},
+              triumphs: [],
             };
           }
           profiles[key].tags[tag.id] = tag;
         }
       }
 
+      for (const triumphData of triumphs) {
+        const { platformMembershipId, triumphs } = triumphData;
+        if (platformMembershipId) {
+          const key = makeProfileKey(platformMembershipId, 2);
+          if (!profiles[key]) {
+            profiles[key] = {
+              loadouts: {},
+              tags: {},
+              triumphs: [],
+            };
+          }
+          profiles[key].triumphs = triumphs;
+        }
+      }
+
+      const searches: DimApiState['searches'] = {
+        1: [],
+        2: [],
+      };
+      for (const search of importedSearches) {
+        searches[search.destinyVersion].push(search.search);
+      }
+
       dispatch(
         profileLoadedFromIDB({
           settings: { ...initialSettingsState, ...settings },
           profiles,
+          itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
+          searches,
           updateQueue: [],
         })
       );

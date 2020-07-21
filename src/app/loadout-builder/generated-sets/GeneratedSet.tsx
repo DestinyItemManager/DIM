@@ -3,20 +3,22 @@ import { DimStore } from '../../inventory/store-types';
 import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
+import { powerIndicatorIcon, AppIcon, faExclamationTriangle } from '../../shell/icons';
 import _ from 'lodash';
-import { getNumValidSets, calculateTotalTier, statTier, sumEnabledStats } from './utils';
+import { getNumValidSets, calculateTotalTier, sumEnabledStats } from './utils';
+import { statTier } from '../utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-import { statHashes } from '../process';
+import { statHashes } from '../types';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { Loadout } from 'app/loadout/loadout-types';
-import { assignModsToArmorSet } from './mod-utils';
+import { assignModsToArmorSet } from '../mod-utils';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import PressTip from 'app/dim-ui/PressTip';
 
 interface Props {
   set: ArmorSet;
@@ -90,11 +92,32 @@ function GeneratedSet({
     ? assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods)
     : {};
 
+  const incorrectStats = _.uniq(
+    set.firstValidSet
+      .map((item) =>
+        item.stats
+          ?.filter((stat) => stat.statHash !== -1000)
+          .map((stat) => stat.baseMayBeWrong && stat.displayProperties.name)
+      )
+      .flat()
+      .filter(Boolean)
+  );
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
+            {set.firstValidSet.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+              <PressTip
+                elementType="span"
+                tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
+                  stats: incorrectStats.join('/'),
+                })}
+              >
+                <AppIcon className={styles.warning} icon={faExclamationTriangle} />
+              </PressTip>
+            )}
             <span className={styles.statSegment}>
               <span>
                 <b>

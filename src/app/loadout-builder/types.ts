@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { DimItem } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -122,5 +123,19 @@ export const LockableBuckets = {
   chest: 14239492,
   leg: 20886954,
   classitem: 1585787867,
-  ghost: 4023194814,
 };
+
+export const statHashes: { [type in StatTypes]: number } = {
+  Mobility: 2996146975,
+  Resilience: 392767087,
+  Recovery: 1943323491,
+  Discipline: 1735777505,
+  Intellect: 144602215,
+  Strength: 4244567218,
+};
+
+export const statValues = Object.values(statHashes);
+export const statKeys = Object.keys(statHashes) as StatTypes[];
+
+// Need to force the type as lodash converts the StatTypes type to string.
+export const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };

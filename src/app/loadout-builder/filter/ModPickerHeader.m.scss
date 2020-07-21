@@ -1,0 +1,27 @@
+@import '../../variables.scss';
+
+.tabs {
+  composes: move-popup-tabs from global;
+  margin-top: 4px;
+}
+
+.tab {
+  composes: move-popup-tab from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+  }
+  @include phone-portrait {
+    flex-direction: column;
+    justify-content: flex-start;
+    img {
+      margin-right: 0;
+      margin-bottom: 4px;
+    }
+  }
+}

@@ -1,0 +1,103 @@
+.inlineIcon {
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  vertical-align: middle;
+  &.smaller {
+    height: 20px;
+    width: 20px;
+    margin: 2.5px;
+  }
+}
+
+.itemTriagePane {
+  margin: 5px 10px 5px;
+}
+
+.triageTable {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  /*  & > div:nth-child(-n + 3) {} */
+  margin-bottom: 15px;
+  & > div {
+    align-self: center;
+    &.header {
+      text-transform: uppercase;
+      align-self: end;
+      /* min-height: 32px; */
+      .inlineIcon {
+        height: 18px;
+        width: 18px;
+        position: relative;
+        top: -2px;
+      }
+    }
+  }
+}
+.headerDivider {
+  /* grid-area: 2 / 1 / 2 / 4; */
+  grid-column: 1 / 11;
+  background: #888;
+  height: 1px;
+}
+.factorCombo {
+  grid-column: 1 / 7;
+  padding: 4px;
+}
+.comboCount {
+  grid-column: 7 / 9;
+  text-align: center;
+}
+.keepMeter {
+  grid-column: 9 / 11;
+  text-align: center;
+  padding-top: 5px;
+}
+.junkIcon {
+  color: hsl(0, 100%, 30%);
+}
+.keepIcon {
+  color: hsl(125, 100%, 30%);
+}
+.tagIcon {
+  position: relative;
+}
+.bestStat {
+  grid-column: 1 / 7;
+}
+.thisStat {
+  grid-column: 7 / 9;
+  text-align: center;
+}
+.dimmed {
+  opacity: 0.8;
+}
+.statValue {
+  font-weight: bold;
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+.statIconWrapper {
+  width: 25px;
+  display: inline-block;
+}
+
+.classIcon {
+  height: 20px;
+  width: 20px !important;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 2.5px;
+}
+
+.weaponSvg {
+  // these have varying aspect ratios and are fill:black by default
+  width: auto !important;
+  filter: invert(1);
+}
+
+.inlineBlock {
+  display: inline-block;
+}

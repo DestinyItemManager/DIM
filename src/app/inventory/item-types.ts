@@ -17,6 +17,7 @@ import {
   DestinyItemPlugBase,
   DestinyDamageTypeDefinition,
   DestinyEnergyTypeDefinition,
+  DestinyBreakerTypeDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
@@ -109,7 +110,9 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** Whether this item can be locked. */
   lockable: boolean;
-  /** Is this item tracked? (D1 quests/bounties). */
+  /** Can this item be tracked? (For quests/bounties.) */
+  trackable: boolean;
+  /** Is this item tracked? (For quests/bounties). */
   tracked: boolean;
   /**
    * Is this item locked?
@@ -196,8 +199,6 @@ export interface D1Item extends DimItem {
   year: number;
   /** Hashes that allow us to figure out where this item can be found (what activities, locations, etc.) */
   sourceHashes: number[];
-  /** Can this item be tracked? (For quests/bounties.) */
-  trackable: boolean;
 
   getStoresService(): D1StoreServiceType;
 }
@@ -216,6 +217,8 @@ export interface D2Item extends DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
   powerCap: number | null;
+  /** an item's current breaker type, if it has one */
+  breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
@@ -257,14 +260,16 @@ export interface DimMasterwork {
   typeIcon: string;
   /** The localized description associated with the type. */
   typeDesc: string | null;
-  /** The stat that is enhanced by this masterwork. */
-  statHash?: number;
-  /** The name of the stat enhanced by this masterwork. */
-  statName?: string;
   /** The tier of the masterwork (not the same as the stat!). */
   tier?: number;
-  /** How much the stat is enhanced by this masterwork. */
-  statValue?: number;
+  /** The stats that are enhanced by this masterwork. */
+  stats?: {
+    hash?: number;
+    /** The name of the stat enhanced by this masterwork. */
+    name?: string;
+    /** How much the stat is enhanced by this masterwork. */
+    value?: number;
+  }[];
 }
 
 export interface DimStat {
@@ -278,6 +283,8 @@ export interface DimStat {
   value: number;
   /** Base stat without bonus perks applied. Important in D2 for armor. */
   base: number;
+  /** If negative mods are found and the investment stat is 0, the base value may be incorrect */
+  baseMayBeWrong?: boolean;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */

@@ -304,7 +304,6 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1807196134, // Phoenix Strife Type 0
     1830829330, // Swordflight 4.1
-    1835747805, // Nature of the Beast
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV
@@ -371,7 +370,6 @@ const missingSources: { [key: string]: number[] } = {
     1600224949, // Anti-Extinction Gloves
     1730282946, // Stella Incognita Bond
     1875607511, // Stella Incognita Mark
-    1946491241, // Truthteller
     2862198970, // Anti-Extinction Gauntlets
     3176347031, // Anti-Extinction Boots
     3304105970, // Anti-Extinction Vest
@@ -1719,7 +1717,6 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1807196134, // Phoenix Strife Type 0
     1830829330, // Swordflight 4.1
-    1835747805, // Nature of the Beast
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV

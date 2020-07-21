@@ -17,6 +17,7 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 export default function ItemPopupHeader({
   item,
@@ -31,7 +32,7 @@ export default function ItemPopupHeader({
   language: string;
   onToggleExpanded(): void;
 }) {
-  const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.element;
+  const hasLeftIcon = item.trackable || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
@@ -93,7 +94,7 @@ export default function ItemPopupHeader({
         {hasLeftIcon && (
           <div className="icon">
             {item.lockable && <LockButton item={item} type="lock" />}
-            {item.isDestiny1() && item.trackable && <LockButton item={item} type="track" />}
+            {item.trackable && <LockButton item={item} type="track" />}
           </div>
         )}
         <div className="item-title-link">
@@ -126,6 +127,9 @@ export default function ItemPopupHeader({
           )}
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
+        )}
+        {item.isDestiny2() && item.breakerType && (
+          <BungieImage className="small-icon" src={item.breakerType.displayProperties.icon} />
         )}
         <div className="item-type-info">{lightString}</div>
         {item.taggable && <ItemTagSelector item={item} />}

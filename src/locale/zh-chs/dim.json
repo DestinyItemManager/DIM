@@ -41,7 +41,9 @@
     "SetNotes": "为物品ID {{id}} 设置了备注“{{notes}}”",
     "SetTag": "为物品ID {{id}} 设置了标签 {{tag}}",
     "Setting": "将 {{key}} 设置为 {{value}}",
-    "TagCleanup": "为已被拆解的物品清除了标签"
+    "TagCleanup": "为 {{count}} 个已被拆解的物品清除了标签",
+    "TagCleanupUnknown": "为一些已被拆解的物品清除了标签",
+    "TagCleanup_plural": "为 {{count}} 个已被拆解的物品清除了标签"
   },
   "Bucket": {
     "Armor": "防具",
@@ -73,6 +75,8 @@
     "NotConnected": "您可能没有连接到互联网。",
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
     "NotLoggedIn": "请授权DIM以使用此应用程式",
+    "Slow": "Bungie.net 目前缓慢",
+    "SlowDetails": "Bungie.net 响应缓慢。这可能是因为玩家过多，或 Bungie.net 目前存在问题。还有可能是你的网络连接问题。我们会继续等待响应。",
     "SlowResponse": "Bungie.net响应缓慢。",
     "Throttled": "Bungie.net限制了DIM可以发起多少个请求。",
     "Twitter": "查看服务器更新状态:",
@@ -144,7 +148,8 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。"
+    "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。",
+    "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
@@ -189,6 +194,7 @@
     "AmmoType": "按照弹药类型显示物品",
     "ArmorCategory": "按照类别显示防具.",
     "Ascended": "显示可以提高光等的物品.",
+    "Breaker": "按照对抗类型或对应的勇士类型筛选。",
     "BulkClear": "移除物品标签",
     "BulkClear_plural": "移除 {{count}} 件物品标签",
     "BulkRevert": "恢复物品标签",
@@ -248,6 +254,7 @@
     "PartialMatch": "显示名称/特性与筛选器文本部分匹配的物品。使用引号精确上搜索。'perk': 筛选器文本 将只搜索该特性物品。",
     "Postmaster": "目前在邮政官处的物品.",
     "PowerLevel": "根据光等来显示物品(武器攻击力; 防具护甲值).",
+    "PowerLimit": "按照可融合到的最大能量等级显示物品。",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
     "RandomRoll": "显示可以随机特性掉落的物品",
     "RarityTier": "按照稀有度显示.",
@@ -307,6 +314,7 @@
     "StatsBase": "根据基础属性值（不包括附加模组）筛选防具。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
+    "SunsetAfter": "按照可达到的赛季能量上限显示物品。",
     "Tags": {
       "Archive": "将很少需要的物品淡化显示",
       "Dismantle": "显示你想要拆除的物品.",
@@ -549,10 +557,13 @@
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
     "OptimizerExplanationArmour2Mods": "属性等级计算不包括防具2.0模组",
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
+    "ProcessingSets": "正在处理 {{character}} 的配装",
     "ResetLocked": "重置锁定物品",
     "SearchPlaceholder": "过滤器（如“英雄哨戒“）",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
+    "SelectMinStatTotal": "最小护甲属性总和",
+    "SelectMinStatTotalDescription": "设置单件护甲的最小属性总和（职业物品除外）。",
     "SelectPerks": "选择特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
@@ -678,6 +689,7 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "该模组在您的模组库存中。",
+    "PowerCap": "",
     "PullItem": "从{{bucket}} 移到{{store}}",
     "ReadLore": "在Ishtar Collective阅读背景故事",
     "ReviewsTab": "评测",
@@ -710,6 +722,7 @@
     "Columns": {
       "Archetype": "原型",
       "BaseStats": "基础数值",
+      "Breaker": "对抗勇士",
       "CustomTotal": "自定义总计",
       "Damage": "伤害",
       "Element": "元素",
@@ -730,7 +743,7 @@
       "PerksMods": "特性、模组与着色器",
       "Quality": "质量 %",
       "Rating": "评分",
-      "Reacquireable": "可重新获取",
+      "Reacquirable": "可重新获取",
       "Season": "赛季",
       "Source": "来源",
       "StatQuality": "属性质量",
@@ -837,6 +850,9 @@
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
     "PercentHelp": "点击获取更多关于品质属性的信息.",
+    "PowerCap": "光等上限",
+    "PowerCapDisclaimer": "突袭护甲，及“最后一愿”或“救赎花园”的武器的能量限制信息可能不准确。",
+    "PowerCapWithSeason": "{{powerCap}}（最大至第 {{finalSeason}} 赛季）",
     "PowerModifier": "季节神器提升光等",
     "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
     "Quality": "品质",
@@ -847,14 +863,14 @@
   },
   "Storage": {
     "ApiPermissionPrompt": {
-      "Description": "DIM can now store your tags, loadouts, and settings on our own servers and sync that data between different versions of DIM, with no separate login. You can import your existing data from the Settings page if you haven't enabled DIM Sync before. This was made possible by the support of our OpenCollective backers!",
+      "Description": "DIM 现在可以将你的标签、配装和设置存储在云端，并将其同步给不同版本的 DIM，且无需另外创建账号。如果你从未启用过 DIM 同步，你可以在设置里导入现有数据。这个功能离不开我们 OpenCollective 支持者的帮助！",
       "No": "现在不行",
       "Title": "启用 DIM 同步吗？",
       "Yes": "启用同步"
     },
     "AuditLog": "DIM 同步更改历史",
     "AuditLogLabel": "查看以往数据更改",
-    "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
+    "AutoBackup": "为了以防万一，我们已经把你的数据备份到了下载文件夹里的 dim-data.json 文件。",
     "BackUpFirst": "为了以防万一，在全部删除数据前，你必须先将其备份。",
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
     "DeleteAllData": "从 DIM 同步服务器删除所有数据",
@@ -871,21 +887,21 @@
     "Export": "下载数据备份",
     "GDriveImport": "从旧的 Google Drive 或本地存储数据导入",
     "GDriveImportButton": "导入旧数据",
-    "GDriveImportExplain": "You can restore legacy data stored in your browser or in Google Drive. Use this if you are just now upgrading DIM to v6 and had data stored before that.",
+    "GDriveImportExplain": "你可以还原浏览器或 Google 云端硬盘中的旧数据。如果你刚刚升级到 DIM v6，并在旧版中存有数据，请使用这个选项。",
     "GDriveSignInError": "登陆Google云端硬碟时出错:",
     "GDriveSignedIn": "已以 {{email}} 登录 Google 云端硬盘",
-    "GoogleApiBlocked": "Google云端硬盘不可用，可能是内容拦截器或广告拦截拓展阻止了Google云端硬盘的JavaScript。请在您的内容拦截器中设置DIM为白名单后重试。",
+    "GoogleApiBlocked": "你无法登录到 Google 云端硬盘，因为它被内容拦截器屏蔽了。如果你需要从 Google 云端硬盘导入旧版数据，请禁用拦截器后刷新页面。",
     "Import": "导入数据备份",
     "ImportConfirmDimApi": "你确定要用此版本的数据覆盖标签、配装和设置吗？旧数据将被完全覆盖。",
     "ImportExport": "备份和导入",
     "ImportFailed": "导入失败！{{error}}",
     "ImportNoFile": "没有选择文件！",
     "ImportNotification": {
-      "FailedBody": "Unable to import data. {{error}}",
-      "FailedTitle": "Import Failed",
-      "NoData": "No loadouts or tags found in the backup",
+      "FailedBody": "无法导入数据。 {{error}}",
+      "FailedTitle": "导入失败",
+      "NoData": "未在备份中找到配装或标签",
       "SuccessBodyForced": "已从你的备份中导入了 {{loadouts}} 个配装和 {{tags}} 个已标记的物品到 DIM 同步，并覆盖了旧内容。",
-      "SuccessBodyLocal": "Imported settings, {{loadouts}} loadouts, and {{tags}} tagged items from your backup into local storage, replacing what was already there. We cannot guarantee that local storage won't be lost - consider enabling DIM Sync.",
+      "SuccessBodyLocal": "已从你的备份向本地存储导入并覆盖了设置、{{loadouts}} 个配装，和 {{tags}} 个已标记的物品。我们不能保证本地存储里的数据完好——请考虑启用 DIM 同步。",
       "SuccessTitle": "导入成功"
     },
     "ImportTooManyFiles": "请选择一个档案导入。",
@@ -930,8 +946,6 @@
   "Vendors": {
     "Catalysts": "催化剂",
     "Collections": "收藏品",
-    "DestinyMap": "在lowlines'Destiny map查看收集品",
-    "DestinySets": "在Destiny Set查看更多的装备套组",
     "Engram": "奖励记忆水晶",
     "FilterToUnacquired": "仅显示未收集物品",
     "Vendors": "商贩"

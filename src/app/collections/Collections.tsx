@@ -82,7 +82,7 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
 
   return (
-    <div className="vendor d2-vendors dim-page">
+    <div className="collections-page d2-vendors dim-page">
       <ErrorBoundary name="Catalysts">
         <Catalysts defs={defs} profileResponse={profileResponse} />
       </ErrorBoundary>
@@ -117,24 +117,6 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
           />
         )}
       </ErrorBoundary>
-      <div className="collections-partners">
-        <a
-          className="collections-partner dim-button"
-          target="_blank"
-          rel="noopener"
-          href="https://destinysets.com"
-        >
-          {t('Vendors.DestinySets')}
-        </a>
-        <a
-          className="collections-partner dim-button"
-          target="_blank"
-          rel="noopener"
-          href="https://lowlidev.com.au/destiny/maps"
-        >
-          {t('Vendors.DestinyMap')}
-        </a>
-      </div>
     </div>
   );
 }

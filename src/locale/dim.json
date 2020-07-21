@@ -148,7 +148,8 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -193,6 +194,7 @@
     "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
+    "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Removed tag from 1 item.",
     "BulkClear_plural": "Removed tags from {{count}} items.",
     "BulkRevert": "Reverted tag on 1 item.",
@@ -553,16 +555,20 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible. To get accurate results, remove all mods with negative stat contributions.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
+    "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "SelectMinStatTotal": "Minimum Armor Stat Total",
+    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
+    "StatIncorrectWarning": "Please remove any mods with negative stat values to get accurate results.\n\nDue to negative stat modifiers, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
@@ -700,6 +706,7 @@
       "Track": "Track {{itemType}}",
       "Untrack": "Untrack {{itemType}}"
     },
+    "TriageTab": "Triage",
     "Vault": "Vault"
   },
   "Notes": {
@@ -717,6 +724,7 @@
     "Columns": {
       "Archetype": "Archetype",
       "BaseStats": "Base Stats",
+      "Breaker": "Breaker",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
       "Element": "Element",
@@ -737,7 +745,7 @@
       "PerksMods": "Perks, Mods & Shaders",
       "Quality": "Quality %",
       "Rating": "Rating",
-      "Reacquireable": "Reacquireable",
+      "Reacquirable": "Reacquirable",
       "Season": "Season",
       "Source": "Source",
       "StatQuality": "Stat Quality",
@@ -853,7 +861,8 @@
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "TotalIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -884,7 +893,7 @@
     "GDriveImportExplain": "You can restore legacy data stored in your browser or in Google Drive. Use this if you are just now upgrading DIM to v6 and had data stored before that.",
     "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignedIn": "Logged in to Google Drive as {{email}}",
-    "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
+    "GoogleApiBlocked": "You can't sign in to Google Drive because a content blocker is blocking it. If you need to import legacy data from Google Drive, disable content blockers and reload.",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
@@ -940,8 +949,6 @@
   "Vendors": {
     "Catalysts": "Catalysts",
     "Collections": "Collections",
-    "DestinyMap": "Find collectibles on lowlines' Destiny map",
-    "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
     "Vendors": "Vendors"

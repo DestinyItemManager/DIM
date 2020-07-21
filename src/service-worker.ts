@@ -35,7 +35,7 @@ const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
   // These have their own pages (return.html and gdrive-return.html)
   // This regex matches on query string too, so no anchors!
-  denylist: [/return\.html/, /\.well-known/],
+  denylist: [/return\.html/, /\.well-known/, /\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$/],
 });
 registerRoute(navigationRoute);
 
