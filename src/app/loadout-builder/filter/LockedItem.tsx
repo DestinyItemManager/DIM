@@ -1,12 +1,12 @@
 import React from 'react';
-import { LockedItemType } from './types';
+import { LockedItemType } from '../types';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
-import ClosableContainer from './ClosableContainer';
+import ClosableContainer from '../ClosableContainer';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import styles from './LockedItem.m.scss';
-import ArmorBucketIcon from './ArmorBucketIcon';
+import ArmorBucketIcon from '../ArmorBucketIcon';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 

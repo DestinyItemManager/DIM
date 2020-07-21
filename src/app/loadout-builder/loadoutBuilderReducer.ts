@@ -9,7 +9,7 @@ import {
 } from './types';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
-import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
+import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
 

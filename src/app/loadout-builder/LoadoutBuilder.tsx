@@ -8,13 +8,14 @@ import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from 'app/store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
+import { filterGeneratedSets } from './generated-sets/utils';
+import { isLoadoutBuilderItem } from './utils';
 import { filterItems } from './preProcessFilter';
 import { StatTypes, ItemsByBucket, statKeys, statHashToType } from './types';
 import { storesSelector } from '../inventory/selectors';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import FilterBuilds from './generated-sets/FilterBuilds';
+import FilterBuilds from './filter/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import SearchFilterInput from 'app/search/SearchFilterInput';
@@ -25,7 +26,7 @@ import {
   searchFiltersConfigSelector,
 } from 'app/search/search-filter';
 import styles from './LoadoutBuilder.m.scss';
-import LockArmorAndPerks from './LockArmorAndPerks';
+import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { useProcess } from './hooks/useProcess';

@@ -7,10 +7,9 @@ import {
   LockedItemType,
 } from './types';
 import { Armor2ModPlugCategories, getItemDamageShortName } from 'app/utils/item-utils';
-import { doEnergiesMatch } from './generated-sets/mod-utils';
-import { canSlotMod } from './generated-sets/utils';
+import { doEnergiesMatch } from './mod-utils';
+import { canSlotMod, getBaseStatValues } from './utils';
 import { DimItem } from 'app/inventory/item-types';
-import { getBaseStatValues } from './utils';
 
 const bucketsToCategories = {
   [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,

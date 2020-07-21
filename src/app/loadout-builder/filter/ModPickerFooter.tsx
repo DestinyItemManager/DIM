@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 
 import styles from './ModPickerFooter.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
-import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
+import { LockedArmor2ModMap, LockedArmor2Mod } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 

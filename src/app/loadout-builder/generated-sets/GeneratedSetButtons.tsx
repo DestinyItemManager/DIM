@@ -8,7 +8,7 @@ import styles from './GeneratedSetButtons.m.scss';
 import { Loadout } from 'app/loadout/loadout-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { statTier } from './utils';
+import { statTier } from '../utils';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set

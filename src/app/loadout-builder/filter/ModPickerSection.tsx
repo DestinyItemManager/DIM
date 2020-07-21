@@ -1,8 +1,8 @@
 import React from 'react';
-import { SelectableArmor2Mod } from './locked-armor/SelectableBungieImage';
+import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { LockedArmor2Mod, ModPickerCategory } from './types';
+import { LockedArmor2Mod, ModPickerCategory } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export default function ModPickerSection({

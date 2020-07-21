@@ -1,7 +1,7 @@
 import React, { useState, Dispatch } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
+import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from '../utils';
 import {
   LockableBuckets,
   LockedItemType,
@@ -16,7 +16,7 @@ import {
   LockedArmor2ModMap,
   LockedArmor2Mod,
   ModPickerCategories,
-} from './types';
+} from '../types';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
@@ -24,7 +24,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
-import LoadoutBucketDropTarget from './locked-armor/LoadoutBucketDropTarget';
+import LoadoutBucketDropTarget from '../locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PerkPicker from './PerkPicker';
 import ReactDOM from 'react-dom';
@@ -34,7 +34,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import ModPicker from './ModPicker';
-import { LoadoutBuilderAction } from './loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
