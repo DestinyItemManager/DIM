@@ -520,7 +520,7 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
   let endIndex = interp.findIndex((p) => p.value > value);
 
   // value < 0 is for mods with negative stats
-  if (endIndex < 0 || value < 0) {
+  if (endIndex < 0 || (value < 0 && armorStats.includes(statDisplay.statHash))) {
     endIndex = interp.length - 1;
   }
   const startIndex = Math.max(0, endIndex - 1);
