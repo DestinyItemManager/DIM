@@ -1,0 +1,25 @@
+.light {
+  composes: light from global;
+  float: none;
+
+  :global(.app-icon) {
+    font-size: 10px;
+    vertical-align: -0.125em;
+    margin-right: 0;
+  }
+}
+
+.statSegment {
+  &::after {
+    content: ' | ';
+  }
+}
+
+.nonActiveStat {
+  opacity: 0.4;
+}
+
+.warning {
+  color: yellow;
+  margin-right: 4px;
+}
