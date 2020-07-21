@@ -298,31 +298,9 @@ export function statTier(stat: number) {
  */
 export function generateMixesFromPerks(
   item: DimItem,
-  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
-) {
-  return generateMixesFromPerksOrStats(item, onMix);
-}
-
-/**
- * This is an awkward helper used by both byStatMix (to generate the list of
- * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
- * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
- * calculates them directly from the stats.
- *
- * It has two modes depending on whether an "onMix" callback is provided - if it is, it
- * assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
- * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
- * returns all the mixes. This is like this so we can share this complicated bit of logic
- * and not get it out of sync.
- *
- * TODO This is now only used for Armor 1.0 alt perk mixes. It should probably have the
- * stat mix functionality removed and the onMix function merged into this.
- */
-function generateMixesFromPerksOrStats(
-  item: DimItem,
   /** Callback when a new mix is found. */
-  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
-) {
+  chosenValues: number[]
+): DimPlug[] {
   const stats = item.stats;
 
   if (!stats || stats.length < 3) {
@@ -351,8 +329,8 @@ function generateMixesFromPerksOrStats(
               const existingMixAlts = altPerks[mixIndex];
               const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
               altPerks.push(plugs);
-              if (!onMix(optionStat, plugs)) {
-                return [];
+              if (plugs && optionStat.every((val, index) => val === chosenValues[index])) {
+                return plugs;
               }
               mixes.push(optionStat);
             }
@@ -362,7 +340,7 @@ function generateMixesFromPerksOrStats(
     }
   }
 
-  return mixes;
+  return [];
 }
 
 /**
