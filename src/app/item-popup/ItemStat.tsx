@@ -48,7 +48,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  let baseBar = item ? stat.base : stat.value;
+  let baseBar = item ? Math.min(stat.base, stat.value) : stat.value;
 
   if (moddedStatValue && moddedStatValue < 0) {
     baseBar = Math.max(0, baseBar + moddedStatValue);
