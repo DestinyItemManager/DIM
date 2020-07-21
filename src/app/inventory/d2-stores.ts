@@ -413,7 +413,8 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getLight(store, maxLightItemSet(stores, store));
+      const maxLightSet = maxLightItemSet(stores, store);
+      const maxBasePower = getLight(store, maxLightSet);
       const hasClassified = stores.some((s) =>
         s.items.some(
           (i) =>
@@ -426,7 +427,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hash: -3,
         name: t('Stats.MaxGearPower'),
         hasClassified,
-        description: def.displayProperties.description,
+        description: '',
         value: maxBasePower,
         icon: helmetIcon,
       };
@@ -436,7 +437,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hash: -2,
         name: t('Stats.PowerModifier'),
         hasClassified: false,
-        description: def.displayProperties.description,
+        description: '',
         value: artifactPower,
         icon: xpIcon,
       };
@@ -445,7 +446,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hash: -1,
         name: t('Stats.MaxTotalPower'),
         hasClassified,
-        description: def.displayProperties.description,
+        description: '',
         value: maxBasePower + artifactPower,
         icon: bungieNetPath(def.displayProperties.icon),
       };

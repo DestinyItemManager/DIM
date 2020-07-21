@@ -4,7 +4,7 @@ import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
 import { D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
-import _ from 'lodash';
+
 import './GearPower.scss';
 
 import { connect } from 'react-redux';
@@ -13,19 +13,12 @@ import { connect } from 'react-redux';
 
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
-import { D2Categories } from '../destiny2/d2-buckets';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { itemPop } from 'app/dim-ui/scroll';
-
-const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
-// order to display a list of all 8 gear slots
-const gearSlotOrder = [
-  ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
-  ...D2Categories.Armor,
-];
+import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
 
 interface StoreProps {
   stores: D2Store[];
@@ -55,15 +48,13 @@ function GearPower({ stores }: StoreProps) {
     return null;
   }
 
-  const maxLightItems = _.sortBy(maxLightItemSet(stores, selectedStore), (i) =>
-    gearSlotOrder.indexOf(i.type)
-  );
+  const maxLightItems = maxLightItemSet(stores, selectedStore);
   const maxBasePower = getLight(selectedStore, maxLightItems);
   const powerFloor = Math.floor(maxBasePower);
   const header = (
     <h1>
       <img src={selectedStore.icon} />
-      {`${selectedStore.name} (${maxBasePower})`}
+      {selectedStore.name} ({<FractionalPowerLevel power={maxBasePower} />})
     </h1>
   );
   return (

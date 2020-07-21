@@ -4,6 +4,14 @@ import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D2Categories } from '../destiny2/d2-buckets';
+
+const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
+// order to display a list of all 8 gear slots
+const gearSlotOrder = [
+  ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
+  ...D2Categories.Armor,
+];
 
 /**
  * Creates a new loadout, with all of the items equipped.
@@ -28,7 +36,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   if (store.isDestiny2()) {
     const exactLight = _.sumBy(items, (i) => i.primStat!.value) / items.length;
-    return Math.floor(exactLight * 10) / 10;
+    return Math.floor(exactLight * 1000) / 1000;
   } else {
     const itemWeight = {
       Weapons: 6,
@@ -105,7 +113,7 @@ export function optimalItemSet(
     }
   });
 
-  return Object.values(items);
+  return _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
 }
 
 export function optimalLoadout(

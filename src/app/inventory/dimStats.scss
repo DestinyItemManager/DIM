@@ -67,6 +67,7 @@
       display: flex;
       flex-direction: row;
       justify-items: left;
+      align-items: center;
       &:first-child {
         img {
           opacity: 0.6;

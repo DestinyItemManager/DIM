@@ -10,6 +10,7 @@ import { armorStats } from './store/stats';
 import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { showGearPower } from 'app/gear-power/gear-power';
+import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
 
 interface Props {
   stats?: DimStore['stats'];
@@ -80,8 +81,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       ]).map((stat) => ({ stat, tooltip: powerTooltip(stat) }));
 
       const statTooltip = (stat: DimCharacterStat): string =>
-        `${stat.name}: ${stat.value}
-${stat.description}`;
+        `${stat.name}: ${stat.value}\n${stat.description}`;
       const statInfos = armorStats
         .map((h) => stats[h])
         .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
@@ -90,38 +90,65 @@ ${stat.description}`;
         <div className="stat-bars destiny2">
           {[powerInfos, statInfos].map((stats, index) => (
             <div key={index} className="stat-row">
-              {stats.map(({ stat, tooltip }) =>
+              {stats.map(({ stat, tooltip }) => {
+                const displayValue =
+                  stat.hash < 0 ? <FractionalPowerLevel power={stat.value} /> : stat.value;
                 // if this is the "max gear power" stat (hash -3),
                 // add in an onClick and an extra class, and skip the PressTip
-                stat.hash === -3 && storeId ? (
-                  <React.Fragment key={stat.hash}>
+                const isMaxGearPower = stat.hash === -3 && storeId;
+
+                return (
+                  <PressTip key={stat.hash} tooltip={tooltip} allowClickThrough={true}>
                     <div
-                      className="stat pointerCursor"
+                      className={clsx('stat', { pointerCursor: isMaxGearPower })}
                       aria-label={`${stat.name} ${stat.value}`}
                       role="group"
-                      onClick={() => {
-                        showGearPower(storeId);
-                      }}
+                      onClick={
+                        isMaxGearPower
+                          ? () => {
+                              showGearPower(storeId!);
+                            }
+                          : undefined
+                      }
                     >
                       <img src={stat.icon} alt={stat.name} />
                       <div>
-                        {stat.value}
-                        {stat.hasClassified && <sup>*</sup>}
-                      </div>
-                    </div>
-                  </React.Fragment>
-                ) : (
-                  <PressTip key={stat.hash} tooltip={tooltip}>
-                    <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-                      <img src={stat.icon} alt={stat.name} />
-                      <div>
-                        {stat.value}
+                        {displayValue}
                         {stat.hasClassified && <sup>*</sup>}
                       </div>
                     </div>
                   </PressTip>
-                )
-              )}
+                );
+
+                // return stat.hash === -3 && storeId ? (
+                //   <React.Fragment key={stat.hash}>
+                //     <div
+                //       className="stat pointerCursor"
+                //       aria-label={`${stat.name} ${displayValue}`}
+                //       role="group"
+                //       onClick={() => {
+                //         showGearPower(storeId);
+                //       }}
+                //     >
+                //       <img src={stat.icon} alt={stat.name} />
+                //       <div>
+                //         {displayValue}
+                //         {stat.hasClassified && <sup>*</sup>}
+                //       </div>
+                //     </div>
+                //   </React.Fragment>
+                // ) : (
+                //   <PressTip key={stat.hash} tooltip={tooltip}>
+                //     <div className="stat" aria-label={`${stat.name} ${displayValue}`} role="group">
+                //       <img src={stat.icon} alt={stat.name} />
+                //       <div>
+                //         {displayValue}
+                //         {stat.hasClassified && <sup>*</sup>}
+                //       </div>
+                //     </div>
+                //   </PressTip>
+                // );
+              })}
             </div>
           ))}
         </div>
