@@ -331,7 +331,9 @@ class Compare extends React.Component<Props, State> {
     comparisonItems = this.state.comparisonItems
   ) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
+    const exampleItemElementIcon = (
+      <ElementIcon key={exampleItem.id} element={exampleItem.element} />
+    );
     const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
     const specialtyModSlotName = getItemSpecialtyModSlotDisplayName(exampleItem);
 
@@ -437,7 +439,9 @@ class Compare extends React.Component<Props, State> {
     comparisonItems = this.state.comparisonItems
   ) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
+    const exampleItemElementIcon = (
+      <ElementIcon key={exampleItem.id} element={exampleItem.element} />
+    );
 
     const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
       item[key] === exampleItem[key];
