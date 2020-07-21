@@ -8,7 +8,7 @@ import { ArmorSet, statHashes, LockedArmor2ModMap, StatTypes } from '../types';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 import { t } from 'app/i18next-t';
 import { statTier } from '../utils';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { Armor2ModPlugCategories, getPossiblyIncorrectStats } from 'app/utils/item-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './SetStats.m.scss';
 
@@ -24,16 +24,7 @@ function SetStats({ defs, set, statOrder, enabledStats, lockedArmor2Mods }: Prop
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
-  const incorrectStats = _.uniq(
-    set.firstValidSet
-      .map((item) =>
-        item.stats
-          ?.filter((stat) => stat.statHash !== -1000)
-          .map((stat) => stat.baseMayBeWrong && stat.displayProperties.name)
-      )
-      .flat()
-      .filter(Boolean)
-  );
+  const incorrectStats = _.uniq(set.firstValidSet.map(getPossiblyIncorrectStats).flat());
 
   const displayStats = { ...set.stats };
 
