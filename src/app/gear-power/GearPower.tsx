@@ -16,7 +16,7 @@ import { useLocation } from 'react-router';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
-import BucketIcon from 'app/dim-ui/BucketIcon';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { itemPop } from 'app/dim-ui/scroll';
 

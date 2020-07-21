@@ -9,7 +9,7 @@ import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import { DimItem } from 'app/inventory/item-types';
-import BungieImage from './BungieImage';
+import BungieImage from '../BungieImage';
 
 const bucketIcons = {
   Kinetic: dmgKinetic,

@@ -28,6 +28,7 @@ import { getAllItems } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
