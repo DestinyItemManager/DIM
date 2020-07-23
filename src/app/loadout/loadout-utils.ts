@@ -67,11 +67,12 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 export function optimalItemSet(
   applicableItems: DimItem[],
   bestItemFn: (item: DimItem) => number
-): DimItem[] {
+): Record<'equippable' | 'unrestricted', DimItem[]> {
   const itemsByType = _.groupBy(applicableItems, (i) => i.type);
 
   // Pick the best item
   let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
+  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
 
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
@@ -113,7 +114,9 @@ export function optimalItemSet(
     }
   });
 
-  return _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+
+  return { equippable, unrestricted };
 }
 
 export function optimalLoadout(
@@ -121,10 +124,10 @@ export function optimalLoadout(
   bestItemFn: (item: DimItem) => number,
   name: string
 ): Loadout {
-  const items = optimalItemSet(applicableItems, bestItemFn);
+  const { equippable } = optimalItemSet(applicableItems, bestItemFn);
   return newLoadout(
     name,
-    items.map((i) => convertToLoadoutItem(i, true))
+    equippable.map((i) => convertToLoadoutItem(i, true))
   );
 }
 /** Create a loadout from all of this character's items that can be in loadouts */

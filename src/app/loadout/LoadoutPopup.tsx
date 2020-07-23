@@ -142,7 +142,7 @@ class LoadoutPopup extends React.Component<Props> {
     } = this.props;
 
     // For the most part we don't need to memoize this - this menu is destroyed when closed
-    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
+    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
     const artifactLight = getArtifactBonus(dimStore);
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;

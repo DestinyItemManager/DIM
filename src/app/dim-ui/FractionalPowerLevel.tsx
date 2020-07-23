@@ -5,10 +5,13 @@ export function FractionalPowerLevel({ power }: { power: number }) {
   const numerator = (power * 8) % 8 || null;
   return (
     <span className={styles.fractionalPowerLevel}>
-      {Math.floor(power)}{' '}
+      {Math.floor(power)}
       {numerator && (
         <>
-          <sup className={styles.subSup}>{numerator}</sup>⁄<sub className={styles.subSup}>8</sub>
+          &#8239;
+          <span className={styles.fraction}>
+            <sup>{numerator}</sup>⁄<sub>8</sub>
+          </span>
         </>
       )}
     </span>

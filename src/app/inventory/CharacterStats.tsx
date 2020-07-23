@@ -72,19 +72,39 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </div>
       );
     } else {
-      const powerTooltip = (stat: DimCharacterStat): string =>
-        `${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
-      const powerInfos = _.compact([
+      const powerTooltip = (
+        stat: NonNullable<DimStore['stats']['maxGearPower']>
+      ): React.ReactNode => (
+        <>
+          {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
+          {stat.richTooltip && (
+            <>
+              <hr />
+              <div className="richTooltipWrapper">
+                {stat.richTooltip}
+                {stat.differentEquippableMaxGearPower && (
+                  <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+                )}
+              </div>
+            </>
+          )}
+        </>
+      );
+      const powerInfos: {
+        stat: NonNullable<DimStore['stats']['maxGearPower']>;
+        tooltip: React.ReactNode;
+      }[] = _.compact([
         stats.maxTotalPower,
         stats.maxGearPower,
         stats.powerModifier,
       ]).map((stat) => ({ stat, tooltip: powerTooltip(stat) }));
 
-      const statTooltip = (stat: DimCharacterStat): string =>
+      const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
         `${stat.name}: ${stat.value}\n${stat.description}`;
-      const statInfos = armorStats
-        .map((h) => stats[h])
-        .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
+      const statInfos: {
+        stat: NonNullable<DimStore['stats']['maxGearPower']>;
+        tooltip: React.ReactNode;
+      }[] = armorStats.map((h) => stats[h]).map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
       return (
         <div className="stat-bars destiny2">
@@ -92,7 +112,13 @@ export default class CharacterStats extends React.PureComponent<Props> {
             <div key={index} className="stat-row">
               {stats.map(({ stat, tooltip }) => {
                 const displayValue =
-                  stat.hash < 0 ? <FractionalPowerLevel power={stat.value} /> : stat.value;
+                  stat.hash < 0 ? (
+                    <span className="powerStat">
+                      <FractionalPowerLevel power={stat.value} />
+                    </span>
+                  ) : (
+                    stat.value
+                  );
                 // if this is the "max gear power" stat (hash -3),
                 // add in an onClick and an extra class, and skip the PressTip
                 const isMaxGearPower = stat.hash === -3 && storeId;
@@ -114,40 +140,13 @@ export default class CharacterStats extends React.PureComponent<Props> {
                       <img src={stat.icon} alt={stat.name} />
                       <div>
                         {displayValue}
-                        {stat.hasClassified && <sup>*</sup>}
+                        {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
+                          <sup className="asterisk">*</sup>
+                        )}
                       </div>
                     </div>
                   </PressTip>
                 );
-
-                // return stat.hash === -3 && storeId ? (
-                //   <React.Fragment key={stat.hash}>
-                //     <div
-                //       className="stat pointerCursor"
-                //       aria-label={`${stat.name} ${displayValue}`}
-                //       role="group"
-                //       onClick={() => {
-                //         showGearPower(storeId);
-                //       }}
-                //     >
-                //       <img src={stat.icon} alt={stat.name} />
-                //       <div>
-                //         {displayValue}
-                //         {stat.hasClassified && <sup>*</sup>}
-                //       </div>
-                //     </div>
-                //   </React.Fragment>
-                // ) : (
-                //   <PressTip key={stat.hash} tooltip={tooltip}>
-                //     <div className="stat" aria-label={`${stat.name} ${displayValue}`} role="group">
-                //       <img src={stat.icon} alt={stat.name} />
-                //       <div>
-                //         {displayValue}
-                //         {stat.hasClassified && <sup>*</sup>}
-                //       </div>
-                //     </div>
-                //   </PressTip>
-                // );
               })}
             </div>
           ))}

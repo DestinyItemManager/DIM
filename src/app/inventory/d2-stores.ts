@@ -39,6 +39,7 @@ import { currentAccountSelector } from 'app/accounts/reducer';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getArtifactBonus } from './stores-helpers';
+import { ItemPowerSet } from './ItemPowerSet';
 
 /**
  * Update the high level character information for all the stores
@@ -413,8 +414,11 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxLightSet = maxLightItemSet(stores, store);
-      const maxBasePower = getLight(store, maxLightSet);
+      const { equippable, unrestricted } = maxLightItemSet(stores, store);
+      const unrestrictedMaxGearPower = getLight(store, unrestricted);
+      const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
+      const equippableMaxGearPower = getLight(store, equippable);
+
       const hasClassified = stores.some((s) =>
         s.items.some(
           (i) =>
@@ -423,12 +427,17 @@ function makeD2StoresService(): D2StoreServiceType {
         )
       );
 
+      const differentEquippableMaxGearPower =
+        unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower;
+
       store.stats.maxGearPower = {
         hash: -3,
-        name: t('Stats.MaxGearPower'),
+        name: 'Maximum Power of all gear',
         hasClassified,
         description: '',
-        value: maxBasePower,
+        differentEquippableMaxGearPower,
+        richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
+        value: unrestrictedMaxGearPower,
         icon: helmetIcon,
       };
 
@@ -447,7 +456,7 @@ function makeD2StoresService(): D2StoreServiceType {
         name: t('Stats.MaxTotalPower'),
         hasClassified,
         description: '',
-        value: maxBasePower + artifactPower,
+        value: unrestrictedMaxGearPower + artifactPower,
         icon: bungieNetPath(def.displayProperties.icon),
       };
     }

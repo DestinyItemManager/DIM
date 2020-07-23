@@ -350,6 +350,7 @@
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "General": {
+    "ClickForDetails": "Click for details",
     "UserGuideLink": "User guide"
   },
   "Ghost": {
@@ -845,7 +846,6 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intellect",
-    "MaxGearPower": "Maximum Power of equippable gear",
     "MaxTotalPower": "Maximum total Power",
     "Milliseconds": "ms",
     "NoBonus": "No Bonus",

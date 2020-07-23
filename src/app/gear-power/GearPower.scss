@@ -1,10 +1,21 @@
 .gearPowerSheet {
-  img {
-    height: 20px;
-    width: 20px;
+  .gearPowerHeader {
+    display: flex;
 
-    vertical-align: middle;
+    img {
+      margin-right: 10px;
+      height: 48px;
+      width: 48px;
+    }
+
+    h1:first-child {
+      opacity: 0.6;
+    }
+    h1:last-child {
+      margin-bottom: 0;
+    }
   }
+
   .invert {
     filter: invert(1);
   }
@@ -26,6 +37,14 @@
     & > div {
       grid-row-end: span 2;
     }
+
+    img {
+      height: 20px;
+      width: 20px;
+
+      vertical-align: middle;
+    }
+
     .Kinetic,
     .Energy,
     .Power {
