@@ -1,7 +1,7 @@
 import React, { useMemo, Dispatch } from 'react';
 import { DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, LockedArmor2Mod } from '../types';
+import { LockedItemType, LockedArmor2Mod, StatTypes } from '../types';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
@@ -28,6 +28,7 @@ export default function GeneratedSetItem({
   defs,
   statValues,
   itemOptions,
+  statOrder,
   lockedMods,
   lbDispatch,
 }: {
@@ -36,10 +37,15 @@ export default function GeneratedSetItem({
   defs: D2ManifestDefinitions;
   statValues: number[];
   itemOptions: DimItem[];
+  statOrder: StatTypes[];
   lockedMods?: LockedArmor2Mod[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const altPerks = useMemo(() => generateMixesFromPerks(item, statValues), [item, statValues]);
+  const altPerks = useMemo(() => generateMixesFromPerks(item, statValues, statOrder), [
+    item,
+    statValues,
+    statOrder,
+  ]);
 
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
   const removeLockedItem = (item: LockedItemType) =>

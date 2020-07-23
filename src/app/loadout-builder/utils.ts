@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { DimPlug, DimItem, D2Item, DimSocket } from 'app/inventory/item-types';
-import { statValues, LockedItemType, LockedMod, LockedArmor2Mod } from './types';
+import { statValues, LockedItemType, LockedMod, LockedArmor2Mod, StatTypes } from './types';
 import {
   DestinyInventoryItemDefinition,
   TierType,
@@ -299,7 +299,8 @@ export function statTier(stat: number) {
 export function generateMixesFromPerks(
   item: DimItem,
   /** Callback when a new mix is found. */
-  chosenValues: number[]
+  chosenValues: number[],
+  statOrder: StatTypes[]
 ): DimPlug[] {
   const stats = item.stats;
 
@@ -307,7 +308,7 @@ export function generateMixesFromPerks(
     return [];
   }
 
-  const mixes: number[][] = [getOrderedStatValues(item)];
+  const mixes: number[][] = [getOrderedStatValues(item, statOrder)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -344,18 +345,11 @@ export function generateMixesFromPerks(
 }
 
 /**
- * This gets stat values for an item ordered by the statValues array.
+ * This gets stat values for an item ordered by the statOrder array.
  */
-function getOrderedStatValues(item: DimItem) {
+function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
   const stats = _.keyBy(item.stats, (stat) => stat.statHash);
-  const keyedStats = {};
-
-  for (const statHash of statValues) {
-    keyedStats[statHash] = stats[statHash]?.value || 0;
-  }
-
-  // mapping out from stat values to ensure ordering
-  return statValues.map((statHash) => keyedStats[statHash]);
+  return statOrder.map((statHash) => stats[statHash]?.value || 0);
 }
 
 /**
