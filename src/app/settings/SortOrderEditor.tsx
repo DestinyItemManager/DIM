@@ -144,12 +144,15 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           <span className="name" {...provided.dragHandleProps}>
             {item.displayName}
           </span>
-          <AppIcon icon={moveUpIcon} className="sort-button sort-up" />
-          <AppIcon icon={moveDownIcon} className="sort-button sort-down" />
-          <AppIcon
-            icon={item.enabled ? enabledIcon : unselectedCheckIcon}
-            className="sort-button sort-toggle"
-          />
+          <span className="sort-button sort-up">
+            <AppIcon icon={moveUpIcon} />
+          </span>
+          <span className="sort-button sort-down">
+            <AppIcon icon={moveDownIcon} />
+          </span>
+          <span className="sort-button sort-toggle">
+            <AppIcon icon={item.enabled ? enabledIcon : unselectedCheckIcon} />
+          </span>
         </div>
       )}
     </Draggable>
