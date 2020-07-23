@@ -104,8 +104,7 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
 }
 
 /**
- * This gets the total of the total of the base stats plus any masterwork values. The two cases for
- * masterwork values are,
+ * This gets the total of the base stats plus any masterwork values. The two cases for masterwork values are,
  * 1. When assume masterwork is selected we add 2 onto each stat of each armour item
  * 2. When not assume masterwork we add on the the masterwork stat values for any items that have actually
  *   been masterworked since it cannot be removed from the item.
