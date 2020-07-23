@@ -99,11 +99,9 @@ function StatToggleButton({
       }
     >
       {stat.displayProperties.hasIcon ? (
-        <BungieImage
-          title={stat.displayProperties.name}
-          className={styles.inlineStatIcon}
-          src={stat.displayProperties.icon}
-        />
+        <span title={stat.displayProperties.name} className={styles.inlineStatIcon}>
+          <BungieImage src={stat.displayProperties.icon} />
+        </span>
       ) : (
         stat.displayProperties.name
       )}

@@ -37,6 +37,9 @@ import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import { emptyArray } from 'app/utils/empty';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { dimHunterIcon, dimWarlockIcon, dimTitanIcon } from 'app/shell/icons/custom';
 
 interface StoreProps {
   settings: Settings;
@@ -362,6 +365,12 @@ function SettingsPage({
 
               <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
               <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
+            </div>
+            <div className="setting">
+              <label htmlFor="">{t('Organizer.Columns.CustomTotal')}</label>
+              <AppIcon icon={dimTitanIcon} />: <StatTotalToggle forClass={DestinyClass.Titan} />
+              <AppIcon icon={dimHunterIcon} />: <StatTotalToggle forClass={DestinyClass.Hunter} />
+              <AppIcon icon={dimWarlockIcon} />: <StatTotalToggle forClass={DestinyClass.Warlock} />
             </div>
           </section>
 
