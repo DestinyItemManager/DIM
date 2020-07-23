@@ -1,10 +1,9 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Header from './shell/Header';
 import clsx from 'clsx';
 import ActivityTracker from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
-import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
@@ -26,6 +25,8 @@ import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
 import { t } from './i18next-t';
 import { IssueBanner } from './banner/IssueBanner';
+import { set } from 'idb-keyval';
+import ErrorPanel from './shell/ErrorPanel';
 
 const WhatsNew = React.lazy(() =>
   import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -81,9 +82,33 @@ function App({
   needsDeveloper,
   showIssueBanner,
 }: Props) {
+  const [storageWorks, setStorageWorks] = useState(true);
   useEffect(() => {
-    testFeatureCompatibility();
+    (async () => {
+      try {
+        localStorage.setItem('test', 'true');
+        if (!window.indexedDB) {
+          throw new Error('IndexedDB not available');
+        }
+        await set('idb-test', true);
+      } catch (e) {
+        console.error('Failed Storage Test', e);
+        setStorageWorks(false);
+      }
+    })();
   }, []);
+
+  if (!storageWorks) {
+    return (
+      <div className="dim-page">
+        <ErrorPanel
+          title={t('Help.NoStorage')}
+          fallbackMessage={t('Help.NoStorageMessage')}
+          showTwitters={true}
+        />
+      </div>
+    );
+  }
 
   return (
     <div

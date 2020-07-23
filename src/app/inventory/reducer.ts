@@ -10,7 +10,6 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
 import { set } from 'idb-keyval';
-import { handleLocalStorageFullError } from 'app/compatibility';
 import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
@@ -32,7 +31,7 @@ export const saveItemInfosOnStateChange = _.once(() => {
         try {
           return await set(key, newItems);
         } catch (e) {
-          handleLocalStorageFullError(e);
+          console.error("Couldn't save new items", e);
         }
       }
     }, 1000)

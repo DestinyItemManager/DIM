@@ -393,7 +393,7 @@
     "CannotMove": "Cannot move that item off this character.",
     "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "Keyboard Shortcuts:",
