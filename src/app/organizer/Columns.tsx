@@ -49,10 +49,12 @@ import { source } from 'app/inventory/spreadsheets';
 import { statHashByName } from 'app/search/search-filter-values';
 import { statAllowList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
+import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import { isUsedModSocket } from 'app/utils/socket-utils';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -61,7 +63,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
   return column.columnGroup ? column.columnGroup.id : column.id;
 }
 
-const booleanCell = (value) => (value ? <AppIcon icon={faCheck} /> : undefined);
+const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
 /**
  * This function generates the columns.
@@ -151,7 +153,7 @@ export function getColumns(
           id: `base_${column.statHash}`,
           columnGroup: baseStatsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
-          cell: (value) => value,
+          cell: (value) => <div className={itemStatStyle.value}>{value}</div>,
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
       : [];
@@ -563,18 +565,28 @@ function PerksCell({
   if (!item.isDestiny2() || !item.sockets) {
     return null;
   }
-  const sockets = item.sockets.categories.flatMap((c) =>
+
+  let sockets = item.sockets.categories.flatMap((c) =>
     c.sockets.filter(
       (s) =>
-        s.plug &&
+        s.plug && // ignore empty sockets
         s.plugOptions.length > 0 &&
-        ((!traitsOnly && s.plug.plugItem.collectibleHash) ||
+        (s.plug.plugItem.collectibleHash || // collectibleHash catches shaders and most mods
+        isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
-            (item.isExotic ||
-              (!s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY) &&
-                (!traitsOnly || s.plug.plugItem.plug.plugCategoryIdentifier === 'frames')))))
+            (item.isExotic || // ignore archetype if it's not exotic
+              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))))
     )
   );
+
+  if (traitsOnly) {
+    sockets = sockets.filter(
+      (s) =>
+        s.plug &&
+        (s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
+          s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')
+    );
+  }
 
   if (!sockets.length) {
     return null;
