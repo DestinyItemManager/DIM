@@ -103,6 +103,13 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   }
 }
 
+/**
+ * This gets the total of the total of the base stats plus any masterwork values. The two cases for
+ * masterwork values are,
+ * 1. When assume masterwork is selected we add 2 onto each stat of each armour item
+ * 2. When not assume masterwork we add on the the masterwork stat values for any items that have actually
+ *   been masterworked since it cannot be removed from the item.
+ */
 export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork: boolean | null) {
   const stats = _.keyBy(item.stats, (stat) => stat.statHash);
   const baseStats = {};
@@ -113,8 +120,12 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
-    // If not assume masterwork add on mw stats as they can't be removed.
-    if (!assumeMasterwork) {
+    if (assumeMasterwork) {
+      for (const statHash of statValues) {
+        baseStats[statHash] += 2;
+      }
+    } else {
+      // If not assume masterwork add on mw stats as they can't be removed.
       const masterworkSocketHashes = getMasterworkSocketHashes(
         item.sockets,
         DestinySocketCategoryStyle.EnergyMeter
@@ -130,12 +141,6 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
             }
           }
         }
-      }
-    }
-
-    if (assumeMasterwork) {
-      for (const statHash of statValues) {
-        baseStats[statHash] += 2;
       }
     }
   }
