@@ -1,4 +1,12 @@
 .gearPowerSheet {
+  width: 100%;
+  max-width: fit-content;
+  margin: 0 auto;
+
+  .gearPowerSheetContent {
+    margin: 0 20px 20px;
+  }
+
   .gearPowerHeader {
     display: flex;
 
@@ -16,16 +24,6 @@
     }
   }
 
-  .invert {
-    filter: invert(1);
-  }
-  .positive {
-    color: green;
-  }
-  .negative {
-    color: red;
-  }
-
   .gearGrid {
     width: max-content;
     margin: 10px auto;
@@ -34,15 +32,55 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(10, 1fr);
 
-    & > div {
+    .gearItem {
       grid-row-end: span 2;
-    }
+      display: flex;
 
-    img {
-      height: 20px;
-      width: 20px;
+      .itemImage {
+        height: 40px;
+        width: 40px;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+      .gearItemInfo {
+        display: flex;
+        flex-direction: column;
 
-      vertical-align: middle;
+        .primStat {
+          font-size: 16px;
+          line-height: 1;
+        }
+        .statMeta {
+          font-size: 24px;
+          line-height: 26px;
+        }
+
+        & > div {
+          display: flex;
+        }
+      }
+
+      .bucketImage {
+        height: 22px;
+        width: 22px;
+        margin-top: 2px;
+        filter: invert(1);
+        opacity: 0.6;
+      }
+      .neutral {
+        opacity: 0.3;
+      }
+      .positive {
+        color: green;
+      }
+      .negative {
+        color: red;
+      }
+      .neutral,
+      .positive,
+      .negative {
+        margin: 0 3px;
+      }
     }
 
     .Kinetic,
@@ -57,6 +95,11 @@
     .Leg,
     .ClassItem {
       grid-column-start: 2;
+
+      &.gearItem,
+      .gearItemInfo > div {
+        flex-direction: row-reverse;
+      }
     }
 
     .Kinetic {
@@ -86,6 +129,8 @@
   }
 
   .footNote {
-    margin-top: 10px;
+    margin: 10px auto 0;
+    opacity: 0.7;
+    max-width: 400px;
   }
 }
