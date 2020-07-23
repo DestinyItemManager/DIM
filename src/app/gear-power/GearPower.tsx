@@ -7,7 +7,8 @@ import { RootState } from '../store/reducers';
 
 import './GearPower.scss';
 
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
+// import { connect, useDispatch, useSelector } from 'react-redux';
 // import { t } from 'app/i18next-t';
 // import clsx from 'clsx';
 
@@ -19,8 +20,8 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { itemPop } from 'app/dim-ui/scroll';
 import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
-import { settingsSelector } from 'app/settings/reducer';
-import { setSetting } from 'app/settings/actions';
+// import { settingsSelector } from 'app/settings/reducer';
+// import { setSetting } from 'app/settings/actions';
 
 interface StoreProps {
   stores: D2Store[];
@@ -33,22 +34,25 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-function GearPower({ stores }: StoreProps) {
+function GearPower() {
   const [selectedStore, setSelectedStore] = useState<D2Store | undefined>();
   const reset = () => setSelectedStore(undefined);
+
+  const stores = useSelector<RootState, D2Store[]>((state) => storesSelector(state) as D2Store[]);
 
   useSubscription(() =>
     showGearPower$.subscribe(({ selectedStoreId }) => {
       setSelectedStore(stores.find((s) => s.id === selectedStoreId));
     })
   );
-  const showPowerMaxAsEquippable = useSelector<RootState, boolean>(
-    (state) => settingsSelector(state).showPowerMaxAsEquippable
-  );
-  const dispatch = useDispatch();
-  const setShowPowerMaxAsEquippable = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSetting('showPowerMaxAsEquippable', e.target.value === 'equippable'));
-  };
+
+  // const showPowerMaxAsEquippable = useSelector<RootState, boolean>(
+  //   (state) => settingsSelector(state).showPowerMaxAsEquippable
+  // );
+  // const dispatch = useDispatch();
+  // const setShowPowerMaxAsEquippable = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   dispatch(setSetting('showPowerMaxAsEquippable', e.target.value === 'equippable'));
+  // };
 
   const { pathname } = useLocation();
   useEffect(reset, [pathname]);
@@ -57,10 +61,12 @@ function GearPower({ stores }: StoreProps) {
     return null;
   }
 
-  const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
+  const { unrestricted } = maxLightItemSet(stores, selectedStore);
+  // const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
   const maxBasePower = getLight(
     selectedStore,
-    showPowerMaxAsEquippable ? equippable : unrestricted
+    // showPowerMaxAsEquippable ? equippable : unrestricted
+    unrestricted
   );
   const powerFloor = Math.floor(maxBasePower);
   const header = (
@@ -76,28 +82,31 @@ function GearPower({ stores }: StoreProps) {
   );
   return (
     <Sheet onClose={reset} header={header} sheetClassName="gearPowerSheet">
-      <label>
-        <input
-          type="radio"
-          name="showPowerMaxAsEquippable"
-          checked={showPowerMaxAsEquippable}
-          value="equippable"
-          onChange={setShowPowerMaxAsEquippable}
-        />{' '}
-        equippable
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="showPowerMaxAsEquippable"
-          checked={!showPowerMaxAsEquippable}
-          value="not"
-          onChange={setShowPowerMaxAsEquippable}
-        />{' '}
-        drop max
-      </label>
+      {
+        //   <label>
+        //   <input
+        //     type="radio"
+        //     name="showPowerMaxAsEquippable"
+        //     checked={showPowerMaxAsEquippable}
+        //     value="equippable"
+        //     onChange={setShowPowerMaxAsEquippable}
+        //   />{' '}
+        //   equippable
+        // </label>
+        // <label>
+        //   <input
+        //     type="radio"
+        //     name="showPowerMaxAsEquippable"
+        //     checked={!showPowerMaxAsEquippable}
+        //     value="not"
+        //     onChange={setShowPowerMaxAsEquippable}
+        //   />{' '}
+        //   drop max
+        // </label>
+      }
       <div className="gearGrid">
-        {(showPowerMaxAsEquippable ? equippable : unrestricted).map((i) => {
+        {unrestricted.map((i) => {
+          // (showPowerMaxAsEquippable ? equippable : unrestricted).map((i) => {
           const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
           const diffSymbol = powerDiff > 0 ? '+' : '';
           const diffClass = powerDiff > 0 ? 'positive' : 'negative';
@@ -115,6 +124,11 @@ function GearPower({ stores }: StoreProps) {
             </div>
           );
         })}
+      </div>
+      <div className="footNote">
+        Maximum Power isn't limited by the "One Exotic" rule when determining the Power of your
+        drops/powerfuls/pinnacle rewards. Multiple Exotic items were used to calculate your Maximum
+        Power, so the number shown may not be achievable when equipping your items in-game.
       </div>
     </Sheet>
   );
