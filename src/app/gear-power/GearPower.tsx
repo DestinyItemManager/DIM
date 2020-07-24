@@ -33,8 +33,9 @@ export default function GearPower() {
     return null;
   }
 
-  const { unrestricted } = maxLightItemSet(stores, selectedStore);
+  const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
   const maxBasePower = getLight(selectedStore, unrestricted);
+  const equippableMaxBasePower = getLight(selectedStore, equippable);
   const powerFloor = Math.floor(maxBasePower);
   const header = (
     <div className="gearPowerHeader">
@@ -74,8 +75,12 @@ export default function GearPower() {
             );
           })}
         </div>
-        <div className="footNote">* {t('Loadouts.EquippableDifferent1')}</div>
-        <div className="footNote">{t('Loadouts.EquippableDifferent2')}</div>
+        {maxBasePower !== equippableMaxBasePower && (
+          <>
+            <div className="footNote">* {t('Loadouts.EquippableDifferent1')}</div>
+            <div className="footNote">{t('Loadouts.EquippableDifferent2')}</div>
+          </>
+        )}
       </div>
     </Sheet>
   );
