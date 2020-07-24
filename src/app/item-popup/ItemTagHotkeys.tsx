@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   item: DimItem;
@@ -40,7 +41,7 @@ function ItemTagHotkeys({ item, children, itemTag, dispatch }: Props) {
         description: t('Hotkey.MarkItemAs', { tag: tag.type }),
         callback: () =>
           dispatch(
-            item.id && item.id !== '0'
+            itemIsInstanced(item)
               ? setItemTag({ itemId: item.id, tag: itemTag === tag.type ? undefined : tag.type })
               : setItemHashTag({
                   itemHash: item.hash,

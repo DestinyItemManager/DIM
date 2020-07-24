@@ -13,6 +13,7 @@ import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { setItemNote, setItemHashNote } from 'app/inventory/actions';
 import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   item: DimItem;
@@ -43,7 +44,7 @@ function ItemDescription({ item, notes, inventoryWishListRoll, dispatch }: Props
 
   const saveNotes = (note: string) =>
     dispatch(
-      item.id && item.id !== '0'
+      itemIsInstanced(item)
         ? setItemNote({ itemId: item.id, note })
         : setItemHashNote({ itemHash: item.hash, note })
     );

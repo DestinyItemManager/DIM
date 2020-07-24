@@ -8,6 +8,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ThunkResult } from 'app/store/reducers';
 import { itemInfosSelector } from './selectors';
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
@@ -154,7 +155,7 @@ export function getTag(
   }
 ): TagValue | undefined {
   return item.taggable
-    ? (item.id && item.id !== '0' ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) ||
+    ? (itemIsInstanced(item) ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) ||
         undefined
     : undefined;
 }
@@ -167,7 +168,7 @@ export function getNotes(
   }
 ): string | undefined {
   return item.taggable
-    ? (item.id && item.id !== '0' ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) ||
+    ? (itemIsInstanced(item) ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) ||
         undefined
     : undefined;
 }

@@ -7,6 +7,7 @@ import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 import { setItemTag, setItemHashTag } from 'app/inventory/actions';
 import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   item: DimItem;
@@ -26,7 +27,7 @@ function ItemTagSelector({ item, tag, dispatch }: Props) {
   const onTagUpdated = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tag = e.currentTarget.value as TagValue;
     dispatch(
-      item.id && item.id !== '0'
+      itemIsInstanced(item)
         ? setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag })
         : setItemHashTag({ itemHash: item.hash, tag: tag === 'clear' ? undefined : tag })
     );
