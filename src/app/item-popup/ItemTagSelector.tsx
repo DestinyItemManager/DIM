@@ -5,8 +5,8 @@ import { DimItem } from '../inventory/item-types';
 import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
-import { setItemTag } from 'app/inventory/actions';
-import { itemInfosSelector } from 'app/inventory/selectors';
+import { setItemTag, setItemHashTag } from 'app/inventory/actions';
+import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
 
 interface ProvidedProps {
   item: DimItem;
@@ -17,7 +17,7 @@ interface StoreProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { tag: getTag(props.item, itemInfosSelector(state)) };
+  return { tag: getTag(props.item, itemInfosSelector(state), itemHashTagsSelector(state)) };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -25,7 +25,11 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 function ItemTagSelector({ item, tag, dispatch }: Props) {
   const onTagUpdated = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tag = e.currentTarget.value as TagValue;
-    dispatch(setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag }));
+    dispatch(
+      item.id && item.id !== '0'
+        ? setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag })
+        : setItemHashTag({ itemHash: item.hash, tag: tag === 'clear' ? undefined : tag })
+    );
   };
 
   return (

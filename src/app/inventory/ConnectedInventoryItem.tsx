@@ -9,7 +9,7 @@ import { searchFilterSelector } from '../search/search-filter';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector } from './selectors';
+import { itemInfosSelector, itemHashTagsSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -42,11 +42,12 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     : undefined;
   const showRating = $featureFlags.reviewsEnabled && shouldShowRating(dtrRating);
   const itemInfos = itemInfosSelector(state);
+  const itemHashTags = itemHashTagsSelector(state);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
-    tag: getTag(item, itemInfos),
-    notes: getNotes(item, itemInfos) ? true : false,
+    tag: getTag(item, itemInfos, itemHashTags),
+    notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     wishListsEnabled: wishListsEnabledSelector(state),

@@ -26,6 +26,7 @@ import {
   itemInfosSelector,
   sortedStoresSelector,
   currentStoreSelector,
+  itemHashTagsSelector,
 } from '../inventory/selectors';
 import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
 
@@ -51,7 +52,7 @@ import seasonTags from 'data/d2/season-tags.json';
 import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
 import { getStore } from 'app/inventory/stores-helpers';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyVersion, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -122,6 +123,7 @@ export const searchFiltersConfigSelector = createSelector(
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
+  itemHashTagsSelector,
   searchFilters
 );
 
@@ -467,7 +469,10 @@ function searchFilters(
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
-  itemInfos: ItemInfos
+  itemInfos: ItemInfos,
+  itemHashTags: {
+    [itemHash: string]: ItemHashTag;
+  }
 ): SearchFilters {
   // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
@@ -488,7 +493,7 @@ function searchFilters(
         compareBy((item) => item.masterwork),
         compareBy((item) => item.locked),
         compareBy((item) => {
-          const tag = getTag(item, itemInfos);
+          const tag = getTag(item, itemInfos, itemHashTags);
           return Boolean(tag && ['favorite', 'keep'].includes(tag));
         }),
         compareBy((i) => i.id) // tiebreak by ID
@@ -582,7 +587,7 @@ function searchFilters(
       query = query.trim().toLowerCase();
       if (!query.length) {
         // By default, show anything that doesn't have the archive tag
-        return (item: DimItem) => getTag(item, itemInfos) !== 'archive';
+        return (item: DimItem) => getTag(item, itemInfos, itemHashTags) !== 'archive';
       }
 
       // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
@@ -976,15 +981,15 @@ function searchFilters(
         return false;
       },
       tag(item: DimItem, filterValue: string) {
-        const tag = getTag(item, itemInfos);
+        const tag = getTag(item, itemInfos, itemHashTags);
         return (tag || 'none') === filterValue;
       },
       notes(item: DimItem, filterValue: string) {
-        const notes = getNotes(item, itemInfos);
+        const notes = getNotes(item, itemInfos, itemHashTags);
         return notes?.toLocaleLowerCase().includes(filterValue);
       },
       hasnotes(item: DimItem) {
-        return Boolean(getNotes(item, itemInfos));
+        return Boolean(getNotes(item, itemInfos, itemHashTags));
       },
       stattype(item: DimItem, filterValue: string) {
         return item.stats?.some((s) =>
@@ -1248,7 +1253,7 @@ function searchFilters(
         return newItems.has(item.id);
       },
       tagged(item: DimItem) {
-        return Boolean(getTag(item, itemInfos));
+        return Boolean(getTag(item, itemInfos, itemHashTags));
       },
       hasLight(item: DimItem) {
         return item.primStat && hashes.lightStats.includes(item.primStat.statHash);

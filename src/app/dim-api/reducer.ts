@@ -175,6 +175,8 @@ export const dimApi = (
               ...action.payload.profiles,
             },
             updateQueue: newUpdateQueue,
+            itemHashTags: action.payload.itemHashTags,
+            searches: action.payload.searches,
           }
         : {
             ...state,
@@ -737,6 +739,11 @@ function setTag(
   tag: TagValue | undefined,
   account: DestinyAccount
 ) {
+  if (!itemId || itemId === '0') {
+    console.error('Cannot tag a non-instanced item. Use setItemHashTag instead');
+    return;
+  }
+
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
   const tags = profile.tags;
@@ -817,6 +824,10 @@ function setNote(
   notes: string | undefined,
   account: DestinyAccount
 ) {
+  if (!itemId || itemId === '0') {
+    console.error('Cannot note a non-instanced item. Use setItemHashNote instead');
+    return;
+  }
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
   const tags = profile.tags;

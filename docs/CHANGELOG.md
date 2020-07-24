@@ -1,5 +1,7 @@
 ## Next
 
+* You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.
+
 ## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
 
 * Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.

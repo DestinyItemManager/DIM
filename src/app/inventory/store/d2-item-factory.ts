@@ -432,7 +432,12 @@ export function makeItem(
     : D2Events[item.itemHash];
 
   // *able
-  createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
+  createdItem.taggable = Boolean(
+    createdItem.lockable ||
+      createdItem.classified ||
+      // Shaders
+      createdItem.bucket.hash === 2973005342
+  );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean(
     $featureFlags.reviewsEnabled && isWeaponOrArmor1OrExoticArmor2(createdItem)
