@@ -26,30 +26,30 @@ import _ from 'lodash';
  * A tree of the parsed query. Boolean/unary operators have children (operands)that
  * describe their relationship.
  */
-type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
+export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
   error?: Error;
 };
 
 /** If ALL of of the operands are true, this resolves to true. There may be any number of operands. */
-interface AndOp {
+export interface AndOp {
   op: 'and';
   operands: QueryAST[];
 }
 
 /** If any of the operands is true, this resolves to true. There may be any number of operands. */
-interface OrOp {
+export interface OrOp {
   op: 'or';
   operands: QueryAST[];
 }
 
 /** An operator which negates the result of its only operand. */
-interface NotOp {
+export interface NotOp {
   op: 'not';
   operand: QueryAST;
 }
 
 /** This represents one of our filter function definitions, such as is:, season:, etc. */
-interface FilterOp {
+export interface FilterOp {
   op: 'filter';
   /**
    * The name of the filter function, without any trailing :. The only weird case is
