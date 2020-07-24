@@ -161,7 +161,7 @@ describe("Can't slot seasonal mods", () => {
     expect(result).toEqual(false);
   });
 
-  it('fails when two any energy items and only one slot that can take them', () => {
+  it('fails when first slot cant be used and only one item to take both mods', () => {
     const mods = [getMod(7, 'opulent', 0), getMod(7, 'opulent', 0)].sort(
       sortProcessModMetadataOrProcessItem
     );
