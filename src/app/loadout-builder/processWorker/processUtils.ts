@@ -47,9 +47,9 @@ export function canTakeAllSeasonalMods(
       (sortedItems[itemIndex].energyType === energyType || energyType === DestinyEnergyType.Any) &&
       sortedItems[itemIndex].compatibleModSeasons?.includes(tag)
     ) {
+      sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;
-      sortedItems.splice(itemIndex, 1);
     } else {
       itemIndex += 1;
     }

@@ -91,6 +91,21 @@ describe('Can slot seasonal mods', () => {
     const result = canTakeAllSeasonalMods(mods, items);
     expect(result).toEqual(true);
   });
+
+  it('passes when the first item takes no mods', () => {
+    const mods = [getMod(7, 'opulent', 0), getMod(7, 'opulent', 0)].sort(
+      sortProcessModMetadataOrProcessItem
+    );
+
+    const items = [
+      getItem(8, 2, ['undying', 'dawn', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(8, 2, ['opulent', 'undying', 'dawn']),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
 });
 
 /*
@@ -140,6 +155,21 @@ describe("Can't slot seasonal mods", () => {
       getItem(11, 3, ['arrivals', 'worthy']),
       getItem(11, 3, ['arrivals', 'worthy']),
       getItem(8, 3, undefined),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
+
+  it('fails when first slot cant be used and only one item to take both mods', () => {
+    const mods = [getMod(7, 'opulent', 0), getMod(7, 'opulent', 0)].sort(
+      sortProcessModMetadataOrProcessItem
+    );
+
+    const items = [
+      getItem(9, 2, ['undying', 'dawn', 'worthy']),
+      getItem(11, 3, ['arrivals', 'worthy']),
+      getItem(8, 2, ['opulent', 'undying', 'dawn']),
     ];
 
     const result = canTakeAllSeasonalMods(mods, items);
