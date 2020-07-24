@@ -89,7 +89,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </>
       );
       const powerInfos: {
-        stat: NonNullable<DimStore['stats']['maxGearPower']>;
+        stat: DimCharacterStat;
         tooltip: React.ReactNode;
       }[] = _.compact([
         stats.maxTotalPower,
@@ -100,7 +100,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
         `${stat.name}: ${stat.value}\n${stat.description}`;
       const statInfos: {
-        stat: NonNullable<DimStore['stats']['maxGearPower']>;
+        stat: DimCharacterStat;
         tooltip: React.ReactNode;
       }[] = armorStats.map((h) => stats[h]).map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
