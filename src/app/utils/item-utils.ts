@@ -4,7 +4,7 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimItem, DimMasterwork } from 'app/inventory/item-types';
-
+import _ from 'lodash';
 import modSocketMetadata from 'data/d2/specialty-modslot-metadata';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
@@ -112,4 +112,18 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
       .filter(Boolean)
       .join(', ') ?? ''
   );
+}
+
+export function getPossiblyIncorrectStats(item: DimItem): string[] {
+  const incorrect: Set<string> = new Set();
+  const stats = item.stats;
+
+  if (stats) {
+    for (const stat of stats) {
+      if (stat.statHash !== -1000 && stat.baseMayBeWrong && stat.displayProperties.name) {
+        incorrect.add(stat.displayProperties.name);
+      }
+    }
+  }
+  return [...incorrect];
 }

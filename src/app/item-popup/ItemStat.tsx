@@ -13,6 +13,7 @@ import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getSocketsWithStyle } from '../utils/socket-utils';
 import PressTip from 'app/dim-ui/PressTip';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -93,12 +94,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     [styles.totalRow]: Boolean(totalDetails),
   };
 
-  const incorrectStats = _.uniq(
-    item?.stats
-      ?.filter((stat) => stat.statHash !== -1000)
-      .map((stat) => stat.baseMayBeWrong && stat.displayProperties.name)
-      .filter(Boolean)
-  );
+  const incorrectStats = (item && getPossiblyIncorrectStats(item)) || [];
 
   return (
     <>
