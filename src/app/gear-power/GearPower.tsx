@@ -29,31 +29,18 @@ export default function GearPower() {
     })
   );
 
-  // const showPowerMaxAsEquippable = useSelector<RootState, boolean>(
-  //   (state) => settingsSelector(state).showPowerMaxAsEquippable
-  // );
-  // const dispatch = useDispatch();
-  // const setShowPowerMaxAsEquippable = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   dispatch(setSetting('showPowerMaxAsEquippable', e.target.value === 'equippable'));
-  // };
-
   if (!selectedStore) {
     return null;
   }
 
   const { unrestricted } = maxLightItemSet(stores, selectedStore);
-  // const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
-  const maxBasePower = getLight(
-    selectedStore,
-    // showPowerMaxAsEquippable ? equippable : unrestricted
-    unrestricted
-  );
+  const maxBasePower = getLight(selectedStore, unrestricted);
   const powerFloor = Math.floor(maxBasePower);
   const header = (
     <div className="gearPowerHeader">
       <img src={selectedStore.icon} />
       <div>
-        <h1>{selectedStore.name}</h1>{' '}
+        <h1>{selectedStore.name}</h1>
         <h1>
           <FractionalPowerLevel power={maxBasePower} />
         </h1>
@@ -62,32 +49,9 @@ export default function GearPower() {
   );
   return (
     <Sheet onClose={reset} header={header} sheetClassName="gearPowerSheet">
-      {
-        //   <label>
-        //   <input
-        //     type="radio"
-        //     name="showPowerMaxAsEquippable"
-        //     checked={showPowerMaxAsEquippable}
-        //     value="equippable"
-        //     onChange={setShowPowerMaxAsEquippable}
-        //   />{' '}
-        //   equippable
-        // </label>
-        // <label>
-        //   <input
-        //     type="radio"
-        //     name="showPowerMaxAsEquippable"
-        //     checked={!showPowerMaxAsEquippable}
-        //     value="not"
-        //     onChange={setShowPowerMaxAsEquippable}
-        //   />{' '}
-        //   drop max
-        // </label>
-      }
       <div className="gearPowerSheetContent">
         <div className="gearGrid">
           {unrestricted.map((i) => {
-            // (showPowerMaxAsEquippable ? equippable : unrestricted).map((i) => {
             const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
             const diffSymbol = powerDiff >= 0 ? '+' : '';
             const diffClass = powerDiff > 0 ? 'positive' : powerDiff < 0 ? 'negative' : 'neutral';

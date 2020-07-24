@@ -62,6 +62,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from './actions';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -174,8 +175,18 @@ class LoadoutPopup extends React.Component<Props> {
                 <span onClick={this.maxLightLoadout}>
                   <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
                     <span className="light">
-                      <AppIcon icon={powerIndicatorIcon} />
-                      {maxLight + artifactLight}
+                      {dimStore.destinyVersion === 1 ? (
+                        <>
+                          <AppIcon icon={powerIndicatorIcon} />
+                          {maxLight + artifactLight}
+                        </>
+                      ) : (
+                        <>
+                          <AppIcon icon={powerIndicatorIcon} />
+                          {maxLight + artifactLight}
+                        </>
+                      )}
+
                       {hasClassified && <sup>*</sup>}
                     </span>
                   </PressTip>
