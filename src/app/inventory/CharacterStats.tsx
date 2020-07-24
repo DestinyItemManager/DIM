@@ -118,7 +118,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                     stat.value
                   );
                 // if this is the "max gear power" stat (hash -3),
-                // add in an onClick and an extra class, and skip the PressTip
+                // add in an onClick and an extra class
                 const isMaxGearPower = stat.hash === -3 && storeId;
 
                 return (
