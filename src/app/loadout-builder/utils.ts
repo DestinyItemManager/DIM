@@ -288,17 +288,12 @@ export function statTier(stat: number) {
 }
 
 /**
- * This is a wrapper for the awkward helper used by
- * GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out which perks need
- * to be selected to get that stat mix.
- *
- * It assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
- * to fulfill a stat-mix, and the callback stops the function early. This is like this
- * so we can share this complicated bit of logic and not get it out of sync.
+ * This figures out which perks need to be selected on specific armor 1.0 items to achieve the desired stat mix.
+ * process#generateMixesFromPerksOrStats uses a very similar algorithm to generate the stat mixes initially so the
+ * two should be kept in sync if this changes.
  */
 export function generateMixesFromPerks(
   item: DimItem,
-  /** Callback when a new mix is found. */
   chosenValues: number[],
   statOrder: StatTypes[]
 ): DimPlug[] {
