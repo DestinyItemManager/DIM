@@ -23,7 +23,6 @@ $content-cells: 5;
     :global(.gradientBackground) & {
       background-color: #27263a;
     }
-    border-bottom: 1px solid #3c3c3e;
   }
 }
 
@@ -200,9 +199,6 @@ $toolbarHeight: 41px - 16px + 8px;
 }
 .traits {
   visibility: visible;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
   .modPerks {
     flex: 0;
     min-width: 160px;
