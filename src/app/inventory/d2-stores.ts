@@ -433,7 +433,8 @@ function makeD2StoresService(): D2StoreServiceType {
 
       store.stats.maxGearPower = {
         hash: -3,
-        name: 'Maximum Power of all gear',
+        name: t('Stats.MaxGearPowerAll'),
+        // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
         hasClassified,
         description: '',
         differentEquippableMaxGearPower,

@@ -856,6 +856,7 @@
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxGearPowerAll": "Maximum Power of all gear",
     "PowerModifier": "Power granted by seasonal experience progression",
     "MaxTotalPower": "Maximum total Power",
     "Milliseconds": "ms",
