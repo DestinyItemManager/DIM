@@ -78,10 +78,7 @@ export interface DimStore<Item = DimItem> {
   /** Character stats. */
   stats: {
     /** average of your highest simultaneously equippable gear with bonus fields for rich tooltip content and equippability warnings */
-    maxGearPower?: DimCharacterStat & {
-      richTooltip?: JSX.Element;
-      differentEquippableMaxGearPower?: number | false;
-    };
+    maxGearPower?: DimCharacterStat;
     /** currently represents the power level bonus provided by the Seasonal Artifact */
     powerModifier?: DimCharacterStat;
     /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
@@ -172,6 +169,11 @@ export interface DimCharacterStat {
   description: string;
   /** Whether this stat is inaccurate because it relies on classified items (like base power). */
   hasClassified?: boolean;
+
+  /** maxGearPower (hash `-3`) may have this. if it's set, it's the *equippable* max power (instead of all items' combined max) */
+  differentEquippableMaxGearPower?: number;
+  /** additional rich content available to display in a stat's tooltip */
+  richTooltip?: JSX.Element;
 
   /** A localized description of this stat's effect. */
   effect?: string;

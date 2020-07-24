@@ -7,7 +7,7 @@ export interface GearPowerStore {
 export const showGearPower$ = new Subject<GearPowerStore>();
 
 /**
- * Show the infusion fuel finder.
+ * Show the gear power sheet
  */
 export function showGearPower(selectedStoreId: string) {
   showGearPower$.next({ selectedStoreId });

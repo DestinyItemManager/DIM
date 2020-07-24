@@ -72,9 +72,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </div>
       );
     } else {
-      const powerTooltip = (
-        stat: NonNullable<DimStore['stats']['maxGearPower']>
-      ): React.ReactNode => (
+      const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
         <>
           {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
           {stat.richTooltip && (

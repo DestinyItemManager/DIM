@@ -428,7 +428,8 @@ function makeD2StoresService(): D2StoreServiceType {
       );
 
       const differentEquippableMaxGearPower =
-        unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower;
+        (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) ||
+        undefined;
 
       store.stats.maxGearPower = {
         hash: -3,

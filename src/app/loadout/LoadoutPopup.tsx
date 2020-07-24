@@ -63,6 +63,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from './actions';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import xpIcon from 'images/xpIcon.svg';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -178,12 +179,15 @@ class LoadoutPopup extends React.Component<Props> {
                       {dimStore.destinyVersion === 1 ? (
                         <>
                           <AppIcon icon={powerIndicatorIcon} />
-                          {maxLight + artifactLight}
+                          {Math.floor(maxLight * 10) / 10}
                         </>
                       ) : (
                         <>
-                          <AppIcon icon={powerIndicatorIcon} />
-                          {maxLight + artifactLight}
+                          <img className="yellowInlineSvg" src={helmetIcon} />
+                          {Math.floor(maxLight)}
+                          {' + '}
+                          <img className="yellowInlineSvg" src={xpIcon} />
+                          {artifactLight}
                         </>
                       )}
 
