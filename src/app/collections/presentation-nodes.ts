@@ -34,16 +34,10 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
   childPresentationNodes?: DimPresentationNode[];
 }
 
-export const enum TrackedRecordState {
-  Untracked,
-  TrackedInGame,
-  TrackedInDim,
-}
-
 export interface DimRecord {
   recordComponent: DestinyRecordComponent;
   recordDef: DestinyRecordDefinition;
-  tracked: TrackedRecordState; // TODO: not needed here?
+  trackedInGame: boolean;
 }
 
 export interface DimMetric {
@@ -289,16 +283,12 @@ export function toRecord(
     return null;
   }
 
-  // TODO: incorporate dim sync data?
-  const tracked =
-    profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash
-      ? TrackedRecordState.TrackedInGame
-      : TrackedRecordState.Untracked;
+  const trackedInGame = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
 
   return {
     recordComponent: record,
     recordDef,
-    tracked,
+    trackedInGame,
   };
 }
 

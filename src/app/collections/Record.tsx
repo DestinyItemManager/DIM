@@ -15,16 +15,18 @@ import { t } from 'app/i18next-t';
 import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import trackedIcon from 'images/trackedIcon.svg';
+import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import { percent } from 'app/shell/filters';
 import _ from 'lodash';
-import { DimRecord, TrackedRecordState } from './presentation-nodes';
+import { DimRecord } from './presentation-nodes';
 
 interface Props {
   record: DimRecord;
   defs: D2ManifestDefinitions;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  trackedTriumphs: number[];
 }
 
 interface RecordInterval {
@@ -41,8 +43,9 @@ export default function Record({
   defs,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  trackedTriumphs,
 }: Props) {
-  const { recordDef, tracked, recordComponent } = record;
+  const { recordDef, trackedInGame, recordComponent } = record;
   const state = recordComponent.state;
   const recordHash = recordDef.hash;
 
@@ -53,6 +56,7 @@ export default function Record({
     !unlocked &&
     !acquired &&
     Boolean(state & DestinyRecordState.Obscured);
+  const trackedByDim = trackedTriumphs.includes(recordHash);
   const loreLink =
     !obscured &&
     recordDef.loreHash &&
@@ -141,13 +145,16 @@ export default function Record({
             !defs.Objective.get(objectives[0].objectiveHash).allowOvercompletion)
         )));
 
+  // TODO: show track badge greyed out / on hover
+  // TODO: track on click
+
   return (
     <div
       className={clsx('triumph-record', {
         redeemed: acquired,
         unlocked,
         obscured,
-        tracked,
+        tracked: trackedInGame,
         multistep: intervals.length > 0,
       })}
     >
@@ -171,9 +178,8 @@ export default function Record({
             <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
           </div>
         )}
-        {tracked == TrackedRecordState.TrackedInGame && (
-          <img className="trackedIcon" src={trackedIcon} />
-        )}
+        {trackedInGame && <img className="trackedIcon" src={trackedIcon} />}
+        {trackedByDim && <img className="trackedIcon" src={dimTrackedIcon} />}
       </div>
       {intervalProgressBar}
     </div>
