@@ -246,7 +246,7 @@ export function getColumns(
             </>
           ),
         defaultSort: SortDirection.DESC,
-        filter: (value) => `sunsetsafter:>=${value}`,
+        filter: (value) => (value ? `powerlimit:=${value}` : undefined),
         gridWidth: 'minmax(max-content,max-content)',
       },
     !isGhost &&
