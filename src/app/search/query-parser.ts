@@ -231,7 +231,11 @@ export function parseQuery(query: string): QueryAST {
   }
 
   const tokens = new PeekableGenerator(lexer(query));
-  if (!tokens.peek()) {
+  try {
+    if (!tokens.peek()) {
+      return { op: 'noop' };
+    }
+  } catch (e) {
     return { op: 'noop' };
   }
   const ast = parse(tokens);
@@ -273,8 +277,8 @@ const negation = /-\s*/y;
 // `not`, `or`, and `and` keywords. or and not can be preceded by whitespace, and any of them can be followed by whitespace.
 // `not` can't be preceded by whitespace because that whitespace is an implicit `and`.
 const booleanKeywords = /(not|\s+or|\s+and)\s+/y;
-// Filter names like is:, stat:discipline:, etc
-const filterName = /[a-z]+:([a-z]+:)?/y;
+// Filter names like is:, stat:, etc
+const filterName = /[a-z]+:/y;
 // Arguments to filters are pretty unconstrained
 const filterArgs = /[^\s()]+/y;
 // Words without quotes are basically any non-whitespace that doesn't terminate a group

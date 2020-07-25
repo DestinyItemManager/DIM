@@ -598,11 +598,13 @@ function searchFilters(
             const { type: filterName, args: filterValue } = ast;
 
             // Generate a filter function from the filters table
-            const filterByKeyword = (keyword: string, filterValue: string) => {
-              const filterName = searchConfig.keywordToFilter[keyword];
-              if (filterName && filterTable[filterName]) {
-                const filterFunction = filterTable[filterName];
-                return (item: DimItem) => filterFunction(item, filterValue);
+            const filterByTable = (filterName: string, filterValue: string) => {
+              if (filterTable[filterName]) {
+                const filterFunction = filterTable[filterName] as (
+                  item: DimItem,
+                  val: string
+                ) => boolean;
+                return (item: DimItem) => filterFunction.call(filterTable, item, filterValue);
               }
               // TODO: Throw error?
               return () => true;
@@ -612,34 +614,35 @@ function searchFilters(
               case 'is': {
                 // do a lookup by filterValue (i.e. arc)
                 // to find the appropriate filterFunction (i.e. dmg)
-                return filterByKeyword(filterValue, filterValue);
+                const filterName = searchConfig.keywordToFilter[filterValue];
+                return filterByTable(filterName, filterValue);
               }
               // normalize synonyms
               case 'light':
               case 'power':
-                return filterByKeyword('light', filterValue);
+                return filterByTable('light', filterValue);
               case 'quality':
               case 'percentage':
-                return filterByKeyword('quality', filterValue);
+                return filterByTable('quality', filterValue);
               // mutate filterValues where keywords (forge) should be translated into seasons (5)
               case 'powerlimitseason':
               case 'sunsetsafter':
-                return filterByKeyword('sunsetsafter', replaceSeasonTagWithNumber(filterValue));
+                return filterByTable('sunsetsafter', replaceSeasonTagWithNumber(filterValue));
               case 'season':
-                return filterByKeyword('season', replaceSeasonTagWithNumber(filterValue));
+                return filterByTable('season', replaceSeasonTagWithNumber(filterValue));
               // stat filter has sub-searchterm and needs further separation
               case 'basestat':
               case 'stat': {
                 const [statName, statValue, shouldntExist] = filterValue.split(':');
                 const statFilterName = filterName === 'basestat' ? `base${statName}` : statName;
                 if (!shouldntExist) {
-                  return filterByKeyword(statFilterName, statValue);
+                  return filterByTable(statFilterName, statValue);
                 }
                 break;
               }
               default:
                 // All other keywords just pass through to filter table lookups
-                return filterByKeyword(filterName, filterValue);
+                return filterByTable(filterName, filterValue);
             }
 
             // TODO: Throw error?
