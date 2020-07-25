@@ -14,7 +14,6 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -496,22 +495,6 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       })
     );
-
-    if (process.env.PT_PROJECT_TOKEN) {
-      const packOptions = {
-        upload: true,
-        fail_build: true,
-      };
-
-      if (process.env.GITHUB_ACTIONS === 'true') {
-        Object.assign(packOptions, {
-          branch: process.env.GITHUB.EVENT.PULL_REQUEST.HEAD.REF,
-          commit: process.env.GITHUB.EVENT.PULL_REQUEST.HEAD.SHA,
-          prior_commit: process.env.GITHUB.EVENT.PULL_REQUEST.BASE.SHA,
-        });
-      }
-      config.plugins.push(new PacktrackerPlugin(packOptions));
-    }
   }
 
   return config;
