@@ -19,6 +19,9 @@ jobs:
       - name: yarn install
         uses: bahmutov/npm-install@v1
 
+      - name: Set mtime to MD5 complete! (for eslint)
+        run: find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
+
       - name: yarn test
         run: yarn test
 
