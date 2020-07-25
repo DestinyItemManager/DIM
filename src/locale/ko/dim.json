@@ -350,6 +350,7 @@
     "Year": "데스티니의 특정 연도에서 나온 아이템 표시"
   },
   "General": {
+    "ClickForDetails": "자세한 내용은 클릭",
     "UserGuideLink": "사용 설명서"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
     "Drag": "Shift 키를 누르고 유지하여 스택의 일부를 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
-    "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다."
+    "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 이와 같은 문제가 발생할 수 있습니다. DIM에 로그인하거나 사용할 수 없습니다."
   },
   "Hotkey": {
     "CheatSheetTitle": "키보드 단축키:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "스탯 조합 {{count, number}}개",
     "NumStatMixes_plural": "스탯 조합 {{count, number}}개",
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
-    "OptimizerExplanationArmour2Mods": "방어구 2.0 개조 부품은 능력치 등급 계산에 포함되어 있지 않습니다.",
+    "OptimizerExplanationArmour2Mods": "방어구 2.0 개조 부품의 스탯 변경점은 가능한 제외하였습니다. 정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.",
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "잠긴 아이템 초기화",
@@ -568,6 +569,7 @@
     "SelectPower": "최소 파워",
     "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
     "SelectedPerkKey": "선택된 특성",
+    "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.\n\n능력치 페널티로 인하여 DIM에서 일부 아이템의 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "로드아웃 생성",
     "Delete": "로드아읏 지우기",
     "Edit": "로드아웃 편집",
+    "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
+    "EquippableDifferent2": "최대 전투력은 획득한 아이템/강력한 장비/최고조 보상의 전투력을 결정할 때 \"하나의 경이\" 규칙에 의해 제한되지 않습니다.",
     "FilteredItems": "필터링된 아이템",
     "FindAnother": "다른 {{name}} 검색",
     "FromEquipped": "현재 장비",
@@ -705,6 +709,7 @@
       "Track": "{{itemType}} 추적",
       "Untrack": "{{itemType}} 추적 해제"
     },
+    "TriageTab": "분류",
     "Vault": "금고"
   },
   "Notes": {
@@ -722,7 +727,7 @@
     "Columns": {
       "Archetype": "아키타입",
       "BaseStats": "기본 스탯",
-      "Breaker": "차단기",
+      "Breaker": "용사 차단기",
       "CustomTotal": "사용자 정의 총합",
       "Damage": "피해 유형",
       "Element": "원소",
@@ -844,6 +849,7 @@
     "Discipline": "규율",
     "Intellect": "지능",
     "MaxGearPower": "장착 가능한 최대 전투력",
+    "MaxGearPowerAll": "모든 장비의 최대 전투력",
     "MaxTotalPower": "최대 전투력",
     "Milliseconds": "ms",
     "NoBonus": "보너스 없음",
@@ -859,7 +865,8 @@
     "Strength": "힘",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
-    "Total": "총"
+    "Total": "총",
+    "TotalIncorrectWarning": "능력치 페널티로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
   },
   "Storage": {
     "ApiPermissionPrompt": {

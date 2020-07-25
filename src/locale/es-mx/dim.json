@@ -350,6 +350,7 @@
     "Year": "Muestra los objetos según el año de aparición en Destiny."
   },
   "General": {
+    "ClickForDetails": "Haz click para detalles",
     "UserGuideLink": "Manual del usuario"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "No se puede mover ese objeto de este personaje.",
     "Drag": "Deja apretado SHIFT para transferir una pila parcial",
     "NoStorage": "DIM no puede almacenar información",
-    "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas poco espacio en disco."
+    "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en privado o en modo incógnito, o cuando tengas poco espacio en disco. No podrás ser capaz de iniciar sesión o usar DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "Atajos del Teclado:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
     "NumStatMixes_plural": "{{count, number}} mezclas de estadísticas",
     "OptimizerExplanation": "Selecciona perks, filtra y reordena estadísticas, y bloquea objetos para reducir tus posibles equipaciones.",
-    "OptimizerExplanationArmour2Mods": "Los Mods de la Armadura 2.0, no están incluidos en los cálculos de estadísticas del nivel.",
+    "OptimizerExplanationArmour2Mods": "Los cambios de estadísticas con Modificadores de Armadura 2.0 estarán excluidos cuando sea posible. Para obtener resultados precisos, quita todos los modificadores con contribuciones de estadísticas negativas.",
     "OptimizerExplanationDesktop": "SHIFT+CLICK en un perk para seleccionarlo. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos bloqueados",
@@ -568,6 +569,7 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
     "SelectedPerkKey": "Perk seleccionado",
+    "StatIncorrectWarning": "Por favor, quita cualquier modificador con valores de estadísticas negativos para obtener resultados precisos.\n\nDebido a modificadores de estadísticas negativos, DIM no puede determinar el valor base de {{stats}} en algunos objetos incluidos. Esto es una limitación de información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "Crear equipación",
     "Delete": "Borrar equipación",
     "Edit": "Editar equipación",
+    "EquippableDifferent1": "Múltiples objetos Exóticos fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
+    "EquippableDifferent2": "El Poder Máximo no está limitado por la regla del \"Exótico Único\" cuando se determina el Poder de tus recompensas de botines/poderosos/pináculo.",
     "FilteredItems": "Objetos filtrados",
     "FindAnother": "Encontrar otro {{name}}",
     "FromEquipped": "Equipado",
@@ -705,6 +709,7 @@
       "Track": "Seguir {{itemType}}",
       "Untrack": "No seguir {{itemType}}"
     },
+    "TriageTab": "Triaje",
     "Vault": "Bóveda"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",
+    "MaxGearPowerAll": "Poder Máximo de todo el equipamiento",
     "MaxTotalPower": "Poder total máximo",
     "Milliseconds": "ms",
     "NoBonus": "Sin bono",
@@ -859,7 +865,8 @@
     "Strength": "Fuerza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "TotalIncorrectWarning": "Debido a modificadores de estadísticas negativos, DIM no puede determinar el valor base de {{stats}}. Esto es una limitación de información enviada por Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

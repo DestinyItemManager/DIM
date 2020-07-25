@@ -350,6 +350,7 @@
     "Year": "По году Destiny 2."
   },
   "General": {
+    "ClickForDetails": "Click for details",
     "UserGuideLink": "User guide"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
     "Drag": "Зажмите [Shift] чтобы переместить часть пачки",
     "NoStorage": "DIM не смог записать данные",
-    "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "Горячие клавиши:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
-    "OptimizerExplanationArmour2Mods": "Моды Брони 2.0 не включены в расчет статистики.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible. To get accurate results, remove all mods with negative stat contributions.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
@@ -568,6 +569,7 @@
     "SelectPower": "Минимальная Сила",
     "SelectPowerDescription": "Устанавливает минимальный уровень силы для всего набора (не отдельные части)",
     "SelectedPerkKey": "Искомый Бонус",
+    "StatIncorrectWarning": "Please remove any mods with negative stat values to get accurate results.\n\nDue to negative stat modifiers, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Игнорировать",
     "StatTierIncludeOption": "Включать",
     "TierNumber": "Т{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "Набор",
     "Delete": "Удалить Набор",
     "Edit": "Изменить Набор",
+    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
+    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
     "FilteredItems": "Отфильтрованные предметы",
     "FindAnother": "Найти следующий {{name}}",
     "FromEquipped": "Из экипированных",
@@ -705,6 +709,7 @@
       "Track": "Отслеживать {{itemType}}",
       "Untrack": "Не отслеживать {{itemType}}"
     },
+    "TriageTab": "Triage",
     "Vault": "Хран."
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
     "MaxGearPower": "Максимальный уровень Силы экипированного снаряжения",
+    "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "Максимально возможный уровень Силы",
     "Milliseconds": "мсек",
     "NoBonus": "Без бонуса",
@@ -859,7 +865,8 @@
     "Strength": "Стойкость",
     "TierProgress": "У{{tier}} {{statName}} ({{progress}}/60 для У{{nextTier}})\n",
     "TierProgress_Max": "У{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Всего"
+    "Total": "Всего",
+    "TotalIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

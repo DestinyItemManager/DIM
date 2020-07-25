@@ -350,6 +350,7 @@
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
   "General": {
+    "ClickForDetails": "Click for details",
     "UserGuideLink": "Benutzerhandbuch"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
     "Drag": "Halte Shift um einen Teilstapel zu übertragen",
     "NoStorage": "DIM kann die Daten nicht speichern",
-    "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden."
+    "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. Du wirst dich weder anmelden, noch DIM nutzen können."
   },
   "Hotkey": {
     "CheatSheetTitle": "Tastaturkürzel:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} Stat-Mix",
     "NumStatMixes_plural": "{{count, number}} Stat-Mixes",
     "OptimizerExplanation": "Wähle Perks, Filter und sortiere Statistiken und sperre Gegenstände, um deine möglichen Loadouts zu ermitteln.",
-    "OptimizerExplanationArmour2Mods": "Rüstung 2.0 Mods sind nicht in den Berechnungen des Stat-Rangs enthalten.",
+    "OptimizerExplanationArmour2Mods": "Statistikänderungen von Rüstung 2.0 Mods sind wo es geht ausgeschlossen. Um genaue Ergebnisse zu erhalten, entferne alle Mods mit negativen Statistik-Beeinflussungen.",
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
     "ResetLocked": "Setze gesperrte Items zurück",
@@ -568,6 +569,7 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
     "SelectedPerkKey": "Gewählter Perk",
+    "StatIncorrectWarning": "Bitte entferne alle Mods mit negativen Werten, um genaue Ergebnisse zu erhalten.\n\nAufgrund negativer Statistik-Modifikatoren kann DIM den Basiswert von {{stats}} bei einigen enthaltenen Elementen nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen.",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "Loadout erstellen",
     "Delete": "Loadout löschen",
     "Edit": "Loadout bearbeiten",
+    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
+    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
     "FilteredItems": "Gefilterte Items",
     "FindAnother": "Finde andere(s) {{name}}",
     "FromEquipped": "Ausgerüstet",
@@ -705,6 +709,7 @@
       "Track": "{{itemType}} verfolgen",
       "Untrack": "{{itemType}} nicht verfolgen"
     },
+    "TriageTab": "Vorselektieren",
     "Vault": "Tresor"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
+    "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "Maximale Gesamt Power",
     "Milliseconds": "ms",
     "NoBonus": "Kein Bonus",
@@ -859,7 +865,8 @@
     "Strength": "Stärke",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Gesamt"
+    "Total": "Gesamt",
+    "TotalIncorrectWarning": "Aufgrund negativer Statistik-Modifikatoren kann DIM den Basiswert von {{stats}} nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net gesendeten Informationen."
   },
   "Storage": {
     "ApiPermissionPrompt": {

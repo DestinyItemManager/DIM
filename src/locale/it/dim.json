@@ -350,6 +350,7 @@
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
   },
   "General": {
+    "ClickForDetails": "Clicca per dettagli",
     "UserGuideLink": "Guida Utente"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
     "Drag": "Tieni premuto Shift per trasferire uno stack parziale",
     "NoStorage": "DIM non può salvare dati",
-    "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria."
+    "NoStorageMessage": "DIM non può memorizzare dati nel tuo browser. Questo succede se stai navigando in modalità privacy o in incognito, oppure se hai poco spazio libero in memoria. Non potrai effettuare l'accesso ed utilizzare DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "Scorciatoie da tastiera:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} mix di statistiche",
     "NumStatMixes_plural": "{{count, number}} mix di statistiche",
     "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
-    "OptimizerExplanationArmour2Mods": "Le Modifiche dell'Armatura 2.0 non sono considerate nel calcolo dei livelli delle statistiche.",
+    "OptimizerExplanationArmour2Mods": "I cambiamenti alle statistiche dalle modifiche delle Armature 2.0 sono esclusi ove possibile. Per ottenere risultati accurati, rimuovere tutte le modifiche con valori statistiche negativi.",
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
@@ -568,6 +569,7 @@
     "SelectPower": "Potere Minimo",
     "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
     "SelectedPerkKey": "Perk selezionato",
+    "StatIncorrectWarning": "Si prega di rimuovere tutte le modifiche con valori statistiche negativi per ottenere risultati accurati.\n\nA causa di modificatori negativi alle statistiche, DIM non può determinare il valore base di {{stats}}. È un limite dei dati forniti da Bungie.net.",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "Crea loadout",
     "Delete": "Cancella loadout",
     "Edit": "Modifica loadout",
+    "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
+    "EquippableDifferent2": "Il Potere massimo non è limitato dalla regola \"Una sola esotica\" quando viene determinato il Potere dei tuoi drop/potenti/armamenti di punta.",
     "FilteredItems": "Oggetti Filtrati",
     "FindAnother": "Trova un altro {{name}}",
     "FromEquipped": "Da equipaggiato",
@@ -705,6 +709,7 @@
       "Track": "Segui {{itemType}}",
       "Untrack": "Non seguire {{itemType}}"
     },
+    "TriageTab": "Triage",
     "Vault": "Depos"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",
+    "MaxGearPowerAll": "Potere massimo di tutto l'equipaggiamento",
     "MaxTotalPower": "Potere Massimo totale",
     "Milliseconds": "ms",
     "NoBonus": "Nessun Bonus",
@@ -859,7 +865,8 @@
     "Strength": "Forza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Totale"
+    "Total": "Totale",
+    "TotalIncorrectWarning": "A causa di modificatori negativi alle statistiche, DIM non può determinare il valore base di {{stats}}. È un limite dei dati forniti da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
