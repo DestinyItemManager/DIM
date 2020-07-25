@@ -1,5 +1,7 @@
 ## Next
 
+* More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
+
 ## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
 
 * Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
