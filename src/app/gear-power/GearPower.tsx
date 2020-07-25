@@ -4,7 +4,7 @@ import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
 import { D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
-import './GearPower.scss';
+import styles from './GearPower.m.scss';
 import { useSelector } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';
@@ -15,6 +15,17 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { itemPop } from 'app/dim-ui/scroll';
 import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
 import clsx from 'clsx';
+
+const bucketClassNames = {
+  Kinetic: styles.kinetic,
+  Energy: styles.energy,
+  Power: styles.power,
+  Helmet: styles.helmet,
+  Gauntlets: styles.gauntlets,
+  Chest: styles.chest,
+  Leg: styles.leg,
+  ClassItem: styles.classItem,
+};
 
 export default function GearPower() {
   const stores = useSelector<RootState, D2Store[]>((state) => storesSelector(state) as D2Store[]);
@@ -38,7 +49,7 @@ export default function GearPower() {
   const equippableMaxBasePower = getLight(selectedStore, equippable);
   const powerFloor = Math.floor(maxBasePower);
   const header = (
-    <div className="gearPowerHeader">
+    <div className={styles.gearPowerHeader}>
       <img src={selectedStore.icon} />
       <div>
         <h1>{selectedStore.name}</h1>
@@ -49,22 +60,23 @@ export default function GearPower() {
     </div>
   );
   return (
-    <Sheet onClose={reset} header={header} sheetClassName="gearPowerSheet">
-      <div className="gearPowerSheetContent">
-        <div className="gearGrid">
+    <Sheet onClose={reset} header={header} sheetClassName={styles.gearPowerSheet}>
+      <div className={styles.gearPowerSheetContent}>
+        <div className={styles.gearGrid}>
           {unrestricted.map((i) => {
             const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
             const diffSymbol = powerDiff >= 0 ? '+' : '';
-            const diffClass = powerDiff > 0 ? 'positive' : powerDiff < 0 ? 'negative' : 'neutral';
+            const diffClass =
+              powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
             return (
-              <div key={i.id} className={clsx(i.type, 'gearItem')}>
+              <div key={i.id} className={clsx(bucketClassNames[i.type], styles.gearItem)}>
                 <div onClick={() => itemPop(i)}>
-                  <BungieImage src={i.icon} className="itemImage" />
+                  <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>
-                <div className="gearItemInfo">
-                  <div className="primStat">{i.primStat?.value}</div>
-                  <div className="statMeta">
-                    <BucketIcon className="bucketImage" item={i} />
+                <div className={styles.gearItemInfo}>
+                  <div className={styles.primStat}>{i.primStat?.value}</div>
+                  <div className={styles.statMeta}>
+                    <BucketIcon className={styles.bucketImage} item={i} />
                     <div className={diffClass}>
                       {diffSymbol}
                       {powerDiff}
@@ -77,8 +89,8 @@ export default function GearPower() {
         </div>
         {maxBasePower !== equippableMaxBasePower && (
           <>
-            <div className="footNote">* {t('Loadouts.EquippableDifferent1')}</div>
-            <div className="footNote">{t('Loadouts.EquippableDifferent2')}</div>
+            <div className={styles.footNote}>* {t('Loadouts.EquippableDifferent1')}</div>
+            <div className={styles.footNote}>{t('Loadouts.EquippableDifferent2')}</div>
           </>
         )}
       </div>

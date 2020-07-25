@@ -85,6 +85,9 @@ const popperOptions = (): Partial<Options> => {
  *
  * Tooltop content can be any React element, and can be updated through React.
  *
+ * PressTip stops event propagation, so mobile can hold down on an element in lieu of hovering.
+ * `allowClickThrough` property suppresses this and lets click events propagate.
+ *
  * Example:
  *
  * <PressTip
