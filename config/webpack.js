@@ -503,13 +503,14 @@ module.exports = (env) => {
         fail_build: true,
       };
 
-      if (process.env.TRAVIS === 'true') {
+      if (process.env.GITHUB_ACTIONS === 'true') {
         Object.assign(packOptions, {
-          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
-          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
+          branch: process.env.GITHUB.EVENT.PULL_REQUEST.HEAD.REF,
+          commit: process.env.GITHUB.EVENT.PULL_REQUEST.HEAD.SHA,
+          prior_commit: process.env.GITHUB.EVENT.PULL_REQUEST.BASE.SHA,
         });
       }
-
+      // github.event.pull_request.head.sha
       config.plugins.push(new PacktrackerPlugin(packOptions));
     }
   }

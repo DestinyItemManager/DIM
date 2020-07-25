@@ -1,0 +1,29 @@
+# This workflow runs when a PR is requested
+name: Pull Request Flow
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DIM
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v1.4.2
+        with:
+          node-version: '14.x'
+
+      - name: yarn install
+        uses: bahmutov/npm-install@v1
+
+      - name: yarn test
+        run: yarn test
+
+      - name: yarn run lint-check
+        run: yarn run lint-check
+
+      - name: build beta
+        run: yarn run build-beta
