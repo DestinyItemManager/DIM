@@ -4,7 +4,7 @@ const fs = require("fs");
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
-  var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
+  var betaVersion = pkg.version.toString() + "." + process.env.GITHUB_RUN_NUMBER;
 
   grunt.initConfig({
     pkg: pkg,

@@ -46,8 +46,8 @@ module.exports = (env) => {
   });
 
   let version = packageJson.version.toString();
-  if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
-    version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
+  if (env.beta && process.env.GITHUB_RUN_NUMBER) {
+    version += `.${process.env.GITHUB_RUN_NUMBER}`;
   }
 
   const buildTime = Date.now();
@@ -357,7 +357,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env.name),
         $DIM_BUILD_DATE: JSON.stringify(buildTime),
-        // These are set from the Travis repo settings instead of .travis.yml
+        // These are set from the Github Action
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
