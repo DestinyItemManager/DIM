@@ -815,7 +815,9 @@ function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).map((i) => i.id));
+            _maxPowerLoadoutItems.push(
+              ...maxLightItemSet(stores, store).unrestricted.map((i) => i.id)
+            );
           });
         }
 

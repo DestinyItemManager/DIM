@@ -13,6 +13,7 @@ import Compare from '../compare/Compare';
 import D2Farming from '../farming/D2Farming';
 import D1Farming from '../farming/D1Farming';
 import InfusionFinder from '../infuse/InfusionFinder';
+import GearPower from '../gear-power/GearPower';
 import { queueAction } from './action-queue';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
@@ -67,6 +68,7 @@ function Inventory({ storesLoaded, account }: Props) {
       <StackableDragHelp />
       <DragPerformanceFix />
       {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+      {account.destinyVersion === 2 && <GearPower />}
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ClearNewItems account={account} />
     </ErrorBoundary>

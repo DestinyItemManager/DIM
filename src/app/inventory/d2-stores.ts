@@ -39,6 +39,7 @@ import { currentAccountSelector } from 'app/accounts/reducer';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getArtifactBonus } from './stores-helpers';
+import { ItemPowerSet } from './ItemPowerSet';
 
 /**
  * Update the high level character information for all the stores
@@ -413,7 +414,11 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getLight(store, maxLightItemSet(stores, store));
+      const { equippable, unrestricted } = maxLightItemSet(stores, store);
+      const unrestrictedMaxGearPower = getLight(store, unrestricted);
+      const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
+      const equippableMaxGearPower = getLight(store, equippable);
+
       const hasClassified = stores.some((s) =>
         s.items.some(
           (i) =>
@@ -422,12 +427,19 @@ function makeD2StoresService(): D2StoreServiceType {
         )
       );
 
+      const differentEquippableMaxGearPower =
+        (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) ||
+        undefined;
+
       store.stats.maxGearPower = {
         hash: -3,
-        name: t('Stats.MaxGearPower'),
+        name: t('Stats.MaxGearPowerAll'),
+        // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
         hasClassified,
-        description: def.displayProperties.description,
-        value: maxBasePower,
+        description: '',
+        differentEquippableMaxGearPower,
+        richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
+        value: unrestrictedMaxGearPower,
         icon: helmetIcon,
       };
 
@@ -436,7 +448,7 @@ function makeD2StoresService(): D2StoreServiceType {
         hash: -2,
         name: t('Stats.PowerModifier'),
         hasClassified: false,
-        description: def.displayProperties.description,
+        description: '',
         value: artifactPower,
         icon: xpIcon,
       };
@@ -445,8 +457,8 @@ function makeD2StoresService(): D2StoreServiceType {
         hash: -1,
         name: t('Stats.MaxTotalPower'),
         hasClassified,
-        description: def.displayProperties.description,
-        value: maxBasePower + artifactPower,
+        description: '',
+        value: unrestrictedMaxGearPower + artifactPower,
         icon: bungieNetPath(def.displayProperties.icon),
       };
     }

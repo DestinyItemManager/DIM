@@ -1,0 +1,39 @@
+.itemPowerSet {
+  display: grid;
+  margin: auto;
+  width: fit-content;
+  grid-template-columns: max-content max-content max-content max-content;
+  grid-gap: 1px 6px;
+  align-items: center;
+
+  img {
+    height: 20px;
+    width: 20px;
+
+    vertical-align: middle;
+    &.invert {
+      filter: invert(1);
+    }
+  }
+
+  .bucketName,
+  .powerDiff {
+    opacity: 0.5;
+  }
+
+  .bucketName {
+    text-align: right;
+  }
+  .powerDiff {
+    text-align: center;
+  }
+  .spanGrid {
+    grid-column-end: span 4;
+    hr {
+      margin: 3px;
+    }
+  }
+}
+.dimmed {
+  opacity: 0.5;
+}
