@@ -583,11 +583,25 @@ function searchFilters(
         switch (ast.op) {
           case 'and': {
             const fns = ast.operands.map(transformAST);
-            return (item) => fns.every((fn) => fn(item));
+            return (item) => {
+              for (const fn of fns) {
+                if (!fn(item)) {
+                  return false;
+                }
+              }
+              return true;
+            };
           }
           case 'or': {
             const fns = ast.operands.map(transformAST);
-            return (item) => fns.some((fn) => fn(item));
+            return (item) => {
+              for (const fn of fns) {
+                if (fn(item)) {
+                  return true;
+                }
+              }
+              return false;
+            };
           }
           case 'not': {
             const fn = transformAST(ast.operand);
@@ -606,7 +620,6 @@ function searchFilters(
                 ) => boolean;
                 return (item: DimItem) => filterFunction.call(filterTable, item, filterValue);
               }
-              // TODO: Throw error?
               return () => true;
             };
 
@@ -645,7 +658,6 @@ function searchFilters(
                 return filterByTable(filterName, filterValue);
             }
 
-            // TODO: Throw error?
             return () => true;
           }
         }
