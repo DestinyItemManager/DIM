@@ -16,6 +16,18 @@ jobs:
         with:
           node-version: '14.x'
 
+      - name: Cache eslint
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-eslint
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: yarn install
         uses: bahmutov/npm-install@v1
 
