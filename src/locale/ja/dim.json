@@ -350,6 +350,7 @@
     "Year": "Destinyの何年目にでてきたかを表示"
   },
   "General": {
+    "ClickForDetails": "クリックして詳細表示",
     "UserGuideLink": "ユーザーガイド"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "キャラクターからこのアイテムを外せません",
     "Drag": "Shiftキーを押しながら、部分スタックを転送します",
     "NoStorage": "DIMがデータを保管できません。",
-    "NoStorageMessage": "DIMはブラウザにデータを保存できません。これは、プライベートモードまたはシークレットモードでのブラウズ、またはディスク容量が少ない場合に発生することがあります。"
+    "NoStorageMessage": "DIMは、ブラウザにデータを保存できません。この問題は、プライベートモードでブラウジングした場合、もしくは空きディスク容量が少ない場合が原因している可能性があります。DIMにログインしたり、利用することができません。"
   },
   "Hotkey": {
     "CheatSheetTitle": "キーボード ショートカット:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "パークを選択したり、統計をフィルタして並べ替えたり、項目をロックして潜在的なロードアウトを絞り込みます。",
-    "OptimizerExplanationArmour2Mods": "アーマー2.0 Modは統計レベルの計算には含まれません。",
+    "OptimizerExplanationArmour2Mods": "アーマー2.0のパーツに由来するステータス変更は、可能な限り除外されます。正確な結果を得る為には、負のステータスに貢献する全てのパーツを解除して下さい。",
     "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックして除外します。アイテムをサイドバーにドラッグして、除外またはロックします。",
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ロックされたアイテムをリセットする",
@@ -568,6 +569,7 @@
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
     "SelectedPerkKey": "パークを選択",
+    "StatIncorrectWarning": "正確な結果を得るためには、ステータスの値が負のパーツを削除して下さい。\n\n負のステータスが原因で、DIMは、いくつかアイテムに含まれる {{stats}} の基準値を決定できません。これは、 Bungie.net から送信される情報の制限です。",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "ロードアウトを作成",
     "Delete": "ロードアウトを削除",
     "Edit": "ロードアウトを編集",
+    "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
+    "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは「1つのエキゾチック」ルールによって制限されません。",
     "FilteredItems": "フィルタ処理された項目",
     "FindAnother": "別の {{name}} を検索する",
     "FromEquipped": "装備している",
@@ -705,6 +709,7 @@
       "Track": "{{itemType}} を追跡する",
       "Untrack": "{{itemType}} を追跡しない"
     },
+    "TriageTab": "トリアージ",
     "Vault": "保管庫"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "MaxGearPower": "装備可能なギアの最大出力",
+    "MaxGearPowerAll": "装備可能な装備での最大パワー値",
     "MaxTotalPower": "最大総合パワー",
     "Milliseconds": "ミリ秒",
     "NoBonus": "ボーナスなし。",
@@ -859,7 +865,8 @@
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "合計"
+    "Total": "合計",
+    "TotalIncorrectWarning": "負のステータスが原因で、DIMは、 {{stats}} の基準値を決定できません。これは、 Bungie.net から送信される情報の制限です。"
   },
   "Storage": {
     "ApiPermissionPrompt": {

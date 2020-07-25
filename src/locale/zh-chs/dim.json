@@ -350,6 +350,7 @@
     "Year": "按照物品推出年份显示."
   },
   "General": {
+    "ClickForDetails": "Click for details",
     "UserGuideLink": "用户指南"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "无法从该角色中移出物品.",
     "Drag": "按住shift转移部分堆叠",
     "NoStorage": "DIM无法存储数据",
-    "NoStorageMessage": "DIM无法在您的流览器中存储资料。这可能是流览器的无痕或隐身模式造成的，或许您磁碟空间不足。DIM无法完成后续操作。"
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "键盘快速键",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} 状态混合",
     "NumStatMixes_plural": "{{count, number}} 状态混合",
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
-    "OptimizerExplanationArmour2Mods": "属性等级计算不包括防具2.0模组",
+    "OptimizerExplanationArmour2Mods": "已尽可能排除护甲 2.0 模组导致的属性变动。为了获得精确结果，移除所有带有属性惩罚的模组。",
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
     "ProcessingSets": "正在处理 {{character}} 的配装",
     "ResetLocked": "重置锁定物品",
@@ -568,6 +569,7 @@
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
     "SelectedPerkKey": "已选特性",
+    "StatIncorrectWarning": "为了获得精确结果，请移除所有带有属性惩罚的模组。\n\n因为 Bungie.net 的数据限制，鉴于负面属性影响，DIM 无法确定一些包含物品上 {{stats}} 的基础数值。",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "创建配装",
     "Delete": "删除配装",
     "Edit": "编辑配装",
+    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
+    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
     "FilteredItems": "已过滤的物品",
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
@@ -705,6 +709,7 @@
       "Track": "跟踪{{itemType}}",
       "Untrack": "取消跟踪{{itemType}}"
     },
+    "TriageTab": "Triage",
     "Vault": "保险库"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "训练",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",
+    "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "最大光等",
     "Milliseconds": "毫秒",
     "NoBonus": "无加成",
@@ -859,7 +865,8 @@
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
-    "Total": "总计"
+    "Total": "总计",
+    "TotalIncorrectWarning": "因为 Bungie.net 的数据限制，鉴于负面属性影响，DIM 无法确定 {{stats}} 的基础数值。"
   },
   "Storage": {
     "ApiPermissionPrompt": {
