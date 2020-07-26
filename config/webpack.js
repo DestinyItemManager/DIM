@@ -424,10 +424,15 @@ module.exports = (env) => {
     config.plugins.push(new Visualizer());
   }
 
-  if (env.release) {
+  if (!env.dev) {
     config.plugins.push(
       new CopyWebpackPlugin({
-        patterns: [{ from: './src/android-config.json', to: '.well-known/assetlinks.json' }],
+        patterns: [
+          {
+            from: `./src/android-config${env.release ? '' : '.beta'}.json`,
+            to: '.well-known/assetlinks.json',
+          },
+        ],
       })
     );
   }
