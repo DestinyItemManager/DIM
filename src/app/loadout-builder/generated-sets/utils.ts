@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import { DimItem } from '../../inventory/item-types';
-import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { ArmorSet, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 import { statKeys } from '../types';
-import { canSetTakeGeneralAndSeasonalMods } from '../mod-utils';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
@@ -21,13 +20,8 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
   return comparators;
 }
 
-/**
- * Filter sets down based on stat filters, locked perks, etc.
- * TODO This needs to become a sorter, not a filter. All 'filtering' should be done in process.
- */
-export function filterGeneratedSets(
+export function sortGeneratedSets(
   lockedMap: LockedMap,
-  lockedArmor2ModMap: LockedArmor2ModMap,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>,
   sets?: readonly ArmorSet[]
@@ -36,22 +30,8 @@ export function filterGeneratedSets(
     return;
   }
 
-  let matchedSets = Array.from(sets);
-
-  matchedSets = matchedSets.filter((set) => {
-    // TODO this is too restrictive as there may be other combinations that can take the mods
-    if (
-      $featureFlags.armor2ModPicker &&
-      !canSetTakeGeneralAndSeasonalMods(set.firstValidSet, lockedArmor2ModMap)
-    ) {
-      return false;
-    }
-
-    return true;
-  });
-
   // TODO Can these two sorts be merged?
-  matchedSets = matchedSets.sort(
+  let matchedSets = Array.from(sets).sort(
     chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
   );
 

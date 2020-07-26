@@ -8,7 +8,7 @@ import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from 'app/store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets } from './generated-sets/utils';
+import { sortGeneratedSets } from './generated-sets/utils';
 import { isLoadoutBuilderItem } from './utils';
 import { filterItems } from './preProcessFilter';
 import { StatTypes, ItemsByBucket, statKeys, statHashToType } from './types';
@@ -172,8 +172,8 @@ function LoadoutBuilder({
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
 
   const filteredSets = useMemo(
-    () => filterGeneratedSets(lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets),
-    [lockedMap, lockedArmor2Mods, statOrder, enabledStats, result?.sets]
+    () => sortGeneratedSets(lockedMap, statOrder, enabledStats, result?.sets),
+    [lockedMap, statOrder, enabledStats, result?.sets]
   );
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);

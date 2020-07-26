@@ -1,4 +1,5 @@
 import { wrap, releaseProxy } from 'comlink';
+import _ from 'lodash';
 import { useEffect, useState, useMemo } from 'react';
 import {
   ItemsByBucket,
@@ -18,12 +19,14 @@ import {
   ProcessArmorSet,
   ProcessSocket,
   ProcessSockets,
-  ProcessModMetadata,
+  LockedArmor2ProcessMods,
+  ProcessMod,
 } from '../processWorker/types';
 import {
   getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
 } from 'app/utils/item-utils';
+import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 
 interface ProcessState {
   processing: boolean;
@@ -96,8 +99,10 @@ export function useProcess(
         processItems,
         lockedItems,
         mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
-        getTotalSeasonalModStatChanges(lockedSeasonalMods),
-        lockedArmor2ModMap,
+        getTotalSeasonalModStatChanges(
+          $featureFlags.armor2ModPicker ? lockedArmor2ModMap.seasonal : lockedSeasonalMods
+        ),
+        mapArmo2ModsToProcessMods(lockedArmor2ModMap),
         assumeMasterwork,
         statOrder,
         statFilters,
@@ -186,6 +191,8 @@ function createWorker() {
   return { worker, cleanup };
 }
 
+// TODO Move all the stuff below here to its own file so the hook specific stuff is clear
+
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   return {
     plug: dimSocket.plug && {
@@ -199,26 +206,48 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
-function mapSeasonalModsToSeasonsArray(
-  lockedSeasonalMods: readonly LockedModBase[]
-): ProcessModMetadata[] {
+function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): ProcessMod[] {
   const metadatas = lockedSeasonalMods.map((mod) => ({
     mod,
     metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
   }));
 
-  const modMetadata: ProcessModMetadata[] = [];
+  const modMetadata: ProcessMod[] = [];
   for (const entry of metadatas) {
-    if (entry?.metadata) {
-      modMetadata.push({
-        season: entry.metadata.season,
-        tag: entry.metadata.tag,
-        energyType: entry.mod.mod.plug.energyCost.energyType,
-      });
-    }
+    modMetadata.push({
+      season: entry.metadata?.season,
+      tag: entry.metadata?.tag,
+      energyType: entry.mod.mod.plug.energyCost.energyType,
+      investmentStats: entry.mod.mod.investmentStats,
+    });
   }
 
   return modMetadata;
+}
+
+function mapArmo2ModsToProcessMods(lockedMods: LockedArmor2ModMap): LockedArmor2ProcessMods {
+  const seasonalMetas = lockedMods.seasonal.map((mod) =>
+    getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)
+  );
+
+  return _.mapValues(lockedMods, (mods) =>
+    mods.map((mod, index) => {
+      const processMod = {
+        energyType: mod.mod.plug.energyCost.energyType,
+        investmentStats: mod.mod.investmentStats,
+      };
+
+      if (mod.category === 'seasonal') {
+        return {
+          ...processMod,
+          season: seasonalMetas[index]?.season,
+          tag: seasonalMetas[index]?.tag,
+        };
+      }
+
+      return processMod;
+    })
+  );
 }
 
 /**
@@ -226,7 +255,9 @@ function mapSeasonalModsToSeasonsArray(
  * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
  * effect stat values in game.
  */
-function getTotalSeasonalModStatChanges(lockedSeasonalMods: readonly LockedModBase[]) {
+function getTotalSeasonalModStatChanges(
+  lockedSeasonalMods: readonly { mod: { investmentStats: DestinyItemInvestmentStatDefinition[] } }[]
+) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,

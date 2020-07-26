@@ -4,8 +4,6 @@ import {
   StatTypes,
   LockedItemType,
   LockedMap,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
   MinMaxIgnored,
   MinMax,
 } from '../types';
@@ -19,9 +17,15 @@ import {
   ProcessArmorSet,
   IntermediateProcessArmorSet,
   ProcessModMetadata,
+  LockedArmor2ProcessMods,
+  ProcessMod,
 } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { canTakeAllSeasonalMods, sortProcessModMetadataOrProcessItem } from './processUtils';
+import {
+  canTakeAllSeasonalMods,
+  sortProcessModsOrProcessItems,
+  canTakeAllGeneralMods,
+} from './processUtils';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -95,7 +99,7 @@ export function process(
   lockedItems: LockedMap,
   processedSeasonalMods: ProcessModMetadata[],
   seasonalModStatTotals: { [stat in StatTypes]: number },
-  lockedArmor2ModMap: LockedArmor2ModMap,
+  lockedArmor2ModMap: LockedArmor2ProcessMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [stat in StatTypes]: MinMaxIgnored },
@@ -108,7 +112,7 @@ export function process(
 } {
   const pstart = performance.now();
 
-  processedSeasonalMods.sort(sortProcessModMetadataOrProcessItem);
+  processedSeasonalMods.sort(sortProcessModsOrProcessItems);
 
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
@@ -317,6 +321,24 @@ export function process(
                 continue;
               }
 
+              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+              if (
+                lockedArmor2ModMap.seasonal.length &&
+                !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet)
+              ) {
+                continue;
+              }
+
+              if (
+                lockedArmor2ModMap[Armor2ModPlugCategories.general].length &&
+                !canTakeAllGeneralMods(
+                  lockedArmor2ModMap[Armor2ModPlugCategories.general],
+                  firstValidSet
+                )
+              ) {
+                continue;
+              }
+
               const newArmorSet: IntermediateProcessArmorSet = {
                 sets: [
                   {
@@ -396,7 +418,7 @@ function byStatMix(
   assumeMasterwork: boolean,
   orderedStatValues: number[],
   lockedItems?: readonly LockedItemType[],
-  lockedArmor2Mods?: LockedArmor2Mod[]
+  lockedArmor2Mods?: ProcessMod[]
 ) {
   const lockedModStats: { [statHash: number]: number } = {};
   // Handle old armour mods
@@ -414,7 +436,7 @@ function byStatMix(
   // Handle armour 2.0 mods
   if (lockedArmor2Mods) {
     for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.mod.investmentStats) {
+      for (const stat of lockedMod.investmentStats) {
         lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
         lockedModStats[stat.statTypeHash] += stat.value;
       }
