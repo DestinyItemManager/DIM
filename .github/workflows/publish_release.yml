@@ -1,8 +1,10 @@
 # This workflow runs when a PR is merged
-name: Pull Request Merge Flow
+# This workflow runs every Monday @ 0000 UTC (1700 PST)
+name: Publish Release
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"
 
 jobs:
   build:
@@ -45,8 +47,8 @@ jobs:
           encrypted_472c4900477c_key: ${{ secrets.encrypted_472c4900477c_key }}
           encrypted_472c4900477c_iv: ${{ secrets.encrypted_472c4900477c_iv }}
 
-      - name: build beta
-        run: yarn run build-beta
+      - name: build release
+        run: yarn run build-release
         env:
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
@@ -54,10 +56,10 @@ jobs:
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       - name: Set Version
-        run: echo ::set-env name=VERSION::"$(node -p -e "require('./package.json').version + '.' + $GITHUB_RUN_ID")"
+        run: echo ::set-env name=VERSION::"$(node -p -e "require('./package.json').version)"
 
       - name: Echo Version
-        run: echo New Beta version is $VERSION
+        run: echo New production version is $VERSION
 
       - name: Compress Files
         uses: stefh/ghaction-CompressFiles@v1
@@ -85,11 +87,6 @@ jobs:
           remote_path: ${{ secrets.REMOTE_PATH }}
           remote_host: ${{ secrets.REMOTE_HOST }}
           remote_key: 'config/dim_travis.rsa'
-
-      - name: Update Sentry
-        run: |
-            npx sentry-cli releases new "{{ $VERSION }}" --finalize
-            npx sentry-cli releases set-commits "{{ $VERSION }}" --auto
 
       - name: Update CF
         if: $CLOUDFLARE_KEY
