@@ -44,11 +44,11 @@ jobs:
           encrypted_3184b4fb5b91_key: ${{ secrets.encrypted_3184b4fb5b91_key }}
           encrypted_3184b4fb5b91_iv: ${{ secrets.encrypted_3184b4fb5b91_iv }}
 
-      - name: Set Version
+      - name: Set Version PATCH
         if: github.event_name == 'workflow_dispatch'
         run: echo ::set-env name=VERSION::"$(npm --no-git-tag-version version patch | sed 's/^v//)"
 
-      - name: Set Version
+      - name: Set Version MINOR
         if: github.event_name != 'workflow_dispatch'
         run: echo ::set-env name=VERSION::"$(npm --no-git-tag-version version minor | sed 's/^v//)"
 
