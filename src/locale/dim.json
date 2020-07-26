@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible. To get accurate results, remove all mods with negative stat contributions.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see ",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
@@ -574,7 +574,8 @@
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
-    "UnlockItem": "Unlock Item"
+    "UnlockItem": "Unlock Item",
+    "WikiWarningModsStats": "A Warning on Mods and Stats"
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",

@@ -126,6 +126,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
           {'\n'}
           {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}{' '}
+          <UserGuideLink
+            topic="Loadout_Optimizer#A_Warning_on_Mods_and_Stats"
+            title={t('LoadoutBuilder.WikiWarningModsStats')}
+          />
+          {'. '}
           <UserGuideLink topic="Loadout_Optimizer" />
         </p>
         <p>
