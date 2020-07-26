@@ -30,6 +30,49 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
+      - name: git config
+        run: |
+          git config --global user.email "destinyitemmanager@gmail.com"
+          git config --global user.name "DIM Release Bot"
+
+      - name: openssl
+        run: |
+          openssl aes-256-cbc -K $encrypted_3184b4fb5b91_key -iv $encrypted_3184b4fb5b91_iv -in id_rsa.enc -out ~/.ssh/dim_travis.rsa -d
+          chmod 600 ~/.ssh/dim_travis.rsa
+          echo "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/dim_travis.rsa\n" >> ~/.ssh/config
+        env:
+          encrypted_3184b4fb5b91_key: ${{ secrets.encrypted_3184b4fb5b91_key }}
+          encrypted_3184b4fb5b91_iv: ${{ secrets.encrypted_3184b4fb5b91_iv }}
+
+      - name: Set Version
+        if: github.event_name == 'workflow_dispatch'
+        run: echo ::set-env name=VERSION::"$(npm --no-git-tag-version version patch | sed 's/^v//)"
+
+      - name: Set Version
+        if: github.event_name != 'workflow_dispatch'
+        run: echo ::set-env name=VERSION::"$(npm --no-git-tag-version version minor | sed 's/^v//)"
+
+      - name: Echo Version
+        run: echo New production version is $VERSION
+
+      - name: Update changelog & release notes
+        run: |
+          echo $VERSION > release-notes.txt
+          awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >> release-notes.txt
+          OPENSPAN='\<span className="changelog-date"\>'
+          CLOSESPAN='\<\/span\>'
+          DATE=$(TZ="America/Los_Angeles" date +"%Y-%m-%d")
+          perl -i'' -pe"s/^## Next/## Next\n\n## $VERSION $OPENSPAN($DATE)$CLOSESPAN/" docs/CHANGELOG.md
+
+      - name: Add these other changes to the version commit
+        run: |
+          git add -u
+          git commit -m"$VERSION"
+          git tag "v$VERSION"
+
+      - name: Set up SSH keys for rsync
+        run: cp ~/.ssh/dim_travis.rsa config && cp ../id_rsa.pub config/dim_travis.rsa.pub
+
       - name: yarn install
         uses: bahmutov/npm-install@v1
 
@@ -41,12 +84,6 @@ jobs:
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
           yarn run lint-check
 
-      - name: openssl
-        run: openssl aes-256-cbc -K "$encrypted_472c4900477c_key" -iv "$encrypted_472c4900477c_iv" -in config/dim_travis.rsa.enc -out config/dim_travis.rsa -d && chmod 600 config/dim_travis.rsa
-        env:
-          encrypted_472c4900477c_key: ${{ secrets.encrypted_472c4900477c_key }}
-          encrypted_472c4900477c_iv: ${{ secrets.encrypted_472c4900477c_iv }}
-
       - name: build release
         run: yarn run build-release
         env:
@@ -54,12 +91,6 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
-
-      - name: Set Version
-        run: echo ::set-env name=VERSION::"$(node -p -e "require('./package.json').version)"
-
-      - name: Echo Version
-        run: echo New production version is $VERSION
 
       - name: Compress Files
         uses: stefh/ghaction-CompressFiles@v1
@@ -90,12 +121,18 @@ jobs:
 
       - name: Update CF
         if: $CLOUDFLARE_KEY
+        # Purge the cache in CloudFlare for long-lived files
         run: |
-              curl -X POST "https://api.cloudflare.com/client/v4/zones/2c34c69276ed0f6eb2b9e1518fe56f74/purge_cache" \
-              -H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
-              -H "X-Auth-Key: $CLOUDFLARE_KEY" \
-              -H "Content-Type: application/json" \
-              --data '{"files":["https://beta.destinyitemmanager.com", "https://beta.destinyitemmanager.com/index.html", "https://beta.destinyitemmanager.com/version.json", "https://beta.destinyitemmanager.com/service-worker.js", "https://beta.destinyitemmanager.com/gdrive-return.html", "https://beta.destinyitemmanager.com/return.html", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]}'
+            curl -X POST "https://api.cloudflare.com/client/v4/zones/2c34c69276ed0f6eb2b9e1518fe56f74/purge_cache" \
+              -H "X-Auth-Email: $CLOUDFLARE_EMAIL" -H "X-Auth-Key: $CLOUDFLARE_KEY" -H "Content-Type: application/json" \
+              --data '{"files":["https://app.destinyitemmanager.com", "https://app.destinyitemmanager.com/index.html", "https://app.destinyitemmanager.com/version.json", "https://app.destinyitemmanager.com/service-worker.js", "https://app.destinyitemmanager.com/gdrive-return.html", "https://app.destinyitemmanager.com/return.html", "https://app.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://app.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]}'
         env:
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }},
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }},
+
+
+      - name: push tags and changes
+        run: git push --tags origin master:master
+
+      - name: publish a release on GitHub
+        run: GITHUB_TOKEN=$GITHUB_ACCESS_TOKEN hub release create -c -F release-notes.txt "v$VERSION"
