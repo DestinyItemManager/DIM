@@ -11,6 +11,7 @@ import {
   MinMax,
   LockedModBase,
   statHashToType,
+  ModPickerCategories,
 } from '../types';
 import { DimItem, DimSocket, DimSockets, D2Item } from 'app/inventory/item-types';
 import {
@@ -99,8 +100,10 @@ export function useProcess(
         processItems,
         lockedItems,
         mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
-        getTotalSeasonalModStatChanges(
-          $featureFlags.armor2ModPicker ? lockedArmor2ModMap.seasonal : lockedSeasonalMods
+        getTotalModStatChanges(
+          $featureFlags.armor2ModPicker
+            ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
+            : lockedSeasonalMods
         ),
         mapArmo2ModsToProcessMods(lockedArmor2ModMap),
         assumeMasterwork,
@@ -251,11 +254,14 @@ function mapArmo2ModsToProcessMods(lockedMods: LockedArmor2ModMap): LockedArmor2
 }
 
 /**
- * This sums up the total stat contributions across locked seasonal mods. These are then applied
+ * This sums up the total stat contributions across mods passed in. These are then applied
  * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
- * effect stat values in game.
+ * effect stat values in game and allows us to do some preprocessing.
+ *
+ * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
+ * just for the seasonal mods.
  */
-function getTotalSeasonalModStatChanges(
+function getTotalModStatChanges(
   lockedSeasonalMods: readonly { mod: { investmentStats: DestinyItemInvestmentStatDefinition[] } }[]
 ) {
   const totals: { [stat in StatTypes]: number } = {
