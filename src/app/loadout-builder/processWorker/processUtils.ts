@@ -1,4 +1,4 @@
-import { ProcessModMetadata, ProcessMod } from './types';
+import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 interface SortParam {
@@ -10,6 +10,10 @@ export interface ProcessItemSubset extends SortParam {
   compatibleModSeasons?: string[];
 }
 
+/**
+ * This sorting function is pivitol in the algorithm to figure out it seasonal mods can be slotted into
+ * a list of items. It sorts by season and then energyType in descending order.
+ */
 export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
   if (a.season && b.season) {
     // any energy is 0 so check undefined rather than falsey
@@ -24,6 +28,10 @@ export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
   return -1;
 }
 
+/**
+ * This sorting function is pivitol in the algorithm to figure out it general mods can be slotted into
+ * a list of items. It sorts by energyType in descending order.
+ */
 export function sortGeneralModsOrProcessItem(a: SortParam, b: SortParam) {
   // any energy is 0 so check undefined rather than falsey
   if (a.energyType !== undefined && b.energyType !== undefined) {
@@ -38,13 +46,12 @@ export function sortGeneralModsOrProcessItem(a: SortParam, b: SortParam) {
 /**
  * See if we can slot all the locked seasonal mods.
  *
+ * This function need to be kept inline with ../mod-utils#assignAllSeasonalMods.
+ *
  * @param processedMods These mods must be sorted by sortProcessModsOrProcessItems.
  * @param items The process items to test for mod slotting.
  */
-export function canTakeAllSeasonalMods(
-  processedMods: ProcessModMetadata[] | ProcessMod[],
-  items: ProcessItemSubset[]
-) {
+export function canTakeAllSeasonalMods(processedMods: ProcessMod[], items: ProcessItemSubset[]) {
   const sortedItems = [...items].sort(sortProcessModsOrProcessItems);
 
   let modIndex = 0;
@@ -77,6 +84,8 @@ export function canTakeAllSeasonalMods(
 
 /**
  * See if we can slot all the locked general mods.
+ *
+ * This function need to be kept inline with ../mod-utils#assignAllGeneralMods.
  *
  * @param processedMods These mods must be sorted by sortGeneralModsOrProcessItem.
  * @param items The process items to test for mod slotting.

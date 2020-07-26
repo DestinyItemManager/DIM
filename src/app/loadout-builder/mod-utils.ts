@@ -88,6 +88,8 @@ function assignModsForSlot(
  * Checks to see if the passed in seasonal mods can be assigned to the armour set.
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
+ *
+ * This function need to be kept inline with processWorker/processUtils#canTakeAllSeasonalMods.
  */
 function assignAllSeasonalMods(
   setToMatch: readonly DimItem[],

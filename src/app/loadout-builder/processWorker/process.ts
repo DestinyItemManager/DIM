@@ -16,7 +16,6 @@ import {
   ProcessItem,
   ProcessArmorSet,
   IntermediateProcessArmorSet,
-  ProcessModMetadata,
   LockedArmor2ProcessMods,
   ProcessMod,
 } from './types';
@@ -93,12 +92,13 @@ function insertIntoSetTracker(
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
+ * @param modStatTotals Stats that are applied to final stat totals, think general and seasonal mod stats
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
   lockedItems: LockedMap,
-  processedSeasonalMods: ProcessModMetadata[],
-  seasonalModStatTotals: { [stat in StatTypes]: number },
+  processedSeasonalMods: ProcessMod[],
+  modStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ProcessMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -278,7 +278,7 @@ export function process(
               let index = 1;
               let statRangeExceeded = false;
               for (const statKey of orderedConsideredStats) {
-                stats[statKey] += seasonalModStatTotals[statKey];
+                stats[statKey] += modStatTotals[statKey];
                 const tier = statTier(stats[statKey]);
 
                 if (tier > statRanges[statKey].max) {
@@ -314,27 +314,17 @@ export function process(
                 }
               }
 
-              if (
-                processedSeasonalMods.length &&
-                !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)
-              ) {
-                continue;
-              }
-
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                lockedArmor2ModMap.seasonal.length &&
-                !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet)
-              ) {
-                continue;
-              }
-
-              if (
-                lockedArmor2ModMap[Armor2ModPlugCategories.general].length &&
-                !canTakeAllGeneralMods(
-                  lockedArmor2ModMap[Armor2ModPlugCategories.general],
-                  firstValidSet
-                )
+                (processedSeasonalMods.length &&
+                  !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)) ||
+                (lockedArmor2ModMap[Armor2ModPlugCategories.general].length &&
+                  !canTakeAllGeneralMods(
+                    lockedArmor2ModMap[Armor2ModPlugCategories.general],
+                    firstValidSet
+                  )) ||
+                (lockedArmor2ModMap.seasonal.length &&
+                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet))
               ) {
                 continue;
               }

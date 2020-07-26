@@ -3,11 +3,11 @@ import {
   sortProcessModsOrProcessItems,
   ProcessItemSubset,
 } from './processUtils';
-import { ProcessModMetadata } from './types';
+import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
-function getMod(season: number, tag: string, energyType: DestinyEnergyType): ProcessModMetadata {
-  return { season, tag, energyType };
+function getMod(season: number, tag: string, energyType: DestinyEnergyType): ProcessMod {
+  return { season, tag, energyType, investmentStats: [] };
 }
 
 function getItem(
