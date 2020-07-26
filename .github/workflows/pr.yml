@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout DIM
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
       - name: Install Node
         uses: actions/setup-node@v1.4.2
