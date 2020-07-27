@@ -113,7 +113,11 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
                     {isVault(store) ? (
                       <VaultStats store={store} />
                     ) : (
-                      <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+                      <CharacterStats
+                        destinyVersion={store.destinyVersion}
+                        stats={store.stats}
+                        storeId={store.id}
+                      />
                     )}
                   </View>
                 ))}
@@ -155,7 +159,11 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             {isVault(store) ? (
               <VaultStats store={store} />
             ) : (
-              <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+              <CharacterStats
+                destinyVersion={store.destinyVersion}
+                stats={store.stats}
+                storeId={store.id}
+              />
             )}
           </div>
         ))}

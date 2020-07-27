@@ -77,7 +77,11 @@ async function responseIndicatesBadToken(response: Response) {
     (data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
       data.ErrorCode === PlatformErrorCodes.WebAuthRequired ||
       // (also means the access token has expired)
-      data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed)
+      data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed ||
+      data.ErrorCode === PlatformErrorCodes.AuthorizationRecordRevoked ||
+      data.ErrorCode === PlatformErrorCodes.AuthorizationRecordExpired ||
+      data.ErrorCode === PlatformErrorCodes.AuthorizationCodeStale ||
+      data.ErrorCode === PlatformErrorCodes.AuthorizationCodeInvalid)
   );
 }
 

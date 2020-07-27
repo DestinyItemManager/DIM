@@ -353,6 +353,7 @@
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "General": {
+    "ClickForDetails": "Click for details",
     "UserGuideLink": "User guide"
   },
   "Ghost": {
@@ -598,6 +599,8 @@
     "Create": "Create Loadout",
     "Delete": "Delete Loadout",
     "Edit": "Edit Loadout",
+    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
+    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
@@ -853,6 +856,7 @@
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxGearPowerAll": "Maximum Power of all gear",
     "PowerModifier": "Power granted by seasonal experience progression",
     "MaxTotalPower": "Maximum total Power",
     "Milliseconds": "ms",

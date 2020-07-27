@@ -19,7 +19,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
         -H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
         -H "X-Auth-Key: $CLOUDFLARE_KEY" \
         -H "Content-Type: application/json" \
-        --data '{"files":["https://beta.destinyitemmanager.com", "https://beta.destinyitemmanager.com/index.html", "https://beta.destinyitemmanager.com/version.json", "https://beta.destinyitemmanager.com/service-worker.js", "https://beta.destinyitemmanager.com/gdrive-return.html", "https://beta.destinyitemmanager.com/return.html", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]}'
+        --data '{"files":["https://beta.destinyitemmanager.com", "https://beta.destinyitemmanager.com/index.html", "https://beta.destinyitemmanager.com/version.json", "https://beta.destinyitemmanager.com/service-worker.js", "https://beta.destinyitemmanager.com/gdrive-return.html", "https://beta.destinyitemmanager.com/return.html", "https://beta.destinyitemmanager.com/.well-known/assetlinks.json", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]}'
   fi
 else
   # PRs should just check if the app builds

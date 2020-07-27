@@ -519,13 +519,13 @@ AddDefaultCharset utf-8
 # https://www.mnot.net/blog/2010/04/07/well-known
 # https://tools.ietf.org/html/rfc5785
 
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteCond %{REQUEST_URI} "!(^|/)\.well-known/([^./]+./?)+$" [NC]
-#     RewriteCond %{SCRIPT_FILENAME} -d [OR]
-#     RewriteCond %{SCRIPT_FILENAME} -f
-#     RewriteRule "(^|/)\." - [F]
-# </IfModule>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} "!(^|/)\.well-known/([^./]+./?)+$" [NC]
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+</IfModule>
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

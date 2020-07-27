@@ -1,0 +1,142 @@
+@import '../variables.scss';
+.gearPowerSheet {
+  width: 100%;
+  max-width: fit-content;
+
+  @include phone-portrait {
+    max-width: unset;
+  }
+  margin: 0 auto;
+
+  .gearPowerSheetContent {
+    margin: 0 20px 20px;
+  }
+
+  .gearPowerHeader {
+    display: flex;
+    margin-right: 10px;
+
+    img {
+      margin-right: 10px;
+      height: 48px;
+      width: 48px;
+    }
+
+    h1:first-child {
+      opacity: 0.6;
+    }
+    h1:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .gearGrid {
+    width: max-content;
+    margin: 10px auto;
+    display: grid;
+    gap: 4px 10px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+
+    .gearItem {
+      grid-row-end: span 2;
+      display: flex;
+
+      .itemImage {
+        height: 40px;
+        width: 40px;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+      .gearItemInfo {
+        display: flex;
+        flex-direction: column;
+
+        .primStat {
+          font-size: 16px;
+          line-height: 1;
+        }
+        .statMeta {
+          font-size: 24px;
+          line-height: 26px;
+        }
+
+        & > div {
+          display: flex;
+        }
+      }
+
+      .bucketImage {
+        height: 22px;
+        width: 22px;
+        margin-top: 2px;
+        filter: invert(1);
+        opacity: 0.6;
+      }
+      .neutral {
+        opacity: 0.3;
+      }
+      .positive {
+        color: green;
+      }
+      .negative {
+        color: red;
+      }
+      .neutral,
+      .positive,
+      .negative {
+        margin: 0 3px;
+      }
+    }
+
+    .Kinetic,
+    .Energy,
+    .Power {
+      grid-column-start: 1;
+    }
+
+    .Helmet,
+    .Gauntlets,
+    .Chest,
+    .Leg,
+    .ClassItem {
+      grid-column-start: 2;
+
+      &.gearItem,
+      .gearItemInfo > div {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .Kinetic {
+      grid-row-start: 3;
+    }
+    .Energy {
+      grid-row-start: 5;
+    }
+    .Power {
+      grid-row-start: 7;
+    }
+    .Helmet {
+      grid-row-start: 1;
+    }
+    .Gauntlets {
+      grid-row-start: 3;
+    }
+    .Chest {
+      grid-row-start: 5;
+    }
+    .Leg {
+      grid-row-start: 7;
+    }
+    .ClassItem {
+      grid-row-start: 9;
+    }
+  }
+
+  .footNote {
+    margin: 10px auto 0;
+    opacity: 0.7;
+    max-width: 400px;
+  }
+}

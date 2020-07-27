@@ -64,10 +64,10 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
 export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
-  const items = maxLightItemSet(stores, store);
+  const { equippable } = maxLightItemSet(stores, store);
   return newLoadout(
     name,
-    items.map((i) => convertToLoadoutItem(i, true))
+    equippable.map((i) => convertToLoadoutItem(i, true))
   );
 }
 
@@ -80,7 +80,10 @@ const powerStatHashes = [
 /**
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
-export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] {
+export function maxLightItemSet(
+  stores: DimStore[],
+  store: DimStore
+): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
   for (const s of stores) {
     for (const i of s.items) {

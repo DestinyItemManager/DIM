@@ -67,30 +67,36 @@
       display: flex;
       flex-direction: row;
       justify-items: left;
+      align-items: center;
       &:first-child {
         img {
           opacity: 0.6;
+          height: 17px;
+          width: 17px;
         }
         img[src^='data'] {
           filter: invert(1);
+        }
+        .powerStat {
+          font-size: 125%;
         }
         > div:nth-child(2) {
           display: flex;
           flex-direction: row;
           &::before,
           &::after {
-            font-size: 11px;
+            font-size: 13px;
             color: #aaa;
           }
           &::before {
             content: '=';
-            margin-left: 6px;
-            margin-right: 6px;
+            margin-left: 4px;
+            margin-right: 4px;
           }
           &::after {
             content: '+';
-            margin-left: 8px;
-            margin-right: 5px;
+            margin-left: 4px;
+            margin-right: 4px;
           }
         }
       }
@@ -103,6 +109,22 @@
       flex: 0;
       font-size: 11px;
       color: #aaa;
+      &.pointerCursor {
+        cursor: pointer;
+      }
     }
   }
+}
+.tooltipFootnote {
+  opacity: 50%;
+  width: 80%;
+  margin: 10px 0 0 auto;
+  text-align: right;
+}
+.richTooltipWrapper {
+  margin: 5px 10px 0;
+}
+.asterisk {
+  vertical-align: top;
+  margin-left: 2px;
 }

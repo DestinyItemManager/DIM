@@ -350,6 +350,7 @@
     "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
   },
   "General": {
+    "ClickForDetails": "Clique para detalhes",
     "UserGuideLink": "Guia do usuário"
   },
   "Ghost": {
@@ -393,7 +394,7 @@
     "CannotMove": "Não é possível remover o item deste personagem.",
     "Drag": "Segure a tecla shift para transferir uma pilha parcial",
     "NoStorage": "DIM não pode salvar os dados",
-    "NoStorageMessage": "DIM não pode salvar dados no seu navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco."
+    "NoStorageMessage": "DIM não está conseguindo salvar dados em seu navegador. Isso normalmente ocorre durante a navegação privada ou em modo anônimo, ou ainda quando há pouco espaço disponível em disco. Sendo assim, não será possível se conectar ou usar o DIM."
   },
   "Hotkey": {
     "CheatSheetTitle": "Teclas de Atalho:",
@@ -555,7 +556,7 @@
     "NumStatMixes": "{{count, number}} possibilidade de atributos",
     "NumStatMixes_plural": "{{count, number}} possibilidades de atributos",
     "OptimizerExplanation": "Selecione perks, filtre, reorganize atributos e trave itens para estreitar o número de sets em potencial.",
-    "OptimizerExplanationArmour2Mods": "Mods de armaduras 2.0 não estão inclusos nos cálculos de tier de atributo.",
+    "OptimizerExplanationArmour2Mods": "Mudanças em atributos de mods para Armaduras 2.0 são desconsideradas sempre que possível. Para ter resultados mais precisos, remova todos os mods que contribua negativamente em atributos.",
     "OptimizerExplanationDesktop": "Shift-clique um perk para selecionar. Shift-clique em um item para ignorá-lo. Mova os itens para a barra lateral para ignorá-los ou travá-los.",
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens travados",
@@ -568,6 +569,7 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
     "SelectedPerkKey": "Perk selecionado",
+    "StatIncorrectWarning": "Por favor, remova quaisquer mods com atributos negativos para obter resultados mais precisos.\n\nDevido a estes modificadores negativos, DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
@@ -592,6 +594,8 @@
     "Create": "Criar set",
     "Delete": "Excluir set",
     "Edit": "Editar set",
+    "EquippableDifferent1": "Múltiplos itens exóticos foram usados para calcular seu Poder Máximo. Então o número mostrado pode não ser alcançável ao equipar seus itens no jogo.",
+    "EquippableDifferent2": "O Poder Máximo não se restringe pela regra de \"Um Exótico\" ao determinar o Poder dos seus itens comuns, poderosos ou pináculo.",
     "FilteredItems": "Itens filtrados",
     "FindAnother": "Encontrar outro {{name}}",
     "FromEquipped": "Equipado",
@@ -705,6 +709,7 @@
       "Track": "Rastrear {{itemType}}",
       "Untrack": "Não rastrear {{itemType}}"
     },
+    "TriageTab": "Triagem",
     "Vault": "Cofre"
   },
   "Notes": {
@@ -844,6 +849,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder máximo de itens equipáveis",
+    "MaxGearPowerAll": "Poder Máximo de todos os equipamentos",
     "MaxTotalPower": "Poder máximo total",
     "Milliseconds": "ms",
     "NoBonus": "Sem bônus",
@@ -859,7 +865,8 @@
     "Strength": "Força",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "TotalIncorrectWarning": "Devido a modificadores negativos, DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
