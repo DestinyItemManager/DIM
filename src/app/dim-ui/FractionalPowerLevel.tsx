@@ -10,7 +10,7 @@ export function FractionalPowerLevel({ power }: { power: number }) {
         <>
           &#8239;
           <span className={styles.fraction}>
-            <sup>{numerator}</sup>⁄<sub>8</sub>
+            <sup>{Math.floor(numerator)}</sup>⁄<sub>8</sub>
           </span>
         </>
       )}
