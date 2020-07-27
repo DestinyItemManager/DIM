@@ -2,7 +2,16 @@
 
 ## 6.22.0 <span className="changelog-date">(2020-07-26)</span>
 
-* More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
+* New: More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
+* Improved detection that you need to reauthorize DIM to your Bungie account.
+* Fixes to how stat bars display when affected by negative modifiers & perks.
+* Clearer errors if DIM is unable to save the item information database.
+* Organizer
+  * Power Limit column now generates the right filter when Shift-clicked.
+  * Traits column content has been narrowed down.
+  * Improved top level categories take fewer clicks to reach your items.
+* Loadout Optimizer
+  * Fixed finding slots for seasonal mods.
 
 ## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
 
