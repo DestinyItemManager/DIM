@@ -1,5 +1,7 @@
 ## Next
 
+## 6.22.1 <span className="changelog-date">(2020-07-27)</span>
+
 ## 6.22.0 <span className="changelog-date">(2020-07-26)</span>
 
 * New: More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
