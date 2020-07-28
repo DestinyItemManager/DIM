@@ -12,6 +12,12 @@ import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
+const statsWarning =
+  'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';
+const statsWarningLink = `<a href='${statsWarning}' target='_blank' rel='noopener noreferrer'>${t(
+  'LoadoutBuilder.WikiWarningModsStats'
+)}</a>`;
+
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -125,12 +131,13 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
           {'\n'}
-          {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}{' '}
-          <UserGuideLink
-            topic="Loadout_Optimizer#A_Warning_on_Mods_and_Stats"
-            title={t('LoadoutBuilder.WikiWarningModsStats')}
-          />
-          {'. '}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: t('LoadoutBuilder.OptimizerExplanationArmour2Mods', {
+                link: statsWarningLink,
+              }),
+            }}
+          />{' '}
           <UserGuideLink topic="Loadout_Optimizer" />
         </p>
         <p>
