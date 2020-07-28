@@ -1,32 +1,15 @@
-import {
-  DamageType,
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem, DimMasterwork } from 'app/inventory/item-types';
 import _ from 'lodash';
 import modSocketMetadata from 'data/d2/specialty-modslot-metadata';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
+import { energyNamesByEnum } from 'app/search/d2-known-values';
+import { damageNamesByEnum } from 'app/search/search-filter-values';
 
 // damage is a mess!
-// this section supports turning a destiny DamageType or EnergyType into a known english name
+// this function supports turning a destiny DamageType or EnergyType into a known english name
 // mainly for most css purposes and the filter names
-export const damageNamesByEnum: { [key in DamageType]: string | null } = {
-  0: null,
-  1: 'kinetic',
-  2: 'arc',
-  3: 'solar',
-  4: 'void',
-  5: 'raid',
-};
-
-export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
-  [DestinyEnergyType.Any]: 'any',
-  [DestinyEnergyType.Arc]: 'arc',
-  [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void',
-};
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.isDestiny2() && item.energy
