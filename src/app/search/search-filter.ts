@@ -52,6 +52,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
 import { getStore } from 'app/inventory/stores-helpers';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { parseQuery, QueryAST } from './query-parser';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -74,20 +75,8 @@ const startWordRegexp = memoizeOne(
     new RegExp(`${isLatinBased() ? '\\b' : ''}${escapeRegExp(s)}`, 'i')
 );
 
-// String.match results like [
-// "-not:tagged", (0: discarded)
-// "-",           (1: invertString)
-// "not:",        (2: discarded)
-// "not",         (3: filterName)
-// "tagged"       (4: filterValue)
-// ]
-const searchTermRegex = /^(-?)(([^:]+):)?(.+)$/;
-
 /** returns input string toLower, and stripped of accents if it's a latin language */
 const plainString = (s: string): string => (isLatinBased() ? latinise(s) : s).toLowerCase();
-
-/** remove starting and ending quotes ('") e.g. for notes:"this string" */
-const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
 
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
@@ -585,142 +574,98 @@ function searchFilters(
         return (item: DimItem) => getTag(item, itemInfos) !== 'archive';
       }
 
-      // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-      query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
-      query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
-      // \S*?(["']).*?\1 -> match `is:"stuff here"` or `is:'stuff here'`
-      // [^\s"']+ -> match is:stuff
-      const searchTerms = query.match(/\S*?(["']).*?\1|[^\s"']+/g) || [];
-      interface Filter {
-        invert: boolean;
-        filterValue: string;
-        filterName: string;
-        orFilters?: Filter[];
-      }
-      const filterStack: Filter[] = [];
+      const parsedQuery = parseQuery(query);
+      const filterTable = this.filters;
 
-      // The entire implementation of "or" is a dirty hack - we should really
-      // build an expression tree instead. But here, we flip a flag when we see
-      // an "or" token, and then on the next filter we instead combine the filter
-      // with the previous one in a hacked-up "or" node that we'll handle specially.
-      let or = false;
-
-      function addFilterToStack(filterName: string, filterValue: string, invert: boolean) {
-        const filterDef: Filter = { filterName, filterValue, invert };
-        if (or && filterStack.length) {
-          const lastFilter = filterStack.pop();
-          filterStack.push({
-            filterName: 'or',
-            invert: false,
-            filterValue: '',
-            orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef],
-          });
-        } else {
-          filterStack.push(filterDef);
-        }
-        or = false;
-      }
-
-      for (const search of searchTerms) {
-        const [, invertString, , filterName, filterValue] = search.match(searchTermRegex) || [];
-        let invert = Boolean(invertString);
-
-        if (filterValue === 'or') {
-          or = true;
-        } else {
-          switch (filterName) {
-            case 'not':
-              invert = !invert;
-            // fall through intentionally after setting "not" inversion
-            case 'is': {
-              // do a lookup by filterValue (i.e. arc)
-              // to find the appropriate filterFunction (i.e. dmg)
-              const filterFunction = searchConfig.keywordToFilter[filterValue];
-              if (filterFunction) {
-                addFilterToStack(filterFunction, filterValue, invert);
+      // Transform our query syntax tree into a filter function by recursion.
+      // TODO: break these out into standalone, tested functions!
+      const transformAST = (ast: QueryAST): ((item: DimItem) => boolean) => {
+        switch (ast.op) {
+          case 'and': {
+            const fns = ast.operands.map(transformAST);
+            return (item) => {
+              for (const fn of fns) {
+                if (!fn(item)) {
+                  return false;
+                }
               }
-              break;
+              return true;
+            };
+          }
+          case 'or': {
+            const fns = ast.operands.map(transformAST);
+            return (item) => {
+              for (const fn of fns) {
+                if (fn(item)) {
+                  return true;
+                }
+              }
+              return false;
+            };
+          }
+          case 'not': {
+            const fn = transformAST(ast.operand);
+            return (item) => !fn(item);
+          }
+          case 'filter': {
+            // TODO: break this out into its own function that takes the filter table as an arg
+            const { type: filterName, args: filterValue } = ast;
+
+            // Generate a filter function from the filters table
+            const filterByTable = (filterName: string, filterValue: string) => {
+              if (filterTable[filterName]) {
+                const filterFunction = filterTable[filterName] as (
+                  item: DimItem,
+                  val: string
+                ) => boolean;
+                return (item: DimItem) => filterFunction.call(filterTable, item, filterValue);
+              }
+              return () => true;
+            };
+
+            switch (filterName) {
+              case 'is': {
+                // do a lookup by filterValue (i.e. arc)
+                // to find the appropriate filterFunction (i.e. dmg)
+                const filterName = searchConfig.keywordToFilter[filterValue];
+                return filterByTable(filterName, filterValue);
+              }
+              // normalize synonyms
+              case 'light':
+              case 'power':
+                return filterByTable('light', filterValue);
+              case 'quality':
+              case 'percentage':
+                return filterByTable('quality', filterValue);
+              // mutate filterValues where keywords (forge) should be translated into seasons (5)
+              case 'powerlimitseason':
+              case 'sunsetsafter':
+                return filterByTable('sunsetsafter', replaceSeasonTagWithNumber(filterValue));
+              case 'season':
+                return filterByTable('season', replaceSeasonTagWithNumber(filterValue));
+              // stat filter has sub-searchterm and needs further separation
+              case 'basestat':
+              case 'stat': {
+                const [statName, statValue, shouldntExist] = filterValue.split(':');
+                const statFilterName = filterName === 'basestat' ? `base${statName}` : statName;
+                if (!shouldntExist) {
+                  return filterByTable(statFilterName, statValue);
+                }
+                break;
+              }
+              default:
+                // All other keywords just pass through to filter table lookups
+                return filterByTable(filterName, filterValue);
             }
-            // filters whose filterValue needs outer quotes trimmed
-            case 'notes':
-            case 'perk':
-            case 'perkname':
-            case 'name':
-            case 'description':
-            case 'wishlistnotes':
-              addFilterToStack(filterName, trimQuotes(filterValue), invert);
-              break;
-            // normalize synonyms
-            case 'light':
-            case 'power':
-              addFilterToStack('light', filterValue, invert);
-              break;
-            case 'quality':
-            case 'percentage':
-              addFilterToStack('quality', filterValue, invert);
-              break;
-            // mutate filterValues where keywords (forge) should be translated into seasons (5)
-            case 'powerlimitseason':
-            case 'sunsetsafter':
-              addFilterToStack('sunsetsafter', replaceSeasonTagWithNumber(filterValue), invert);
-              break;
-            case 'season':
-              addFilterToStack('season', replaceSeasonTagWithNumber(filterValue), invert);
-              break;
-            // pass these filter names and values unaltered
-            case 'masterwork':
-            case 'powerlimit':
-            case 'year':
-            case 'stack':
-            case 'count':
-            case 'energycapacity':
-            case 'breaker':
-            case 'maxbasestatvalue':
-            case 'maxstatloadout':
-            case 'maxstatvalue':
-            case 'tag':
-            case 'level':
-            case 'rating':
-            case 'ratingcount':
-            case 'id':
-            case 'hash':
-            case 'source':
-            case 'modslot':
-            case 'holdsmod':
-              addFilterToStack(filterName, filterValue, invert);
-              break;
-            // stat filter has sub-searchterm and needs further separation
-            case 'basestat':
-            case 'stat': {
-              const [statName, statValue, shouldntExist] = filterValue.split(':');
-              const statFilterName = filterName === 'basestat' ? `base${statName}` : statName;
-              if (!shouldntExist) {
-                addFilterToStack(statFilterName, statValue, invert);
-              }
-              break;
-            }
-            // if nothing else matches we cast a wide net and do the powerful keyword search
-            default:
-              if (!/^\s*$/.test(filterValue)) {
-                addFilterToStack('keyword', trimQuotes(filterValue), invert);
-              }
+
+            return () => true;
           }
         }
-      }
 
-      return (item: DimItem) =>
-        filterStack.every((filter) => {
-          let result;
-          if (filter.orFilters) {
-            result = filter.orFilters.some((filter) => {
-              const result = this.filters[filter.filterName]?.(item, filter.filterValue);
-              return filter.invert ? !result : result;
-            });
-          } else {
-            result = this.filters[filter.filterName]?.(item, filter.filterValue);
-          }
-          return filter.invert ? !result : result;
-        });
+        return () => true;
+      };
+
+      return transformAST(parsedQuery);
     }),
 
     /**
