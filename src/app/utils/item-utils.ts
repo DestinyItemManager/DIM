@@ -127,3 +127,11 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
   }
   return [...incorrect];
 }
+
+/**
+ * "Instanced" items are uniquely identifiable by an id, while "uninstanced" items don't have any such
+ * identifier even though there may be multiple of them in a given location.
+ */
+export function itemIsInstanced(item: DimItem): boolean {
+  return item.id !== '0';
+}

@@ -11,8 +11,9 @@ import { getNotes } from 'app/inventory/dim-item-info';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { setItemNote } from 'app/inventory/actions';
-import { itemInfosSelector } from 'app/inventory/selectors';
+import { setItemNote, setItemHashNote } from 'app/inventory/actions';
+import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 interface ProvidedProps {
   item: DimItem;
@@ -25,7 +26,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    notes: getNotes(props.item, itemInfosSelector(state)),
+    notes: getNotes(props.item, itemInfosSelector(state), itemHashTagsSelector(state)),
     inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id],
   };
 }
@@ -41,7 +42,12 @@ function ItemDescription({ item, notes, inventoryWishListRoll, dispatch }: Props
 
   const [notesOpen, setNotesOpen] = useState(false);
 
-  const saveNotes = (note: string) => dispatch(setItemNote({ itemId: item.id, note }));
+  const saveNotes = (note: string) =>
+    dispatch(
+      itemIsInstanced(item)
+        ? setItemNote({ itemId: item.id, note })
+        : setItemHashNote({ itemHash: item.hash, note })
+    );
 
   // TODO: close notes button
   return (

@@ -7,7 +7,8 @@ import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/ico
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ThunkResult } from 'app/store/reducers';
 import { itemInfosSelector } from './selectors';
-import { ItemAnnotation } from '@destinyitemmanager/dim-api-types';
+import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { itemIsInstanced } from 'app/utils/item-utils';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
@@ -146,10 +147,28 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
   };
 }
 
-export function getTag(item: DimItem, itemInfos: ItemInfos): TagValue | undefined {
-  return itemInfos[item.id]?.tag || undefined;
+export function getTag(
+  item: DimItem,
+  itemInfos: ItemInfos,
+  itemHashTags?: {
+    [itemHash: string]: ItemHashTag;
+  }
+): TagValue | undefined {
+  return item.taggable
+    ? (itemIsInstanced(item) ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) ||
+        undefined
+    : undefined;
 }
 
-export function getNotes(item: DimItem, itemInfos: ItemInfos): string | undefined {
-  return itemInfos[item.id]?.notes || undefined;
+export function getNotes(
+  item: DimItem,
+  itemInfos: ItemInfos,
+  itemHashTags?: {
+    [itemHash: string]: ItemHashTag;
+  }
+): string | undefined {
+  return item.taggable
+    ? (itemIsInstanced(item) ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) ||
+        undefined
+    : undefined;
 }

@@ -1,5 +1,6 @@
 ## Next
 
+* You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.
 * Searches now support parentheses for grouping, the "and" keyword, and the "not" keyword. Example: `(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)`. "and" has higher precedence than "or", which has higher precedence than just a space (which still means "and").
 
 ## 6.22.1 <span className="changelog-date">(2020-07-27)</span>

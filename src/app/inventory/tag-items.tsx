@@ -6,28 +6,44 @@ import NotificationButton from 'app/notifications/NotificationButton';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
 import { ThunkResult } from 'app/store/reducers';
-import { setItemTagsBulk } from './actions';
-import { itemInfosSelector } from './selectors';
+import { setItemTagsBulk, setItemHashTag } from './actions';
+import { itemInfosSelector, itemHashTagsSelector } from './selectors';
+import _ from 'lodash';
 
 export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult {
   return async (dispatch, getState) => {
     const appliedTagInfo = tagConfig[selectedTag];
     const itemInfos = itemInfosSelector(getState());
+    const itemHashTags = itemHashTagsSelector(getState());
 
     // existing tags are later passed to buttonEffect so the notif button knows what to revert
-    const previousState = itemsToBeTagged.map((item) => ({
-      item,
-      setTag: getTag(item, itemInfos),
-    }));
+    const previousState = new Map<DimItem, TagValue | undefined>();
+    for (const item of itemsToBeTagged) {
+      previousState.set(item, getTag(item, itemInfos, itemHashTags));
+    }
 
-    dispatch(
-      setItemTagsBulk(
-        itemsToBeTagged.map((item) => ({
-          itemId: item.id,
-          tag: selectedTag === 'clear' ? undefined : selectedTag,
-        }))
-      )
-    );
+    const [instanced, nonInstanced] = _.partition(itemsToBeTagged, (i) => i.id && i.id !== '0');
+
+    if (instanced.length) {
+      dispatch(
+        setItemTagsBulk(
+          instanced.map((item) => ({
+            itemId: item.id,
+            tag: selectedTag === 'clear' ? undefined : selectedTag,
+          }))
+        )
+      );
+    }
+    if (nonInstanced.length) {
+      for (const item of nonInstanced) {
+        dispatch(
+          setItemHashTag({
+            itemHash: item.hash,
+            tag: selectedTag === 'clear' ? undefined : selectedTag,
+          })
+        );
+      }
+    }
 
     showNotification({
       type: 'success',
@@ -45,18 +61,30 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
               })}
           <NotificationButton
             onClick={async () => {
-              dispatch(
-                setItemTagsBulk(
-                  previousState.map(({ item, setTag }) => ({
-                    itemId: item.id,
-                    tag: setTag,
-                  }))
-                )
-              );
+              if (instanced.length) {
+                dispatch(
+                  setItemTagsBulk(
+                    instanced.map((item) => ({
+                      itemId: item.id,
+                      tag: previousState.get(item),
+                    }))
+                  )
+                );
+              }
+              if (nonInstanced.length) {
+                for (const item of nonInstanced) {
+                  dispatch(
+                    setItemHashTag({
+                      itemHash: item.hash,
+                      tag: previousState.get(item),
+                    })
+                  );
+                }
+              }
               showNotification({
                 type: 'success',
                 title: t('Header.BulkTag'),
-                body: t('Filter.BulkRevert', { count: previousState.length }),
+                body: t('Filter.BulkRevert', { count: itemsToBeTagged.length }),
               });
             }}
           >

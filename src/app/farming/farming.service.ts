@@ -13,7 +13,7 @@ import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector } from 'app/inventory/selectors';
+import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
 import { getVault } from 'app/inventory/stores-helpers';
 
 const glimmerHashes = new Set([
@@ -151,6 +151,7 @@ export async function makeRoomForItemsInBuckets(
   // If any category is full, we'll move one aside
   const itemsToMove: DimItem[] = [];
   const itemInfos = itemInfosSelector(rxStore.getState());
+  const itemHashTags = itemHashTagsSelector(rxStore.getState());
   makeRoomBuckets.forEach((bucket) => {
     const items = store.buckets[bucket.hash];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
@@ -159,7 +160,8 @@ export async function makeRoomForItemsInBuckets(
         moveAsideCandidates,
         store,
         getVault(stores)!,
-        itemInfos
+        itemInfos,
+        itemHashTags
       );
       // We'll move the first one to the vault
       const itemToMove = prioritizedMoveAsideCandidates[0];

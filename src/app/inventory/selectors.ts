@@ -6,6 +6,7 @@ import { currentProfileSelector } from 'app/dim-api/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { getCurrentStore } from './stores-helpers';
 import { ItemInfos } from './dim-item-info';
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
@@ -41,3 +42,6 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>
   currentProfileSelector(state)?.tags || emptyObject();
+
+export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
+  state.dimApi.itemHashTags;
