@@ -1,7 +1,7 @@
 import React, { useMemo, Dispatch } from 'react';
-import { DimPlug, DimItem } from '../../inventory/item-types';
+import { DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, LockedArmor2Mod } from '../types';
+import { LockedItemType, LockedArmor2Mod, StatTypes } from '../types';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
@@ -19,20 +19,6 @@ import { matchLockedItem } from '../preProcessFilter';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 /**
- * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
- */
-function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: number[]) {
-  let altPerks: DimPlug[] = [];
-  generateMixesFromPerks(item, {}, (mix, plugs) => {
-    if (plugs && mix.every((val, index) => val === chosenValues[index])) {
-      altPerks = plugs;
-      return false;
-    }
-    return true;
-  });
-  return altPerks;
-}
-/**
  * An individual item in a generated set. Includes a perk display and a button for selecting
  * alternative items with the same stat mix.
  */
@@ -42,6 +28,7 @@ export default function GeneratedSetItem({
   defs,
   statValues,
   itemOptions,
+  statOrder,
   lockedMods,
   lbDispatch,
 }: {
@@ -50,12 +37,14 @@ export default function GeneratedSetItem({
   defs: D2ManifestDefinitions;
   statValues: number[];
   itemOptions: DimItem[];
+  statOrder: StatTypes[];
   lockedMods?: LockedArmor2Mod[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
+  const altPerks = useMemo(() => generateMixesFromPerks(item, statValues, statOrder), [
     item,
     statValues,
+    statOrder,
   ]);
 
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });

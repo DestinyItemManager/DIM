@@ -85,6 +85,7 @@ function GeneratedSet({
             lbDispatch={lbDispatch}
             statValues={set.firstValidSetStatChoices[index]}
             lockedMods={assignedMods[item.hash]}
+            statOrder={statOrder}
           />
         ))}
       </div>
