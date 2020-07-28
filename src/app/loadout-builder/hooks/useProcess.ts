@@ -105,7 +105,7 @@ export function useProcess(
             ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
             : lockedSeasonalMods
         ),
-        mapArmo2ModsToProcessMods(lockedArmor2ModMap),
+        mapArmor2ModsToProcessMods(lockedArmor2ModMap),
         assumeMasterwork,
         statOrder,
         statFilters,
@@ -228,7 +228,7 @@ function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBas
   return modMetadata;
 }
 
-function mapArmo2ModsToProcessMods(lockedMods: LockedArmor2ModMap): LockedArmor2ProcessMods {
+function mapArmor2ModsToProcessMods(lockedMods: LockedArmor2ModMap): LockedArmor2ProcessMods {
   const seasonalMetas = lockedMods.seasonal.map((mod) =>
     getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)
   );
