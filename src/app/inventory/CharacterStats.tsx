@@ -9,15 +9,18 @@ import _ from 'lodash';
 import { armorStats } from './store/stats';
 import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { showGearPower } from 'app/gear-power/gear-power';
+import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
 
 interface Props {
   stats?: DimStore['stats'];
   destinyVersion: DestinyVersion;
+  storeId?: string;
 }
 
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
-    const { stats, destinyVersion } = this.props;
+    const { stats, destinyVersion, storeId } = this.props;
 
     if (!stats) {
       return null;
@@ -69,39 +72,80 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </div>
       );
     } else {
-      const powerTooltip = (stat: DimCharacterStat): string =>
-        `${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
-      const powerInfos = _.compact([
+      const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
+        <>
+          {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
+          {stat.richTooltip && (
+            <>
+              <hr />
+              <div className="richTooltipWrapper">
+                {stat.richTooltip}
+                {stat.differentEquippableMaxGearPower && (
+                  <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+                )}
+              </div>
+            </>
+          )}
+        </>
+      );
+      const powerInfos: {
+        stat: DimCharacterStat;
+        tooltip: React.ReactNode;
+      }[] = _.compact([
         stats.maxTotalPower,
         stats.maxGearPower,
         stats.powerModifier,
       ]).map((stat) => ({ stat, tooltip: powerTooltip(stat) }));
 
-      const statTooltip = (stat: DimCharacterStat): string =>
-        `${stat.name}: ${stat.value}
-${stat.description}`;
-      const statInfos = armorStats
-        .map((h) => stats[h])
-        .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
+      const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
+        `${stat.name}: ${stat.value}\n${stat.description}`;
+      const statInfos: {
+        stat: DimCharacterStat;
+        tooltip: React.ReactNode;
+      }[] = armorStats.map((h) => stats[h]).map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
       return (
         <div className="stat-bars destiny2">
           {[powerInfos, statInfos].map((stats, index) => (
             <div key={index} className="stat-row">
-              {stats.map(
-                ({ stat, tooltip }) =>
-                  stat && (
-                    <PressTip key={stat.hash} tooltip={tooltip}>
-                      <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-                        <img src={stat.icon} alt={stat.name} />
-                        <div>
-                          {stat.value}
-                          {stat.hasClassified && <sup>*</sup>}
-                        </div>
+              {stats.map(({ stat, tooltip }) => {
+                const displayValue =
+                  stat.hash < 0 ? (
+                    <span className="powerStat">
+                      <FractionalPowerLevel power={stat.value} />
+                    </span>
+                  ) : (
+                    stat.value
+                  );
+                // if this is the "max gear power" stat (hash -3),
+                // add in an onClick and an extra class
+                const isMaxGearPower = stat.hash === -3 && storeId;
+
+                return (
+                  <PressTip key={stat.hash} tooltip={tooltip} allowClickThrough={true}>
+                    <div
+                      className={clsx('stat', { pointerCursor: isMaxGearPower })}
+                      aria-label={`${stat.name} ${stat.value}`}
+                      role="group"
+                      onClick={
+                        isMaxGearPower
+                          ? () => {
+                              showGearPower(storeId!);
+                            }
+                          : undefined
+                      }
+                    >
+                      <img src={stat.icon} alt={stat.name} />
+                      <div>
+                        {displayValue}
+                        {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
+                          <sup className="asterisk">*</sup>
+                        )}
                       </div>
-                    </PressTip>
-                  )
-              )}
+                    </div>
+                  </PressTip>
+                );
+              })}
             </div>
           ))}
         </div>

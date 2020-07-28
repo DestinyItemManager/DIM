@@ -542,9 +542,9 @@ Object {
       },
     },
     Object {
-      "args": "<55",
+      "args": "total:<55",
       "op": "filter",
-      "type": "stat:total",
+      "type": "stat",
     },
   ],
 }
@@ -598,8 +598,8 @@ Array [
   ],
   Array [
     "filter",
-    "stat:total",
-    "<55",
+    "stat",
+    "total:<55",
   ],
 ]
 `;

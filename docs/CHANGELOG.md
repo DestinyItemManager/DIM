@@ -1,6 +1,22 @@
 ## Next
 
 * You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.
+* Searches now support parentheses for grouping, the "and" keyword, and the "not" keyword. Example: `(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)`. "and" has higher precedence than "or", which has higher precedence than just a space (which still means "and").
+
+## 6.22.1 <span className="changelog-date">(2020-07-27)</span>
+
+## 6.22.0 <span className="changelog-date">(2020-07-26)</span>
+
+* New: More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
+* Improved detection that you need to reauthorize DIM to your Bungie account.
+* Fixes to how stat bars display when affected by negative modifiers & perks.
+* Clearer errors if DIM is unable to save the item information database.
+* Organizer
+  * Power Limit column now generates the right filter when Shift-clicked.
+  * Traits column content has been narrowed down.
+  * Improved top level categories take fewer clicks to reach your items.
+* Loadout Optimizer
+  * Fixed finding slots for seasonal mods.
 
 ## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
 

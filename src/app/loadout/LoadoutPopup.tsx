@@ -62,6 +62,8 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from './actions';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import xpIcon from 'images/xpIcon.svg';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -142,7 +144,7 @@ class LoadoutPopup extends React.Component<Props> {
     } = this.props;
 
     // For the most part we don't need to memoize this - this menu is destroyed when closed
-    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
+    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
     const artifactLight = getArtifactBonus(dimStore);
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
@@ -174,8 +176,21 @@ class LoadoutPopup extends React.Component<Props> {
                 <span onClick={this.maxLightLoadout}>
                   <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
                     <span className="light">
-                      <AppIcon icon={powerIndicatorIcon} />
-                      {maxLight + artifactLight}
+                      {dimStore.destinyVersion === 1 ? (
+                        <>
+                          <AppIcon icon={powerIndicatorIcon} />
+                          {Math.floor(maxLight * 10) / 10}
+                        </>
+                      ) : (
+                        <>
+                          <img className="yellowInlineSvg" src={helmetIcon} />
+                          {Math.floor(maxLight)}
+                          {' + '}
+                          <img className="yellowInlineSvg" src={xpIcon} />
+                          {artifactLight}
+                        </>
+                      )}
+
                       {hasClassified && <sup>*</sup>}
                     </span>
                   </PressTip>

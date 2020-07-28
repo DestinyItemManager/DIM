@@ -21,6 +21,10 @@
     @include destiny-header;
   }
 
+  hr {
+    border-color: #888;
+  }
+
   &[data-popper-placement='top'] .arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;

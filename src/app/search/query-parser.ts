@@ -26,30 +26,30 @@ import _ from 'lodash';
  * A tree of the parsed query. Boolean/unary operators have children (operands)that
  * describe their relationship.
  */
-type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
+export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
   error?: Error;
 };
 
 /** If ALL of of the operands are true, this resolves to true. There may be any number of operands. */
-interface AndOp {
+export interface AndOp {
   op: 'and';
   operands: QueryAST[];
 }
 
 /** If any of the operands is true, this resolves to true. There may be any number of operands. */
-interface OrOp {
+export interface OrOp {
   op: 'or';
   operands: QueryAST[];
 }
 
 /** An operator which negates the result of its only operand. */
-interface NotOp {
+export interface NotOp {
   op: 'not';
   operand: QueryAST;
 }
 
 /** This represents one of our filter function definitions, such as is:, season:, etc. */
-interface FilterOp {
+export interface FilterOp {
   op: 'filter';
   /**
    * The name of the filter function, without any trailing :. The only weird case is
@@ -231,7 +231,11 @@ export function parseQuery(query: string): QueryAST {
   }
 
   const tokens = new PeekableGenerator(lexer(query));
-  if (!tokens.peek()) {
+  try {
+    if (!tokens.peek()) {
+      return { op: 'noop' };
+    }
+  } catch (e) {
     return { op: 'noop' };
   }
   const ast = parse(tokens);
@@ -273,8 +277,8 @@ const negation = /-\s*/y;
 // `not`, `or`, and `and` keywords. or and not can be preceded by whitespace, and any of them can be followed by whitespace.
 // `not` can't be preceded by whitespace because that whitespace is an implicit `and`.
 const booleanKeywords = /(not|\s+or|\s+and)\s+/y;
-// Filter names like is:, stat:discipline:, etc
-const filterName = /[a-z]+:([a-z]+:)?/y;
+// Filter names like is:, stat:, etc
+const filterName = /[a-z]+:/y;
 // Arguments to filters are pretty unconstrained
 const filterArgs = /[^\s()]+/y;
 // Words without quotes are basically any non-whitespace that doesn't terminate a group

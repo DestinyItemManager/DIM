@@ -14,6 +14,7 @@ import _ from 'lodash';
 interface Props {
   tooltip: React.ReactNode;
   children: React.ReactElement<any, any>;
+  allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ReactType;
 }
@@ -84,6 +85,9 @@ const popperOptions = (): Partial<Options> => {
  *
  * Tooltop content can be any React element, and can be updated through React.
  *
+ * PressTip stops event propagation, so mobile can hold down on an element in lieu of hovering.
+ * `allowClickThrough` property suppresses this and lets click events propagate.
+ *
  * Example:
  *
  * <PressTip
@@ -126,8 +130,8 @@ export default class PressTip extends React.Component<Props, State> {
   };
 
   closeToolTip = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    this.props.allowClickThrough || e.preventDefault();
+    this.props.allowClickThrough || e.stopPropagation();
     this.setState({ isOpen: false });
     clearTimeout(this.timer);
   };
@@ -139,8 +143,8 @@ export default class PressTip extends React.Component<Props, State> {
   };
 
   press = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    this.props.allowClickThrough || e.preventDefault();
+    this.props.allowClickThrough || e.stopPropagation();
     this.showTip();
   };
 
