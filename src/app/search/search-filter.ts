@@ -1,11 +1,5 @@
 import { D1Item, D2Item, DimItem } from '../inventory/item-types';
 import {
-  DEFAULT_GLOW,
-  DEFAULT_GLOW_CATEGORY,
-  DEFAULT_ORNAMENTS,
-  DEFAULT_SHADER,
-} from 'app/inventory/store/sockets';
-import {
   DestinyAmmunitionType,
   DestinyClass,
   DestinyCollectibleState,
@@ -64,11 +58,16 @@ import {
   breakerTypes,
   curatedPlugsAllowList,
   D2ItemCategoryHashes,
+  DEFAULT_GLOW,
+  DEFAULT_GLOW_CATEGORY,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_SHADER,
   emptySocketHashes,
   energyCapacityTypeNames,
   energyNamesByEnum,
   powerfulSources,
-  shaderBucket,
+  SEASONAL_ARTIFACT_BUCKET,
+  SHADERS_BUCKET,
 } from './d2-known-values';
 import {
   allStatNames,
@@ -122,9 +121,9 @@ export const makeDupeID = (item: DimItem) =>
   (item.classified && String(item.hash)) ||
   `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
 
-/**
- * Selectors
- */
+//
+// Selectors
+//
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
@@ -149,9 +148,9 @@ export const searchFilterSelector = createSelector(
   (query, filters) => filters.filterFunction(query)
 );
 
-/**
- * SearchConfig
- */
+//
+// SearchConfig
+//
 
 export interface SearchConfig {
   destinyVersion: DestinyVersion;
@@ -865,7 +864,7 @@ function searchFilters(
           _duplicates &&
           !item.itemCategoryHashes.includes(58) &&
           item.hash !== DEFAULT_SHADER &&
-          item.bucket.hash !== 1506418338 &&
+          item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
         );
@@ -1280,7 +1279,7 @@ function searchFilters(
         return item.sockets?.sockets.some((socket) =>
           Boolean(
             socket.plug?.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === shaderBucket &&
+              socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
               socket.plug.plugItem.hash !== DEFAULT_SHADER
           )
         );

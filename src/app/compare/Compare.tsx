@@ -454,25 +454,6 @@ class Compare extends React.Component<Props, State> {
       return itemRpmStat?.value || -99999999;
     };
 
-    /* disabled for now
-    const weaponTypes = Object.keys(intrinsicLookupTable).map(Number);
-    const thisWeaponsType =
-      weaponTypes.find((h) => exampleItem.itemCategoryHashes.includes(h)) || -99999999;
-      const matchingIntrisics = intrinsicLookupTable[thisWeaponsType]?.[exampleItemRpm];
-      const intrinsicPerk =
-        matchingIntrisics &&
-        this.props.defs &&
-        this.props.defs.InventoryItem.get(matchingIntrisics[0]);
-      const intrinsicName = intrinsicPerk?.displayProperties.name || t('Compare.Archetype');
-      const getIntrinsicPerk: (item: D2Item) => number = (item) => {
-      const intrinsic =
-        item.sockets &&
-        item.sockets.sockets.find((s) =>
-          s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-        );
-      return intrinsic?.plug?.plugItem.hash || -99999999;
-    };
-      */
     const exampleItemRpm = getRpm(exampleItem);
     const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');

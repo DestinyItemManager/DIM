@@ -1,6 +1,11 @@
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { D1LightStats } from './d1-known-values';
-import { D2ArmorStatHashByName, D2LightStats, D2WeaponStatHashByName } from './d2-known-values';
+import {
+  D2ArmorStatHashByName,
+  D2LightStats,
+  D2WeaponStatHashByName,
+  TOTAL_STAT_HASH,
+} from './d2-known-values';
 
 // ✨ magic values ✨
 // this file has non-programatically decided information
@@ -27,7 +32,7 @@ export const damageTypeNames = Object.values(damageNamesByEnum).filter(
  */
 export const dimArmorStatHashByName = {
   ...D2ArmorStatHashByName,
-  total: -1000,
+  total: TOTAL_STAT_HASH,
 };
 
 /** stats names used to create armor-specific filters, real ones plus an "any" keyword */

@@ -8,6 +8,7 @@ import {
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './Metrics.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { ALL_TRAIT } from 'app/search/d2-known-values';
 
 export default function Metrics({
   metrics,
@@ -25,7 +26,7 @@ export default function Metrics({
       if (!metricDef) {
         return null;
       }
-      return metricDef.traitHashes.filter((h) => h !== 1434215347)[0];
+      return metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0];
     }
   );
 

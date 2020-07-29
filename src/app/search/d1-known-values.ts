@@ -2,11 +2,19 @@
 // this file has non-programatically decided information
 // hashes, names, & enums, hand-crafted and chosen by us
 
+//
+// STATS KNOWN VALUES
+//
+
 /** hashes representing D1 PL stats */
 export const D1LightStats = [
   3897883278, // Defense
   368428387, // Attack
 ];
+
+//
+// ITEMS / ITEMCATERGORY KNOWN VALUES
+//
 
 /** these weapons exist in D1&2 */
 export const D1ItemCategoryHashes = {
@@ -22,6 +30,10 @@ export const D1ItemCategoryHashes = {
   sidearm: 14,
   sword: 54,
 };
+
+//
+// OTHER STUFF
+//
 
 /** sublime engrams */
 export const sublimeEngrams = [

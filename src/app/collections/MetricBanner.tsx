@@ -6,6 +6,7 @@ import styles from './MetricBanner.m.scss';
 import masterworkOverlay from 'images/masterwork-metric.png';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
+import { ALL_TRAIT } from 'app/search/d2-known-values';
 
 interface Props {
   metricHash: number;
@@ -22,7 +23,7 @@ export default function MetricBanner({ metricHash, defs, objectiveProgress, clas
   const metricIcon = metricDef.displayProperties.icon;
 
   const metricScope = metricDef.traitHashes
-    .filter((h) => h !== 1434215347)
+    .filter((h) => h !== ALL_TRAIT)
     .map((h) => defs.Trait.get(h))[0];
   const parentNode = defs.PresentationNode.get(metricDef.parentNodeHashes[0]);
 

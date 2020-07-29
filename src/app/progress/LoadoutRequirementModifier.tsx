@@ -4,8 +4,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './ActivityModifier.scss';
-
-export const armsmasterModifierHash = 3704166961;
+import { ARMSMASTER_ACTIVITY_MODIFIER } from 'app/search/d2-known-values';
 
 /**
  * This table lets us use localized names for ItemSubTypes, since they only exist as enum values.EquipmentSlot definitions.
@@ -75,7 +74,7 @@ export default function LoadoutRequirementModifier({
   }
 
   const activityDef = defs.Activity.get(activity.activityHash);
-  const modifier = defs.ActivityModifier.get(armsmasterModifierHash);
+  const modifier = defs.ActivityModifier.get(ARMSMASTER_ACTIVITY_MODIFIER);
 
   // Raid activities can have required loadouts, which fall under the "armsmaster" modifier. The
   // actual modifier text doesn't give the right info, so we'll build it ourselves from the loadout

@@ -11,6 +11,7 @@ import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import TagIcon from './TagIcon';
 import { selectedSubclassPath } from './subclass';
+import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 
 const itemTierDogearStyles = {
   Legendary: styles.legendary,
@@ -147,7 +148,7 @@ export default function InventoryItem({
 export function borderless(item: DimItem) {
   return (
     (item.isDestiny2?.() &&
-      (item.bucket.hash === 3284755031 || item.itemCategoryHashes?.includes(268598612))) ||
+      (item.bucket.hash === SUBCLASS_BUCKET || item.itemCategoryHashes?.includes(268598612))) ||
     item.isEngram
   );
 }

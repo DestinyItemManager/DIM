@@ -8,9 +8,10 @@ import { ArmorSet, statHashes, LockedArmor2ModMap, StatTypes } from '../types';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 import { t } from 'app/i18next-t';
 import { statTier } from '../utils';
-import { Armor2ModPlugCategories, getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './SetStats.m.scss';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -30,7 +31,7 @@ function SetStats({ defs, set, statOrder, enabledStats, lockedArmor2Mods }: Prop
 
   // Add general mod vaues for display purposes
   if ($featureFlags.armor2ModPicker) {
-    for (const lockedMod of lockedArmor2Mods[Armor2ModPlugCategories.general]) {
+    for (const lockedMod of lockedArmor2Mods[armor2PlugCategoryHashesByName.general]) {
       for (const stat of lockedMod.mod.investmentStats) {
         if (stat.statTypeHash === statHashes.Mobility) {
           displayStats.Mobility += stat.value;

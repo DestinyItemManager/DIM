@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
+import { RECOIL_DIRECTION } from 'app/search/d2-known-values';
 
 export default function CompareStat({
   stat,
@@ -34,7 +35,7 @@ export default function CompareStat({
           <ElementIcon element={item.element} />
         )}
         {itemStat?.value !== undefined ? (
-          itemStat.statHash === 2715839340 ? (
+          itemStat.statHash === RECOIL_DIRECTION ? (
             <span className="stat-recoil">
               <span>{itemStat.value}</span>
               <RecoilStat value={itemStat.value} />

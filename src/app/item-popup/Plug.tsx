@@ -8,9 +8,9 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
-import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { LockedItemType } from 'app/loadout-builder/types';
+import { INTRINSIC_ITEM_CATEGORY } from 'app/search/d2-known-values';
 
 export default function Plug({
   defs,
@@ -96,7 +96,7 @@ export default function Plug({
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: !itemCategories.includes(INTRINSIC_PLUG_CATEGORY),
+        notIntrinsic: !itemCategories.includes(INTRINSIC_ITEM_CATEGORY),
       })}
       onClick={handleShiftClick}
     >

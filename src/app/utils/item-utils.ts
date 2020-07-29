@@ -4,7 +4,11 @@ import _ from 'lodash';
 import modSocketMetadata from 'data/d2/specialty-modslot-metadata';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
-import { energyNamesByEnum } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashes,
+  energyNamesByEnum,
+  TOTAL_STAT_HASH,
+} from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 
 // damage is a mess!
@@ -15,16 +19,6 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.isDestiny2() && item.energy
     ? energyNamesByEnum[item.element?.enumValue ?? -1]
     : damageNamesByEnum[item.element?.enumValue ?? -1];
-
-export const Armor2ModPlugCategories = {
-  general: 2487827355,
-  helmet: 2912171003,
-  gauntlets: 3422420680,
-  chest: 1526202480,
-  leg: 2111701510,
-  classitem: 912441879,
-} as const;
-const armor2PlugCategoryHashes: number[] = Object.values(Armor2ModPlugCategories);
 
 // these are helpers for identifying SpecialtySockets (seasonal mods).
 // i would like this file to be the only one that interfaces with
@@ -103,7 +97,7 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
 
   if (stats) {
     for (const stat of stats) {
-      if (stat.statHash !== -1000 && stat.baseMayBeWrong && stat.displayProperties.name) {
+      if (stat.statHash !== TOTAL_STAT_HASH && stat.baseMayBeWrong && stat.displayProperties.name) {
         incorrect.add(stat.displayProperties.name);
       }
     }

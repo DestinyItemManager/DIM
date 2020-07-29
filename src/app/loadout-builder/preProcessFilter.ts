@@ -6,17 +6,18 @@ import {
   ItemsByBucket,
   LockedItemType,
 } from './types';
-import { Armor2ModPlugCategories, getItemDamageShortName } from 'app/utils/item-utils';
+import { getItemDamageShortName } from 'app/utils/item-utils';
 import { doEnergiesMatch } from './mod-utils';
 import { canSlotMod, getBaseStatValues } from './utils';
 import { DimItem } from 'app/inventory/item-types';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 
 const bucketsToCategories = {
-  [LockableBuckets.helmet]: Armor2ModPlugCategories.helmet,
-  [LockableBuckets.gauntlets]: Armor2ModPlugCategories.gauntlets,
-  [LockableBuckets.chest]: Armor2ModPlugCategories.chest,
-  [LockableBuckets.leg]: Armor2ModPlugCategories.leg,
-  [LockableBuckets.classitem]: Armor2ModPlugCategories.classitem,
+  [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
+  [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
+  [LockableBuckets.chest]: armor2PlugCategoryHashesByName.chest,
+  [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
+  [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
 };
 
 /**

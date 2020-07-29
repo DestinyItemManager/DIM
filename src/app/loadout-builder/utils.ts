@@ -10,6 +10,11 @@ import {
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  INTRINSIC_PLUG_CATEGORY,
+  MODIFICATIONS_BUCKET,
+  Y1_ARMOR_MODS_PLUG_CATEGORY,
+} from 'app/search/d2-known-values';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -64,7 +69,7 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove Archetype/Inherit perk
   if (
-    plugItem.plug.plugCategoryHash === 1744546145 &&
+    plugItem.plug.plugCategoryHash === INTRINSIC_PLUG_CATEGORY &&
     plugItem.inventory.tierType !== 6 // keep exotics
   ) {
     return false;
@@ -72,7 +77,7 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove empty mod slots
   if (
-    plugItem.plug.plugCategoryHash === 3347429529 &&
+    plugItem.plug.plugCategoryHash === Y1_ARMOR_MODS_PLUG_CATEGORY &&
     plugItem.inventory.tierType === TierType.Basic
   ) {
     return false;
@@ -91,7 +96,8 @@ export function filterPlugs(socket: DimSocket) {
   // Only real mods
   if (
     !socket.isPerk &&
-    (plugItem.inventory.bucketTypeHash !== 3313201758 || !plugItem.inventory.recoveryBucketTypeHash)
+    (plugItem.inventory.bucketTypeHash !== MODIFICATIONS_BUCKET ||
+      !plugItem.inventory.recoveryBucketTypeHash)
   ) {
     return false;
   }
