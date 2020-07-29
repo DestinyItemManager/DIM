@@ -14,9 +14,7 @@ import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 const statsWarning =
   'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';
-const statsWarningLink = `<a href='${statsWarning}' target='_blank' rel='noopener noreferrer'>${t(
-  'LoadoutBuilder.WikiWarningModsStats'
-)}</a>`;
+const statsWarningLink = `<a href='${statsWarning}' target='_blank' rel='noopener noreferrer'>A Warning on Mods and Stats</a>`;
 
 interface Props {
   selectedStore: DimStore;

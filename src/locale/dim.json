@@ -574,8 +574,7 @@
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
-    "UnlockItem": "Unlock Item",
-    "WikiWarningModsStats": "A Warning on Mods and Stats"
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
