@@ -1,14 +1,7 @@
 import _ from 'lodash';
 import { DimSocket, DimSockets, D2Item, DimItem } from '../../inventory/item-types';
-import {
-  ProcessSocket,
-  ProcessMod,
-  LockedArmor2ProcessMods,
-  ProcessSockets,
-  ProcessItem,
-  ProcessArmorSet,
-} from './types';
-import { LockedModBase, LockedArmor2ModMap, ArmorSet, statHashToType, StatTypes } from '../types';
+import { ProcessSocket, ProcessMod, ProcessSockets, ProcessItem, ProcessArmorSet } from './types';
+import { LockedModBase, ArmorSet, statHashToType, StatTypes, LockedArmor2Mod } from '../types';
 import {
   getSpecialtySocketMetadataByPlugCategoryHash,
   getSpecialtySocketMetadata,
@@ -44,6 +37,7 @@ export function mapSeasonalModsToProcessMods(
   const modMetadata: ProcessMod[] = [];
   for (const entry of metadatas) {
     modMetadata.push({
+      hash: entry.mod.mod.hash,
       season: entry.metadata?.season,
       tag: entry.metadata?.tag,
       energyType: entry.mod.mod.plug.energyCost.energyType,
@@ -57,34 +51,23 @@ export function mapSeasonalModsToProcessMods(
   return modMetadata;
 }
 
-/**
- * Maps armour 2.0 mods from the ModPicker to ProcessMods.
- */
-export function mapArmor2ModsToProcessMods(
-  lockedMods: LockedArmor2ModMap
-): LockedArmor2ProcessMods {
-  const seasonalMetas = lockedMods.seasonal.map((mod) =>
-    getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)
-  );
+export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
+  const processMod = {
+    hash: mod.mod.hash,
+    energyType: mod.mod.plug.energyCost.energyType,
+    investmentStats: mod.mod.investmentStats,
+  };
 
-  return _.mapValues(lockedMods, (mods) =>
-    mods.map((mod, index) => {
-      const processMod = {
-        energyType: mod.mod.plug.energyCost.energyType,
-        investmentStats: mod.mod.investmentStats,
-      };
+  if (mod.category === 'seasonal') {
+    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash);
+    return {
+      ...processMod,
+      season: metadata?.season,
+      tag: metadata?.tag,
+    };
+  }
 
-      if (mod.category === 'seasonal') {
-        return {
-          ...processMod,
-          season: seasonalMetas[index]?.season,
-          tag: seasonalMetas[index]?.tag,
-        };
-      }
-
-      return processMod;
-    })
-  );
+  return processMod;
 }
 
 /**

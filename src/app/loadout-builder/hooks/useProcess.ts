@@ -18,8 +18,8 @@ import {
   mapDimItemToProcessItem,
   mapSeasonalModsToProcessMods,
   getTotalModStatChanges,
-  mapArmor2ModsToProcessMods,
   hydrateArmorSet,
+  mapArmor2ModToProcessMod,
 } from '../processWorker/mappers';
 
 interface ProcessState {
@@ -96,7 +96,7 @@ export function useProcess(
             ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
             : lockedSeasonalMods
         ),
-        mapArmor2ModsToProcessMods(lockedArmor2ModMap),
+        _.mapValues(lockedArmor2ModMap, (mods) => mods.map((mod) => mapArmor2ModToProcessMod(mod))),
         assumeMasterwork,
         statOrder,
         statFilters,

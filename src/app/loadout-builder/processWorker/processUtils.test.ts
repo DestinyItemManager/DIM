@@ -6,19 +6,26 @@ import {
 import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
-function getMod(season: number, tag: string, energyType: DestinyEnergyType): ProcessMod {
-  return { season, tag, energyType, investmentStats: [] };
+function getMod(
+  season: number,
+  tag: string,
+  energyType: DestinyEnergyType,
+  hash?: number
+): ProcessMod {
+  return { season, tag, energyType, investmentStats: [], hash: hash || 0 };
 }
 
 function getItem(
   season: number,
   energyType: DestinyEnergyType,
-  compatibleModSeasons?: string[]
+  compatibleModSeasons?: string[],
+  id?: string
 ): ProcessItemSubset {
   return {
     energyType,
     season,
     compatibleModSeasons,
+    id: id || 'id',
   };
 }
 

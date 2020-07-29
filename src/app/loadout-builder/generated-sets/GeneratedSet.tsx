@@ -78,7 +78,7 @@ function GeneratedSet({
             locked={lockedMap[item.bucket.hash]}
             lbDispatch={lbDispatch}
             statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={assignedMods[item.hash]}
+            lockedMods={assignedMods[item.id]}
             statOrder={statOrder}
           />
         ))}

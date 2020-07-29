@@ -98,6 +98,7 @@ interface ProcessStat {
 }
 
 export interface ProcessMod {
+  hash: number;
   energyType: DestinyEnergyType;
   investmentStats: ProcessStat[];
   /** This should only be available in seasonal mods */
