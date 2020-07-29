@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.destinyitemmanager.app",
       "sha256_cert_fingerprints": [
-        "48:9B:BD:A6:8F:4C:DE:F3:35:83:2F:4B:3A:BC:85:0A:F1:D8:FE:6D:62:E7:53:83:B5:E1:86:11:89:50:E4:B6"
+        "48:9B:BD:A6:8F:4C:DE:F3:35:83:2F:4B:3A:BC:85:0A:F1:D8:FE:6D:62:E7:53:83:B5:E1:86:11:89:50:E4:B6",
+        "E8:7B:18:E2:6E:24:12:1C:A3:D3:3D:1A:C2:7C:39:3A:D9:9B:33:95:8D:42:AD:79:B7:80:F5:24:05:69:F1:7D"
       ]
     }
   }

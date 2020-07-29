@@ -489,7 +489,10 @@ function buildBaseStats(
           if (itemStat && itemStat.base > perkValue) {
             itemStat.base -= perkValue;
           }
-          if (itemStat && itemStat.investmentValue === 0 && perkValue < 0) {
+          if (
+            (itemStat && itemStat.investmentValue === 0 && perkValue < 0) ||
+            perkStat.isConditionallyActive
+          ) {
             itemStat.baseMayBeWrong = true;
           }
         }

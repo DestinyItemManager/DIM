@@ -495,6 +495,11 @@ function getPower(items: ProcessItem[]) {
   return Math.floor(power / numPoweredItems);
 }
 
+/**
+ * This creates stat mixes from either perks (armor 1.0) or stats (armor 2.0).
+ * This uses a similar algorithm to loadout-builder/util#generateMixesFromPerks so the two should
+ * be kept in sync if this changes.
+ */
 function generateMixesFromPerksOrStats(
   item: ProcessItem,
   assumeArmor2IsMasterwork: boolean | null,
