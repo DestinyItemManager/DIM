@@ -99,7 +99,7 @@ export function useProcess(
       .process(
         processItems,
         lockedItems,
-        mapSeasonalModsToSeasonsArray(lockedSeasonalMods),
+        mapSeasonalModsToProcessMods(lockedSeasonalMods),
         getTotalModStatChanges(
           $featureFlags.armor2ModPicker
             ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
@@ -209,7 +209,12 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
-function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBase[]): ProcessMod[] {
+/**
+ * Maps the seasonal mods from the PerkPicker to ProcessMods.
+ *
+ * TODO When ModPicker is fully merged delete this.
+ */
+function mapSeasonalModsToProcessMods(lockedSeasonalMods: readonly LockedModBase[]): ProcessMod[] {
   const metadatas = lockedSeasonalMods.map((mod) => ({
     mod,
     metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
@@ -221,13 +226,19 @@ function mapSeasonalModsToSeasonsArray(lockedSeasonalMods: readonly LockedModBas
       season: entry.metadata?.season,
       tag: entry.metadata?.tag,
       energyType: entry.mod.mod.plug.energyCost.energyType,
-      investmentStats: entry.mod.mod.investmentStats,
+      investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
+        statTypeHash,
+        value,
+      })),
     });
   }
 
   return modMetadata;
 }
 
+/**
+ * Maps armour 2.0 mods from the ModPicker to ProcessMods.
+ */
 function mapArmor2ModsToProcessMods(lockedMods: LockedArmor2ModMap): LockedArmor2ProcessMods {
   const seasonalMetas = lockedMods.seasonal.map((mod) =>
     getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash)

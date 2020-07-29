@@ -97,7 +97,8 @@ export function canTakeAllGeneralMods(processedMods: ProcessMod[], items: Proces
   let itemIndex = 0;
 
   // Loop over the items and mods in parallel and see if they can be slotted.
-  // due to Any energy mods needing to consider skipped items we reset item index after each splice.
+  // We need to reset the index after a match to ensure that mods with the Any energy type
+  // use up armour items that didn't match an energy type/season first.
   while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
     const { energyType } = processedMods[modIndex];
 

@@ -92,9 +92,14 @@ export interface IntermediateProcessArmorSet {
   maxPower: number;
 }
 
+interface ProcessStat {
+  statTypeHash: number;
+  value: number;
+}
+
 export interface ProcessMod {
   energyType: DestinyEnergyType;
-  investmentStats: DestinyItemInvestmentStatDefinition[];
+  investmentStats: ProcessStat[];
   /** This should only be available in seasonal mods */
   season?: number;
   /** This should only be available in seasonal mods */
