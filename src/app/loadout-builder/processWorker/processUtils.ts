@@ -59,7 +59,7 @@ export function canTakeAllSeasonalMods(
   items: ProcessItemSubset[],
   assignments?: Record<string, number[]>
 ) {
-  const sortedItems = [...items].sort(sortProcessModsOrProcessItems);
+  const sortedItems = Array.from(items).sort(sortProcessModsOrProcessItems);
 
   let modIndex = 0;
   let itemIndex = 0;
@@ -107,7 +107,7 @@ export function canTakeAllGeneralMods(
   items: ProcessItemSubset[],
   assignments?: Record<string, number[]>
 ) {
-  const sortedItems = [...items].sort(sortGeneralModsOrProcessItem);
+  const sortedItems = Array.from(items).sort(sortGeneralModsOrProcessItem);
 
   let modIndex = 0;
   let itemIndex = 0;
