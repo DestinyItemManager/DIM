@@ -3,6 +3,11 @@
   height: calc(var(--item-size) / 6);
   margin-right: 1px;
 
+  :global(.destiny1) & {
+    width: calc(var(--item-size) / 5);
+    height: calc(var(--item-size) / 5);
+  }
+
   &.lightBackground {
     filter: brightness(75%) saturate(200%);
     background-color: transparent !important;
