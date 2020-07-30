@@ -2,7 +2,7 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists } from './actions';
+import { loadWishLists, touchWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector, WishListsState } from './reducer';
@@ -48,8 +48,14 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
-    const wishListResponse = await fetch(wishListSource);
-    const wishListText = await wishListResponse.text();
+    let wishListText: string;
+    try {
+      const wishListResponse = await fetch(wishListSource);
+      wishListText = await wishListResponse.text();
+    } catch (e) {
+      console.error('Unable to load wish list', e);
+      return;
+    }
 
     const wishListAndInfo = toWishList(wishListText);
     wishListAndInfo.source = wishListSource;
@@ -65,6 +71,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
+      dispatch(touchWishLists());
     }
   };
 }

@@ -8,3 +8,5 @@ export const loadWishLists = createAction('wishlists/LOAD')<{
 }>();
 
 export const clearWishLists = createAction('wishlists/CLEAR')();
+
+export const touchWishLists = createAction('wishlists/TOUCH')();
