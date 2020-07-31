@@ -24,7 +24,6 @@ import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { DimItem, D1Item } from 'app/inventory/item-types';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
@@ -55,6 +54,7 @@ import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { isUsedModSocket } from 'app/utils/socket-utils';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -102,11 +102,11 @@ export function getColumns(
 
   // Some stat labels are long. This lets us replace them with i18n
   const statLabels = {
-    4284893193: t('Organizer.Stats.RPM'),
-    4188031367: t('Organizer.Stats.Reload'), // Reload Speed
-    1345609583: t('Organizer.Stats.Aim'), // Aim Assistance
-    2715839340: t('Organizer.Stats.Recoil'), // Recoil Direction
-    1931675084: t('Organizer.Stats.Inventory'), // Inventory Size
+    [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
+    [StatHashes.ReloadSpeed]: t('Organizer.Stats.Reload'), // Reload Speed
+    [StatHashes.AimAssistance]: t('Organizer.Stats.Aim'), // Aim Assistance
+    [StatHashes.RecoilDirection]: t('Organizer.Stats.Recoil'), // Recoil Direction
+    [StatHashes.InventorySize]: t('Organizer.Stats.Inventory'), // Inventory Size
   };
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
@@ -575,7 +575,9 @@ function PerksCell({
         isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
-              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY))))
+              !s.plug.plugItem.itemCategoryHashes?.includes(
+                ItemCategoryHashes.WeaponModsIntrinsic
+              ))))
     )
   );
 

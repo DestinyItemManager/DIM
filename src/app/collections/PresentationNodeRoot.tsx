@@ -14,6 +14,7 @@ import _ from 'lodash';
 import Record, { getRecordComponent } from './Record';
 import { getMetricComponent } from './Metric';
 import { itemsForPlugSet } from './plugset-helpers';
+import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 
 interface Props {
   presentationNodeHash: number;
@@ -75,7 +76,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     return (
       <>
-        {presentationNodeHash === 1024788583 && trackedRecordHash !== undefined && (
+        {presentationNodeHash === TRIUMPHS_ROOT_NODE && trackedRecordHash !== undefined && (
           <div className="progress-for-character">
             <div className="records">
               <Record

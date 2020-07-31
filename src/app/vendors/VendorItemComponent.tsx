@@ -14,6 +14,7 @@ import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import { Link } from 'react-router-dom';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export default function VendorItemComponent({
   item,
@@ -91,9 +92,9 @@ export function VendorItemDisplay({
   extraData?: ItemPopupExtraInfo;
   children?: React.ReactNode;
 }) {
-  const acquiredIcon = item.itemCategoryHashes.includes(4104513227) ? ( // ItemCategory "Armor Mods"
+  const acquiredIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods) ? (
     <img src={helmetIcon} className={styles.attachedIcon} />
-  ) : item.itemCategoryHashes.includes(610365472) ? ( // ItemCategory "Weapon Mods"
+  ) : item.itemCategoryHashes.includes(ItemCategoryHashes.WeaponMods) ? (
     <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
   ) : (
     <AppIcon className={styles.acquiredIcon} icon={faCheck} />

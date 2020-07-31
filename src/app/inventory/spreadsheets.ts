@@ -19,6 +19,8 @@ import { getRating } from '../item-review/reducer';
 import { getSpecialtySocketMetadata, getMasterworkStatNames } from 'app/utils/item-utils';
 import store from '../store/store';
 import { t } from 'app/i18next-t';
+import { dimArmorStatHashByName } from 'app/search/search-filter-values';
+import { StatHashes } from 'data/d2/generated-enums';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -74,12 +76,12 @@ export function downloadCsvFiles(
     if (type === 'Weapons') {
       if (
         item.primStat &&
-        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
+        (item.primStat.statHash === 368428387 || item.primStat.statHash === StatHashes.Attack)
       ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat?.statHash === 3897883278) {
+      if (item.primStat?.statHash === StatHashes.Defense) {
         items.push(item);
       }
     } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
@@ -285,16 +287,6 @@ export function source(item: DimItem) {
   }
 }
 
-export const armorStatHashes = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491,
-  Discipline: 1735777505,
-  Intellect: 144602215,
-  Strength: 4244567218,
-  Total: -1000,
-};
-
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -384,9 +376,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row.Disc = stats.Discipline ? stats.Discipline.value : 0;
       row.Str = stats.Strength ? stats.Strength.value : 0;
     } else {
-      const armorStats = Object.keys(armorStatHashes).map((statName) => ({
+      const armorStats = Object.keys(dimArmorStatHashByName).map((statName) => ({
         name: statName,
-        stat: stats[armorStatHashes[statName]],
+        stat: stats[dimArmorStatHashByName[statName]],
       }));
       armorStats.forEach((stat) => {
         row[stat.name] = stat.stat ? stat.stat.value : 0;
@@ -526,7 +518,7 @@ function downloadWeapons(
             case 2961396640: // Charge Time
               stats.chargetime = stat.value;
               break;
-            case 1591432999: // accuracy
+            case StatHashes.Accuracy: // accuracy
               stats.accuracy = stat.value;
               break;
             case 3614673599: // Blast Radius

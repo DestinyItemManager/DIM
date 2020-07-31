@@ -40,6 +40,7 @@ import { getCharacterStatsData as getD1CharacterStatsData } from './store/charac
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getArtifactBonus } from './stores-helpers';
 import { ItemPowerSet } from './ItemPowerSet';
+import { StatHashes } from 'data/d2/generated-enums';
 
 /**
  * Update the high level character information for all the stores
@@ -413,7 +414,7 @@ function makeD2StoresService(): D2StoreServiceType {
   // Add a fake stat for "max base power"
   function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
-      const def = defs.Stat.get(1935470627);
+      const def = defs.Stat.get(StatHashes.Power);
       const { equippable, unrestricted } = maxLightItemSet(stores, store);
       const unrestrictedMaxGearPower = getLight(store, unrestricted);
       const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);

@@ -12,6 +12,7 @@ import styles from './VendorItems.m.scss';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { Link } from 'react-router-dom';
 import spiderMats from 'data/d2/spider-mats.json';
+import { SPIDER_VENDOR } from 'app/search/d2-known-values';
 
 const itemSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.typeName),
@@ -62,7 +63,7 @@ export default function VendorItems({
   }
 
   // add all traded planetmats if this vendor is the spider
-  if (vendor?.component?.vendorHash === 863940356) {
+  if (vendor?.component?.vendorHash === SPIDER_VENDOR) {
     currencies = _.uniqBy(
       [...spiderMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
       (i) => i.hash

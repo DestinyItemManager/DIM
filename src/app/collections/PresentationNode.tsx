@@ -19,6 +19,7 @@ import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
 import Metrics from './Metrics';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -127,7 +128,7 @@ class PresentationNode extends React.Component<Props> {
     // todo: export this hash/depth and clean up the boolean string
     const alwaysExpanded =
       // if we're not in triumphs
-      (thisAndParents[0] !== 1024788583 &&
+      (thisAndParents[0] !== TRIUMPHS_ROOT_NODE &&
         // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
         thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
       // or this is manually selected to be forced expanded
@@ -228,7 +229,7 @@ class PresentationNode extends React.Component<Props> {
             </div>
           </div>
         )}
-        {childrenExpanded && presentationNodeHash === 1024788583 && (
+        {childrenExpanded && presentationNodeHash === TRIUMPHS_ROOT_NODE && (
           <div className="presentationNodeOptions">
             <Checkbox
               label={t('Triumphs.HideCompleted')}

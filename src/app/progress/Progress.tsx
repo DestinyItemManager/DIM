@@ -26,6 +26,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSubscription } from 'app/utils/hooks';
 import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -121,9 +122,9 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     return null;
   }
 
-  const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
-  const sealTitle = defs.PresentationNode.get(1652422747).displayProperties.name;
-  const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
+  const triumphTitle = defs.PresentationNode.get(TRIUMPHS_ROOT_NODE).displayProperties.name;
+  const sealTitle = defs.PresentationNode.get(SEALS_ROOT_NODE).displayProperties.name;
+  const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
 
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
@@ -205,7 +206,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
               <section id="triumphs">
                 <ErrorBoundary name="Triumphs">
                   <PresentationNodeRoot
-                    presentationNodeHash={1024788583}
+                    presentationNodeHash={TRIUMPHS_ROOT_NODE}
                     defs={defs}
                     profileResponse={profileInfo}
                   />
@@ -215,7 +216,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
               <section id="seals">
                 <ErrorBoundary name="Seals">
                   <PresentationNodeRoot
-                    presentationNodeHash={1652422747}
+                    presentationNodeHash={SEALS_ROOT_NODE}
                     defs={defs}
                     profileResponse={profileInfo}
                   />

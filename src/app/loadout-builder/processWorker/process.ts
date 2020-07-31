@@ -9,7 +9,6 @@ import {
 } from '../types';
 import { statTier } from '../utils';
 import { compareBy } from '../../utils/comparators';
-import { Armor2ModPlugCategories } from '../../utils/item-utils';
 import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
@@ -25,6 +24,7 @@ import {
   sortProcessModsOrProcessItems,
   canTakeAllGeneralMods,
 } from './processUtils';
+import { armor2PlugCategoryHashesByName } from '../../search/d2-known-values';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -145,7 +145,7 @@ export function process(
       assumeMasterwork,
       orderedStatValues,
       lockedItems[LockableBuckets.helmet],
-      lockedArmor2ModMap[Armor2ModPlugCategories.helmet]
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.helmet]
     )
   );
   const gaunts = multiGroupBy(
@@ -154,7 +154,7 @@ export function process(
       assumeMasterwork,
       orderedStatValues,
       lockedItems[LockableBuckets.gauntlets],
-      lockedArmor2ModMap[Armor2ModPlugCategories.gauntlets]
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.gauntlets]
     )
   );
   const chests = multiGroupBy(
@@ -163,7 +163,7 @@ export function process(
       assumeMasterwork,
       orderedStatValues,
       lockedItems[LockableBuckets.chest],
-      lockedArmor2ModMap[Armor2ModPlugCategories.chest]
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.chest]
     )
   );
   const legs = multiGroupBy(
@@ -172,7 +172,7 @@ export function process(
       assumeMasterwork,
       orderedStatValues,
       lockedItems[LockableBuckets.leg],
-      lockedArmor2ModMap[Armor2ModPlugCategories.leg]
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.leg]
     )
   );
   const classitems = multiGroupBy(
@@ -181,7 +181,7 @@ export function process(
       assumeMasterwork,
       orderedStatValues,
       lockedItems[LockableBuckets.classitem],
-      lockedArmor2ModMap[Armor2ModPlugCategories.classitem]
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.classitem]
     )
   );
 
@@ -318,9 +318,9 @@ export function process(
               if (
                 (processedSeasonalMods.length &&
                   !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)) ||
-                (lockedArmor2ModMap[Armor2ModPlugCategories.general].length &&
+                (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllGeneralMods(
-                    lockedArmor2ModMap[Armor2ModPlugCategories.general],
+                    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
                     firstValidSet
                   )) ||
                 (lockedArmor2ModMap.seasonal.length &&

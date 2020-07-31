@@ -1,9 +1,14 @@
 import _ from 'lodash';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import { DimItem } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import {
+  armor2PlugCategoryHashesByName,
+  armorBuckets,
+  D2ArmorStatHashByName,
+} from 'app/search/d2-known-values';
 
+// todo: get this from d2-known-values
 export type StatTypes =
   | 'Mobility'
   | 'Resilience'
@@ -12,6 +17,7 @@ export type StatTypes =
   | 'Intellect'
   | 'Strength';
 
+// todo: and this?
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {
@@ -69,7 +75,10 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export const ModPickerCategories = { ...Armor2ModPlugCategories, seasonal: 'seasonal' } as const;
+export const ModPickerCategories = {
+  ...armor2PlugCategoryHashesByName,
+  seasonal: 'seasonal',
+} as const;
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
 export interface LockedArmor2Mod {
@@ -118,20 +127,21 @@ export type ItemsByBucket = Readonly<{
  * Bucket lookup, also used for ordering of the buckets.
  */
 export const LockableBuckets = {
-  helmet: 3448274439,
-  gauntlets: 3551918588,
-  chest: 14239492,
-  leg: 20886954,
-  classitem: 1585787867,
+  helmet: armorBuckets.helmet,
+  gauntlets: armorBuckets.gauntlets,
+  chest: armorBuckets.chest,
+  leg: armorBuckets.leg,
+  classitem: armorBuckets.classitem,
 };
 
+// to-do: deduplicate this and use D2ArmorStatHashByName instead
 export const statHashes: { [type in StatTypes]: number } = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491,
-  Discipline: 1735777505,
-  Intellect: 144602215,
-  Strength: 4244567218,
+  Mobility: D2ArmorStatHashByName.mobility,
+  Resilience: D2ArmorStatHashByName.resilience,
+  Recovery: D2ArmorStatHashByName.recovery,
+  Discipline: D2ArmorStatHashByName.discipline,
+  Intellect: D2ArmorStatHashByName.intellect,
+  Strength: D2ArmorStatHashByName.strength,
 };
 
 export const statValues = Object.values(statHashes);

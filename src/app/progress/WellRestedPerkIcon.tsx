@@ -7,6 +7,7 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
+import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
 
 export default function WellRestedPerkIcon({
   defs,
@@ -24,7 +25,7 @@ export default function WellRestedPerkIcon({
   if (!wellRestedInfo.wellRested) {
     return null;
   }
-  const wellRestedPerk = defs.SandboxPerk.get(2352765282);
+  const wellRestedPerk = defs.SandboxPerk.get(WELL_RESTED_PERK);
   if (!wellRestedPerk) {
     console.error("Couldn't find Well Rested perk in manifest");
     return null;

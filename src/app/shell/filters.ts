@@ -7,6 +7,11 @@ import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
 import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import {
+  CONSUMABLES_BUCKET,
+  MATERIALS_BUCKET,
+  MODIFICATIONS_BUCKET,
+} from 'app/search/d2-known-values';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -166,12 +171,12 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === 1469714392) {
+  if (itemLocationId === CONSUMABLES_BUCKET) {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === 3865314626) {
+  if (itemLocationId === MATERIALS_BUCKET) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
@@ -184,7 +189,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort mods
-  if (itemLocationId === 3313201758) {
+  if (itemLocationId === MODIFICATIONS_BUCKET) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
     if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
@@ -193,7 +198,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort consumables
-  if (itemLocationId === 1469714392) {
+  if (itemLocationId === CONSUMABLES_BUCKET) {
     return items.sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,

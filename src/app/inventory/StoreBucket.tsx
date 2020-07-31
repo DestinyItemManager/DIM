@@ -20,6 +20,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { emptyArray } from 'app/utils/empty';
+import { ENGRAMS_BUCKET } from 'app/search/d2-known-values';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -123,7 +124,7 @@ class StoreBucket extends React.Component<Props> {
             <StoreInventoryItem key={item.index} item={item} />
           ))}
           {store.isDestiny2() &&
-          bucket.hash === 375726501 && // Engrams. D1 uses this same bucket hash for "Missions"
+          bucket.hash === ENGRAMS_BUCKET && // Engrams. D1 uses this same bucket hash for "Missions"
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
             ))}

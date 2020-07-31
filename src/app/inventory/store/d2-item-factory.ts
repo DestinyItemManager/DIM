@@ -31,6 +31,13 @@ import { buildTalentGrid } from './talent-grids';
 import { reportException } from '../../utils/exceptions';
 import { t } from 'app/i18next-t';
 import { getSeason } from './season';
+import {
+  ENGRAMS_BUCKET,
+  MODIFICATIONS_BUCKET,
+  SHADERS_BUCKET,
+  THE_FORBIDDEN_BUCKET,
+} from 'app/search/d2-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -256,8 +263,8 @@ export function makeItem(
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
 
   // https://github.com/Bungie-net/api/issues/687
-  if (itemDef.inventory.bucketTypeHash === 2422292810) {
-    normalBucket = buckets.byHash[3313201758];
+  if (itemDef.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) {
+    normalBucket = buckets.byHash[MODIFICATIONS_BUCKET];
   }
 
   // item.bucket is where it IS right now
@@ -278,7 +285,9 @@ export function makeItem(
 
   // 34 = category hash for engrams
   const isEngram =
-    itemDef.itemCategoryHashes?.includes(34) || normalBucket.hash === 375726501 || false;
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
+    normalBucket.hash === ENGRAMS_BUCKET ||
+    false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
@@ -436,7 +445,7 @@ export function makeItem(
     createdItem.lockable ||
       createdItem.classified ||
       // Shaders
-      createdItem.bucket.hash === 2973005342
+      createdItem.bucket.hash === SHADERS_BUCKET
   );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean(
@@ -594,8 +603,8 @@ export function makeItem(
 function isWeaponOrArmor1OrExoticArmor2(item: D2Item) {
   return (
     item.primStat &&
-    (item.primStat.statHash === 1480404414 || // weapon
-      (item.primStat.statHash === 3897883278 && // armor
+    (item.primStat.statHash === StatHashes.Attack || // weapon
+      (item.primStat.statHash === StatHashes.Defense && // armor
         (!item.energy || // energy is an armor 2.0 signifier
           item.isExotic))) // but we want to allow exotic armor 2.0 reviews
   );

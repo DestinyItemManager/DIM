@@ -19,6 +19,7 @@ import ReactDOM from 'react-dom';
 import SocketDetails from './SocketDetails';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { emptySet } from 'app/utils/empty';
+import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
 
 interface ProvidedProps {
   item: D2Item;
@@ -85,9 +86,9 @@ function ItemSockets({
   }
 
   // special top level class for styling some specific items' popups differently
-  const itemSpecificClass = [1160544508, 1160544509, 1160544511, 3633698719].includes(item.hash)
+  const itemSpecificClass = synthesizerHashes.includes(item.hash)
     ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
-    : item.hash === 1115550924
+    : item.hash === CHALICE_OF_OPULENCE
     ? 'chalice'
     : null;
 

@@ -10,10 +10,6 @@ module.exports = function csp(env) {
     defaultSrc: ['none'],
     scriptSrc: [
       SELF,
-      // For Webpack?
-      "'unsafe-eval'",
-      "'unsafe-inline'",
-      'data:',
       // Include a snippet of inline scripts
       "'report-sample'",
       // Google API (Drive)
@@ -26,7 +22,7 @@ module.exports = function csp(env) {
     ],
     styleSrc: [
       SELF,
-      // For Webpack's inserted styles
+      // For our inline styles
       "'unsafe-inline'",
       // Google Fonts
       'https://fonts.googleapis.com/css',
@@ -41,10 +37,13 @@ module.exports = function csp(env) {
       // Bungie.net API
       'https://www.bungie.net',
       // DTR Reviews API
-      'https://reviews-api.destinytracker.net',
-      'https://api.tracker.gg',
+      //'https://reviews-api.destinytracker.net',
+      //'https://api.tracker.gg',
+      // VendorEngrams
       'https://api.vendorengrams.xyz',
+      // Wishlists
       'https://raw.githubusercontent.com',
+      // DIM Sync
       'https://api.destinyitemmanager.com',
     ],
     imgSrc: [
@@ -63,8 +62,6 @@ module.exports = function csp(env) {
       'https://syndication.twitter.com',
       'https://platform.twitter.com',
       'https://*.twimg.com/',
-      // User profile info in storage settings
-      'https://*.googleusercontent.com/',
     ],
     fontSrc: [
       SELF,

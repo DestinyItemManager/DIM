@@ -33,6 +33,7 @@ import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -61,7 +62,7 @@ const armorHashes = {
  * used to generate the list of selected subcategories.
  */
 export const getD2SelectionTree = (defs: D2ManifestDefinitions): ItemCategoryTreeNode => {
-  const armorCategory = defs.ItemCategory.get(20);
+  const armorCategory = defs.ItemCategory.get(ItemCategoryHashes.Armor);
 
   // Each class has the same armor
   const armorCategories = armorCategory.groupedCategoryHashes.map(

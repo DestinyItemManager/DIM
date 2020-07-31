@@ -9,6 +9,7 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import ClosableContainer from '../ClosableContainer';
+import { TRACTION_PERK } from 'app/search/d2-known-values';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting
@@ -159,7 +160,7 @@ export function SelectablePerk({
     >
       <BungieImageAndAmmo
         className={clsx({
-          [styles.goodPerk]: perk.hash === 1818103563,
+          [styles.goodPerk]: perk.hash === TRACTION_PERK,
           [styles.badPerk]: isBadPerk,
         })}
         hash={perk.hash}
@@ -173,7 +174,7 @@ export function SelectablePerk({
             ? sandboxPerk.displayProperties.description
             : perk.displayProperties.description}
           {isBadPerk && <p>{t('LoadoutBuilder.BadPerk')}</p>}
-          {perk.hash === 1818103563 && t('LoadoutBuilder.Traction')}
+          {perk.hash === TRACTION_PERK && t('LoadoutBuilder.Traction')}
         </div>
       </div>
     </div>

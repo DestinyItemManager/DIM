@@ -4,16 +4,7 @@ import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
-
-// unfortunately the API's raid .order attribute is odd
-const raidOrder = [
-  3660836525, // levi
-  2986584050, // eow
-  2683538554, // sos
-  3181387331, // wish
-  1342567285, // scourge
-  2590427074, // crown
-];
+import { raidOrder, RAID_ACTIVITY_TYPE } from 'app/search/d2-known-values';
 
 /**
  * Displays all of the raids available to a user as milestones
@@ -37,7 +28,8 @@ export default function Raids({
   const filteredMilestones = allMilestones.filter((milestone) => {
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return milestoneActivities?.some(
-      (activity) => (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989
+      (activity) =>
+        defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE
     );
   });
 

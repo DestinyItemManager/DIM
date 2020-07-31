@@ -16,7 +16,9 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import { D2CategoryHashes } from 'app/search/search-filter-values';
+import { armorBuckets, ARMOR_STAT_CAP, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -36,65 +38,61 @@ import { D2CategoryHashes } from 'app/search/search-filter-values';
 
 /** Stats that all armor should have. */
 export const armorStats = [
-  2996146975, // Mobility
-  392767087, // Resilience
-  1943323491, // Recovery
-  1735777505, // Discipline
-  144602215, // Intellect
-  4244567218, // Strength
+  StatHashes.Mobility,
+  StatHashes.Resilience,
+  StatHashes.Recovery,
+  StatHashes.Discipline,
+  StatHashes.Intellect,
+  StatHashes.Strength,
 ];
 
 /**
  * Which stats to display, and in which order.
  */
 export const statAllowList = [
-  4284893193, // Rounds Per Minute
-  2961396640, // Charge Time
-  447667954, // Draw Time
-  3614673599, // Blast Radius
-  2523465841, // Velocity
-  2837207746, // Swing Speed (sword)
-  4043523819, // Impact
-  1240592695, // Range
-  2762071195, // Efficiency (sword)
-  209426660, // Defense (sword)
-  1591432999, // Accuracy
-  155624089, // Stability
-  943549884, // Handling
-  3022301683, // Charge Rate (Sword)
-  3736848092, // Guard Endurance
-  4188031367, // Reload Speed
-  1345609583, // Aim Assistance
-  3555269338, // Zoom
-  2715839340, // Recoil Direction
-  3871231066, // Magazine
-  1931675084, // Inventory Size
-  925767036, // Ammo Capacity
+  StatHashes.RoundsPerMinute,
+  StatHashes.ChargeTime,
+  StatHashes.DrawTime,
+  StatHashes.BlastRadius,
+  StatHashes.Velocity,
+  StatHashes.SwingSpeed,
+  StatHashes.Impact,
+  StatHashes.Range,
+  StatHashes.GuardEfficiency,
+  StatHashes.GuardResistance,
+  StatHashes.Accuracy,
+  StatHashes.Stability,
+  StatHashes.Handling,
+  StatHashes.ChargeRate,
+  StatHashes.GuardEndurance,
+  StatHashes.ReloadSpeed,
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.AmmoCapacity,
   ...armorStats,
-  -1000, // Total
-];
-
-/** Stats that should be forced to display without a bar (just a number). */
-const statsNoBar = [
-  4284893193, // Rounds Per Minute
-  3871231066, // Magazine
-  2961396640, // Charge Time
-  447667954, // Draw Time
-  1931675084, // Recovery
-  2715839340, // Recoil Direction
+  TOTAL_STAT_HASH,
 ];
 
 /** Stats that are measured in milliseconds. */
-export const statsMs = [
-  447667954, // Draw Time
-  2961396640, // Charge Time
+export const statsMs = [StatHashes.DrawTime, StatHashes.ChargeTime];
+
+/** Stats that should be forced to display without a bar (just a number). */
+const statsNoBar = [
+  StatHashes.RoundsPerMinute,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.RecoilDirection,
+  ...statsMs,
 ];
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsAllowList = [
-  1345609583, // Aim Assistance
-  3555269338, // Zoom
-  2715839340, // Recoil Direction
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -167,7 +165,7 @@ function buildStatsFromMods(
 ): DimStat[] {
   const statTracker: { stat: number; value: number } | {} = {};
   const investmentStats: DimStat[] = [];
-  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, D2CategoryHashes.armormod);
+  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, ItemCategoryHashes.ArmorMods);
   const masterworkSockets = getSocketsWithStyle(
     itemSockets,
     DestinySocketCategoryStyle.EnergyMeter
@@ -198,7 +196,7 @@ function buildStatsFromMods(
       value: statTracker[statHash],
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
-    builtStat.maximumValue = 42;
+    builtStat.maximumValue = ARMOR_STAT_CAP;
     investmentStats.push(builtStat);
   }
 
@@ -213,12 +211,15 @@ function shouldShowStat(
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
   // Bows have a charge time stat that nobody asked for
-  if (statHash === 2961396640 && itemDef.itemCategoryHashes?.includes(3317538576)) {
+  if (
+    statHash === StatHashes.ChargeTime &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Bows)
+  ) {
     return false;
   }
 
   // Swords shouldn't show any hidden stats
-  const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(54);
+  const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(D1ItemCategoryHashes.sword);
 
   return (
     // Must be on the AllowList
@@ -463,7 +464,7 @@ function buildBaseStats(
   item: D2Item
 ) {
   // Class Items always have a base stat of 0;
-  if (item.bucket.hash === 1585787867) {
+  if (item.bucket.hash === armorBuckets.classitem) {
     for (const stat of stats) {
       stat.base = 0;
     }
@@ -495,11 +496,11 @@ function totalStat(stats: DimStat[]): DimStat {
   const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
   return {
     investmentValue: total,
-    statHash: -1000,
+    statHash: TOTAL_STAT_HASH,
     displayProperties: ({
       name: t('Stats.Total'),
     } as any) as DestinyDisplayPropertiesDefinition,
-    sort: statAllowList.indexOf(-1000),
+    sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
     baseMayBeWrong,
@@ -541,7 +542,9 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
 
   // vthorn has a hunch that magazine size doesn't use banker's rounding, but the rest definitely do:
   // https://github.com/Bungie-net/api/issues/1029#issuecomment-531849137
-  return statDisplay.statHash === 3871231066 ? Math.round(interpValue) : bankersRound(interpValue);
+  return statDisplay.statHash === StatHashes.Magazine
+    ? Math.round(interpValue)
+    : bankersRound(interpValue);
 }
 
 /**

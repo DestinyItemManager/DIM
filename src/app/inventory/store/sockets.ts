@@ -13,49 +13,15 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
+import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
-/**
- * These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
- * are how perks, mods, and many other things are implemented on items.
- *
- * This is called from within d2-item-factory.service.ts
- */
-
-/**
- * Plugs to hide from plug options (if not socketed)
- * removes the "Default Ornament" plug, "Default Shader" and "Rework Masterwork"
- * TODO: with AWA we may want to put some of these back
- */
-const EXCLUDED_PLUGS = new Set([
-  // Default ornament
-  2931483505,
-  1959648454,
-  702981643,
-  // Rework Masterwork
-  39869035,
-  1961001474,
-  3612467353,
-  // Default Shader
-  4248210736,
-]);
-
-/** The item category hash for "intrinsic perk" */
-export const INTRINSIC_PLUG_CATEGORY = 2237038328;
-/** The item category hash for "masterwork mods" */
-export const MASTERWORK_MOD_CATEGORY = 141186804;
-/** The item category hash for "ghost projections" */
-const GHOST_MOD_CATEGORY = 1404791674;
-
-/** the default shader InventoryItem in every empty shader slot */
-export const DEFAULT_SHADER = 4248210736;
-
-/** the default glow InventoryItem in every empty glow slot */
-export const DEFAULT_GLOW = 3807544519;
-/** The item category hash for "glows" */
-export const DEFAULT_GLOW_CATEGORY = 1875601085;
-
-/** An array of default ornament hashes */
-export const DEFAULT_ORNAMENTS: number[] = [2931483505, 1959648454, 702981643];
+//
+// These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
+// are how perks, mods, and many other things are implemented on items.
+//
+// This is called from within d2-item-factory.service.ts
+//
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -215,8 +181,8 @@ function filterReusablePlug(reusablePlug: DimPlug) {
   const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    !itemCategoryHashes.includes(MASTERWORK_MOD_CATEGORY) &&
-    !itemCategoryHashes.includes(GHOST_MOD_CATEGORY) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.MasterworksMods) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.GhostModsProjections) &&
     (!reusablePlug.plugItem.plug ||
       !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
@@ -379,7 +345,7 @@ function addPlugOption(
       plugOptions.push(plug);
     } else {
       // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-      if (!built.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)) {
+      if (!built.plugItem.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)) {
         plugOptions.push(built);
       }
     }

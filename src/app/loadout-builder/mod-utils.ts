@@ -2,13 +2,13 @@ import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { Armor2ModPlugCategories } from 'app/utils/item-utils';
 import {
   sortProcessModsOrProcessItems,
   canTakeAllSeasonalMods,
   canTakeAllGeneralMods,
 } from './processWorker/processUtils';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 
 /**
  * Checks that:
@@ -79,19 +79,35 @@ export function assignModsToArmorSet(
     assignments[item.id] = [];
   }
 
-  assignGeneralMods(setToMatch, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
-
-  assignModsForSlot(setToMatch[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet], assignments);
-  assignModsForSlot(
-    setToMatch[1],
-    lockedArmor2Mods[Armor2ModPlugCategories.gauntlets],
+  assignGeneralMods(
+    setToMatch,
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
     assignments
   );
-  assignModsForSlot(setToMatch[2], lockedArmor2Mods[Armor2ModPlugCategories.chest], assignments);
-  assignModsForSlot(setToMatch[3], lockedArmor2Mods[Armor2ModPlugCategories.leg], assignments);
+
+  assignModsForSlot(
+    setToMatch[0],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[1],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[2],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.chest],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[3],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.leg],
+    assignments
+  );
   assignModsForSlot(
     setToMatch[4],
-    lockedArmor2Mods[Armor2ModPlugCategories.classitem],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem],
     assignments
   );
 
