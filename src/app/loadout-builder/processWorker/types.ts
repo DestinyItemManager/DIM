@@ -1,4 +1,4 @@
-import { StatTypes } from '../types';
+import { StatTypes, ModPickerCategory } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export interface ProcessPlug {
@@ -92,8 +92,21 @@ export interface IntermediateProcessArmorSet {
   maxPower: number;
 }
 
-export interface ProcessModMetadata {
-  season: number;
-  tag: string;
-  energyType: DestinyEnergyType;
+interface ProcessStat {
+  statTypeHash: number;
+  value: number;
 }
+
+export interface ProcessMod {
+  hash: number;
+  energyType: DestinyEnergyType;
+  investmentStats: ProcessStat[];
+  /** This should only be available in seasonal mods */
+  season?: number;
+  /** This should only be available in seasonal mods */
+  tag?: string;
+}
+
+export type LockedArmor2ProcessMods = {
+  [T in ModPickerCategory]: ProcessMod[];
+};

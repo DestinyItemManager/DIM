@@ -60,13 +60,7 @@ function GeneratedSet({
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
-        <SetStats
-          defs={defs}
-          set={set}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-          lockedArmor2Mods={lockedArmor2Mods}
-        />
+        <SetStats defs={defs} set={set} statOrder={statOrder} enabledStats={enabledStats} />
         <GeneratedSetButtons
           numSets={numSets}
           set={set}
@@ -84,7 +78,7 @@ function GeneratedSet({
             locked={lockedMap[item.bucket.hash]}
             lbDispatch={lbDispatch}
             statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={assignedMods[item.hash]}
+            lockedMods={assignedMods[item.id]}
             statOrder={statOrder}
           />
         ))}

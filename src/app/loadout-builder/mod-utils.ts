@@ -1,16 +1,14 @@
 import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
-import { LockableBuckets, LockedArmor2ModMap, LockedArmor2Mod } from './types';
+import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  sortProcessModsOrProcessItems,
+  canTakeAllSeasonalMods,
+  canTakeAllGeneralMods,
+} from './processWorker/processUtils';
+import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-
-const energyOrder = [
-  DestinyEnergyType.Void,
-  DestinyEnergyType.Thermal,
-  DestinyEnergyType.Arc,
-  DestinyEnergyType.Any,
-];
 
 /**
  * Checks that:
@@ -27,48 +25,17 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones
  * i.e. Void Resist ect
  *
- * assignments is mutated in this function as it tracks assigned mods for a particular armour set
+ * assignments is mutated in this function as it tracks assigned mods for a particular armour set.
  */
 function assignGeneralMods(
   setToMatch: readonly DimItem[],
   generalMods: LockedArmor2Mod[],
-  assignments: Record<number, LockedArmor2Mod[]>
+  assignments: Record<string, number[]>
 ): void {
-  const armour2Items = setToMatch.filter((item) => item.isDestiny2() && item.energy);
-  if (generalMods && armour2Items.length < generalMods.length) {
-    return;
-  }
+  // Mods need to be sorted before being passed to the assignment function
+  const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
 
-  const generalModsByEnergyType = _.groupBy(
-    generalMods,
-    (mod) => mod.mod.plug.energyCost.energyType
-  );
-
-  const armourByEnergyType = _.groupBy(
-    setToMatch,
-    (item) => item.isDestiny2() && item.energy?.energyType
-  );
-
-  let piecesLeft = [...setToMatch];
-  for (const energyType of energyOrder) {
-    if (generalModsByEnergyType[energyType]) {
-      for (let i = 0; i < generalModsByEnergyType[energyType].length; i++) {
-        const mod = generalModsByEnergyType[energyType][i];
-        if (
-          energyType !== DestinyEnergyType.Any &&
-          armourByEnergyType[energyType] &&
-          i < armourByEnergyType[energyType].length
-        ) {
-          const piece = armourByEnergyType[energyType][i];
-          assignments[piece.hash].push(mod);
-          piecesLeft = piecesLeft.filter((item) => item !== piece);
-        } else if (energyType === DestinyEnergyType.Any && piecesLeft.length) {
-          assignments[piecesLeft[0].hash].push(mod);
-          piecesLeft.shift();
-        }
-      }
-    }
-  }
+  canTakeAllGeneralMods(sortedMods, setToMatch.map(mapDimItemToProcessItem), assignments);
 }
 
 /**
@@ -79,10 +46,10 @@ function assignGeneralMods(
 function assignModsForSlot(
   item: DimItem,
   mods: LockedArmor2Mod[],
-  assignments: Record<number, LockedArmor2Mod[]>
+  assignments: Record<string, number[]>
 ): void {
   if (!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item))) {
-    assignments[item.hash] = [...assignments[item.hash], ...mods];
+    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.mod.hash)];
   }
 }
 
@@ -94,70 +61,22 @@ function assignModsForSlot(
 function assignAllSeasonalMods(
   setToMatch: readonly DimItem[],
   seasonalMods: readonly LockedArmor2Mod[],
-  assignments: Record<number, LockedArmor2Mod[]>
+  assignments: Record<string, number[]>
 ): void {
-  const firstValidSetArmor2Count = setToMatch.reduce(
-    (total, item) => (item.isDestiny2() && item.energy ? total + 1 : total),
-    0
-  );
+  // Mods need to be sorted before being passed to the assignment function
+  const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
 
-  if (!seasonalMods || seasonalMods.length > 5 || seasonalMods.length > firstValidSetArmor2Count) {
-    return;
-  }
-
-  const modsByArmorBucket = {};
-
-  // Build up an array of possible mods for each item in the set.
-  for (const mod of seasonalMods) {
-    for (const item of setToMatch) {
-      const itemModCategories =
-        getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes || [];
-
-      if (itemModCategories.includes(mod.mod.plug.plugCategoryHash) && doEnergiesMatch(mod, item)) {
-        if (!modsByArmorBucket[item.bucket.hash]) {
-          modsByArmorBucket[item.bucket.hash] = [];
-        }
-
-        modsByArmorBucket[item.bucket.hash].push(mod);
-      }
-    }
-  }
-
-  // From the possible mods try and find a combination that includes all seasonal mods
-  for (const helmetMod of modsByArmorBucket[LockableBuckets.helmet] || [null]) {
-    for (const armsMod of modsByArmorBucket[LockableBuckets.gauntlets] || [null]) {
-      for (const chestMod of modsByArmorBucket[LockableBuckets.chest] || [null]) {
-        for (const legsMod of modsByArmorBucket[LockableBuckets.leg] || [null]) {
-          for (const classMod of modsByArmorBucket[LockableBuckets.classitem] || [null]) {
-            const setMods = [helmetMod, armsMod, chestMod, legsMod, classMod];
-            const applicableMods = setMods.filter(Boolean);
-            const containsAllLocked =
-              seasonalMods.every((item) => applicableMods.includes(item)) &&
-              _.uniq(applicableMods).length === applicableMods.length;
-
-            if (containsAllLocked) {
-              for (let i = 0; i < setMods.length; i++) {
-                if (setMods[i]) {
-                  assignModsForSlot(setToMatch[i], [setMods[i]], assignments);
-                }
-              }
-              return;
-            }
-          }
-        }
-      }
-    }
-  }
+  canTakeAllSeasonalMods(sortedMods, setToMatch.map(mapDimItemToProcessItem), assignments);
 }
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
-): Record<number, LockedArmor2Mod[]> {
-  const assignments: Record<number, LockedArmor2Mod[]> = {};
+): Record<string, LockedArmor2Mod[]> {
+  const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
-    assignments[item.hash] = [];
+    assignments[item.id] = [];
   }
 
   assignGeneralMods(
@@ -194,32 +113,6 @@ export function assignModsToArmorSet(
 
   assignAllSeasonalMods(setToMatch, lockedArmor2Mods.seasonal, assignments);
 
-  return assignments;
-}
-
-// Should be in the same order as first valid set
-export function canSetTakeGeneralAndSeasonalMods(
-  set: readonly DimItem[],
-  lockedArmor2Mods: LockedArmor2ModMap
-) {
-  const assignments: Record<number, LockedArmor2Mod[]> = {};
-
-  for (const item of set) {
-    assignments[item.hash] = [];
-  }
-
-  // we ignore slot specific mods as they are prefiltered so should match up
-  assignGeneralMods(set, lockedArmor2Mods[armor2PlugCategoryHashesByName.general], assignments);
-  assignAllSeasonalMods(set, lockedArmor2Mods.seasonal, assignments);
-
-  let assignmentCount = 0;
-  for (const slotAssignments of Object.values(assignments)) {
-    assignmentCount += slotAssignments.length;
-  }
-
-  return (
-    assignmentCount ===
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length +
-      lockedArmor2Mods.seasonal.length
-  );
+  const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
+  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
 }
