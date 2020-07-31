@@ -35,10 +35,10 @@ export const EXCLUDED_PLUGS = new Set([
 ]);
 
 /** the default shader InventoryItem in every empty shader slot */
-export const DEFAULT_SHADER = 4248210736;
+export const DEFAULT_SHADER = 4248210736; // InventoryItem "Default Shader"
 
 /** the default glow InventoryItem in every empty glow slot */
-export const DEFAULT_GLOW = 3807544519;
+export const DEFAULT_GLOW = 3807544519; // InventoryItem "Remove Armor Glow"
 
 /** An array of default ornament hashes */
 export const DEFAULT_ORNAMENTS: number[] = [
@@ -47,7 +47,6 @@ export const DEFAULT_ORNAMENTS: number[] = [
   702981643, // InventoryItem "Default Ornament"
 ];
 
-// the "upgrade masterwork" plug item
 export const UPGRADE_MASTERWORK = 3547298846; // InventoryItem "Upgrade Masterwork"
 
 /** if a socket contains these, consider it empty */

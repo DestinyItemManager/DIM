@@ -35,8 +35,8 @@ export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<n
           po.plugItem.itemCategoryHashes?.some(
             (ich) =>
               ich === ItemCategoryHashes.WeaponModsOrnaments ||
-              ich === ItemCategoryHashes.MasterworksMods // weapon mods: ornaments, masterworks mods
-          ) || po.plugItem.hash === UPGRADE_MASTERWORK // upgrade masterwork
+              ich === ItemCategoryHashes.MasterworksMods
+          ) || po.plugItem.hash === UPGRADE_MASTERWORK
       );
 
       if (!anyOrnamentsOrCatalysts) {

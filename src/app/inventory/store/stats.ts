@@ -38,64 +38,61 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /** Stats that all armor should have. */
 export const armorStats = [
-  StatHashes.Mobility, // Mobility
-  StatHashes.Resilience, // Resilience
-  StatHashes.Recovery, // Recovery
-  StatHashes.Discipline, // Discipline
-  StatHashes.Intellect, // Intellect
-  StatHashes.Strength, // Strength
+  StatHashes.Mobility,
+  StatHashes.Resilience,
+  StatHashes.Recovery,
+  StatHashes.Discipline,
+  StatHashes.Intellect,
+  StatHashes.Strength,
 ];
 
 /**
  * Which stats to display, and in which order.
  */
 export const statAllowList = [
-  StatHashes.RoundsPerMinute, // Rounds Per Minute
-  StatHashes.ChargeTime, // Charge Time
-  StatHashes.DrawTime, // Draw Time
-  StatHashes.BlastRadius, // Blast Radius
-  StatHashes.Velocity, // Velocity
-  StatHashes.SwingSpeed, // Swing Speed (sword)
-  StatHashes.Impact, // Impact
-  StatHashes.Range, // Range
-  StatHashes.GuardEfficiency, // Efficiency (sword)
-  StatHashes.GuardResistance, // Defense (sword)
-  StatHashes.Accuracy, // Accuracy
-  StatHashes.Stability, // Stability
-  StatHashes.Handling, // Handling
-  StatHashes.ChargeRate, // Charge Rate (Sword)
-  StatHashes.GuardEndurance, // Guard Endurance
-  StatHashes.ReloadSpeed, // Reload Speed
-  StatHashes.AimAssistance, // Aim Assistance
-  StatHashes.Zoom, // Zoom
-  StatHashes.RecoilDirection, // Recoil Direction
-  StatHashes.Magazine, // Magazine
-  StatHashes.InventorySize, // Inventory Size
-  StatHashes.AmmoCapacity, // Ammo Capacity
+  StatHashes.RoundsPerMinute,
+  StatHashes.ChargeTime,
+  StatHashes.DrawTime,
+  StatHashes.BlastRadius,
+  StatHashes.Velocity,
+  StatHashes.SwingSpeed,
+  StatHashes.Impact,
+  StatHashes.Range,
+  StatHashes.GuardEfficiency,
+  StatHashes.GuardResistance,
+  StatHashes.Accuracy,
+  StatHashes.Stability,
+  StatHashes.Handling,
+  StatHashes.ChargeRate,
+  StatHashes.GuardEndurance,
+  StatHashes.ReloadSpeed,
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.AmmoCapacity,
   ...armorStats,
-  TOTAL_STAT_HASH, // Total
+  TOTAL_STAT_HASH,
 ];
 
 /** Stats that are measured in milliseconds. */
-export const statsMs = [
-  StatHashes.DrawTime, // Draw Time
-  StatHashes.ChargeTime, // Charge Time
-];
+export const statsMs = [StatHashes.DrawTime, StatHashes.ChargeTime];
 
 /** Stats that should be forced to display without a bar (just a number). */
 const statsNoBar = [
-  StatHashes.RoundsPerMinute, // Rounds Per Minute
-  StatHashes.Magazine, // Magazine
-  StatHashes.InventorySize, // Recovery
-  StatHashes.RecoilDirection, // Recoil Direction
+  StatHashes.RoundsPerMinute,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.RecoilDirection,
   ...statsMs,
 ];
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsAllowList = [
-  StatHashes.AimAssistance, // Aim Assistance
-  StatHashes.Zoom, // Zoom
-  StatHashes.RecoilDirection, // Recoil Direction
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */

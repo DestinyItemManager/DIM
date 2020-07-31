@@ -24,7 +24,7 @@ const unwantedSockets = new Set([
   PlugCategoryHashes.PlugsMasterworksArmorDefault, // Empty masterwork slot
 ]);
 const unwantedCategories = new Set([
-  ItemCategoryHashes.ArmorModsOrnaments, // ItemCategory "Armor Mods: Ornaments"
+  ItemCategoryHashes.ArmorModsOrnaments,
   ItemCategoryHashes.ArmorModsGlowEffects,
   ItemCategoryHashes.GhostModsProjections,
 ]);

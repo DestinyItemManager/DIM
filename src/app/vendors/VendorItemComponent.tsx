@@ -92,9 +92,9 @@ export function VendorItemDisplay({
   extraData?: ItemPopupExtraInfo;
   children?: React.ReactNode;
 }) {
-  const acquiredIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods) ? ( // ItemCategory "Armor Mods"
+  const acquiredIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods) ? (
     <img src={helmetIcon} className={styles.attachedIcon} />
-  ) : item.itemCategoryHashes.includes(ItemCategoryHashes.WeaponMods) ? ( // ItemCategory "Weapon Mods"
+  ) : item.itemCategoryHashes.includes(ItemCategoryHashes.WeaponMods) ? (
     <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
   ) : (
     <AppIcon className={styles.acquiredIcon} icon={faCheck} />

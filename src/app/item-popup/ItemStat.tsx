@@ -19,7 +19,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
-  1052191496, // weapon mods
+  ItemCategoryHashes.WeaponModsDamage,
   ItemCategoryHashes.ArmorModsGameplay, // armor mods (pre-2.0)
   ItemCategoryHashes.ArmorMods, // armor 2.0 mods
 ];
