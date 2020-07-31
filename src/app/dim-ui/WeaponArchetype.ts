@@ -1,10 +1,10 @@
 import { D2Item } from 'app/inventory/item-types';
-import { INTRINSIC_TRAITS_SOCKET_CATEGORY } from 'app/search/d2-known-values';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 
 export const getWeaponArchetypeSocket = (item: D2Item) =>
   (item.bucket.inWeapons &&
     !item.isExotic &&
-    item.sockets?.categories.find((c) => c.category.hash === INTRINSIC_TRAITS_SOCKET_CATEGORY)
+    item.sockets?.categories.find((c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits)
       ?.sockets[0]) ||
   undefined;
 

@@ -16,16 +16,9 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import {
-  ACCURACY,
-  armorBuckets,
-  D2ArmorStatHashByName,
-  D2ItemCategoryHashes,
-  D2WeaponStatHashByName,
-  swordStats,
-  TOTAL_STAT_HASH,
-} from 'app/search/d2-known-values';
+import { armorBuckets, ARMOR_STAT_CAP, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -45,65 +38,61 @@ import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 
 /** Stats that all armor should have. */
 export const armorStats = [
-  D2ArmorStatHashByName.mobility, // Mobility
-  D2ArmorStatHashByName.resilience, // Resilience
-  D2ArmorStatHashByName.recovery, // Recovery
-  D2ArmorStatHashByName.discipline, // Discipline
-  D2ArmorStatHashByName.intellect, // Intellect
-  D2ArmorStatHashByName.strength, // Strength
+  StatHashes.Mobility,
+  StatHashes.Resilience,
+  StatHashes.Recovery,
+  StatHashes.Discipline,
+  StatHashes.Intellect,
+  StatHashes.Strength,
 ];
 
 /**
  * Which stats to display, and in which order.
  */
 export const statAllowList = [
-  D2WeaponStatHashByName.rpm, // Rounds Per Minute
-  D2WeaponStatHashByName.charge, // Charge Time
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.blastradius, // Blast Radius
-  D2WeaponStatHashByName.velocity, // Velocity
-  swordStats.swingSpeed, // Swing Speed (sword)
-  D2WeaponStatHashByName.impact, // Impact
-  D2WeaponStatHashByName.range, // Range
-  swordStats.guardEfficiency, // Efficiency (sword)
-  swordStats.guardResistance, // Defense (sword)
-  ACCURACY, // Accuracy
-  D2WeaponStatHashByName.stability, // Stability
-  D2WeaponStatHashByName.handling, // Handling
-  swordStats.chargeRate, // Charge Rate (Sword)
-  swordStats.guardEndurance, // Guard Endurance
-  D2WeaponStatHashByName.reload, // Reload Speed
-  D2WeaponStatHashByName.aimassist, // Aim Assistance
-  D2WeaponStatHashByName.zoom, // Zoom
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
-  D2WeaponStatHashByName.magazine, // Magazine
-  D2WeaponStatHashByName.inventorysize, // Inventory Size
-  swordStats.ammoCapacity, // Ammo Capacity
+  StatHashes.RoundsPerMinute,
+  StatHashes.ChargeTime,
+  StatHashes.DrawTime,
+  StatHashes.BlastRadius,
+  StatHashes.Velocity,
+  StatHashes.SwingSpeed,
+  StatHashes.Impact,
+  StatHashes.Range,
+  StatHashes.GuardEfficiency,
+  StatHashes.GuardResistance,
+  StatHashes.Accuracy,
+  StatHashes.Stability,
+  StatHashes.Handling,
+  StatHashes.ChargeRate,
+  StatHashes.GuardEndurance,
+  StatHashes.ReloadSpeed,
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.AmmoCapacity,
   ...armorStats,
-  TOTAL_STAT_HASH, // Total
-];
-
-/** Stats that should be forced to display without a bar (just a number). */
-const statsNoBar = [
-  D2WeaponStatHashByName.rpm, // Rounds Per Minute
-  D2WeaponStatHashByName.magazine, // Magazine
-  D2WeaponStatHashByName.charge, // Charge Time
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.inventorysize, // Recovery
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
+  TOTAL_STAT_HASH,
 ];
 
 /** Stats that are measured in milliseconds. */
-export const statsMs = [
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.charge, // Charge Time
+export const statsMs = [StatHashes.DrawTime, StatHashes.ChargeTime];
+
+/** Stats that should be forced to display without a bar (just a number). */
+const statsNoBar = [
+  StatHashes.RoundsPerMinute,
+  StatHashes.Magazine,
+  StatHashes.InventorySize,
+  StatHashes.RecoilDirection,
+  ...statsMs,
 ];
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsAllowList = [
-  D2WeaponStatHashByName.aimassist, // Aim Assistance
-  D2WeaponStatHashByName.zoom, // Zoom
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
+  StatHashes.AimAssistance,
+  StatHashes.Zoom,
+  StatHashes.RecoilDirection,
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -176,7 +165,7 @@ function buildStatsFromMods(
 ): DimStat[] {
   const statTracker: { stat: number; value: number } | {} = {};
   const investmentStats: DimStat[] = [];
-  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, D2ItemCategoryHashes.armormod);
+  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, ItemCategoryHashes.ArmorMods);
   const masterworkSockets = getSocketsWithStyle(
     itemSockets,
     DestinySocketCategoryStyle.EnergyMeter
@@ -207,7 +196,7 @@ function buildStatsFromMods(
       value: statTracker[statHash],
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
-    builtStat.maximumValue = 42;
+    builtStat.maximumValue = ARMOR_STAT_CAP;
     investmentStats.push(builtStat);
   }
 
@@ -223,8 +212,8 @@ function shouldShowStat(
 ) {
   // Bows have a charge time stat that nobody asked for
   if (
-    statHash === D2WeaponStatHashByName.charge &&
-    itemDef.itemCategoryHashes?.includes(D2ItemCategoryHashes.bow)
+    statHash === StatHashes.ChargeTime &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Bows)
   ) {
     return false;
   }
@@ -553,7 +542,7 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
 
   // vthorn has a hunch that magazine size doesn't use banker's rounding, but the rest definitely do:
   // https://github.com/Bungie-net/api/issues/1029#issuecomment-531849137
-  return statDisplay.statHash === D2WeaponStatHashByName.magazine
+  return statDisplay.statHash === StatHashes.Magazine
     ? Math.round(interpValue)
     : bankersRound(interpValue);
 }

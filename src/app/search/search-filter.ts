@@ -57,9 +57,8 @@ import {
 import {
   breakerTypes,
   curatedPlugsAllowList,
-  D2ItemCategoryHashes,
+  D2ItemCategoryHashesByName,
   DEFAULT_GLOW,
-  DEFAULT_GLOW_CATEGORY,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
   emptySocketHashes,
@@ -79,6 +78,7 @@ import {
   searchableStatNames,
   statHashByName,
 } from './search-filter-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -171,7 +171,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   // Add new ItemCategoryHash hashes to this, to add new category searches
   const categoryHashFilters: { [key: string]: number } = {
     ...D1ItemCategoryHashes,
-    ...(isD2 ? D2ItemCategoryHashes : {}),
+    ...(isD2 ? D2ItemCategoryHashesByName : {}),
   };
 
   const stats = [
@@ -862,7 +862,7 @@ function searchFilters(
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
-          !item.itemCategoryHashes.includes(58) &&
+          !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
           item.hash !== DEFAULT_SHADER &&
           item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
           _duplicates[dupeId] &&
@@ -1291,7 +1291,9 @@ function searchFilters(
               socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
               socket.plug.plugItem.hash !== DEFAULT_GLOW &&
               !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-              !socket.plug.plugItem.itemCategoryHashes?.includes(DEFAULT_GLOW_CATEGORY)
+              !socket.plug.plugItem.itemCategoryHashes?.includes(
+                ItemCategoryHashes.ArmorModsGlowEffects
+              )
           )
         );
       },

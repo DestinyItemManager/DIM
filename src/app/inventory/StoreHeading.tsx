@@ -166,7 +166,7 @@ function getLevelBar(store: DimStore) {
     };
   }
   if (store.progression?.progressions) {
-    const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750);
+    const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750); // some kind of d1 hash
     if (prestige) {
       const data = {
         level: prestige.level,

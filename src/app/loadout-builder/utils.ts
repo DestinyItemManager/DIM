@@ -8,28 +8,25 @@ import {
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import {
-  INTRINSIC_PLUG_CATEGORY,
-  MODIFICATIONS_BUCKET,
-  Y1_ARMOR_MODS_PLUG_CATEGORY,
-} from 'app/search/d2-known-values';
+import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
  */
 const unwantedSockets = new Set([
-  3313201758, // Mobility, Restorative, and Resilience perks
-  1514141499, // Void damage resistance
-  1514141501, // Arc damage resistance
-  1514141500, // Solar damage resistance
-  2973005342, // Shaders
-  3356843615, // Ornaments
-  2457930460, // Empty masterwork slot
+  PlugCategoryHashes.Mods, // Mobility, Restorative, and Resilience perks
+  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance4, // Void damage resistance
+  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance2, // Arc damage resistance
+  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance3, // Solar damage resistance
+  PlugCategoryHashes.Shader,
+  PlugCategoryHashes.ArmorSkinsEmpty, // Ornaments
+  PlugCategoryHashes.PlugsMasterworksArmorDefault, // Empty masterwork slot
 ]);
 const unwantedCategories = new Set([
-  1742617626, // ItemCategory "Armor Mods: Ornaments"
-  1875601085, // ItemCategory "Armor Mods: Glow Effects"
-  1404791674, // ItemCategory "Ghost Mods: Projections"
+  ItemCategoryHashes.ArmorModsOrnaments,
+  ItemCategoryHashes.ArmorModsGlowEffects,
+  ItemCategoryHashes.GhostModsProjections,
 ]);
 
 /**
@@ -67,15 +64,15 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove Archetype/Inherit perk
   if (
-    plugItem.plug.plugCategoryHash === INTRINSIC_PLUG_CATEGORY &&
-    plugItem.inventory.tierType !== 6 // keep exotics
+    plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+    plugItem.inventory.tierType !== TierType.Exotic // keep exotics
   ) {
     return false;
   }
 
   // Remove empty mod slots
   if (
-    plugItem.plug.plugCategoryHash === Y1_ARMOR_MODS_PLUG_CATEGORY &&
+    plugItem.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsUniversal &&
     plugItem.inventory.tierType === TierType.Basic
   ) {
     return false;

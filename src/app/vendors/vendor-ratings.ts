@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { ThunkResult } from '../store/reducers';
 import { DtrRating } from '../item-review/dtr-api-types';
-import { ATTACK_STAT, DEFENSE_STAT } from 'app/search/d2-known-values';
+import { StatHashes } from 'data/d2/generated-enums';
 
 function isWeaponOrArmor(
   defs: D2ManifestDefinitions,
@@ -20,8 +20,8 @@ function isWeaponOrArmor(
   const inventoryItemStats = itemDef?.stats;
   return (
     inventoryItemStats &&
-    (inventoryItemStats.primaryBaseStatHash === ATTACK_STAT || // weapon
-      inventoryItemStats.primaryBaseStatHash === DEFENSE_STAT)
+    (inventoryItemStats.primaryBaseStatHash === StatHashes.Attack || // weapon
+      inventoryItemStats.primaryBaseStatHash === StatHashes.Defense)
   ); // armor
 }
 

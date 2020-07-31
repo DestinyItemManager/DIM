@@ -12,6 +12,7 @@ import iconStyles from 'app/inventory/ElementIcon.m.scss';
 import ElementIcon from './ElementIcon';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 interface Props {
   item: DimItem;
@@ -22,7 +23,7 @@ interface Props {
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
-  item.isDestiny2?.() && item.sockets && item.itemCategoryHashes.includes(39)
+  item.isDestiny2?.() && item.sockets && item.itemCategoryHashes.includes(ItemCategoryHashes.Ghost)
     ? _.compact(
         item.sockets.sockets.map((s) => {
           const hash = s.plug?.plugItem?.hash;
@@ -41,7 +42,7 @@ export function hasBadge(item?: DimItem | null): boolean {
     item.classified ||
     (item.objectives && !item.complete && !item.hidePercentage) ||
     (item.maxStackSize > 1 && item.amount > 1) ||
-    item.itemCategoryHashes?.includes(39)
+    item.itemCategoryHashes?.includes(ItemCategoryHashes.Ghost)
   );
 }
 
@@ -49,7 +50,9 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
-  const isGhost = Boolean(item.isDestiny2?.() && item.itemCategoryHashes?.includes(39));
+  const isGhost = Boolean(
+    item.isDestiny2?.() && item.itemCategoryHashes?.includes(ItemCategoryHashes.Ghost)
+  );
   const isGeneric = !isBounty && !isStackable && !isGhost;
 
   const ghostInfos = getGhostInfos(item);

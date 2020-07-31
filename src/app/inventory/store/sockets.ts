@@ -13,12 +13,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import {
-  EXCLUDED_PLUGS,
-  GHOST_MOD_CATEGORY,
-  INTRINSIC_ITEM_CATEGORY,
-  MASTERWORK_MOD_CATEGORY,
-} from 'app/search/d2-known-values';
+import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 //
 // These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
@@ -185,8 +181,8 @@ function filterReusablePlug(reusablePlug: DimPlug) {
   const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    !itemCategoryHashes.includes(MASTERWORK_MOD_CATEGORY) &&
-    !itemCategoryHashes.includes(GHOST_MOD_CATEGORY) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.MasterworksMods) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.GhostModsProjections) &&
     (!reusablePlug.plugItem.plug ||
       !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
@@ -349,7 +345,7 @@ function addPlugOption(
       plugOptions.push(plug);
     } else {
       // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-      if (!built.plugItem.itemCategoryHashes?.includes(INTRINSIC_ITEM_CATEGORY)) {
+      if (!built.plugItem.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)) {
         plugOptions.push(built);
       }
     }

@@ -54,7 +54,7 @@ import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { isUsedModSocket } from 'app/utils/socket-utils';
-import { D2WeaponStatHashByName, INTRINSIC_ITEM_CATEGORY } from 'app/search/d2-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -102,11 +102,11 @@ export function getColumns(
 
   // Some stat labels are long. This lets us replace them with i18n
   const statLabels = {
-    [D2WeaponStatHashByName.rpm]: t('Organizer.Stats.RPM'),
-    [D2WeaponStatHashByName.reload]: t('Organizer.Stats.Reload'), // Reload Speed
-    [D2WeaponStatHashByName.aimassist]: t('Organizer.Stats.Aim'), // Aim Assistance
-    [D2WeaponStatHashByName.recoildirection]: t('Organizer.Stats.Recoil'), // Recoil Direction
-    [D2WeaponStatHashByName.inventorysize]: t('Organizer.Stats.Inventory'), // Inventory Size
+    [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
+    [StatHashes.ReloadSpeed]: t('Organizer.Stats.Reload'), // Reload Speed
+    [StatHashes.AimAssistance]: t('Organizer.Stats.Aim'), // Aim Assistance
+    [StatHashes.RecoilDirection]: t('Organizer.Stats.Recoil'), // Recoil Direction
+    [StatHashes.InventorySize]: t('Organizer.Stats.Inventory'), // Inventory Size
   };
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
@@ -575,7 +575,9 @@ function PerksCell({
         isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
-              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_ITEM_CATEGORY))))
+              !s.plug.plugItem.itemCategoryHashes?.includes(
+                ItemCategoryHashes.WeaponModsIntrinsic
+              ))))
     )
   );
 

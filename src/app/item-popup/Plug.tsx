@@ -10,7 +10,7 @@ import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { LockedItemType } from 'app/loadout-builder/types';
-import { INTRINSIC_ITEM_CATEGORY } from 'app/search/d2-known-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export default function Plug({
   defs,
@@ -96,7 +96,7 @@ export default function Plug({
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: !itemCategories.includes(INTRINSIC_ITEM_CATEGORY),
+        notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}
       onClick={handleShiftClick}
     >

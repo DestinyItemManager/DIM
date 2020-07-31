@@ -7,6 +7,7 @@ import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Loadout } from './loadout-types';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
+import { StatHashes } from 'data/d2/generated-enums';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -72,8 +73,8 @@ export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
 }
 
 const powerStatHashes = [
-  1480404414, // D2 Attack
-  3897883278, // D1 & D2 Defense
+  StatHashes.Attack, // D2 Attack
+  StatHashes.Defense, // D1 & D2 Defense
   368428387, // D1 Attack
 ];
 

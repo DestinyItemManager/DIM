@@ -6,6 +6,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 const defaultExpirationDate = new Date(8640000000000000);
 
@@ -40,14 +41,16 @@ export default function Pursuits({
   // that represent milestones.
   const filteredItems = store.buckets[1345459588].concat(
     // Include prophecy tablets, which are in consumables
-    store.buckets[1469714392].filter((item) => item.itemCategoryHashes.includes(2250046497))
+    store.buckets[1469714392].filter((item) =>
+      item.itemCategoryHashes.includes(ItemCategoryHashes.ProphecyTablets)
+    )
   );
 
   const pursuits = _.groupBy(filteredItems, (item) => {
     const itemDef = defs.InventoryItem.get(item.hash);
     if (
-      item.itemCategoryHashes.includes(16) ||
-      item.itemCategoryHashes.includes(2250046497) ||
+      item.itemCategoryHashes.includes(ItemCategoryHashes.QuestStep) ||
+      item.itemCategoryHashes.includes(ItemCategoryHashes.ProphecyTablets) ||
       itemDef?.objectives?.questlineItemHash
     ) {
       return 'Quests';
