@@ -16,12 +16,7 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import {
-  armorBuckets,
-  ARMOR_STAT_CAP,
-  D2WeaponStatHashByName,
-  TOTAL_STAT_HASH,
-} from 'app/search/d2-known-values';
+import { armorBuckets, ARMOR_STAT_CAP, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
@@ -220,7 +215,7 @@ function shouldShowStat(
 ) {
   // Bows have a charge time stat that nobody asked for
   if (
-    statHash === D2WeaponStatHashByName.charge &&
+    statHash === StatHashes.ChargeTime &&
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Bows)
   ) {
     return false;
@@ -550,7 +545,7 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
 
   // vthorn has a hunch that magazine size doesn't use banker's rounding, but the rest definitely do:
   // https://github.com/Bungie-net/api/issues/1029#issuecomment-531849137
-  return statDisplay.statHash === D2WeaponStatHashByName.magazine
+  return statDisplay.statHash === StatHashes.Magazine
     ? Math.round(interpValue)
     : bankersRound(interpValue);
 }
