@@ -7,7 +7,11 @@ import BungieImage from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { ActivityModifier } from './ActivityModifier';
-import LoadoutRequirementModifier, { armsmasterModifierHash } from './LoadoutRequirementModifier';
+import LoadoutRequirementModifier from './LoadoutRequirementModifier';
+import {
+  ARMSMASTER_ACTIVITY_MODIFIER,
+  ENCOUNTERS_COMPLETED_OBJECTIVE,
+} from 'app/search/d2-known-values';
 
 interface Props {
   displayProperties: DestinyDisplayPropertiesDefinition;
@@ -49,7 +53,7 @@ export function RaidActivity({
   displayName: string;
 }) {
   // a manifest-localized string describing raid segments with loot. "Encounters completed"
-  const encountersString = defs.Objective.get(3133307686).progressDescription;
+  const encountersString = defs.Objective.get(ENCOUNTERS_COMPLETED_OBJECTIVE).progressDescription;
 
   // convert character's DestinyMilestoneChallengeActivity to manifest's DestinyActivityDefinition
   const activityDef = defs.Activity.get(activity.activityHash);
@@ -63,7 +67,7 @@ export function RaidActivity({
       <div className="quest-modifiers">
         {activity.modifierHashes?.map(
           (modifierHash) =>
-            modifierHash !== armsmasterModifierHash && (
+            modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
               <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
             )
         )}

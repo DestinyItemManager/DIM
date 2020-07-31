@@ -4,7 +4,7 @@ import './EnergyMeter.scss';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { energyNamesByEnum } from 'app/utils/item-utils';
+import { energyNamesByEnum } from 'app/search/d2-known-values';
 
 export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinitions; item: D2Item }) {
   if (!item.energy) {

@@ -1,12 +1,4 @@
-import * as hashes from './search-filter-values';
-
 import { D1Item, D2Item, DimItem } from '../inventory/item-types';
-import {
-  DEFAULT_GLOW,
-  DEFAULT_GLOW_CATEGORY,
-  DEFAULT_ORNAMENTS,
-  DEFAULT_SHADER,
-} from 'app/inventory/store/sockets';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -54,6 +46,39 @@ import store from '../store/store';
 import { getStore } from 'app/inventory/stores-helpers';
 import { DestinyVersion, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { parseQuery, QueryAST } from './query-parser';
+import {
+  boosts,
+  D1ActivityHashes,
+  D1ItemCategoryHashes,
+  sublimeEngrams,
+  supplies,
+  vendorHashes,
+} from './d1-known-values';
+import {
+  breakerTypes,
+  curatedPlugsAllowList,
+  D2ItemCategoryHashes,
+  DEFAULT_GLOW,
+  DEFAULT_GLOW_CATEGORY,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_SHADER,
+  emptySocketHashes,
+  energyCapacityTypeNames,
+  energyNamesByEnum,
+  powerfulSources,
+  SEASONAL_ARTIFACT_BUCKET,
+  SHADERS_BUCKET,
+} from './d2-known-values';
+import {
+  allStatNames,
+  armorAnyStatHashes,
+  armorStatHashes,
+  cosmeticTypes,
+  damageTypeNames,
+  lightStats,
+  searchableStatNames,
+  statHashByName,
+} from './search-filter-values';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -96,9 +121,9 @@ export const makeDupeID = (item: DimItem) =>
   (item.classified && String(item.hash)) ||
   `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
 
-/**
- * Selectors
- */
+//
+// Selectors
+//
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
@@ -123,9 +148,9 @@ export const searchFilterSelector = createSelector(
   (query, filters) => filters.filterFunction(query)
 );
 
-/**
- * SearchConfig
- */
+//
+// SearchConfig
+//
 
 export interface SearchConfig {
   destinyVersion: DestinyVersion;
@@ -145,8 +170,8 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
 
   // Add new ItemCategoryHash hashes to this, to add new category searches
   const categoryHashFilters: { [key: string]: number } = {
-    ...hashes.D1CategoryHashes,
-    ...(isD2 ? hashes.D2CategoryHashes : {}),
+    ...D1ItemCategoryHashes,
+    ...(isD2 ? D2ItemCategoryHashes : {}),
   };
 
   const stats = [
@@ -185,7 +210,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   const singleTermFilters: {
     [key: string]: string[];
   } = {
-    dmg: hashes.damageTypeNames,
+    dmg: damageTypeNames,
     type: itemTypes,
     tier: [
       'common',
@@ -323,7 +348,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     // a keyword for every combination of an item stat name and mathmatical operator
     ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
     // additional basestat searches for armor stats
-    ...hashes.armorStatNames.flatMap((stat) =>
+    ...searchableStatNames.flatMap((stat) =>
       operators.map((comparison) => `basestat:${stat}:${comparison}`)
     ),
     // keywords for checking which stat is masterworked
@@ -344,7 +369,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
+    ...(isD2 ? energyCapacityTypeNames.map((element) => `energycapacity:${element}`) : []),
     ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
     // keywords for checking when an item hits power limit. s11 is the first valid season for this
     ...(isD2
@@ -353,9 +378,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           .reverse()
           .map(([tag]) => `sunsetsafter:${tag}`)
       : []),
-    ...(isD2
-      ? Object.keys(hashes.breakerTypes).map((breakerType) => `breaker:${breakerType}`)
-      : []),
+    ...(isD2 ? Object.keys(breakerTypes).map((breakerType) => `breaker:${breakerType}`) : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -364,9 +387,9 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           ...Object.keys(D2Sources).map((word) => `source:${word}`),
           ...Object.keys(D2EventPredicateLookup).map((word) => `source:${word}`),
           // maximum stat finders
-          ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
-          ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
-          ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
+          ...searchableStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
+          ...searchableStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
+          ...searchableStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
         ]
       : []),
     // all the free text searches that support quotes
@@ -534,7 +557,7 @@ function searchFilters(
           }
           if (i.stats) {
             for (const stat of i.stats) {
-              if (hashes.armorStatHashes.includes(stat.statHash)) {
+              if (armorStatHashes.includes(stat.statHash)) {
                 _maxStatValues[itemSlot][stat.statHash] =
                   // just assign if this is the first
                   !(stat.statHash in _maxStatValues[itemSlot])
@@ -558,7 +581,7 @@ function searchFilters(
   const filterByStats = (statType: string, byBaseValue = false) => {
     const byWhichValue = byBaseValue ? 'base' : 'value';
     const statHashes: number[] =
-      statType === 'any' ? hashes.anyArmorStatHashes : [hashes.statHashByName[statType]];
+      statType === 'any' ? armorAnyStatHashes : [statHashByName[statType]];
     return (item: DimItem, filterValue: string) => {
       const matchingStats = item.stats?.filter(
         (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], filterValue)
@@ -705,7 +728,7 @@ function searchFilters(
         return item.tier.toLowerCase() === (tierMap[filterValue] || filterValue);
       },
       sublime(item: DimItem) {
-        return hashes.sublimeEngrams.includes(item.hash);
+        return sublimeEngrams.includes(item.hash);
       },
       // Incomplete will show items that are not fully leveled.
       incomplete(item: DimItem) {
@@ -776,7 +799,7 @@ function searchFilters(
       /** looks for a loadout (simultaneously equippable) maximized for this stat */
       maxstatloadout(item: D2Item, filterValue: string) {
         // filterValue stat must exist, and this must be armor
-        const maxStatHash = hashes.statHashByName[filterValue];
+        const maxStatHash = statHashByName[filterValue];
         if (!maxStatHash || !item.bucket.inArmor) {
           return false;
         }
@@ -802,7 +825,7 @@ function searchFilters(
           return false;
         }
         const statHashes: number[] =
-          filterValue === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[filterValue]];
+          filterValue === 'any' ? armorStatHashes : [statHashByName[filterValue]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.type}`;
 
@@ -841,7 +864,7 @@ function searchFilters(
           _duplicates &&
           !item.itemCategoryHashes.includes(58) &&
           item.hash !== DEFAULT_SHADER &&
-          item.bucket.hash !== 1506418338 &&
+          item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
         );
@@ -919,11 +942,11 @@ function searchFilters(
       glimmer(item: DimItem, filterValue: string) {
         switch (filterValue) {
           case 'glimmerboost':
-            return hashes.boosts.includes(item.hash);
+            return boosts.includes(item.hash);
           case 'glimmersupply':
-            return hashes.supplies.includes(item.hash);
+            return supplies.includes(item.hash);
           case 'glimmeritem':
-            return hashes.boosts.includes(item.hash) || hashes.supplies.includes(item.hash);
+            return boosts.includes(item.hash) || supplies.includes(item.hash);
         }
         return false;
       },
@@ -1036,7 +1059,7 @@ function searchFilters(
         );
       },
       powerfulreward(item: D2Item) {
-        return item.pursuit?.rewards.some((r) => hashes.powerfulSources.includes(r.itemHash));
+        return item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash));
       },
       light(item: DimItem, filterValue: string) {
         if (!item.primStat) {
@@ -1056,9 +1079,7 @@ function searchFilters(
             filterValue
           );
         }
-        return item.masterworkInfo?.stats?.some(
-          (s) => s.hash === hashes.statHashByName?.[filterValue]
-        );
+        return item.masterworkInfo?.stats?.some((s) => s.hash === statHashByName?.[filterValue]);
       },
       season(item: D2Item, filterValue: string) {
         return compareByOperator(item.season, filterValue);
@@ -1078,13 +1099,13 @@ function searchFilters(
           return (
             (mathCheck.test(filterValue) &&
               compareByOperator(item.energy.energyCapacity, filterValue)) ||
-            filterValue === hashes.energyCapacityTypes[item.energy.energyType]
+            filterValue === energyNamesByEnum[item.energy.energyType]
           );
         }
       },
       breaker(item: D2Item, filterValue: string) {
         if (item.breakerType) {
-          return hashes.breakerTypes[filterValue] === item.breakerType.hash;
+          return breakerTypes[filterValue] === item.breakerType.hash;
         }
       },
       hascapacity(item: D2Item) {
@@ -1130,17 +1151,17 @@ function searchFilters(
         if (!item) {
           return false;
         }
-        if (hashes.vendorHashes.restricted[filterValue]) {
+        if (vendorHashes.restricted[filterValue]) {
           return (
-            hashes.vendorHashes.required[filterValue].some((vendorHash) =>
+            vendorHashes.required[filterValue].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             ) &&
-            !hashes.vendorHashes.restricted[filterValue].some((vendorHash) =>
+            !vendorHashes.restricted[filterValue].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             )
           );
         } else {
-          return hashes.vendorHashes.required[filterValue].some((vendorHash) =>
+          return vendorHashes.required[filterValue].some((vendorHash) =>
             item.sourceHashes.includes(vendorHash)
           );
         }
@@ -1166,17 +1187,17 @@ function searchFilters(
         }
         if (filterValue === 'vanilla') {
           return item.year === 1;
-        } else if (hashes.D1ActivityHashes.restricted[filterValue]) {
+        } else if (D1ActivityHashes.restricted[filterValue]) {
           return (
-            hashes.D1ActivityHashes.required[filterValue].some((sourceHash) =>
+            D1ActivityHashes.required[filterValue].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             ) &&
-            !hashes.D1ActivityHashes.restricted[filterValue].some((sourceHash) =>
+            !D1ActivityHashes.restricted[filterValue].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             )
           );
         } else {
-          return hashes.D1ActivityHashes.required[filterValue].some((sourceHash) =>
+          return D1ActivityHashes.required[filterValue].some((sourceHash) =>
             item.sourceHashes.includes(sourceHash)
           );
         }
@@ -1203,7 +1224,7 @@ function searchFilters(
         return Boolean(getTag(item, itemInfos, itemHashTags));
       },
       hasLight(item: DimItem) {
-        return item.primStat && hashes.lightStats.includes(item.primStat.statHash);
+        return item.primStat && lightStats.includes(item.primStat.statHash);
       },
       curated(item: D2Item) {
         if (!item) {
@@ -1219,9 +1240,7 @@ function searchFilters(
 
         const oneSocketPerPlug = item.sockets?.sockets
           .filter((socket) =>
-            hashes.curatedPlugsAllowList.includes(
-              socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
-            )
+            curatedPlugsAllowList.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash || 0)
           )
           .every((socket) => socket?.plugOptions.length === 1);
 
@@ -1242,7 +1261,7 @@ function searchFilters(
         return item.bucket?.sort === 'Armor';
       },
       cosmetic(item: DimItem) {
-        return hashes.cosmeticTypes.includes(item.type);
+        return cosmeticTypes.includes(item.type);
       },
       equipment(item: DimItem) {
         return item.equipment;
@@ -1260,7 +1279,7 @@ function searchFilters(
         return item.sockets?.sockets.some((socket) =>
           Boolean(
             socket.plug?.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
+              socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
               socket.plug.plugItem.hash !== DEFAULT_SHADER
           )
         );
@@ -1280,7 +1299,7 @@ function searchFilters(
         return item.sockets?.sockets.some((socket) =>
           Boolean(
             socket.plug &&
-              !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
@@ -1299,7 +1318,7 @@ function searchFilters(
           item.sockets.sockets.some((socket) =>
             Boolean(
               socket.plug &&
-                !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+                !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
                 socket.plug.plugItem.plug &&
                 socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                   /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
@@ -1347,12 +1366,12 @@ function searchFilters(
         );
       },
       // create a stat filter for each stat name
-      ...hashes.allStatNames.reduce((obj, name) => {
+      ...allStatNames.reduce((obj, name) => {
         obj[name] = filterByStats(name, false);
         return obj;
       }, {}),
-      // create a basestat filter for each armor stat name
-      ...hashes.armorStatNames.reduce((obj, name) => {
+      // create a basestat filter for each ARMOR stat name
+      ...searchableStatNames.reduce((obj, name) => {
         obj[`base${name}`] = filterByStats(name, true);
         return obj;
       }, {}),

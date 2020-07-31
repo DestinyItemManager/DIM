@@ -14,6 +14,7 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getSocketsWithStyle } from '../utils/socket-utils';
 import PressTip from 'app/dim-ui/PressTip';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { RECOIL_DIRECTION, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -21,8 +22,6 @@ const modItemCategoryHashes = [
   4062965806, // armor mods (pre-2.0)
   4104513227, // armor 2.0 mods
 ];
-
-const TOTAL_STAT_HASH = -1000;
 
 /**
  * A single stat line.
@@ -123,7 +122,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         </div>
       )}
 
-      {stat.statHash === 2715839340 && (
+      {stat.statHash === RECOIL_DIRECTION && (
         <div className={styles.statBar}>
           <RecoilStat value={stat.value} />
         </div>

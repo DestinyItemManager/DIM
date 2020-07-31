@@ -4,6 +4,7 @@ import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import styles from './ItemMoveLocation.m.scss';
+import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
 
 interface Props {
   item: DimItem;
@@ -93,8 +94,8 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
     // Don't show "Store" for finishers, seasonal artifacts, or clan banners
     if (
       item.location.capacity === 1 ||
-      item.location.hash === 1506418338 ||
-      item.location.hash === 3683254069
+      item.location.hash === SEASONAL_ARTIFACT_BUCKET ||
+      item.location.hash === FINISHERS_BUCKET
     ) {
       return false;
     }

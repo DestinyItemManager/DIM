@@ -2,7 +2,8 @@ import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { LockableBuckets, LockedArmor2ModMap, LockedArmor2Mod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { getSpecialtySocketMetadata, Armor2ModPlugCategories } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 
 const energyOrder = [
   DestinyEnergyType.Void,
@@ -159,19 +160,35 @@ export function assignModsToArmorSet(
     assignments[item.hash] = [];
   }
 
-  assignGeneralMods(setToMatch, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
-
-  assignModsForSlot(setToMatch[0], lockedArmor2Mods[Armor2ModPlugCategories.helmet], assignments);
-  assignModsForSlot(
-    setToMatch[1],
-    lockedArmor2Mods[Armor2ModPlugCategories.gauntlets],
+  assignGeneralMods(
+    setToMatch,
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
     assignments
   );
-  assignModsForSlot(setToMatch[2], lockedArmor2Mods[Armor2ModPlugCategories.chest], assignments);
-  assignModsForSlot(setToMatch[3], lockedArmor2Mods[Armor2ModPlugCategories.leg], assignments);
+
+  assignModsForSlot(
+    setToMatch[0],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[1],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[2],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.chest],
+    assignments
+  );
+  assignModsForSlot(
+    setToMatch[3],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.leg],
+    assignments
+  );
   assignModsForSlot(
     setToMatch[4],
-    lockedArmor2Mods[Armor2ModPlugCategories.classitem],
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem],
     assignments
   );
 
@@ -192,7 +209,7 @@ export function canSetTakeGeneralAndSeasonalMods(
   }
 
   // we ignore slot specific mods as they are prefiltered so should match up
-  assignGeneralMods(set, lockedArmor2Mods[Armor2ModPlugCategories.general], assignments);
+  assignGeneralMods(set, lockedArmor2Mods[armor2PlugCategoryHashesByName.general], assignments);
   assignAllSeasonalMods(set, lockedArmor2Mods.seasonal, assignments);
 
   let assignmentCount = 0;
@@ -202,6 +219,7 @@ export function canSetTakeGeneralAndSeasonalMods(
 
   return (
     assignmentCount ===
-    lockedArmor2Mods[Armor2ModPlugCategories.general].length + lockedArmor2Mods.seasonal.length
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length +
+      lockedArmor2Mods.seasonal.length
   );
 }

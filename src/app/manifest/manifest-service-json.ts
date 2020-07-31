@@ -12,6 +12,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import store from 'app/store/store';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { loadingStart, loadingEnd } from 'app/shell/actions';
+import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -41,7 +42,7 @@ const tableTrimmers = {
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory.bucketTypeHash !== 3284755031) {
+      if (def.inventory.bucketTypeHash !== SUBCLASS_BUCKET) {
         def.talentGrid = emptyObject();
       }
 
