@@ -22,6 +22,8 @@ module.exports = function csp(env) {
     ],
     styleSrc: [
       SELF,
+      // For our inline styles
+      "'unsafe-inline'",
       // Google Fonts
       'https://fonts.googleapis.com/css',
       // Twitter Widget
