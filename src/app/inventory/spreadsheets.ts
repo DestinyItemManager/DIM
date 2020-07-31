@@ -20,6 +20,7 @@ import { getSpecialtySocketMetadata, getMasterworkStatNames } from 'app/utils/it
 import store from '../store/store';
 import { t } from 'app/i18next-t';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
+import { StatHashes } from 'data/d2/generated-enums';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -75,12 +76,12 @@ export function downloadCsvFiles(
     if (type === 'Weapons') {
       if (
         item.primStat &&
-        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
+        (item.primStat.statHash === 368428387 || item.primStat.statHash === StatHashes.Attack)
       ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat?.statHash === 3897883278) {
+      if (item.primStat?.statHash === StatHashes.Defense) {
         items.push(item);
       }
     } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
@@ -517,7 +518,7 @@ function downloadWeapons(
             case 2961396640: // Charge Time
               stats.chargetime = stat.value;
               break;
-            case 1591432999: // accuracy
+            case StatHashes.Accuracy: // accuracy
               stats.accuracy = stat.value;
               break;
             case 3614673599: // Blast Radius

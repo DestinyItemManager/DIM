@@ -6,6 +6,7 @@ import './collections.scss';
 import { t } from 'app/i18next-t';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import Record from './Record';
+import { CATALYSTS_ROOT_NODE } from 'app/search/d2-known-values';
 
 export default function Catalysts({
   defs,
@@ -14,7 +15,7 @@ export default function Catalysts({
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
 }) {
-  const catalystPresentationNode = defs.PresentationNode.get(1111248994);
+  const catalystPresentationNode = defs.PresentationNode.get(CATALYSTS_ROOT_NODE);
   const firstCharacterRecords = Object.values(profileResponse.characterRecords.data || {})[0]
     .records;
 

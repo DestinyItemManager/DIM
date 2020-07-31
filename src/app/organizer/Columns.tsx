@@ -54,7 +54,8 @@ import { percent, getColor } from 'app/shell/filters';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { isUsedModSocket } from 'app/utils/socket-utils';
-import { D2WeaponStatHashByName, INTRINSIC_ITEM_CATEGORY } from 'app/search/d2-known-values';
+import { D2WeaponStatHashByName } from 'app/search/d2-known-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -575,7 +576,9 @@ function PerksCell({
         isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
-              !s.plug.plugItem.itemCategoryHashes?.includes(INTRINSIC_ITEM_CATEGORY))))
+              !s.plug.plugItem.itemCategoryHashes?.includes(
+                ItemCategoryHashes.WeaponModsIntrinsic
+              ))))
     )
   );
 

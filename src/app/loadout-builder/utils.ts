@@ -8,11 +8,8 @@ import {
   DestinyEnergyType,
 } from 'bungie-api-ts/destiny2';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import {
-  INTRINSIC_PLUG_CATEGORY,
-  MODIFICATIONS_BUCKET,
-  Y1_ARMOR_MODS_PLUG_CATEGORY,
-} from 'app/search/d2-known-values';
+import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -28,8 +25,8 @@ const unwantedSockets = new Set([
 ]);
 const unwantedCategories = new Set([
   1742617626, // ItemCategory "Armor Mods: Ornaments"
-  1875601085, // ItemCategory "Armor Mods: Glow Effects"
-  1404791674, // ItemCategory "Ghost Mods: Projections"
+  ItemCategoryHashes.ArmorModsGlowEffects,
+  ItemCategoryHashes.GhostModsProjections,
 ]);
 
 /**
@@ -67,7 +64,7 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove Archetype/Inherit perk
   if (
-    plugItem.plug.plugCategoryHash === INTRINSIC_PLUG_CATEGORY &&
+    plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
     plugItem.inventory.tierType !== 6 // keep exotics
   ) {
     return false;
@@ -75,7 +72,7 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove empty mod slots
   if (
-    plugItem.plug.plugCategoryHash === Y1_ARMOR_MODS_PLUG_CATEGORY &&
+    plugItem.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsUniversal &&
     plugItem.inventory.tierType === TierType.Basic
   ) {
     return false;

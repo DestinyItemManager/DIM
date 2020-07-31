@@ -1,7 +1,7 @@
 import { D2Item, DimSockets, DimMasterwork } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DamageType } from 'bungie-api-ts/destiny2';
-import { VANGUARD_MASTERWORK_PCH } from 'app/search/d2-known-values';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * These are the utilities that deal with figuring out Masterwork info.
@@ -150,7 +150,8 @@ function buildMasterworkInfo(
   return {
     progress: plugObjective.progress,
     typeName:
-      socket.plug.plugItem.plug.plugCategoryHash === VANGUARD_MASTERWORK_PCH
+      socket.plug.plugItem.plug.plugCategoryHash ===
+      PlugCategoryHashes.V300PlugsMasterworksGenericWeaponsKills
         ? 'Vanguard'
         : 'Crucible',
     typeIcon: objectiveDef.displayProperties.icon,

@@ -24,6 +24,7 @@ import { destinyVersionSelector } from 'app/accounts/reducer';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import Objective from 'app/progress/Objective';
 import { Link, useParams } from 'react-router-dom';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 interface ProvidedProps {
   item: DimItem;
@@ -51,14 +52,15 @@ function isD2Manifest(
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
-  // mods should be 610365472 ("Weapon Mods") if they aren't 4104513227 ("Armor Mods")
-  const modTypeIcon = item.itemCategoryHashes.includes(4104513227) ? helmetIcon : handCannonIcon;
+  const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
+    ? helmetIcon
+    : handCannonIcon;
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
   return (
     <div className="item-details-body">
-      {item.itemCategoryHashes.includes(41) && (
+      {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className="item-shader" src={item.icon} width="96" height="96" />
       )}
 
@@ -72,7 +74,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {isD2Manifest(defs) && item.itemCategoryHashes.includes(19) && (
+      {isD2Manifest(defs) && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} defs={defs} />
         </div>

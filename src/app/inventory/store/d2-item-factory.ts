@@ -32,13 +32,12 @@ import { reportException } from '../../utils/exceptions';
 import { t } from 'app/i18next-t';
 import { getSeason } from './season';
 import {
-  ATTACK_STAT,
-  DEFENSE_STAT,
   ENGRAMS_BUCKET,
   MODIFICATIONS_BUCKET,
   SHADERS_BUCKET,
   THE_FORBIDDEN_BUCKET,
 } from 'app/search/d2-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -286,7 +285,9 @@ export function makeItem(
 
   // 34 = category hash for engrams
   const isEngram =
-    itemDef.itemCategoryHashes?.includes(34) || normalBucket.hash === ENGRAMS_BUCKET || false;
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
+    normalBucket.hash === ENGRAMS_BUCKET ||
+    false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
@@ -602,8 +603,8 @@ export function makeItem(
 function isWeaponOrArmor1OrExoticArmor2(item: D2Item) {
   return (
     item.primStat &&
-    (item.primStat.statHash === ATTACK_STAT || // weapon
-      (item.primStat.statHash === DEFENSE_STAT && // armor
+    (item.primStat.statHash === StatHashes.Attack || // weapon
+      (item.primStat.statHash === StatHashes.Defense && // armor
         (!item.energy || // energy is an armor 2.0 signifier
           item.isExotic))) // but we want to allow exotic armor 2.0 reviews
   );

@@ -18,6 +18,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { VendorItem } from './vendor-item';
 import _ from 'lodash';
 import { DimItem } from 'app/inventory/item-types';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -133,7 +134,7 @@ export function toVendor(
   const currencies = _.compact(
     Array.from(vendorCurrencyHashes)
       .map((h) => defs.InventoryItem.get(h))
-      .filter((i) => !i.itemCategoryHashes?.includes(41))
+      .filter((i) => !i.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders))
   );
 
   return {

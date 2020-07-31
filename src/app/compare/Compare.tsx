@@ -28,6 +28,7 @@ import { getAllItems } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -469,7 +470,7 @@ class Compare extends React.Component<Props, State> {
           // all other weapon types with multiple ammos, are novelty exotic exceptions
           !exampleItem.isDestiny2() ||
           !i.isDestiny2() ||
-          !exampleItem.itemCategoryHashes.includes(153950757) ||
+          !exampleItem.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
           exampleItem.ammoType === i.ammoType
       );
 

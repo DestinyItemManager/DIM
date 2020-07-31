@@ -2,15 +2,8 @@ import { DimStore } from '../inventory/store-types';
 import { DimWishList, WishListRoll } from './types';
 import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
 import _ from 'lodash';
-import {
-  ARMOR_MODS_CATEGORY,
-  BONUS_MODS_CATEGORY,
-  GHOST_PERKS_CATEGORY,
-  INTRINSIC_ITEM_CATEGORY,
-  MODIFICATIONS_BUCKET,
-  WEAPON_GAMEPLAY_MODS_CATEGORY,
-  WEAPON_MODS_CATEGORY,
-} from 'app/search/d2-known-values';
+import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export const enum UiWishListRoll {
   Good = 1,
@@ -87,8 +80,8 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   if (
     plug.plugItem.itemCategoryHashes?.find(
       (ich) =>
-        ich === INTRINSIC_ITEM_CATEGORY || // intrinsics
-        ich === WEAPON_GAMEPLAY_MODS_CATEGORY || // weapon gameplay socket
+        ich === ItemCategoryHashes.WeaponModsIntrinsic ||
+        ich === ItemCategoryHashes.WeaponModsGameplay ||
         ich === 3851138800 // armor gameplay socket
     )
   ) {
@@ -103,10 +96,10 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   return (
     plug.plugItem.itemCategoryHashes?.some(
       (ich) =>
-        ich === WEAPON_MODS_CATEGORY ||
-        ich === ARMOR_MODS_CATEGORY ||
-        ich === BONUS_MODS_CATEGORY ||
-        ich === GHOST_PERKS_CATEGORY
+        ich === ItemCategoryHashes.WeaponMods ||
+        ich === ItemCategoryHashes.ArmorMods ||
+        ich === ItemCategoryHashes.BonusMods ||
+        ich === ItemCategoryHashes.GhostModsPerks
     ) ?? false
   ); // weapon, then armor, then bonus (found on armor perks), then ghost mod
 }

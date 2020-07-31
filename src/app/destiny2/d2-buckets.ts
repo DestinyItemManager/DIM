@@ -2,6 +2,7 @@ import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/
 import _ from 'lodash';
 import { getDefinitions } from './d2-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
+import { VAULT_VENDOR } from 'app/search/d2-known-values';
 
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
@@ -108,7 +109,7 @@ async function getBucketsUncached() {
     buckets.byHash[bucket.hash] = bucket;
   });
   const vaultMappings = {};
-  defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
+  defs.Vendor.get(VAULT_VENDOR).acceptedItems.forEach((items) => {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   });
   _.forIn(buckets.byHash, (bucket: InventoryBucket) => {

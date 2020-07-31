@@ -5,7 +5,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
-import { MOD_CATEGORY, POWER_STAT } from 'app/search/d2-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * Lookup keys for review data in the cache.
@@ -142,8 +142,8 @@ function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
   return item.sockets //             remove this ?? null when typescript is fixed
     ? _.compact(item.sockets.sockets.map((p) => p.plug?.plugItem ?? null)).filter(
         (plug) =>
-          plug.itemCategoryHashes?.includes(MOD_CATEGORY) &&
-          plug.investmentStats?.some((s) => s.statTypeHash === POWER_STAT)
+          plug.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Mod) &&
+          plug.investmentStats?.some((s) => s.statTypeHash === StatHashes.Power)
       )
     : [];
 }

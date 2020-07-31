@@ -17,15 +17,13 @@ import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
 import {
-  ACCURACY,
   armorBuckets,
-  D2ArmorStatHashByName,
-  D2ItemCategoryHashes,
+  ARMOR_STAT_CAP,
   D2WeaponStatHashByName,
-  swordStats,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -45,65 +43,64 @@ import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 
 /** Stats that all armor should have. */
 export const armorStats = [
-  D2ArmorStatHashByName.mobility, // Mobility
-  D2ArmorStatHashByName.resilience, // Resilience
-  D2ArmorStatHashByName.recovery, // Recovery
-  D2ArmorStatHashByName.discipline, // Discipline
-  D2ArmorStatHashByName.intellect, // Intellect
-  D2ArmorStatHashByName.strength, // Strength
+  StatHashes.Mobility, // Mobility
+  StatHashes.Resilience, // Resilience
+  StatHashes.Recovery, // Recovery
+  StatHashes.Discipline, // Discipline
+  StatHashes.Intellect, // Intellect
+  StatHashes.Strength, // Strength
 ];
 
 /**
  * Which stats to display, and in which order.
  */
 export const statAllowList = [
-  D2WeaponStatHashByName.rpm, // Rounds Per Minute
-  D2WeaponStatHashByName.charge, // Charge Time
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.blastradius, // Blast Radius
-  D2WeaponStatHashByName.velocity, // Velocity
-  swordStats.swingSpeed, // Swing Speed (sword)
-  D2WeaponStatHashByName.impact, // Impact
-  D2WeaponStatHashByName.range, // Range
-  swordStats.guardEfficiency, // Efficiency (sword)
-  swordStats.guardResistance, // Defense (sword)
-  ACCURACY, // Accuracy
-  D2WeaponStatHashByName.stability, // Stability
-  D2WeaponStatHashByName.handling, // Handling
-  swordStats.chargeRate, // Charge Rate (Sword)
-  swordStats.guardEndurance, // Guard Endurance
-  D2WeaponStatHashByName.reload, // Reload Speed
-  D2WeaponStatHashByName.aimassist, // Aim Assistance
-  D2WeaponStatHashByName.zoom, // Zoom
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
-  D2WeaponStatHashByName.magazine, // Magazine
-  D2WeaponStatHashByName.inventorysize, // Inventory Size
-  swordStats.ammoCapacity, // Ammo Capacity
+  StatHashes.RoundsPerMinute, // Rounds Per Minute
+  StatHashes.ChargeTime, // Charge Time
+  StatHashes.DrawTime, // Draw Time
+  StatHashes.BlastRadius, // Blast Radius
+  StatHashes.Velocity, // Velocity
+  StatHashes.SwingSpeed, // Swing Speed (sword)
+  StatHashes.Impact, // Impact
+  StatHashes.Range, // Range
+  StatHashes.GuardEfficiency, // Efficiency (sword)
+  StatHashes.GuardResistance, // Defense (sword)
+  StatHashes.Accuracy, // Accuracy
+  StatHashes.Stability, // Stability
+  StatHashes.Handling, // Handling
+  StatHashes.ChargeRate, // Charge Rate (Sword)
+  StatHashes.GuardEndurance, // Guard Endurance
+  StatHashes.ReloadSpeed, // Reload Speed
+  StatHashes.AimAssistance, // Aim Assistance
+  StatHashes.Zoom, // Zoom
+  StatHashes.RecoilDirection, // Recoil Direction
+  StatHashes.Magazine, // Magazine
+  StatHashes.InventorySize, // Inventory Size
+  StatHashes.AmmoCapacity, // Ammo Capacity
   ...armorStats,
   TOTAL_STAT_HASH, // Total
 ];
 
-/** Stats that should be forced to display without a bar (just a number). */
-const statsNoBar = [
-  D2WeaponStatHashByName.rpm, // Rounds Per Minute
-  D2WeaponStatHashByName.magazine, // Magazine
-  D2WeaponStatHashByName.charge, // Charge Time
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.inventorysize, // Recovery
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
-];
-
 /** Stats that are measured in milliseconds. */
 export const statsMs = [
-  D2WeaponStatHashByName.drawtime, // Draw Time
-  D2WeaponStatHashByName.charge, // Charge Time
+  StatHashes.DrawTime, // Draw Time
+  StatHashes.ChargeTime, // Charge Time
+];
+
+/** Stats that should be forced to display without a bar (just a number). */
+const statsNoBar = [
+  StatHashes.RoundsPerMinute, // Rounds Per Minute
+  StatHashes.Magazine, // Magazine
+  StatHashes.InventorySize, // Recovery
+  StatHashes.RecoilDirection, // Recoil Direction
+  ...statsMs,
 ];
 
 /** Show these stats in addition to any "natural" stats */
 const hiddenStatsAllowList = [
-  D2WeaponStatHashByName.aimassist, // Aim Assistance
-  D2WeaponStatHashByName.zoom, // Zoom
-  D2WeaponStatHashByName.recoildirection, // Recoil Direction
+  StatHashes.AimAssistance, // Aim Assistance
+  StatHashes.Zoom, // Zoom
+  StatHashes.RecoilDirection, // Recoil Direction
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -176,7 +173,7 @@ function buildStatsFromMods(
 ): DimStat[] {
   const statTracker: { stat: number; value: number } | {} = {};
   const investmentStats: DimStat[] = [];
-  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, D2ItemCategoryHashes.armormod);
+  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, ItemCategoryHashes.ArmorMods);
   const masterworkSockets = getSocketsWithStyle(
     itemSockets,
     DestinySocketCategoryStyle.EnergyMeter
@@ -207,7 +204,7 @@ function buildStatsFromMods(
       value: statTracker[statHash],
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
-    builtStat.maximumValue = 42;
+    builtStat.maximumValue = ARMOR_STAT_CAP;
     investmentStats.push(builtStat);
   }
 
@@ -224,7 +221,7 @@ function shouldShowStat(
   // Bows have a charge time stat that nobody asked for
   if (
     statHash === D2WeaponStatHashByName.charge &&
-    itemDef.itemCategoryHashes?.includes(D2ItemCategoryHashes.bow)
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Bows)
   ) {
     return false;
   }

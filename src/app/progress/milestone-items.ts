@@ -16,6 +16,7 @@ import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -78,7 +79,7 @@ function availableQuestToItem(
               i &&
               (i.classType === characterClass || i.classType === DestinyClass.Unknown) &&
               // And quest steps, they're not interesting
-              !i.itemCategoryHashes?.includes(16)
+              !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep)
           ),
         1
       )
