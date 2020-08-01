@@ -37,7 +37,7 @@ export interface ProcessItem {
     val: number;
     /** This contains the energy usage by slot specific mods in the mod picker. Those mods are preprocessed so we don't
      * need to recalculate them over and over. */
-    valInitial: readonly number;
+    valInitial: number;
   } | null;
   basePower: number;
   stats: { [statHash: number]: number };
