@@ -1,5 +1,5 @@
-# This workflow runs when a PR is merged
-# This workflow runs every Monday @ 0000 UTC (1700 PST)
+# Release a new verion of DIM
+# This workflow runs every Monday @ 0000 UTC (Sunday @ 1700 PST)
 name: Publish Release
 on:
   workflow_dispatch:
