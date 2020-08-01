@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "パークを選択したり、統計をフィルタして並べ替えたり、項目をロックして潜在的なロードアウトを絞り込みます。",
-    "OptimizerExplanationArmour2Mods": "アーマー2.0のパーツに由来するステータス変更は、可能な限り除外されます。正確な結果を得る為には、負のステータスに貢献する全てのパーツを解除して下さい。",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
     "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックして除外します。アイテムをサイドバーにドラッグして、除外またはロックします。",
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ロックされたアイテムをリセットする",
@@ -569,7 +569,7 @@
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
     "SelectedPerkKey": "パークを選択",
-    "StatIncorrectWarning": "正確な結果を得るためには、ステータスの値が負のパーツを削除して下さい。\n\n負のステータスが原因で、DIMは、いくつかアイテムに含まれる {{stats}} の基準値を決定できません。これは、 Bungie.net から送信される情報の制限です。",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "合計",
-    "TotalIncorrectWarning": "負のステータスが原因で、DIMは、 {{stats}} の基準値を決定できません。これは、 Bungie.net から送信される情報の制限です。"
+    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

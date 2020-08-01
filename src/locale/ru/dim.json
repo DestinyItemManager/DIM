@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
-    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible. To get accurate results, remove all mods with negative stat contributions.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
@@ -569,7 +569,7 @@
     "SelectPower": "Минимальная Сила",
     "SelectPowerDescription": "Устанавливает минимальный уровень силы для всего набора (не отдельные части)",
     "SelectedPerkKey": "Искомый Бонус",
-    "StatIncorrectWarning": "Please remove any mods with negative stat values to get accurate results.\n\nDue to negative stat modifiers, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Игнорировать",
     "StatTierIncludeOption": "Включать",
     "TierNumber": "Т{{tier}}",
@@ -866,7 +866,7 @@
     "TierProgress": "У{{tier}} {{statName}} ({{progress}}/60 для У{{nextTier}})\n",
     "TierProgress_Max": "У{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Всего",
-    "TotalIncorrectWarning": "Due to negative stat modifiers, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

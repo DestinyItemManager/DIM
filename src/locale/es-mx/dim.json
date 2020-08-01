@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
     "NumStatMixes_plural": "{{count, number}} mezclas de estadísticas",
     "OptimizerExplanation": "Selecciona perks, filtra y reordena estadísticas, y bloquea objetos para reducir tus posibles equipaciones.",
-    "OptimizerExplanationArmour2Mods": "Los cambios de estadísticas con Modificadores de Armadura 2.0 estarán excluidos cuando sea posible. Para obtener resultados precisos, quita todos los modificadores con contribuciones de estadísticas negativas.",
+    "OptimizerExplanationArmour2Mods": "Los cambios de estadísticas de Modificadores de Armadura 2.0 están excluídos cuando sea posible, para más información por favor ver {{link}}.",
     "OptimizerExplanationDesktop": "SHIFT+CLICK en un perk para seleccionarlo. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos bloqueados",
@@ -569,7 +569,7 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
     "SelectedPerkKey": "Perk seleccionado",
-    "StatIncorrectWarning": "Por favor, quita cualquier modificador con valores de estadísticas negativos para obtener resultados precisos.\n\nDebido a modificadores de estadísticas negativos, DIM no puede determinar el valor base de {{stats}} en algunos objetos incluidos. Esto es una limitación de información enviada por Bungie.net.",
+    "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimina cualquier modificador con efectos de estadísticas negativas o condicionales.\n\nDebido a modificadores con modificadores de estadísticas o efectos de estado condicionales, DIM no puede determinar el valor base de {{stats}} en algunos objetos incluídos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Debido a modificadores de estadísticas negativos, DIM no puede determinar el valor base de {{stats}}. Esto es una limitación de información enviada por Bungie.net."
+    "TotalIncorrectWarning": "Debido a modificadores con efectos de estado condicionales o negativos, DIM no puede determinar el valor base de {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

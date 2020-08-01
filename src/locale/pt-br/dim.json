@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} possibilidade de atributos",
     "NumStatMixes_plural": "{{count, number}} possibilidades de atributos",
     "OptimizerExplanation": "Selecione perks, filtre, reorganize atributos e trave itens para estreitar o número de sets em potencial.",
-    "OptimizerExplanationArmour2Mods": "Mudanças em atributos de mods para Armaduras 2.0 são desconsideradas sempre que possível. Para ter resultados mais precisos, remova todos os mods que contribua negativamente em atributos.",
+    "OptimizerExplanationArmour2Mods": "Alterações de atributos de mods de Armadura 2.0 são ignoradas sempre que possível. Para mais informações, por favor, acesse {{link}}.",
     "OptimizerExplanationDesktop": "Shift-clique um perk para selecionar. Shift-clique em um item para ignorá-lo. Mova os itens para a barra lateral para ignorá-los ou travá-los.",
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens travados",
@@ -569,7 +569,7 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
     "SelectedPerkKey": "Perk selecionado",
-    "StatIncorrectWarning": "Por favor, remova quaisquer mods com atributos negativos para obter resultados mais precisos.\n\nDevido a estes modificadores negativos, DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
+    "StatIncorrectWarning": "Por favor, remova quaisquer mods com atributos de efeitos negativos ou condicionais para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Devido a modificadores negativos, DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
+    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

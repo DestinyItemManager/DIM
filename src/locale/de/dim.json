@@ -350,7 +350,7 @@
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
   "General": {
-    "ClickForDetails": "Click for details",
+    "ClickForDetails": "Für Details klicken",
     "UserGuideLink": "Benutzerhandbuch"
   },
   "Ghost": {
@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} Stat-Mix",
     "NumStatMixes_plural": "{{count, number}} Stat-Mixes",
     "OptimizerExplanation": "Wähle Perks, Filter und sortiere Statistiken und sperre Gegenstände, um deine möglichen Loadouts zu ermitteln.",
-    "OptimizerExplanationArmour2Mods": "Statistikänderungen von Rüstung 2.0 Mods sind wo es geht ausgeschlossen. Um genaue Ergebnisse zu erhalten, entferne alle Mods mit negativen Statistik-Beeinflussungen.",
+    "OptimizerExplanationArmour2Mods": "Statistik Änderungen von Rüstung 2.0 Mods sind, soweit möglich, ausgeschlossen, für weitere Informationen siehe {{link}}.",
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
     "ResetLocked": "Setze gesperrte Items zurück",
@@ -569,7 +569,7 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
     "SelectedPerkKey": "Gewählter Perk",
-    "StatIncorrectWarning": "Bitte entferne alle Mods mit negativen Werten, um genaue Ergebnisse zu erhalten.\n\nAufgrund negativer Statistik-Modifikatoren kann DIM den Basiswert von {{stats}} bei einigen enthaltenen Elementen nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen.",
+    "StatIncorrectWarning": "Um genaue Ergebnisse zu erhalten, entferne bitte alle Mods mit negativen oder bedingten Statistik-Effekten.\n\nAufgrund von Mods mit negativen Statistik-Modifikatoren oder bedingten Statistik-Effekten, DIM kann den Basiswert von {{stats}} bei einigen enthaltenen Items nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen.",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
@@ -594,8 +594,8 @@
     "Create": "Loadout erstellen",
     "Delete": "Loadout löschen",
     "Edit": "Loadout bearbeiten",
-    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
-    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
+    "EquippableDifferent1": "Mehrere Exotische Gegenstände wurden verwendet, um dein maximales Powerlevel zu berechnen, so dass die angezeigte Anzahl bei der Ausrüstung deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
+    "EquippableDifferent2": "Das maximale Powerlevel ist nicht durch die Regel \"Ein exotisches Item\" begrenzt, wenn die Höhe deiner Drops/Mächtiger Loot/Pinnacle-Belohnungen festgelegt wird.",
     "FilteredItems": "Gefilterte Items",
     "FindAnother": "Finde andere(s) {{name}}",
     "FromEquipped": "Ausgerüstet",
@@ -849,7 +849,7 @@
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
-    "MaxGearPowerAll": "Maximum Power of all gear",
+    "MaxGearPowerAll": "Maximale Power von gesamter Ausrüstung",
     "MaxTotalPower": "Maximale Gesamt Power",
     "Milliseconds": "ms",
     "NoBonus": "Kein Bonus",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Gesamt",
-    "TotalIncorrectWarning": "Aufgrund negativer Statistik-Modifikatoren kann DIM den Basiswert von {{stats}} nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net gesendeten Informationen."
+    "TotalIncorrectWarning": "Aufgrund von Mods mit negativen oder bedingten statistischen Effekten, kann DIM den Basiswert von {{stats}} nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen."
   },
   "Storage": {
     "ApiPermissionPrompt": {

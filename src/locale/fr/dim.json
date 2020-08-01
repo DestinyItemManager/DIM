@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} mix de stat",
     "NumStatMixes_plural": "{{count, number}} mix de stat",
     "OptimizerExplanation": "Sélectionnez des attributs, filtrez et réorganisez les statistiques, et verrouillez des objets pour réduire votre nombre d'arsenaux potentiels.",
-    "OptimizerExplanationArmour2Mods": "Les changements de statistique des Mods D'Armure 2.0 sont exclus lorsque possible. Pour obtenir des résultats précis, retirez tous les mods avec des modifications de statistique négatives.",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
     "OptimizerExplanationDesktop": "Maj+clique sur une compétence pour la sélectionner. Maj+clique sur un objet pour l'exclure. Glissez des objets sur la barre latérale pour les verrouiller ou les exclure.",
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
     "ResetLocked": "Réinitialiser les objets verouillés",
@@ -569,7 +569,7 @@
     "SelectPower": "Puissance minimum",
     "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'arsenal (pas les pièces individuelles)",
     "SelectedPerkKey": "Compétence sélectionnée",
-    "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs.\n\nÀ cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
@@ -866,7 +866,7 @@
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "À cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

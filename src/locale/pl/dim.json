@@ -350,7 +350,7 @@
     "Year": "Pokazuje przedmioty na podstawie którego roku z Destiny 2 pochodzą."
   },
   "General": {
-    "ClickForDetails": "Click for details",
+    "ClickForDetails": "Kliknij po szczegóły",
     "UserGuideLink": "Przewodnik użytkownika"
   },
   "Ghost": {
@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} miksy statystyk",
     "NumStatMixes_plural": "{{count, number}} miksów statystyk",
     "OptimizerExplanation": "Wybierz perki, filtry, uporządkuj statystyki lub zablokuj przedmioty aby zwęzić twoje potencjalne uzbrojenia.",
-    "OptimizerExplanationArmour2Mods": "Zmiany statystyk z Modyfikacji Pancerza 2.0 są w miarę możliwości wykluczone. Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi wkładami statystyk.",
+    "OptimizerExplanationArmour2Mods": "Zmiany statystyk z Modyfikacji Pancerzu 2.0 są wykluczone, tam gdzie to możliwe, aby uzyskać więcej informacji, zobacz {{link}}.",
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj zablokowane przedmioty",
@@ -569,7 +569,7 @@
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
     "SelectedPerkKey": "Wybrany perk",
-    "StatIncorrectWarning": "Proszę usunąć wszelkie modyfikacje z ujemnymi wartościami statystyk, aby uzyskać dokładne wyniki.\n\nZe względu na ujemne modyfikatory statystyk DIM nie może określić wartości bazowej {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
+    "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi lub warunkowymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk lub efektami warunkowymi, DIM nie może określić wartości bazowej {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TierNumber": "T{{tier}}",
@@ -594,8 +594,8 @@
     "Create": "Utwórz Uzbrojenie",
     "Delete": "Usuń Uzbrojenie",
     "Edit": "Edytuj Uzbrojenie",
-    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
-    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
+    "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
+    "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów/potężnych/szczytowych nagród.",
     "FilteredItems": "Filtrowane Przedmioty",
     "FindAnother": "Znajdź następny {{name}}",
     "FromEquipped": "Założone",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Łącznie",
-    "TotalIncorrectWarning": "Ze względu na ujemne modyfikatory statystyk, DIM nie może określić wartości bazowej {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
+    "TotalIncorrectWarning": "Ze względu na modyfikacje z negatywnymi lub warunkowymi efektami statystyk, DIM nie może określić wartości bazowej {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

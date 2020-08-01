@@ -350,7 +350,7 @@
     "Year": "按照物品推出年份显示."
   },
   "General": {
-    "ClickForDetails": "Click for details",
+    "ClickForDetails": "点击查看详情",
     "UserGuideLink": "用户指南"
   },
   "Ghost": {
@@ -394,7 +394,7 @@
     "CannotMove": "无法从该角色中移出物品.",
     "Drag": "按住shift转移部分堆叠",
     "NoStorage": "DIM无法存储数据",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM 无法在你的浏览器中存储数据。这可能是因为你在使用无痕或隐身模式，或磁盘空间不足。你将无法登录或使用 DIM。"
   },
   "Hotkey": {
     "CheatSheetTitle": "键盘快速键",
@@ -547,7 +547,7 @@
     "ExcludeItem": "排除项目",
     "Filter": "过滤",
     "GeneratedBuilds": "编译",
-    "LimitedCombos": "您有{{combosWithoutCaps, number}} 可能性属性组合, 但是我们只检索了{{combos, number}} 个组合以避免DIM崩溃. 所以, 有些可能性组合没有显示. 锁定一些物品或特性或者拆除一些旧(旧) 装备来减少限制.",
+    "LimitedCombos": "你有 {{combosWithoutCaps, number}} 种可能的属性组合，但是我们只检索了 {{combos, number}} 个组合以避免 DIM 崩溃。因此，有些组合没有显示。锁定一些物品或特性或者拆除一些旧护甲来减少组合数目。",
     "LockEquipped": "已装备",
     "LockItem": "锁定物品",
     "LockPerk": "选择能量或特性",
@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} 状态混合",
     "NumStatMixes_plural": "{{count, number}} 状态混合",
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
-    "OptimizerExplanationArmour2Mods": "已尽可能排除护甲 2.0 模组导致的属性变动。为了获得精确结果，移除所有带有属性惩罚的模组。",
+    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
     "ProcessingSets": "正在处理 {{character}} 的配装",
     "ResetLocked": "重置锁定物品",
@@ -569,7 +569,7 @@
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
     "SelectedPerkKey": "已选特性",
-    "StatIncorrectWarning": "为了获得精确结果，请移除所有带有属性惩罚的模组。\n\n因为 Bungie.net 的数据限制，鉴于负面属性影响，DIM 无法确定一些包含物品上 {{stats}} 的基础数值。",
+    "StatIncorrectWarning": "为了获得准确结果，请移除所有具有负面或有条件的属性的模组。\n\n由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
@@ -594,8 +594,8 @@
     "Create": "创建配装",
     "Delete": "删除配装",
     "Edit": "编辑配装",
-    "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
-    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
+    "EquippableDifferent1": "计算你的最大能量等级时使用了多件异域装备，所以在游戏内配装时可能达不到这个数值。",
+    "EquippableDifferent2": "在计算你的掉落/强力/巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
     "FilteredItems": "已过滤的物品",
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
@@ -709,7 +709,7 @@
       "Track": "跟踪{{itemType}}",
       "Untrack": "取消跟踪{{itemType}}"
     },
-    "TriageTab": "Triage",
+    "TriageTab": "分类",
     "Vault": "保险库"
   },
   "Notes": {
@@ -849,7 +849,7 @@
     "Discipline": "训练",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",
-    "MaxGearPowerAll": "Maximum Power of all gear",
+    "MaxGearPowerAll": "所有装备最高光等",
     "MaxTotalPower": "最大光等",
     "Milliseconds": "毫秒",
     "NoBonus": "无加成",
@@ -866,7 +866,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "总计",
-    "TotalIncorrectWarning": "因为 Bungie.net 的数据限制，鉴于负面属性影响，DIM 无法确定 {{stats}} 的基础数值。"
+    "TotalIncorrectWarning": "由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -897,7 +897,7 @@
     "GDriveImportExplain": "你可以还原浏览器或 Google 云端硬盘中的旧数据。如果你刚刚升级到 DIM v6，并在旧版中存有数据，请使用这个选项。",
     "GDriveSignInError": "登陆Google云端硬碟时出错:",
     "GDriveSignedIn": "已以 {{email}} 登录 Google 云端硬盘",
-    "GoogleApiBlocked": "你无法登录到 Google 云端硬盘，因为它被内容拦截器屏蔽了。如果你需要从 Google 云端硬盘导入旧版数据，请禁用拦截器后刷新页面。",
+    "GoogleApiBlocked": "您不能登录到Google Drive，因为一个内容拦截器正在屏蔽它。 如果您需要从 Google Drive 导入旧版数据，请禁用内容拦截器并重新加载。",
     "Import": "导入数据备份",
     "ImportConfirmDimApi": "你确定要用此版本的数据覆盖标签、配装和设置吗？旧数据将被完全覆盖。",
     "ImportExport": "备份和导入",
