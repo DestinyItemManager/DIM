@@ -68,6 +68,12 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
         loaded: true,
       };
     }
+    case getType(actions.touchWishLists): {
+      return {
+        ...state,
+        lastFetched: new Date(),
+      };
+    }
     default:
       return state;
   }
