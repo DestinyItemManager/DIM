@@ -14,6 +14,14 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
+      - name: Install Node
+        uses: actions/setup-node@v1.4.2
+        with:
+          node-version: '14.x'
+
+      - name: yarn install
+        uses: bahmutov/npm-install@v1
+
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v2.x
 
@@ -51,7 +59,6 @@ jobs:
         run: |
           git config --local user.email "destinyitemmanager@gmail.com"
           git config --local user.name "DIM i18n Bot"
-          git config --bool core.bare true
           git commit .
           git commit -m "i18n - ${{ env.GITHUB_SHA_SHORT }}" -a
 
