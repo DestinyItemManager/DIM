@@ -4,6 +4,7 @@ import strengthIcon from 'images/strength.png';
 import { DimCharacterStat } from '../store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { StatHashes } from 'data/d2/generated-enums';
 
 // Cooldowns
 const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -78,11 +79,7 @@ export function getBonus(light: number, type: string): number {
   return 0;
 }
 
-export const statsWithTiers = [
-  1735777505, // Discipline
-  144602215, // Intellect
-  4244567218, // Strength
-];
+export const statsWithTiers = [StatHashes.Discipline, StatHashes.Intellect, StatHashes.Strength];
 export function getD1CharacterStatTiers(stat: DimCharacterStat) {
   if (!statsWithTiers.includes(stat.hash)) {
     return [];

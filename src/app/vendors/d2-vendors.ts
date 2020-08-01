@@ -19,7 +19,7 @@ import { VendorItem } from './vendor-item';
 import _ from 'lodash';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-
+import { VENDORS } from 'app/search/d2-known-values';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -35,12 +35,12 @@ export interface D2Vendor {
 }
 
 const vendorOrder = [
-  863940356, // spider
-  3361454721, // eververse
-  1265988377, // benedict
-  672118013, // banshee
-  248695599, // drifter
-  2917531897, // ada
+  VENDORS.SPIDER,
+  VENDORS.EVERVERSE,
+  VENDORS.BENEDICT,
+  VENDORS.BANSHEE,
+  VENDORS.DRIFTER,
+  VENDORS.ADA,
 ];
 
 export function toVendorGroups(

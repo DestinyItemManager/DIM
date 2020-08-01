@@ -21,8 +21,8 @@ function isWeaponOrArmor(
   return (
     inventoryItemStats &&
     (inventoryItemStats.primaryBaseStatHash === StatHashes.Attack || // weapon
-      inventoryItemStats.primaryBaseStatHash === StatHashes.Defense)
-  ); // armor
+      inventoryItemStats.primaryBaseStatHash === StatHashes.Defense) // armor
+  );
 }
 
 export function fetchRatingsForVendors(
