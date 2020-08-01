@@ -7,7 +7,7 @@ const SELF = "'self'";
  */
 module.exports = function csp(env) {
   const baseCSP = {
-    defaultSrc: ['none'],
+    defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
       // Include a snippet of inline scripts
