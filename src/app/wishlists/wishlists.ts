@@ -82,7 +82,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
       (ich) =>
         ich === ItemCategoryHashes.WeaponModsIntrinsic ||
         ich === ItemCategoryHashes.WeaponModsGameplay ||
-        ich === 3851138800 // armor gameplay socket
+        ich === ItemCategoryHashes.ArmorModsGameplay
     )
   ) {
     return false;
