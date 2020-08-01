@@ -1,6 +1,6 @@
 import { DimItem, D2Item } from '../inventory/item-types';
 import _ from 'lodash';
-import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
+import { LockedArmor2ModMap, LockedArmor2Mod, ModPickerCategories } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   sortProcessModsOrProcessItems,
@@ -113,5 +113,18 @@ export function assignModsToArmorSet(
   );
 
   const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
-  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
+  return _.mapValues(assignments, (modHashes) =>
+    modHashes
+      .map((modHash) => modsByHash[modHash])
+      .sort((a) => {
+        // Sort the mods so that they appear in the order general, slot specific, seasonal (mimic the game).
+        if (a.category === ModPickerCategories.general) {
+          return -1;
+        } else if (a.category === ModPickerCategories.seasonal) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+  );
 }
