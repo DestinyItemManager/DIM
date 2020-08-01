@@ -42,7 +42,7 @@ export function mapSeasonalModsToProcessMods(
       tag: entry.metadata?.tag,
       energy: {
         type: entry.mod.mod.plug.energyCost.energyType,
-        cost: entry.mod.mod.plug.energyCost.energyCost,
+        val: entry.mod.mod.plug.energyCost.energyCost,
       },
       investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
         statTypeHash,
@@ -59,7 +59,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     hash: mod.mod.hash,
     energy: {
       type: mod.mod.plug.energyCost.energyType,
-      cost: mod.mod.plug.energyCost.energyCost,
+      val: mod.mod.plug.energyCost.energyCost,
     },
     investmentStats: mod.mod.investmentStats,
   };
@@ -151,8 +151,8 @@ export function mapDimItemToProcessItem(
       dimItem.energy && costInitial !== null
         ? {
             type: dimItem.energy.energyType,
-            costInitial, // this is needed to reset energy used after trying to slot mods
-            cost: costInitial,
+            valInitial: costInitial, // this is needed to reset energy used after trying to slot mods
+            val: costInitial,
           }
         : null,
     season: modMetadata?.season,

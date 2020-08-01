@@ -4,7 +4,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 interface SortParam {
   energy: {
     type: DestinyEnergyType;
-    cost: number;
+    val: number;
   } | null;
   season?: number;
 }
@@ -23,7 +23,7 @@ export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
     if (a.season === b.season) {
       if (a.energy && b.energy) {
         if (a.energy.type === b.energy.type) {
-          return b.energy.cost - a.energy.cost;
+          return b.energy.val - a.energy.val;
         } else {
           return b.energy.type - a.energy.type;
         }
@@ -46,7 +46,7 @@ export function sortGeneralModsOrProcessItem(a: SortParam, b: SortParam) {
   // any energy is 0 so check undefined rather than falsey
   if (a.energy && b.energy) {
     if (a.energy.type === b.energy.type) {
-      return b.energy.cost - a.energy.cost;
+      return b.energy.val - a.energy.val;
     } else {
       return b.energy.type - a.energy.type;
     }
@@ -90,13 +90,13 @@ export function canTakeAllSeasonalMods(
     if (
       item.energy &&
       (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.cost + energy.cost <= 10 &&
+      item.energy.val + energy.val <= 10 &&
       item.compatibleModSeasons?.includes(tag)
     ) {
       if (assignments) {
         assignments[item.id].push(hash);
       }
-      item.energy.cost += energy.cost;
+      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;
@@ -138,12 +138,12 @@ export function canTakeAllGeneralMods(
     if (
       item.energy &&
       (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.cost + energy.cost <= 10
+      item.energy.val + energy.val <= 10
     ) {
       if (assignments) {
         assignments[item.id].push(hash);
       }
-      item.energy.cost += energy.cost;
+      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;

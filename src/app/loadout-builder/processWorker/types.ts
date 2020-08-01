@@ -34,10 +34,10 @@ export interface ProcessItem {
     type: DestinyEnergyType;
     /** This is used to track the energy used by mods in a build. Using the name cost so that we can use the same sorting
      * function for ProcessItems and ProcessMods. */
-    cost: number;
+    val: number;
     /** This contains the energy usage by slot specific mods in the mod picker. Those mods are preprocessed so we don't
      * need to recalculate them over and over. */
-    costInitial: readonly number;
+    valInitial: readonly number;
   } | null;
   basePower: number;
   stats: { [statHash: number]: number };
@@ -109,7 +109,8 @@ export interface ProcessMod {
   hash: number;
   energy: {
     type: DestinyEnergyType;
-    cost: number;
+    /** The energy cost of the mod. */
+    val: number;
   };
   investmentStats: ProcessStat[];
   /** This should only be available in seasonal mods */

@@ -317,7 +317,7 @@ export function process(
               // Reset the used item energy of each item so we can add general and seasonal mod costs again.
               for (const item of firstValidSet) {
                 if (item.energy) {
-                  item.energy.cost = item.energy.costInitial;
+                  item.energy.val = item.energy.valInitial;
                 }
               }
 

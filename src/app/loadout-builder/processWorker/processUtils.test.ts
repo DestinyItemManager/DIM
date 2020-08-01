@@ -15,7 +15,7 @@ function getMod(
   return {
     season,
     tag,
-    energy: { type: energyType, cost: 0 },
+    energy: { type: energyType, val: 0 },
     investmentStats: [],
     hash: hash || 0,
   };
@@ -28,7 +28,7 @@ function getItem(
   id?: string
 ): ProcessItemSubset {
   return {
-    energy: { type: energyType, cost: 0 },
+    energy: { type: energyType, val: 0 },
     season,
     compatibleModSeasons,
     id: id || 'id',
