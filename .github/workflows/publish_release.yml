@@ -37,15 +37,6 @@ jobs:
           git config --global user.email "destinyitemmanager@gmail.com"
           git config --global user.name "DIM Release Bot"
 
-      - name: openssl
-        run: |
-          openssl aes-256-cbc -K $encrypted_3184b4fb5b91_key -iv $encrypted_3184b4fb5b91_iv -in id_rsa.enc -out ~/.ssh/dim_travis.rsa -d
-          chmod 600 ~/.ssh/dim_travis.rsa
-          echo "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/dim_travis.rsa\n" >> ~/.ssh/config
-        env:
-          encrypted_3184b4fb5b91_key: ${{ secrets.encrypted_3184b4fb5b91_key }}
-          encrypted_3184b4fb5b91_iv: ${{ secrets.encrypted_3184b4fb5b91_iv }}
-
       - name: Set Version PATCH
         if: github.event_name == 'workflow_dispatch'
         run: echo ::set-env name=VERSION::"$(npm --no-git-tag-version version patch | sed 's/^v//)"
@@ -71,9 +62,6 @@ jobs:
           git add -u
           git commit -m"$VERSION"
           git tag "v$VERSION"
-
-      - name: Set up SSH keys for rsync
-        run: cp ~/.ssh/dim_travis.rsa config && cp ../id_rsa.pub config/dim_travis.rsa.pub
 
       - name: yarn install
         uses: bahmutov/npm-install@v1
@@ -107,9 +95,9 @@ jobs:
         with:
           switches: -avzr --exclude="*.html, service-worker.js, version.json"
           path: "dist/"
-          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_path: app.destinyitemmanager.com
           remote_host: ${{ secrets.REMOTE_HOST }}
-          remote_key: 'config/dim_travis.rsa'
+          remote_key: ${{ secrets.SSH_KEY }}
 
       - name: rsync HTML
         # Then sync the HTML which will start using the new content
@@ -117,9 +105,9 @@ jobs:
         with:
           switches: -avzr --include="*.html, service-worker.js, version.json"
           path: "dist/"
-          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_path: app.destinyitemmanager.com
           remote_host: ${{ secrets.REMOTE_HOST }}
-          remote_key: 'config/dim_travis.rsa'
+          remote_key: ${{ secrets.SSH_KEY }}
 
       - name: Update CF
         if: $CLOUDFLARE_KEY
