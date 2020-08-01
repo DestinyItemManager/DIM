@@ -134,6 +134,14 @@ export const LockableBuckets = {
   classitem: armorBuckets.classitem,
 };
 
+export const bucketsToCategories = {
+  [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
+  [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
+  [LockableBuckets.chest]: armor2PlugCategoryHashesByName.chest,
+  [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
+  [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
+};
+
 // to-do: deduplicate this and use D2ArmorStatHashByName instead
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: D2ArmorStatHashByName.mobility,

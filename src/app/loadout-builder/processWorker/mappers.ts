@@ -40,7 +40,10 @@ export function mapSeasonalModsToProcessMods(
       hash: entry.mod.mod.hash,
       season: entry.metadata?.season,
       tag: entry.metadata?.tag,
-      energyType: entry.mod.mod.plug.energyCost.energyType,
+      energy: {
+        type: entry.mod.mod.plug.energyCost.energyType,
+        cost: entry.mod.mod.plug.energyCost.energyCost,
+      },
       investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
         statTypeHash,
         value,
@@ -54,7 +57,10 @@ export function mapSeasonalModsToProcessMods(
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod = {
     hash: mod.mod.hash,
-    energyType: mod.mod.plug.energyCost.energyType,
+    energy: {
+      type: mod.mod.plug.energyCost.energyType,
+      cost: mod.mod.plug.energyCost.energyCost,
+    },
     investmentStats: mod.mod.investmentStats,
   };
 
@@ -112,7 +118,10 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   };
 }
 
-export function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
+export function mapDimItemToProcessItem(
+  dimItem: D2Item,
+  modsForSlot: LockedArmor2Mod[]
+): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
@@ -126,7 +135,8 @@ export function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
   }
 
   const modMetadata = getSpecialtySocketMetadata(dimItem);
-
+  const costInitial =
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug.energyCost.energyCost);
   return {
     bucketHash: bucket.hash,
     id,
@@ -137,7 +147,14 @@ export function mapDimItemToProcessItem(dimItem: D2Item): ProcessItem {
     stats: statMap,
     baseStats: baseStatMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
-    energyType: dimItem.energy?.energyType,
+    energy:
+      dimItem.energy && costInitial !== null
+        ? {
+            type: dimItem.energy.energyType,
+            costInitial, // this is needed to reset energy used after trying to slot mods
+            cost: costInitial,
+          }
+        : null,
     season: modMetadata?.season,
     compatibleModSeasons: modMetadata?.compatibleTags,
   };

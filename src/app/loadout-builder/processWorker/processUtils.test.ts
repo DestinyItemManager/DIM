@@ -12,7 +12,13 @@ function getMod(
   energyType: DestinyEnergyType,
   hash?: number
 ): ProcessMod {
-  return { season, tag, energyType, investmentStats: [], hash: hash || 0 };
+  return {
+    season,
+    tag,
+    energy: { type: energyType, cost: 0 },
+    investmentStats: [],
+    hash: hash || 0,
+  };
 }
 
 function getItem(
@@ -22,7 +28,7 @@ function getItem(
   id?: string
 ): ProcessItemSubset {
   return {
-    energyType,
+    energy: { type: energyType, cost: 0 },
     season,
     compatibleModSeasons,
     id: id || 'id',

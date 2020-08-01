@@ -6,22 +6,14 @@ import {
   ItemsByBucket,
   LockedItemType,
   statValues,
+  bucketsToCategories,
 } from './types';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { doEnergiesMatch } from './mod-utils';
 import { canSlotMod } from './utils';
 import { DimItem } from 'app/inventory/item-types';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
-
-const bucketsToCategories = {
-  [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
-  [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
-  [LockableBuckets.chest]: armor2PlugCategoryHashesByName.chest,
-  [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
-  [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
-};
 
 /**
  * Filter the items map down given the locking and filtering configs.
