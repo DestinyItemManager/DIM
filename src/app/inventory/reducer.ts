@@ -282,6 +282,10 @@ function computeNewItems(oldStores: DimStore[], oldNewItems: Set<string>, newSto
  * Compute if two sets are equal by seeing that every item of each set is present in the other.
  */
 function setsEqual<T>(first: Set<T>, second: Set<T>) {
+  if (first.size !== second.size) {
+    return false;
+  }
+
   let equal = true;
   for (const itemId of first) {
     if (!second.has(itemId)) {
