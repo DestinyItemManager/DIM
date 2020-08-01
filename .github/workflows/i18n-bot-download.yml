@@ -10,6 +10,9 @@ jobs:
     steps:
       - name: Checkout DIM
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v2.x
@@ -43,26 +46,16 @@ jobs:
         id: porcelain
         run: echo ::set-output name=porcelain::"$(git status --porcelain)"
 
-#      - name: Push changes (DIM)
-#        if: steps.porcelain.outputs.porcelain
-#        uses: delphiactual/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.I18N_PAT }}
-#          commit_message: "i18n - ${{ env.GITHUB_SHA_SHORT }}"
-#          user_email: "destinyitemmanager@gmail.com"
-#          user_name: "DIM i18n Bot"
-#          branch: master
-
-      - name: Create Pull Request (DIM)
+      - name: Commit files
         if: steps.porcelain.outputs.porcelain
-        uses: peter-evans/create-pull-request@v2
+        run: |
+          git config --local user.email "destinyitemmanager@gmail.com"
+          git config --local user.name "DIM i18n Bot"
+          git commit .
+          git commit -m "i18n - ${{ env.GITHUB_SHA_SHORT }}" -a
+
+      - name: Push changes
+        if: steps.porcelain.outputs.porcelain
+        uses: ad-m/github-push-action@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: i18n - ${{ env.GITHUB_SHA_SHORT }}
-          committer: DIM i18n Bot <destinyitemmanager@gmail.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          title: '[i18n] Updates'
-          body: i18n updates
-          labels: i18n, automated pr
-          reviewers: delphiactual
-          branch: i18n
+          github_token: ${{ secrets.I18N_PAT }}
