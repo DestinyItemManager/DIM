@@ -140,7 +140,7 @@ export function parseQuery(query: string): QueryAST {
    * not a binary operator. "not" is also in here because it's really just a modifier on an atom.
    */
   function parseAtom(tokens: PeekableGenerator<Token>): QueryAST {
-    const token: Token | undefined = tokens.peek();
+    const token: Token | undefined = tokens.pop();
 
     if (!token) {
       throw new Error('expected an atom');
@@ -148,7 +148,6 @@ export function parseQuery(query: string): QueryAST {
 
     switch (token[0]) {
       case 'filter': {
-        tokens.pop();
         const keyword = token[1];
         if (keyword === 'not') {
           // `not:` a synonym for `-is:`. We could fix this up in filter execution but I chose to normalize it here.
@@ -169,7 +168,6 @@ export function parseQuery(query: string): QueryAST {
         }
       }
       case 'not': {
-        tokens.pop();
         return {
           op: 'not',
           // The operand should always be an atom
@@ -177,8 +175,7 @@ export function parseQuery(query: string): QueryAST {
         };
       }
       case '(': {
-        tokens.pop();
-        const result = parse(new PeekableGenerator(untilCloseParen(tokens)));
+        const result = parse(tokens);
         if (tokens.peek()?.[0] === ')') {
           tokens.pop();
         }
@@ -201,6 +198,9 @@ export function parseQuery(query: string): QueryAST {
 
       let token: Token | undefined;
       while ((token = tokens.peek())) {
+        if (token[0] === ')') {
+          break;
+        }
         const operator = operators[token[0] as keyof typeof operators];
         if (!operator) {
           throw new Error('Expected an operator, got ' + token);
@@ -244,19 +244,6 @@ export function parseQuery(query: string): QueryAST {
 
 function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp | OrOp {
   return binOp === op.op;
-}
-
-/**
- * Yield tokens from the passed in generator until we reach a closing parenthesis token.
- */
-function* untilCloseParen(tokens: PeekableGenerator<Token>): Generator<Token> {
-  let token: Token | undefined;
-  while ((token = tokens.pop())) {
-    if (token[0] === ')') {
-      return;
-    }
-    yield token;
-  }
 }
 
 /* **** Lexer **** */

@@ -45,6 +45,7 @@ const cases = [
   // These test copy/pasting from somewhere that automatically converts quotes to "smart quotes"
   ['“grenade launcher reserves”'],
   ['‘grenade launcher reserves’'],
+  ['(("test" or "test") and "test")'],
 ];
 
 // Each of these asserts that the first query is the same as the second query once parsed

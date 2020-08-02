@@ -84,6 +84,72 @@ Array [
 ]
 `;
 
+exports[`parse |(("test" or "test") and "test")|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "args": "test",
+          "op": "filter",
+          "type": "keyword",
+        },
+        Object {
+          "args": "test",
+          "op": "filter",
+          "type": "keyword",
+        },
+      ],
+    },
+    Object {
+      "args": "test",
+      "op": "filter",
+      "type": "keyword",
+    },
+  ],
+}
+`;
+
+exports[`parse |(("test" or "test") and "test")|: lexer 1`] = `
+Array [
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "test",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "test",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "test",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: ast 1`] = `
 Object {
   "op": "or",
