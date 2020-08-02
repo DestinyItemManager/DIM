@@ -2,10 +2,10 @@ import _ from 'lodash';
 import {
   LockableBuckets,
   StatTypes,
-  LockedItemType,
   LockedMap,
   MinMaxIgnored,
   MinMax,
+  bucketsToCategories,
 } from '../types';
 import { statTier } from '../utils';
 import { statHashes } from '../types';
@@ -125,6 +125,32 @@ export function process(
     Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
   };
 
+  const lockedModStats: { [statHash: number]: number } = {};
+  // Handle old armour mods
+  for (const bucket of Object.values(LockableBuckets)) {
+    const lockedItemsByBucket = lockedItems[bucket];
+    if (lockedItemsByBucket) {
+      for (const lockedItem of lockedItemsByBucket) {
+        if (lockedItem.type === 'mod') {
+          for (const stat of lockedItem.mod.investmentStats) {
+            lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+            lockedModStats[stat.statTypeHash] += stat.value;
+          }
+        }
+      }
+    }
+    // Handle armour 2.0 mods
+    const lockedArmor2Mods = lockedArmor2ModMap[bucketsToCategories[bucket]];
+    if (lockedArmor2Mods) {
+      for (const lockedMod of lockedArmor2Mods) {
+        for (const stat of lockedMod.investmentStats) {
+          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          lockedModStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
   const helms = _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower);
   const gaunts = _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower);
   const chests = _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower);
@@ -159,59 +185,29 @@ export function process(
 
   const statsCache: Record<string, number[]> = {};
 
-  const getItemStats = (
-    item: ProcessItem,
-    locked?: readonly LockedItemType[],
-    mods?: ProcessMod[]
-  ) => {
-    if (statsCache[item.id]) {
-      return statsCache[item.id];
-    }
-
-    const stats = getStatMix(item, assumeMasterwork, orderedStatValues, locked, mods);
-    statsCache[item.id] = stats;
-    return stats;
-  };
-
   let lowestTier = 100;
   let setCount = 0;
 
   for (const helm of helms) {
+    const helmStats = getStatMix(helm, assumeMasterwork, orderedStatValues, lockedModStats);
     for (const gaunt of gaunts) {
+      const gauntStats = getStatMix(gaunt, assumeMasterwork, orderedStatValues, lockedModStats);
       for (const chest of chests) {
+        const chestStats = getStatMix(chest, assumeMasterwork, orderedStatValues, lockedModStats);
         for (const leg of legs) {
+          const legStats = getStatMix(leg, assumeMasterwork, orderedStatValues, lockedModStats);
           for (const classItem of classItems) {
+            const classItemStats = getStatMix(
+              classItem,
+              assumeMasterwork,
+              orderedStatValues,
+              lockedModStats
+            );
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // Make sure there is at most one exotic
             if (_.sumBy(armor, (item) => (item.equippingLabel ? 1 : 0)) <= 1) {
-              const statChoices = [
-                getItemStats(
-                  helm,
-                  lockedItems[LockableBuckets.helmet],
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.helmet]
-                ),
-                getItemStats(
-                  gaunt,
-                  lockedItems[LockableBuckets.gauntlets],
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.gauntlets]
-                ),
-                getItemStats(
-                  chest,
-                  lockedItems[LockableBuckets.chest],
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.chest]
-                ),
-                getItemStats(
-                  leg,
-                  lockedItems[LockableBuckets.leg],
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.leg]
-                ),
-                getItemStats(
-                  classItem,
-                  lockedItems[LockableBuckets.classitem],
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.classitem]
-                ),
-              ];
+              const statChoices = [helmStats, gauntStats, chestStats, legStats, classItemStats];
 
               const maxPower = getPower(armor);
 
@@ -365,92 +361,16 @@ function getStatMix(
   item: ProcessItem,
   assumeMasterwork: boolean,
   orderedStatValues: number[],
-  lockedItems?: readonly LockedItemType[],
-  lockedArmor2Mods?: ProcessMod[]
+  lockedModStats: { [statHash: number]: number }
 ) {
-  const lockedModStats: { [statHash: number]: number } = {};
-  // Handle old armour mods
-  if (lockedItems) {
-    for (const lockedItem of lockedItems) {
-      if (lockedItem.type === 'mod') {
-        for (const stat of lockedItem.mod.investmentStats) {
-          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-          lockedModStats[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
-  // Handle armour 2.0 mods
-  if (lockedArmor2Mods) {
-    for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.investmentStats) {
-        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-        lockedModStats[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
-
   const stats = item.stats;
 
   if (!stats) {
     return emptyStats;
   }
 
-  const mixes: number[][] = generateMixesFromPerksOrStats(
-    item,
-    assumeMasterwork,
-    orderedStatValues,
-    lockedModStats
-  );
-
-  if (mixes.length === 1) {
-    return mixes[0];
-  }
-  // return the mix with the higest total stat
-  return _.sortBy((mix) => _.sum(mix))[0];
-}
-
-/**
- * Get the maximum average power for a particular set of armor.
- */
-function getPower(items: ProcessItem[]) {
-  let power = 0;
-  let numPoweredItems = 0;
-  for (const item of items) {
-    if (item.basePower) {
-      power += item.basePower;
-      numPoweredItems++;
-    }
-  }
-
-  return Math.floor(power / numPoweredItems);
-}
-
-/**
- * This creates stat mixes from either perks (armor 1.0) or stats (armor 2.0).
- * This uses a similar algorithm to loadout-builder/util#generateMixesFromPerks so the two should
- * be kept in sync if this changes.
- */
-function generateMixesFromPerksOrStats(
-  item: ProcessItem,
-  assumeArmor2IsMasterwork: boolean | null,
-  orderedStatValues: number[],
-  lockedModStats: { [statHash: number]: number }
-) {
-  const stats = item.stats;
-
-  if (!stats) {
-    return [];
-  }
-
   const mixes: number[][] = [
-    getStatValuesWithModsAndMWProcess(
-      item,
-      assumeArmor2IsMasterwork,
-      orderedStatValues,
-      lockedModStats
-    ),
+    getStatValuesWithModsAndMWProcess(item, assumeMasterwork, orderedStatValues, lockedModStats),
   ];
 
   if (stats && item.sockets && item.energy) {
@@ -476,7 +396,27 @@ function generateMixesFromPerksOrStats(
     }
   }
 
-  return mixes;
+  if (mixes.length === 1) {
+    return mixes[0];
+  }
+  // return the mix with the higest total stat
+  return _.sortBy((mix) => _.sum(mix))[0];
+}
+
+/**
+ * Get the maximum average power for a particular set of armor.
+ */
+function getPower(items: ProcessItem[]) {
+  let power = 0;
+  let numPoweredItems = 0;
+  for (const item of items) {
+    if (item.basePower) {
+      power += item.basePower;
+      numPoweredItems++;
+    }
+  }
+
+  return Math.floor(power / numPoweredItems);
 }
 
 /**
@@ -494,7 +434,6 @@ function getStatValuesWithModsAndMWProcess(
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
   if (item.sockets && item.energy) {
     let masterworkSocketHashes: number[] = [];
-
     // only get masterwork sockets if we aren't manually adding the values
     if (!assumeMasterwork) {
       const masterworkSocketCategory = item.sockets.categories.find(
