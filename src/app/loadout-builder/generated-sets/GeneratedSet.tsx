@@ -4,7 +4,6 @@ import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import _ from 'lodash';
-import { getNumValidSets } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './GeneratedSet.m.scss';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
@@ -47,7 +46,7 @@ function GeneratedSet({
     editLoadout(loadout, { showClass: false });
   };
 
-  const numSets = _.sumBy(set.sets, (setSlice) => getNumValidSets(setSlice.armor));
+  const numSets = set.sets.length;
   if (!numSets) {
     console.error('No valid sets!');
     return null;

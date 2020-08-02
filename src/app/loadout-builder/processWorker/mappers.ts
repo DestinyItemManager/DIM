@@ -167,10 +167,10 @@ export function hydrateArmorSet(
   const sets: ArmorSet['sets'] = [];
 
   for (const processSet of processed.sets) {
-    const armor: DimItem[][] = [];
+    const armor: DimItem[] = [];
 
-    for (const itemIds of processSet.armor) {
-      armor.push(itemIds.map((id) => itemsById[id]));
+    for (const itemId of processSet.armor) {
+      armor.push(itemsById[itemId]);
     }
 
     sets.push({ armor, statChoices: processSet.statChoices });

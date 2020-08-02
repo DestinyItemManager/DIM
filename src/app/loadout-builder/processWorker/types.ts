@@ -61,7 +61,7 @@ export interface ProcessArmorSet {
    */
   readonly sets: {
     /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    readonly armor: readonly string[][];
+    readonly armor: readonly string[];
     /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
     readonly statChoices: readonly number[][];
     readonly maxPower: number;
@@ -86,7 +86,7 @@ export interface IntermediateProcessArmorSet {
    */
   sets: {
     /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    armor: ProcessItem[][];
+    armor: ProcessItem[];
     /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
     statChoices: number[][];
     maxPower: number;

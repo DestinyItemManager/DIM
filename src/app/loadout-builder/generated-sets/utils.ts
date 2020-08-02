@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { DimItem } from '../../inventory/item-types';
 import { ArmorSet, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
@@ -79,36 +78,6 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
   });
 
   return sortedSets;
-}
-
-/**
- * Calculate the number of valid permutations of a stat mix, without enumerating them.
- */
-export function getNumValidSets(armors: readonly DimItem[][]) {
-  const exotics = new Array(armors.length).fill(0);
-  const nonExotics = new Array(armors.length).fill(0);
-  let index = 0;
-  for (const armor of armors) {
-    for (const item of armor) {
-      if (item.equippingLabel) {
-        exotics[index]++;
-      } else {
-        nonExotics[index]++;
-      }
-    }
-    index++;
-  }
-
-  // Sets that are all legendary
-  let total = nonExotics.reduce((memo, num) => num * memo, 1);
-  // Sets that include one exotic
-  for (index = 0; index < armors.length; index++) {
-    total += exotics[index]
-      ? nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1)
-      : 0;
-  }
-
-  return total;
 }
 
 /**

@@ -8,7 +8,6 @@ import {
   MinMax,
 } from '../types';
 import { statTier } from '../utils';
-import { compareBy } from '../../utils/comparators';
 import { statHashes } from '../types';
 import {
   ProcessItemsByBucket,
@@ -114,19 +113,6 @@ export function process(
 
   processedSeasonalMods.sort(sortProcessModsOrProcessItems);
 
-  // Memoize the function that turns string stat-keys back into numbers to save garbage.
-  // Writing our own memoization instead of using _.memoize is 2x faster.
-  const keyToStatsCache = new Map<string, number[]>();
-  const keyToStats = (key: string) => {
-    let value = keyToStatsCache.get(key);
-    if (value) {
-      return value;
-    }
-    value = JSON.parse(key) as number[];
-    keyToStatsCache.set(key, value);
-    return value;
-  };
-
   const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
   const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
 
@@ -139,85 +125,26 @@ export function process(
     Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
   };
 
-  const helms = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
-    byStatMix(
-      assumeMasterwork,
-      orderedStatValues,
-      lockedItems[LockableBuckets.helmet],
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.helmet]
-    )
-  );
-  const gaunts = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
-    byStatMix(
-      assumeMasterwork,
-      orderedStatValues,
-      lockedItems[LockableBuckets.gauntlets],
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.gauntlets]
-    )
-  );
-  const chests = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
-    byStatMix(
-      assumeMasterwork,
-      orderedStatValues,
-      lockedItems[LockableBuckets.chest],
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.chest]
-    )
-  );
-  const legs = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
-    byStatMix(
-      assumeMasterwork,
-      orderedStatValues,
-      lockedItems[LockableBuckets.leg],
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.leg]
-    )
-  );
-  const classitems = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
-    byStatMix(
-      assumeMasterwork,
-      orderedStatValues,
-      lockedItems[LockableBuckets.classitem],
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.classitem]
-    )
-  );
+  const helms = _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower);
+  const gaunts = _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower);
+  const chests = _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower);
+  const legs = _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower);
+  const classItems = _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower);
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
   const combosLimit = 2_000_000;
 
-  // Get the keys of the object, sorted by total stats descending
-  const makeKeys = (obj: { [key: string]: ProcessItem[] }) =>
-    _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k)));
-
-  const helmsKeys = makeKeys(helms);
-  const gauntsKeys = makeKeys(gaunts);
-  const chestsKeys = makeKeys(chests);
-  const legsKeys = makeKeys(legs);
-  const classItemsKeys = makeKeys(classitems);
-
   const combosWithoutCaps =
-    helmsKeys.length *
-    gauntsKeys.length *
-    chestsKeys.length *
-    legsKeys.length *
-    classItemsKeys.length;
+    helms.length * gaunts.length * chests.length * legs.length * classItems.length;
 
   let combos = combosWithoutCaps;
 
   // If we're over the limit, start trimming down the armor lists starting with the longest.
   // Since we're already sorted by total stats descending this should toss the worst items.
   while (combos > combosLimit) {
-    const longestList = _.maxBy([helmsKeys, gauntsKeys, chestsKeys, legsKeys], (l) => l.length);
+    const longestList = _.maxBy([helms, gaunts, chests, legs, classItems], (l) => l.length);
     longestList!.pop();
-    combos =
-      helmsKeys.length *
-      gauntsKeys.length *
-      chestsKeys.length *
-      legsKeys.length *
-      classItemsKeys.length;
+    combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
 
   if (combos < combosWithoutCaps) {
@@ -230,33 +157,63 @@ export function process(
 
   const setTracker: SetTracker = [];
 
+  const statsCache: Record<string, number[]> = {};
+
+  const getItemStats = (
+    item: ProcessItem,
+    locked?: readonly LockedItemType[],
+    mods?: ProcessMod[]
+  ) => {
+    if (statsCache[item.id]) {
+      return statsCache[item.id];
+    }
+
+    const stats = getStatMix(item, assumeMasterwork, orderedStatValues, locked, mods);
+    statsCache[item.id] = stats;
+    return stats;
+  };
+
   let lowestTier = 100;
   let setCount = 0;
 
-  for (const helmsKey of helmsKeys) {
-    for (const gauntsKey of gauntsKeys) {
-      for (const chestsKey of chestsKeys) {
-        for (const legsKey of legsKeys) {
-          for (const classItemsKey of classItemsKeys) {
-            const armor = [
-              helms[helmsKey],
-              gaunts[gauntsKey],
-              chests[chestsKey],
-              legs[legsKey],
-              classitems[classItemsKey],
-            ];
+  for (const helm of helms) {
+    for (const gaunt of gaunts) {
+      for (const chest of chests) {
+        for (const leg of legs) {
+          for (const classItem of classItems) {
+            const armor = [helm, gaunt, chest, leg, classItem];
 
-            const firstValidSet = getFirstValidSet(armor);
-            if (firstValidSet) {
+            // Make sure there is at most one exotic
+            if (_.sumBy(armor, (item) => (item.equippingLabel ? 1 : 0)) <= 1) {
               const statChoices = [
-                keyToStats(helmsKey),
-                keyToStats(gauntsKey),
-                keyToStats(chestsKey),
-                keyToStats(legsKey),
-                keyToStats(classItemsKey),
+                getItemStats(
+                  helm,
+                  lockedItems[LockableBuckets.helmet],
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.helmet]
+                ),
+                getItemStats(
+                  gaunt,
+                  lockedItems[LockableBuckets.gauntlets],
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.gauntlets]
+                ),
+                getItemStats(
+                  chest,
+                  lockedItems[LockableBuckets.chest],
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.chest]
+                ),
+                getItemStats(
+                  leg,
+                  lockedItems[LockableBuckets.leg],
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.leg]
+                ),
+                getItemStats(
+                  classItem,
+                  lockedItems[LockableBuckets.classitem],
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.classitem]
+                ),
               ];
 
-              const maxPower = getPower(firstValidSet);
+              const maxPower = getPower(armor);
 
               if (maxPower < minimumPower) {
                 continue;
@@ -315,7 +272,7 @@ export function process(
               }
 
               // Reset the used item energy of each item so we can add general and seasonal mod costs again.
-              for (const item of firstValidSet) {
+              for (const item of armor) {
                 if (item.energy) {
                   item.energy.val = item.energy.valInitial;
                 }
@@ -326,13 +283,13 @@ export function process(
               // TODO Check validity of this with the energy contraints in.
               if (
                 (processedSeasonalMods.length &&
-                  !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)) ||
+                  !canTakeAllSeasonalMods(processedSeasonalMods, armor)) ||
                 (lockedArmor2ModMap.seasonal.length &&
-                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet)) ||
+                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
                 (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllGeneralMods(
                     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
-                    firstValidSet
+                    armor
                   ))
               ) {
                 continue;
@@ -349,7 +306,7 @@ export function process(
                 stats: stats as {
                   [statType in StatTypes]: number;
                 },
-                firstValidSet,
+                firstValidSet: armor,
                 firstValidSetStatChoices: statChoices,
                 maxPower,
               };
@@ -383,6 +340,8 @@ export function process(
 
   const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSet)).flat();
 
+  console.log(Object.keys(statsCache).length);
+
   console.log(
     'found',
     finalSets.length,
@@ -396,24 +355,14 @@ export function process(
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
 }
 
-function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
-  const map: { [key: string]: T[] } = {};
-  for (const item of items) {
-    for (const result of mapper(item)) {
-      map[result] = map[result] || [];
-      map[result].push(item);
-    }
-  }
-  return map;
-}
-
-const emptyStats = [JSON.stringify(new Array(_.size(statHashes)).fill(0))];
+const emptyStats: number[] = new Array(_.size(statHashes)).fill(0);
 
 /**
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(
+function getStatMix(
+  item: ProcessItem,
   assumeMasterwork: boolean,
   orderedStatValues: number[],
   lockedItems?: readonly LockedItemType[],
@@ -442,62 +391,24 @@ function byStatMix(
     }
   }
 
-  return (item: ProcessItem): string[] => {
-    const stats = item.stats;
+  const stats = item.stats;
 
-    if (!stats) {
-      return emptyStats;
-    }
-
-    const mixes: number[][] = generateMixesFromPerksOrStats(
-      item,
-      assumeMasterwork,
-      orderedStatValues,
-      lockedModStats
-    );
-
-    if (mixes.length === 1) {
-      return mixes.map((m) => JSON.stringify(m));
-    }
-    return _.uniq(mixes.map((m) => JSON.stringify(m)));
-  };
-}
-
-/**
- * Get the loadout permutation for this stat mix that has the highest power, assuming the
- * items in each slot are already sorted by power. This respects the rule that two exotics
- * cannot be equipped at once.
- */
-function getFirstValidSet(armors: readonly ProcessItem[][]) {
-  const exoticIndices: number[] = [];
-  let index = 0;
-  for (const armor of armors) {
-    if (armor[0].equippingLabel) {
-      exoticIndices.push(index);
-    }
-    index++;
+  if (!stats) {
+    return emptyStats;
   }
 
-  if (exoticIndices.length > 1) {
-    exoticIndices.sort(compareBy((i) => armors[i][0].basePower));
-    for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
-      // Start by trying to substitute the least powerful exotic
-      const fixedIndex = exoticIndices.shift()!;
-      // For each remaining exotic, try to find a non-exotic in its place
-      const firstValid = armors.map((a, i) =>
-        exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
-      );
+  const mixes: number[][] = generateMixesFromPerksOrStats(
+    item,
+    assumeMasterwork,
+    orderedStatValues,
+    lockedModStats
+  );
 
-      if (firstValid.every(Boolean)) {
-        return _.compact(firstValid);
-      }
-      // Put it back on the end
-      exoticIndices.push(fixedIndex);
-    }
-    return undefined;
-  } else {
-    return armors.map((a) => a[0]);
+  if (mixes.length === 1) {
+    return mixes[0];
   }
+  // return the mix with the higest total stat
+  return _.sortBy((mix) => _.sum(mix))[0];
 }
 
 /**
@@ -630,7 +541,7 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
     ...set,
     sets: set.sets.map((armorSet) => ({
       ...armorSet,
-      armor: armorSet.armor.map((items) => items.map((item) => item.id)),
+      armor: armorSet.armor.map((item) => item.id),
     })),
     firstValidSet: set.firstValidSet.map((item) => item.id),
   }));
