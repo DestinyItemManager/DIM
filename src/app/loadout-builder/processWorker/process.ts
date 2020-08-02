@@ -16,7 +16,7 @@ import {
   sortProcessModsOrProcessItems,
   canTakeAllGeneralMods,
 } from './processUtils';
-import { armor2PlugCategoryHashesByName } from '../../search/d2-known-values';
+import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -117,14 +117,29 @@ export function process(
     Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
   };
 
-  const helms = _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower);
-  const gaunts = _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower);
-  const chests = _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower);
-  const legs = _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower);
-  const classItems = _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower);
+  const helms = _.sortBy(
+    filteredItems[LockableBuckets.helmet] || [],
+    (i) => -i.baseStats[TOTAL_STAT_HASH]
+  );
+  const gaunts = _.sortBy(
+    filteredItems[LockableBuckets.gauntlets] || [],
+    (i) => -i.baseStats[TOTAL_STAT_HASH]
+  );
+  const chests = _.sortBy(
+    filteredItems[LockableBuckets.chest] || [],
+    (i) => -i.baseStats[TOTAL_STAT_HASH]
+  );
+  const legs = _.sortBy(
+    filteredItems[LockableBuckets.leg] || [],
+    (i) => -i.baseStats[TOTAL_STAT_HASH]
+  );
+  const classItems = _.sortBy(
+    filteredItems[LockableBuckets.classitem] || [],
+    (i) => -i.baseStats[TOTAL_STAT_HASH]
+  );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
-  const combosLimit = 1_000_000;
+  const combosLimit = 2_000_000;
 
   const combosWithoutCaps =
     helms.length * gaunts.length * chests.length * legs.length * classItems.length;
@@ -149,26 +164,31 @@ export function process(
 
   const setTracker: SetTracker = [];
 
-  const statsCache: Record<string, number[]> = {};
-
   let lowestTier = 100;
   let setCount = 0;
 
+  const statsCache: Record<string, number[]> = {};
+
+  for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
+    statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
+  }
+
   for (const helm of helms) {
-    const helmStats = getStatMix(helm, assumeMasterwork, orderedStatValues);
     for (const gaunt of gaunts) {
-      const gauntStats = getStatMix(gaunt, assumeMasterwork, orderedStatValues);
       for (const chest of chests) {
-        const chestStats = getStatMix(chest, assumeMasterwork, orderedStatValues);
         for (const leg of legs) {
-          const legStats = getStatMix(leg, assumeMasterwork, orderedStatValues);
           for (const classItem of classItems) {
-            const classItemStats = getStatMix(classItem, assumeMasterwork, orderedStatValues);
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // Make sure there is at most one exotic
             if (_.sumBy(armor, (item) => (item.equippingLabel ? 1 : 0)) <= 1) {
-              const statChoices = [helmStats, gauntStats, chestStats, legStats, classItemStats];
+              const statChoices = [
+                statsCache[helm.id],
+                statsCache[gaunt.id],
+                statsCache[chest.id],
+                statsCache[leg.id],
+                statsCache[classItem.id],
+              ];
 
               const maxPower = getPower(armor);
 
