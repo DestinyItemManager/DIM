@@ -164,6 +164,7 @@
     "clsx": "^1.0.4",
     "comlink": "^4.3.0",
     "core-js": "^3.6.0",
+    "downshift": "^6.0.2",
     "fast-copy": "^2.0.1",
     "fast-equals": "^2.0.0",
     "i18next": "^19.0.0",

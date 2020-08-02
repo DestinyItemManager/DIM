@@ -1,0 +1,16 @@
+.menu {
+  width: 135px;
+  margin: 0;
+  border-top: 0;
+  background: white;
+  position: absolute;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  left: 135px;
+}
+
+.openButton {
+  display: inline-block;
+  margin-left: 5px;
+}

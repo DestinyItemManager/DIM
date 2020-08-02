@@ -34,10 +34,12 @@ declare const $featureFlags: {
   armor2ModPicker: boolean;
   /** Show a banner for supporting a charitable cause */
   issueBanner: boolean;
-  // Show the triage tab in the item popup
+  /** Show the triage tab in the item popup */
   triage: boolean;
   /** Enable detached stats from sticky header on mobile */
   unstickyStats: boolean;
+  /** New search bar */
+  newSearch: boolean;
 };
 
 declare namespace React {

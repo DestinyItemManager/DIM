@@ -26,6 +26,7 @@ import { useLocation } from 'react-router';
 import { emptyArray, emptySet } from 'app/utils/empty';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
+import SearchBar from './SearchBar';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -196,7 +197,48 @@ export function SearchFilter(
     ? t('Header.FilterHelpBrief')
     : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
 
-  return (
+  return $featureFlags.newSearch ? (
+    <SearchBar
+      ref={ref}
+      onQueryChanged={setSearchQuery}
+      alwaysShowClearButton={mobile}
+      placeholder={placeholder}
+      onClear={onClearFilter}
+      searchQueryVersion={searchQueryVersion}
+      searchQuery={searchQuery}
+    >
+      <>
+        {!onProgress && (
+          <span className="filter-match-count">
+            {t('Header.FilterMatchCount', { count: filteredItems.length })}
+          </span>
+        )}
+        {isComparable && (
+          <span
+            onClick={compareMatching}
+            className="filter-bar-button"
+            title={t('Header.CompareMatching')}
+          >
+            <AppIcon icon={faClone} />
+          </span>
+        )}
+
+        {showSelect ? (
+          <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
+            {bulkItemTags.map((tag) => (
+              <option key={tag.type || 'default'} value={tag.type}>
+                {t(tag.label)}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
+            <AppIcon icon={tagIcon} />
+          </span>
+        )}
+      </>
+    </SearchBar>
+  ) : (
     <SearchFilterInput
       ref={ref}
       onQueryChanged={setSearchQuery}

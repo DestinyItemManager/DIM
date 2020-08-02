@@ -13,20 +13,48 @@ import React, {
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
-import { searchConfigSelector } from './search-config';
 import Sheet from 'app/dim-ui/Sheet';
 import Textarea from 'textcomplete/lib/textarea';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchConfigSelector } from './search-filter';
+import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { searchUsed } from 'app/dim-api/basic-actions';
+import { useCombobox } from 'downshift';
+import styles from './SearchBar.m.scss';
+
+/** The autocompleter/dropdown will suggest different types of searches */
+const enum SearchItemType {
+  /** Searches from your history */
+  Recent,
+  /** Explicitly saved searches */
+  Saved,
+  /** Searches suggested by DIM Sync but not part of your history */
+  Suggested,
+  /** Generated autocomplete searches */
+  Autocomplete,
+}
+
+/** An item in the search autocompleter */
+interface SearchItem {
+  type: SearchItemType;
+  /** The suggested query */
+  query: string;
+  /** An optional part of the query that will be highlighted */
+  highlightRange?: [number, number];
+  /** Help text */
+  helpText?: React.ReactNode;
+}
 
 interface ProvidedProps {
   /** Whether the "X" button that clears the selection should always be shown. */
   alwaysShowClearButton?: boolean;
   /** Placeholder text when nothing has been typed */
   placeholder: string;
+  /** Whether to autofocus this on mount */
   autoFocus?: boolean;
   /** A fake property that can be used to force the "live" query to be replaced with the one from props */
   searchQueryVersion?: number;
@@ -45,6 +73,8 @@ type Props = ProvidedProps;
 const LazyFilterHelp = React.lazy(() =>
   import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
+
+// TODO: break filter autocomplete into its own object/helpers... with tests
 
 /** matches a keyword that's probably a math comparison */
 const mathCheck = /[\d<>=]/;
@@ -75,7 +105,10 @@ export interface SearchFilterRef {
 
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
- * announces its query has changed only after some delay.
+ * announces its query has changed only after some delay. This is the new version of the component
+ * that offers a browser-style autocompleting search bar with history.
+ *
+ * TODO: Should this be the main search bar only, or should it also work for item picker, etc?
  */
 export default React.forwardRef(function SearchFilterInput(
   {
@@ -92,16 +125,31 @@ export default React.forwardRef(function SearchFilterInput(
 ) {
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
-
+  const dispatch = useDispatch();
   const searchConfig = useSelector(searchConfigSelector);
+  const recentSearches = useSelector(recentSearchesSelector);
+
   const textcomplete = useRef<Textcomplete>();
   const inputElement = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdateQuery = useCallback(_.debounce(onQueryChanged, 500), [onQueryChanged]);
+  const debouncedUpdateQuery = useCallback(
+    _.debounce((query: string) => {
+      onQueryChanged(query);
+    }, 500),
+    [onQueryChanged]
+  );
 
   const focusFilterInput = useCallback(() => {
     inputElement.current?.focus();
   }, []);
+
+  const onBlur = () => {
+    textcomplete.current?.hide();
+    if (liveQuery) {
+      // save this to the recent searches only on blur
+      dispatch(searchUsed(liveQuery));
+    }
+  };
 
   const clearFilter = useCallback(() => {
     debouncedUpdateQuery('');
@@ -120,6 +168,45 @@ export default React.forwardRef(function SearchFilterInput(
     [focusFilterInput, clearFilter]
   );
 
+  // Initial input items are recent searches, from DIM Sync data
+  // TODO: this should be a function of query text
+  const inputItems: SearchItem[] = _.take(
+    _.compact([
+      liveQuery && {
+        type: SearchItemType.Autocomplete,
+        query: liveQuery,
+      },
+      ...recentSearches.map((s) => ({
+        type: s.usageCount > 0 ? SearchItemType.Recent : SearchItemType.Suggested,
+        query: s.query,
+      })),
+    ]),
+    8
+  );
+
+  // useCombobox from Downshift manages the state of the dropdown
+  const {
+    isOpen,
+    getToggleButtonProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+  } = useCombobox<SearchItem>({
+    items: inputItems,
+    onInputValueChange: ({ inputValue }) => {
+      // TODO: there are other interesting values available
+      if (inputValue) {
+        setLiveQuery(inputValue);
+        // TODO: If the change type wasn't keyboard, apply instantly
+        debouncedUpdateQuery(inputValue);
+      } else {
+        clearFilter();
+      }
+    },
+  });
+
   const onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const query = e.currentTarget.value;
     setLiveQuery(query);
@@ -135,6 +222,8 @@ export default React.forwardRef(function SearchFilterInput(
       clearFilter();
     }
   };
+
+  // TODO: remove the textcomplete
 
   // Set up the textcomplete
   useEffect(() => {
@@ -233,6 +322,7 @@ export default React.forwardRef(function SearchFilterInput(
     }
   }, [searchQueryVersion, searchQuery]);
 
+  // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   return (
     <div className="search-filter" role="search">
       <GlobalHotkeys
@@ -274,7 +364,7 @@ export default React.forwardRef(function SearchFilterInput(
         onChange={_.noop}
         onInput={onQueryChange}
         onKeyDown={onKeyDown}
-        onBlur={() => textcomplete.current?.hide()}
+        onBlur={onBlur}
       />
 
       {liveQuery.length !== 0 && children}
@@ -288,6 +378,14 @@ export default React.forwardRef(function SearchFilterInput(
           <AppIcon icon={disabledIcon} />
         </span>
       )}
+
+      <div className={styles.openButton} {...getComboboxProps()}>
+        <input {...getInputProps()} />
+        <button type="button" {...getToggleButtonProps()} aria-label="toggle menu">
+          &#8595;
+        </button>
+      </div>
+
       {filterHelpOpen &&
         ReactDOM.createPortal(
           <Sheet
@@ -301,6 +399,19 @@ export default React.forwardRef(function SearchFilterInput(
           </Sheet>,
           document.body
         )}
+
+      <ul {...getMenuProps()} className={styles.menu}>
+        {isOpen &&
+          inputItems.map((item, index) => (
+            <li
+              style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
+              key={`${item}${index}`}
+              {...getItemProps({ item, index })}
+            >
+              {item.query}
+            </li>
+          ))}
+      </ul>
     </div>
   );
 });
