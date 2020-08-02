@@ -10,7 +10,6 @@ import {
   MinMaxIgnored,
   MinMax,
   LockedModBase,
-  ModPickerCategories,
   bucketsToCategories,
 } from '../types';
 import { D2Item } from 'app/inventory/item-types';
@@ -92,13 +91,8 @@ export function useProcess(
     worker
       .process(
         processItems,
-        lockedItems,
         mapSeasonalModsToProcessMods(lockedSeasonalMods),
-        getTotalModStatChanges(
-          $featureFlags.armor2ModPicker
-            ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
-            : lockedSeasonalMods
-        ),
+        getTotalModStatChanges(lockedItems, lockedArmor2ModMap),
         _.mapValues(lockedArmor2ModMap, (mods) => mods.map((mod) => mapArmor2ModToProcessMod(mod))),
         assumeMasterwork,
         statOrder,

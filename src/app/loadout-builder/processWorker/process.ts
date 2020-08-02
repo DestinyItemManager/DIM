@@ -1,12 +1,5 @@
 import _ from 'lodash';
-import {
-  LockableBuckets,
-  StatTypes,
-  LockedMap,
-  MinMaxIgnored,
-  MinMax,
-  bucketsToCategories,
-} from '../types';
+import { LockableBuckets, StatTypes, MinMaxIgnored, MinMax } from '../types';
 import { statTier } from '../utils';
 import { statHashes } from '../types';
 import {
@@ -95,7 +88,6 @@ function insertIntoSetTracker(
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
-  lockedItems: LockedMap,
   processedSeasonalMods: ProcessMod[],
   modStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ProcessMods,
@@ -125,32 +117,6 @@ export function process(
     Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
   };
 
-  const lockedModStats: { [statHash: number]: number } = {};
-  // Handle old armour mods
-  for (const bucket of Object.values(LockableBuckets)) {
-    const lockedItemsByBucket = lockedItems[bucket];
-    if (lockedItemsByBucket) {
-      for (const lockedItem of lockedItemsByBucket) {
-        if (lockedItem.type === 'mod') {
-          for (const stat of lockedItem.mod.investmentStats) {
-            lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-            lockedModStats[stat.statTypeHash] += stat.value;
-          }
-        }
-      }
-    }
-    // Handle armour 2.0 mods
-    const lockedArmor2Mods = lockedArmor2ModMap[bucketsToCategories[bucket]];
-    if (lockedArmor2Mods) {
-      for (const lockedMod of lockedArmor2Mods) {
-        for (const stat of lockedMod.investmentStats) {
-          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-          lockedModStats[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
   const helms = _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower);
   const gaunts = _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower);
   const chests = _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower);
@@ -158,7 +124,7 @@ export function process(
   const classItems = _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower);
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
-  const combosLimit = 2_000_000;
+  const combosLimit = 1_000_000;
 
   const combosWithoutCaps =
     helms.length * gaunts.length * chests.length * legs.length * classItems.length;
@@ -189,20 +155,15 @@ export function process(
   let setCount = 0;
 
   for (const helm of helms) {
-    const helmStats = getStatMix(helm, assumeMasterwork, orderedStatValues, lockedModStats);
+    const helmStats = getStatMix(helm, assumeMasterwork, orderedStatValues);
     for (const gaunt of gaunts) {
-      const gauntStats = getStatMix(gaunt, assumeMasterwork, orderedStatValues, lockedModStats);
+      const gauntStats = getStatMix(gaunt, assumeMasterwork, orderedStatValues);
       for (const chest of chests) {
-        const chestStats = getStatMix(chest, assumeMasterwork, orderedStatValues, lockedModStats);
+        const chestStats = getStatMix(chest, assumeMasterwork, orderedStatValues);
         for (const leg of legs) {
-          const legStats = getStatMix(leg, assumeMasterwork, orderedStatValues, lockedModStats);
+          const legStats = getStatMix(leg, assumeMasterwork, orderedStatValues);
           for (const classItem of classItems) {
-            const classItemStats = getStatMix(
-              classItem,
-              assumeMasterwork,
-              orderedStatValues,
-              lockedModStats
-            );
+            const classItemStats = getStatMix(classItem, assumeMasterwork, orderedStatValues);
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // Make sure there is at most one exotic
@@ -357,12 +318,7 @@ const emptyStats: number[] = new Array(_.size(statHashes)).fill(0);
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function getStatMix(
-  item: ProcessItem,
-  assumeMasterwork: boolean,
-  orderedStatValues: number[],
-  lockedModStats: { [statHash: number]: number }
-) {
+function getStatMix(item: ProcessItem, assumeMasterwork: boolean, orderedStatValues: number[]) {
   const stats = item.stats;
 
   if (!stats) {
@@ -370,7 +326,7 @@ function getStatMix(
   }
 
   const mixes: number[][] = [
-    getStatValuesWithModsAndMWProcess(item, assumeMasterwork, orderedStatValues, lockedModStats),
+    getStatValuesWithModsAndMWProcess(item, assumeMasterwork, orderedStatValues),
   ];
 
   if (stats && item.sockets && item.energy) {
@@ -426,8 +382,7 @@ function getPower(items: ProcessItem[]) {
 function getStatValuesWithModsAndMWProcess(
   item: ProcessItem,
   assumeMasterwork: boolean | null,
-  orderedStatValues: number[],
-  lockedModStats: { [statHash: number]: number }
+  orderedStatValues: number[]
 ) {
   const baseStats = { ...item.baseStats };
 
@@ -466,10 +421,6 @@ function getStatValuesWithModsAndMWProcess(
         baseStats[statHash] += 2;
       }
     }
-    // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
-    _.forIn(lockedModStats, (value, statHash) => {
-      baseStats[statHash] += value;
-    });
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
   return orderedStatValues.map((statHash) => Math.max(baseStats[statHash], 0));

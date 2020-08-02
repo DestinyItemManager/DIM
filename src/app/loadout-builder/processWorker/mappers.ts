@@ -1,12 +1,21 @@
 import _ from 'lodash';
 import { DimSocket, DimSockets, D2Item, DimItem } from '../../inventory/item-types';
 import { ProcessSocket, ProcessMod, ProcessSockets, ProcessItem, ProcessArmorSet } from './types';
-import { LockedModBase, ArmorSet, statHashToType, StatTypes, LockedArmor2Mod } from '../types';
+import {
+  LockedModBase,
+  ArmorSet,
+  statHashToType,
+  StatTypes,
+  LockedArmor2Mod,
+  LockedMap,
+  LockedArmor2ModMap,
+  LockableBuckets,
+  ModPickerCategories,
+} from '../types';
 import {
   getSpecialtySocketMetadataByPlugCategoryHash,
   getSpecialtySocketMetadata,
 } from '../../utils/item-utils';
-import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   return {
@@ -84,9 +93,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
  * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
  * just for the seasonal mods.
  */
-export function getTotalModStatChanges(
-  lockedSeasonalMods: readonly { mod: { investmentStats: DestinyItemInvestmentStatDefinition[] } }[]
-) {
+export function getTotalModStatChanges(lockedMap: LockedMap, lockedArmor2Mods: LockedArmor2ModMap) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -96,11 +103,30 @@ export function getTotalModStatChanges(
     Strength: 0,
   };
 
-  for (const mod of lockedSeasonalMods) {
-    for (const stat of mod.mod.investmentStats) {
-      const statType = statHashToType[stat.statTypeHash];
-      if (statType) {
-        totals[statType] += stat.value;
+  for (const category of Object.values(ModPickerCategories)) {
+    for (const mod of lockedArmor2Mods[category]) {
+      for (const stat of mod.mod.investmentStats) {
+        const statType = statHashToType[stat.statTypeHash];
+        if (statType) {
+          totals[statType] += stat.value;
+        }
+      }
+    }
+  }
+
+  // Handle old armour mods
+  for (const bucket of Object.values(LockableBuckets)) {
+    const lockedItemsByBucket = lockedMap[bucket];
+    if (lockedItemsByBucket) {
+      for (const lockedItem of lockedItemsByBucket) {
+        if (lockedItem.type === 'mod') {
+          for (const stat of lockedItem.mod.investmentStats) {
+            const statType = statHashToType[stat.statTypeHash];
+            if (statType) {
+              totals[statType] += stat.value;
+            }
+          }
+        }
       }
     }
   }
