@@ -28,7 +28,8 @@ import { getAllItems } from 'app/inventory/stores-helpers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -450,7 +451,8 @@ class Compare extends React.Component<Props, State> {
     const getRpm = (i: DimItem) => {
       const itemRpmStat = i.stats?.find(
         (s) =>
-          s.statHash === (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : 4284893193)
+          s.statHash ===
+          (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : StatHashes.RoundsPerMinute)
       );
       return itemRpmStat?.value || -99999999;
     };
@@ -567,7 +569,7 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
       makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
         item.isDestiny2()
           ? {
-              statHash: 573,
+              statHash: powerCapPlugSetHash,
               value: item.powerCap ?? undefined,
             }
           : undefined

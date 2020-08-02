@@ -229,12 +229,18 @@ export const raidOrder = [
 /** used for checking if something is a raid */
 export const RAID_ACTIVITY_TYPE = 2043403989;
 
-/** "The Spider", from whom we calculate planetmat info */
-export const SPIDER_VENDOR = 863940356;
-/** rahool. we override how his vendor FakeItems are displayed */
-export const RAHOOL_VENDOR = 2255782930;
-
-export const VAULT_VENDOR = 1037843411;
+export const VENDORS = {
+  /** "The Spider", from whom we calculate planetmat info */
+  SPIDER: 863940356,
+  EVERVERSE: 3361454721,
+  BENEDICT: 1265988377,
+  BANSHEE: 672118013,
+  DRIFTER: 248695599,
+  ADA: 2917531897,
+  /** rahool. we override how his vendor FakeItems are displayed */
+  RAHOOL: 2255782930,
+  VAULT: 1037843411,
+};
 
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2352765282;
@@ -268,3 +274,5 @@ export const breakerTypes = {
   unstoppable: 3178805705,
   stagger: 3178805705,
 };
+
+export const powerCapPlugSetHash = 573;

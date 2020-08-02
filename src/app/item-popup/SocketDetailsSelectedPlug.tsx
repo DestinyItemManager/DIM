@@ -9,8 +9,14 @@ import { StatValue } from './PlugTooltip';
 import ItemStats from './ItemStats';
 import styles from './SocketDetailsSelectedPlug.m.scss';
 import { SocketDetailsMod } from './SocketDetails';
+import { StatHashes } from 'data/d2/generated-enums';
 
-const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
+const costStatHashes = [
+  StatHashes.AnyEnergyTypeCost,
+  StatHashes.VoidCost,
+  StatHashes.SolarCost,
+  StatHashes.ArcCost,
+];
 
 export default function SocketDetailsSelectedPlug({
   plug,

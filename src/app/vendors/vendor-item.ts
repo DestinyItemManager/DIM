@@ -13,7 +13,7 @@ import { makeFakeItem } from '../inventory/store/d2-item-factory';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import _ from 'lodash';
-import { RAHOOL_VENDOR } from 'app/search/d2-known-values';
+import { VENDORS } from 'app/search/d2-known-values';
 
 /**
  * A displayable vendor item.
@@ -146,7 +146,7 @@ export class VendorItem {
     }
 
     // only apply for 2255782930, master rahool
-    if (vendorHash === RAHOOL_VENDOR && saleItem?.overrideStyleItemHash && this.item) {
+    if (vendorHash === VENDORS.RAHOOL && saleItem?.overrideStyleItemHash && this.item) {
       const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
       if (itemDef) {
         const display = itemDef.displayProperties;

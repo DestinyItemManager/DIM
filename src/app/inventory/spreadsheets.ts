@@ -484,47 +484,47 @@ function downloadWeapons(
       item.stats.forEach((stat) => {
         if (stat.value) {
           switch (stat.statHash) {
-            case 2715839340: // Recoil direction
+            case StatHashes.RecoilDirection:
               stats.recoil = stat.value;
               break;
-            case 1345609583: // Aim Assist
+            case StatHashes.AimAssistance:
               stats.aa = stat.value;
               break;
-            case 4043523819: // Impact
+            case StatHashes.Impact:
               stats.impact = stat.value;
               break;
-            case 1240592695: // Range
+            case StatHashes.Range:
               stats.range = stat.value;
               break;
-            case 155624089: // Stability
+            case StatHashes.Stability:
               stats.stability = stat.value;
               break;
-            case 4284893193: // Rate of fire
+            case StatHashes.RoundsPerMinute:
               stats.rof = stat.value;
               break;
-            case 4188031367: // Reload
+            case StatHashes.ReloadSpeed:
               stats.reload = stat.value;
               break;
-            case 3871231066: // Magazine
-            case 925767036: // Energy
+            case StatHashes.Magazine:
+            case StatHashes.AmmoCapacity:
               stats.magazine = stat.value;
               break;
-            case 943549884: // Equip Speed
+            case StatHashes.Handling:
               stats.equipSpeed = stat.value;
               break;
-            case 447667954: // Draw Time
+            case StatHashes.DrawTime:
               stats.drawtime = stat.value;
               break;
-            case 2961396640: // Charge Time
+            case StatHashes.ChargeTime:
               stats.chargetime = stat.value;
               break;
-            case StatHashes.Accuracy: // accuracy
+            case StatHashes.Accuracy:
               stats.accuracy = stat.value;
               break;
-            case 3614673599: // Blast Radius
+            case StatHashes.BlastRadius:
               stats.blastRadius = stat.value;
               break;
-            case 2523465841: // Velocity
+            case StatHashes.Velocity:
               stats.velocity = stat.value;
               break;
           }
