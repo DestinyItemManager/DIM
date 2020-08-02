@@ -11,8 +11,9 @@ import {
   MinMax,
   LockedModBase,
   ModPickerCategories,
+  bucketsToCategories,
 } from '../types';
-import { DimItem } from 'app/inventory/item-types';
+import { D2Item } from 'app/inventory/item-types';
 import { ProcessItemsByBucket } from '../processWorker/types';
 import {
   mapDimItemToProcessItem,
@@ -73,13 +74,15 @@ export function useProcess(
     setState({ processing: true, result, currentCleanup: cleanup });
 
     const processItems: ProcessItemsByBucket = {};
-    const itemsById: { [id: string]: DimItem } = {};
+    const itemsById: { [id: string]: D2Item } = {};
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
       for (const item of items) {
         if (item.isDestiny2()) {
-          processItems[key].push(mapDimItemToProcessItem(item));
+          processItems[key].push(
+            mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
+          );
           itemsById[item.id] = item;
         }
       }

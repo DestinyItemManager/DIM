@@ -10,22 +10,28 @@ function getMod(
   season: number,
   tag: string,
   energyType: DestinyEnergyType,
-  hash?: number
+  energyCost: number = 0
 ): ProcessMod {
-  return { season, tag, energyType, investmentStats: [], hash: hash || 0 };
+  return {
+    season,
+    tag,
+    energy: { type: energyType, val: energyCost },
+    investmentStats: [],
+    hash: 0, // need to mock this unfortunately
+  };
 }
 
 function getItem(
   season: number,
   energyType: DestinyEnergyType,
   compatibleModSeasons?: string[],
-  id?: string
+  energyCost: number = 0
 ): ProcessItemSubset {
   return {
-    energyType,
+    energy: { type: energyType, val: energyCost },
     season,
     compatibleModSeasons,
-    id: id || 'id',
+    id: 'id', // need to mock this unfortunately
   };
 }
 
@@ -246,6 +252,59 @@ describe('Sorting works for mods and items', () => {
       getItem(10, 1, ['arrivals', 'worthy', 'dawn']),
       getItem(11, 1, ['arrivals', 'worthy']),
       getItem(9, 1, ['worthy', 'dawn', 'undying']),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(true);
+  });
+});
+
+/*
+  Ensuring the energy requirement part works
+*/
+describe('Energy requirements correctly filter a set', () => {
+  it('passes when items and mods add up to 10', () => {
+    const mods = [
+      getMod(11, 'arrivals', 2, 5),
+      getMod(11, 'arrivals', 1, 5),
+      getMod(11, 'arrivals', 3, 5),
+    ].sort(sortProcessModsOrProcessItems);
+
+    const items = [
+      getItem(11, 1, ['arrivals', 'worthy'], 5),
+      getItem(11, 2, ['arrivals', 'worthy'], 5),
+      getItem(11, 3, ['arrivals', 'worthy'], 5),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(true);
+  });
+
+  it('fails when one item and mod add up to more than 10', () => {
+    const mods = [
+      getMod(11, 'arrivals', 2, 5),
+      getMod(11, 'arrivals', 1, 5),
+      getMod(11, 'arrivals', 3, 5),
+    ].sort(sortProcessModsOrProcessItems);
+
+    const items = [
+      getItem(11, 1, ['arrivals', 'worthy'], 5),
+      getItem(11, 2, ['arrivals', 'worthy'], 6),
+      getItem(11, 3, ['arrivals', 'worthy'], 5),
+    ];
+
+    const result = canTakeAllSeasonalMods(mods, items);
+    expect(result).toEqual(false);
+  });
+
+  it('passes when an any mod needs the first mods space', () => {
+    const mods = [getMod(11, 'arrivals', 2, 4), getMod(11, 'arrivals', 0, 5)].sort(
+      sortProcessModsOrProcessItems
+    );
+
+    const items = [
+      getItem(11, 2, ['arrivals', 'worthy'], 5),
+      getItem(11, 2, ['arrivals', 'worthy'], 6),
     ];
 
     const result = canTakeAllSeasonalMods(mods, items);

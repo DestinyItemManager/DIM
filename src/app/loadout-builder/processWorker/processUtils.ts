@@ -2,7 +2,10 @@ import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 interface SortParam {
-  energyType?: DestinyEnergyType;
+  energy: {
+    type: DestinyEnergyType;
+    val: number;
+  } | null;
   season?: number;
 }
 
@@ -17,11 +20,17 @@ export interface ProcessItemSubset extends SortParam {
  */
 export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
   if (a.season && b.season) {
-    // any energy is 0 so check undefined rather than falsey
-    if (a.season === b.season && a.energyType !== undefined && b.energyType !== undefined) {
-      return b.energyType - a.energyType;
+    if (a.season === b.season) {
+      if (a.energy && b.energy) {
+        if (a.energy.type === b.energy.type) {
+          return b.energy.val - a.energy.val;
+        } else {
+          return b.energy.type - a.energy.type;
+        }
+      }
+    } else {
+      return b.season - a.season;
     }
-    return b.season - a.season;
     // I don't think the following cases will every happen but I have included them just incase.
   } else if (a.season === undefined) {
     return 1;
@@ -35,9 +44,13 @@ export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
  */
 export function sortGeneralModsOrProcessItem(a: SortParam, b: SortParam) {
   // any energy is 0 so check undefined rather than falsey
-  if (a.energyType !== undefined && b.energyType !== undefined) {
-    return b.energyType - a.energyType;
-  } else if (a.energyType === undefined) {
+  if (a.energy && b.energy) {
+    if (a.energy.type === b.energy.type) {
+      return b.energy.val - a.energy.val;
+    } else {
+      return b.energy.type - a.energy.type;
+    }
+  } else if (!a.energy) {
     return 1;
   }
 
@@ -67,19 +80,23 @@ export function canTakeAllSeasonalMods(
   // Loop over the items and mods in parallel and see if they can be slotted.
   // due to Any energy mods needing to consider skipped items we reset item index after each splice.
   while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
-    const { energyType, tag, hash } = processedMods[modIndex];
+    const { energy, tag, hash } = processedMods[modIndex];
+    const item = sortedItems[itemIndex];
     if (!tag) {
       // This should never happen but if it does we ignore seasonal requirements and log the warning.
       console.warn('Optimiser: Found seasonal mod without season details.');
       return true;
     }
     if (
-      (sortedItems[itemIndex].energyType === energyType || energyType === DestinyEnergyType.Any) &&
-      sortedItems[itemIndex].compatibleModSeasons?.includes(tag)
+      item.energy &&
+      (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
+      item.energy.val + energy.val <= 10 &&
+      item.compatibleModSeasons?.includes(tag)
     ) {
       if (assignments) {
-        assignments[sortedItems[itemIndex].id].push(hash);
+        assignments[item.id].push(hash);
       }
+      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;
@@ -116,12 +133,17 @@ export function canTakeAllGeneralMods(
   // We need to reset the index after a match to ensure that mods with the Any energy type
   // use up armour items that didn't match an energy type/season first.
   while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
-    const { energyType, hash } = processedMods[modIndex];
-
-    if (sortedItems[itemIndex].energyType === energyType || energyType === DestinyEnergyType.Any) {
+    const { energy, hash } = processedMods[modIndex];
+    const item = sortedItems[itemIndex];
+    if (
+      item.energy &&
+      (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
+      item.energy.val + energy.val <= 10
+    ) {
       if (assignments) {
-        assignments[sortedItems[itemIndex].id].push(hash);
+        assignments[item.id].push(hash);
       }
+      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;

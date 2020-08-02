@@ -1,6 +1,6 @@
-import { DimItem } from '../inventory/item-types';
+import { DimItem, D2Item } from '../inventory/item-types';
 import _ from 'lodash';
-import { LockedArmor2ModMap, LockedArmor2Mod } from './types';
+import { LockedArmor2ModMap, LockedArmor2Mod, ModPickerCategories } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   sortProcessModsOrProcessItems,
@@ -9,6 +9,7 @@ import {
 } from './processWorker/processUtils';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { ProcessItem } from './processWorker/types';
 
 /**
  * Checks that:
@@ -28,14 +29,14 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set.
  */
 function assignGeneralMods(
-  setToMatch: readonly DimItem[],
+  setToMatch: ProcessItem[],
   generalMods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
 
-  canTakeAllGeneralMods(sortedMods, setToMatch.map(mapDimItemToProcessItem), assignments);
+  canTakeAllGeneralMods(sortedMods, setToMatch, assignments);
 }
 
 /**
@@ -59,14 +60,14 @@ function assignModsForSlot(
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
 function assignAllSeasonalMods(
-  setToMatch: readonly DimItem[],
+  setToMatch: ProcessItem[],
   seasonalMods: readonly LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
 
-  canTakeAllSeasonalMods(sortedMods, setToMatch.map(mapDimItemToProcessItem), assignments);
+  canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
 
 export function assignModsToArmorSet(
@@ -76,43 +77,54 @@ export function assignModsToArmorSet(
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
-    assignments[item.id] = [];
+    if (!item.isDestiny2()) {
+      return {};
+    } else {
+      assignments[item.id] = [];
+    }
   }
 
-  assignGeneralMods(
-    setToMatch,
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-    assignments
-  );
+  const [helmet, arms, chest, legs, classItem] = setToMatch as D2Item[];
 
+  assignModsForSlot(helmet, lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet], assignments);
+  assignModsForSlot(arms, lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets], assignments);
+  assignModsForSlot(chest, lockedArmor2Mods[armor2PlugCategoryHashesByName.chest], assignments);
+  assignModsForSlot(legs, lockedArmor2Mods[armor2PlugCategoryHashesByName.leg], assignments);
   assignModsForSlot(
-    setToMatch[0],
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet],
-    assignments
-  );
-  assignModsForSlot(
-    setToMatch[1],
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets],
-    assignments
-  );
-  assignModsForSlot(
-    setToMatch[2],
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.chest],
-    assignments
-  );
-  assignModsForSlot(
-    setToMatch[3],
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.leg],
-    assignments
-  );
-  assignModsForSlot(
-    setToMatch[4],
+    classItem,
     lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem],
     assignments
   );
 
-  assignAllSeasonalMods(setToMatch, lockedArmor2Mods.seasonal, assignments);
+  const processItems = [
+    mapDimItemToProcessItem(helmet, lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet]),
+    mapDimItemToProcessItem(arms, lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets]),
+    mapDimItemToProcessItem(chest, lockedArmor2Mods[armor2PlugCategoryHashesByName.chest]),
+    mapDimItemToProcessItem(legs, lockedArmor2Mods[armor2PlugCategoryHashesByName.leg]),
+    mapDimItemToProcessItem(classItem, lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem]),
+  ];
+
+  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
+
+  assignGeneralMods(
+    processItems,
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
+    assignments
+  );
 
   const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
-  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
+  return _.mapValues(assignments, (modHashes) =>
+    modHashes
+      .map((modHash) => modsByHash[modHash])
+      .sort((a) => {
+        // Sort the mods so that they appear in the order general, slot specific, seasonal (mimic the game).
+        if (a.category === ModPickerCategories.general) {
+          return -1;
+        } else if (a.category === ModPickerCategories.seasonal) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+  );
 }

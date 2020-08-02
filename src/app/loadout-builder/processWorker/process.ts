@@ -314,17 +314,26 @@ export function process(
                 }
               }
 
-              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+              // Reset the used item energy of each item so we can add general and seasonal mod costs again.
+              for (const item of firstValidSet) {
+                if (item.energy) {
+                  item.energy.val = item.energy.valInitial;
+                }
+              }
+
+              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements.
+              // For mod armour 2 mods we do seasonal first as its more likely to have energy specific mods.
+              // TODO Check validity of this with the energy contraints in.
               if (
                 (processedSeasonalMods.length &&
                   !canTakeAllSeasonalMods(processedSeasonalMods, firstValidSet)) ||
+                (lockedArmor2ModMap.seasonal.length &&
+                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet)) ||
                 (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllGeneralMods(
                     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
                     firstValidSet
-                  )) ||
-                (lockedArmor2ModMap.seasonal.length &&
-                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, firstValidSet))
+                  ))
               ) {
                 continue;
               }
@@ -533,7 +542,7 @@ function generateMixesFromPerksOrStats(
     ),
   ];
 
-  if (stats && item.sockets && item.energyType === undefined) {
+  if (stats && item.sockets && item.energy) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -572,7 +581,7 @@ function getStatValuesWithModsAndMWProcess(
   const baseStats = { ...item.baseStats };
 
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
-  if (item.sockets && item.energyType !== undefined) {
+  if (item.sockets && item.energy) {
     let masterworkSocketHashes: number[] = [];
 
     // only get masterwork sockets if we aren't manually adding the values
