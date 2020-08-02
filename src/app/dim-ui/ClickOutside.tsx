@@ -4,18 +4,18 @@ import { useSubscription } from 'app/utils/hooks';
 
 export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
 
+type Props = React.HTMLAttributes<HTMLDivElement> & {
+  children: React.ReactNode;
+  onClickOutside(event: React.MouseEvent): void;
+};
+
 /**
  * Component that fires an event if you click or tap outside of it.
  */
-export default function ClickOutside({
-  onClickOutside,
-  children,
-  ref,
-  ...other
-}: React.HTMLAttributes<HTMLDivElement> & {
-  ref?: React.RefObject<HTMLDivElement>;
-  onClickOutside(event: React.MouseEvent): void;
-}) {
+export default React.forwardRef(function ClickOutside(
+  { onClickOutside, children, ...other }: Props,
+  ref: React.RefObject<HTMLDivElement> | null
+) {
   const localRef = useRef<HTMLDivElement>(null);
   const wrapperRef = ref || localRef;
   const context = useContext(ClickOutsideContext);
@@ -39,4 +39,4 @@ export default function ClickOutside({
       {children}
     </div>
   );
-}
+});
