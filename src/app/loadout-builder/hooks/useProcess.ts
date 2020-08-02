@@ -11,9 +11,11 @@ import {
   MinMax,
   LockedModBase,
   bucketsToCategories,
+  LockableBuckets,
+  ModPickerCategories,
 } from '../types';
 import { D2Item } from 'app/inventory/item-types';
-import { ProcessItemsByBucket } from '../processWorker/types';
+import { ProcessItemsByBucket, ProcessItem } from '../processWorker/types';
 import {
   mapDimItemToProcessItem,
   mapSeasonalModsToProcessMods,
@@ -21,6 +23,7 @@ import {
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
 } from '../processWorker/mappers';
+import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 
 interface ProcessState {
   processing: boolean;
@@ -74,17 +77,44 @@ export function useProcess(
 
     const processItems: ProcessItemsByBucket = {};
     const itemsById: { [id: string]: D2Item } = {};
+    const classItemsById: { [id: string]: D2Item[] } = {};
+    const classItems: ProcessItem[] = [];
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
       for (const item of items) {
         if (item.isDestiny2()) {
-          processItems[key].push(
-            mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
+          const processItem = mapDimItemToProcessItem(
+            item,
+            lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]]
           );
-          itemsById[item.id] = item;
+          if (key !== LockableBuckets.classitem.toString()) {
+            processItems[key].push(processItem);
+            itemsById[item.id] = item;
+          } else {
+            classItems.push(processItem);
+            itemsById[item.id] = item;
+          }
         }
       }
+    }
+
+    if (
+      lockedSeasonalMods.length ||
+      lockedArmor2ModMap[ModPickerCategories.general].length ||
+      lockedArmor2ModMap[ModPickerCategories.seasonal].length
+    ) {
+      const groupedClassItems = _.groupBy(
+        classItems,
+        (item) => `${item.season}${item.energy?.type}${item.baseStats[TOTAL_STAT_HASH]}`
+      );
+      for (const groupedItems of Object.values(groupedClassItems)) {
+        classItemsById[groupedItems[0].id] = groupedItems.map((item) => itemsById[item.id]);
+        processItems[LockableBuckets.classitem].push(groupedItems[0]);
+      }
+    } else {
+      classItemsById[classItems[0].id] = classItems.map((item) => itemsById[item.id]);
+      processItems[LockableBuckets.classitem].push(classItems[0]);
     }
 
     const workerStart = performance.now();
@@ -101,7 +131,7 @@ export function useProcess(
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById, classItemsById));
 
         setState({
           processing: false,

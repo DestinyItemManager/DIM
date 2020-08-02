@@ -47,7 +47,7 @@ export interface ProcessItem {
 }
 
 export type ProcessItemsByBucket = Readonly<{
-  [bucketHash: number]: readonly ProcessItem[];
+  [bucketHash: number]: ProcessItem[];
 }>;
 
 export interface ProcessArmorSet {

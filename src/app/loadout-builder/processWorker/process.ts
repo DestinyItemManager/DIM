@@ -149,8 +149,11 @@ export function process(
   // If we're over the limit, start trimming down the armor lists starting with the longest.
   // Since we're already sorted by total stats descending this should toss the worst items.
   while (combos > combosLimit) {
-    const longestList = _.maxBy([helms, gaunts, chests, legs, classItems], (l) => l.length);
-    longestList!.pop();
+    const lowestTotalStat = _.minBy(
+      [helms, gaunts, chests, legs],
+      (l) => l[l.length - 1].baseStats[TOTAL_STAT_HASH]
+    );
+    lowestTotalStat!.pop();
     combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
 
@@ -316,8 +319,6 @@ export function process(
   }
 
   const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSet)).flat();
-
-  console.log(Object.keys(statsCache).length);
 
   console.log(
     'found',
