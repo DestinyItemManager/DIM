@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PresentationNode from './PresentationNode';
 import {
@@ -28,103 +28,87 @@ interface Props {
   showPlugSets?: boolean;
 }
 
-interface State {
-  nodePath: number[];
-}
-
 /**
  * The root for an expandable presentation node tree.
  */
-export default class PresentationNodeRoot extends React.Component<Props, State> {
-  state: State = { nodePath: [] };
+export default function PresentationNodeRoot({
+  presentationNodeHash,
+  openedPresentationHash,
+  defs,
+  buckets,
+  profileResponse,
+  ownedItemHashes,
+  showPlugSets,
+}: Props) {
+  const [nodePath, setNodePath] = useState<number[]>([]);
 
-  render() {
-    const {
-      presentationNodeHash,
-      openedPresentationHash,
-      defs,
-      buckets,
-      profileResponse,
-      ownedItemHashes,
-      showPlugSets,
-    } = this.props;
-    const { nodePath } = this.state;
-
-    let fullNodePath = nodePath;
-    if (nodePath.length === 0 && openedPresentationHash) {
-      let currentHash = openedPresentationHash;
-      fullNodePath = [currentHash];
-      let node = defs.PresentationNode.get(currentHash);
-      while (node.parentNodeHashes.length) {
-        nodePath.unshift(node.parentNodeHashes[0]);
-        currentHash = node.parentNodeHashes[0];
-        node = defs.PresentationNode.get(currentHash);
-      }
-      fullNodePath.unshift(presentationNodeHash);
+  let fullNodePath = nodePath;
+  if (nodePath.length === 0 && openedPresentationHash) {
+    let currentHash = openedPresentationHash;
+    fullNodePath = [currentHash];
+    let node = defs.PresentationNode.get(currentHash);
+    while (node.parentNodeHashes.length) {
+      nodePath.unshift(node.parentNodeHashes[0]);
+      currentHash = node.parentNodeHashes[0];
+      node = defs.PresentationNode.get(currentHash);
     }
-
-    const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
-
-    const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
-
-    const plugSetCollections = [
-      // Emotes
-      { hash: 1155321287, displayItem: 3960522253 },
-      // Projections
-      { hash: 499268600, displayItem: 2544954628 },
-    ];
-
-    return (
-      <>
-        {presentationNodeHash === TRIUMPHS_ROOT_NODE && trackedRecordHash !== undefined && (
-          <div className="progress-for-character">
-            <div className="records">
-              <Record
-                recordHash={trackedRecordHash}
-                defs={defs}
-                profileResponse={profileResponse}
-                completedRecordsHidden={false}
-                redactedRecordsRevealed={true}
-              />
-            </div>
-          </div>
-        )}
-
-        <PresentationNode
-          collectionCounts={collectionCounts}
-          presentationNodeHash={presentationNodeHash}
-          defs={defs}
-          profileResponse={profileResponse}
-          buckets={buckets}
-          ownedItemHashes={ownedItemHashes}
-          path={fullNodePath}
-          onNodePathSelected={this.onNodePathSelected}
-          parents={[]}
-        />
-
-        {buckets &&
-          showPlugSets &&
-          plugSetCollections.map((plugSetCollection) => (
-            <PlugSet
-              key={plugSetCollection.hash}
-              defs={defs}
-              buckets={buckets}
-              plugSetCollection={plugSetCollection}
-              items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}
-              path={fullNodePath}
-              onNodePathSelected={this.onNodePathSelected}
-            />
-          ))}
-      </>
-    );
+    fullNodePath.unshift(presentationNodeHash);
   }
 
-  // TODO: onNodeDeselected!
-  private onNodePathSelected = (nodePath: number[]): void => {
-    this.setState({
-      nodePath,
-    });
-  };
+  const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
+
+  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
+
+  const plugSetCollections = [
+    // Emotes
+    { hash: 1155321287, displayItem: 3960522253 },
+    // Projections
+    { hash: 499268600, displayItem: 2544954628 },
+  ];
+
+  return (
+    <>
+      {presentationNodeHash === TRIUMPHS_ROOT_NODE && trackedRecordHash !== undefined && (
+        <div className="progress-for-character">
+          <div className="records">
+            <Record
+              recordHash={trackedRecordHash}
+              defs={defs}
+              profileResponse={profileResponse}
+              completedRecordsHidden={false}
+              redactedRecordsRevealed={true}
+            />
+          </div>
+        </div>
+      )}
+
+      <PresentationNode
+        collectionCounts={collectionCounts}
+        presentationNodeHash={presentationNodeHash}
+        defs={defs}
+        profileResponse={profileResponse}
+        buckets={buckets}
+        ownedItemHashes={ownedItemHashes}
+        path={fullNodePath}
+        onNodePathSelected={setNodePath}
+        parents={[]}
+      />
+
+      {buckets &&
+        showPlugSets &&
+        plugSetCollections.map((plugSetCollection) => (
+          <PlugSet
+            key={plugSetCollection.hash}
+            defs={defs}
+            buckets={buckets}
+            plugSetCollection={plugSetCollection}
+            items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}
+            path={fullNodePath}
+            onNodePathSelected={setNodePath}
+          />
+        ))}
+    </>
+  );
 }
 
 /**

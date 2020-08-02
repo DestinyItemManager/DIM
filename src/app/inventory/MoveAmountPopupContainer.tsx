@@ -1,104 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sheet from '../dim-ui/Sheet';
-import { Subscriptions } from '../utils/rx-utils';
 import './MoveAmountPopupContainer.scss';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
 import { t } from 'app/i18next-t';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
 import BungieImage from '../dim-ui/BungieImage';
-
-interface State {
-  options?: MoveAmountPopupOptions;
-  amount: number;
-}
+import { useSubscription } from 'app/utils/hooks';
 
 /**
  * A container that can show a single move amount popup. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-export default class MoveAmountPopupContainer extends React.Component<{}, State> {
-  state: State = { amount: 0 };
-  private subscriptions = new Subscriptions();
+export default function MoveAmountPopupContainer() {
+  const [amount, setAmount] = useState(0);
+  const [options, setOptions] = useState<MoveAmountPopupOptions>();
+  useSubscription(() =>
+    showMoveAmountPopup$.subscribe((options) => {
+      setOptions(options);
+      setAmount(options.amount);
+    })
+  );
 
-  componentDidMount() {
-    this.subscriptions.add(
-      showMoveAmountPopup$.subscribe((options) => {
-        this.setState({ options, amount: options.amount });
-      })
-    );
-  }
+  const onAmountChanged = setAmount;
 
-  componentWillUnmount() {
-    this.subscriptions.unsubscribe();
-  }
-
-  render() {
-    const { options, amount } = this.state;
-
-    if (!options) {
-      return null;
+  const onClose = () => {
+    if (options) {
+      options.onCancel();
     }
+    setOptions(undefined);
+  };
 
-    const { item, maximum, targetStore } = options;
-
-    let targetAmount = targetStore.amountOfItem(item);
-    while (targetAmount > 0) {
-      targetAmount -= item.maxStackSize;
-    }
-    const stacksWorth = Math.min(Math.max(-targetAmount, 0), maximum);
-
-    return (
-      <Sheet
-        onClose={this.onClose}
-        header={
-          <h1>
-            <div className="item">
-              <BungieImage className="item-img" src={item.icon} />
-            </div>
-            <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
-          </h1>
-        }
-        sheetClassName="move-amount-popup"
-      >
-        {({ onClose }) => (
-          <>
-            <ItemMoveAmount
-              amount={amount}
-              maximum={maximum}
-              maxStackSize={item.maxStackSize}
-              onAmountChanged={this.onAmountChanged}
-            />
-            <div className="buttons">
-              <button className="dim-button" onClick={() => this.finish(amount, onClose)}>
-                {t('StoreBucket.Move')}
-              </button>
-              {stacksWorth > 0 && (
-                <button className="dim-button" onClick={() => this.finish(stacksWorth, onClose)}>
-                  {t('StoreBucket.FillStack', { amount: stacksWorth })}
-                </button>
-              )}
-            </div>
-          </>
-        )}
-      </Sheet>
-    );
-  }
-
-  private finish = (amount: number, onClose: () => void) => {
-    if (this.state.options) {
-      this.state.options.onAmountSelected(amount);
+  const finish = (amount: number, onClose: () => void) => {
+    if (options) {
+      options.onAmountSelected(amount);
       onClose();
     }
   };
 
-  private onAmountChanged = (amount: number) => {
-    this.setState({ amount });
-  };
+  if (!options) {
+    return null;
+  }
 
-  private onClose = () => {
-    if (this.state.options) {
-      this.state.options.onCancel();
-    }
-    this.setState({ options: undefined });
-  };
+  const { item, maximum, targetStore } = options;
+
+  let targetAmount = targetStore.amountOfItem(item);
+  while (targetAmount > 0) {
+    targetAmount -= item.maxStackSize;
+  }
+  const stacksWorth = Math.min(Math.max(-targetAmount, 0), maximum);
+
+  return (
+    <Sheet
+      onClose={onClose}
+      header={
+        <h1>
+          <div className="item">
+            <BungieImage className="item-img" src={item.icon} />
+          </div>
+          <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
+        </h1>
+      }
+      sheetClassName="move-amount-popup"
+    >
+      {({ onClose }) => (
+        <>
+          <ItemMoveAmount
+            amount={amount}
+            maximum={maximum}
+            maxStackSize={item.maxStackSize}
+            onAmountChanged={onAmountChanged}
+          />
+          <div className="buttons">
+            <button className="dim-button" onClick={() => finish(amount, onClose)}>
+              {t('StoreBucket.Move')}
+            </button>
+            {stacksWorth > 0 && (
+              <button className="dim-button" onClick={() => finish(stacksWorth, onClose)}>
+                {t('StoreBucket.FillStack', { amount: stacksWorth })}
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </Sheet>
+  );
 }

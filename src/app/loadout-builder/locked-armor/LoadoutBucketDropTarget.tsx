@@ -56,21 +56,23 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
 /**
  * This allows us to drop loadout builder items.
  */
-class LoadoutBucketDropTarget extends React.Component<Props> {
-  render() {
-    const { connectDropTarget, children, isOver, canDrop, className } = this.props;
-
-    return connectDropTarget(
-      <div
-        className={clsx(className, {
-          'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop,
-        })}
-      >
-        {children}
-      </div>
-    );
-  }
+function LoadoutBucketDropTarget({
+  connectDropTarget,
+  children,
+  isOver,
+  canDrop,
+  className,
+}: Props) {
+  return connectDropTarget(
+    <div
+      className={clsx(className, {
+        'on-drag-hover': canDrop && isOver,
+        'on-drag-enter': canDrop,
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default DropTarget(dragType, dropSpec, collect)(LoadoutBucketDropTarget);

@@ -44,21 +44,23 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
   };
 }
 
-class ExcludeItemsDropTarget extends React.Component<Props> {
-  render() {
-    const { className, connectDropTarget, children, isOver, canDrop } = this.props;
-
-    return connectDropTarget(
-      <div
-        className={clsx(className, {
-          'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop,
-        })}
-      >
-        {children}
-      </div>
-    );
-  }
+function ExcludeItemsDropTarget({
+  className,
+  connectDropTarget,
+  children,
+  isOver,
+  canDrop,
+}: Props) {
+  return connectDropTarget(
+    <div
+      className={clsx(className, {
+        'on-drag-hover': canDrop && isOver,
+        'on-drag-enter': canDrop,
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default DropTarget<ExternalProps, InternalProps>(

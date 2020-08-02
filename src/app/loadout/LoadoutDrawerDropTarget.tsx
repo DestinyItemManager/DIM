@@ -53,20 +53,16 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
   };
 }
 
-class LoadoutDrawerDropTarget extends React.Component<Props> {
-  render() {
-    const { connectDropTarget, children, isOver } = this.props;
-
-    return connectDropTarget(
-      <div
-        className={clsx('loadout-drop', {
-          'on-drag-hover': isOver,
-        })}
-      >
-        {children}
-      </div>
-    );
-  }
+function LoadoutDrawerDropTarget({ connectDropTarget, children, isOver }: Props) {
+  return connectDropTarget(
+    <div
+      className={clsx('loadout-drop', {
+        'on-drag-hover': isOver,
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default DropTarget(dragType, dropSpec, collect)(LoadoutDrawerDropTarget);

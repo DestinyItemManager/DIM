@@ -83,11 +83,8 @@ function collect(connect: DragSourceConnector): InternalProps {
   };
 }
 
-class DraggableInventoryItem extends React.Component<Props> {
-  render() {
-    const { connectDragSource, children } = this.props;
-    return connectDragSource(<div className="item-drag-container">{children}</div>);
-  }
+function DraggableInventoryItem({ connectDragSource, children }: Props) {
+  return connectDragSource(<div className="item-drag-container">{children}</div>);
 }
 
 /**

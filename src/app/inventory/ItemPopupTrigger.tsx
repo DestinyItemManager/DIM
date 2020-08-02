@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
 import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 import { loadoutDialogOpen, addItemToLoadout } from 'app/loadout/LoadoutDrawer';
-import store from 'app/store/store';
 import { clearNewItem } from './actions';
+import { useDispatch } from 'react-redux';
 
 interface Props {
   item: DimItem;
@@ -15,30 +15,28 @@ interface Props {
 /**
  * This wraps its children in a div which, when clicked, will show the move popup for the provided item.
  */
-export default class ItemPopupTrigger extends React.Component<Props> {
-  private ref = React.createRef<HTMLDivElement>();
+export default function ItemPopupTrigger({ item, extraData, children }: Props): JSX.Element {
+  const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
-  render() {
-    const { children } = this.props;
+  const clicked = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
 
-    return children(this.ref, this.clicked);
-  }
+      dispatch(clearNewItem(item.id));
 
-  private clicked = (e: React.MouseEvent) => {
-    e.stopPropagation();
+      // TODO: a dispatcher based on store state?
+      if (loadoutDialogOpen) {
+        addItemToLoadout(item, e);
+      } else if (CompareService.dialogOpen) {
+        CompareService.addItemsToCompare([item]);
+      } else {
+        showItemPopup(item, ref.current!, extraData);
+        return false;
+      }
+    },
+    [dispatch, extraData, item]
+  );
 
-    const { item, extraData } = this.props;
-
-    store.dispatch(clearNewItem(item.id));
-
-    // TODO: a dispatcher based on store state?
-    if (loadoutDialogOpen) {
-      addItemToLoadout(item, e);
-    } else if (CompareService.dialogOpen) {
-      CompareService.addItemsToCompare([item]);
-    } else {
-      showItemPopup(item, this.ref.current!, extraData);
-      return false;
-    }
-  };
+  return children(ref, clicked) as JSX.Element;
 }
