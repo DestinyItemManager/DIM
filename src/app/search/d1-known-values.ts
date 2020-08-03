@@ -12,6 +12,11 @@ export const D1LightStats = [
   368428387, // Attack
 ];
 
+export const enum D1_StatHashes {
+  Defense = 3897883278,
+  Attack = 368428387,
+}
+
 //
 // ITEMS / ITEMCATERGORY KNOWN VALUES
 //

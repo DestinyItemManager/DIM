@@ -21,6 +21,7 @@ import store from '../store/store';
 import { t } from 'app/i18next-t';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { StatHashes } from 'data/d2/generated-enums';
+import { D1_StatHashes } from 'app/search/d1-known-values';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -75,8 +76,8 @@ export function downloadCsvFiles(
 
     if (type === 'Weapons') {
       if (
-        item.primStat &&
-        (item.primStat.statHash === 368428387 || item.primStat.statHash === StatHashes.Attack)
+        item.primStat?.statHash === D1_StatHashes.Attack ||
+        item.primStat?.statHash === StatHashes.Attack
       ) {
         items.push(item);
       }
@@ -333,18 +334,12 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
 
     if ($featureFlags.reviewsEnabled) {
       const dtrRating = getDtrRating(item);
-
-      if (dtrRating?.overallScore) {
-        row['DTR Rating'] = dtrRating.overallScore;
-        row['# of Reviews'] = dtrRating.ratingCount;
-      } else {
-        row['DTR Rating'] = 'N/A';
-        row['# of Reviews'] = 'N/A';
-      }
+      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
+      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
     }
 
     if (item.isDestiny1()) {
-      row['% Quality'] = item.quality ? item.quality.min : 0;
+      row['% Quality'] = item.quality?.min ?? 0;
     }
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.isDestiny1() && item.stats) {
@@ -369,22 +364,22 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
     }
     if (item.isDestiny1()) {
-      row['% IntQ'] = stats.Intellect ? stats.Intellect.pct : 0;
-      row['% DiscQ'] = stats.Discipline ? stats.Discipline.pct : 0;
-      row['% StrQ'] = stats.Strength ? stats.Strength.pct : 0;
-      row.Int = stats.Intellect ? stats.Intellect.value : 0;
-      row.Disc = stats.Discipline ? stats.Discipline.value : 0;
-      row.Str = stats.Strength ? stats.Strength.value : 0;
+      row['% IntQ'] = stats.Intellect?.pct ?? 0;
+      row['% DiscQ'] = stats.Discipline?.pct ?? 0;
+      row['% StrQ'] = stats.Strength?.pct ?? 0;
+      row.Int = stats.Intellect?.value ?? 0;
+      row.Disc = stats.Discipline?.value ?? 0;
+      row.Str = stats.Strength?.value ?? 0;
     } else {
       const armorStats = Object.keys(dimArmorStatHashByName).map((statName) => ({
         name: statName,
         stat: stats[dimArmorStatHashByName[statName]],
       }));
       armorStats.forEach((stat) => {
-        row[stat.name] = stat.stat ? stat.stat.value : 0;
+        row[capitalizeFirstLetter(stat.name)] = stat.stat?.value ?? 0;
       });
       armorStats.forEach((stat) => {
-        row[`${stat.name} (Base)`] = stat.stat ? stat.stat.base : 0;
+        row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
       });
 
       if (item.isDestiny2() && item.sockets) {
@@ -454,13 +449,8 @@ function downloadWeapons(
     const dtrRating = getDtrRating(item);
 
     if ($featureFlags.reviewsEnabled) {
-      if (dtrRating?.overallScore) {
-        row['DTR Rating'] = dtrRating.overallScore;
-        row['# of Reviews'] = dtrRating.ratingCount;
-      } else {
-        row['DTR Rating'] = 'N/A';
-        row['# of Reviews'] = 'N/A';
-      }
+      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
+      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
     }
 
     const stats = {
