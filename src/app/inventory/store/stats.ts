@@ -17,7 +17,12 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import { armorBuckets, ARMOR_STAT_CAP, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import {
+  armorBuckets,
+  ARMOR_STAT_CAP,
+  TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
+} from 'app/search/d2-known-values';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import reduxStore from '../../store/store';
@@ -77,6 +82,7 @@ export const statAllowList = [
   StatHashes.AmmoCapacity,
   ...armorStats,
   TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
 ];
 
 /** Stats that are measured in milliseconds. */
@@ -526,22 +532,23 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     destinyClass
   ];
 
-  if (!customStatDef?.length) {
+  if (!customStatDef || customStatDef.length === 0 || customStatDef.length === 6) {
     return undefined;
   }
 
   // TODO: for loop
+  // Custom stat is always base stat
   stats = stats.filter((s) => customStatDef.includes(s.statHash));
-  const total = _.sumBy(stats, (s) => s.value);
-  const baseTotal = _.sumBy(stats, (s) => s.base);
+  const total = _.sumBy(stats, (s) => s.base);
+  const baseTotal = total;
   const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
   return {
     investmentValue: total,
-    statHash: -1100,
+    statHash: CUSTOM_TOTAL_STAT_HASH,
     displayProperties: ({
       name: t('Stats.Custom'),
     } as any) as DestinyDisplayPropertiesDefinition,
-    sort: statAllowList.indexOf(-1100),
+    sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
     baseMayBeWrong,

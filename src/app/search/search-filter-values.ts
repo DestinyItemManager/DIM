@@ -5,6 +5,7 @@ import {
   D2LightStats,
   D2WeaponStatHashByName,
   TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -33,6 +34,7 @@ export const damageTypeNames = Object.values(damageNamesByEnum).filter(
 export const dimArmorStatHashByName = {
   ...D2ArmorStatHashByName,
   total: TOTAL_STAT_HASH,
+  custom: CUSTOM_TOTAL_STAT_HASH,
 };
 
 /** stats names used to create armor-specific filters, real ones plus an "any" keyword */

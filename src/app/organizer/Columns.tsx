@@ -55,6 +55,7 @@ import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -111,10 +112,13 @@ export function getColumns(
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
-    _.map(
-      statHashes,
-      (statInfo, statHashStr): ColumnWithStat => {
+    _.compact(
+      _.map(statHashes, (statInfo, statHashStr): ColumnWithStat | undefined => {
         const statHash = parseInt(statHashStr, 10);
+        if (statHash === CUSTOM_TOTAL_STAT_HASH) {
+          // Exclude custom total, it has its own column
+          return undefined;
+        }
         return {
           id: `stat_${statHash}`,
           header: statInfo.displayProperties.hasIcon ? (
@@ -137,7 +141,7 @@ export function getColumns(
           defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
           filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`,
         };
-      }
+      })
     ),
     (s) => statAllowList.indexOf(s.statHash)
   );
@@ -478,6 +482,7 @@ export function getColumns(
         value: (item) =>
           _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.base : 0)),
         defaultSort: SortDirection.DESC,
+        filter: (value) => `stat:custom:>=${value}`,
       },
     destinyVersion === 2 &&
       isWeapon && {
