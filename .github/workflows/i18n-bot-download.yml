@@ -32,22 +32,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: sort dim.json
-        run: jq -S . src/locale/dim.json > src/locale/dim_sorted.json && mv src/locale/dim_sorted.json src/locale/dim.json
-
-      - name: sort locale dim.json
-        run: |
-          allLocales=("de" "es" "es-mx" "fr" "it" "ja" "ko" "pl" "pt-br" "ru" "zh-chs" "zh-cht")
-          for lang in ${allLocales[@]}; do
-            jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
-          done
-
-      - name: Check for new files (DIM)
-        id: porcelain
-        run: echo ::set-output name=porcelain::"$(git status --porcelain)"
+      - name: sort all dim.json
+        id: sort
+        run: ./build/sort-json.sh dim.json && echo ::set-output name=porcelain::"$(git status --porcelain)"
 
       - name: Commit files
-        if: steps.porcelain.outputs.porcelain
+        if: steps.sort.outputs.porcelain
         run: |
           git config --local user.email "destinyitemmanager@gmail.com"
           git config --local user.name "DIM i18n Bot"
@@ -55,7 +45,7 @@ jobs:
           git commit -m "i18n - ${{ env.GITHUB_SHA_SHORT }}" -a
 
       - name: Push changes
-        if: steps.porcelain.outputs.porcelain
+        if: steps.sort.outputs.porcelain
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.I18N_PAT }}
