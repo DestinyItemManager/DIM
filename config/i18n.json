@@ -816,6 +816,7 @@
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
     "CsvImport": "Import tags/notes from CSV",
+    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
@@ -852,6 +853,8 @@
     "SortName": "Name"
   },
   "Stats": {
+    "Custom": "Custom Total",
+    "CustomDesc": "Custom total configured in settings. This only adds up base stats, ignoring mods or masterworking.",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",

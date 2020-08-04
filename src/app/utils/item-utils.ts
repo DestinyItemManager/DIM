@@ -8,6 +8,7 @@ import {
   armor2PlugCategoryHashes,
   energyNamesByEnum,
   TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 
@@ -97,7 +98,12 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
 
   if (stats) {
     for (const stat of stats) {
-      if (stat.statHash !== TOTAL_STAT_HASH && stat.baseMayBeWrong && stat.displayProperties.name) {
+      if (
+        stat.statHash !== TOTAL_STAT_HASH &&
+        stat.statHash !== CUSTOM_TOTAL_STAT_HASH &&
+        stat.baseMayBeWrong &&
+        stat.displayProperties.name
+      ) {
         incorrect.add(stat.displayProperties.name);
       }
     }

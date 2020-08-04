@@ -35,16 +35,24 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { clearRatings } from 'app/item-review/actions';
 import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import { emptyArray } from 'app/utils/empty';
-import { storesLoadedSelector } from 'app/inventory/selectors';
+import { storesLoadedSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { dimHunterIcon, dimWarlockIcon, dimTitanIcon } from 'app/shell/icons/custom';
+import { DimStore } from 'app/inventory/store-types';
+
+const classIcons = {
+  [DestinyClass.Hunter]: dimHunterIcon,
+  [DestinyClass.Titan]: dimTitanIcon,
+  [DestinyClass.Warlock]: dimWarlockIcon,
+};
 
 interface StoreProps {
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
+  stores: DimStore[];
   reviewModeOptions: D2ReviewMode[];
 }
 
@@ -52,6 +60,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
     storesLoaded: storesLoadedSelector(state),
+    stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
   };
@@ -149,6 +158,7 @@ function SettingsPage({
   isPhonePortrait,
   reviewModeOptions,
   storesLoaded,
+  stores,
   dispatch,
 }: Props) {
   useEffect(() => {
@@ -280,6 +290,11 @@ function SettingsPage({
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
+  const uniqChars = _.uniqBy(
+    stores.filter((s) => !s.isVault),
+    (s) => s.classType
+  );
+
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
@@ -368,9 +383,20 @@ function SettingsPage({
             </div>
             <div className="setting">
               <label htmlFor="">{t('Organizer.Columns.CustomTotal')}</label>
-              <AppIcon icon={dimTitanIcon} />: <StatTotalToggle forClass={DestinyClass.Titan} />
-              <AppIcon icon={dimHunterIcon} />: <StatTotalToggle forClass={DestinyClass.Hunter} />
-              <AppIcon icon={dimWarlockIcon} />: <StatTotalToggle forClass={DestinyClass.Warlock} />
+              <div className="fineprint">{t('Settings.CustomStatDesc')}</div>
+              <div className="customStats">
+                {uniqChars.map(
+                  (store) =>
+                    !store.isVault && (
+                      <React.Fragment key={store.classType}>
+                        <div>
+                          <AppIcon icon={classIcons[store.classType]} /> {store.className}:{' '}
+                        </div>
+                        <StatTotalToggle forClass={store.classType} />
+                      </React.Fragment>
+                    )
+                )}
+              </div>
             </div>
           </section>
 

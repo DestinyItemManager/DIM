@@ -547,6 +547,7 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     statHash: CUSTOM_TOTAL_STAT_HASH,
     displayProperties: ({
       name: t('Stats.Custom'),
+      description: t('Stats.CustomDesc'),
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
