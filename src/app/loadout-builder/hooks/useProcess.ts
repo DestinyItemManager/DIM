@@ -23,7 +23,6 @@ import {
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
 } from '../processWorker/mappers';
-import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 
 interface ProcessState {
   processing: boolean;
@@ -99,22 +98,21 @@ export function useProcess(
       }
     }
 
-    if (
+    const groupForMods =
       lockedSeasonalMods.length ||
       lockedArmor2ModMap[ModPickerCategories.general].length ||
-      lockedArmor2ModMap[ModPickerCategories.seasonal].length
-    ) {
-      const groupedClassItems = _.groupBy(
-        classItems,
-        (item) => `${item.season}${item.energy?.type}${item.baseStats[TOTAL_STAT_HASH]}`
-      );
-      for (const groupedItems of Object.values(groupedClassItems)) {
-        classItemsById[groupedItems[0].id] = groupedItems.map((item) => itemsById[item.id]);
-        processItems[LockableBuckets.classitem].push(groupedItems[0]);
-      }
-    } else {
-      classItemsById[classItems[0].id] = classItems.map((item) => itemsById[item.id]);
-      processItems[LockableBuckets.classitem].push(classItems[0]);
+      lockedArmor2ModMap[ModPickerCategories.seasonal].length;
+
+    const groupingFn = (item: ProcessItem) =>
+      groupForMods
+        ? `${item.season}${item.energy?.type}${item.energy?.capacity === 10}`
+        : item.energy?.capacity === 10;
+
+    const groupedClassItems = _.groupBy(classItems, groupingFn);
+
+    for (const groupedItems of Object.values(groupedClassItems)) {
+      classItemsById[groupedItems[0].id] = groupedItems.map((item) => itemsById[item.id]);
+      processItems[LockableBuckets.classitem].push(groupedItems[0]);
     }
 
     const workerStart = performance.now();
