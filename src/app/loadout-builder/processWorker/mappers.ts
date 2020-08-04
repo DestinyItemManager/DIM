@@ -192,28 +192,19 @@ export function hydrateArmorSet(
   itemsById: { [id: string]: DimItem },
   classItemsById: { [id: string]: D2Item[] }
 ): ArmorSet {
-  const sets: ArmorSet['sets'] = [];
+  const armor: DimItem[][] = [];
 
-  for (const processSet of processed.sets) {
-    const armor: DimItem[][] = [];
-
-    for (const itemId of processSet.armor) {
-      if (classItemsById[itemId]) {
-        armor.push(classItemsById[itemId]);
-      } else {
-        armor.push([itemsById[itemId]]);
-      }
+  for (const itemId of processed.armor) {
+    if (classItemsById[itemId]) {
+      armor.push(classItemsById[itemId]);
+    } else {
+      armor.push([itemsById[itemId]]);
     }
-
-    sets.push({ armor, statChoices: processSet.statChoices });
   }
 
-  const firstValidSet: DimItem[] = processed.firstValidSet.map((id) => itemsById[id]);
-
   return {
-    sets,
-    firstValidSet,
-    firstValidSetStatChoices: processed.firstValidSetStatChoices,
+    armor,
+    statChoices: processed.statChoices,
     stats: processed.stats,
     maxPower: processed.maxPower,
   };

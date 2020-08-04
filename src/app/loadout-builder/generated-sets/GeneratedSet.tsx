@@ -46,38 +46,35 @@ function GeneratedSet({
     editLoadout(loadout, { showClass: false });
   };
 
-  const numSets = set.sets.length;
-  if (!numSets) {
+  if (set.armor.some((items) => !items.length)) {
     console.error('No valid sets!');
     return null;
   }
 
   const assignedMods = $featureFlags.armor2ModPicker
-    ? assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods)
+    ? assignModsToArmorSet(
+        set.armor.map((items) => items[0]),
+        lockedArmor2Mods
+      )
     : {};
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <SetStats defs={defs} set={set} statOrder={statOrder} enabledStats={enabledStats} />
-        <GeneratedSetButtons
-          numSets={numSets}
-          set={set}
-          store={selectedStore!}
-          onLoadoutSet={setCreateLoadout}
-        />
+        <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
       </div>
       <div className={styles.items}>
-        {set.firstValidSet.map((item, index) => (
+        {set.armor.map((items, index) => (
           <GeneratedSetItem
-            key={item.index}
-            item={item}
+            key={items[0].index}
+            item={items[0]}
             defs={defs}
-            itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
-            locked={lockedMap[item.bucket.hash]}
+            itemOptions={items}
+            locked={lockedMap[items[0].bucket.hash]}
             lbDispatch={lbDispatch}
-            statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={assignedMods[item.id]}
+            statValues={set.statChoices[index]}
+            lockedMods={assignedMods[items[0].id]}
             statOrder={statOrder}
           />
         ))}

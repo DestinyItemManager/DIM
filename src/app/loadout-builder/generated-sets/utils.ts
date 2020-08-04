@@ -61,11 +61,12 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
     sortedSets = _.sortBy(
       sortedSets,
       (set) =>
-        -_.sumBy(set.firstValidSet, (firstItem) => {
-          if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
+        -_.sumBy(set.armor, (items) => {
+          const item = items?.[0];
+          if (!item || !item.isDestiny2() || !item.sockets) {
             return 0;
           }
-          return count(firstItem.sockets.sockets, (slot) =>
+          return count(item.sockets.sockets, (slot) =>
             slot.plugOptions.some((perk) =>
               lockedPerks.some(
                 (lockedPerk) =>

@@ -98,17 +98,7 @@ export function useProcess(
       }
     }
 
-    const groupForMods =
-      lockedSeasonalMods.length ||
-      lockedArmor2ModMap[ModPickerCategories.general].length ||
-      lockedArmor2ModMap[ModPickerCategories.seasonal].length;
-
-    const groupingFn = (item: ProcessItem) =>
-      groupForMods
-        ? `${item.season}${item.energy?.type}${item.energy?.capacity === 10}`
-        : item.energy?.capacity === 10;
-
-    const groupedClassItems = _.groupBy(classItems, groupingFn);
+    const groupedClassItems = groupClassItems(classItems, lockedSeasonalMods, lockedArmor2ModMap);
 
     for (const groupedItems of Object.values(groupedClassItems)) {
       classItemsById[groupedItems[0].id] = groupedItems.map((item) => itemsById[item.id]);
@@ -208,4 +198,22 @@ function createWorker() {
   };
 
   return { worker, cleanup };
+}
+
+function groupClassItems(
+  classItems: ProcessItem[],
+  lockedSeasonalMods: readonly LockedModBase[],
+  lockedArmor2ModMap: LockedArmor2ModMap
+) {
+  const groupForMods =
+    lockedSeasonalMods.length ||
+    lockedArmor2ModMap[ModPickerCategories.general].length ||
+    lockedArmor2ModMap[ModPickerCategories.seasonal].length;
+
+  const groupingFn = (item: ProcessItem) =>
+    groupForMods
+      ? `${item.season}${item.energy?.type}${item.energy?.capacity === 10}`
+      : item.energy?.capacity === 10;
+
+  return _.groupBy(classItems, groupingFn);
 }
