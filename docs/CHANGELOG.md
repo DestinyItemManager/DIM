@@ -1,5 +1,7 @@
 ## Next
 
+* Configure a custom armor stat per-class in Settings, and it'll show up in item popups, Organizer, Compare, and the new `stat:custom:` search.
+
 ## 6.23.0 <span className="changelog-date">(2020-08-02)</span>
 
 * You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.

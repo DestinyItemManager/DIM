@@ -1,7 +1,10 @@
 .inlineStatIcon {
-  display: inline-block;
-  vertical-align: bottom;
-  height: 1.5em;
+  cursor: pointer;
+  img {
+    display: inline-block;
+    vertical-align: bottom;
+    height: 1.5em;
+  }
 }
 .divider::after {
   opacity: 0;

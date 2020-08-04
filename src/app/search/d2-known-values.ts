@@ -90,6 +90,7 @@ export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCatego
 
 /** the stat hash for DIM's artificial armor stat, "Total" */
 export const TOTAL_STAT_HASH = -1000;
+export const CUSTOM_TOTAL_STAT_HASH = -1100;
 
 /** hashes representing D2 PL stats */
 export const D2LightStats = [StatHashes.Attack, StatHashes.Defense];

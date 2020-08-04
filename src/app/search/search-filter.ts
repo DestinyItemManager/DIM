@@ -193,7 +193,17 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     'strength',
     ...(isD1 ? ['rof'] : []),
     ...(isD2
-      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total', 'any']
+      ? [
+          'rpm',
+          'mobility',
+          'recovery',
+          'resilience',
+          'drawtime',
+          'inventorysize',
+          'total',
+          'custom',
+          'any',
+        ]
       : []),
   ];
 

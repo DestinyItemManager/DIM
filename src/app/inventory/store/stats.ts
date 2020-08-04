@@ -9,6 +9,7 @@ import {
   DestinyStatAggregationType,
   DestinyStatCategory,
   DestinySocketCategoryStyle,
+  DestinyClass,
 } from 'bungie-api-ts/destiny2';
 import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -16,9 +17,16 @@ import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
-import { armorBuckets, ARMOR_STAT_CAP, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import {
+  armorBuckets,
+  ARMOR_STAT_CAP,
+  TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
+} from 'app/search/d2-known-values';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import reduxStore from '../../store/store';
+import { settingsSelector } from 'app/settings/reducer';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -74,6 +82,7 @@ export const statAllowList = [
   StatHashes.AmmoCapacity,
   ...armorStats,
   TOTAL_STAT_HASH,
+  CUSTOM_TOTAL_STAT_HASH,
 ];
 
 /** Stats that are measured in milliseconds. */
@@ -143,7 +152,11 @@ export function buildStats(
       // Add the "Total" stat for armor
       const tStat = totalStat(investmentStats);
       investmentStats.push(tStat);
-      // investmentStatsByHash[tStat.statHash] = tStat; // not used after this line
+
+      const cStat = customStat(investmentStats, createdItem.classType);
+      if (cStat) {
+        investmentStats.push(cStat);
+      }
     }
   } else if (
     createdItem.isDestiny2() &&
@@ -491,6 +504,9 @@ function buildBaseStats(
 }
 
 function totalStat(stats: DimStat[]): DimStat {
+  // TODO: for loop
+  // TODO: base only
+  // TODO: search terms?
   const total = _.sumBy(stats, (s) => s.value);
   const baseTotal = _.sumBy(stats, (s) => s.base);
   const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
@@ -501,6 +517,39 @@ function totalStat(stats: DimStat[]): DimStat {
       name: t('Stats.Total'),
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statAllowList.indexOf(TOTAL_STAT_HASH),
+    value: total,
+    base: baseTotal,
+    baseMayBeWrong,
+    maximumValue: 100,
+    bar: false,
+    smallerIsBetter: false,
+    additive: false,
+  };
+}
+
+function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | undefined {
+  const customStatDef = settingsSelector(reduxStore.getState()).customTotalStatsByClass[
+    destinyClass
+  ];
+
+  if (!customStatDef || customStatDef.length === 0 || customStatDef.length === 6) {
+    return undefined;
+  }
+
+  // TODO: for loop
+  // Custom stat is always base stat
+  stats = stats.filter((s) => customStatDef.includes(s.statHash));
+  const total = _.sumBy(stats, (s) => s.base);
+  const baseTotal = total;
+  const baseMayBeWrong = stats.some((stat) => stat.baseMayBeWrong);
+  return {
+    investmentValue: total,
+    statHash: CUSTOM_TOTAL_STAT_HASH,
+    displayProperties: ({
+      name: t('Stats.Custom'),
+      description: t('Stats.CustomDesc'),
+    } as any) as DestinyDisplayPropertiesDefinition,
+    sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
     baseMayBeWrong,
