@@ -556,7 +556,7 @@
     "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
-    "NumCombinations": "{{count, number}} combinations",
+    "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
