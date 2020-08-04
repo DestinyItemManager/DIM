@@ -119,7 +119,9 @@ const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) =>
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
   (item.classified && String(item.hash)) ||
-  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
+  `${item.name}${item.classType}${item.tier}${item.isDestiny2() ? item.collectibleHash : ''}${
+    item.isDestiny2() ? item.powerCap : ''
+  }${item.itemCategoryHashes.join('.')}`;
 
 //
 // Selectors
