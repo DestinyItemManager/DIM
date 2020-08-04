@@ -12,6 +12,7 @@ interface CssExports {
   'quality': string;
   'qualitySummary': string;
   'ratingChartBarColor': string;
+  'smallStatToggle': string;
   'statBar': string;
   'statName': string;
   'totalRow': string;

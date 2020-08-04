@@ -19,6 +19,7 @@
     height: 12px;
     width: 12px;
     vertical-align: bottom;
+    filter: drop-shadow(0 0 0 white);
   }
 }
 
@@ -118,4 +119,14 @@
 .totalStatWarn {
   color: yellow;
   margin-left: 8px;
+}
+
+.smallStatToggle {
+  grid-column: -3 / -1;
+  margin-left: 4px;
+  img {
+    height: 12px !important;
+    width: 12px !important;
+    vertical-align: bottom;
+  }
 }
