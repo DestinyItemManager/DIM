@@ -854,7 +854,7 @@
   },
   "Stats": {
     "Custom": "Custom Total",
-    "CustomDesc": "Custom total configured in settings. This only adds up base stats, ignoring mods or masterworking.",
+    "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
