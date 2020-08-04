@@ -112,7 +112,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
         <h2>
           {t('LoadoutBuilder.GeneratedBuilds')}{' '}
           <span className={styles.numSets}>
-            ({t('LoadoutBuilder.NumStatMixes', { count: sets.length })})
+            ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
           </span>
           <button
             className={`dim-button ${styles.newLoadout}`}
