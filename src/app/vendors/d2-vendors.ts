@@ -160,7 +160,7 @@ export function getVendorItems(
     [hash: number]: DestinyCollectibleComponent;
   }
 ): VendorItem[] {
-  if (sales && itemComponents) {
+  if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
       VendorItem.forVendorSaleItem(
