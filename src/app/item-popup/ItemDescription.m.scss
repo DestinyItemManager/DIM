@@ -11,6 +11,9 @@
 
 .addNote {
   cursor: pointer;
+  display: inline-block;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   &:hover {
     color: $orange;
   }
