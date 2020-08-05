@@ -104,7 +104,8 @@ export function buildInstancedSockets(
       itemDef.sockets.socketEntries[i],
       i,
       reusablePlugData?.[i],
-      plugObjectivesData
+      plugObjectivesData,
+      itemDef
     );
 
     realSockets.push(built);
@@ -366,7 +367,8 @@ function buildSocket(
   reusablePlugs?: DestinyItemPlugBase[],
   plugObjectivesData?: {
     [plugItemHash: number]: DestinyObjectiveProgress[];
-  }
+  },
+  forThisItem?: DestinyInventoryItemDefinition
 ): DimSocket | undefined {
   if (
     !socketDef ||
@@ -378,11 +380,11 @@ function buildSocket(
     return undefined;
   }
 
-  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash);
+  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash, forThisItem);
   if (!socketTypeDef) {
     return undefined;
   }
-  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash);
+  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash, forThisItem);
   if (!socketCategoryDef) {
     return undefined;
   }
@@ -410,10 +412,12 @@ function buildSocket(
       }
     } else if (socketDef.reusablePlugSetHash) {
       // Get options from plug set, instead of live info
-      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
-      for (const reusablePlug of plugSet.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug);
-        addPlugOption(built, plug, plugOptions);
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
+      if (plugSet) {
+        for (const reusablePlug of plugSet.reusablePlugItems) {
+          const built = buildDefinedPlug(defs, reusablePlug);
+          addPlugOption(built, plug, plugOptions);
+        }
       }
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
