@@ -23,6 +23,7 @@ import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 import { emptySet } from 'app/utils/empty';
+import { getModCostInfo } from 'app/collections/Mod';
 
 interface ProvidedProps {
   item: D2Item;
@@ -256,9 +257,7 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: DestinyInventoryItemDefinition): void;
   }) => {
-    const energyType = defs.EnergyType.get(itemDef?.plug?.energyCost?.energyTypeHash);
-    const energyCostStat = defs.Stat.get(energyType?.costStatHash);
-    const costElementIcon = energyCostStat?.displayProperties.icon;
+    const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
 
     const onClickFn = onClick && (() => onClick(itemDef));
 
@@ -271,13 +270,13 @@ export const SocketDetailsMod = React.memo(
         tabIndex={0}
       >
         <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
-        {costElementIcon && (
+        {energyCostElementOverlay && (
           <>
             <div
-              style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
+              style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
               className="energyCostOverlay"
             />
-            <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
+            <div className="energyCost">{energyCost}</div>
           </>
         )}
       </div>
