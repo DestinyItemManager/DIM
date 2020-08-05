@@ -5,7 +5,8 @@ interface CssExports {
   'addNoteTag': string;
   'description': string;
   'descriptionTools': string;
-  'lore': string;
+  'loreLink': string;
+  'noNotesYet': string;
   'officialDescription': string;
   'wishListNotes': string;
 }

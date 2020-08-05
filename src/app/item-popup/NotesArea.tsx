@@ -10,6 +10,7 @@ import { setItemHashNote, setItemNote } from 'app/inventory/actions';
 import { AppIcon, editIcon } from 'app/shell/icons';
 // import { RichNotes } from 'app/dim-ui/RichNotes';
 import styles from './ItemDescription.m.scss';
+import clsx from 'clsx';
 
 const maxLength = 120;
 
@@ -29,12 +30,12 @@ export default function NotesArea({ item }: { item: DimItem }) {
     return <NotesEditor notes={savedNotes} item={item} />;
   }
 
-  // show notes if they exist
-  if (savedNotes) {
-    return (
+  // show notes if they exist, and an "add" or "edit" prompt
+  return (
+    <div className={styles.description}>
       <div
-        className={[styles.addNote, styles.description].join(' ')}
         role="button"
+        className={clsx(styles.addNote, { [styles.noNotesYet]: !savedNotes })}
         onClick={() => {
           setNotesOpen(true);
           ga('send', 'event', 'Item Popup', 'Edit Notes');
@@ -42,21 +43,11 @@ export default function NotesArea({ item }: { item: DimItem }) {
         tabIndex={0}
       >
         <AppIcon icon={editIcon} />{' '}
-        <span className={styles.addNoteTag}>{t('MovePopup.Notes')}</span> {savedNotes}
+        <span className={styles.addNoteTag}>
+          {savedNotes ? t('MovePopup.Notes') : t('MovePopup.AddNote')}
+        </span>{' '}
+        {savedNotes}
       </div>
-    );
-  }
-
-  // no other condition was met, show a message offering to add a note
-  return (
-    <div
-      role="button"
-      className={[styles.addNote, styles.description].join(' ')}
-      onClick={() => setNotesOpen(true)}
-      tabIndex={0}
-    >
-      <AppIcon icon={editIcon} />{' '}
-      <span className={styles.addNoteTag}>{t('MovePopup.AddNote')}</span>
     </div>
   );
 }

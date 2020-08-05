@@ -23,8 +23,6 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id],
   };
 }
-/**  */
-// const displaySourceIgnoreList: string[] = [];
 
 type Props = ProvidedProps & StoreProps;
 
@@ -40,14 +38,16 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
     <>
       {showDescription && (
         <div className={styles.officialDescription}>
-          {item.description}
+          {item.description}{' '}
           {loreLink && (
             <ExternalLink
-              className={styles.lore}
+              className={styles.loreLink}
               href={loreLink}
+              title={t('MovePopup.ReadLore')}
               onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
             >
-              <img src={ishtarLogo} height="16" width="16" /> {t('MovePopup.ReadLore')}
+              <img src={ishtarLogo} height="16" width="16" />
+              {t('MovePopup.ReadLoreLink')}
             </ExternalLink>
           )}
         </div>
