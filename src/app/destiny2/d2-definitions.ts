@@ -166,7 +166,8 @@ async function getDefinitionsUncached() {
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
-        if (!dbTable[id]) {
+        const dbEntry = dbTable[id];
+        if (!dbEntry) {
           const requestingEntryInfo =
             typeof requestor === 'object' ? requestor.hash : String(requestor);
           reportException('hashLookupFailure', new Error('hash lookup failure'), {
@@ -175,7 +176,7 @@ async function getDefinitionsUncached() {
             failedComponent: table,
           });
         }
-        return dbTable[id];
+        return dbEntry;
       },
       getAll() {
         return db[table];
