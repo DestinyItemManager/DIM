@@ -144,6 +144,7 @@ export const D2ItemCategoryHashesByName = {
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
   submachine: ItemCategoryHashes.SubmachineGuns,
+  smg: ItemCategoryHashes.SubmachineGuns,
   bow: ItemCategoryHashes.Bows,
   transmat: ItemCategoryHashes.ShipModsTransmatEffects,
   weaponmod: ItemCategoryHashes.WeaponMods,
