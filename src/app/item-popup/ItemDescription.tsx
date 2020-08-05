@@ -29,7 +29,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function ItemDescription({ item, inventoryWishListRoll }: Props) {
-  const showDescription = Boolean(item.description?.length);
+  const showDescription =
+    !item.bucket.inWeapons && !item.bucket.inArmor && Boolean(item.description?.length);
 
   const loreLink = item.loreHash
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
@@ -51,17 +52,18 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
           )}
         </div>
       )}
-      {item.isDestiny2() && true && Boolean(item.displaySource?.length) && (
-        <div className={styles.officialDescription}>{item.displaySource}</div>
-      )}
+      {item.isDestiny2() &&
+        !item.bucket.inWeapons &&
+        !item.bucket.inArmor &&
+        Boolean(item.displaySource?.length) && (
+          <div className={styles.officialDescription}>{item.displaySource}</div>
+        )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
-        <div className={styles.wishListNotes}>
+        <div tabIndex={-1} className={styles.wishListNotes}>
           {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
         </div>
       )}
-      <div className={styles.descriptionTools}>
-        <NotesArea item={item} />
-      </div>
+      <NotesArea item={item} />
     </>
   );
 }
