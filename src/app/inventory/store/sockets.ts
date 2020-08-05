@@ -150,7 +150,7 @@ function buildDefinedSockets(
 
   for (let i = 0; i < sockets.length; i++) {
     const socket = sockets[i];
-    realSockets.push(buildDefinedSocket(defs, socket, i));
+    realSockets.push(buildDefinedSocket(defs, socket, i, itemDef));
   }
 
   const categories: DimSocketCategory[] = [];
@@ -194,17 +194,18 @@ function filterReusablePlug(reusablePlug: DimPlug) {
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
   socketDef: DestinyItemSocketEntryDefinition,
-  index: number
+  index: number,
+  forThisItem?: DestinyInventoryItemDefinition
 ): DimSocket | undefined {
   if (!socketDef) {
     return undefined;
   }
 
-  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash);
+  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash, forThisItem);
   if (!socketTypeDef) {
     return undefined;
   }
-  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash);
+  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash, forThisItem);
   if (!socketCategoryDef) {
     return undefined;
   }
@@ -223,11 +224,13 @@ function buildDefinedSocket(
   // we will only populate plugOptions with the currently inserted plug.
   if (isPerk) {
     if (socketDef.reusablePlugSetHash) {
-      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
-      for (const reusablePlug of plugSet.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug);
-        if (built) {
-          reusablePlugs.push(built);
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
+      if (plugSet) {
+        for (const reusablePlug of plugSet.reusablePlugItems) {
+          const built = buildDefinedPlug(defs, reusablePlug);
+          if (built) {
+            reusablePlugs.push(built);
+          }
         }
       }
     } else if (socketDef.reusablePlugItems) {
