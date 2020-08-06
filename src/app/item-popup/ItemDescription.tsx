@@ -60,7 +60,10 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
         )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
         <div tabIndex={-1} className={styles.wishListNotes}>
-          {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
+          <span className={styles.wishListLabel}>
+            {t('WishListRoll.WishListNotes', { notes: '' })}
+          </span>
+          <span className={styles.wishListTextContent}>{inventoryWishListRoll.notes}</span>
         </div>
       )}
       <NotesArea item={item} />

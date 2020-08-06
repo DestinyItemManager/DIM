@@ -8,7 +8,9 @@ interface CssExports {
   'loreLink': string;
   'noNotesYet': string;
   'officialDescription': string;
+  'wishListLabel': string;
   'wishListNotes': string;
+  'wishListTextContent': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

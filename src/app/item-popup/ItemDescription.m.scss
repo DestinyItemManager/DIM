@@ -37,7 +37,6 @@
 
 .wishListNotes {
   composes: description;
-  font-style: italic;
   position: relative;
   max-height: 46px;
   overflow: hidden;
@@ -61,6 +60,12 @@
     &::after {
       display: none;
     }
+  }
+  .wishListLabel {
+    font-weight: bold;
+  }
+  .wishListTextContent {
+    font-style: italic;
   }
 }
 
