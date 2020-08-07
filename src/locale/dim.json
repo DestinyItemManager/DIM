@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
+    "ReadLoreLink": "Read lore",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
     "Split": "Split",

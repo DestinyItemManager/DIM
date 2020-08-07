@@ -11,8 +11,13 @@
 
 .addNote {
   cursor: pointer;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   &:hover {
     color: $orange;
+  }
+  &.noNotesYet {
+    display: inline-block;
   }
 }
 .addNoteTag {
@@ -27,16 +32,47 @@
 .officialDescription {
   composes: description;
   font-style: italic;
+  overflow: auto;
 }
 
 .wishListNotes {
   composes: description;
-  font-style: italic;
+  position: relative;
+  max-height: 46px;
+  overflow: hidden;
+  &:hover {
+    cursor: pointer;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow: inset 0 -31px 20px -20px black;
+  }
+  &:focus {
+    max-height: fit-content;
+    &:hover {
+      cursor: default;
+    }
+    &::after {
+      display: none;
+    }
+  }
+  .wishListLabel {
+    font-weight: bold;
+  }
+  .wishListTextContent {
+    font-style: italic;
+  }
 }
 
-.lore {
-  flex: 1;
+.loreLink {
+  white-space: nowrap;
   img {
     vertical-align: text-bottom;
+    margin-right: 0.2em;
   }
 }
