@@ -43,6 +43,7 @@ import { ManifestDefinitions } from './definitions';
 import _ from 'lodash';
 import { setD2Manifest } from '../manifest/actions';
 import store from '../store/store';
+import { reportException } from 'app/utils/exceptions';
 
 const lazyTables = [
   'InventoryItem',
@@ -89,7 +90,12 @@ const eagerTables = [
 
 /** These aren't really lazy */
 export interface DefinitionTable<T> {
-  get(hash: number): T;
+  /**
+   * for troubleshooting/questionable lookups, include second arg
+   * and sentry can gather info about the source of the invalid hash.
+   * `requestor` ideally a string/number, or a definition including a "hash" key
+   */
+  get(hash: number, requestor?: any): T;
   getAll(): { [hash: number]: T };
 }
 
@@ -155,12 +161,22 @@ async function getDefinitionsUncached() {
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = {
-      get(id: number) {
+      get(id: number, requestor?: any) {
         const dbTable = db[table];
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
-        return dbTable[id];
+        const dbEntry = dbTable[id];
+        if (!dbEntry) {
+          const requestingEntryInfo =
+            typeof requestor === 'object' ? requestor.hash : String(requestor);
+          reportException('hashLookupFailure', new Error('hash lookup failure'), {
+            requestingEntryInfo,
+            failedHash: id,
+            failedComponent: table,
+          });
+        }
+        return dbEntry;
       },
       getAll() {
         return db[table];
