@@ -9,6 +9,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import { statAllowList } from 'app/inventory/store/stats';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -37,14 +38,18 @@ export default function PlugTooltip({
       <h2>{plug.plugItem.displayProperties.name}</h2>
 
       {plug.plugItem.displayProperties.description ? (
-        <div>{plug.plugItem.displayProperties.description}</div>
+        <div>
+          <RichDestinyText text={plug.plugItem.displayProperties.description} defs={defs} />
+        </div>
       ) : (
         plug.perks.map((perk) => (
           <div key={perk.hash}>
             {plug.plugItem.displayProperties.name !== perk.displayProperties.name && (
               <div>{perk.displayProperties.name}</div>
             )}
-            <div>{perk.displayProperties.description}</div>
+            <div>
+              <RichDestinyText text={perk.displayProperties.description} defs={defs} />
+            </div>
           </div>
         ))
       )}
