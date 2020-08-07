@@ -4,6 +4,7 @@ import { observeStore } from '../utils/redux-utils';
 import { settingsSelector } from './reducer';
 
 export let readyResolve;
+/** this promise is resolved when the initial big load of DIM API data is completed */
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
 export function watchLanguageChanges() {
