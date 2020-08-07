@@ -72,6 +72,8 @@ function availableQuestToItem(
   const questRewards = questDef.questRewards
     ? _.take(
         questDef.questRewards.items
+          // 75% of "rewards" are the invalid hash 0
+          .filter((r) => r.itemHash)
           .map((r) => defs.InventoryItem.get(r.itemHash))
           // Filter out rewards that are for other characters
           .filter(

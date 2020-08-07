@@ -68,7 +68,7 @@ export function getModCostInfo(
   }
 
   if (mod) {
-    modCostInfo.energyCost = mod.plug.energyCost.energyCost;
+    modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
   }
 
   if (mod?.plug.energyCost?.energyTypeHash) {
