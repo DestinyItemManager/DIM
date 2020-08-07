@@ -73,7 +73,8 @@ function availableQuestToItem(
     ? _.take(
         questDef.questRewards.items
           // 75% of "rewards" are the invalid hash 0
-          .map((r) => r.itemHash && defs.InventoryItem.get(r.itemHash))
+          .filter((r) => r.itemHash)
+          .map((r) => defs.InventoryItem.get(r.itemHash))
           // Filter out rewards that are for other characters
           .filter(
             (i) =>
