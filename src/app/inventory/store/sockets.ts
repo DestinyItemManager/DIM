@@ -201,8 +201,9 @@ function buildDefinedSocket(
   if (!socketDef) {
     return undefined;
   }
-
-  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash, forThisItem);
+  // a LOT of sockets have socketTypeHash "0", no subsequent data, and should be excluded from consideration
+  const socketTypeDef =
+    socketDef.socketTypeHash && defs.SocketType.get(socketDef.socketTypeHash, forThisItem);
   if (!socketTypeDef) {
     return undefined;
   }
