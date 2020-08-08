@@ -10,7 +10,7 @@ import { FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
 // these just check an attribute found on DimItem
-const simpleFilters: FilterDefinition[] = [
+const d1Filters: FilterDefinition[] = [
   {
     keywords: ['sublime'],
     description: ['Filter.RarityTier'],
@@ -233,4 +233,4 @@ const simpleFilters: FilterDefinition[] = [
   },
 ];
 
-export default simpleFilters;
+export default d1Filters;

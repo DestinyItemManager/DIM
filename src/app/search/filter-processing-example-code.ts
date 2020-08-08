@@ -8,6 +8,15 @@ import { FilterDefinition } from './filter-types';
 import { DimItem } from 'app/inventory/item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import _ from 'lodash';
+import d1Filters from './search-filters/d1-filters';
+import freeformFilters from './search-filters/freeform';
+import itemInfosFilters from './search-filters/item-infos';
+import knownValuesFilters from './search-filters/known-values';
+import loadoutFilters from './search-filters/loadouts';
+import simpleFilters from './search-filters/simple';
+import statFilters from './search-filters/stats';
+import locationFilters from './search-filters/stores';
+import wishlistFilters from './search-filters/wishlist';
 
 /** a placeholder filter which always returns false */
 const falseFilter: FilterDefinition = {
@@ -24,20 +33,29 @@ const allFiltersByKeyword: Record<string, FilterDefinition> = {};
 export function populateFilters(currentDestinyVersion: 1 | 2) {
   [
     advancedFilters,
+    d1Filters,
     dupeFilters,
+    freeformFilters,
+    itemInfosFilters,
+    knownValuesFilters,
+    loadoutFilters,
     simpleRangeFilters,
     overloadedRangeFilters,
     ratingsFilters,
+    simpleFilters,
     socketFilters,
+    statFilters,
+    locationFilters,
+    wishlistFilters,
   ]
     .flatMap((filterGroup) =>
       filterGroup.filter(
         (filter) => filter.destinyVersion === 0 || filter.destinyVersion === currentDestinyVersion
       )
     )
-    .forEach((f) => {
-      f.keywords.forEach((k) => {
-        allFiltersByKeyword[k] = f;
+    .forEach((filter) => {
+      filter.keywords.forEach((keyword) => {
+        allFiltersByKeyword[keyword] = filter;
       });
     });
 }
