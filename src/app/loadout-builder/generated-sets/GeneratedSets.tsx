@@ -1,7 +1,14 @@
 import { t } from 'app/i18next-t';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import {
+  ArmorSet,
+  StatTypes,
+  LockedMap,
+  LockedArmor2ModMap,
+  ModPickerCategories,
+  LockedModBase,
+} from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { newLoadout } from 'app/loadout/loadout-utils';
@@ -27,6 +34,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
+  lockedSeasonalMods: LockedModBase[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -98,6 +106,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       combosWithoutCaps,
       enabledStats,
       lockedArmor2Mods,
+      lockedSeasonalMods,
       lbDispatch,
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
@@ -106,6 +115,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
     if (sets.length > 0 && rowHeight === 0 && rowColumns !== 0) {
       measureSet = _.maxBy(sets, numColumns);
     }
+
+    const itemsGroupedForMods =
+      lockedSeasonalMods.length ||
+      lockedArmor2Mods[ModPickerCategories.general].length ||
+      lockedArmor2Mods[ModPickerCategories.seasonal].length;
 
     return (
       <div className={styles.sets}>
@@ -138,6 +152,14 @@ export default class GeneratedSets extends React.Component<Props, State> {
             }}
           />{' '}
           <UserGuideLink topic="Loadout_Optimizer" />
+        </p>
+        <p>
+          {/* t('LoadoutBuilder.ItemsGroupedForMods') t('LoadoutBuilder.ItemsGrouped') */}
+          {t(
+            itemsGroupedForMods
+              ? 'LoadoutBuilder.ItemsGroupedForMods'
+              : 'LoadoutBuilder.ItemsGrouped'
+          )}
         </p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}

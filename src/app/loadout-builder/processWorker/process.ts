@@ -342,9 +342,7 @@ function getStatMix(item: ProcessItem, assumeMasterwork: boolean, orderedStatVal
     return emptyStats;
   }
 
-  const mixes: number[][] = [
-    getStatValuesWithModsAndMWProcess(item, assumeMasterwork, orderedStatValues),
-  ];
+  const mixes: number[][] = [getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatValues)];
 
   if (stats && item.sockets && item.energy) {
     for (const socket of item.sockets.sockets) {
@@ -393,10 +391,9 @@ function getPower(items: ProcessItem[]) {
 }
 
 /**
- * Gets the stat values of an item with masterwork and locked mods considered.
- * Unfortunately this needs to be kept in line with getStatValuesWithModsAndMW in ../utils.ts.
+ * Gets the stat values of an item with masterwork.
  */
-function getStatValuesWithModsAndMWProcess(
+function getStatValuesWithMWProcess(
   item: ProcessItem,
   assumeMasterwork: boolean | null,
   orderedStatValues: number[]

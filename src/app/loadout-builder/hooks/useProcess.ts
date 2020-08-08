@@ -11,11 +11,11 @@ import {
   MinMax,
   LockedModBase,
   bucketsToCategories,
-  LockableBuckets,
   ModPickerCategories,
+  statHashes,
 } from '../types';
-import { D2Item } from 'app/inventory/item-types';
-import { ProcessItemsByBucket, ProcessItem } from '../processWorker/types';
+import { DimItem } from 'app/inventory/item-types';
+import { ProcessItemsByBucket } from '../processWorker/types';
 import {
   mapDimItemToProcessItem,
   mapSeasonalModsToProcessMods,
@@ -23,6 +23,7 @@ import {
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
 } from '../processWorker/mappers';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 
 interface ProcessState {
   processing: boolean;
@@ -75,34 +76,26 @@ export function useProcess(
     setState({ processing: true, result, currentCleanup: cleanup });
 
     const processItems: ProcessItemsByBucket = {};
-    const itemsById: { [id: string]: D2Item } = {};
-    const classItemsById: { [id: string]: D2Item[] } = {};
-    const classItems: ProcessItem[] = [];
+    const itemsById: { [id: string]: DimItem[] } = {};
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      for (const item of items) {
-        if (item.isDestiny2()) {
-          const processItem = mapDimItemToProcessItem(
-            item,
-            lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]]
+      const groupedItems = groupItems(
+        items,
+        lockedSeasonalMods,
+        lockedArmor2ModMap,
+        statOrder,
+        assumeMasterwork
+      );
+      for (const group of Object.values(groupedItems)) {
+        const item = group.length ? group[0] : null;
+        if (item?.isDestiny2()) {
+          processItems[key].push(
+            mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
           );
-          if (key !== LockableBuckets.classitem.toString()) {
-            processItems[key].push(processItem);
-            itemsById[item.id] = item;
-          } else {
-            classItems.push(processItem);
-            itemsById[item.id] = item;
-          }
+          itemsById[item.id] = group;
         }
       }
-    }
-
-    const groupedClassItems = groupClassItems(classItems, lockedSeasonalMods, lockedArmor2ModMap);
-
-    for (const groupedItems of Object.values(groupedClassItems)) {
-      classItemsById[groupedItems[0].id] = groupedItems.map((item) => itemsById[item.id]);
-      processItems[LockableBuckets.classitem].push(groupedItems[0]);
     }
 
     const workerStart = performance.now();
@@ -119,7 +112,7 @@ export function useProcess(
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById, classItemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
 
         setState({
           processing: false,
@@ -200,20 +193,43 @@ function createWorker() {
   return { worker, cleanup };
 }
 
-function groupClassItems(
-  classItems: ProcessItem[],
+/**
+ * This groups items for process depending on whether any general or seasonal mods are locked.
+ * If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energy).
+ * If not it groups by (stats, masterworked).
+ * Note that assumedMasterwork effects this.
+ */
+function groupItems(
+  items: readonly DimItem[],
   lockedSeasonalMods: readonly LockedModBase[],
-  lockedArmor2ModMap: LockedArmor2ModMap
+  lockedArmor2ModMap: LockedArmor2ModMap,
+  statOrder: StatTypes[],
+  assumeMasterwork: boolean
 ) {
   const groupForMods =
     lockedSeasonalMods.length ||
     lockedArmor2ModMap[ModPickerCategories.general].length ||
     lockedArmor2ModMap[ModPickerCategories.seasonal].length;
 
-  const groupingFn = (item: ProcessItem) =>
-    groupForMods
-      ? `${item.season}${item.energy?.type}${item.energy?.capacity === 10}`
-      : item.energy?.capacity === 10;
+  const groupingFn = (item: DimItem) => {
+    if (item.isDestiny2()) {
+      const statValues: number[] = [];
+      const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+      // Ensure ordering of stats
+      if (statsByHash) {
+        for (const statType of statOrder) {
+          statValues.push(statsByHash[statHashes[statType]].base);
+        }
+      }
 
-  return _.groupBy(classItems, groupingFn);
+      const statsAndMW = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+      return groupForMods
+        ? `${statsAndMW}${getSpecialtySocketMetadata(item)?.season}${item.energy?.energyType}`
+        : statsAndMW;
+    } else {
+      return 'throwAway';
+    }
+  };
+
+  return _.groupBy(items, groupingFn);
 }

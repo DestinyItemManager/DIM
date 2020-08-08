@@ -189,17 +189,12 @@ export function mapDimItemToProcessItem(
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: { [id: string]: DimItem },
-  classItemsById: { [id: string]: D2Item[] }
+  itemsById: { [id: string]: DimItem[] }
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
   for (const itemId of processed.armor) {
-    if (classItemsById[itemId]) {
-      armor.push(classItemsById[itemId]);
-    } else {
-      armor.push([itemsById[itemId]]);
-    }
+    armor.push(itemsById[itemId]);
   }
 
   return {
