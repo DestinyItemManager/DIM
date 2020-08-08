@@ -195,7 +195,7 @@ export function SearchFilter(
 
   const placeholder = isPhonePortrait
     ? t('Header.FilterHelpBrief')
-    : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
+    : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' });
 
   return $featureFlags.newSearch ? (
     <SearchBar

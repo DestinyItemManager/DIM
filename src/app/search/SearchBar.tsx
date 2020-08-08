@@ -1,6 +1,16 @@
 import './search-filter.scss';
 
-import { AppIcon, disabledIcon, helpIcon, searchIcon } from '../shell/icons';
+import {
+  AppIcon,
+  disabledIcon,
+  helpIcon,
+  searchIcon,
+  faClock,
+  starIcon,
+  moveUpIcon,
+  moveDownIcon,
+  unTrackedIcon,
+} from '../shell/icons';
 import React, {
   Suspense,
   useState,
@@ -8,6 +18,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useEffect,
+  useMemo,
 } from 'react';
 
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
@@ -25,6 +36,7 @@ import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { searchUsed } from 'app/dim-api/basic-actions';
 import { useCombobox } from 'downshift';
 import styles from './SearchBar.m.scss';
+import clsx from 'clsx';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 const enum SearchItemType {
@@ -36,6 +48,8 @@ const enum SearchItemType {
   Suggested,
   /** Generated autocomplete searches */
   Autocomplete,
+  /** Open help */
+  Help,
 }
 
 /** An item in the search autocompleter */
@@ -48,6 +62,14 @@ interface SearchItem {
   /** Help text */
   helpText?: React.ReactNode;
 }
+
+const searchItemIcons: { [key in SearchItemType]: string } = {
+  [SearchItemType.Recent]: faClock,
+  [SearchItemType.Saved]: starIcon,
+  [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
+  [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
+  [SearchItemType.Help]: helpIcon,
+};
 
 interface ProvidedProps {
   /** Whether the "X" button that clears the selection should always be shown. */
@@ -153,6 +175,7 @@ export default React.forwardRef(function SearchFilterInput(
 
   const clearFilter = useCallback(() => {
     debouncedUpdateQuery('');
+    debouncedUpdateQuery.flush();
     setLiveQuery('');
     textcomplete.current?.trigger('');
     onClear?.();
@@ -170,19 +193,39 @@ export default React.forwardRef(function SearchFilterInput(
 
   // Initial input items are recent searches, from DIM Sync data
   // TODO: this should be a function of query text
-  const inputItems: SearchItem[] = _.take(
-    _.compact([
-      liveQuery && {
-        type: SearchItemType.Autocomplete,
-        query: liveQuery,
+  // TODO: don't show results that exactly match the input
+  const inputItems: SearchItem[] = useMemo(
+    () => [
+      ..._.take(
+        _.compact([
+          liveQuery && {
+            type: SearchItemType.Autocomplete,
+            query: liveQuery,
+          },
+          ...recentSearches.map((s) => ({
+            type: s.usageCount > 0 ? SearchItemType.Recent : SearchItemType.Suggested,
+            query: s.query,
+          })),
+        ]),
+        6
+      ),
+      // Add an item for opening the filter help
+      {
+        type: SearchItemType.Help,
+        query: liveQuery || '', // use the live query as the text so we don't change text when selecting it
       },
-      ...recentSearches.map((s) => ({
-        type: s.usageCount > 0 ? SearchItemType.Recent : SearchItemType.Suggested,
-        query: s.query,
-      })),
-    ]),
-    8
+    ],
+    [liveQuery, recentSearches]
   );
+
+  // TODO: Some interaction notes:
+  // * In chrome, selecting an item via keyboard/mouse replaces the current input value with that, but doesn't apply it until "Enter"
+  //   In downshift, focus remains on the input and changing the input would fire onInputValueChanged
+  // * On mobile, we should start with the menu open
+  // * When the user hits "enter" we should show a sheet of results
+  // * Should we not search until they blur/hit enter? no...
+
+  // why does the selection change when stores reload
 
   // useCombobox from Downshift manages the state of the dropdown
   const {
@@ -190,38 +233,37 @@ export default React.forwardRef(function SearchFilterInput(
     getToggleButtonProps,
     getMenuProps,
     getInputProps,
+    getLabelProps,
     getComboboxProps,
     highlightedIndex,
     getItemProps,
+    // openMenu // we can call this on focus?
+    // reset
   } = useCombobox<SearchItem>({
+    //isOpen: true,
+    inputValue: liveQuery,
     items: inputItems,
-    onInputValueChange: ({ inputValue }) => {
-      // TODO: there are other interesting values available
+    defaultHighlightedIndex: 0,
+    itemToString: (i) => i?.query || '',
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (selectedItem?.type === SearchItemType.Help) {
+        setFilterHelpOpen(true);
+        return;
+      }
+    },
+    onInputValueChange: ({ inputValue, selectedItem }) => {
       if (inputValue) {
         setLiveQuery(inputValue);
-        // TODO: If the change type wasn't keyboard, apply instantly
         debouncedUpdateQuery(inputValue);
+        // If we selected an item from the menu, apply it immediately
+        if (selectedItem) {
+          debouncedUpdateQuery.flush();
+        }
       } else {
         clearFilter();
       }
     },
   });
-
-  const onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const query = e.currentTarget.value;
-    setLiveQuery(query);
-    debouncedUpdateQuery(query);
-  };
-
-  const showFilterHelp = () => setFilterHelpOpen(true);
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === 27) {
-      e.stopPropagation();
-      e.preventDefault();
-      clearFilter();
-    }
-  };
 
   // TODO: remove the textcomplete
 
@@ -324,7 +366,11 @@ export default React.forwardRef(function SearchFilterInput(
 
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   return (
-    <div className="search-filter" role="search">
+    <div
+      className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
+      role="search"
+      {...getComboboxProps()}
+    >
       <GlobalHotkeys
         hotkeys={[
           {
@@ -348,7 +394,7 @@ export default React.forwardRef(function SearchFilterInput(
           },
         ]}
       />
-      <AppIcon icon={searchIcon} />
+      <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
       <input
         ref={inputElement}
         className="filter-input"
@@ -360,18 +406,10 @@ export default React.forwardRef(function SearchFilterInput(
         placeholder={placeholder}
         type="text"
         name="filter"
-        value={liveQuery}
-        onChange={_.noop}
-        onInput={onQueryChange}
-        onKeyDown={onKeyDown}
-        onBlur={onBlur}
+        {...getInputProps({ onBlur })}
       />
 
       {liveQuery.length !== 0 && children}
-
-      <span onClick={showFilterHelp} className="filter-bar-button" title={t('Header.Filters')}>
-        <AppIcon icon={helpIcon} />
-      </span>
 
       {(liveQuery.length > 0 || alwaysShowClearButton) && (
         <span className="filter-bar-button" onClick={clearFilter} title={t('Header.Clear')}>
@@ -379,12 +417,14 @@ export default React.forwardRef(function SearchFilterInput(
         </span>
       )}
 
-      <div className={styles.openButton} {...getComboboxProps()}>
-        <input {...getInputProps()} />
-        <button type="button" {...getToggleButtonProps()} aria-label="toggle menu">
-          &#8595;
-        </button>
-      </div>
+      <button
+        type="button"
+        className={styles.openButton}
+        {...getToggleButtonProps()}
+        aria-label="toggle menu"
+      >
+        <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
+      </button>
 
       {filterHelpOpen &&
         ReactDOM.createPortal(
@@ -400,15 +440,18 @@ export default React.forwardRef(function SearchFilterInput(
           document.body
         )}
 
-      <ul {...getMenuProps()} className={styles.menu}>
+      <ul {...getMenuProps()} className={clsx(styles.menu, { [styles.menuOpen]: isOpen })}>
         {isOpen &&
           inputItems.map((item, index) => (
             <li
-              style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
-              key={`${item}${index}`}
+              className={clsx(styles.menuItem, {
+                [styles.highlightedItem]: highlightedIndex === index,
+              })}
+              key={`${item.type}${item.query}`}
               {...getItemProps({ item, index })}
             >
-              {item.query}
+              <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+              {item.type === SearchItemType.Help ? t('Header.FilterHelpMenuItem') : item.query}
             </li>
           ))}
       </ul>

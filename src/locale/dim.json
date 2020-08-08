@@ -375,6 +375,7 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
+    "FilterHelpMenuItem": "Filters Help...",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
