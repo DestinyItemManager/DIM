@@ -379,7 +379,7 @@
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
     "Filters": "过滤器",
-    "InstallDIM": "安装 DIM",
+    "InstallDIM": "Install as an App",
     "Inventory": "背包",
     "IosPwaPrompt": "在使用移动端Safari浏览器时，请点击屏幕底部中间的分享按钮并选择“添加到主屏幕”。",
     "Menu": "菜单",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "从{{bucket}} 移到{{store}}",
     "ReadLore": "在Ishtar Collective阅读背景故事",
+    "ReadLoreLink": "Read lore",
     "ReviewsTab": "评测",
     "Rewards": "奖励：",
     "Split": "拆分",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
     "CsvImport": "从CSV导入标签/注释",
+    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "试算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而不会模糊物品图片或文本。",
     "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具来比较相关物品。",
@@ -846,6 +848,8 @@
     "SortName": "名称"
   },
   "Stats": {
+    "Custom": "Custom Total",
+    "CustomDesc": "Custom total configured in settings. This only adds up base stats, ignoring mods or masterworking.",
     "Discipline": "训练",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",

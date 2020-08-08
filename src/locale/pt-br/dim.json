@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM de modificar seus itens.",
+    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus itens.",
     "ConfirmTitle": "Confirmar Ação"
   },
   "Accounts": {
@@ -249,7 +249,7 @@
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "Negate": "Para negar uma busca, inclua um sinal de menos como prefixo do termo buscado: {{notexample}} achará todos os itens não-engramas.",
     "NewItems": "Mostra novos itens.",
-    "Notes": "Procura por itens que você marcou com notas customizadas",
+    "Notes": "Procura por itens que você marcou com notas personalizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
     "PartialMatch": "Exibe itens onde seus nomes/perks possuem uma correspondência parcial com o texto do filtro. Busque por frases inteiras usando aspas. O filtro 'perk:' buscará somente perks.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
-    "InstallDIM": "Instalar DIM",
+    "InstallDIM": "Instalar como um App",
     "Inventory": "Inventário",
     "IosPwaPrompt": "No Safari para celular, clique no ícone compartilhar (botão do meio na parte inferior) e selecione \"Adicionar à Tela Inicial\".",
     "Menu": "Menu",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Mover de {{bucket}} para {{store}}",
     "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
+    "ReadLoreLink": "Ler sobre",
     "ReviewsTab": "Análises",
     "Rewards": "Recompensas:",
     "Split": "Dividir",
@@ -728,7 +729,7 @@
       "Archetype": "Arquétipo",
       "BaseStats": "Atributos base",
       "Breaker": "Quebra-guarda",
-      "CustomTotal": "Total customizado",
+      "CustomTotal": "Total Personalizado",
       "Damage": "Dano",
       "Element": "Elemento",
       "Energy": "Energia",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
     "CsvImport": "Importar marcas/anotações do CSV",
+    "CustomStatDesc": "Indique atributos de armaduras para criar um valor total personalizado que será exibido no popup do item, no Organizador e no Comparador. Pesquise por stat:custom>=30.",
     "Data": "Planilhas",
     "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
     "DontForgetDupes": "Não esqueça que você pode pesquisar is:dupe para encontrar facilmente itens duplicados, e então usar a ferramenta de comparação para avaliar itens relacionados.",
@@ -846,6 +848,8 @@
     "SortName": "Nome"
   },
   "Stats": {
+    "Custom": "Total Personalizado",
+    "CustomDesc": "Total personalizado indicado nas configurações. Inclui apenas atributos base, ignorando mods e obras-primas.",
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder máximo de itens equipáveis",

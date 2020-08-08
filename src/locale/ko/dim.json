@@ -379,7 +379,7 @@
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
-    "InstallDIM": "DIM 설치",
+    "InstallDIM": "앱으로 설치",
     "Inventory": "소지품",
     "IosPwaPrompt": "모바일 사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
     "Menu": "메뉴",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "{{bucket}}에서 {{store}}(으)로 이동",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
+    "ReadLoreLink": "지식 읽기",
     "ReviewsTab": "평가",
     "Rewards": "보상:",
     "Split": "분할",
@@ -810,6 +811,7 @@
     "ColumnSize": "아이템 {{num}}개",
     "ColumnSizeAuto": "자동",
     "CsvImport": "CSV에서 태그와 메모 가져오기",
+    "CustomStatDesc": "방어구 스텟을 선택하면 아이템 팝업, 정리 도구, 비교에서 표시되는 사용자 정의 총합을 만들 수 있습니다. stat:custom:>=30로 검색하세요.",
     "Data": "스프레드시트",
     "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
@@ -846,6 +848,8 @@
     "SortName": "이름"
   },
   "Stats": {
+    "Custom": "사용자 정의 총합",
+    "CustomDesc": "사용자 정의 총합은 설정에 정의되어 있습니다. 기본 스텟만 계산되며, 개조 부품이나 걸작은 무시됩니다.",
     "Discipline": "규율",
     "Intellect": "지능",
     "MaxGearPower": "장착 가능한 최대 전투력",

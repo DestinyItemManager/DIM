@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
-    "InstallDIM": "Zainstaluj DIM",
+    "InstallDIM": "Zainstaluj jako aplikację",
     "Inventory": "Ekwipunek",
     "IosPwaPrompt": "W Mobilnym Safari, kliknij ikonę udostępniania (środkowy przycisk u dołu) i wybierz \"Dodaj do Ekranu Domowego\".",
     "Menu": "Menu",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Wyciągnij z {{bucket}} do {{store}}",
     "ReadLore": "Czytaj lore na Ishtar Collective",
+    "ReadLoreLink": "Czytaj fabułę",
     "ReviewsTab": "Recenzje",
     "Rewards": "Nagrody:",
     "Split": "Podziel",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} przedmiotów",
     "ColumnSizeAuto": "Auto",
     "CsvImport": "Importuj tagi/notatki z pliku CSV",
+    "CustomStatDesc": "Wybierz statystyki pancerza, aby utworzyć niestandardową całkowitą sumę statystyk, która pokaże się w wyskakującym oknie przedmiotu, organizatorze i porównaniu. Szukaj z stat:custom:>=30.",
     "Data": "Arkusze kalkulacyjne",
     "DefaultItemSizeNote": "Rozmiar przedmiotu 50px będzie wyglądał najostrzej, bez rozmycia obrazu przedmiotu lub tekstu.",
     "DontForgetDupes": "Nie zapomnij, że możesz wyszukać is:dupe aby szybko znaleźć zduplikowane przedmioty, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
@@ -846,6 +848,8 @@
     "SortName": "Nazwa"
   },
   "Stats": {
+    "Custom": "Niestandardowa suma",
+    "CustomDesc": "Niestandardowa suma skonfigurowana w ustawieniach. Dodaje tylko podstawowe statystyki, ignorując modyfikacje lub mistrzostwo.",
     "Discipline": "Dyscyplina",
     "Intellect": "Intelekt",
     "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",
