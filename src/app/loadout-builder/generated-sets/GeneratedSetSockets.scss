@@ -5,12 +5,12 @@
 
   .item {
     cursor: pointer;
-    margin-right: 4px;
+    margin: 0 4px 4px 0;
     display: flex;
     flex-direction: column;
 
-    width: calc(0.64 * var(--item-size));
-    height: calc(0.64 * var(--item-size));
+    width: calc(0.59 * var(--item-size));
+    height: calc(0.59 * var(--item-size));
 
     &:last-child {
       margin-right: 0;
@@ -18,21 +18,21 @@
 
     img {
       -webkit-touch-callout: none;
-      width: calc(0.64 * var(--item-size));
-      height: calc(0.64 * var(--item-size));
+      width: calc(0.59 * var(--item-size));
+      height: calc(0.59 * var(--item-size));
       display: block;
     }
 
     .energyCostOverlay {
-      height: calc(0.64 * var(--item-size) - #{2 * $item-border-width});
-      width: calc(0.64 * var(--item-size) - #{2 * $item-border-width});
-      background-size: calc(0.64 * var(--item-size));
+      height: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
+      width: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
+      background-size: calc(0.59 * var(--item-size));
     }
 
     .energyCost {
-      top: calc(#{$item-border-width} + ((0.64 * var(--item-size)) / 13));
-      right: calc(#{$item-border-width} + ((0.64 * var(--item-size)) / 10.5));
-      font-size: calc((0.64 * var(--item-size)) / 5.5);
+      top: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 13));
+      right: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 10.5));
+      font-size: calc((0.59 * var(--item-size)) / 5.5);
     }
   }
 }
