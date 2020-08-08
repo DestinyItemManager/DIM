@@ -31,18 +31,17 @@
 }
 
 .openButton {
-  -webkit-appearance: button;
+  composes: resetButton from '../dim-ui/common.m.scss';
   display: inline-block;
   margin-left: 5px;
   color: #999;
-  margin: 0 6px 0 4px;
   font-size: 12px !important;
-  background: transparent;
-  border: 0;
 }
 
 .menuItem {
-  padding: 7px 8px 7px 9px;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: baseline;
+  padding: 7px 9px 7px 9px;
 }
 
 .highlightedItem {
@@ -51,10 +50,24 @@
   .menuItemIcon {
     color: black;
   }
+  .deleteIcon {
+    color: #333;
+  }
 }
 
 .menuItemIcon {
   font-size: 12px !important;
   margin-right: 6px;
+  color: #999;
+}
+
+.menuItemQuery {
+  flex: 1;
+}
+
+.deleteIcon {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  font-size: 10px !important;
+  margin-left: 6px;
   color: #999;
 }

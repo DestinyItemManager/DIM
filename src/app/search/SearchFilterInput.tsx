@@ -258,7 +258,7 @@ export default React.forwardRef(function SearchFilterInput(
           },
         ]}
       />
-      <AppIcon icon={searchIcon} />
+      <AppIcon icon={searchIcon} className="search-bar-icon" />
       <input
         ref={inputElement}
         className="filter-input"

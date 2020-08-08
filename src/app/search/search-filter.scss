@@ -17,6 +17,7 @@
   align-items: center;
   background: #313233;
   padding-left: 5px;
+  padding-right: 5px;
   margin-left: -3px;
   height: 32px;
   border-radius: 4px;
@@ -114,8 +115,17 @@
 }
 
 .filter-bar-button {
-  cursor: pointer;
   margin: 0 6px;
+  padding: 0;
+  -webkit-appearance: button;
+  display: inline-block;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  :focus {
+    outline: 1px solid $orange;
+  }
 
   @include phone-portrait {
     margin-right: 8px !important;

@@ -10,6 +10,8 @@ import {
   moveUpIcon,
   moveDownIcon,
   unTrackedIcon,
+  closeIcon,
+  starOutlineIcon,
 } from '../shell/icons';
 import React, {
   Suspense,
@@ -25,18 +27,15 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
-import Textarea from 'textcomplete/lib/textarea';
-import Textcomplete from 'textcomplete/lib/textcomplete';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchConfigSelector } from './search-filter';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
-import { searchUsed } from 'app/dim-api/basic-actions';
+import { searchUsed, saveSearch } from 'app/dim-api/basic-actions';
 import { useCombobox } from 'downshift';
 import styles from './SearchBar.m.scss';
 import clsx from 'clsx';
+import { parseQuery, canonicalizeQuery } from './query-parser';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 const enum SearchItemType {
@@ -98,25 +97,6 @@ const LazyFilterHelp = React.lazy(() =>
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
 
-/** matches a keyword that's probably a math comparison */
-const mathCheck = /[\d<>=]/;
-
-/** if one of these has been typed, stop guessing which filter and just offer this filter's values */
-const filterNames = [
-  'is',
-  'not',
-  'tag',
-  'notes',
-  'stat',
-  'stack',
-  'count',
-  'source',
-  'perk',
-  'perkname',
-  'name',
-  'description',
-];
-
 /** An interface for interacting with the search filter through a ref */
 export interface SearchFilterRef {
   /** Switch focus to the filter field */
@@ -148,10 +128,9 @@ export default React.forwardRef(function SearchFilterInput(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const dispatch = useDispatch();
-  const searchConfig = useSelector(searchConfigSelector);
+  //const searchConfig = useSelector(searchConfigSelector);
   const recentSearches = useSelector(recentSearchesSelector);
 
-  const textcomplete = useRef<Textcomplete>();
   const inputElement = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
@@ -166,7 +145,6 @@ export default React.forwardRef(function SearchFilterInput(
   }, []);
 
   const onBlur = () => {
-    textcomplete.current?.hide();
     if (liveQuery) {
       // save this to the recent searches only on blur
       dispatch(searchUsed(liveQuery));
@@ -177,7 +155,6 @@ export default React.forwardRef(function SearchFilterInput(
     debouncedUpdateQuery('');
     debouncedUpdateQuery.flush();
     setLiveQuery('');
-    textcomplete.current?.trigger('');
     onClear?.();
   }, [debouncedUpdateQuery, onClear]);
 
@@ -191,6 +168,15 @@ export default React.forwardRef(function SearchFilterInput(
     [focusFilterInput, clearFilter]
   );
 
+  // TODO: this seems inefficient
+  const canonical = canonicalizeQuery(parseQuery(liveQuery));
+  const saved = recentSearches.find((s) => s.query === canonical)?.saved;
+
+  // This depends on blur firing first?
+  const toggleSaved = () => {
+    dispatch(saveSearch({ query: liveQuery, saved: !saved }));
+  };
+
   // Initial input items are recent searches, from DIM Sync data
   // TODO: this should be a function of query text
   // TODO: don't show results that exactly match the input
@@ -203,7 +189,11 @@ export default React.forwardRef(function SearchFilterInput(
             query: liveQuery,
           },
           ...recentSearches.map((s) => ({
-            type: s.usageCount > 0 ? SearchItemType.Recent : SearchItemType.Suggested,
+            type: s.saved
+              ? SearchItemType.Saved
+              : s.usageCount > 0
+              ? SearchItemType.Recent
+              : SearchItemType.Suggested,
             query: s.query,
           })),
         ]),
@@ -240,7 +230,7 @@ export default React.forwardRef(function SearchFilterInput(
     // openMenu // we can call this on focus?
     // reset
   } = useCombobox<SearchItem>({
-    //isOpen: true,
+    isOpen: true,
     inputValue: liveQuery,
     items: inputItems,
     defaultHighlightedIndex: 0,
@@ -265,104 +255,16 @@ export default React.forwardRef(function SearchFilterInput(
     },
   });
 
-  // TODO: remove the textcomplete
-
-  // Set up the textcomplete
-  useEffect(() => {
-    if (!inputElement.current) {
-      return;
-    }
-
-    const editor = new Textarea(inputElement.current);
-    textcomplete.current = new Textcomplete(editor);
-    textcomplete.current.register(
-      [
-        {
-          words: searchConfig.keywords,
-          match: /\b([\w:"']{3,})$/i,
-          search(term: string, callback: (terms: string[]) => void) {
-            if (term) {
-              let words: string[] = term.includes(':') // with a colon, only match from beginning
-                ? // ("stat:" matches "stat:" but not "basestat:")
-                  searchConfig.keywords.filter((word: string) =>
-                    word.startsWith(term.toLowerCase())
-                  )
-                : // ("stat" matches "stat:" and "basestat:")
-                  searchConfig.keywords.filter((word: string) => word.includes(term.toLowerCase()));
-
-              words = words.sort(
-                chainComparator(
-                  // tags are UGC and therefore important
-                  compareBy((word: string) => !word.startsWith('tag:')),
-                  // prioritize is: & not: because a pair takes up only 2 slots at the top,
-                  // vs filters that end in like 8 statnames
-                  compareBy((word: string) => !(word.startsWith('is:') || word.startsWith('not:'))),
-                  // sort incomplete terms (ending with ':') to the front
-                  compareBy((word: string) => !word.endsWith(':')),
-                  // sort more-basic incomplete terms (fewer colons) to the front
-                  compareBy((word: string) => word.split(':').length),
-                  // prioritize strings we are typing the beginning of
-                  compareBy((word: string) => word.indexOf(term.toLowerCase()) !== 0),
-                  // prioritize words with less left to type
-                  compareBy(
-                    (word: string) => word.length - (term.length + word.indexOf(term.toLowerCase()))
-                  ),
-                  // push math operators to the front for things like "masterwork:"
-                  compareBy((word: string) => !mathCheck.test(word))
-                )
-              );
-              if (filterNames.includes(term.split(':')[0])) {
-                callback(words);
-              } else if (words.length) {
-                const deDuped = new Set([term, ...words]);
-                deDuped.delete(term);
-                callback([...deDuped]);
-              } else {
-                callback([]);
-              }
-            }
-          },
-          // TODO: use "template" to include help text
-          index: 1,
-          replace(word: string) {
-            word = word.toLowerCase();
-            return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
-          },
-        },
-      ],
-      {
-        zIndex: 1000,
-      }
-    );
-
-    textcomplete.current.on('rendered', () => {
-      if (textcomplete.current.dropdown.items.length) {
-        // Activate the first item by default
-        textcomplete.current.dropdown.items[0].activate();
-      }
-    });
-    textcomplete.current.dropdown.on('select', (selectEvent) => {
-      if (selectEvent.detail.searchResult.data.endsWith(':')) {
-        setTimeout(() => {
-          textcomplete.current.editor.onInput();
-        }, 200);
-      }
-    });
-
-    return () => {
-      if (textcomplete.current) {
-        textcomplete.current.destroy();
-        textcomplete.current = null;
-      }
-    };
-  }, [searchConfig.keywords]);
-
   // Reset live query when search version changes
   useEffect(() => {
     if (searchQuery !== undefined) {
       setLiveQuery(searchQuery);
     }
   }, [searchQueryVersion, searchQuery]);
+
+  const deleteSearch = (_item: SearchItem) => {
+    console.log('This is where item deleting goes');
+  };
 
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   return (
@@ -409,17 +311,33 @@ export default React.forwardRef(function SearchFilterInput(
         {...getInputProps({ onBlur })}
       />
 
-      {liveQuery.length !== 0 && children}
+      {liveQuery.length > 0 && children}
+
+      {liveQuery.length > 0 && (
+        <button
+          type="button"
+          className="filter-bar-button"
+          onClick={toggleSaved}
+          title={t('Header.SaveSearch')}
+        >
+          <AppIcon icon={saved ? starIcon : starOutlineIcon} />
+        </button>
+      )}
 
       {(liveQuery.length > 0 || alwaysShowClearButton) && (
-        <span className="filter-bar-button" onClick={clearFilter} title={t('Header.Clear')}>
+        <button
+          type="button"
+          className="filter-bar-button"
+          onClick={clearFilter}
+          title={t('Header.Clear')}
+        >
           <AppIcon icon={disabledIcon} />
-        </span>
+        </button>
       )}
 
       <button
         type="button"
-        className={styles.openButton}
+        className={clsx('filter-bar-button', styles.openButton)}
         {...getToggleButtonProps()}
         aria-label="toggle menu"
       >
@@ -451,7 +369,19 @@ export default React.forwardRef(function SearchFilterInput(
               {...getItemProps({ item, index })}
             >
               <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-              {item.type === SearchItemType.Help ? t('Header.FilterHelpMenuItem') : item.query}
+              <span className={styles.menuItemQuery}>
+                {item.type === SearchItemType.Help ? t('Header.FilterHelpMenuItem') : item.query}
+              </span>
+              {highlightedIndex === index &&
+                (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+                  <button
+                    type="button"
+                    className={styles.deleteIcon}
+                    onClick={() => deleteSearch(item)}
+                  >
+                    <AppIcon icon={closeIcon} />
+                  </button>
+                )}
             </li>
           ))}
       </ul>
