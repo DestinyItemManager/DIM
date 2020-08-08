@@ -116,10 +116,13 @@ export default class GeneratedSets extends React.Component<Props, State> {
       measureSet = _.maxBy(sets, numColumns);
     }
 
-    const itemsGroupedForMods =
-      lockedSeasonalMods.length ||
-      lockedArmor2Mods[ModPickerCategories.general].length ||
-      lockedArmor2Mods[ModPickerCategories.seasonal].length;
+    let groupingDescription = t('LoadoutBuilder.ItemsGrouped');
+
+    if (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedForMods');
+    } else if (lockedArmor2Mods[ModPickerCategories.general].length) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedForGeneralMods');
+    }
 
     return (
       <div className={styles.sets}>
@@ -153,14 +156,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
           />{' '}
           <UserGuideLink topic="Loadout_Optimizer" />
         </p>
-        <p>
-          {/* t('LoadoutBuilder.ItemsGroupedForMods') t('LoadoutBuilder.ItemsGrouped') */}
-          {t(
-            itemsGroupedForMods
-              ? 'LoadoutBuilder.ItemsGroupedForMods'
-              : 'LoadoutBuilder.ItemsGrouped'
-          )}
-        </p>
+        <p>{groupingDescription}</p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
           <span className={styles.selectedPerkKey}>{t('LoadoutBuilder.SelectedPerkKey')}</span>

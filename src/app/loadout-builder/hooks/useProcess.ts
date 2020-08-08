@@ -194,9 +194,11 @@ function createWorker() {
 }
 
 /**
- * This groups items for process depending on whether any general or seasonal mods are locked.
- * If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energy).
- * If not it groups by (stats, masterworked).
+ * This groups items for process depending on whether any general or seasonal mods are locked as follows
+ * - If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energyType).
+ * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
+ * - If no general or seasonal mods are locked it groups by (stats, masterworked).
+ *
  * Note that assumedMasterwork effects this.
  */
 function groupItems(
@@ -206,11 +208,6 @@ function groupItems(
   statOrder: StatTypes[],
   assumeMasterwork: boolean
 ) {
-  const groupForMods =
-    lockedSeasonalMods.length ||
-    lockedArmor2ModMap[ModPickerCategories.general].length ||
-    lockedArmor2ModMap[ModPickerCategories.seasonal].length;
-
   const groupingFn = (item: DimItem) => {
     if (item.isDestiny2()) {
       const statValues: number[] = [];
@@ -223,9 +220,14 @@ function groupItems(
       }
 
       const statsAndMW = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
-      return groupForMods
-        ? `${statsAndMW}${getSpecialtySocketMetadata(item)?.season}${item.energy?.energyType}`
-        : statsAndMW;
+
+      if (lockedSeasonalMods.length || lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
+        return `${statsAndMW}${getSpecialtySocketMetadata(item)?.season}${item.energy?.energyType}`;
+      } else if (lockedArmor2ModMap[ModPickerCategories.general].length) {
+        return `${statsAndMW}${item.energy?.energyType}`;
+      } else {
+        return statsAndMW;
+      }
     } else {
       return 'throwAway';
     }
