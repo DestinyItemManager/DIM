@@ -5,7 +5,7 @@ import { getTag, getNotes, ItemInfos, itemTagSelectorList } from 'app/inventory/
 const itemInfos: ItemInfos = {};
 
 // simple checks against check an attribute found on DimItem
-const simpleFilters: FilterDefinition[] = [
+const itemInfosFilters: FilterDefinition[] = [
   {
     keywords: ['tagged'],
     description: ['Filter.Tags.Tagged'],
@@ -31,4 +31,4 @@ const simpleFilters: FilterDefinition[] = [
   },
 ];
 
-export default simpleFilters;
+export default itemInfosFilters;
