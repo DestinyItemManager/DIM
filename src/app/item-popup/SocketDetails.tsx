@@ -28,6 +28,7 @@ import { getModCostInfo } from 'app/collections/Mod';
 interface ProvidedProps {
   item: D2Item;
   socket: DimSocket;
+  initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;
 }
 
@@ -109,9 +110,18 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 
-function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
+function SocketDetails({
+  defs,
+  item,
+  socket,
+  initialSelectedPlug,
+  unlockedPlugs,
+  inventoryPlugs,
+  onClose,
+}: Props) {
+  const initialPlug = initialSelectedPlug || socket.plug?.plugItem;
   const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
-    socket.plug?.plugItem || null
+    initialPlug || null
   );
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -174,9 +184,9 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
       )
     );
 
-  if (socket.plug?.plugItem) {
-    mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
-    mods.unshift(socket.plug.plugItem);
+  if (initialPlug) {
+    mods = mods.filter((m) => m.hash !== initialPlug.hash);
+    mods.unshift(initialPlug);
   }
 
   const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
