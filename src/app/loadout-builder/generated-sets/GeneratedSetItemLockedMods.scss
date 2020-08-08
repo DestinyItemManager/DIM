@@ -1,8 +1,7 @@
 @import '../../variables.scss';
 
 .lockedItems {
-  display: flex;
-  flex-direction: row;
+  display: grid;
 
   .item {
     margin-right: 4px;
@@ -37,7 +36,7 @@
   }
 }
 
-.lockedPerks {
+.perk {
   img {
     border: none;
   }

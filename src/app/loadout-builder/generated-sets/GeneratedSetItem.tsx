@@ -10,13 +10,12 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from '../utils';
 import { generateMixesFromPerks } from '../utils';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './GeneratedSetItemLockedMods.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import { matchLockedItem } from '../preProcessFilter';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import GeneratedSetSockets from './GeneratedSetSockets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -38,7 +37,7 @@ export default function GeneratedSetItem({
   statValues: number[];
   itemOptions: DimItem[];
   statOrder: StatTypes[];
-  lockedMods?: LockedArmor2Mod[];
+  lockedMods: LockedArmor2Mod[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const altPerks = useMemo(() => generateMixesFromPerks(item, statValues, statOrder), [
@@ -131,25 +130,7 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          {Boolean(lockedMods?.length) && (
-            <div className={clsx('lockedItems', styles.lockedSocketsRow)}>
-              {lockedMods?.map((mod) => (
-                <SocketDetailsMod key={mod.key} itemDef={mod.mod} defs={defs} />
-              ))}
-            </div>
-          )}
-          {Boolean(lockedOldMods.length) && (
-            <div className={clsx('lockedItems', styles.lockedSocketsRow)}>
-              {lockedOldMods?.map((def) => (
-                <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
-              ))}
-            </div>
-          )}
-          <div className={clsx('lockedItems', 'lockedPerks', styles.lockedSocketsRow)}>
-            {lockedPerks?.map((def) => (
-              <SocketDetailsMod key={def.hash} itemDef={def} defs={defs} />
-            ))}
-          </div>
+          <GeneratedSetSockets item={item} lockedMods={lockedMods} defs={defs} />
         </div>
       )}
     </div>
