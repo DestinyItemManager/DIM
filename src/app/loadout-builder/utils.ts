@@ -384,3 +384,12 @@ export function getLockedModStats(
 
   return lockedModStats;
 }
+
+/**
+ * Checks to see if some LockedArmor2Mod or LockedMod has an energy requirement.
+ */
+export function someModHasEnergyRequirement(
+  mods: readonly { mod: DestinyInventoryItemDefinition }[]
+) {
+  return mods.some((mod) => mod.mod.plug.energyCost.energyType !== DestinyEnergyType.Any);
+}

@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { someModHasEnergyRequirement } from '../utils';
 
 const statsWarning =
   'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';
@@ -116,12 +117,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
       measureSet = _.maxBy(sets, numColumns);
     }
 
-    let groupingDescription = t('LoadoutBuilder.ItemsGrouped');
+    let groupingDescription;
 
-    if (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length) {
-      groupingDescription = t('LoadoutBuilder.ItemsGroupedForMods');
-    } else if (lockedArmor2Mods[ModPickerCategories.general].length) {
-      groupingDescription = t('LoadoutBuilder.ItemsGroupedForGeneralMods');
+    if (
+      someModHasEnergyRequirement(lockedSeasonalMods) ||
+      someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.seasonal]) ||
+      (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general]) &&
+        (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length))
+    ) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
+    } else if (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
+    } else if (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general])) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
+    } else {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStats');
     }
 
     return (

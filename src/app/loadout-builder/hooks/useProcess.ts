@@ -24,6 +24,7 @@ import {
   mapArmor2ModToProcessMod,
 } from '../processWorker/mappers';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { someModHasEnergyRequirement } from '../utils';
 
 interface ProcessState {
   processing: boolean;
@@ -219,15 +220,18 @@ function groupItems(
         }
       }
 
-      const statsAndMW = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+      let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
       if (lockedSeasonalMods.length || lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
-        return `${statsAndMW}${getSpecialtySocketMetadata(item)?.season}${item.energy?.energyType}`;
-      } else if (lockedArmor2ModMap[ModPickerCategories.general].length) {
-        return `${statsAndMW}${item.energy?.energyType}`;
-      } else {
-        return statsAndMW;
+        groupId += `${getSpecialtySocketMetadata(item)?.season}`;
+      } else if (
+        someModHasEnergyRequirement(lockedSeasonalMods) ||
+        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
+        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+      ) {
+        groupId += `${item.energy?.energyType}`;
       }
+      return groupId;
     } else {
       return 'throwAway';
     }
