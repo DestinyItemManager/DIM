@@ -79,7 +79,7 @@ export default class StoreHeading extends React.Component<Props, State> {
     }
 
     return (
-      <>
+      <div>
         <CharacterHeader
           store={store}
           loadoutMenuOpen={loadoutMenuOpen}
@@ -87,7 +87,7 @@ export default class StoreHeading extends React.Component<Props, State> {
           onClick={this.openLoadoutPopup}
         />
         {loadoutMenu}
-      </>
+      </div>
     );
   }
 
