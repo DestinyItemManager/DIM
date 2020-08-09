@@ -28,7 +28,8 @@ export function ExpandableTextBlock({
   useLayoutEffect(() => {
     setClosedHeight(contentRef.current!.clientHeight);
   }, []);
-  // after the element has been measured, set isOpen if the unclamped text still fits in clamped height
+  // after the element has been measured, if the unclamped text still fits inside clamped height,
+  // then clamping wasn't necessary. set isOpen to mark it as, effectively, already opened
   useEffect(() => {
     if (closedHeight && wrapperRef.current!.clientHeight >= contentRef.current!.clientHeight) {
       setOpen(true);
