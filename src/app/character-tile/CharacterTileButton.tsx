@@ -21,7 +21,6 @@ export const CharacterTileButton = ({
         destiny2: character.isDestiny2(),
       })}
     >
-      <div className="background" style={{ backgroundImage: `url("${character.background}")` }} />
       <CharacterTile store={character} />
     </div>
   );
