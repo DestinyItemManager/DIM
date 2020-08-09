@@ -46,8 +46,6 @@
 }
 
 .store-cell {
-  display: flex;
-  flex-direction: row;
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
@@ -174,14 +172,20 @@
       margin: 0;
       width: 100%;
       padding: 8px 0 4px 0;
+      .character.vault {
+        width: 100%;
+      }
     }
     > div {
-      max-width: 250px;
+      max-width: calc(100% - 80px);
       margin: 0 auto;
       overflow: visible !important;
       .frame {
         overflow: visible !important;
         touch-action: none;
+      }
+      .character {
+        margin: 0 5px;
       }
     }
   }

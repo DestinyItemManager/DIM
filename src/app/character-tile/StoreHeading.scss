@@ -1,0 +1,85 @@
+@import '../variables.scss';
+
+$xp-bar-height: 2px;
+
+.character {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 100%;
+  height: 46px;
+
+  &.vault {
+    width: calc(6px + var(--character-column-width) - var(--item-margin));
+  }
+
+  &.current:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    border-top: 13px solid $orange;
+    border-right: 13px solid transparent;
+  }
+
+  &.destiny1 {
+    border-bottom: $xp-bar-height solid #666;
+  }
+
+  &.destiny2 {
+    .background {
+      filter: none;
+    }
+  }
+
+  &:hover,
+  &:active {
+    .background {
+      filter: brightness(130%) !important;
+    }
+  }
+}
+
+.level-bar {
+  height: $xp-bar-height;
+  width: 100%;
+  position: absolute;
+  bottom: -$xp-bar-height;
+  left: 0;
+  .level-bar-progress {
+    background-color: $xp;
+    height: 100%;
+
+    &.mote-progress {
+      background-color: rgb(40, 132, 179);
+    }
+  }
+}
+
+.loadout-button {
+  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.loadout-open {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 1);
+  }
+}
+
+.lang-ru {
+  .vault .class {
+    font-size: 16px;
+  }
+}
+
+.lang-ja {
+  .class {
+    font-size: 16px;
+  }
+}
