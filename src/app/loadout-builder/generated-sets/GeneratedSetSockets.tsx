@@ -12,7 +12,6 @@ import './GeneratedSetSockets.scss';
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
   PlugCategoryHashes.Shader,
-  PlugCategoryHashes.ArmorSkinsEmpty,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance1,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance3,

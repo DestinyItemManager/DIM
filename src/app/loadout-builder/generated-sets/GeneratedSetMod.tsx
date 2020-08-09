@@ -1,7 +1,7 @@
 import React from 'react';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getModCostInfo } from 'app/collections/Mod';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import clsx from 'clsx';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -33,7 +33,7 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
       {energyCostElementOverlay && (
         <>
           <div
-            style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
+            style={bungieBackgroundStyle(energyCostElementOverlay)}
             className="energyCostOverlay"
           />
           <div className="energyCost">{energyCost}</div>
