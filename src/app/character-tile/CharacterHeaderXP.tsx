@@ -5,14 +5,16 @@ import { t } from 'app/i18next-t';
 import { D1Store } from '../inventory/store-types';
 import PressTip from '../dim-ui/PressTip';
 import { percent } from '../shell/filters';
+import { D1ProgressionHashes } from 'app/search/d1-known-values';
 
 function getLevelBar(store: D1Store) {
-  const prestige = store.progression?.progressions.find((p) => p.progressionHash === 2030054750);
+  const prestige = store.progression?.progressions.find(
+    (p) => p.progressionHash === D1ProgressionHashes.Prestige
+  );
   const data = {
     level: prestige?.level,
     exp: prestige?.level ? prestige?.nextLevelAt - prestige?.progressToNextLevel : 0,
   };
-
   return {
     levelBar: prestige?.level
       ? prestige.progressToNextLevel / prestige.nextLevelAt
