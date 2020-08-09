@@ -3,7 +3,7 @@ import TestRenderer from 'react-test-renderer';
 import CharacterSelect from './CharacterSelect';
 import { DimStore } from '../inventory/store-types';
 import { Frame, Track, ViewPager } from 'react-view-pager';
-import SimpleCharacterTile from 'app/inventory/SimpleCharacterTile';
+import { CharacterTileButton } from 'app/character-tile/CharacterTileButton';
 
 const stubDimStore: DimStore = {} as DimStore;
 const stubDimStoreArray: DimStore[] = [];
@@ -75,7 +75,7 @@ it('should render all non-vault stores in the phone interface', () => {
   );
   const testInstance = testRenderer.root;
   // There are two non-vault mocked DimStore objects. Both should render.
-  expect(testInstance.findAllByType(SimpleCharacterTile).length).toBe(2);
+  expect(testInstance.findAllByType(CharacterTileButton).length).toBe(2);
 });
 
 it('should render all non-vault stores in the non-phone interface', () => {
@@ -90,7 +90,7 @@ it('should render all non-vault stores in the non-phone interface', () => {
   );
   const testInstance = testRenderer.root;
   // There are two non-vault mocked DimStore objects. Both should render.
-  expect(testInstance.findAllByType(SimpleCharacterTile).length).toBe(2);
+  expect(testInstance.findAllByType(CharacterTileButton).length).toBe(2);
 });
 
 it('should call the onCharacterChanged function on click in the phone interface', () => {
@@ -105,7 +105,7 @@ it('should call the onCharacterChanged function on click in the phone interface'
   );
   const testInstance = testRenderer.root;
   // Simulate a click event
-  testInstance.findAllByType(SimpleCharacterTile)[0].props.onClick();
+  testInstance.findAllByType(CharacterTileButton)[0].props.onClick();
   expect(mockOnCharacterChanged).toHaveBeenCalledTimes(1);
   jest.clearAllMocks();
 });
@@ -122,7 +122,7 @@ it('should call the onCharacterChanged function on click in the non-phone interf
   );
   const testInstance = testRenderer.root;
   // Simulate a click event
-  testInstance.findAllByType(SimpleCharacterTile)[0].props.onClick();
+  testInstance.findAllByType(CharacterTileButton)[0].props.onClick();
   expect(mockOnCharacterChanged).toHaveBeenCalledTimes(1);
   jest.clearAllMocks();
 });
