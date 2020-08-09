@@ -18,9 +18,11 @@ export function ExpandableTextBlock({
   const contentRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  // measure the element height, with lines clamped, the first time this component exists
   useLayoutEffect(() => {
     setClosedHeight(contentRef.current!.clientHeight);
   }, []);
+  // after the element has been measured, set isOpen if the unclamped text still fits in clamped height
   useEffect(() => {
     if (closedHeight && wrapperRef.current!.clientHeight >= contentRef.current!.clientHeight) {
       setOpen(true);
