@@ -7,28 +7,17 @@ import PressTip from '../dim-ui/PressTip';
 import { percent } from '../shell/filters';
 
 function getLevelBar(store: D1Store) {
-  if (store.percentToNextLevel) {
-    return {
-      levelBar: store.percentToNextLevel,
-      xpTillMote: undefined,
-    };
-  }
-  if (store.progression?.progressions) {
-    const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750); // some kind of d1 hash
-    if (prestige) {
-      const data = {
-        level: prestige.level,
-        exp: prestige.nextLevelAt - prestige.progressToNextLevel,
-      };
-      return {
-        xpTillMote: t('Stats.Prestige', data),
-        levelBar: prestige.progressToNextLevel / prestige.nextLevelAt,
-      };
-    }
-  }
+  const prestige = store.progression?.progressions.find((p) => p.progressionHash === 2030054750);
+  const data = {
+    level: prestige?.level,
+    exp: prestige?.level ? prestige?.nextLevelAt - prestige?.progressToNextLevel : 0,
+  };
+
   return {
-    levelBar: 0,
-    xpTillMote: undefined,
+    levelBar: prestige?.level
+      ? prestige.progressToNextLevel / prestige.nextLevelAt
+      : store?.percentToNextLevel ?? 0,
+    xpTillMote: prestige?.level ? t('Stats.Prestige', data) : undefined,
   };
 }
 
