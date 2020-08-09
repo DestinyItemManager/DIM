@@ -3,7 +3,7 @@
 * Configure a custom armor stat per-class in Settings, and it'll show up in item popups, Organizer, Compare, and the new `stat:custom:` search.
 * Speed improvements to wishlist processing.
 * `is:smg` for if you're as bad at remembering "submachine gun" as.. some of us are.
-* No more accidental app reloads when wiping down hard on the page on mobile.
+* No more accidental app reloads when swiping down hard on the page on mobile.
 * Spring (Summer?) cleaning in the Item Popup. Some less important elements have been moved or removed, to make room for more functionality and stats.
 * Bar-based stat values in the Mod preview menu are no longer extremely large bois.
 * Anti-champion damage types are now interpreted in tooltip descriptions.
