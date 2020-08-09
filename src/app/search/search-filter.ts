@@ -119,6 +119,10 @@ const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) =>
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
+  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
+
+export const makeSeasonalDupeID = (item: DimItem) =>
+  (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}${
     item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}` : ''
   }${item.itemCategoryHashes.join('.')}`;
@@ -228,6 +232,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     ],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
+    seasonaldupe: ['seasonaldupe', 'seasonalduplicate'],
     dupelower: ['dupelower'],
     locked: ['locked'],
     unlocked: ['unlocked'],
@@ -490,6 +495,7 @@ function searchFilters(
 ): SearchFilters {
   // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  let _duplicates_seasonal: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
   let _maxStatValues: {
@@ -516,17 +522,39 @@ function searchFilters(
 
     if (_duplicates === null) {
       _duplicates = {};
+      _duplicates_seasonal = {};
       for (const store of stores) {
         for (const i of store.items) {
           const dupeID = makeDupeID(i);
+          const seasonalDupeID = makeSeasonalDupeID(i);
           if (!_duplicates[dupeID]) {
             _duplicates[dupeID] = [];
           }
+          if (!_duplicates_seasonal[seasonalDupeID]) {
+            _duplicates_seasonal[seasonalDupeID] = [];
+          }
           _duplicates[dupeID].push(i);
+          _duplicates_seasonal[seasonalDupeID].push(i);
         }
       }
 
       _.forIn(_duplicates, (dupes: DimItem[]) => {
+        if (dupes.length > 1) {
+          dupes.sort(dupeComparator);
+          const bestDupe = dupes[0];
+          for (const dupe of dupes) {
+            if (
+              dupe.bucket &&
+              (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') &&
+              !dupe.notransfer
+            ) {
+              _lowerDupes[dupe.id] = dupe !== bestDupe;
+            }
+          }
+        }
+      });
+
+      _.forIn(_duplicates_seasonal, (dupes: DimItem[]) => {
         if (dupes.length > 1) {
           dupes.sort(dupeComparator);
           const bestDupe = dupes[0];
@@ -869,6 +897,19 @@ function searchFilters(
           item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
+        );
+      },
+      seasonaldupe(item: DimItem) {
+        initDupes();
+        const dupeId = makeSeasonalDupeID(item);
+        // We filter out the InventoryItem "Default Shader" because everybody has one per character
+        return (
+          _duplicates_seasonal &&
+          !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
+          item.hash !== DEFAULT_SHADER &&
+          item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
+          _duplicates_seasonal[dupeId] &&
+          _duplicates_seasonal[dupeId].length > 1
         );
       },
       count(item: DimItem, filterValue: string) {
