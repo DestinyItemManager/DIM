@@ -7,7 +7,7 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import SocketDetails from '../../item-popup/SocketDetails';
 import ReactDOM from 'react-dom';
-import './GeneratedSetSockets.scss';
+import styles from './GeneratedSetSockets.m.scss';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -63,7 +63,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
 
   return (
     <>
-      <div className={'lockedItems'}>
+      <div className={styles.lockedItems}>
         {modsAndPerks.map((socketAndPlug, index) => (
           <GeneratedSetMod
             key={index}

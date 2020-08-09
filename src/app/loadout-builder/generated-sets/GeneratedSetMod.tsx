@@ -5,6 +5,7 @@ import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import clsx from 'clsx';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import styles from './GeneratedSetMod.m.scss';
 
 interface Props {
   plugDef: DestinyInventoryItemDefinition;
@@ -17,8 +18,8 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
   const { energyCost, energyCostElementOverlay } = getModCostInfo(plugDef, defs);
 
   const classes = {
-    item: true,
-    perk: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
+    [styles.item]: true,
+    [styles.perk]: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
   };
 
   return (
@@ -34,9 +35,9 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
         <>
           <div
             style={bungieBackgroundStyle(energyCostElementOverlay)}
-            className="energyCostOverlay"
+            className={styles.energyCostOverlay}
           />
-          <div className="energyCost">{energyCost}</div>
+          <div className={styles.energyCost}>{energyCost}</div>
         </>
       )}
     </div>
