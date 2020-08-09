@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 
 interface ProvidedProps {
   item: DimItem;
@@ -59,12 +60,12 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
           <div className={styles.officialDescription}>{item.displaySource}</div>
         )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
-        <div tabIndex={-1} className={styles.wishListNotes}>
+        <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>
             {t('WishListRoll.WishListNotes', { notes: '' })}
           </span>
           <span className={styles.wishListTextContent}>{inventoryWishListRoll.notes}</span>
-        </div>
+        </ExpandableTextBlock>
       )}
       <NotesArea item={item} />
     </>
