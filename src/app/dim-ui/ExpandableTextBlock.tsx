@@ -2,15 +2,21 @@ import clsx from 'clsx';
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import styles from './ExpandableTextBlock.m.scss';
 
+/**
+ * wrapped around some inline content, this collapses that to a specified number of lines and lets the user click it to show all.
+ *
+ * @param linesWhenClosed an integer please. controls how many lines to collapse to
+ * @param alreadyOpen allows a parent component to force it open
+ */
 export function ExpandableTextBlock({
+  children,
   linesWhenClosed,
   alreadyOpen,
-  children,
   className,
 }: {
+  children: React.ReactNode;
   linesWhenClosed: number;
   alreadyOpen?: boolean;
-  children: React.ReactNode;
   className?: string;
 }) {
   const [isOpen, setOpen] = useState(alreadyOpen);
@@ -22,7 +28,8 @@ export function ExpandableTextBlock({
   useLayoutEffect(() => {
     setClosedHeight(contentRef.current!.clientHeight);
   }, []);
-  // after the element has been measured, set isOpen if the unclamped text still fits in clamped height
+  // after the element has been measured, if the unclamped text still fits inside clamped height,
+  // then clamping wasn't necessary. set isOpen to mark it as, effectively, already opened
   useEffect(() => {
     if (closedHeight && wrapperRef.current!.clientHeight >= contentRef.current!.clientHeight) {
       setOpen(true);
