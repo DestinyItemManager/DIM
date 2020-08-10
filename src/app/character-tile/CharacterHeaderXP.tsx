@@ -11,15 +11,18 @@ function getLevelBar(store: D1Store) {
   const prestige = store.progression?.progressions.find(
     (p) => p.progressionHash === D1ProgressionHashes.Prestige
   );
-  const data = {
-    level: prestige?.level,
-    exp: prestige?.level ? prestige?.nextLevelAt - prestige?.progressToNextLevel : 0,
-  };
+  let levelBar = store?.percentToNextLevel ?? 0;
+  let xpTillMote: string | undefined = undefined;
+  if (prestige) {
+    levelBar = prestige.progressToNextLevel / prestige.nextLevelAt;
+    xpTillMote = t('Stats.Prestige', {
+      level: prestige.level,
+      exp: prestige.nextLevelAt - prestige.progressToNextLevel,
+    });
+  }
   return {
-    levelBar: prestige?.level
-      ? prestige.progressToNextLevel / prestige.nextLevelAt
-      : store?.percentToNextLevel ?? 0,
-    xpTillMote: prestige?.level ? t('Stats.Prestige', data) : undefined,
+    levelBar,
+    xpTillMote,
   };
 }
 
