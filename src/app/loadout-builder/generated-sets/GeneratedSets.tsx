@@ -1,7 +1,14 @@
 import { t } from 'app/i18next-t';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import {
+  ArmorSet,
+  StatTypes,
+  LockedMap,
+  LockedArmor2ModMap,
+  ModPickerCategories,
+  LockedModBase,
+} from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { newLoadout } from 'app/loadout/loadout-utils';
@@ -11,6 +18,7 @@ import _ from 'lodash';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { someModHasEnergyRequirement } from '../utils';
 
 const statsWarning =
   'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';
@@ -27,6 +35,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
+  lockedSeasonalMods: LockedModBase[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -37,14 +46,15 @@ interface State {
 }
 
 function numColumns(set: ArmorSet) {
-  return _.sumBy(
-    set.firstValidSet,
-    (item) =>
+  return _.sumBy(set.armor, (items) => {
+    const item = items[0];
+    return (
       (item.isDestiny2() &&
         item.sockets &&
         _.max(item.sockets.categories.map((c) => c.sockets.length))) ||
       0
-  );
+    );
+  });
 }
 
 /**
@@ -97,6 +107,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       combosWithoutCaps,
       enabledStats,
       lockedArmor2Mods,
+      lockedSeasonalMods,
       lbDispatch,
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
@@ -106,12 +117,29 @@ export default class GeneratedSets extends React.Component<Props, State> {
       measureSet = _.maxBy(sets, numColumns);
     }
 
+    let groupingDescription;
+
+    if (
+      someModHasEnergyRequirement(lockedSeasonalMods) ||
+      someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.seasonal]) ||
+      (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general]) &&
+        (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length))
+    ) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
+    } else if (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
+    } else if (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general])) {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
+    } else {
+      groupingDescription = t('LoadoutBuilder.ItemsGroupedByStats');
+    }
+
     return (
       <div className={styles.sets}>
         <h2>
           {t('LoadoutBuilder.GeneratedBuilds')}{' '}
           <span className={styles.numSets}>
-            ({t('LoadoutBuilder.NumStatMixes', { count: sets.length })})
+            ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
           </span>
           <button
             className={`dim-button ${styles.newLoadout}`}
@@ -138,6 +166,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
           />{' '}
           <UserGuideLink topic="Loadout_Optimizer" />
         </p>
+        <p>{groupingDescription}</p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
           <span className={styles.selectedPerkKey}>{t('LoadoutBuilder.SelectedPerkKey')}</span>

@@ -268,6 +268,7 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
+            lockedSeasonalMods={lockedSeasonalMods}
           />
         )}
       </PageWithMenu.Contents>
