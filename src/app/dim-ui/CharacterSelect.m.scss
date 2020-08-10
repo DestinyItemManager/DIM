@@ -57,7 +57,7 @@
   > div {
     max-width: 250px;
     @include phone-portrait {
-      max-width: 340px;
+      max-width: 260px;
     }
 
     margin: 0 auto;

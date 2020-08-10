@@ -46,6 +46,8 @@
 }
 
 .store-cell {
+  display: flex;
+  flex-direction: row;
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
@@ -177,7 +179,7 @@
       }
     }
     > div {
-      max-width: calc(100% - 80px);
+      max-width: calc(100% - 179px);
       margin: 0 auto;
       overflow: visible !important;
       .frame {

@@ -132,7 +132,7 @@
     max-height: calc(100vh - #{120px + $header-height} - constant(safe-area-inset-top));
     max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
 
-    max-width: calc(100% - 80px);
+    max-width: calc(100% - 179px);
     left: 50%;
     transform: translateX(-50%);
     padding: 0 5px;
