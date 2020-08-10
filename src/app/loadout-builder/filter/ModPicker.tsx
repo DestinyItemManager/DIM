@@ -45,8 +45,8 @@ let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
-  compareBy((i) => i.plug.energyCost?.energyType),
-  compareBy((i) => i.plug.energyCost?.energyCost),
+  compareBy((i) => i.plug!.energyCost?.energyType),
+  compareBy((i) => i.plug!.energyCost?.energyCost),
   compareBy((i) => i.displayProperties.name)
 );
 
@@ -124,7 +124,7 @@ function mapStateToProps() {
 
         return unlockedPlugs
           .map((i) => defs.InventoryItem.get(i))
-          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
+          .filter((item) => isArmor2Mod(item) && item.plug!.insertionMaterialRequirementHash !== 0)
           .sort(sortMods);
       });
 
@@ -199,8 +199,8 @@ class ModPicker extends React.Component<Props, State> {
       queryFilteredMods
         .filter((mod) =>
           category === ModPickerCategories.seasonal
-            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)
-            : mod.plug.plugCategoryHash === category
+            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug!.plugCategoryHash)
+            : mod.plug!.plugCategoryHash === category
         )
         .map((mod) => ({ key: modKey++, mod, category }));
 

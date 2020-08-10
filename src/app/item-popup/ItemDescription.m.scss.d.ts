@@ -9,7 +9,6 @@ interface CssExports {
   'noNotesYet': string;
   'officialDescription': string;
   'wishListLabel': string;
-  'wishListNotes': string;
   'wishListTextContent': string;
 }
 export const cssExports: CssExports;

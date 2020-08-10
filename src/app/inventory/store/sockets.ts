@@ -141,7 +141,8 @@ function buildDefinedSockets(
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition
 ): DimSockets | null {
-  const sockets = itemDef.sockets.socketEntries;
+  // if we made it here, item has sockets
+  const sockets = itemDef.sockets!.socketEntries;
   if (!sockets || !sockets.length) {
     return null;
   }
@@ -156,7 +157,7 @@ function buildDefinedSockets(
 
   const categories: DimSocketCategory[] = [];
 
-  for (const category of itemDef.sockets.socketCategories) {
+  for (const category of itemDef.sockets!.socketCategories) {
     const sockets: DimSocket[] = [];
 
     for (const index of category.socketIndexes) {
@@ -299,7 +300,7 @@ function buildPlug(
 
   const failReasons = plug.enableFailIndexes
     ? _.compact(
-        plug.enableFailIndexes.map((index) => plugItem.plug.enabledRules[index]?.failureMessage)
+        plug.enableFailIndexes.map((index) => plugItem.plug!.enabledRules[index]?.failureMessage)
       ).join('\n')
     : '';
 

@@ -33,17 +33,17 @@ const tableTrimmers = {
       // structures from JSON parsing. Only replace objects with empties, and always test with the
       // memory profiler. Don't assume that deleting something makes this smaller.
 
-      def.action = emptyObject();
+      def.action! = emptyObject();
       def.backgroundColor = emptyObject();
-      def.translationBlock = emptyObject();
+      def.translationBlock! = emptyObject();
       if (def.equippingBlock?.displayStrings?.length) {
         def.equippingBlock.displayStrings = emptyArray();
       }
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory.bucketTypeHash !== SUBCLASS_BUCKET) {
-        def.talentGrid = emptyObject();
+      if (def.inventory!.bucketTypeHash !== SUBCLASS_BUCKET) {
+        def.talentGrid! = emptyObject();
       }
 
       if (def.sockets) {

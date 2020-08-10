@@ -170,11 +170,15 @@ async function getDefinitionsUncached() {
         if (!dbEntry) {
           const requestingEntryInfo =
             typeof requestor === 'object' ? requestor.hash : String(requestor);
-          reportException('hashLookupFailure', new Error('hash lookup failure'), {
-            requestingEntryInfo,
-            failedHash: id,
-            failedComponent: table,
-          });
+          reportException(
+            `hashLookupFailure: ${table}[${id}]`,
+            new Error(`hashLookupFailure: ${table}[${id}]`),
+            {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            }
+          );
         }
         return dbEntry;
       },

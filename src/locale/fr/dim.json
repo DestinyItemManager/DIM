@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
     "Filters": "Filtres",
-    "InstallDIM": "Installer DIM",
+    "InstallDIM": "Install as an App",
     "Inventory": "Inventaire",
     "IosPwaPrompt": "Dans Safari Mobile, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
     "Menu": "Menu",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Retirez depuis {{bucket}} vers {{store}}",
     "ReadLore": "Lire le lore de Ishtar Collective",
+    "ReadLoreLink": "Read lore",
     "ReviewsTab": "Évaluations",
     "Rewards": "Récompenses:",
     "Split": "Couper",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
     "CsvImport": "Importer des balises/notes depuis CSV",
+    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
@@ -846,6 +848,8 @@
     "SortName": "Nom"
   },
   "Stats": {
+    "Custom": "Custom Total",
+    "CustomDesc": "Custom total configured in settings. This only adds up base stats, ignoring mods or masterworking.",
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
     "MaxGearPower": "Puissance maximale des équipements pouvant être équipés",

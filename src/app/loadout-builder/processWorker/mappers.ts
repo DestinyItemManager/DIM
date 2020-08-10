@@ -40,7 +40,7 @@ export function mapSeasonalModsToProcessMods(
 ): ProcessMod[] {
   const metadatas = lockedSeasonalMods.map((mod) => ({
     mod,
-    metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
+    metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug!.plugCategoryHash),
   }));
 
   const modMetadata: ProcessMod[] = [];
@@ -50,8 +50,8 @@ export function mapSeasonalModsToProcessMods(
       season: entry.metadata?.season,
       tag: entry.metadata?.tag,
       energy: {
-        type: entry.mod.mod.plug.energyCost.energyType,
-        val: entry.mod.mod.plug.energyCost.energyCost,
+        type: entry.mod.mod.plug!.energyCost!.energyType,
+        val: entry.mod.mod.plug!.energyCost!.energyCost,
       },
       investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
         statTypeHash,
@@ -67,14 +67,14 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod = {
     hash: mod.mod.hash,
     energy: {
-      type: mod.mod.plug.energyCost.energyType,
-      val: mod.mod.plug.energyCost.energyCost,
+      type: mod.mod.plug!.energyCost!.energyType,
+      val: mod.mod.plug!.energyCost!.energyCost,
     },
     investmentStats: mod.mod.investmentStats,
   };
 
   if (mod.category === 'seasonal') {
-    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash);
+    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug!.plugCategoryHash);
     return {
       ...processMod,
       season: metadata?.season,
@@ -162,7 +162,7 @@ export function mapDimItemToProcessItem(
 
   const modMetadata = getSpecialtySocketMetadata(dimItem);
   const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug.energyCost.energyCost);
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug!.energyCost!.energyCost);
   return {
     bucketHash: bucket.hash,
     id,

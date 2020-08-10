@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
-    "InstallDIM": "Installa DIM",
+    "InstallDIM": "Installa come App",
     "Inventory": "Inventario",
     "IosPwaPrompt": "Su Safari Mobile, clicca sull'icona \"condividi\" (il bottone centrale in basso) e seleziona \"Aggiungi a schermata Home\".",
     "Menu": "Menù",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
+    "ReadLoreLink": "Leggi storia",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",
     "Split": "Dividi",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
     "CsvImport": "Importa etichette/note da CSV",
+    "CustomStatDesc": "Scegli delle statistiche delle armature per raggiungere un totale statistica personalizzato che verrà mostrato nel popup dell'oggetto, Organizzatore Deposito e Confronta. Cerca con statcustom:>=30.",
     "Data": "Fogli di calcolo",
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi usare lo strumento di confronto per valutarli.",
@@ -846,6 +848,8 @@
     "SortName": "Nome"
   },
   "Stats": {
+    "Custom": "Totale Personalizzato",
+    "CustomDesc": "Totale personalizzato configurato nelle impostazioni. Questo aggiunge solo alle statistiche di base, ignorando le Modifiche o il Prodigio.",
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",

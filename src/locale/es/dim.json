@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
     "Filters": "Filtros",
-    "InstallDIM": "Instalar DIM",
+    "InstallDIM": "Instalar como App",
     "Inventory": "Inventario",
     "IosPwaPrompt": "En Safari Móvil, haga click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
     "Menu": "Menú",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Traer de {{bucket}} a {{store}}",
     "ReadLore": "Lee historia en Ishtar Collective",
+    "ReadLoreLink": "Leer historia",
     "ReviewsTab": "Calificaciones",
     "Rewards": "Recompensas:",
     "Split": "Partir",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
     "CsvImport": "Importar etiquetas/notas del CSV",
+    "CustomStatDesc": "Elige estadísticas de armadura para crear una estadística total personalizada que se mostrará en la ventana del objeto, Organizador y Comparar. Busca con stat:custom:>30.",
     "Data": "Hojas de cálculo",
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe para buscar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
@@ -846,6 +848,8 @@
     "SortName": "Nombre"
   },
   "Stats": {
+    "Custom": "Total Personalizado",
+    "CustomDesc": "Total personalizado configurado en ajustes. Esto sólo añade estadísticas base, ignorando modificadores u Obras Maestras.",
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",

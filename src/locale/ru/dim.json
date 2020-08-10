@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
-    "InstallDIM": "Установить DIM",
+    "InstallDIM": "Install as an App",
     "Inventory": "Инвентарь",
     "IosPwaPrompt": "В мобильном браузере Safari, нажмите на кнопку «Поделиться» (находится внизу экрана посередине) и выберите «Добавить на экран \"Домой\"».",
     "Menu": "Меню",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
+    "ReadLoreLink": "Read lore",
     "ReviewsTab": "Отзывы",
     "Rewards": "Награды:",
     "Split": "Делить",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
     "CsvImport": "Импорт тегов/заметок из файла CSV",
+    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
     "DontForgetDupes": "Не забывайте, что вы набрать в поисковой строке is:dupe, чтобы быстро найти дубликаты предметов и использовать инструмент сравнения для оценки взаимосвязанных предметов.",
@@ -846,6 +848,8 @@
     "SortName": "Имя"
   },
   "Stats": {
+    "Custom": "Custom Total",
+    "CustomDesc": "Custom total configured in settings. This only adds up base stats, ignoring mods or masterworking.",
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
     "MaxGearPower": "Максимальный уровень Силы экипированного снаряжения",

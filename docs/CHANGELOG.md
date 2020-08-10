@@ -1,12 +1,26 @@
 ## Next
 
+## 6.24.0 <span className="changelog-date">(2020-08-09)</span>
+
 * Configure a custom armor stat per-class in Settings, and it'll show up in item popups, Organizer, Compare, and the new `stat:custom:` search.
+* Speed improvements to wishlist processing.
+* `is:smg` for if you're as bad at remembering "submachine gun" as.. some of us are.
+* No more accidental app reloads when swiping down hard on the page on mobile.
+* Spring (Summer?) cleaning in the Item Popup. Some less important elements have been moved or removed, to make room for more functionality and stats.
+* Bar-based stat values in the Mod preview menu are no longer extremely large bois.
+* Anti-champion damage types are now interpreted in tooltip descriptions.
+* Seasonal Artifact is now previewable, but be warned:
+  * Some data from the API is wrong, and the Season 11 artifact is incorrectly labeled.
+  * It can show seasonal mods you have equipped, but Season 11 mods still aren't in Collections data, so mod unlocks aren't displayed.
+* Spreadsheet columns slightly adjusted to get them back to their usual column names.
+* Lots going on behind the scenes to clear up errors and get Loadout Optimizer ready for upgrades!
 
 ## 6.23.0 <span className="changelog-date">(2020-08-02)</span>
 
 * You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.
 * Searches now support parentheses for grouping, the "and" keyword, and the "not" keyword. Example: `(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)`. "and" has higher precedence than "or", which has higher precedence than just a space (which still means "and").
 * Fixed the size of damage type icons in D1.
+* Our Content Security Policy is more restrictive now, external and injected scripts may fail but this keeps your account and data safer.
 
 ## 6.22.1 <span className="changelog-date">(2020-07-27)</span>
 

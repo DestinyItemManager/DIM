@@ -65,7 +65,7 @@ export function filterPlugs(socket: DimSocket) {
   // Remove Archetype/Inherit perk
   if (
     plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-    plugItem.inventory.tierType !== TierType.Exotic // keep exotics
+    plugItem.inventory!.tierType !== TierType.Exotic // keep exotics
   ) {
     return false;
   }
@@ -73,7 +73,7 @@ export function filterPlugs(socket: DimSocket) {
   // Remove empty mod slots
   if (
     plugItem.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsUniversal &&
-    plugItem.inventory.tierType === TierType.Basic
+    plugItem.inventory!.tierType === TierType.Basic
   ) {
     return false;
   }
@@ -84,15 +84,15 @@ export function filterPlugs(socket: DimSocket) {
   }
 
   // Remove empty sockets, which are common tier
-  if (plugItem.inventory.tierType === TierType.Common) {
+  if (plugItem.inventory!.tierType === TierType.Common) {
     return false;
   }
 
   // Only real mods
   if (
     !socket.isPerk &&
-    (plugItem.inventory.bucketTypeHash !== MODIFICATIONS_BUCKET ||
-      !plugItem.inventory.recoveryBucketTypeHash)
+    (plugItem.inventory!.bucketTypeHash !== MODIFICATIONS_BUCKET ||
+      !plugItem.inventory!.recoveryBucketTypeHash)
   ) {
     return false;
   }
@@ -267,7 +267,7 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
     matchesEnergy(item, mod) &&
     // is a seasonal mod and item has correct socket
     (getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes.includes(
-      lockedItem.mod.plug.plugCategoryHash
+      lockedItem.mod.plug!.plugCategoryHash
     ) ||
       // or matches socket plugsets
       item.sockets?.sockets.some(

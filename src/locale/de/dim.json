@@ -379,7 +379,7 @@
     "FilterMatchCount": "1 Item",
     "FilterMatchCount_plural": "{{count}} Items",
     "Filters": "Filter",
-    "InstallDIM": "Installiere DIM",
+    "InstallDIM": "Install as an App",
     "Inventory": "Inventar",
     "IosPwaPrompt": "Klicke im mobilen Safari auf das Teilen-Symbol (mittlere Taste unten) und wähle \"Zu Home Screen hinzufügen\".",
     "Menu": "Menü",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "Ziehe von {{bucket}} nach {{store}}",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
+    "ReadLoreLink": "Lese Lore",
     "ReviewsTab": "Berichte",
     "Rewards": "Belohnungen:",
     "Split": "Teilen",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} Items",
     "ColumnSizeAuto": "Automatisch",
     "CsvImport": "Tags/Notizen von CSV importieren",
+    "CustomStatDesc": "Wähle Rüstungsstatistiken, um eine benutzerdefinierte Gesamtstatistik zu erstellen, die im Popup, Organizer und Vergleich angezeigt wird. Suche mit stat:custom:>=30.",
     "Data": "Excel Tabelle",
     "DefaultItemSizeNote": "Eine Itemgröße von 50px wird am schärfsten aussehen, ohne das Itembild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Items zu finden und du kannst das Vergleichstool nutzen um verwandte Items zu evaluieren.",
@@ -846,6 +848,8 @@
     "SortName": "Name"
   },
   "Stats": {
+    "Custom": "Benutzerdefinierte Summe",
+    "CustomDesc": "Benutzerdefinierte Gesamtanzahl in den Einstellungen. Dies fügt nur Basisstatistiken hinzu, ignoriert Mods oder Meisterwerk.",
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
