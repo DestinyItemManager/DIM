@@ -23,14 +23,17 @@ function SetStats({ defs, set, statOrder, enabledStats }: Props) {
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
-  const incorrectStats = _.uniq(set.firstValidSet.map(getPossiblyIncorrectStats).flat());
+  // class items is the only array larger than 1 and it cannot have incorrect stats
+  const incorrectStats = _.uniq(
+    set.armor.map((items) => getPossiblyIncorrectStats(items[0])).flat()
+  );
 
   const displayStats = { ...set.stats };
 
   return (
     <div>
       <span>
-        {set.firstValidSet.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+        {set.armor.some((items) => items[0].stats?.some((stat) => stat.baseMayBeWrong)) && (
           <PressTip
             elementType="span"
             tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
