@@ -17,7 +17,7 @@ export default function SeasonalModPicker({
   defs: D2ManifestDefinitions;
   mods: readonly LockedModBase[];
   locked?: readonly LockedModBase[];
-  onSeasonalModSelected(mod: LockedModBase);
+  onSeasonalModSelected(mod: LockedModBase): void;
 }) {
   return (
     <div className={styles.bucket} id="seasonal">

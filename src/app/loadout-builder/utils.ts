@@ -267,7 +267,7 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
     matchesEnergy(item, mod) &&
     // is a seasonal mod and item has correct socket
     (getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes.includes(
-      lockedItem.mod.plug!.plugCategoryHash
+      lockedItem.mod.plug.plugCategoryHash
     ) ||
       // or matches socket plugsets
       item.sockets?.sockets.some(

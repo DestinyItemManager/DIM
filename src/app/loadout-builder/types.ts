@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
   armor2PlugCategoryHashesByName,
@@ -46,11 +45,11 @@ export interface LockedItemCase {
 }
 export interface LockedPerk {
   type: 'perk';
-  perk: DestinyInventoryItemDefinition;
+  perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
 }
 export interface LockedModBase {
-  mod: DestinyInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   plugSetHash: number;
 }
 export interface LockedMod extends LockedModBase {
@@ -84,7 +83,7 @@ export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPicke
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key: number;
-  mod: DestinyInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
 }
 

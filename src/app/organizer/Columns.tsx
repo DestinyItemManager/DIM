@@ -590,8 +590,8 @@ function PerksCell({
     sockets = sockets.filter(
       (s) =>
         s.plug &&
-        (s.plug.plugItem.plug!.plugCategoryIdentifier === 'frames' ||
-          s.plug.plugItem.plug!.plugCategoryIdentifier === 'intrinsics')
+        (s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
+          s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')
     );
   }
 

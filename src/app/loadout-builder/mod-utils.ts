@@ -19,8 +19,8 @@ import { ProcessItem } from './processWorker/types';
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.isDestiny2() &&
   item.energy &&
-  (mod.mod.plug!.energyCost!.energyType === DestinyEnergyType.Any ||
-    mod.mod.plug!.energyCost!.energyType === item.energy?.energyType);
+  (mod.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+    mod.mod.plug.energyCost!.energyType === item.energy?.energyType);
 
 /**
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones

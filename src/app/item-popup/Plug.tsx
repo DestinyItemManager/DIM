@@ -11,6 +11,7 @@ import PlugTooltip from './PlugTooltip';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 
 export default function Plug({
   defs,
@@ -41,7 +42,7 @@ export default function Plug({
 }) {
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugItem.hash);
-  if (!modDef) {
+  if (!modDef || !isPluggableItem(modDef)) {
     return null;
   }
 
@@ -84,7 +85,7 @@ export default function Plug({
             style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
             className="energyCostOverlay"
           />
-          <div className="energyCost">{modDef.plug!.energyCost!.energyCost}</div>
+          <div className="energyCost">{modDef.plug.energyCost!.energyCost}</div>
         </>
       )}
     </div>

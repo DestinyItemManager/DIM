@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { LockedArmor2Mod } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import GeneratedSetMod from './GeneratedSetMod';
@@ -8,6 +8,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import SocketDetails from '../../item-popup/SocketDetails';
 import ReactDOM from 'react-dom';
 import styles from './GeneratedSetSockets.m.scss';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -19,7 +20,7 @@ const undesireablePlugs = [
 ];
 
 interface SocketAndPlug {
-  plug: DestinyInventoryItemDefinition;
+  plug: PluggableInventoryItemDefinition;
   socket: DimSocket;
 }
 
@@ -45,7 +46,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
     for (let modIndex = 0; modIndex < modsToUse.length; modIndex++) {
       const mod = modsToUse[modIndex].mod;
       if (
-        socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug!.plugCategoryHash)
+        socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug.plugCategoryHash)
       ) {
         toSave = mod;
         modsToUse.splice(modIndex, 1);
@@ -56,7 +57,11 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
       toSave = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
     }
 
-    if (toSave && !undesireablePlugs.includes(toSave.plug!.plugCategoryHash)) {
+    if (
+      toSave &&
+      isPluggableItem(toSave) &&
+      !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
+    ) {
       modsAndPerks.push({ plug: toSave, socket });
     }
   }

@@ -394,13 +394,18 @@ export interface D1GridNode extends DimGridNode {
   dtrRoll: string;
 }
 
+/** an InventoryItem known to have a plug attribute, because this item is in a socket */
+export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDefinition {
+  plug: NonNullable<DestinyInventoryItemDefinition['plug']>;
+}
+
 /**
  * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {
   /** The item associated with this plug. */
-  plugItem: DestinyInventoryItemDefinition;
+  plugItem: PluggableInventoryItemDefinition;
   /** Perks associated with the use of this plug. TODO: load on demand? */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */

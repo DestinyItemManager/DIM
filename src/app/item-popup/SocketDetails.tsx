@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { DimSocket, D2Item } from 'app/inventory/item-types';
+import { DimSocket, D2Item, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
@@ -24,6 +24,7 @@ import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 import { emptySet } from 'app/utils/empty';
 import { getModCostInfo } from 'app/collections/Mod';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 
 interface ProvidedProps {
   item: D2Item;
@@ -119,8 +120,9 @@ function SocketDetails({
   inventoryPlugs,
   onClose,
 }: Props) {
-  const initialPlug = initialSelectedPlug || socket.plug?.plugItem;
-  const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
+  const initialPlug =
+    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plug?.plugItem;
+  const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
     initialPlug || null
   );
 
@@ -173,6 +175,7 @@ function SocketDetails({
           (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
           i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
+    .filter(isPluggableItem)
     .sort(
       chainComparator(
         reverseComparator(
@@ -217,7 +220,7 @@ function SocketDetails({
     }
   }, []);
 
-  const footer = selectedPlug && (
+  const footer = selectedPlug && isPluggableItem(selectedPlug) && (
     <SocketDetailsSelectedPlug
       plug={selectedPlug}
       defs={defs}
@@ -262,10 +265,10 @@ export const SocketDetailsMod = React.memo(
     className,
     onClick,
   }: {
-    itemDef: DestinyInventoryItemDefinition;
+    itemDef: PluggableInventoryItemDefinition;
     defs: D2ManifestDefinitions;
     className?: string;
-    onClick?(mod: DestinyInventoryItemDefinition): void;
+    onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
     const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
 

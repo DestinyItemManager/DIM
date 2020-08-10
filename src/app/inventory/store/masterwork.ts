@@ -150,7 +150,7 @@ function buildMasterworkInfo(
   return {
     progress: plugObjective.progress,
     typeName:
-      socket.plug.plugItem.plug!.plugCategoryHash ===
+      socket.plug.plugItem.plug.plugCategoryHash ===
       PlugCategoryHashes.V300PlugsMasterworksGenericWeaponsKills
         ? 'Vanguard'
         : 'Crucible',

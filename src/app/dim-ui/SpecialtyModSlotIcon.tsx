@@ -58,7 +58,8 @@ export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | false
 /** this returns a string for easy printing purposes. '' if not found */
 export const getArmorSlotSpecificModSocketDisplayName: (item: DimItem) => string = (item) => {
   const foundSocket = getArmorSlotSpecificModSocket(item);
-  return (foundSocket && foundSocket.plug!.plugItem.itemTypeDisplayName) || '';
+  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+  return (foundSocket && foundSocket.plug?.plugItem.itemTypeDisplayName) || '';
 };
 
 function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, defs }: Props) {
