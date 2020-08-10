@@ -442,10 +442,6 @@ export interface DimSocket {
   socketDefinition: DestinyItemSocketEntryDefinition;
 }
 
-export interface NonEmptyDimSocket extends DimSocket {
-  plugged: NonNullable<DimSocket['plugged']>;
-}
-
 export interface DimSocketCategory {
   /** A grouping of sockets. */
   category: DestinySocketCategoryDefinition;
