@@ -1,5 +1,7 @@
 ## Next
 
+## 6.24.0 <span className="changelog-date">(2020-08-09)</span>
+
 * Configure a custom armor stat per-class in Settings, and it'll show up in item popups, Organizer, Compare, and the new `stat:custom:` search.
 * Speed improvements to wishlist processing.
 * `is:smg` for if you're as bad at remembering "submachine gun" as.. some of us are.
