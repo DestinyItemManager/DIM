@@ -53,7 +53,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
       }
     }
 
-    if (!toSave) {
+    if (!toSave && socket.socketDefinition.singleInitialItemHash) {
       toSave = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
     }
 
