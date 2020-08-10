@@ -2,13 +2,7 @@
 
 .select {
   display: flex;
-
-  :global(.character-box) {
-    border-bottom: none;
-    @include phone-portrait {
-      max-width: 100%;
-    }
-  }
+  justify-content: space-between;
 }
 
 .horizontal {
@@ -42,9 +36,15 @@
 }
 
 .tile {
+  height: 46px;
   min-width: 230px;
   @include phone-portrait {
+    min-width: 260px;
     margin-bottom: 6px;
+
+    > div {
+      margin: 0 5px;
+    }
   }
 }
 
@@ -54,9 +54,12 @@
 
 .pager {
   overflow: hidden;
-  padding-left: 20px;
   > div {
     max-width: 250px;
+    @include phone-portrait {
+      max-width: 260px;
+    }
+
     margin: 0 auto;
     overflow: visible !important;
   }

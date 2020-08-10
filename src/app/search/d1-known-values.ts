@@ -17,6 +17,11 @@ export const enum D1_StatHashes {
   Attack = 368428387,
 }
 
+/** hashes representing D1 Progressions */
+export const enum D1ProgressionHashes {
+  Prestige = 2030054750,
+}
+
 //
 // ITEMS / ITEMCATERGORY KNOWN VALUES
 //

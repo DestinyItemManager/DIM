@@ -65,6 +65,7 @@ const faStickyNote = 'fas fa-sticky-note';
 const faMinusSquare = 'fas fa-minus-square';
 const faRandom = 'fas fa-random';
 const faEquals = 'fas fa-equals';
+const faEllipsisV = 'fas fa-ellipsis-v';
 const faArrowCircleDown = 'fas fa-arrow-circle-down';
 const faExclamationCircle = 'fas fa-exclamation-circle';
 const faMinus = 'fas fa-minus';
@@ -116,6 +117,7 @@ export {
   faCog as settingsIcon,
   faCopy as copyIcon,
   faDownload as downloadIcon,
+  faEllipsisV,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,
