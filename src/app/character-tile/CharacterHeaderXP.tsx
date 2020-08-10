@@ -27,7 +27,7 @@ function getLevelBar(store: D1Store) {
 }
 
 // This is just a D1 feature, so it only accepts a D1 store.
-export const CharacterHeaderXPBar = ({ store }: { store: D1Store }) => {
+export default function CharacterHeaderXPBar({ store }: { store: D1Store }) {
   const { levelBar, xpTillMote } = getLevelBar(store);
   return (
     <PressTip tooltip={xpTillMote}>
@@ -41,4 +41,4 @@ export const CharacterHeaderXPBar = ({ store }: { store: D1Store }) => {
       </div>
     </PressTip>
   );
-};
+}

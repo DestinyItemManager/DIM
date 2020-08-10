@@ -4,7 +4,7 @@ import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import { DimStore, D1Store } from '../../inventory/store-types';
 import { RootState } from '../../store/reducers';
 import { sortedStoresSelector } from '../../inventory/selectors';
-import { CharacterTileButton } from '../../character-tile/CharacterTileButton';
+import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { t } from 'app/i18next-t';

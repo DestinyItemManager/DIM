@@ -7,8 +7,8 @@ import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ReactDOM from 'react-dom';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
-import { CharacterHeaderXPBar } from './CharacterHeaderXP';
-import { CharacterTile } from './CharacterTile';
+import CharacterHeaderXPBar from './CharacterHeaderXP';
+import CharacterTile from './CharacterTile';
 
 interface Props {
   store: DimStore;
@@ -24,6 +24,7 @@ interface State {
   loadoutMenuOpen: boolean;
 }
 
+// Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
 const CharacterHeader = ({
   store,
   loadoutMenuOpen,
@@ -57,6 +58,10 @@ const CharacterHeader = ({
   </div>
 );
 
+/**
+ * This is the character dropdown used at the top of the inventory page.
+ * It will render a {CharacterTile} in addition to a button for the loadout menu
+ */
 export default class StoreHeading extends React.Component<Props, State> {
   state: State = { loadoutMenuOpen: false };
   private menuTrigger = React.createRef<HTMLDivElement>();

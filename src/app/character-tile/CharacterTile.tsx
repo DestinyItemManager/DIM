@@ -11,26 +11,32 @@ const CharacterEmblem = ({ store }: { store: DimStore }) => (
   />
 );
 
-export const CharacterTile = ({ store }: { store: DimStore }) => (
-  <div className="character-tile">
-    <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
-    <CharacterEmblem store={store} />
-    <div className="character-text">
-      <div className="top">
-        <div className="class">{store.className}</div>
+/**
+ * Render a basic character tile without any event handlers
+ * This is currently being shared between StoreHeading and CharacterTileButton
+ */
+export default function CharacterTile({ store }: { store: DimStore }) {
+  return (
+    <div className="character-tile">
+      <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
+      <CharacterEmblem store={store} />
+      <div className="character-text">
+        <div className="top">
+          <div className="class">{store.className}</div>
+          {!store.isVault && (
+            <div className="powerLevel">
+              <AppIcon icon={powerActionIcon} />
+              {store.powerLevel}
+            </div>
+          )}
+        </div>
         {!store.isVault && (
-          <div className="powerLevel">
-            <AppIcon icon={powerActionIcon} />
-            {store.powerLevel}
+          <div className="bottom">
+            <div className="race-gender">{store.genderRace}</div>
+            {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
           </div>
         )}
       </div>
-      {!store.isVault && (
-        <div className="bottom">
-          <div className="race-gender">{store.genderRace}</div>
-          {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
-        </div>
-      )}
     </div>
-  </div>
-);
+  );
+}

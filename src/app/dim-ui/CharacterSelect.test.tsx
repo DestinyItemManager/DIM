@@ -3,7 +3,7 @@ import TestRenderer from 'react-test-renderer';
 import CharacterSelect from './CharacterSelect';
 import { DimStore } from '../inventory/store-types';
 import { Frame, Track, ViewPager } from 'react-view-pager';
-import { CharacterTileButton } from 'app/character-tile/CharacterTileButton';
+import CharacterTileButton from 'app/character-tile/CharacterTileButton';
 
 const stubDimStore: DimStore = {} as DimStore;
 const stubDimStoreArray: DimStore[] = [];
