@@ -192,13 +192,13 @@ function downloadCsv(filename: string, csv: string) {
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {
-  const socketItems = sockets.sockets.map((s) =>
+  const socketItems = sockets.allSockets.map((s) =>
     s.plugOptions
-      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
+      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugDef.displayProperties.name))
       .map((p) =>
-        s.plug?.plugItem.hash === p.plugItem.hash
-          ? `${p.plugItem.displayProperties.name}*`
-          : p.plugItem.displayProperties.name
+        s.plugged?.plugDef.hash === p.plugDef.hash
+          ? `${p.plugDef.displayProperties.name}*`
+          : p.plugDef.displayProperties.name
       )
   );
 

@@ -48,8 +48,8 @@ const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|che
 export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
   (item.isDestiny2() &&
     item.bucket.inArmor &&
-    item.sockets?.sockets.find((socket) =>
-      socket?.plug?.plugItem?.plug.plugCategoryIdentifier.match(
+    item.sockets?.allSockets.find((socket) =>
+      socket?.plugged?.plugDef?.plug.plugCategoryIdentifier.match(
         armorSlotSpecificPlugCategoryIdentifier
       )
     )) ||
@@ -57,7 +57,7 @@ export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undef
 
 /** this returns a string for easy printing purposes. '' if not found */
 export const getArmorSlotSpecificModSocketDisplayName: (item: DimItem) => string = (item) =>
-  getArmorSlotSpecificModSocket(item)?.plug?.plugItem.itemTypeDisplayName || '';
+  getArmorSlotSpecificModSocket(item)?.plugged?.plugDef.itemTypeDisplayName || '';
 
 function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, defs }: Props) {
   const foundSocket = getArmorSlotSpecificModSocket(item);

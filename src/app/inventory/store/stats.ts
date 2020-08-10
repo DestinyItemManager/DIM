@@ -128,12 +128,12 @@ export function buildStats(
   let investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
 
   // Include the contributions from perks and mods
-  if (createdItem.sockets?.sockets.length) {
+  if (createdItem.sockets?.allSockets.length) {
     enhanceStatsWithPlugs(
       itemDef,
       investmentStats,
       investmentStatsByHash,
-      createdItem.sockets.sockets,
+      createdItem.sockets.allSockets,
       defs,
       statGroup,
       statDisplays
@@ -194,10 +194,10 @@ function buildStatsFromMods(
   }
 
   for (const socket of modSockets) {
-    if (socket?.plug?.stats) {
+    if (socket?.plugged?.stats) {
       for (const statHash of armorStats) {
-        if (socket.plug.stats[statHash]) {
-          statTracker[statHash] += socket.plug.stats[statHash];
+        if (socket.plugged.stats[statHash]) {
+          statTracker[statHash] += socket.plugged.stats[statHash];
         }
       }
     }
@@ -327,8 +327,8 @@ function enhanceStatsWithPlugs(
 
   // Add the chosen plugs' investment stats to the item's base investment stats
   for (const socket of sockets) {
-    if (socket.plug?.plugItem.investmentStats) {
-      for (const perkStat of socket.plug.plugItem.investmentStats) {
+    if (socket.plugged?.plugDef.investmentStats) {
+      for (const perkStat of socket.plugged.plugDef.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = statsByHash[statHash];
         const value = perkStat.value || 0;
@@ -336,7 +336,7 @@ function enhanceStatsWithPlugs(
           itemStat.investmentValue += value;
         } else if (shouldShowStat(itemDef, statHash, statDisplays)) {
           // This stat didn't exist before we modified it, so add it here.
-          const stat = socket.plug.plugItem.investmentStats.find(
+          const stat = socket.plugged.plugDef.investmentStats.find(
             (s) => s.statTypeHash === statHash
           );
 
@@ -367,7 +367,7 @@ function enhanceStatsWithPlugs(
   const sortedSockets = _.sortBy(sockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
     for (const plug of socket.plugOptions) {
-      if (plug.plugItem?.investmentStats?.length) {
+      if (plug.plugDef?.investmentStats?.length) {
         plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
       }
     }
@@ -388,7 +388,7 @@ function buildPlugStats(
     [statHash: number]: number;
   } = {};
 
-  for (const perkStat of plug.plugItem.investmentStats) {
+  for (const perkStat of plug.plugDef.investmentStats) {
     let value = perkStat.value || 0;
     const itemStat = statsByHash[perkStat.statTypeHash];
     const statDisplay = statDisplays[perkStat.statTypeHash];
@@ -481,10 +481,10 @@ function buildBaseStats(
     for (const stat of stats) {
       stat.base = 0;
     }
-  } else if (item.sockets?.sockets.length) {
-    for (const socket of item.sockets.sockets) {
-      if (socket.plug?.plugItem.investmentStats) {
-        for (const perkStat of socket.plug.plugItem.investmentStats) {
+  } else if (item.sockets?.allSockets.length) {
+    for (const socket of item.sockets.allSockets) {
+      if (socket.plugged?.plugDef.investmentStats) {
+        for (const perkStat of socket.plugged.plugDef.investmentStats) {
           const statHash = perkStat.statTypeHash;
           const itemStat = statsByHash[statHash];
           const perkValue = perkStat.value || 0;

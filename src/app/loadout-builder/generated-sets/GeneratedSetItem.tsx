@@ -50,7 +50,7 @@ export default function GeneratedSetItem({
     lbDispatch({ type: 'removeItemFromLockedMap', item });
 
   const classesByHash = altPerks.reduce(
-    (memo, perk) => ({ ...memo, [perk.plugItem.hash]: styles.altPerk }),
+    (memo, perk) => ({ ...memo, [perk.plugDef.hash]: styles.altPerk }),
     {}
   );
   if (locked) {

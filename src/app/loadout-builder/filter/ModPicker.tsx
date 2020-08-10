@@ -98,7 +98,7 @@ function mapStateToProps() {
             plugSets[item.bucket.hash] = new Set<number>();
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets
+          item.sockets.allSockets
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {

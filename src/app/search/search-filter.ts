@@ -1063,11 +1063,11 @@ function searchFilters(
           ) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
-                  regex.test(plug.plugItem.displayProperties.description) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.description) ||
                   plug.perks.some((perk) =>
                     Boolean(
                       (perk.displayProperties.name && regex.test(perk.displayProperties.name)) ||
@@ -1085,10 +1085,10 @@ function searchFilters(
           item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
                   plug.perks.some((perk) =>
                     Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
@@ -1185,7 +1185,9 @@ function searchFilters(
         }
       },
       randomroll(item: D2Item) {
-        return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
+        return (
+          Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems)
+        );
       },
       rating(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
@@ -1291,9 +1293,9 @@ function searchFilters(
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        const oneSocketPerPlug = item.sockets?.sockets
+        const oneSocketPerPlug = item.sockets?.allSockets
           .filter((socket) =>
-            curatedPlugsAllowList.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash || 0)
+            curatedPlugsAllowList.includes(socket?.plugged?.plugDef?.plug?.plugCategoryHash || 0)
           )
           .every((socket) => socket?.plugOptions.length === 1);
 
@@ -1329,40 +1331,40 @@ function searchFilters(
         return !item.notransfer;
       },
       hasShader(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug?.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
-              socket.plug.plugItem.hash !== DEFAULT_SHADER
+            socket.plugged?.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryHash === SHADERS_BUCKET &&
+              socket.plugged.plugDef.hash !== DEFAULT_SHADER
           )
         );
       },
       hasOrnament(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-              socket.plug.plugItem.hash !== DEFAULT_GLOW &&
-              !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-              !socket.plug.plugItem.itemCategoryHashes?.includes(
+            socket.plugged &&
+              socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament &&
+              socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+              !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+              !socket.plugged.plugDef.itemCategoryHashes?.includes(
                 ItemCategoryHashes.ArmorModsGlowEffects
               )
           )
         );
       },
       hasMod(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-              socket.plug.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+            socket.plugged &&
+              !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+              socket.plugged.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               ) &&
               // enforce that this provides a perk (excludes empty slots)
-              socket.plug.plugItem.perks.length &&
+              socket.plugged.plugDef.perks.length &&
               // enforce that this doesn't have an energy cost (y3 reusables)
-              !socket.plug.plugItem.plug.energyCost
+              !socket.plugged.plugDef.plug.energyCost
           )
         );
       },
@@ -1370,16 +1372,16 @@ function searchFilters(
         return (
           Boolean(item.energy) &&
           item.sockets &&
-          item.sockets.sockets.some((socket) =>
+          item.sockets.allSockets.some((socket) =>
             Boolean(
-              socket.plug &&
-                !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+              socket.plugged &&
+                !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+                socket.plugged.plugDef.plug &&
+                socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                   /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
                 ) &&
                 // enforce that this provides a perk (excludes empty slots)
-                socket.plug.plugItem.perks.length
+                socket.plugged.plugDef.perks.length
             )
           )
         );

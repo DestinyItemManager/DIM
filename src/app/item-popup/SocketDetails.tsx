@@ -121,7 +121,7 @@ function SocketDetails({
   onClose,
 }: Props) {
   const initialPlug =
-    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plug?.plugItem;
+    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plugged?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
     initialPlug || null
   );
@@ -225,7 +225,7 @@ function SocketDetails({
       plug={selectedPlug}
       defs={defs}
       item={item}
-      currentPlug={socket.plug}
+      currentPlug={socket.plugged}
     />
   );
 

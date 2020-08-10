@@ -106,14 +106,14 @@ const itemFactors: Record<string, Factor> = {
       const archetypeSocket = getWeaponArchetypeSocket(item);
       return (
         <>
-          {archetypeSocket?.plug && (
+          {archetypeSocket?.plugged && (
             <PressTip
               elementType="span"
-              tooltip={<PlugTooltip item={item} plug={archetypeSocket.plug} />}
+              tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
             >
               <BungieImage
                 className={styles.inlineIcon}
-                src={archetypeSocket.plug.plugItem.displayProperties.icon}
+                src={archetypeSocket.plugged.plugDef.displayProperties.icon}
               />
             </PressTip>
           )}

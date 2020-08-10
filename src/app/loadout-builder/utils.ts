@@ -39,17 +39,17 @@ const unwantedCategories = new Set([
  *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
-  if (!socket.plug) {
+  if (!socket.plugged) {
     return false;
   }
 
-  const plugItem = socket.plug.plugItem;
+  const plugItem = socket.plugged.plugDef;
   if (!plugItem || !plugItem.plug) {
     return false;
   }
 
   // Armor 2.0 mods
-  if (socket.plug.plugItem.collectibleHash) {
+  if (socket.plugged.plugDef.collectibleHash) {
     return false;
   }
 
@@ -191,7 +191,7 @@ export function getFilteredPerksAndPlugSets(
     const itemPlugSets: number[] = [];
 
     if (item.isDestiny2() && item.sockets) {
-      for (const socket of item.sockets.sockets) {
+      for (const socket of item.sockets.allSockets) {
         // Populate mods
         if (!socket.isPerk) {
           if (socket.socketDefinition.reusablePlugSetHash) {
@@ -204,7 +204,7 @@ export function getFilteredPerksAndPlugSets(
         // Populate plugs
         if (filterPlugs(socket)) {
           socket.plugOptions.forEach((option) => {
-            itemPlugs.push(option.plugItem);
+            itemPlugs.push(option.plugDef);
           });
         }
       }
@@ -276,7 +276,7 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
       lockedItem.mod.plug.plugCategoryHash
     ) ||
       // or matches socket plugsets
-      item.sockets?.sockets.some(
+      item.sockets?.allSockets.some(
         (socket) =>
           (socket.socketDefinition.reusablePlugSetHash &&
             lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
@@ -317,16 +317,17 @@ export function generateMixesFromPerks(
   const altPerks: (DimPlug[] | null)[] = [null];
 
   if (stats && item.isDestiny2() && item.sockets && !item.energy) {
-    for (const socket of item.sockets.sockets) {
+    for (const socket of item.sockets.allSockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
-          if (plug !== socket.plug && plug.stats) {
+          if (plug !== socket.plugged && plug.stats) {
             // Stats without the currently selected plug, with the optional plug
             const mixNum = mixes.length;
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
               const existingMix = mixes[mixIndex];
               const optionStat = statValues.map((statHash, index) => {
-                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
+                const currentPlugValue =
+                  (socket.plugged?.stats && socket.plugged.stats[statHash]) ?? 0;
                 const optionPlugValue = plug.stats?.[statHash] || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
