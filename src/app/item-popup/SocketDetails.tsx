@@ -167,7 +167,7 @@ function SocketDetails({
     .map((h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
-        i.inventory.tierType !== TierType.Common &&
+        i.inventory!.tierType !== TierType.Common &&
         (!i.plug ||
           !i.plug.energyCost ||
           (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
@@ -179,7 +179,7 @@ function SocketDetails({
           compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
         ),
         compareBy((i) => i.plug?.energyCost?.energyCost),
-        compareBy((i) => -i.inventory.tierType),
+        compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
       )
     );

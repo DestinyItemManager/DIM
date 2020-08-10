@@ -19,7 +19,7 @@ function isWeaponOrArmor(
   const itemDef = defs.InventoryItem.get(saleItemComponent.itemHash);
   const inventoryItemStats = itemDef?.stats;
   return (
-    inventoryItemStats &&
+    inventoryItemStats !== undefined &&
     (inventoryItemStats.primaryBaseStatHash === StatHashes.Attack || // weapon
       inventoryItemStats.primaryBaseStatHash === StatHashes.Defense) // armor
   );

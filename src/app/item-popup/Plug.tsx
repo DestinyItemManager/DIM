@@ -84,7 +84,7 @@ export default function Plug({
             style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
             className="energyCostOverlay"
           />
-          <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+          <div className="energyCost">{modDef.plug!.energyCost!.energyCost}</div>
         </>
       )}
     </div>

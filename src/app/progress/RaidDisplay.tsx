@@ -75,7 +75,7 @@ export function RaidActivity({
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">
-          {activity.phases.map((phase) => (
+          {activity.phases?.map((phase) => (
             <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
           ))}
           <div className="objective-progress">

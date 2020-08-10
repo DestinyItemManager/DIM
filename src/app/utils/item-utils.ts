@@ -75,8 +75,9 @@ export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
-  armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
-  specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash);
+  item.plug !== undefined &&
+  (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
+    specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
