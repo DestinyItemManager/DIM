@@ -45,8 +45,8 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
-  compareBy((i) => i.plug.energyCost?.energyType),
-  compareBy((i) => i.plug.energyCost?.energyCost),
+  compareBy((i) => i.plug!.energyCost?.energyType),
+  compareBy((i) => i.plug!.energyCost?.energyCost),
   compareBy((i) => i.displayProperties.name)
 );
 
@@ -136,7 +136,7 @@ function mapStateToProps() {
       Object.keys(perks).forEach((bucket) => {
         const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[bucket]);
         bucketPerks.sort((a, b) => b.index - a.index);
-        bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
+        bucketPerks.sort((a, b) => b.inventory!.tierType - a.inventory!.tierType);
         perks[bucket] = bucketPerks;
       });
 
@@ -203,9 +203,9 @@ function mapStateToProps() {
           }))
           .filter(
             (i) =>
-              i.item.inventory.tierType !== TierType.Common &&
+              i.item.inventory!.tierType !== TierType.Common &&
               !i.item.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
-              i.item.plug.insertionMaterialRequirementHash !== 0 // not the empty mod sockets
+              i.item.plug!.insertionMaterialRequirementHash !== 0 // not the empty mod sockets
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });
@@ -338,7 +338,7 @@ class PerkPicker extends React.Component<Props, State> {
       Object.values(queryFilteredMods).flatMap((bucktedMods) =>
         bucktedMods
           .filter(({ item }) =>
-            getSpecialtySocketMetadataByPlugCategoryHash(item.plug.plugCategoryHash)
+            getSpecialtySocketMetadataByPlugCategoryHash(item.plug!.plugCategoryHash)
           )
           .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
       ),

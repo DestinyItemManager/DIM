@@ -45,7 +45,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
     for (let modIndex = 0; modIndex < modsToUse.length; modIndex++) {
       const mod = modsToUse[modIndex].mod;
       if (
-        socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug.plugCategoryHash)
+        socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug!.plugCategoryHash)
       ) {
         toSave = mod;
         modsToUse.splice(modIndex, 1);
@@ -56,7 +56,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
       toSave = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
     }
 
-    if (toSave && !undesireablePlugs.includes(toSave.plug.plugCategoryHash)) {
+    if (toSave && !undesireablePlugs.includes(toSave.plug!.plugCategoryHash)) {
       modsAndPerks.push({ plug: toSave, socket });
     }
   }

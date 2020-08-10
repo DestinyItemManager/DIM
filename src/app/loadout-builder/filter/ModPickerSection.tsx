@@ -34,8 +34,8 @@ export default function ModPickerSection({
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
       if (
-        item.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-        locked?.every((locked) => locked.mod.plug.energyCost.energyType === DestinyEnergyType.Any)
+        item.mod.plug!.energyCost!.energyType === DestinyEnergyType.Any ||
+        locked?.every((locked) => locked.mod.plug!.energyCost!.energyType === DestinyEnergyType.Any)
       ) {
         return false;
       }
@@ -43,7 +43,7 @@ export default function ModPickerSection({
       if (
         locked?.some(
           (lockedMod) =>
-            lockedMod.mod.plug.energyCost.energyType !== item.mod.plug.energyCost.energyType
+            lockedMod.mod.plug!.energyCost!.energyType !== item.mod.plug!.energyCost!.energyType
         )
       ) {
         return true;

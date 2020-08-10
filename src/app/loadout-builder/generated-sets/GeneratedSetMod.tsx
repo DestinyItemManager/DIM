@@ -19,7 +19,7 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
 
   const classes = {
     [styles.item]: true,
-    [styles.perk]: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
+    [styles.perk]: plugDef.plug!.plugCategoryHash === PlugCategoryHashes.Intrinsics,
   };
 
   return (

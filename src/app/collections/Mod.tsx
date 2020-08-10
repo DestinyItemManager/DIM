@@ -67,18 +67,17 @@ export function getModCostInfo(
     mod = defs.InventoryItem.get(mod);
   }
 
-  if (mod) {
+  if (mod?.plug) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
-  }
 
-  if (mod?.plug.energyCost?.energyTypeHash) {
-    modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
+    if (mod.plug.energyCost?.energyTypeHash) {
+      modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
+    }
+    if (modCostInfo.energyCostElement?.costStatHash) {
+      modCostInfo.energyCostElementOverlay = defs.Stat.get(
+        modCostInfo.energyCostElement.costStatHash
+      )?.displayProperties.icon;
+    }
   }
-  if (modCostInfo.energyCostElement?.costStatHash) {
-    modCostInfo.energyCostElementOverlay = defs.Stat.get(
-      modCostInfo.energyCostElement.costStatHash
-    )?.displayProperties.icon;
-  }
-
   return modCostInfo;
 }

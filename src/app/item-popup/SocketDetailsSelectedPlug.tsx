@@ -33,8 +33,8 @@ export default function SocketDetailsSelectedPlug({
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
   const materialRequirementSet =
-    (plug.plug.insertionMaterialRequirementHash &&
-      defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
+    (plug.plug!.insertionMaterialRequirementHash &&
+      defs.MaterialRequirementSet.get(plug.plug!.insertionMaterialRequirementHash)) ||
     undefined;
 
   const sourceString =
@@ -50,7 +50,7 @@ export default function SocketDetailsSelectedPlug({
         return null;
       }
       const statGroupDef = defs.StatGroup.get(
-        defs.InventoryItem.get(item.hash).stats.statGroupHash!
+        defs.InventoryItem.get(item.hash).stats!.statGroupHash!
       );
 
       const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
