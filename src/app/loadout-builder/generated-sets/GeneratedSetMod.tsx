@@ -4,11 +4,11 @@ import { getModCostInfo } from 'app/collections/Mod';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import clsx from 'clsx';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import styles from './GeneratedSetMod.m.scss';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 interface Props {
-  plugDef: DestinyInventoryItemDefinition;
+  plugDef: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   gridColumn: number;
   onClick(): void;
@@ -19,7 +19,7 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
 
   const classes = {
     [styles.item]: true,
-    [styles.perk]: plugDef.plug!.plugCategoryHash === PlugCategoryHashes.Intrinsics,
+    [styles.perk]: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
   };
 
   return (

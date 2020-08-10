@@ -10,7 +10,13 @@ import {
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
+import {
+  DimSockets,
+  DimSocketCategory,
+  DimSocket,
+  DimPlug,
+  PluggableInventoryItemDefinition,
+} from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
@@ -268,6 +274,16 @@ function buildDefinedSocket(
   };
 }
 
+/**
+ * verifies a DestinyInventoryItemDefinition is pluggable into a socket
+ * and converts it to a PluggableInventoryItemDefinition
+ */
+export function isPluggableItem(
+  itemDef?: DestinyInventoryItemDefinition
+): itemDef is PluggableInventoryItemDefinition {
+  return itemDef?.plug !== undefined;
+}
+
 function isDestinyItemPlug(
   plug: DestinyItemPlugBase | DestinyItemSocketState
 ): plug is DestinyItemPlugBase {
@@ -294,7 +310,7 @@ function buildPlug(
     plugItem = defs.InventoryItem.get(socketDef.singleInitialItemHash);
   }
 
-  if (!plugItem) {
+  if (!plugItem || !isPluggableItem(plugItem)) {
     return null;
   }
 
@@ -321,7 +337,7 @@ function buildDefinedPlug(
   const plugHash = plug.plugItemHash;
 
   const plugItem = plugHash && defs.InventoryItem.get(plugHash);
-  if (!plugItem) {
+  if (!plugItem || !isPluggableItem(plugItem)) {
     return null;
   }
 

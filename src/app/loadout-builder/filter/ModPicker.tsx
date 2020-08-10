@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   LockedArmor2Mod,
@@ -29,6 +29,8 @@ import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { t } from 'app/i18next-t';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -44,9 +46,9 @@ const Armor2ModPlugCategoriesTitles = {
 let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
-  compareBy((i) => i.plug!.energyCost?.energyType),
-  compareBy((i) => i.plug!.energyCost?.energyCost),
+export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((i) => i.plug.energyCost?.energyType),
+  compareBy((i) => i.plug.energyCost?.energyCost),
   compareBy((i) => i.displayProperties.name)
 );
 
@@ -62,7 +64,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: DestinyInventoryItemDefinition[];
+  mods: PluggableInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -124,7 +126,8 @@ function mapStateToProps() {
 
         return unlockedPlugs
           .map((i) => defs.InventoryItem.get(i))
-          .filter((item) => isArmor2Mod(item) && item.plug!.insertionMaterialRequirementHash !== 0)
+          .filter(isPluggableItem)
+          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
           .sort(sortMods);
       });
 
@@ -199,8 +202,8 @@ class ModPicker extends React.Component<Props, State> {
       queryFilteredMods
         .filter((mod) =>
           category === ModPickerCategories.seasonal
-            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug!.plugCategoryHash)
-            : mod.plug!.plugCategoryHash === category
+            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)
+            : mod.plug.plugCategoryHash === category
         )
         .map((mod) => ({ key: modKey++, mod, category }));
 

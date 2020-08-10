@@ -1,7 +1,11 @@
 import React from 'react';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2Item, DimPlug, DimStat } from 'app/inventory/item-types';
+import {
+  D2Item,
+  DimPlug,
+  DimStat,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
 import _ from 'lodash';
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -24,7 +28,7 @@ export default function SocketDetailsSelectedPlug({
   item,
   currentPlug,
 }: {
-  plug: DestinyInventoryItemDefinition;
+  plug: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   item: D2Item;
   currentPlug: DimPlug | null;
@@ -33,8 +37,8 @@ export default function SocketDetailsSelectedPlug({
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
   const materialRequirementSet =
-    (plug.plug!.insertionMaterialRequirementHash &&
-      defs.MaterialRequirementSet.get(plug.plug!.insertionMaterialRequirementHash)) ||
+    (plug.plug.insertionMaterialRequirementHash &&
+      defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
   const sourceString =
