@@ -8,4 +8,5 @@ export const getWeaponArchetypeSocket = (item: D2Item) =>
       ?.sockets[0]) ||
   undefined;
 
-export const getWeaponArchetype = (item: D2Item) => getWeaponArchetypeSocket(item)?.plug?.plugItem;
+export const getWeaponArchetype = (item: D2Item) =>
+  getWeaponArchetypeSocket(item)?.plugged?.plugDef;

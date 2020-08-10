@@ -39,7 +39,7 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
   const modsAndPerks: SocketAndPlug[] = [];
   const modsToUse = [...lockedMods];
 
-  for (const socket of item.sockets?.sockets || []) {
+  for (const socket of item.sockets?.allSockets || []) {
     const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
     let toSave: DestinyInventoryItemDefinition | undefined;
 

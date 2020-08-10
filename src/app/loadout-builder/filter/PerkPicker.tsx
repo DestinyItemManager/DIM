@@ -125,9 +125,9 @@ function mapStateToProps() {
             perks[item.bucket.hash] = [];
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+          item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
             socket.plugOptions.forEach((option) => {
-              perks[item.bucket.hash].push(option.plugItem);
+              perks[item.bucket.hash].push(option.plugDef);
             });
           });
         }
@@ -173,7 +173,7 @@ function mapStateToProps() {
             plugSets[item.bucket.hash] = new Set<number>();
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets
+          item.sockets.allSockets
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {

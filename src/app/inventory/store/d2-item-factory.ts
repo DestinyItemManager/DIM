@@ -542,13 +542,13 @@ export function makeItem(
 
   // Secondary Icon
   if (createdItem.sockets) {
-    const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug?.plugItem.itemType === DestinyItemType.Emblem
+    const multiEmblem = createdItem.sockets.allSockets.filter(
+      (socket) => socket.plugged?.plugDef.itemType === DestinyItemType.Emblem
     );
-    const selectedEmblem = multiEmblem[0]?.plug;
+    const selectedEmblem = multiEmblem[0]?.plugged;
 
     if (selectedEmblem) {
-      createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+      createdItem.secondaryIcon = selectedEmblem.plugDef.secondaryIcon;
     }
   }
 
@@ -558,9 +558,9 @@ export function makeItem(
   if (itemDef.breakerTypeHash) {
     createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
   } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
-    const breakerTypeHash = createdItem.sockets.sockets.find(
-      (s) => s.plug?.plugItem.breakerTypeHash
-    )?.plug?.plugItem.breakerTypeHash;
+    const breakerTypeHash = createdItem.sockets.allSockets.find(
+      (s) => s.plugged?.plugDef.breakerTypeHash
+    )?.plugged?.plugDef.breakerTypeHash;
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }

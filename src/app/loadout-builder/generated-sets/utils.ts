@@ -66,11 +66,11 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
           if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
             return 0;
           }
-          return count(firstItem.sockets.sockets, (slot) =>
+          return count(firstItem.sockets.allSockets, (slot) =>
             slot.plugOptions.some((perk) =>
               lockedPerks.some(
                 (lockedPerk) =>
-                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugItem.hash
+                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugDef.hash
               )
             )
           );

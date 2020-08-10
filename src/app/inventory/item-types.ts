@@ -404,8 +404,8 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {
-  /** The item associated with this plug. */
-  plugItem: PluggableInventoryItemDefinition;
+  /** The InventoryItem definition associated with this plug. */
+  plugDef: PluggableInventoryItemDefinition;
   /** Perks associated with the use of this plug. TODO: load on demand? */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
@@ -424,7 +424,7 @@ export interface DimSocket {
   /** The index of this socket in the overall socket list, used for the AWA InsertPlug API. */
   socketIndex: number;
   /** The currently inserted plug item, if any. */
-  plug: DimPlug | null;
+  plugged: DimPlug | null;
   /**
    * The displayable/searchable list of potential plug choices for this socket.
    * For perks, this is all the potential perks in the perk column.
@@ -442,6 +442,10 @@ export interface DimSocket {
   socketDefinition: DestinyItemSocketEntryDefinition;
 }
 
+export interface NonEmptyDimSocket extends DimSocket {
+  plugged: NonNullable<DimSocket['plugged']>;
+}
+
 export interface DimSocketCategory {
   /** A grouping of sockets. */
   category: DestinySocketCategoryDefinition;
@@ -451,7 +455,7 @@ export interface DimSocketCategory {
 
 export interface DimSockets {
   /** A flat list of all sockes on the item. */
-  sockets: DimSocket[];
+  allSockets: DimSocket[];
   /** Sockets grouped by category. */
   categories: DimSocketCategory[];
 }

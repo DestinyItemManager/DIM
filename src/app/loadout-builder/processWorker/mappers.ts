@@ -10,13 +10,13 @@ import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   return {
-    plug: dimSocket.plug && {
-      stats: dimSocket.plug.stats,
-      plugItemHash: dimSocket.plug.plugItem.hash,
+    plug: dimSocket.plugged && {
+      stats: dimSocket.plugged.stats,
+      plugItemHash: dimSocket.plugged.plugDef.hash,
     },
     plugOptions: dimSocket.plugOptions.map((dimPlug) => ({
       stats: dimPlug.stats,
-      plugItemHash: dimPlug.plugItem.hash,
+      plugItemHash: dimPlug.plugDef.hash,
     })),
   };
 }
@@ -110,7 +110,7 @@ export function getTotalModStatChanges(
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
-    sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
+    sockets: dimSockets.allSockets.map(mapDimSocketToProcessSocket),
     categories: dimSockets.categories.map((category) => ({
       categoryStyle: category.category.categoryStyle,
       sockets: category.sockets.map(mapDimSocketToProcessSocket),

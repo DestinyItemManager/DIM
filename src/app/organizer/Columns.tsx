@@ -409,14 +409,14 @@ export function getColumns(
         cell: (_val, item) =>
           item.isDestiny2() ? (
             <div>
-              {_.compact([getWeaponArchetypeSocket(item)?.plug]).map((p) => (
+              {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
                 <PressTip
-                  key={p.plugItem.hash}
+                  key={p.plugDef.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
                 >
                   <div className={styles.modPerk}>
-                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                    {p.plugItem.displayProperties.name}
+                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                    {p.plugDef.displayProperties.name}
                   </div>
                 </PressTip>
               ))}
@@ -574,13 +574,13 @@ function PerksCell({
   let sockets = item.sockets.categories.flatMap((c) =>
     c.sockets.filter(
       (s) =>
-        s.plug && // ignore empty sockets
+        s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&
-        (s.plug.plugItem.collectibleHash || // collectibleHash catches shaders and most mods
+        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
         isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
-              !s.plug.plugItem.itemCategoryHashes?.includes(
+              !s.plugged.plugDef.itemCategoryHashes?.includes(
                 ItemCategoryHashes.WeaponModsIntrinsic
               ))))
     )
@@ -589,9 +589,9 @@ function PerksCell({
   if (traitsOnly) {
     sockets = sockets.filter(
       (s) =>
-        s.plug &&
-        (s.plug.plugItem.plug.plugCategoryIdentifier === 'frames' ||
-          s.plug.plugItem.plug.plugCategoryIdentifier === 'intrinsics')
+        s.plugged &&
+        (s.plugged.plugDef.plug.plugCategoryIdentifier === 'frames' ||
+          s.plugged.plugDef.plug.plugCategoryIdentifier === 'intrinsics')
     );
   }
 
@@ -611,15 +611,12 @@ function PerksCell({
             (p) =>
               item.isDestiny2() && (
                 <PressTip
-                  key={p.plugItem.hash}
+                  key={p.plugDef.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
                 >
-                  <div
-                    className={styles.modPerk}
-                    data-perk-name={p.plugItem.displayProperties.name}
-                  >
-                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
-                    {p.plugItem.displayProperties.name}
+                  <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
+                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                    {p.plugDef.displayProperties.name}
                   </div>
                 </PressTip>
               )
