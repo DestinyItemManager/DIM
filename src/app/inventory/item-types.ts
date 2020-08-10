@@ -394,7 +394,7 @@ export interface D1GridNode extends DimGridNode {
   dtrRoll: string;
 }
 
-/** an InventoryItem known to have a plug attribute, because this item is in a socket */
+/** an InventoryItem known to have a plug attribute, because this item is located in a socket */
 export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDefinition {
   plug: NonNullable<DestinyInventoryItemDefinition['plug']>;
 }
