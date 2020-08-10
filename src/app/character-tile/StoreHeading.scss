@@ -1,7 +1,5 @@
 @import '../variables.scss';
 
-$xp-bar-height: 2px;
-
 .character {
   cursor: pointer;
   display: flex;
@@ -24,10 +22,6 @@ $xp-bar-height: 2px;
     border-right: 13px solid transparent;
   }
 
-  &.destiny1 {
-    border-bottom: $xp-bar-height solid #666;
-  }
-
   &.destiny2 {
     .background {
       filter: none;
@@ -38,22 +32,6 @@ $xp-bar-height: 2px;
   &:active {
     .background {
       filter: brightness(130%) !important;
-    }
-  }
-}
-
-.level-bar {
-  height: $xp-bar-height;
-  width: 100%;
-  position: absolute;
-  bottom: -$xp-bar-height;
-  left: 0;
-  .level-bar-progress {
-    background-color: $xp;
-    height: 100%;
-
-    &.mote-progress {
-      background-color: rgb(40, 132, 179);
     }
   }
 }
