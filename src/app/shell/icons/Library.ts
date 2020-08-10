@@ -19,7 +19,7 @@ const faCheck = 'fas fa-check';
 const faCheckCircle = 'fas fa-check-circle';
 const faCheckCircleRegular = 'far fa-check-circle';
 const faChevronCircleUp = 'fas fa-chevron-circle-up';
-const faEllipsisV = 'fas fa-ellipsis-v';
+const faChevronCircleDown = 'fas fa-chevron-circle-down';
 const faCircleRegular = 'far fa-circle';
 const faCog = 'fas fa-cog';
 const faCopy = 'fas fa-copy';
@@ -65,6 +65,7 @@ const faStickyNote = 'fas fa-sticky-note';
 const faMinusSquare = 'fas fa-minus-square';
 const faRandom = 'fas fa-random';
 const faEquals = 'fas fa-equals';
+const faEllipsisV = 'fas fa-ellipsis-v';
 const faArrowCircleDown = 'fas fa-arrow-circle-down';
 const faExclamationCircle = 'fas fa-exclamation-circle';
 const faMinus = 'fas fa-minus';
@@ -110,12 +111,13 @@ export {
   faCheckCircle as redeemedIcon,
   faCheckCircleRegular as completedIcon,
   faCheckCircleRegular as unselectedCheckIcon,
-  faEllipsisV as openDropdownIcon,
+  faChevronCircleDown as openDropdownIcon,
   faChevronCircleUp,
   faCircleRegular as uncompletedIcon,
   faCog as settingsIcon,
   faCopy as copyIcon,
   faDownload as downloadIcon,
+  faEllipsisV,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,

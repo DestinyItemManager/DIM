@@ -6,7 +6,7 @@ import './StoreHeading.scss';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ReactDOM from 'react-dom';
-import { AppIcon, openDropdownIcon } from '../shell/icons';
+import { AppIcon, faEllipsisV } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';
 
@@ -52,7 +52,7 @@ const CharacterHeader = ({
         'loadout-open': loadoutMenuOpen,
       })}
     >
-      <AppIcon icon={openDropdownIcon} title={t('Loadouts.Loadouts')} />
+      <AppIcon icon={faEllipsisV} title={t('Loadouts.Loadouts')} />
     </div>
     {!store.isVault && store.isDestiny1() && <CharacterHeaderXPBar store={store} />}
   </div>
