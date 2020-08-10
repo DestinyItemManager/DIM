@@ -1,5 +1,11 @@
 import _ from 'lodash';
-import { DimPlug, DimItem, D2Item, DimSocket } from 'app/inventory/item-types';
+import {
+  DimPlug,
+  DimItem,
+  D2Item,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
 import { statValues, LockedItemType, LockedMod, LockedArmor2Mod, StatTypes } from './types';
 import {
   DestinyInventoryItemDefinition,
@@ -389,7 +395,7 @@ export function getLockedModStats(
  * Checks to see if some LockedArmor2Mod or LockedMod has an energy requirement.
  */
 export function someModHasEnergyRequirement(
-  mods: readonly { mod: DestinyInventoryItemDefinition }[]
+  mods: readonly { mod: PluggableInventoryItemDefinition }[]
 ) {
-  return mods.some((mod) => mod.mod.plug!.energyCost!.energyType !== DestinyEnergyType.Any);
+  return mods.some((mod) => mod.mod.plug.energyCost!.energyType !== DestinyEnergyType.Any);
 }
