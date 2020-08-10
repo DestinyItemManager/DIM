@@ -193,7 +193,9 @@ function SocketDetails({
   }
 
   const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
-  const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+  const initialItem =
+    socket.socketDefinition.singleInitialItemHash &&
+    defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>
       {initialItem && (

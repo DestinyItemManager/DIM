@@ -393,7 +393,8 @@ export function getLockedModStats(
 }
 
 /**
- * Checks to see if some LockedArmor2Mod or LockedMod has an energy requirement.
+ * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
+ * has an elemental (non-Any) energy requirement
  */
 export function someModHasEnergyRequirement(
   mods: readonly { mod: PluggableInventoryItemDefinition }[]
