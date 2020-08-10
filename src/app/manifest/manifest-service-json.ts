@@ -42,7 +42,7 @@ const tableTrimmers = {
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory?.bucketTypeHash !== SUBCLASS_BUCKET) {
+      if (def.inventory!.bucketTypeHash !== SUBCLASS_BUCKET) {
         def.talentGrid! = emptyObject();
       }
 

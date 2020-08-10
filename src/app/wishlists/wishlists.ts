@@ -89,7 +89,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   }
 
   // if it's a modification, ignore it
-  if (plug.plugItem.inventory?.bucketTypeHash === MODIFICATIONS_BUCKET) {
+  if (plug.plugItem.inventory!.bucketTypeHash === MODIFICATIONS_BUCKET) {
     return false;
   }
 
