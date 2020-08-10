@@ -391,5 +391,5 @@ export function getLockedModStats(
 export function someModHasEnergyRequirement(
   mods: readonly { mod: DestinyInventoryItemDefinition }[]
 ) {
-  return mods.some((mod) => mod.mod.plug.energyCost.energyType !== DestinyEnergyType.Any);
+  return mods.some((mod) => mod.mod.plug!.energyCost!.energyType !== DestinyEnergyType.Any);
 }
