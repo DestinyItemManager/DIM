@@ -188,18 +188,18 @@ function buildPerksCsv(item: D2Item): string {
   const perkValues: number[] = [];
 
   if (item.sockets) {
-    item.sockets.sockets.forEach((socket, socketIndex) => {
+    item.sockets.allSockets.forEach((socket, socketIndex) => {
       if (socketIndex > 0) {
         const currentSocketPosition = socket.socketIndex;
-        const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
+        const priorSocketPosition = item.sockets!.allSockets[socketIndex - 1].socketIndex;
 
         if (currentSocketPosition > priorSocketPosition + 1) {
           perkValues.push(0);
         }
       }
 
-      if (socket.plug) {
-        perkValues.push(socket.plug.plugItem.hash);
+      if (socket.plugged) {
+        perkValues.push(socket.plugged.plugDef.hash);
       }
     });
   }

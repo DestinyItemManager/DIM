@@ -11,6 +11,7 @@ import PlugTooltip from './PlugTooltip';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 
 export default function Plug({
   defs,
@@ -40,8 +41,8 @@ export default function Plug({
   onShiftClick?(lockedItem: LockedItemType): void;
 }) {
   // TODO: Do this with SVG to make it scale better!
-  const modDef = defs.InventoryItem.get(plug.plugItem.hash);
-  if (!modDef) {
+  const modDef = defs.InventoryItem.get(plug.plugDef.hash);
+  if (!modDef || !isPluggableItem(modDef)) {
     return null;
   }
 
@@ -52,7 +53,7 @@ export default function Plug({
   const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
   const costElementIcon = energyCostStat?.displayProperties.icon;
 
-  const itemCategories = plug?.plugItem?.itemCategoryHashes || [];
+  const itemCategories = plug?.plugDef?.itemCategoryHashes || [];
 
   const handleShiftClick =
     (onShiftClick || onClick) &&
@@ -62,8 +63,8 @@ export default function Plug({
         const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
         const lockedItem: LockedItemType =
           energyType && plugSetHash
-            ? { type: 'mod', mod: plug.plugItem, plugSetHash, bucket: item.bucket }
-            : { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+            ? { type: 'mod', mod: plug.plugDef, plugSetHash, bucket: item.bucket }
+            : { type: 'perk', perk: plug.plugDef, bucket: item.bucket };
         onShiftClick(lockedItem);
       } else {
         onClick?.(plug);
@@ -73,10 +74,10 @@ export default function Plug({
   const contents = (
     <div>
       <BungieImageAndAmmo
-        hash={plug.plugItem.hash}
+        hash={plug.plugDef.hash}
         className="item-mod"
-        title={plug.plugItem.displayProperties.name}
-        src={plug.plugItem.displayProperties.icon}
+        title={plug.plugDef.displayProperties.name}
+        src={plug.plugDef.displayProperties.icon}
       />
       {costElementIcon && (
         <>
@@ -84,7 +85,7 @@ export default function Plug({
             style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
             className="energyCostOverlay"
           />
-          <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+          <div className="energyCost">{modDef.plug.energyCost!.energyCost}</div>
         </>
       )}
     </div>
@@ -92,10 +93,10 @@ export default function Plug({
 
   return (
     <div
-      key={plug.plugItem.hash}
+      key={plug.plugDef.hash}
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
-        notChosen: plug !== socketInfo.plug,
+        notChosen: plug !== socketInfo.plugged,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}
       onClick={handleShiftClick}
@@ -118,12 +119,12 @@ export default function Plug({
       ) : (
         contents
       )}
-      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugDef.hash) && (
         <BestRatedIcon wishListsEnabled={wishListsEnabled} />
       )}
       {wishListsEnabled &&
         inventoryWishListRoll &&
-        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
+        inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
           <BestRatedIcon wishListsEnabled={wishListsEnabled} />
         )}
     </div>

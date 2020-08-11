@@ -157,6 +157,12 @@ h3 {
   margin-bottom: 15px;
 }
 
+html,
+body {
+  // Disable pull to refresh in Android
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0 auto;
   background-color: #313233;
@@ -165,8 +171,6 @@ body {
   font-size: 12px;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
-  // Disable pull to refresh in Android
-  overscroll-behavior: contain;
 }
 
 #system {

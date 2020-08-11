@@ -260,10 +260,10 @@ export function makeItem(
   }
 
   // def.bucketTypeHash is where it goes normally
-  let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
+  let normalBucket = buckets.byHash[itemDef.inventory!.bucketTypeHash];
 
   // https://github.com/Bungie-net/api/issues/687
-  if (itemDef.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) {
+  if (itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET) {
     normalBucket = buckets.byHash[MODIFICATIONS_BUCKET];
   }
 
@@ -306,7 +306,7 @@ export function makeItem(
 
   const powerCapHash =
     item.versionNumber !== undefined &&
-    itemDef.quality.versions?.[item.versionNumber]?.powerCapHash;
+    itemDef.quality?.versions?.[item.versionNumber]?.powerCapHash;
   // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
   let powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
 
@@ -319,7 +319,7 @@ export function makeItem(
   // null out falsy values like a blank string for a url
   const iconOverlay =
     (item.versionNumber !== undefined &&
-      itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+      itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
     null;
 
   const collectible =
@@ -361,8 +361,8 @@ export function makeItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
-    tier: tiers[itemDef.inventory.tierType] || 'Common',
-    isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
+    tier: tiers[itemDef.inventory!.tierType] || 'Common',
+    isExotic: tiers[itemDef.inventory!.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
     name,
     description: displayProperties.description,
@@ -386,8 +386,8 @@ export function makeItem(
     primStat: primaryStat,
     typeName,
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
-    maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
-    uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
+    maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
+    uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
@@ -433,7 +433,7 @@ export function makeItem(
   createdItem.season = getSeason(
     createdItem,
     (item.versionNumber !== undefined &&
-      itemDef.quality.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+      itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
       null
   );
   createdItem.event = createdItem.source
@@ -542,13 +542,13 @@ export function makeItem(
 
   // Secondary Icon
   if (createdItem.sockets) {
-    const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug?.plugItem.itemType === DestinyItemType.Emblem
+    const multiEmblem = createdItem.sockets.allSockets.filter(
+      (socket) => socket.plugged?.plugDef.itemType === DestinyItemType.Emblem
     );
-    const selectedEmblem = multiEmblem[0]?.plug;
+    const selectedEmblem = multiEmblem[0]?.plugged;
 
     if (selectedEmblem) {
-      createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+      createdItem.secondaryIcon = selectedEmblem.plugDef.secondaryIcon;
     }
   }
 
@@ -558,9 +558,9 @@ export function makeItem(
   if (itemDef.breakerTypeHash) {
     createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
   } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
-    const breakerTypeHash = createdItem.sockets.sockets.find(
-      (s) => s.plug?.plugItem.breakerTypeHash
-    )?.plug?.plugItem.breakerTypeHash;
+    const breakerTypeHash = createdItem.sockets.allSockets.find(
+      (s) => s.plugged?.plugDef.breakerTypeHash
+    )?.plugged?.plugDef.breakerTypeHash;
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }
@@ -624,9 +624,9 @@ function buildPursuitInfo(
       expirationDate: new Date(item.expirationDate),
       rewards: [],
       suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+        itemDef.inventory!.suppressExpirationWhenObjectivesComplete
       ),
-      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
+      expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
       places: [],
       activityTypes: [],
       modifierHashes: [],

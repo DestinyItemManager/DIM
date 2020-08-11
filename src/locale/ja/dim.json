@@ -379,7 +379,7 @@
     "FilterMatchCount": "1つのアイテム",
     "FilterMatchCount_plural": "{{count}} アイテム",
     "Filters": "フィルター",
-    "InstallDIM": "DIMのインストール",
+    "InstallDIM": "アプリとしてインストールします。",
     "Inventory": "所持品",
     "IosPwaPrompt": "Mobile Safariで共有アイコン(下部の中央ボタン) をクリックし、「ホーム画面に追加」を選択します。",
     "Menu": "メニュー",
@@ -556,7 +556,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "パークを選択したり、統計をフィルタして並べ替えたり、項目をロックして潜在的なロードアウトを絞り込みます。",
-    "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
+    "OptimizerExplanationArmour2Mods": "Armor 2.0 Modによるステータス変更は可能である場合除外されます。詳細については {{link}} をご覧ください。",
     "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックして除外します。アイテムをサイドバーにドラッグして、除外またはロックします。",
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ロックされたアイテムをリセットする",
@@ -569,7 +569,7 @@
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
     "SelectedPerkKey": "パークを選択",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "正確な結果を得るには、ステータスペナルティまたは変動性の属性があるパーツを外してください。\n\nステータスペナルティまたは変動性の属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
@@ -696,6 +696,7 @@
     "PowerCap": "",
     "PullItem": "{{bucket}} から{{store}} に引き出します",
     "ReadLore": "イシュタルコレクティブで伝承を読む",
+    "ReadLoreLink": "Read lore",
     "ReviewsTab": "レビュー",
     "Rewards": "報酬:",
     "Split": "分割",
@@ -810,6 +811,7 @@
     "ColumnSize": "{{num}} 個",
     "ColumnSizeAuto": "オート",
     "CsvImport": "CSVからタグ/メモをインポートする",
+    "CustomStatDesc": "アーマーのスタッツを選択して、アイテムポップアップ、オーガナイザー、比較に表示するカスタムの合計値を作成します。stat:custom:>=30で検索します。",
     "Data": "スプレッドシート",
     "DefaultItemSizeNote": "50pxのアイテムサイズは、アイテムの画像やテキストをぼかすことなく、最もシャープに見えます。",
     "DontForgetDupes": "重複アイテムをすばやく検索するには、 「is:dupe」で検索し、比較ツールを使用して関連アイテムを評価することができます。",
@@ -846,6 +848,8 @@
     "SortName": "名前"
   },
   "Stats": {
+    "Custom": "カスタム合計",
+    "CustomDesc": "設定で変更したカスタム合計値。この数値は基本的なステータス値を加算しただけで、Modやマスターワークの値は無視されています。",
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "MaxGearPower": "装備可能なギアの最大出力",
@@ -866,7 +870,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "合計",
-    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "ステータスペナルティまたは変動性の属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。"
   },
   "Storage": {
     "ApiPermissionPrompt": {

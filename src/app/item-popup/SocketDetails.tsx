@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { DimSocket, D2Item } from 'app/inventory/item-types';
+import { DimSocket, D2Item, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
@@ -23,10 +23,13 @@ import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 import { emptySet } from 'app/utils/empty';
+import { getModCostInfo } from 'app/collections/Mod';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 
 interface ProvidedProps {
   item: D2Item;
   socket: DimSocket;
+  initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;
 }
 
@@ -108,9 +111,19 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 
-function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
-  const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
-    socket.plug?.plugItem || null
+function SocketDetails({
+  defs,
+  item,
+  socket,
+  initialSelectedPlug,
+  unlockedPlugs,
+  inventoryPlugs,
+  onClose,
+}: Props) {
+  const initialPlug =
+    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plugged?.plugDef;
+  const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
+    initialPlug || null
   );
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -156,30 +169,33 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     .map((h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
-        i.inventory.tierType !== TierType.Common &&
+        i.inventory!.tierType !== TierType.Common &&
         (!i.plug ||
           !i.plug.energyCost ||
           (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
           i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
+    .filter(isPluggableItem)
     .sort(
       chainComparator(
         reverseComparator(
           compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
         ),
         compareBy((i) => i.plug?.energyCost?.energyCost),
-        compareBy((i) => -i.inventory.tierType),
+        compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
       )
     );
 
-  if (socket.plug?.plugItem) {
-    mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
-    mods.unshift(socket.plug.plugItem);
+  if (initialPlug) {
+    mods = mods.filter((m) => m.hash !== initialPlug.hash);
+    mods.unshift(initialPlug);
   }
 
   const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
-  const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+  const initialItem =
+    socket.socketDefinition.singleInitialItemHash &&
+    defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>
       {initialItem && (
@@ -206,12 +222,12 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     }
   }, []);
 
-  const footer = selectedPlug && (
+  const footer = selectedPlug && isPluggableItem(selectedPlug) && (
     <SocketDetailsSelectedPlug
       plug={selectedPlug}
       defs={defs}
       item={item}
-      currentPlug={socket.plug}
+      currentPlug={socket.plugged}
     />
   );
 
@@ -251,14 +267,12 @@ export const SocketDetailsMod = React.memo(
     className,
     onClick,
   }: {
-    itemDef: DestinyInventoryItemDefinition;
+    itemDef: PluggableInventoryItemDefinition;
     defs: D2ManifestDefinitions;
     className?: string;
-    onClick?(mod: DestinyInventoryItemDefinition): void;
+    onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
-    const energyType = defs.EnergyType.get(itemDef?.plug?.energyCost?.energyTypeHash);
-    const energyCostStat = defs.Stat.get(energyType?.costStatHash);
-    const costElementIcon = energyCostStat?.displayProperties.icon;
+    const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
 
     const onClickFn = onClick && (() => onClick(itemDef));
 
@@ -271,13 +285,13 @@ export const SocketDetailsMod = React.memo(
         tabIndex={0}
       >
         <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
-        {costElementIcon && (
+        {energyCostElementOverlay && (
           <>
             <div
-              style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
+              style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
               className="energyCostOverlay"
             />
-            <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
+            <div className="energyCost">{energyCost}</div>
           </>
         )}
       </div>

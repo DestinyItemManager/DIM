@@ -87,8 +87,8 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return (
         item.isDestiny2() &&
         item.sockets &&
-        item.sockets.sockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
+        item.sockets.allSockets.some((slot) =>
+          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
         )
       );
     case 'item':
@@ -123,13 +123,13 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
         DestinySocketCategoryStyle.EnergyMeter
       );
 
-      for (const socket of item.sockets.sockets) {
-        const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
+      for (const socket of item.sockets.allSockets) {
+        const plugHash = socket?.plugged?.plugDef?.hash ?? NaN;
 
-        if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
+        if (socket.plugged?.stats && !masterworkSocketHashes.includes(plugHash)) {
           for (const statHash of statValues) {
-            if (socket.plug.stats[statHash]) {
-              baseStats[statHash] += socket.plug.stats[statHash];
+            if (socket.plugged.stats[statHash]) {
+              baseStats[statHash] += socket.plugged.stats[statHash];
             }
           }
         }

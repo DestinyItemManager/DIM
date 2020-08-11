@@ -1,4 +1,3 @@
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
@@ -10,6 +9,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import ClosableContainer from '../ClosableContainer';
 import { TRACTION_PERK } from 'app/search/d2-known-values';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting
@@ -40,7 +40,7 @@ export function SelectableMod({
   onLockedPerk,
   onLockedModBase,
 }: {
-  mod: DestinyInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   // plugSet this mod appears in
   plugSetHash: number;
   defs: D2ManifestDefinitions;
@@ -133,7 +133,7 @@ export function SelectablePerk({
   unselectable,
   onLockedPerk,
 }: {
-  perk: DestinyInventoryItemDefinition;
+  perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
   selected: boolean;

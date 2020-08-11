@@ -259,10 +259,11 @@ function getNonReuseableModSockets(item: DimItem) {
     return [];
   }
 
-  return item.sockets.sockets.filter(
+  return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
-      _.intersection(s?.plug?.plugItem?.itemCategoryHashes || [], modItemCategoryHashes).length > 0
+      _.intersection(s?.plugged?.plugDef?.itemCategoryHashes || [], modItemCategoryHashes).length >
+        0
   );
 }
 
@@ -272,10 +273,10 @@ function getNonReuseableModSockets(item: DimItem) {
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter(
-    (socket) => socket.plug!.stats && String(stat.statHash) in socket.plug!.stats
+    (socket) => socket.plugged!.stats && String(stat.statHash) in socket.plugged!.stats
   );
 
-  return _.sumBy(modSockets, (socket) => socket.plug!.stats![stat.statHash]);
+  return _.sumBy(modSockets, (socket) => socket.plugged!.stats![stat.statHash]);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
@@ -287,8 +288,8 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) =>
-    socket.plug?.stats
-      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plug!.stats![armorStatHash] || 0)
+    socket.plugged?.stats
+      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plugged!.stats![armorStatHash] || 0)
       : 0
   );
 }

@@ -1,7 +1,7 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { DimItem, DimMasterwork } from 'app/inventory/item-types';
+import { DimItem, DimMasterwork, DimSocket } from 'app/inventory/item-types';
 import _ from 'lodash';
-import modSocketMetadata from 'data/d2/specialty-modslot-metadata';
+import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import { objectifyArray } from './util';
 import {
@@ -43,16 +43,16 @@ export const specialtyModPlugCategoryHashes = modSocketMetadata
   .flat();
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket = (item: DimItem) => {
+export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {
   if (item.isDestiny2() && item.bucket.inArmor) {
-    return item.sockets?.sockets.find((socket) =>
+    return item.sockets?.allSockets.find((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
   }
 };
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadata = (item: DimItem) =>
+export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | undefined =>
   modMetadataBySocketTypeHash[
     getSpecialtySocket(item)?.socketDefinition.socketTypeHash || -99999999
   ];
@@ -62,21 +62,23 @@ export const getSpecialtySocketMetadata = (item: DimItem) =>
  *
  * if you use this you can only trust the returned season, tag, and emptyModSocketHash
  */
-export const getSpecialtySocketMetadataByPlugCategoryHash = (plugCategoryHash: number) =>
-  modMetadataByPlugCategoryHash[plugCategoryHash];
+export const getSpecialtySocketMetadataByPlugCategoryHash = (
+  plugCategoryHash: number
+): ModSocketMetadata | undefined => modMetadataByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes
  *
  * `''` if not found, so you can let it stay blank or `||` it
  */
-export const getItemSpecialtyModSlotDisplayName = (item: DimItem) =>
-  getSpecialtySocket(item)?.plug?.plugItem.itemTypeDisplayName || '';
+export const getItemSpecialtyModSlotDisplayName = (item: DimItem): string =>
+  getSpecialtySocket(item)?.plugged?.plugDef.itemTypeDisplayName || '';
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
-  armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
-  specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash);
+  item.plug !== undefined &&
+  (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
+    specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>

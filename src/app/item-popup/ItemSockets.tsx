@@ -211,7 +211,7 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
 function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<number>) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
-      (plugOption) => plugOption !== socket.plug && bestRated.has(plugOption.plugItem.hash)
+      (plugOption) => plugOption !== socket.plugged && bestRated.has(plugOption.plugDef.hash)
     )
   );
 }
@@ -223,8 +223,8 @@ function anyWishListRolls(
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) =>
-        plugOption !== socket.plug &&
-        inventoryWishListRoll.wishListPerks.has(plugOption.plugItem.hash)
+        plugOption !== socket.plugged &&
+        inventoryWishListRoll.wishListPerks.has(plugOption.plugDef.hash)
     )
   );
 }
@@ -263,7 +263,7 @@ function Socket({
     >
       {socket.plugOptions.map((plug) => (
         <Plug
-          key={plug.plugItem.hash}
+          key={plug.plugDef.hash}
           plug={plug}
           item={item}
           socketInfo={socket}
@@ -273,7 +273,7 @@ function Socket({
           bestPerks={bestPerks}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
-          className={classesByHash?.[plug.plugItem.hash]}
+          className={classesByHash?.[plug.plugDef.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}
         />

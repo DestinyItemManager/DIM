@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
   armor2PlugCategoryHashesByName,
@@ -46,11 +45,11 @@ export interface LockedItemCase {
 }
 export interface LockedPerk {
   type: 'perk';
-  perk: DestinyInventoryItemDefinition;
+  perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
 }
 export interface LockedModBase {
-  mod: DestinyInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   plugSetHash: number;
 }
 export interface LockedMod extends LockedModBase {
@@ -84,7 +83,7 @@ export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPicke
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key: number;
-  mod: DestinyInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
 }
 
@@ -98,23 +97,10 @@ export type LockedArmor2ModMap = {
 export interface ArmorSet {
   /** The overall stats for the loadout as a whole. */
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
-
-  /**
-   * Potential stat mixes that can achieve the overall stats.
-   * Each mix is a particular set of stat choices (and options for each piece within that)
-   * to get to the overall stats.
-   */
-  readonly sets: {
-    /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    readonly armor: readonly DimItem[][];
-    /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-    readonly statChoices: readonly number[][];
-  }[];
-
-  /** The first (highest-power) valid set from this stat mix. */
-  readonly firstValidSet: readonly DimItem[];
-  readonly firstValidSetStatChoices: readonly number[][];
-
+  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
+  readonly armor: readonly DimItem[][];
+  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
+  readonly statChoices: readonly number[][];
   /** The maximum power loadout possible in this stat mix. */
   readonly maxPower: number;
 }

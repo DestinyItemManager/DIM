@@ -16,12 +16,10 @@ import { statTier } from '../utils';
 export default function GeneratedSetButtons({
   store,
   set,
-  numSets,
   onLoadoutSet,
 }: {
   store: DimStore;
   set: ArmorSet;
-  numSets: number;
   onLoadoutSet(loadout: Loadout): void;
 }) {
   // Opens the loadout menu for the generated set
@@ -37,7 +35,6 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
-      <span className={styles.combos}>{t('LoadoutBuilder.Combinations', { count: numSets })}</span>
       <button className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
@@ -57,7 +54,7 @@ function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
   };
   const loadout = newLoadout(
     t('Loadouts.Generated', data),
-    set.firstValidSet.map((i) => convertToLoadoutItem(i, true))
+    set.armor.map((items) => convertToLoadoutItem(items[0], true))
   );
   loadout.classType = classType;
   return loadout;

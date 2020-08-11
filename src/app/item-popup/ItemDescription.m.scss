@@ -11,8 +11,13 @@
 
 .addNote {
   cursor: pointer;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   &:hover {
     color: $orange;
+  }
+  &.noNotesYet {
+    display: inline-block;
   }
 }
 .addNoteTag {
@@ -27,16 +32,19 @@
 .officialDescription {
   composes: description;
   font-style: italic;
+  overflow: auto;
 }
 
-.wishListNotes {
-  composes: description;
+.wishListLabel {
+  font-weight: bold;
+}
+.wishListTextContent {
   font-style: italic;
 }
-
-.lore {
-  flex: 1;
+.loreLink {
+  white-space: nowrap;
   img {
     vertical-align: text-bottom;
+    margin-right: 0.2em;
   }
 }

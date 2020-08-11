@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
   LockableBuckets,
@@ -42,9 +42,10 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
+export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((i) => i.plug.energyCost?.energyType),
   compareBy((i) => i.plug.energyCost?.energyCost),
   compareBy((i) => i.displayProperties.name)
@@ -89,11 +90,11 @@ interface StoreProps {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   perks: Readonly<{
-    [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
+    [bucketHash: number]: readonly PluggableInventoryItemDefinition[];
   }>;
   mods: Readonly<{
     [bucketHash: number]: readonly {
-      item: DestinyInventoryItemDefinition;
+      item: PluggableInventoryItemDefinition;
       // plugSet this mod appears in
       plugSetHash: number;
     }[];
@@ -108,7 +109,7 @@ function mapStateToProps() {
     storesSelector,
     (_: RootState, props: ProvidedProps) => props.classType,
     (stores, classType) => {
-      const perks: { [bucketHash: number]: DestinyInventoryItemDefinition[] } = {};
+      const perks: { [bucketHash: number]: PluggableInventoryItemDefinition[] } = {};
       for (const store of stores) {
         for (const item of store.items) {
           if (
@@ -124,9 +125,9 @@ function mapStateToProps() {
             perks[item.bucket.hash] = [];
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+          item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
             socket.plugOptions.forEach((option) => {
-              perks[item.bucket.hash].push(option.plugItem);
+              perks[item.bucket.hash].push(option.plugDef);
             });
           });
         }
@@ -134,9 +135,9 @@ function mapStateToProps() {
 
       // sort exotic perks first, then by index
       Object.keys(perks).forEach((bucket) => {
-        const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[bucket]);
+        const bucketPerks = _.uniq<PluggableInventoryItemDefinition>(perks[bucket]);
         bucketPerks.sort((a, b) => b.index - a.index);
-        bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
+        bucketPerks.sort((a, b) => b.inventory!.tierType - a.inventory!.tierType);
         perks[bucket] = bucketPerks;
       });
 
@@ -172,7 +173,7 @@ function mapStateToProps() {
             plugSets[item.bucket.hash] = new Set<number>();
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets
+          item.sockets.allSockets
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {
@@ -198,12 +199,12 @@ function mapStateToProps() {
         }
         return Object.entries(unlockedPlugs)
           .map(([i, plugSetHash]) => ({
-            item: defs.InventoryItem.get(parseInt(i, 10)),
+            item: defs.InventoryItem.get(parseInt(i, 10)) as PluggableInventoryItemDefinition,
             plugSetHash,
           }))
           .filter(
             (i) =>
-              i.item.inventory.tierType !== TierType.Common &&
+              i.item.inventory!.tierType !== TierType.Common &&
               !i.item.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
               i.item.plug.insertionMaterialRequirementHash !== 0 // not the empty mod sockets
           )
@@ -463,7 +464,7 @@ class PerkPicker extends React.Component<Props, State> {
     }
   };
 
-  private onSeasonalModSelected = (item: LockedModBase) => {
+  private onSeasonalModSelected = (item: LockedModBase): void => {
     const { selectedSeasonalMods } = this.state;
 
     if (selectedSeasonalMods.some((li) => li.mod.hash === item.mod.hash)) {

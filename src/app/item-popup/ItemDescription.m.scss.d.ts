@@ -5,9 +5,11 @@ interface CssExports {
   'addNoteTag': string;
   'description': string;
   'descriptionTools': string;
-  'lore': string;
+  'loreLink': string;
+  'noNotesYet': string;
   'officialDescription': string;
-  'wishListNotes': string;
+  'wishListLabel': string;
+  'wishListTextContent': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

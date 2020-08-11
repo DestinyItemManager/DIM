@@ -118,8 +118,14 @@ const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) =>
 
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
-  (item.classified && String(item.hash)) ||
+  (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
+
+export const makeSeasonalDupeID = (item: DimItem) =>
+  (item.classified && `${item.hash}`) ||
+  `${item.name}${item.classType}${item.tier}${
+    item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}` : ''
+  }${item.itemCategoryHashes.join('.')}`;
 
 //
 // Selectors
@@ -236,6 +242,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
     ],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
+    seasonaldupe: ['seasonaldupe', 'seasonalduplicate'],
     dupelower: ['dupelower'],
     locked: ['locked'],
     unlocked: ['unlocked'],
@@ -498,6 +505,7 @@ function searchFilters(
 ): SearchFilters {
   // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  let _duplicates_seasonal: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
   let _maxStatValues: {
@@ -524,17 +532,39 @@ function searchFilters(
 
     if (_duplicates === null) {
       _duplicates = {};
+      _duplicates_seasonal = {};
       for (const store of stores) {
         for (const i of store.items) {
           const dupeID = makeDupeID(i);
+          const seasonalDupeID = makeSeasonalDupeID(i);
           if (!_duplicates[dupeID]) {
             _duplicates[dupeID] = [];
           }
+          if (!_duplicates_seasonal[seasonalDupeID]) {
+            _duplicates_seasonal[seasonalDupeID] = [];
+          }
           _duplicates[dupeID].push(i);
+          _duplicates_seasonal[seasonalDupeID].push(i);
         }
       }
 
       _.forIn(_duplicates, (dupes: DimItem[]) => {
+        if (dupes.length > 1) {
+          dupes.sort(dupeComparator);
+          const bestDupe = dupes[0];
+          for (const dupe of dupes) {
+            if (
+              dupe.bucket &&
+              (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') &&
+              !dupe.notransfer
+            ) {
+              _lowerDupes[dupe.id] = dupe !== bestDupe;
+            }
+          }
+        }
+      });
+
+      _.forIn(_duplicates_seasonal, (dupes: DimItem[]) => {
         if (dupes.length > 1) {
           dupes.sort(dupeComparator);
           const bestDupe = dupes[0];
@@ -879,6 +909,19 @@ function searchFilters(
           _duplicates[dupeId].length > 1
         );
       },
+      seasonaldupe(item: DimItem) {
+        initDupes();
+        const dupeId = makeSeasonalDupeID(item);
+        // We filter out the InventoryItem "Default Shader" because everybody has one per character
+        return (
+          _duplicates_seasonal &&
+          !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
+          item.hash !== DEFAULT_SHADER &&
+          item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
+          _duplicates_seasonal[dupeId] &&
+          _duplicates_seasonal[dupeId].length > 1
+        );
+      },
       count(item: DimItem, filterValue: string) {
         initDupes();
         const dupeId = makeDupeID(item);
@@ -1020,11 +1063,11 @@ function searchFilters(
           ) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
-                  regex.test(plug.plugItem.displayProperties.description) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.description) ||
                   plug.perks.some((perk) =>
                     Boolean(
                       (perk.displayProperties.name && regex.test(perk.displayProperties.name)) ||
@@ -1042,10 +1085,10 @@ function searchFilters(
           item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
                   plug.perks.some((perk) =>
                     Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
@@ -1142,7 +1185,9 @@ function searchFilters(
         }
       },
       randomroll(item: D2Item) {
-        return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
+        return (
+          Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems)
+        );
       },
       rating(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
@@ -1248,9 +1293,9 @@ function searchFilters(
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        const oneSocketPerPlug = item.sockets?.sockets
+        const oneSocketPerPlug = item.sockets?.allSockets
           .filter((socket) =>
-            curatedPlugsAllowList.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash || 0)
+            curatedPlugsAllowList.includes(socket?.plugged?.plugDef?.plug?.plugCategoryHash || 0)
           )
           .every((socket) => socket?.plugOptions.length === 1);
 
@@ -1286,40 +1331,40 @@ function searchFilters(
         return !item.notransfer;
       },
       hasShader(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug?.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
-              socket.plug.plugItem.hash !== DEFAULT_SHADER
+            socket.plugged?.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryHash === SHADERS_BUCKET &&
+              socket.plugged.plugDef.hash !== DEFAULT_SHADER
           )
         );
       },
       hasOrnament(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-              socket.plug.plugItem.hash !== DEFAULT_GLOW &&
-              !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-              !socket.plug.plugItem.itemCategoryHashes?.includes(
+            socket.plugged &&
+              socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament &&
+              socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+              !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+              !socket.plugged.plugDef.itemCategoryHashes?.includes(
                 ItemCategoryHashes.ArmorModsGlowEffects
               )
           )
         );
       },
       hasMod(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-              socket.plug.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+            socket.plugged &&
+              !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+              socket.plugged.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               ) &&
               // enforce that this provides a perk (excludes empty slots)
-              socket.plug.plugItem.perks.length &&
+              socket.plugged.plugDef.perks.length &&
               // enforce that this doesn't have an energy cost (y3 reusables)
-              !socket.plug.plugItem.plug.energyCost
+              !socket.plugged.plugDef.plug.energyCost
           )
         );
       },
@@ -1327,16 +1372,16 @@ function searchFilters(
         return (
           Boolean(item.energy) &&
           item.sockets &&
-          item.sockets.sockets.some((socket) =>
+          item.sockets.allSockets.some((socket) =>
             Boolean(
-              socket.plug &&
-                !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+              socket.plugged &&
+                !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+                socket.plugged.plugDef.plug &&
+                socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                   /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
                 ) &&
                 // enforce that this provides a perk (excludes empty slots)
-                socket.plug.plugItem.perks.length
+                socket.plugged.plugDef.perks.length
             )
           )
         );

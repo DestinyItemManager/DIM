@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
@@ -5,6 +6,10 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import '../progress/milestone.scss';
 import { D2Item } from 'app/inventory/item-types';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import {
+  DestinyEnergyTypeDefinition,
+  DestinyInventoryItemDefinition,
+} from 'bungie-api-ts/destiny2';
 
 interface ModProps {
   item: D2Item;
@@ -21,10 +26,7 @@ export default function Mod({ item, defs, allowFilter, innerRef, onClick, childr
     return null;
   }
 
-  const modDef = defs.InventoryItem.get(item.hash);
-  const energyType = defs.EnergyType.get(modDef?.plug.energyCost?.energyTypeHash);
-  const energyCostStat = defs.Stat.get(energyType?.costStatHash);
-  const costElementIcon = energyCostStat?.displayProperties.icon;
+  const { energyCost, energyCostElementOverlay } = getModCostInfo(item.hash, defs);
 
   return (
     <div>
@@ -35,15 +37,47 @@ export default function Mod({ item, defs, allowFilter, innerRef, onClick, childr
         onClick={onClick}
       />
       {children}
-      {costElementIcon && (
+      {energyCostElementOverlay && (
         <>
           <div
-            style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
+            style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
             className="energyCostOverlay"
           />
-          <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+          <div className="energyCost">{energyCost}</div>
         </>
       )}
     </div>
   );
+}
+
+/**
+ * given a mod definition or hash, returns destructurable energy cost information
+ */
+export function getModCostInfo(
+  mod: DestinyInventoryItemDefinition | number,
+  defs: D2ManifestDefinitions
+) {
+  const modCostInfo: {
+    energyCost?: number;
+    energyCostElement?: DestinyEnergyTypeDefinition;
+    energyCostElementOverlay?: string;
+  } = {};
+
+  if (typeof mod === 'number') {
+    mod = defs.InventoryItem.get(mod);
+  }
+
+  if (mod?.plug) {
+    modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
+
+    if (mod.plug.energyCost?.energyTypeHash) {
+      modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
+    }
+    if (modCostInfo.energyCostElement?.costStatHash) {
+      modCostInfo.energyCostElementOverlay = defs.Stat.get(
+        modCostInfo.energyCostElement.costStatHash
+      )?.displayProperties.icon;
+    }
+  }
+  return modCostInfo;
 }
