@@ -1,16 +1,16 @@
 import React from 'react';
-import { DimCharacterStat, DimStore } from './store-types';
 import clsx from 'clsx';
-import PressTip from '../dim-ui/PressTip';
-import { t } from 'app/i18next-t';
-import './dimStats.scss';
-import { percent } from '../shell/filters';
 import _ from 'lodash';
-import { armorStats } from './store/stats';
-import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
+import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import PressTip from 'app/dim-ui/PressTip';
+import { percent } from 'app/shell/filters';
 import { showGearPower } from 'app/gear-power/gear-power';
-import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
+import { armorStats } from 'app/inventory/store/stats';
+import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
+import './CharacterStats.scss';
 
 interface Props {
   stats?: DimStore['stats'];
@@ -18,6 +18,10 @@ interface Props {
   storeId?: string;
 }
 
+/**
+ * Render the character information: Max Power/Stat points.
+ * May want to consider splitting D1 from D2 at some point.
+ */
 export default React.memo(function CharacterStats({ stats, destinyVersion, storeId }: Props) {
   if (!stats) {
     return null;

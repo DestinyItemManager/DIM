@@ -1,7 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import { DimStore } from '../inventory/store-types';
-import { AppIcon, powerActionIcon } from '../shell/icons';
+import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { isPhonePortraitFromMediaQuery } from 'app/utils/media-queries';
+import type { DimStore, DimVault } from 'app/inventory/store-types';
+import VaultCapacity from 'app/store-stats/VaultCapacity';
 import './CharacterTile.scss';
 
 const CharacterEmblem = ({ store }: { store: DimStore }) => (
@@ -10,6 +12,10 @@ const CharacterEmblem = ({ store }: { store: DimStore }) => (
     style={{ backgroundImage: `url("${store.icon}")` }}
   />
 );
+
+function isVault(store: DimStore): store is DimVault {
+  return store.isVault;
+}
 
 /**
  * Render a basic character tile without any event handlers
@@ -30,12 +36,20 @@ export default function CharacterTile({ store }: { store: DimStore }) {
             </div>
           )}
         </div>
-        {!store.isVault && (
-          <div className="bottom">
-            <div className="race-gender">{store.genderRace}</div>
-            {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
-          </div>
-        )}
+        <div className="bottom">
+          {isVault(store) ? (
+            <>
+              {$featureFlags.unstickyStats && isPhonePortraitFromMediaQuery() && (
+                <VaultCapacity store={store} />
+              )}
+            </>
+          ) : (
+            <>
+              <div className="race-gender">{store.genderRace}</div>
+              {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

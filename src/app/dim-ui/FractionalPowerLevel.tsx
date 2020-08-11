@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './FractionalPowerLevel.m.scss';
 
-export function FractionalPowerLevel({ power }: { power: number }) {
+export default function FractionalPowerLevel({ power }: { power: number }) {
   const numerator = (power * 8) % 8 || null;
   return (
     <span className={styles.fractionalPowerLevel}>

@@ -16,9 +16,8 @@ import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import clsx from 'clsx';
-import CharacterStats from './CharacterStats';
-import VaultStats from './VaultStats';
 import { getCurrentStore, getVault, getStore } from './stores-helpers';
+import StoreStats from 'app/store-stats/StoreStats';
 
 interface StoreProps {
   stores: DimStore[];
@@ -110,15 +109,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
                       onTapped={setSelectedStoreId}
                       loadoutMenuRef={detachedLoadoutMenu}
                     />
-                    {isVault(store) ? (
-                      <VaultStats store={store} />
-                    ) : (
-                      <CharacterStats
-                        destinyVersion={store.destinyVersion}
-                        stats={store.stats}
-                        storeId={store.id}
-                      />
-                    )}
+                    {!$featureFlags.unstickyStats && <StoreStats store={store} />}
                   </View>
                 ))}
               </Track>
@@ -130,6 +121,12 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
 
         <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
           <div>
+            {$featureFlags.unstickyStats && (
+              <StoreStats
+                store={selectedStore}
+                style={storeBackgroundColor(selectedStore, 0, true)}
+              />
+            )}
             <StoresInventory
               stores={[selectedStore]}
               vault={vault}
@@ -156,15 +153,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             style={storeBackgroundColor(store, index)}
           >
             <StoreHeading store={store} />
-            {isVault(store) ? (
-              <VaultStats store={store} />
-            ) : (
-              <CharacterStats
-                destinyVersion={store.destinyVersion}
-                stats={store.stats}
-                storeId={store.id}
-              />
-            )}
+            <StoreStats store={store} />
           </div>
         ))}
       </ScrollClassDiv>
@@ -193,10 +182,6 @@ function categoryHasItems(
 }
 
 export default connect<StoreProps>(mapStateToProps)(Stores);
-
-function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}
 
 function StoresInventory({
   buckets,

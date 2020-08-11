@@ -8,10 +8,6 @@
   height: 100%;
   height: 46px;
 
-  &.vault {
-    width: calc(6px + var(--character-column-width) - var(--item-margin));
-  }
-
   &.current:before {
     content: '';
     position: absolute;

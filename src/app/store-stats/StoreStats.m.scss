@@ -1,0 +1,22 @@
+.vaultStats {
+  max-width: 230px;
+  display: grid;
+  grid-template-columns: repeat(4, 16px minmax(min-content, 1fr));
+  grid-auto-rows: 16px;
+  gap: 3px 2px;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 8px;
+
+  img,
+  .bucketTag {
+    justify-self: center;
+  }
+
+  :global(.phone-portrait) & {
+    flex: 1;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
