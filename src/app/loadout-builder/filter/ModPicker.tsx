@@ -8,6 +8,7 @@ import {
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
+  isModPickerCategory,
 } from '../types';
 import _ from 'lodash';
 import { isLoadoutBuilderItem } from '../utils';
@@ -231,17 +232,31 @@ function ModPicker({
       : mods;
   }, [language, query, mods]);
 
-  const getByModCategoryType = useCallback(
-    (category: ModPickerCategory) =>
-      queryFilteredMods
-        .filter((mod) =>
-          category === ModPickerCategories.seasonal
-            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)
-            : mod.plug.plugCategoryHash === category
-        )
-        .map((mod) => ({ key: modKey++, mod, category })),
-    [queryFilteredMods]
-  );
+  const modsByCategory = useMemo(() => {
+    const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
+      [ModPickerCategories.general]: [],
+      [ModPickerCategories.helmet]: [],
+      [ModPickerCategories.gauntlets]: [],
+      [ModPickerCategories.chest]: [],
+      [ModPickerCategories.leg]: [],
+      [ModPickerCategories.classitem]: [],
+      [ModPickerCategories.seasonal]: [],
+    };
+
+    for (const mod of queryFilteredMods) {
+      if (getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)) {
+        rtn.seasonal.push({ key: modKey++, mod, category: 'seasonal' });
+      } else if (isModPickerCategory(mod.plug.plugCategoryHash)) {
+        rtn[mod.plug.plugCategoryHash].push({
+          key: modKey++,
+          mod,
+          category: mod.plug.plugCategoryHash,
+        });
+      }
+    }
+
+    return rtn;
+  }, [queryFilteredMods]);
 
   const isGeneralOrSeasonal = (category: ModPickerCategory) =>
     category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
@@ -278,7 +293,7 @@ function ModPicker({
         {Object.values(ModPickerCategories).map((category) => (
           <ModPickerSection
             key={category}
-            mods={getByModCategoryType(category)}
+            mods={modsByCategory[category]}
             defs={defs}
             locked={lockedArmor2ModsInternal[category]}
             title={Armor2ModPlugCategoriesTitles[category]}
