@@ -25,6 +25,7 @@ import Hammer from 'react-hammerjs';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSubscription } from 'app/utils/hooks';
 import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
+import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 
@@ -126,8 +127,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   const sealTitle = defs.PresentationNode.get(SEALS_ROOT_NODE).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
 
+  const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
+  const solsticeArmor = solsticeOfHeroesArmor(stores, selectedStore);
+
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
+    ...(solsticeArmor.length ? [{ id: 'solstice', title: solsticeTitle }] : []),
     { id: 'milestones', title: t('Progress.Milestones') },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
@@ -173,6 +178,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                   </div>
                 </CollapsibleTitle>
               </section>
+
+              <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
 
               <section id="milestones">
                 <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
