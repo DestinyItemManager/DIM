@@ -344,6 +344,11 @@ export const dimApi = (
         saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
       });
 
+    case getType(actions.searchDeleted):
+      return produce(state, (draft) => {
+        deleteSearch(draft, account!.destinyVersion, action.payload);
+      });
+
     // *** Triumphs ***
 
     case getType(actions.trackTriumph):
@@ -480,6 +485,7 @@ function compactUpdate(
       key = `${update.action}-${update.payload.recordHash}`;
       break;
     case 'search':
+    case 'delete_search':
       // These don't combine (though maybe they should be extended to include an array of usage times?)
       key = `unique-${unique++}`;
       break;
@@ -1034,6 +1040,20 @@ function saveSearch(
     // Hmm, may need to tweak this
     throw new Error("Unable to save a search that's not in your history");
   }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'delete_search',
+    payload: {
+      query,
+    },
+    destinyVersion,
+  };
+
+  draft.searches[destinyVersion] = draft.searches[destinyVersion].filter((s) => s.query !== query);
 
   draft.updateQueue.push(updateAction);
 }

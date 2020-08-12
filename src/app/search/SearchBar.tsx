@@ -30,7 +30,7 @@ import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { useDispatch, useSelector } from 'react-redux';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
-import { searchUsed, saveSearch } from 'app/dim-api/basic-actions';
+import { searchUsed, saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { useCombobox } from 'downshift';
 import styles from './SearchBar.m.scss';
 import clsx from 'clsx';
@@ -111,7 +111,7 @@ export default React.forwardRef(function SearchFilterInput(
   );
   const recentSearches = useSelector(recentSearchesSelector);
   const inputElement = useRef<HTMLInputElement>(null);
-  const [items, setItems] = useState(autocompleter(liveQuery, 0, recentSearches));
+  const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
   // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
   useEffect(() => {
     setItems(autocompleter(liveQuery, inputElement.current?.selectionStart || 0, recentSearches));
@@ -232,8 +232,9 @@ export default React.forwardRef(function SearchFilterInput(
     }
   }, [searchQueryVersion, searchQuery]);
 
-  const deleteSearch = (_item: SearchItem) => {
-    console.log('This is where item deleting goes');
+  const deleteSearch = (e: React.MouseEvent, item: SearchItem) => {
+    e.stopPropagation();
+    dispatch(searchDeleted(item.query));
   };
 
   // TODO: time to finally make a highlight-text component
@@ -367,7 +368,7 @@ export default React.forwardRef(function SearchFilterInput(
                   <button
                     type="button"
                     className={styles.deleteIcon}
-                    onClick={() => deleteSearch(item)}
+                    onClick={(e) => deleteSearch(e, item)}
                   >
                     <AppIcon icon={closeIcon} />
                   </button>
