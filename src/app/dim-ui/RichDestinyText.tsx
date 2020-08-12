@@ -152,7 +152,7 @@ const replaceWithIcon = (textSegment: string) => {
     (replacement && (
       <img
         src={replacement.icon}
-        className={replacement.objectiveHash?.[0] === 'SandboxPerk' ? styles.inlineBreakerSvg : ''}
+        className={styles.inlineSvg}
         title={textSegment}
         key={textSegment}
       />

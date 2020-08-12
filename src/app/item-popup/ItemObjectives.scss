@@ -87,14 +87,6 @@
   padding: 0 4px;
   flex: 1;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  img {
-    filter: invert(1);
-    height: 15px;
-    margin: 0 3px;
-    &:first-child {
-      margin-left: 0;
-    }
-  }
 }
 
 .objective-text {
