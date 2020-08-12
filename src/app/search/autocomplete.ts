@@ -102,7 +102,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     return [];
   };
 
-  return (query: string, _caretIndex: number, recentSearches: Search[]): SearchItem[] => {
+  return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem = query && {
       type: SearchItemType.Autocomplete,
@@ -116,7 +116,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     // TODO: also search individual items from the manifest???
     let filterSuggestions: SearchItem[] = [];
     if (query) {
-      const match = /\b([\w:"']{3,})$/i.exec(query);
+      const match = /\b([\w:"']{3,})$/i.exec(query.slice(0, caretIndex));
       if (match) {
         const term = match[1];
         console.log('query match', match);
@@ -130,13 +130,16 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
 
         const base = query.slice(0, match.index);
 
+        console.log('candidates', candidates);
+
         // new query is existing query minus match plus suggestion
         filterSuggestions = candidates.map((word) => {
-          const newQuery = base + replace(word);
+          const replacement = replace(word);
+          const newQuery = base + replacement + query.slice(caretIndex);
           return {
             query: newQuery,
             type: SearchItemType.Autocomplete,
-            highlightRange: [match.index, newQuery.length - 1],
+            highlightRange: [match.index, match.index + replacement.length],
             // TODO: help from the matched query
           };
         });
@@ -163,10 +166,32 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       query: query || '', // use query as the text so we don't change text when selecting it
     };
 
+    console.log('autocomplete', {
+      queryItem,
+      filterSuggestions,
+      recentSearchItems,
+      items: [
+        ..._.take(
+          _.uniqBy(
+            _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
+            (i) => i.query
+          ),
+          6
+        ),
+        helpItem,
+      ],
+    });
+
     // mix them together
     // TODO: mixer/ranker function
     return [
-      ..._.take(_.compact([queryItem, ...filterSuggestions, ...recentSearchItems]), 6),
+      ..._.take(
+        _.uniqBy(
+          _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
+          (i) => i.query
+        ),
+        6
+      ),
       helpItem,
     ];
   };

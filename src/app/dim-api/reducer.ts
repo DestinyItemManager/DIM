@@ -959,7 +959,13 @@ function trackTriumph(
 function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
   // Canonicalize the query so we always save it the same way
   try {
-    query = canonicalizeQuery(parseQuery(query));
+    const ast = parseQuery(query);
+    if (ast.op === 'filter' && ast.type === 'keyword') {
+      // don't save "trivial" single-keyword filters
+      // TODO: somehow also reject invalid searches (that don't match real keywords)
+      return;
+    }
+    query = canonicalizeQuery(ast);
   } catch (e) {
     console.error('Query not parseable - not saving', query, e);
     return;

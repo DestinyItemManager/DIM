@@ -11,6 +11,7 @@ interface CssExports {
   'open': string;
   'openButton': string;
   'searchBar': string;
+  'textHighlight': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

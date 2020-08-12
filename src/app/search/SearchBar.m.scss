@@ -71,3 +71,13 @@
   margin-left: 6px;
   color: #999;
 }
+
+/* Highlighted spans of text in the autocompleter */
+.textHighlight {
+  display: inline-block;
+  border-bottom: 1px dotted #ddd;
+  margin-bottom: -1px;
+  .highlightedItem & {
+    border-bottom-color: #222;
+  }
+}

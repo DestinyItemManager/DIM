@@ -38,6 +38,7 @@ import { parseQuery, canonicalizeQuery } from './query-parser';
 import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
 import { searchConfigSelector } from './search-filter';
 import { RootState } from 'app/store/reducers';
+import HighlightedText from './HighlightedText';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -109,9 +110,14 @@ export default React.forwardRef(function SearchFilterInput(
     createAutocompleter(searchConfigSelector(state))
   );
   const recentSearches = useSelector(recentSearchesSelector);
-  const [items, setItems] = useState(autocompleter(liveQuery, 0, recentSearches));
-
   const inputElement = useRef<HTMLInputElement>(null);
+  const [items, setItems] = useState(autocompleter(liveQuery, 0, recentSearches));
+  // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
+  useEffect(() => {
+    setItems(autocompleter(liveQuery, inputElement.current?.selectionStart || 0, recentSearches));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recentSearches]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
     _.debounce((query: string) => {
@@ -168,6 +174,10 @@ export default React.forwardRef(function SearchFilterInput(
 
   // why does the selection change when stores reload
 
+  // TODO: abandon downshift?
+  // TODO: autocompleter
+
+  console.log('items', items);
   // useCombobox from Downshift manages the state of the dropdown
   const {
     isOpen,
@@ -183,7 +193,7 @@ export default React.forwardRef(function SearchFilterInput(
   } = useCombobox<SearchItem>({
     isOpen: true,
     items,
-    defaultHighlightedIndex: 0,
+    defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem?.type === SearchItemType.Help) {
@@ -199,7 +209,8 @@ export default React.forwardRef(function SearchFilterInput(
         if (selectedItem) {
           debouncedUpdateQuery.flush();
         }
-        // TODO: this isn't great - it won't re-set items when recentSearches changes. Can fix with a useEffect or https://github.com/downshift-js/downshift/issues/1144
+        // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
+        console.log({ inputValue, selectedItem });
         setItems(
           autocompleter(
             inputValue,
@@ -236,6 +247,7 @@ export default React.forwardRef(function SearchFilterInput(
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
+      enterkeyhint="search"
       {...getComboboxProps()}
     >
       <GlobalHotkeys
@@ -327,7 +339,7 @@ export default React.forwardRef(function SearchFilterInput(
 
       <ul {...getMenuProps()} className={clsx(styles.menu, { [styles.menuOpen]: isOpen })}>
         {isOpen &&
-          inputItems.map((item, index) => (
+          items.map((item, index) => (
             <li
               className={clsx(styles.menuItem, {
                 [styles.highlightedItem]: highlightedIndex === index,
@@ -337,7 +349,18 @@ export default React.forwardRef(function SearchFilterInput(
             >
               <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
               <span className={styles.menuItemQuery}>
-                {item.type === SearchItemType.Help ? t('Header.FilterHelpMenuItem') : item.query}
+                {item.type === SearchItemType.Help ? (
+                  t('Header.FilterHelpMenuItem')
+                ) : item.highlightRange ? (
+                  <HighlightedText
+                    text={item.query}
+                    startIndex={item.highlightRange[0]}
+                    endIndex={item.highlightRange[1]}
+                    className={styles.textHighlight}
+                  />
+                ) : (
+                  item.query
+                )}
               </span>
               {highlightedIndex === index &&
                 (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
