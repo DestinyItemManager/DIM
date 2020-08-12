@@ -1,5 +1,7 @@
 ## Next
 
+## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
+
 * Updated the character tiles, now uses triple dot instead of chevron
 * Solstice of Heroes is back and so is the **Solstice of Heroes** section of the **Progress** tab. Check it out and view your progress toward upgrading armor.
 
