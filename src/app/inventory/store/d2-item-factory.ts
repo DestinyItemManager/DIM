@@ -413,7 +413,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
-      ? defs.Collectible.get(itemDef.collectibleHash)?.sourceHash
+      ? defs.Collectible.get(itemDef.collectibleHash, itemDef.hash)?.sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
     collectibleHash: itemDef.collectibleHash || null,
