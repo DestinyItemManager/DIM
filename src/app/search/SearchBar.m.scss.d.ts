@@ -5,6 +5,7 @@ interface CssExports {
   'highlightedItem': string;
   'menu': string;
   'menuItem': string;
+  'menuItemHelp': string;
   'menuItemIcon': string;
   'menuItemQuery': string;
   'menuOpen': string;

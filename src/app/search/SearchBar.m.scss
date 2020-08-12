@@ -65,6 +65,13 @@
   flex: 1;
 }
 
+.menuItemHelp {
+  color: #999;
+  .highlightedItem & {
+    color: #222;
+  }
+}
+
 .deleteIcon {
   composes: resetButton from '../dim-ui/common.m.scss';
   font-size: 10px !important;

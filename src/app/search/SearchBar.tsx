@@ -196,6 +196,7 @@ export default React.forwardRef(function SearchFilterInput(
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
+      // Handle selecting the special "help" item
       if (selectedItem?.type === SearchItemType.Help) {
         setFilterHelpOpen(true);
         return;
@@ -236,10 +237,6 @@ export default React.forwardRef(function SearchFilterInput(
     e.stopPropagation();
     dispatch(searchDeleted(item.query));
   };
-
-  // TODO: time to finally make a highlight-text component
-  // TODO: editing text earlier on fucks up the setup
-  // TODO: maybe don't save "simple" searches w/ one node
 
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   // TODO: break this stuff uppppp
@@ -363,12 +360,14 @@ export default React.forwardRef(function SearchFilterInput(
                   item.query
                 )}
               </span>
+              {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
               {highlightedIndex === index &&
                 (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
                   <button
                     type="button"
                     className={styles.deleteIcon}
                     onClick={(e) => deleteSearch(e, item)}
+                    title={t('Header.DeleteSearch')}
                   >
                     <AppIcon icon={closeIcon} />
                   </button>

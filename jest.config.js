@@ -22,6 +22,7 @@ module.exports = {
         target: 'ES2015',
         jsx: 'react',
         allowJs: true,
+        lib: ['dom', 'esnext'],
       },
     },
   },

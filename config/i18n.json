@@ -377,6 +377,7 @@
     "BungieNetAlert": "Bungie Alert",
     "Clear": "Clear search filter",
     "CompareMatching": "Compare filtered items",
+    "DeleteSearch": "Delete Search",
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterMatchCount": "1 item",
@@ -390,6 +391,7 @@
     "Refresh": "Refresh Destiny Data",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
+    "SaveSearch": "Save Search",
     "Shop": "Shop",
     "UpgradeDIM": "Update DIM",
     "WhatsNew": "What's New"
