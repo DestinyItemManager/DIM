@@ -20,7 +20,6 @@ import React, {
   useCallback,
   useImperativeHandle,
   useEffect,
-  useMemo,
 } from 'react';
 
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
@@ -36,31 +35,9 @@ import { useCombobox } from 'downshift';
 import styles from './SearchBar.m.scss';
 import clsx from 'clsx';
 import { parseQuery, canonicalizeQuery } from './query-parser';
-
-/** The autocompleter/dropdown will suggest different types of searches */
-const enum SearchItemType {
-  /** Searches from your history */
-  Recent,
-  /** Explicitly saved searches */
-  Saved,
-  /** Searches suggested by DIM Sync but not part of your history */
-  Suggested,
-  /** Generated autocomplete searches */
-  Autocomplete,
-  /** Open help */
-  Help,
-}
-
-/** An item in the search autocompleter */
-interface SearchItem {
-  type: SearchItemType;
-  /** The suggested query */
-  query: string;
-  /** An optional part of the query that will be highlighted */
-  highlightRange?: [number, number];
-  /** Help text */
-  helpText?: React.ReactNode;
-}
+import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
+import { searchConfigSelector } from './search-filter';
+import { RootState } from 'app/store/reducers';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -128,8 +105,11 @@ export default React.forwardRef(function SearchFilterInput(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const dispatch = useDispatch();
-  //const searchConfig = useSelector(searchConfigSelector);
+  const autocompleter = useSelector((state: RootState) =>
+    createAutocompleter(searchConfigSelector(state))
+  );
   const recentSearches = useSelector(recentSearchesSelector);
+  const [items, setItems] = useState(autocompleter(liveQuery, 0, recentSearches));
 
   const inputElement = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,39 +154,10 @@ export default React.forwardRef(function SearchFilterInput(
 
   // This depends on blur firing first?
   const toggleSaved = () => {
+    // TODO: maybe don't save "trivial" searches (like single keywords?)
+    // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
-
-  // Initial input items are recent searches, from DIM Sync data
-  // TODO: this should be a function of query text
-  // TODO: don't show results that exactly match the input
-  const inputItems: SearchItem[] = useMemo(
-    () => [
-      ..._.take(
-        _.compact([
-          liveQuery && {
-            type: SearchItemType.Autocomplete,
-            query: liveQuery,
-          },
-          ...recentSearches.map((s) => ({
-            type: s.saved
-              ? SearchItemType.Saved
-              : s.usageCount > 0
-              ? SearchItemType.Recent
-              : SearchItemType.Suggested,
-            query: s.query,
-          })),
-        ]),
-        6
-      ),
-      // Add an item for opening the filter help
-      {
-        type: SearchItemType.Help,
-        query: liveQuery || '', // use the live query as the text so we don't change text when selecting it
-      },
-    ],
-    [liveQuery, recentSearches]
-  );
 
   // TODO: Some interaction notes:
   // * In chrome, selecting an item via keyboard/mouse replaces the current input value with that, but doesn't apply it until "Enter"
@@ -231,8 +182,7 @@ export default React.forwardRef(function SearchFilterInput(
     // reset
   } = useCombobox<SearchItem>({
     isOpen: true,
-    inputValue: liveQuery,
-    items: inputItems,
+    items,
     defaultHighlightedIndex: 0,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
@@ -249,8 +199,17 @@ export default React.forwardRef(function SearchFilterInput(
         if (selectedItem) {
           debouncedUpdateQuery.flush();
         }
+        // TODO: this isn't great - it won't re-set items when recentSearches changes. Can fix with a useEffect or https://github.com/downshift-js/downshift/issues/1144
+        setItems(
+          autocompleter(
+            inputValue,
+            inputElement.current!.selectionStart || liveQuery.length,
+            recentSearches
+          )
+        );
       } else {
         clearFilter();
+        autocompleter('', 0, recentSearches);
       }
     },
   });
@@ -266,7 +225,13 @@ export default React.forwardRef(function SearchFilterInput(
     console.log('This is where item deleting goes');
   };
 
+  // TODO: time to finally make a highlight-text component
+  // TODO: editing text earlier on fucks up the setup
+  // TODO: maybe don't save "simple" searches w/ one node
+
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
+  // TODO: break this stuff uppppp
+  // TODO: memoize hotkeys
   return (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
@@ -298,17 +263,19 @@ export default React.forwardRef(function SearchFilterInput(
       />
       <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
       <input
-        ref={inputElement}
-        className="filter-input"
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck={false}
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        type="text"
-        name="filter"
-        {...getInputProps({ onBlur })}
+        {...getInputProps({
+          onBlur,
+          ref: inputElement,
+          className: 'filter-input',
+          autoComplete: 'off',
+          autoCorrect: 'off',
+          autoCapitalize: 'off',
+          spellCheck: false,
+          autoFocus,
+          placeholder,
+          type: 'text',
+          name: 'filter',
+        })}
       />
 
       {liveQuery.length > 0 && children}
