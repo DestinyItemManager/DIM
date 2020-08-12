@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import _ from 'lodash';
-import type { DimVault } from '../inventory/store-types';
+import type { DimVault } from 'app/inventory/store-types';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import shadersIcon from 'destiny-icons/general/shaders2.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';

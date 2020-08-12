@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { isPhonePortraitFromMediaQuery } from 'app/utils/media-queries';
+import { RootState } from 'app/store/reducers';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import './CharacterTile.scss';
@@ -17,11 +18,21 @@ function isVault(store: DimStore): store is DimVault {
   return store.isVault;
 }
 
+interface StoreProps {
+  isPhonePortrait: boolean;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    isPhonePortrait: state.shell.isPhonePortrait,
+  };
+}
+
 /**
  * Render a basic character tile without any event handlers
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
-export default function CharacterTile({ store }: { store: DimStore }) {
+function CharacterTile({ store, isPhonePortrait }: { store: DimStore } & StoreProps) {
   return (
     <div className="character-tile">
       <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
@@ -38,11 +49,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         </div>
         <div className="bottom">
           {isVault(store) ? (
-            <>
-              {$featureFlags.unstickyStats && isPhonePortraitFromMediaQuery() && (
-                <VaultCapacity store={store} />
-              )}
-            </>
+            <>{$featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity store={store} />}</>
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>
@@ -54,3 +61,5 @@ export default function CharacterTile({ store }: { store: DimStore }) {
     </div>
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(CharacterTile);
