@@ -18,6 +18,26 @@ interface Props {
   storeId?: string;
 }
 
+function CharacterStat({ stat }: { stat: DimCharacterStat }) {
+  return (
+    <>
+      <img src={stat.icon} alt={stat.name} />
+      <div>
+        {stat.hash < 0 ? (
+          <span className="powerStat">
+            <FractionalPowerLevel power={stat.value} />
+          </span>
+        ) : (
+          stat.value
+        )}
+        {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
+          <sup className="asterisk">*</sup>
+        )}
+      </div>
+    </>
+  );
+}
+
 /**
  * Render the character information: Max Power/Stat points.
  * May want to consider splitting D1 from D2 at some point.
@@ -109,14 +129,6 @@ export default React.memo(function CharacterStats({ stats, destinyVersion, store
         {[powerInfos, statInfos].map((stats, index) => (
           <div key={index} className="stat-row">
             {stats.map(({ stat, tooltip }) => {
-              const displayValue =
-                stat.hash < 0 ? (
-                  <span className="powerStat">
-                    <FractionalPowerLevel power={stat.value} />
-                  </span>
-                ) : (
-                  stat.value
-                );
               // if this is the "max gear power" stat (hash -3),
               // add in an onClick and an extra class
               const isMaxGearPower = stat.hash === -3 && storeId;
@@ -135,13 +147,7 @@ export default React.memo(function CharacterStats({ stats, destinyVersion, store
                         : undefined
                     }
                   >
-                    <img src={stat.icon} alt={stat.name} />
-                    <div>
-                      {displayValue}
-                      {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
-                        <sup className="asterisk">*</sup>
-                      )}
-                    </div>
+                    <CharacterStat stat={stat} />
                   </div>
                 </PressTip>
               );

@@ -120,6 +120,20 @@
         grid-auto-rows: 16px;
         gap: 3px 2px;
       }
+
+      .maxTotalPower {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+        align-items: center;
+
+        img {
+          height: 14px;
+          width: 14px;
+          margin-right: 3px;
+          opacity: 0.5;
+        }
+      }
     }
   }
 }

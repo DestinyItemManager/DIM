@@ -33,6 +33,7 @@ function mapStateToProps(state: RootState): StoreProps {
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
 function CharacterTile({ store, isPhonePortrait }: { store: DimStore } & StoreProps) {
+  const maxTotalPower = store.stats?.maxTotalPower;
   return (
     <div className="character-tile">
       <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
@@ -54,6 +55,12 @@ function CharacterTile({ store, isPhonePortrait }: { store: DimStore } & StorePr
             <>
               <div className="race-gender">{store.genderRace}</div>
               {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
+              {$featureFlags.unstickyStats && isPhonePortrait && maxTotalPower && (
+                <div className="maxTotalPower">
+                  <img src={maxTotalPower.icon} alt={maxTotalPower.name} />
+                  {Math.floor(maxTotalPower.value)}
+                </div>
+              )}
             </>
           )}
         </div>
