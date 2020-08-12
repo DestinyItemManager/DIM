@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 
 interface Props {

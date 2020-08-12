@@ -4,7 +4,7 @@ import {
   postUpdates,
   deleteAllData,
 } from '../dim-api/dim-api';
-import { ThunkResult, RootState } from '../store/reducers';
+import { RootState, ThunkResult } from 'app/store/types';
 import { DimApiState } from './reducer';
 import { get, set } from 'idb-keyval';
 import { getPlatforms } from '../accounts/platforms';

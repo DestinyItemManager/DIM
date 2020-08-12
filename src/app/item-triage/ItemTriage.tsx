@@ -20,7 +20,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import clsx from 'clsx';
 import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { useSelector } from 'react-redux';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 

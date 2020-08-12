@@ -1,4 +1,4 @@
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { characterSortSelector } from '../settings/character-sort';
 import _ from 'lodash';

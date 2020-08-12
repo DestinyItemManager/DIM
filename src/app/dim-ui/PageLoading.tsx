@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import { ThunkDispatchProp, RootState } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Loading } from './Loading';
 import _ from 'lodash';
 import styles from './PageLoading.m.scss';

@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { setItemTagsBulk, setItemHashTag } from './actions';
 import { itemInfosSelector, itemHashTagsSelector } from './selectors';
 import _ from 'lodash';

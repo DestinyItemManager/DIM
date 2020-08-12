@@ -15,7 +15,7 @@ import {
   loadAccountsFromIndexedDB,
   accountsLoadedSelector,
 } from './reducer';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { dedupePromise } from 'app/utils/util';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';

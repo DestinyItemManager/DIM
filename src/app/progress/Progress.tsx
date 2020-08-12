@@ -5,7 +5,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { connect } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';

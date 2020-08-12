@@ -10,7 +10,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
 import { DtrRating } from '../item-review/dtr-api-types';
 import Papa from 'papaparse';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { getActivePlatform } from '../accounts/platforms';
 import { getClass } from './store/character-utils';

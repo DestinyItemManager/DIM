@@ -14,7 +14,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { D1Store } from '../../inventory/store-types';
-import { RootState } from '../../store/reducers';
+import { RootState } from 'app/store/types';
 import { storesSelector } from '../../inventory/selectors';
 import { currentAccountSelector } from '../../accounts/reducer';
 import { D1StoresService } from '../../inventory/d1-stores';

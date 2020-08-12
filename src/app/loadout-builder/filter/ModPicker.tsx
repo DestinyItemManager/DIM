@@ -14,7 +14,7 @@ import { isLoadoutBuilderItem } from '../utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { escapeRegExp } from 'app/search/search-filter';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';

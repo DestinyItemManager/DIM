@@ -7,7 +7,7 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';

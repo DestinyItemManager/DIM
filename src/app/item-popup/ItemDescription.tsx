@@ -6,7 +6,7 @@ import { t } from 'app/i18next-t';
 import ishtarLogo from '../../images/ishtar-collective.svg';
 import styles from './ItemDescription.m.scss';
 import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';

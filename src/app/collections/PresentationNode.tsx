@@ -12,7 +12,7 @@ import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { setSetting } from '../settings/actions';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import Checkbox from '../settings/Checkbox';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';

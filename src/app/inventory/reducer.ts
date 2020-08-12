@@ -5,7 +5,7 @@ import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';

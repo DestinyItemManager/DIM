@@ -1,5 +1,5 @@
 import { DimData } from 'app/storage/sync.service';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { importData } from './dim-api';
 import { loadDimApiData } from './actions';
 import { DimApiState, makeProfileKey } from './reducer';

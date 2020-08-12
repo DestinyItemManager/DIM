@@ -1,4 +1,4 @@
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { DimStore } from '../inventory/store-types';
 import _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';

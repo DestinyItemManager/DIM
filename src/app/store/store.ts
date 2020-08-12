@@ -1,9 +1,10 @@
 import { applyMiddleware, createStore, compose } from 'redux';
-import allReducers, { RootState } from './reducers';
+import allReducers from './reducers';
 import thunk from 'redux-thunk';
 import { getType } from 'typesafe-actions';
 import { update } from '../inventory/actions';
 import { setD1Manifest, setD2Manifest } from '../manifest/actions';
+import { RootState } from './types';
 
 declare global {
   interface Window {

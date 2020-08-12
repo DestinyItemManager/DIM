@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';

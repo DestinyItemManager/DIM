@@ -6,7 +6,7 @@ import StoreBucketDropTarget from './StoreBucketDropTarget';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import StoreInventoryItem from './StoreInventoryItem';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';

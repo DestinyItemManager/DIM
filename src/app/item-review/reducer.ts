@@ -5,7 +5,7 @@ import { WorkingD2Rating, D2ItemReviewResponse, D2ItemUserReview } from './d2-dt
 import { WorkingD1Rating, D1ItemReviewResponse, D1ItemUserReview } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
 import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
-import { RootState, ThunkResult } from '../store/reducers';
+import { RootState, ThunkResult } from 'app/store/types';
 import produce from 'immer';
 import { DtrRating } from './dtr-api-types';
 import { set, get } from 'idb-keyval';

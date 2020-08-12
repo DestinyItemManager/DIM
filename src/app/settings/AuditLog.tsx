@@ -8,7 +8,7 @@ import { getAuditLog } from 'app/dim-api/dim-api';
 import { DestinyAccount, PLATFORM_ICONS } from 'app/accounts/destiny-account';
 import { accountsSelector } from 'app/accounts/reducer';
 import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import styles from './AuditLog.m.scss';
 import { AppIcon } from 'app/shell/icons';
 import { t } from 'app/i18next-t';

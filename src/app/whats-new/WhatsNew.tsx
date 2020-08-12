@@ -5,7 +5,7 @@ import { Timeline } from 'react-twitter-widgets';
 import './WhatsNew.scss';
 import { connect } from 'react-redux';
 import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 
 interface StoreProps {
   language: string;

@@ -2,7 +2,7 @@ import React from 'react';
 import { itemTagSelectorList, TagValue, getTag } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 import { setItemTag, setItemHashTag } from 'app/inventory/actions';

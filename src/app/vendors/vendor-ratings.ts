@@ -8,7 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { ThunkResult } from '../store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { StatHashes } from 'data/d2/generated-enums';
 

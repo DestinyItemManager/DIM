@@ -14,7 +14,7 @@ import { default as SearchFilter } from '../search/SearchFilter';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';

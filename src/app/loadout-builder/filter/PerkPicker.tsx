@@ -29,7 +29,7 @@ import copy from 'fast-copy';
 import ArmorBucketIcon from '../ArmorBucketIcon';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filter';

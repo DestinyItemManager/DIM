@@ -11,7 +11,7 @@ import './compare.scss';
 import { Subscriptions } from '../utils/rx-utils';
 import { connect } from 'react-redux';
 import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';

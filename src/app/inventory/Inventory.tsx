@@ -4,7 +4,7 @@ import Stores from './Stores';
 import { D1StoresService } from './d1-stores';
 import { D2StoresService } from './d2-stores';
 import { connect } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';

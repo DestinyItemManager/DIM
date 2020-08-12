@@ -8,7 +8,7 @@ import { count } from '../../utils/util';
 import { setSetting } from '../../settings/actions';
 import { D1Store } from '../../inventory/store-types';
 import { storesSelector } from '../../inventory/selectors';
-import { RootState } from '../../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { D1StoresService } from '../../inventory/d1-stores';
 import { refresh$ } from '../../shell/refresh';

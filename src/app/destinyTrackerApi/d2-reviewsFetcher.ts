@@ -10,7 +10,7 @@ import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
 import { getReviews, getItemReviewsKey } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
-import { ThunkResult } from '../store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 /**

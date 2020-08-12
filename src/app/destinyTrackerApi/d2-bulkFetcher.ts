@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getD2Roll } from './d2-itemTransformer';
-import { ThunkResult, RootState } from '../store/reducers';
+import { RootState, ThunkResult } from 'app/store/types';
 import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';

@@ -30,7 +30,7 @@ import D2Sources from 'data/d2/source-info';
 import { DimStore } from '../inventory/store-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { Loadout } from '../loadout/loadout-types';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import missingSources from 'data/d2/missing-source-info';
 import _ from 'lodash';
 import { createSelector } from 'reselect';

@@ -3,7 +3,7 @@ import RatingIcon from '../inventory/RatingIcon';
 import { DimItem } from '../inventory/item-types';
 import { connect } from 'react-redux';
 import { getRating, shouldShowRating } from '../item-review/reducer';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { t } from 'app/i18next-t';
 import { DtrRating } from '../item-review/dtr-api-types';
 

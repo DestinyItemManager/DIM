@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { isPhonePortraitFromMediaQuery } from '../utils/media-queries';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import _ from 'lodash';
 
 export const querySelector = (state: RootState) => state.shell.searchQuery;

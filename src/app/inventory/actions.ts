@@ -4,7 +4,7 @@ import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { TagValue } from './dim-item-info';
 import { DestinyProfileResponse, DestinyColor } from 'bungie-api-ts/destiny2';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { get } from 'idb-keyval';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { DimError } from 'app/bungie-api/bungie-service-helper';

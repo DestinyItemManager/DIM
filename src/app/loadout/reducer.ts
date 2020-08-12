@@ -3,7 +3,7 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { currentAccountSelector } from '../accounts/reducer';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import {

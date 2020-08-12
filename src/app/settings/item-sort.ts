@@ -1,4 +1,4 @@
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { settingsSelector } from './reducer';
 import { Settings } from './initial-settings';
 

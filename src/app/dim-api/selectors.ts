@@ -1,4 +1,4 @@
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { makeProfileKeyFromAccount } from './reducer';
 import { currentAccountSelector } from 'app/accounts/reducer';

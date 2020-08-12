@@ -3,7 +3,7 @@ import { showGearPower$ } from './gear-power';
 import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
 import { D2Store } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import styles from './GearPower.m.scss';
 import { useSelector } from 'react-redux';
 import { t } from 'app/i18next-t';

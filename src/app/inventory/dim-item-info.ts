@@ -5,7 +5,7 @@ import { DimItem } from './item-types';
 import { tagCleanup } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { itemInfosSelector } from './selectors';
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { itemIsInstanced } from 'app/utils/item-utils';

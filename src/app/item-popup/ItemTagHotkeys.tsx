@@ -6,7 +6,7 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
 import { itemIsInstanced } from 'app/utils/item-utils';
 

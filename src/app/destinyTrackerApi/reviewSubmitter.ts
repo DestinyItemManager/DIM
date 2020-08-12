@@ -7,7 +7,7 @@ import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { getRollAndPerks as getRollAndPerksD2 } from './d2-itemTransformer';
 import { getItemReviewsKey } from '../item-review/reducer';
 import { markReviewSubmitted, purgeCachedReview } from '../item-review/actions';
-import { ThunkResult } from '../store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { WorkingD1Rating } from '../item-review/d1-dtr-api-types';
 import { getRollAndPerks as getRollAndPerksD1 } from './itemTransformer';

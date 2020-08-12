@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists, touchWishLists } from './actions';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { WishListAndInfo } from './types';
 import { wishListsSelector, WishListsState } from './reducer';
 import { settingsSelector } from 'app/settings/reducer';
