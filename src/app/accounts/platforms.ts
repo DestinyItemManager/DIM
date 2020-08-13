@@ -6,7 +6,6 @@ import {
 } from './destiny-account';
 import { getBungieAccount } from './bungie-account';
 import * as actions from './actions';
-import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../bungie-api/authenticated-fetch';
 import { accountsSelector, currentAccountSelector, accountsLoadedSelector } from './selectors';
@@ -77,11 +76,6 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
 
 function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
   return loadAccountsFromBungieNetAction;
-}
-
-// TODO: get rid of this
-export function getActivePlatform(): DestinyAccount | undefined {
-  return currentAccountSelector(store.getState());
 }
 
 export function setActivePlatform(

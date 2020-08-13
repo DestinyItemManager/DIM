@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, httpAdapter, handleUniquenessViolation } from './bungie-service-helper';
-import { getActivePlatform } from '../accounts/platforms';
+import { getActivePlatform } from '../accounts/get-active-platform';
 import { DestinyManifest, ServerResponse, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { D1Store, DimStore } from '../inventory/store-types';
 import { DestinyAccount } from '../accounts/destiny-account';

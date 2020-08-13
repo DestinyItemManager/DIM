@@ -7,7 +7,7 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import { DimItem } from 'app/inventory/item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2Categories } from 'app/destiny2/d2-buckets';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import Objective from './Objective';
 import './SolsticeOfHeroes.scss';
 

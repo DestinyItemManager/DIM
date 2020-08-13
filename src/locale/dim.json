@@ -70,7 +70,7 @@
     "ItemUniquenessExplanation_male": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "Maintenance": "Bungie.net servers are down for maintenance.",
     "NetworkError": "Network error - {{status}} {{statusText}}",
-    "NoAccount": "No Destiny account was found on {{platform}}. Do you have the right platform selected?",
+    "NoAccount": "No Destiny account was found. Do you have the right platform selected?",
     "NoAccountForPlatform": "Failed to find a Destiny account for you on {{platform}}.",
     "NotConnected": "You may not be connected to the internet.",
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",

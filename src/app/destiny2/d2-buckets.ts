@@ -3,15 +3,7 @@ import _ from 'lodash';
 import { getDefinitions } from './d2-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
-
-// TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
-export const D2Categories = {
-  Postmaster: ['Engrams', 'LostItems', 'Messages', 'SpecialOrders'],
-  Weapons: ['Class', 'Kinetic', 'Energy', 'Power', 'SeasonalArtifacts'],
-  Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
-  General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems', 'Finishers'],
-  Inventory: ['Consumables', 'Modifications', 'Shaders'],
-};
+import { D2Categories } from './d2-bucket-categories';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType: { [hash: number]: string | undefined } = {
