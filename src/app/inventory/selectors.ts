@@ -18,6 +18,8 @@ export const sortedStoresSelector = createSelector(
   (stores, sortStores) => sortStores(stores)
 );
 
+export const isPhonePortraitSelector = (state: RootState) => state.shell.isPhonePortrait;
+
 /** Have stores been loaded? */
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 
