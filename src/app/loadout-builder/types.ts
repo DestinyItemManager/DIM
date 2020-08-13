@@ -97,7 +97,7 @@ export function isModPickerCategory(value: unknown): value is ModPickerCategory 
 
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
-  key: number;
+  key?: number;
   mod: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
 }

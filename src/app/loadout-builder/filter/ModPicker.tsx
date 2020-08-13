@@ -187,7 +187,7 @@ function ModPicker({
     (item: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => ({
         ...oldState,
-        [item.category]: [...oldState[item.category], item],
+        [item.category]: [...oldState[item.category], { ...item, key: modKey++ }],
       }));
     },
     [setLockedArmor2ModsInternal]
@@ -260,10 +260,9 @@ function ModPicker({
 
     for (const mod of queryFilteredMods) {
       if (getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)) {
-        rtn.seasonal.push({ key: modKey++, mod, category: 'seasonal' });
+        rtn.seasonal.push({ mod, category: 'seasonal' });
       } else if (isModPickerCategory(mod.plug.plugCategoryHash)) {
         rtn[mod.plug.plugCategoryHash].push({
-          key: modKey++,
           mod,
           category: mod.plug.plugCategoryHash,
         });

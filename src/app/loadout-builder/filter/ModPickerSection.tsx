@@ -59,7 +59,7 @@ export default function ModPickerSection({
       <div className={styles.perks}>
         {mods.map((item) => (
           <SelectableArmor2Mod
-            key={item.key}
+            key={item.mod.hash}
             defs={defs}
             selected={Boolean(locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash))}
             mod={item}
