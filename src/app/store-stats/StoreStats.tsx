@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { RootState } from 'app/store/reducers';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
@@ -7,16 +7,6 @@ import CharacterStats from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import VaultCapacity from './VaultCapacity';
 import styles from './StoreStats.m.scss';
-
-interface StoreProps {
-  isPhonePortrait: boolean;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    isPhonePortrait: state.shell.isPhonePortrait,
-  };
-}
 
 function isVault(store: DimStore): store is DimVault {
   return store.isVault;
@@ -30,14 +20,15 @@ function shouldShowCapacity(isPhonePortrait: boolean) {
 }
 
 /** Render the store stats for any store type (character or vault) */
-function StoreStats({
+export default function StoreStats({
   store,
-  isPhonePortrait,
   style,
 }: {
   store: DimStore;
   style?: React.CSSProperties;
-} & StoreProps) {
+}) {
+  const isPhonePortrait = useSelector((state: RootState) => state.shell.isPhonePortrait);
+
   return (
     <div className={clsx({ ['store-cell']: Boolean(style), vault: store.isVault })} style={style}>
       {isVault(store) ? (
@@ -55,5 +46,3 @@ function StoreStats({
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(StoreStats);
