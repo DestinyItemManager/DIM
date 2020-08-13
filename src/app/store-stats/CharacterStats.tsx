@@ -1,16 +1,16 @@
 import React from 'react';
-import { DimCharacterStat, DimStore } from './store-types';
 import clsx from 'clsx';
-import PressTip from '../dim-ui/PressTip';
-import { t } from 'app/i18next-t';
-import './dimStats.scss';
-import { percent } from '../shell/filters';
 import _ from 'lodash';
-import { armorStats } from './store/stats';
-import { getD1CharacterStatTiers, statsWithTiers } from './store/character-utils';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
+import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import PressTip from 'app/dim-ui/PressTip';
+import { percent } from 'app/shell/filters';
 import { showGearPower } from 'app/gear-power/gear-power';
-import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
+import { armorStats } from 'app/inventory/store/stats';
+import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
+import './CharacterStats.scss';
 
 interface Props {
   stats?: DimStore['stats'];
@@ -18,6 +18,30 @@ interface Props {
   storeId?: string;
 }
 
+function CharacterStat({ stat }: { stat: DimCharacterStat }) {
+  return (
+    <>
+      <img src={stat.icon} alt={stat.name} />
+      <div>
+        {stat.hash < 0 ? (
+          <span className="powerStat">
+            <FractionalPowerLevel power={stat.value} />
+          </span>
+        ) : (
+          stat.value
+        )}
+        {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
+          <sup className="asterisk">*</sup>
+        )}
+      </div>
+    </>
+  );
+}
+
+/**
+ * Render the character information: Max Power/Stat points.
+ * May want to consider splitting D1 from D2 at some point.
+ */
 export default React.memo(function CharacterStats({ stats, destinyVersion, storeId }: Props) {
   if (!stats) {
     return null;
@@ -105,14 +129,6 @@ export default React.memo(function CharacterStats({ stats, destinyVersion, store
         {[powerInfos, statInfos].map((stats, index) => (
           <div key={index} className="stat-row">
             {stats.map(({ stat, tooltip }) => {
-              const displayValue =
-                stat.hash < 0 ? (
-                  <span className="powerStat">
-                    <FractionalPowerLevel power={stat.value} />
-                  </span>
-                ) : (
-                  stat.value
-                );
               // if this is the "max gear power" stat (hash -3),
               // add in an onClick and an extra class
               const isMaxGearPower = stat.hash === -3 && storeId;
@@ -131,13 +147,7 @@ export default React.memo(function CharacterStats({ stats, destinyVersion, store
                         : undefined
                     }
                   >
-                    <img src={stat.icon} alt={stat.name} />
-                    <div>
-                      {displayValue}
-                      {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
-                        <sup className="asterisk">*</sup>
-                      )}
-                    </div>
+                    <CharacterStat stat={stat} />
                   </div>
                 </PressTip>
               );

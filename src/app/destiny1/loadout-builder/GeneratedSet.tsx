@@ -7,7 +7,7 @@ import { DimStore } from '../../inventory/store-types';
 import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
-import CharacterStats from '../../inventory/CharacterStats';
+import CharacterStats from '../../store-stats/CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';

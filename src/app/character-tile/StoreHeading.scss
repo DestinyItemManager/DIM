@@ -10,6 +10,9 @@
 
   &.vault {
     width: calc(6px + var(--character-column-width) - var(--item-margin));
+    @include phone-portrait {
+      width: auto;
+    }
   }
 
   &.current:before {

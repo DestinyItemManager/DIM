@@ -13,7 +13,7 @@ import { getLight } from 'app/loadout/loadout-utils';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { itemPop } from 'app/dim-ui/scroll';
-import { FractionalPowerLevel } from 'app/dim-ui/FractionalPowerLevel';
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import clsx from 'clsx';
 
 const bucketClassNames = {

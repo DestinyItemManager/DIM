@@ -173,10 +173,7 @@
     .store-cell {
       margin: 0;
       width: 100%;
-      padding: 8px 0 4px 0;
-      .character.vault {
-        width: 100%;
-      }
+      padding: 8px 0;
     }
     > div {
       max-width: calc(100% - 100px);
