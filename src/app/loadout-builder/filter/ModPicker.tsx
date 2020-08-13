@@ -1,4 +1,12 @@
-import React, { Dispatch, useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  Dispatch,
+  useState,
+  useRef,
+  useLayoutEffect,
+  useCallback,
+  useMemo,
+  useEffect,
+} from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -32,7 +40,6 @@ import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import styles from './ModPicker.m.scss';
 
 const Armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.general]: t('LB.General'),
@@ -158,9 +165,17 @@ function ModPicker({
   lockedArmor2Mods,
   lbDispatch,
 }: Props) {
+  const [height, setHeight] = useState<number | undefined>(undefined);
   const [query, setQuery] = useState('');
   const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
+  const itemContainer = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (itemContainer.current) {
+      setHeight(itemContainer.current.clientHeight);
+    }
+  }, [itemContainer]);
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {
@@ -289,7 +304,7 @@ function ModPicker({
       footer={footer}
       sheetClassName="item-picker"
     >
-      <div className={styles.modsPanel}>
+      <div ref={itemContainer} style={{ height }}>
         {Object.values(ModPickerCategories).map((category) => (
           <ModPickerSection
             key={category}
