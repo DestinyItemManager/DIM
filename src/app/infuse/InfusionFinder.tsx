@@ -8,7 +8,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import copy from 'fast-copy';
 import { storesSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../utils/comparators';
 import { newLoadout, convertToLoadoutItem } from '../loadout/loadout-utils';

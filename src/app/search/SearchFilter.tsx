@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
 import './search-filter.scss';

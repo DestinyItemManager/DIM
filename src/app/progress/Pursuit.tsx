@@ -4,7 +4,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import PursuitItem from './PursuitItem';
 import { percent } from 'app/shell/filters';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { connect } from 'react-redux';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
-import { ThunkDispatchProp, RootState } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ErrorPanel from './ErrorPanel';
 import { DestinyAccount } from 'app/accounts/destiny-account';

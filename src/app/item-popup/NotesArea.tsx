@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { t } from 'app/i18next-t';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { DimItem } from 'app/inventory/item-types';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { t } from 'app/i18next-t';
 import i18next from 'i18next';
 import { setSetting, setCharacterOrder } from './actions';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import InventoryItem from '../inventory/InventoryItem';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import CharacterOrderEditor from './CharacterOrderEditor';

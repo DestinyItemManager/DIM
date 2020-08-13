@@ -4,7 +4,7 @@ import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'app/i18next-t';
 import './Stores.scss';
 import StoreHeading from '../character-tile/StoreHeading';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';

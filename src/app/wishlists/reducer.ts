@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { getInventoryWishListRolls } from './wishlists';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { observeStore } from '../utils/redux-utils';
 import { set } from 'idb-keyval';

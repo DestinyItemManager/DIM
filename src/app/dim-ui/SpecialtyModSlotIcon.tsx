@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import React from 'react';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { connect } from 'react-redux';
 import { getSpecialtySocket } from 'app/utils/item-utils';

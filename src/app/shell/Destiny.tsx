@@ -8,7 +8,7 @@ import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { connect } from 'react-redux';
 import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
-import { ThunkDispatchProp, RootState } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ErrorPanel from './ErrorPanel';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';

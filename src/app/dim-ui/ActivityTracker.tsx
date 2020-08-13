@@ -8,7 +8,7 @@ import { filter, take } from 'rxjs/operators';
 import { dimNeedsUpdate } from 'app/register-service-worker';
 import { reloadDIM } from 'app/whats-new/WhatsNewLink';
 import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 
 interface StoreProps {
   /** Don't allow refresh more often than this many seconds. */

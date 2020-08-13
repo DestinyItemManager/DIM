@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { farmingStoreSelector } from './reducer';

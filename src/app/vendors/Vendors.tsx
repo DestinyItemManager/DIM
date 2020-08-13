@@ -16,7 +16,7 @@ import { t } from 'app/i18next-t';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import {
   ownedItemsSelector,
   sortedStoresSelector,

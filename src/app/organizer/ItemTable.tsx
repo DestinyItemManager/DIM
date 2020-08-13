@@ -18,7 +18,7 @@ import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { storesSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';

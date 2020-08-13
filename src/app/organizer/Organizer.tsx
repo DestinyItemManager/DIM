@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { useSubscription } from 'app/utils/hooks';

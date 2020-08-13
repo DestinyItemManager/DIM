@@ -3,7 +3,7 @@ import Header from './shell/Header';
 import clsx from 'clsx';
 import ActivityTracker from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
-import { RootState } from './store/reducers';
+import { RootState } from 'app/store/types';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';

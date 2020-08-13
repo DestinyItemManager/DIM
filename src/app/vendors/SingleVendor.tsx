@@ -16,7 +16,7 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';

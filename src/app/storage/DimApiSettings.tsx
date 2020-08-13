@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import ImportExport from './ImportExport';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import _ from 'lodash';
 import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';

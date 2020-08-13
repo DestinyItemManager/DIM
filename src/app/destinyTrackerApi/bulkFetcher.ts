@@ -8,7 +8,7 @@ import { getWeaponList } from './itemListBuilder';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
-import { ThunkResult, RootState } from '../store/reducers';
+import { RootState, ThunkResult } from 'app/store/types';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';

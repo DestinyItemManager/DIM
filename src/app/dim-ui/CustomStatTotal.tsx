@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './CustomStatTotal.m.scss';
 import { armorStats } from 'app/inventory/store/stats';

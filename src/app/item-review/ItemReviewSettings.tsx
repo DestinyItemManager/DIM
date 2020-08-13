@@ -6,7 +6,7 @@ import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
 import { getItemReviews } from './destiny-tracker.service';
 import { connect } from 'react-redux';
-import { ThunkDispatchProp } from 'app/store/reducers';
+import { ThunkDispatchProp } from 'app/store/types';
 
 interface ProvidedProps {
   item: DimItem;

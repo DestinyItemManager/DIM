@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { t } from 'app/i18next-t';
 import './item-review.scss';
 import { connect } from 'react-redux';

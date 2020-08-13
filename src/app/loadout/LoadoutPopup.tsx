@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';

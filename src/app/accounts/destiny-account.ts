@@ -15,7 +15,7 @@ import { showNotification } from '../notifications/notifications';
 import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
 import { loggedOut } from './actions';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info

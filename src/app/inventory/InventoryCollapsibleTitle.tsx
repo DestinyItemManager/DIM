@@ -1,5 +1,5 @@
 import React from 'react';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';

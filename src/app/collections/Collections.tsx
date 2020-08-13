@@ -10,7 +10,7 @@ import { D2StoresService } from '../inventory/d2-stores';
 import Catalysts from './Catalysts';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from '../inventory/selectors';
 import { refresh$ } from '../shell/refresh';

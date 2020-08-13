@@ -1,6 +1,6 @@
 import { VendorDrop, VendorDropType, VendorDropXyz, toVendorDrop } from './vendorDrops';
 import { t } from 'app/i18next-t';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { loadVendorDrops } from './actions';
 import { VendorDropsState } from './reducer';
 

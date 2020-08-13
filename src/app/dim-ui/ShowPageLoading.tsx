@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { ThunkDispatchProp } from 'app/store/reducers';
+import { ThunkDispatchProp } from 'app/store/types';
 import { loadingStart, loadingEnd } from 'app/shell/actions';
 
 interface ProvidedProps {

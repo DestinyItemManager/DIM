@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import { DimStore, D1Store } from '../../inventory/store-types';
-import { RootState } from '../../store/reducers';
+import { RootState } from 'app/store/types';
 import { sortedStoresSelector } from '../../inventory/selectors';
 import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';

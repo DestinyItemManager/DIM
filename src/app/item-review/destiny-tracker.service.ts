@@ -15,7 +15,7 @@ import { WorkingD1Rating } from './d1-dtr-api-types';
 import { DimUserReview, DtrRating } from './dtr-api-types';
 import { Vendor } from '../destiny1/vendors/vendor.service';
 import { getItemReviewsD2 } from '../destinyTrackerApi/d2-reviewsFetcher';
-import { ThunkResult } from '../store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { submitReview as doSubmitReview } from '../destinyTrackerApi/reviewSubmitter';
 import {
   bulkFetchVendorItems as bulkFetchD1VendorItems,

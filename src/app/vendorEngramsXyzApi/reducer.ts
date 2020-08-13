@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { ThunkResult } from '../store/reducers';
+import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { observeStore } from '../utils/redux-utils';
 import { set, get } from 'idb-keyval';

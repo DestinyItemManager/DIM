@@ -19,7 +19,7 @@ import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
 import offset from '@popperjs/core/lib/modifiers/offset';
 import arrow from '@popperjs/core/lib/modifiers/arrow';
 import React, { useState, useRef, useEffect } from 'react';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import Sheet from '../dim-ui/Sheet';
 import { connect } from 'react-redux';
 import { setSetting } from '../settings/actions';

@@ -4,7 +4,7 @@ import { ItemPickerState } from './item-picker';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { connect, MapStateToProps } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
 import {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem } from './item-types';
 import { TagValue, getTag, getNotes } from './dim-item-info';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';

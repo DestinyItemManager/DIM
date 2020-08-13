@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores';
 import { DimStore } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { refresh$ } from 'app/shell/refresh';

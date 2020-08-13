@@ -8,7 +8,7 @@ import { D2Item, DimSocketCategory, DimPlug, DimSocket } from '../inventory/item
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { connect } from 'react-redux';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';

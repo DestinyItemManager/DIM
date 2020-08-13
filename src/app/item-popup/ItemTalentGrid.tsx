@@ -7,7 +7,7 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import './ItemTalentGrid.scss';
 import { ratePerks } from '../destinyTrackerApi/perkRater';
 import { connect } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 import { getReviews } from '../item-review/reducer';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 import { emptySet, emptyArray } from 'app/utils/empty';

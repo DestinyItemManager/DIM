@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
-import { RootState } from '../store/reducers';
+import { RootState } from 'app/store/types';
 
 export const farmingStoreSelector = () =>
   createSelector(

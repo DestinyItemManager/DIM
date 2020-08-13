@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { DimStore, D2Store } from '../inventory/store-types';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { isLoadoutBuilderItem } from './utils';

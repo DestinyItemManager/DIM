@@ -12,7 +12,7 @@ import ItemDescription from './ItemDescription';
 import ItemExpiration from './ItemExpiration';
 import { Reward } from 'app/progress/Reward';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';

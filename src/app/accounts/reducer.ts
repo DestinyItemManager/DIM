@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { DestinyAccount } from './destiny-account';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { RootState, ThunkResult } from '../store/reducers';
+import { RootState, ThunkResult } from 'app/store/types';
 import { observeStore } from 'app/utils/redux-utils';
 import { set, get } from 'idb-keyval';
 import { dedupePromise } from 'app/utils/util';
