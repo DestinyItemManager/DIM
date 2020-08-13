@@ -12,8 +12,8 @@ function isVault(store: DimStore): store is DimVault {
   return store.isVault;
 }
 
-function shouldShowCapacity() {
-  if (!useSelector(isPhonePortraitSelector)) {
+function shouldShowCapacity(isPhonePortrait: boolean) {
+  if (!isPhonePortrait) {
     return true;
   }
   return !$featureFlags.unstickyStats;
@@ -27,12 +27,13 @@ export default function StoreStats({
   store: DimStore;
   style?: React.CSSProperties;
 }) {
+  const isPhonePortrait = useSelector(isPhonePortraitSelector);
   return (
     <div className={clsx({ ['store-cell']: Boolean(style), vault: store.isVault })} style={style}>
       {isVault(store) ? (
         <div className={styles.vaultStats}>
           <AccountCurrencies store={store} />
-          {shouldShowCapacity() && <VaultCapacity store={store} />}
+          {shouldShowCapacity(isPhonePortrait) && <VaultCapacity store={store} />}
         </div>
       ) : (
         <CharacterStats
