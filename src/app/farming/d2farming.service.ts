@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { getBuckets } from '../destiny2/d2-buckets';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2Store } from '../inventory/store-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
@@ -10,6 +9,7 @@ import rxStore from '../store/store';
 import * as actions from './actions';
 import { makeRoomForItemsInBuckets } from './farming.service';
 import { filter, map, tap, exhaustMap } from 'rxjs/operators';
+import { bucketsSelector } from 'app/inventory/selectors';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -86,7 +86,7 @@ export const D2FarmingService = new D2Farming();
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D2Store) {
-  const buckets = await getBuckets();
+  const buckets = bucketsSelector(rxStore.getState())!;
   const makeRoomBuckets = Object.values(buckets.byHash).filter(
     (b) => b.category === BucketCategory.Equippable && b.type
   );

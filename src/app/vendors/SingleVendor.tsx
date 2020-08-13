@@ -15,6 +15,7 @@ import {
   storesSelector,
   ownedItemsSelector,
   profileResponseSelector,
+  bucketsSelector,
 } from '../inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { toVendor } from './d2-vendors';
@@ -50,7 +51,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: storesSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
     profileResponse: profileResponseSelector(state),
     vendors: state.vendors.vendorsByCharacter,

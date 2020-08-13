@@ -2,7 +2,6 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
-import { InventoryBuckets } from './inventory-buckets';
 import { AccountsAction } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -21,8 +20,6 @@ export interface InventoryState {
   // Updates to items need to deeply modify their store though.
   // TODO: ReadonlyArray<Readonly<DimStore>>
   readonly stores: DimStore[];
-
-  readonly buckets?: InventoryBuckets;
 
   readonly profileResponse?: DestinyProfileResponse;
 
@@ -129,11 +126,9 @@ function updateInventory(
   state: InventoryState,
   {
     stores,
-    buckets,
     profileResponse,
   }: {
     stores: DimStore[];
-    buckets?: InventoryBuckets | undefined;
     profileResponse?: DestinyProfileResponse | undefined;
   }
 ) {
@@ -145,9 +140,6 @@ function updateInventory(
     newItems: computeNewItems(state.stores, state.newItems, stores),
     profileError: undefined,
   };
-  if (buckets) {
-    newState.buckets = buckets;
-  }
   if (profileResponse) {
     newState.profileResponse = profileResponse;
   }

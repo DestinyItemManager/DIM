@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getDefinitions } from './d1-definitions';
+import { D1ManifestDefinitions } from './d1-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D1Categories } from './d1-bucket-categories';
@@ -55,8 +55,7 @@ _.forIn(D1Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.once(async () => {
-  const defs = await getDefinitions();
+export function getBuckets(defs: D1ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
     byType: {},
@@ -116,4 +115,4 @@ export const getBuckets = _.once(async () => {
     buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
   });
   return buckets;
-});
+}

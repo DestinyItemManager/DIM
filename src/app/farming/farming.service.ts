@@ -3,7 +3,6 @@ import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/
 import { DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getBuckets } from '../destiny1/d1-buckets';
 import { refresh } from '../shell/refresh';
 import { D1Store, DimStore } from '../inventory/store-types';
 import * as actions from './actions';
@@ -13,7 +12,7 @@ import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemInfosSelector, itemHashTagsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { getVault } from 'app/inventory/stores-helpers';
 
 const glimmerHashes = new Set([
@@ -136,7 +135,7 @@ async function farmItems(store: D1Store) {
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D1Store) {
-  const buckets = await getBuckets();
+  const buckets = bucketsSelector(rxStore.getState())!;
   const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
   makeRoomForItemsInBuckets(store.getStoresService().getStores(), store, makeRoomBuckets);
 }

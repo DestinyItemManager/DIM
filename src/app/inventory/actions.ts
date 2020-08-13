@@ -14,7 +14,6 @@ import { DimError } from 'app/bungie-api/bungie-service-helper';
  */
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
-  buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
 }>();
 

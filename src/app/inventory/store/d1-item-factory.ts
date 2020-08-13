@@ -4,7 +4,7 @@ import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { getBuckets, vaultTypes } from '../../destiny1/d1-buckets';
+import { vaultTypes } from '../../destiny1/d1-buckets';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, D1Stat } from '../item-types';
@@ -16,6 +16,8 @@ import {
   DestinyDamageTypeDefinition,
   DestinyAmmunitionType,
 } from 'bungie-api-ts/destiny2';
+import { bucketsSelector } from '../selectors';
+import store from 'app/store/store';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -109,7 +111,8 @@ export function resetIdTracker() {
  * @return a promise for the list of items
  */
 export function processItems(owner: D1Store, items: any[]): Promise<D1Item[]> {
-  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
+  return Promise.all([getDefinitions()]).then(([defs]) => {
+    const buckets = bucketsSelector(store.getState())!;
     const result: D1Item[] = [];
     for (const item of items) {
       let createdItem: D1Item | null = null;

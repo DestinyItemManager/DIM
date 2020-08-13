@@ -20,7 +20,7 @@ import {
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
@@ -57,7 +57,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    buckets: state.inventory.buckets!,
+    buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     language: settingsSelector(state).language,

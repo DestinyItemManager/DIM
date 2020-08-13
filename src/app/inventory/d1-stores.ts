@@ -4,7 +4,6 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
 import { getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { getBuckets } from '../destiny1/d1-buckets';
 import { cleanInfos } from './dim-item-info';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
@@ -18,7 +17,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { take, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { storesSelector } from './selectors';
+import { storesSelector, bucketsSelector } from './selectors';
 
 export const D1StoresService = StoreService();
 
@@ -93,12 +92,12 @@ function StoreService(): D1StoreServiceType {
 
     const reloadPromise = Promise.all([
       getDefinitions(),
-      getBuckets(),
       store.dispatch(loadNewItems(account)),
       getStores(account),
     ])
-      .then(([defs, buckets, , rawStores]) => {
+      .then(([defs, , rawStores]) => {
         const lastPlayedDate = findLastPlayedDate(rawStores);
+        const buckets = bucketsSelector(store.getState())!;
 
         // Currencies object gets mutated by processStore
         const currencies: DimVault['currencies'] = [];
@@ -111,9 +110,9 @@ function StoreService(): D1StoreServiceType {
           )
         );
 
-        return Promise.all([buckets, processStorePromises]);
+        return processStorePromises;
       })
-      .then(([buckets, stores]) => {
+      .then((stores) => {
         if ($featureFlags.reviewsEnabled) {
           store.dispatch(fetchRatings(stores));
         }
@@ -125,7 +124,7 @@ function StoreService(): D1StoreServiceType {
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
 
-        store.dispatch(update({ stores, buckets }));
+        store.dispatch(update({ stores }));
 
         return stores;
       })

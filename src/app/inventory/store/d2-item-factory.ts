@@ -38,6 +38,7 @@ import {
   THE_FORBIDDEN_BUCKET,
 } from 'app/search/d2-known-values';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import store from 'app/store/store';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -234,7 +235,7 @@ export function makeItem(
       : {};
   // Missing definition?
   if (!itemDef) {
-    warnMissingDefinition();
+    store.dispatch(warnMissingDefinition);
     return null;
   }
 

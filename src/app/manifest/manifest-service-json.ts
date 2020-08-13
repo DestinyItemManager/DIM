@@ -9,10 +9,12 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';
 import { settingsSelector } from 'app/settings/reducer';
-import store from 'app/store/store';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { loadingStart, loadingEnd } from 'app/shell/actions';
 import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
+import { ThunkResult } from 'app/store/types';
+import { dedupePromise } from 'app/utils/util';
+import memoizeOne from 'memoize-one';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -63,7 +65,6 @@ const tableTrimmers = {
 // Module-local state
 const localStorageKey = 'd2-manifest-version';
 const idbKey = 'd2-manifest';
-let manifestPromise: Promise<object> | null = null;
 let version: string | null = null;
 
 /**
@@ -72,21 +73,19 @@ let version: string | null = null;
  * version has actually changed.
  */
 export const warnMissingDefinition = _.debounce(
-  // This is not async because of https://bugs.webkit.org/show_bug.cgi?id=166879
-  () => {
-    d2GetManifest().then((data) => {
-      const language = settingsSelector(store.getState()).language;
-      const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
+  async (_, getState) => {
+    const data = await d2GetManifest();
+    const language = settingsSelector(getState()).language;
+    const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
-      // The manifest has updated!
-      if (path !== version) {
-        showNotification({
-          type: 'warning',
-          title: t('Manifest.Outdated'),
-          body: t('Manifest.OutdatedExplanation'),
-        });
-      }
-    });
+    // The manifest has updated!
+    if (path !== version) {
+      showNotification({
+        type: 'warning',
+        title: t('Manifest.Outdated'),
+        body: t('Manifest.OutdatedExplanation'),
+      });
+    }
   },
   10000,
   {
@@ -95,141 +94,145 @@ export const warnMissingDefinition = _.debounce(
   }
 );
 
-export function getManifest(tableAllowList: string[]): Promise<object> {
-  if (manifestPromise) {
-    return manifestPromise;
-  }
+const getManifestAction = memoizeOne(
+  (tableAllowList): ThunkResult<object> =>
+    dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
+);
 
-  manifestPromise = doGetManifest(tableAllowList);
-
-  return manifestPromise;
+export function getManifest(tableAllowList: string[]): ThunkResult<object> {
+  return getManifestAction(tableAllowList);
 }
 
 // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
-async function doGetManifest(tableAllowList: string[]) {
-  store.dispatch(loadingStart(t('Manifest.Load')));
-  try {
-    console.time('Load manifest');
-    const manifest = await loadManifest(tableAllowList);
-    if (!manifest.DestinyVendorDefinition) {
-      throw new Error('Manifest corrupted, please reload');
-    }
-    return manifest;
-  } catch (e) {
-    let message = e.message || e;
+function doGetManifest(tableAllowList: string[]): ThunkResult<object> {
+  return async (dispatch) => {
+    dispatch(loadingStart(t('Manifest.Load')));
+    try {
+      console.time('Load manifest');
+      const manifest = await dispatch(loadManifest(tableAllowList));
+      if (!manifest.DestinyVendorDefinition) {
+        throw new Error('Manifest corrupted, please reload');
+      }
+      return manifest;
+    } catch (e) {
+      let message = e.message || e;
 
-    if (e instanceof TypeError || e.status === -1) {
-      message = navigator.onLine
-        ? t('BungieService.NotConnectedOrBlocked')
-        : t('BungieService.NotConnected');
-    } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-      message = t('BungieService.Difficulties');
-    } else if (e.status < 200 || e.status >= 400) {
-      message = t('BungieService.NetworkError', {
-        status: e.status,
-        statusText: e.statusText,
-      });
-    } else {
-      // Something may be wrong with the manifest
-      await deleteManifestFile();
-    }
+      if (e instanceof TypeError || e.status === -1) {
+        message = navigator.onLine
+          ? t('BungieService.NotConnectedOrBlocked')
+          : t('BungieService.NotConnected');
+      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
+        message = t('BungieService.Difficulties');
+      } else if (e.status < 200 || e.status >= 400) {
+        message = t('BungieService.NetworkError', {
+          status: e.status,
+          statusText: e.statusText,
+        });
+      } else {
+        // Something may be wrong with the manifest
+        await deleteManifestFile();
+      }
 
-    const statusText = t('Manifest.Error', { error: message });
-    manifestPromise = null;
-    console.error('Manifest loading error', { error: e }, e);
-    reportException('manifest load', e);
-    const error = new Error(statusText);
-    error.name = 'ManifestError';
-    throw error;
-  } finally {
-    store.dispatch(loadingEnd(t('Manifest.Load')));
-    console.timeEnd('Load manifest');
-  }
+      const statusText = t('Manifest.Error', { error: message });
+      console.error('Manifest loading error', { error: e }, e);
+      reportException('manifest load', e);
+      const error = new Error(statusText);
+      error.name = 'ManifestError';
+      throw error;
+    } finally {
+      dispatch(loadingEnd(t('Manifest.Load')));
+      console.timeEnd('Load manifest');
+    }
+  };
 }
 
-async function loadManifest(tableAllowList: string[]): Promise<any> {
-  let components: {
-    [key: string]: string;
-  } | null = null;
-  try {
-    const data = await d2GetManifest();
-    await settingsReady; // wait for settings to be ready
-    const language = settingsSelector(store.getState()).language;
-    const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
-    components =
-      data.jsonWorldComponentContentPaths[language] || data.jsonWorldComponentContentPaths.en;
+function loadManifest(tableAllowList: string[]): ThunkResult<any> {
+  return async (dispatch, getState) => {
+    let components: {
+      [key: string]: string;
+    } | null = null;
+    try {
+      const data = await d2GetManifest();
+      await settingsReady; // wait for settings to be ready
+      const language = settingsSelector(getState()).language;
+      const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
+      components =
+        data.jsonWorldComponentContentPaths[language] || data.jsonWorldComponentContentPaths.en;
 
-    // Use the path as the version, rather than the "version" field, because
-    // Bungie can update the manifest file without changing that version.
-    version = path;
-  } catch (e) {
-    // If we can't get info about the current manifest, try to just use whatever's already saved.
-    version = localStorage.getItem(localStorageKey);
-    if (version) {
-      return loadManifestFromCache(version, tableAllowList);
-    } else {
-      throw e;
+      // Use the path as the version, rather than the "version" field, because
+      // Bungie can update the manifest file without changing that version.
+      version = path;
+    } catch (e) {
+      // If we can't get info about the current manifest, try to just use whatever's already saved.
+      version = localStorage.getItem(localStorageKey);
+      if (version) {
+        return loadManifestFromCache(version, tableAllowList);
+      } else {
+        throw e;
+      }
     }
-  }
 
-  try {
-    return await loadManifestFromCache(version, tableAllowList);
-  } catch (e) {
-    return loadManifestRemote(version, components, tableAllowList);
-  }
+    try {
+      return await loadManifestFromCache(version, tableAllowList);
+    } catch (e) {
+      return dispatch(loadManifestRemote(version, components, tableAllowList));
+    }
+  };
 }
 
 /**
  * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
  */
-async function loadManifestRemote(
+function loadManifestRemote(
   version: string,
   components: {
     [key: string]: string;
   },
   tableAllowList: string[]
-): Promise<object> {
-  store.dispatch(loadingStart(t('Manifest.Download')));
-  try {
-    const manifest = {};
-    // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
-    // try canonical component URL which should likely be already cached,
-    // then fall back to appending "?dim" then "?dim-[random numbers]",
-    // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
-    const cacheBusterStrings = [
-      '',
-      '?dim',
-      `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
-    ];
-    const futures = tableAllowList
-      .map((t) => `Destiny${t}Definition`)
-      .map(async (table) => {
-        let response: Response | null = null;
-        let error: any = null;
+): ThunkResult<object> {
+  return async (dispatch) => {
+    dispatch(loadingStart(t('Manifest.Download')));
+    try {
+      const manifest = {};
+      // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+      // try canonical component URL which should likely be already cached,
+      // then fall back to appending "?dim" then "?dim-[random numbers]",
+      // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
+      const cacheBusterStrings = [
+        '',
+        '?dim',
+        `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+      ];
+      const futures = tableAllowList
+        .map((t) => `Destiny${t}Definition`)
+        .map(async (table) => {
+          let response: Response | null = null;
+          let error: any = null;
 
-        for (const query of cacheBusterStrings) {
-          try {
-            response = await fetch(`https://www.bungie.net${components[table]}${query}`);
-            if (response.ok) {
-              break;
+          for (const query of cacheBusterStrings) {
+            try {
+              response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+              if (response.ok) {
+                break;
+              }
+              error = error ?? response;
+            } catch (e) {
+              error = error ?? e;
             }
-            error = error ?? response;
-          } catch (e) {
-            error = error ?? e;
           }
-        }
-        const body = await (response?.ok ? response.json() : Promise.reject(error));
-        manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
-      });
+          const body = await (response?.ok ? response.json() : Promise.reject(error));
+          manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
+        });
 
-    await Promise.all(futures);
+      await Promise.all(futures);
 
-    // We intentionally don't wait on this promise
-    saveManifestToIndexedDB(manifest, version, tableAllowList);
-    return manifest;
-  } finally {
-    store.dispatch(loadingEnd(t('Manifest.Download')));
-  }
+      // We intentionally don't wait on this promise
+      saveManifestToIndexedDB(manifest, version, tableAllowList);
+      return manifest;
+    } finally {
+      dispatch(loadingEnd(t('Manifest.Download')));
+    }
+  };
 }
 
 // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879

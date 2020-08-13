@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from '../inventory/selectors';
+import { storesSelector, profileResponseSelector, bucketsSelector } from '../inventory/selectors';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import { useSubscription } from 'app/utils/hooks';
@@ -46,7 +46,7 @@ function mapStateToProps() {
   });
 
   return (state: RootState): StoreProps => ({
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
     profileResponse: profileResponseSelector(state),

@@ -7,9 +7,22 @@ import { emptyObject } from 'app/utils/empty';
 import { getCurrentStore } from './stores-helpers';
 import { ItemInfos } from './dim-item-info';
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
+import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
+import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
+
+export const bucketsSelector = createSelector(
+  destinyVersionSelector,
+  (state: RootState) => state.manifest.d1Manifest,
+  (state: RootState) => state.manifest.d2Manifest,
+  (destinyVersion, d1Manifest, d2Manifest) =>
+    destinyVersion === 2
+      ? d2Manifest && getBucketsD2(d2Manifest)
+      : d1Manifest && getBucketsD1(d1Manifest)
+);
 
 /** All stores, sorted according to user preference. */
 export const sortedStoresSelector = createSelector(
