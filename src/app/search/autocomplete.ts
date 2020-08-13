@@ -1,4 +1,4 @@
-import { SearchConfig } from './search-filter';
+import { SearchConfig } from './search-config';
 import _ from 'lodash';
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';

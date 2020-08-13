@@ -36,9 +36,9 @@ import styles from './SearchBar.m.scss';
 import clsx from 'clsx';
 import { parseQuery, canonicalizeQuery } from './query-parser';
 import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
-import { searchConfigSelector } from './search-filter';
-import { RootState } from 'app/store/reducers';
 import HighlightedText from './HighlightedText';
+import { RootState } from 'app/store/types';
+import { searchConfigSelector } from './search-config';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
