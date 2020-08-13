@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { observeStore } from 'app/utils/redux-utils';
 import { RootState } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { set } from 'idb-keyval';
 
 /**

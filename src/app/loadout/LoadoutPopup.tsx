@@ -4,7 +4,7 @@ import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
-import { currentAccountSelector } from '../accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets';
 import _ from 'lodash';

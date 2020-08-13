@@ -11,7 +11,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
+import { destinyVersionSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { storesSelector } from '../inventory/selectors';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';

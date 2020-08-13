@@ -6,7 +6,7 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { getAuditLog } from 'app/dim-api/dim-api';
 import { DestinyAccount, PLATFORM_ICONS } from 'app/accounts/destiny-account';
-import { accountsSelector } from 'app/accounts/reducer';
+import { accountsSelector } from 'app/accounts/selectors';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/types';
 import styles from './AuditLog.m.scss';

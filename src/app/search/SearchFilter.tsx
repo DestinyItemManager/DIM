@@ -7,7 +7,7 @@ import { RootState } from 'app/store/types';
 import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
 import './search-filter.scss';
-import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
+import { destinyVersionSelector, currentAccountSelector } from '../accounts/selectors';
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filter';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';

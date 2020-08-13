@@ -20,7 +20,7 @@ import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import MetricCategories from './MetricCategories';
 import EmblemPreview from './EmblemPreview';
-import { destinyVersionSelector } from 'app/accounts/reducer';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import Objective from 'app/progress/Objective';
 import { Link, useParams } from 'react-router-dom';

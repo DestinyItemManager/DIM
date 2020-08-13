@@ -16,7 +16,7 @@ import { DestinyAccount } from '../../accounts/destiny-account';
 import { D1Store } from '../../inventory/store-types';
 import { RootState } from 'app/store/types';
 import { storesSelector } from '../../inventory/selectors';
-import { currentAccountSelector } from '../../accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { D1StoresService } from '../../inventory/d1-stores';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';

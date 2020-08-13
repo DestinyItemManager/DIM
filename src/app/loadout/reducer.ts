@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { currentAccountSelector } from '../accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
