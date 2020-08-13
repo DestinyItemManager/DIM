@@ -67,7 +67,7 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
           <span className={styles.wishListTextContent}>{inventoryWishListRoll.notes}</span>
         </ExpandableTextBlock>
       )}
-      <NotesArea item={item} />
+      <NotesArea item={item} className={styles.description} />
     </>
   );
 }
