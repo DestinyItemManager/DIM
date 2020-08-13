@@ -13,7 +13,7 @@ import React, {
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
-import { searchConfigSelector } from './search-filter';
+import { searchConfigSelector } from './search-config';
 import Sheet from 'app/dim-ui/Sheet';
 import Textarea from 'textcomplete/lib/textarea';
 import Textcomplete from 'textcomplete/lib/textcomplete';
