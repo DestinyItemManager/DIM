@@ -8,10 +8,8 @@ import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer
 import { RootState, ThunkResult } from 'app/store/types';
 import produce from 'immer';
 import { DtrRating } from './dtr-api-types';
-import { set, get } from 'idb-keyval';
-import { observeStore } from '../utils/redux-utils';
+import { get } from 'idb-keyval';
 import _ from 'lodash';
-import { ITEM_RATING_EXPIRATION } from '../destinyTrackerApi/d2-itemListBuilder';
 import { createSelector } from 'reselect';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { AccountsAction } from '../accounts/reducer';
@@ -204,30 +202,6 @@ function convertToRatingMap(ratings: DtrRating[]) {
     result[getItemStoreKey(rating.referenceId, rating.roll)] = rating;
   }
   return result;
-}
-
-export function saveReviewsToIndexedDB() {
-  return observeStore(
-    (state) => state.reviews,
-    _.debounce((currentState: ReviewsState, nextState: ReviewsState) => {
-      if (nextState.loadedFromIDB) {
-        const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
-
-        if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
-          set(
-            'reviews',
-            _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff)
-          );
-        }
-        if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
-          set(
-            'ratings-v2',
-            _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff)
-          );
-        }
-      }
-    }, 1000)
-  );
 }
 
 export function loadReviewsFromIndexedDB(): ThunkResult {

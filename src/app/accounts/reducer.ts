@@ -3,8 +3,7 @@ import { DestinyAccount } from './destiny-account';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { RootState, ThunkResult } from 'app/store/types';
-import { observeStore } from 'app/utils/redux-utils';
-import { set, get } from 'idb-keyval';
+import { get } from 'idb-keyval';
 import { dedupePromise } from 'app/utils/util';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { deepEqual } from 'fast-equals';
@@ -114,17 +113,6 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
       return state;
   }
 };
-
-export function saveAccountsToIndexedDB() {
-  return observeStore(
-    (state) => state.accounts,
-    (currentState, nextState) => {
-      if (nextState.loaded && nextState.accounts !== currentState.accounts) {
-        set('accounts', nextState.accounts);
-      }
-    }
-  );
-}
 
 const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
   console.log('Load accounts from IDB');

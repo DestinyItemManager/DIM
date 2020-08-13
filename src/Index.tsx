@@ -17,14 +17,14 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { watchLanguageChanges } from './app/settings/settings';
-import { saveReviewsToIndexedDB } from './app/item-review/reducer';
-import { saveWishListToIndexedDB } from './app/wishlists/reducer';
-import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
+import { saveReviewsToIndexedDB } from './app/item-review/observers';
+import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
-import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
+import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/observers';
 import store from 'app/store/store';
 import { loadDimApiData } from 'app/dim-api/actions';
-import { saveItemInfosOnStateChange } from 'app/inventory/reducer';
+import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 
 polyfill({
   holdToDrag: 300,

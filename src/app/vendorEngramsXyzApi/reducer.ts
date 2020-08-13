@@ -3,8 +3,7 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
-import { observeStore } from '../utils/redux-utils';
-import { set, get } from 'idb-keyval';
+import { get } from 'idb-keyval';
 import { VendorDrop } from './vendorDrops';
 import { dropsNeedRefresh } from './vendorEngramsXyzService';
 
@@ -48,17 +47,6 @@ export const vendorDrops: Reducer<VendorDropsState, VendorDropAction> = (
       return state;
   }
 };
-
-export function saveVendorDropsToIndexedDB() {
-  return observeStore(
-    (state) => state.vendorDrops,
-    (_, nextState) => {
-      if (nextState.loaded) {
-        set('vendorengrams', nextState);
-      }
-    }
-  );
-}
 
 export function loadVendorDropsFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
