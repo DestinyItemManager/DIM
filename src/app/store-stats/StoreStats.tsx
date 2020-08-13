@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { RootState } from 'app/store/reducers';
+import type { RootState } from 'app/store/reducers';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
 import CharacterStats from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';

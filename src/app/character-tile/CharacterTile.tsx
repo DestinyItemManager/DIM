@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { RootState } from 'app/store/reducers';
+import type { RootState } from 'app/store/reducers';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import './CharacterTile.scss';
