@@ -23,7 +23,7 @@ function isVault(store: DimStore): store is DimVault {
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
 export default function CharacterTile({ store }: { store: DimStore }) {
-  const maxTotalPower = store.stats?.maxTotalPower;
+  const maxTotalPower = Math.floor(store.stats?.maxTotalPower?.value || store.powerLevel);
   const isPhonePortrait = useSelector((state: RootState) => state.shell.isPhonePortrait);
 
   return (
@@ -34,10 +34,15 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         <div className="top">
           <div className="class">{store.className}</div>
           {!store.isVault && (
-            <div className="powerLevel">
-              <AppIcon icon={powerActionIcon} />
-              {store.powerLevel}
-            </div>
+            <>
+              <div className="powerLevel">
+                <AppIcon icon={powerActionIcon} />
+                {store.powerLevel}
+              </div>
+              {$featureFlags.unstickyStats && isPhonePortrait && (
+                <div className="maxTotalPower">/ {maxTotalPower}</div>
+              )}
+            </>
           )}
         </div>
         <div className="bottom">
@@ -47,12 +52,6 @@ export default function CharacterTile({ store }: { store: DimStore }) {
             <>
               <div className="race-gender">{store.genderRace}</div>
               {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
-              {$featureFlags.unstickyStats && isPhonePortrait && maxTotalPower && (
-                <div className="maxTotalPower">
-                  <img src={maxTotalPower.icon} alt={maxTotalPower.name} />
-                  {Math.floor(maxTotalPower.value)}
-                </div>
-              )}
             </>
           )}
         </div>

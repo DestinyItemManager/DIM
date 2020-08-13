@@ -106,34 +106,28 @@
     font-size: 20px;
     font-weight: 400;
     height: 24px;
-  }
 
-  .bottom {
-    font-size: 12px;
-    color: white;
-    height: 14px;
     @include phone-portrait {
-      .vault & {
-        display: grid;
-        grid-template-columns: repeat(2, 16px minmax(-webkit-min-content, 1fr));
-        grid-template-columns: repeat(2, 16px minmax(min-content, 1fr));
-        grid-auto-rows: 16px;
-        gap: 3px 2px;
-      }
-
       .maxTotalPower {
-        display: flex;
-        flex: 1;
-        justify-content: flex-end;
-        align-items: center;
-
-        img {
-          height: 14px;
-          width: 14px;
-          margin-right: 3px;
-          opacity: 0.5;
-        }
+        font-size: 12px;
+        align-self: flex-end;
+        padding-left: 4px;
       }
+    }
+  }
+}
+
+.bottom {
+  font-size: 12px;
+  color: white;
+  height: 14px;
+  @include phone-portrait {
+    .vault & {
+      display: grid;
+      grid-template-columns: repeat(2, 16px minmax(-webkit-min-content, 1fr));
+      grid-template-columns: repeat(2, 16px minmax(min-content, 1fr));
+      grid-auto-rows: 16px;
+      gap: 3px 2px;
     }
   }
 }
