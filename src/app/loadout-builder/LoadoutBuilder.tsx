@@ -19,12 +19,7 @@ import FilterBuilds from './filter/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import SearchFilterInput from 'app/search/SearchFilterInput';
-import {
-  SearchConfig,
-  SearchFilters,
-  searchConfigSelector,
-  searchFiltersConfigSelector,
-} from 'app/search/search-filter';
+import { SearchFilters, searchFiltersConfigSelector } from 'app/search/search-filter';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -52,7 +47,6 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  searchConfig: SearchConfig;
   filters: SearchFilters;
 }
 
@@ -106,7 +100,6 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
-      searchConfig: searchConfigSelector(state),
       filters: searchFiltersConfigSelector(state),
     };
   };
@@ -124,7 +117,6 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
-  searchConfig,
   filters,
   preloadedLoadout,
 }: Props) {
@@ -186,7 +178,6 @@ function LoadoutBuilder({
   const menuContent = (
     <div className={styles.menuContent}>
       <SearchFilterInput
-        searchConfig={searchConfig}
         placeholder={t('LoadoutBuilder.SearchPlaceholder')}
         onQueryChanged={(query: string) => lbDispatch({ type: 'queryChanged', query })}
       />
