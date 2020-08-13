@@ -12,7 +12,7 @@ import { DtrRating } from '../item-review/dtr-api-types';
 import Papa from 'papaparse';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
-import { getActivePlatform } from '../accounts/platforms';
+import { getActivePlatform } from '../accounts/get-active-platform';
 import { getClass } from './store/character-utils';
 import { download } from 'app/utils/util';
 import { getRating } from '../item-review/reducer';
