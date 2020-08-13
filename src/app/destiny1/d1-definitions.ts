@@ -1,8 +1,9 @@
 import { ManifestDefinitions } from '../destiny2/definitions';
 import _ from 'lodash';
-import { D1ManifestService } from '../manifest/d1-manifest-service';
+import { getManifest } from '../manifest/d1-manifest-service';
 import store from '../store/store';
 import { setD1Manifest } from '../manifest/actions';
+import { reportException } from 'app/utils/exceptions';
 
 const lazyTables = [
   'InventoryItem',
@@ -62,7 +63,7 @@ export const getDefinitions = _.once(getUncachedDefinitions);
 
 async function getUncachedDefinitions() {
   try {
-    const db = await D1ManifestService.getManifest();
+    const db = await getManifest();
     const defs = {
       isDestiny1: () => true,
       isDestiny2: () => false,
@@ -71,20 +72,33 @@ async function getUncachedDefinitions() {
     lazyTables.forEach((tableShort) => {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = {
-        get(name) {
-          if (Object.prototype.hasOwnProperty.call(this, name)) {
-            return this[name];
+        get(id: number, requestor?: any) {
+          const dbTable = db[table];
+          if (!dbTable) {
+            throw new Error(`Table ${table} does not exist in the manifest`);
           }
-          const val = D1ManifestService.getRecord(db, table, name);
-          this[name] = val;
-          return val;
+          const dbEntry = dbTable[id];
+          if (!dbEntry) {
+            const requestingEntryInfo =
+              typeof requestor === 'object' ? requestor.hash : String(requestor);
+            reportException(
+              `hashLookupFailureD1: ${table}[${id}]`,
+              new Error(`hashLookupFailureD1: ${table}[${id}]`),
+              {
+                requestingEntryInfo,
+                failedHash: id,
+                failedComponent: table,
+              }
+            );
+          }
+          return dbEntry;
         },
       };
     });
     // Resources that need to be fully loaded (because they're iterated over)
     eagerTables.forEach((tableShort) => {
       const table = `Destiny${tableShort}Definition`;
-      defs[tableShort] = D1ManifestService.getAllRecords(db, table);
+      defs[tableShort] = db[table];
     });
     store.dispatch(setD1Manifest(defs as D1ManifestDefinitions));
     return defs as D1ManifestDefinitions;

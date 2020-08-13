@@ -18,7 +18,7 @@ import { buildFlavorObjective, buildObjectives } from './objectives';
 
 import D2Events from 'data/d2/events.json';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { D2ManifestService } from '../../manifest/manifest-service-json';
+import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2Store } from '../store-types';
 import { D2StoresService } from '../d2-stores';
@@ -234,7 +234,7 @@ export function makeItem(
       : {};
   // Missing definition?
   if (!itemDef) {
-    D2ManifestService.warnMissingDefinition();
+    warnMissingDefinition();
     return null;
   }
 

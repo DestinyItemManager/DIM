@@ -38,7 +38,7 @@ import {
   DestinyBreakerTypeDefinition,
 } from 'bungie-api-ts/destiny2';
 
-import { D2ManifestService } from '../manifest/manifest-service-json';
+import { getManifest } from '../manifest/manifest-service-json';
 import { ManifestDefinitions } from './definitions';
 import _ from 'lodash';
 import { setD2Manifest } from '../manifest/actions';
@@ -153,7 +153,7 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {
-  const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
+  const db = await getManifest([...eagerTables, ...lazyTables]);
   const defs = {
     isDestiny1: () => false,
     isDestiny2: () => true,
