@@ -1,8 +1,10 @@
 @import '../variables';
+@import './ItemTable.m.scss';
 
 .dropDown {
   display: inline-block;
   position: relative;
+  z-index: $dropdown-menu;
 }
 
 .button {
@@ -29,6 +31,7 @@
     right: 0;
   }
 
+  background: black;
   @include visible-scrollbars;
 }
 

@@ -56,6 +56,7 @@ import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponA
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import NotesArea from 'app/item-popup/NotesArea';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -542,6 +543,7 @@ export function getColumns(
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
       value: (item) => getNotes(item, itemInfos),
+      cell: (_, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:"${value}"`,
     },
