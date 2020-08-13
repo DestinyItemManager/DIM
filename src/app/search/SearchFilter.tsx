@@ -8,7 +8,7 @@ import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/selectors';
-import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filter';
+import { searchFilterSelector } from './search-filter';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -43,7 +43,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   destinyVersion: DestinyVersion;
   account?: DestinyAccount;
-  searchConfig: SearchConfig;
   searchQueryVersion: number;
   searchQuery: string;
   stores: DimStore[];
@@ -76,7 +75,6 @@ function mapStateToProps(state: RootState): StoreProps {
     isPhonePortrait: state.shell.isPhonePortrait,
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
-    searchConfig: searchConfigSelector(state),
     searchFilter,
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
@@ -89,7 +87,6 @@ export function SearchFilter(
   {
     isPhonePortrait,
     mobile,
-    searchConfig,
     setSearchQuery,
     searchQuery,
     searchQueryVersion,
@@ -209,7 +206,6 @@ export function SearchFilter(
       onQueryChanged={setSearchQuery}
       alwaysShowClearButton={mobile}
       placeholder={placeholder}
-      searchConfig={searchConfig}
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}

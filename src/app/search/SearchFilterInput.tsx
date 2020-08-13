@@ -13,18 +13,18 @@ import React, {
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
-import { SearchConfig } from './search-filter';
+import { searchConfigSelector } from './search-config';
 import Sheet from 'app/dim-ui/Sheet';
 import Textarea from 'textcomplete/lib/textarea';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { useSelector } from 'react-redux';
 
 interface ProvidedProps {
   alwaysShowClearButton?: boolean;
   placeholder: string;
-  searchConfig: SearchConfig;
   autoFocus?: boolean;
   searchQueryVersion?: number;
   searchQuery?: string;
@@ -72,7 +72,6 @@ export interface SearchFilterRef {
 export default React.forwardRef(function SearchFilterInput(
   {
     searchQueryVersion,
-    searchConfig,
     searchQuery,
     alwaysShowClearButton,
     placeholder,
@@ -86,6 +85,7 @@ export default React.forwardRef(function SearchFilterInput(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
 
+  const searchConfig = useSelector(searchConfigSelector);
   const textcomplete = useRef<Textcomplete>();
   const inputElement = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps

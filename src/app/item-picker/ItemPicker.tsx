@@ -7,12 +7,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
-import {
-  SearchConfig,
-  searchConfigSelector,
-  SearchFilters,
-  searchFiltersConfigSelector,
-} from '../search/search-filter';
+import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
 import SearchFilterInput, { SearchFilterRef } from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
@@ -29,7 +24,6 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  searchConfig: SearchConfig;
   filters: SearchFilters;
   itemSortOrder: string[];
   isPhonePortrait: boolean;
@@ -46,7 +40,6 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
 
   return (state, ownProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
-    searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     itemSortOrder: itemSortOrderSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
@@ -66,7 +59,6 @@ function ItemPicker({
   preferEquip,
   allItems,
   prompt,
-  searchConfig,
   filters,
   itemSortOrder,
   hideStoreEquip,
@@ -120,7 +112,6 @@ function ItemPicker({
       <div className="item-picker-search">
         <SearchFilterInput
           ref={filterInput}
-          searchConfig={searchConfig}
           placeholder={t('ItemPicker.SearchPlaceholder')}
           autoFocus={autoFocus}
           onQueryChanged={setQuery}

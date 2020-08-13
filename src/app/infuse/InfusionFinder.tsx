@@ -16,12 +16,7 @@ import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import SearchFilterInput from '../search/SearchFilterInput';
-import {
-  SearchConfig,
-  searchConfigSelector,
-  SearchFilters,
-  searchFiltersConfigSelector,
-} from '../search/search-filter';
+import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';
@@ -47,7 +42,6 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   currentStore: DimStore;
-  searchConfig: SearchConfig;
   filters: SearchFilters;
   lastInfusionDirection: InfuseDirection;
   isPhonePortrait: boolean;
@@ -57,7 +51,6 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
     currentStore: currentStoreSelector(state)!,
-    searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
     isPhonePortrait: state.shell.isPhonePortrait,
@@ -172,7 +165,6 @@ function stateReducer(state: State, action: Action): State {
 function InfusionFinder({
   stores,
   currentStore,
-  searchConfig,
   filters,
   isPhonePortrait,
   lastInfusionDirection,
@@ -304,7 +296,6 @@ function InfusionFinder({
         </div>
         <div className="infuseSearch">
           <SearchFilterInput
-            searchConfig={searchConfig}
             onQueryChanged={onQueryChanged}
             placeholder="Filter items"
             autoFocus={autoFocus}
