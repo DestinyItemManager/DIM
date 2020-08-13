@@ -15,7 +15,7 @@ import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';

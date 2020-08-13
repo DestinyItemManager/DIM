@@ -2,7 +2,7 @@ import React from 'react';
 import './Account.scss';
 import { DestinyAccount } from './destiny-account';
 import { AppIcon, signOutIcon } from '../shell/icons';
-import { currentAccountSelector } from './reducer';
+import { currentAccountSelector } from './selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';

@@ -1,5 +1,5 @@
 import { combineReducers, Reducer } from 'redux';
-import { accounts, currentAccountSelector } from '../accounts/reducer';
+import { accounts } from '../accounts/reducer';
 import { inventory } from '../inventory/reducer';
 import { shell } from '../shell/reducer';
 import { reviews } from '../item-review/reducer';
@@ -11,6 +11,7 @@ import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-
 import { vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 import { vendors } from 'app/vendors/reducer';
 import { RootState } from './types';
+import { currentAccountSelector } from 'app/accounts/selectors';
 
 const reducer: Reducer<RootState> = (state, action) => {
   const combinedReducers = combineReducers({

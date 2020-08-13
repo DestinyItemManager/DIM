@@ -18,7 +18,7 @@ import styles from './Organizer.m.scss';
 import { t } from 'app/i18next-t';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { destinyVersionSelector } from 'app/accounts/reducer';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D1StoresService } from 'app/inventory/d1-stores';
 
 interface ProvidedProps {

@@ -5,7 +5,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ErrorPanel from './ErrorPanel';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { currentAccountSelector, accountsLoadedSelector } from 'app/accounts/reducer';
+import { currentAccountSelector, accountsLoadedSelector } from 'app/accounts/selectors';
 import { getPlatforms } from 'app/accounts/platforms';
 import { accountRoute } from 'app/routes';
 import { Redirect } from 'react-router';

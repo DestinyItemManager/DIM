@@ -34,7 +34,7 @@ import { RootState } from 'app/store/types';
 import missingSources from 'data/d2/missing-source-info';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { destinyVersionSelector } from '../accounts/reducer';
+import { destinyVersionSelector } from '../accounts/selectors';
 import { inventoryWishListsSelector } from '../wishlists/reducer';
 import latinise from 'voca/latinise';
 import { loadoutsSelector } from '../loadout/reducer';

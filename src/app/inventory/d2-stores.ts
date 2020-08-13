@@ -35,7 +35,7 @@ import xpIcon from '../../images/xpIcon.svg';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { storesSelector } from './selectors';
 import { ThunkResult } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getArtifactBonus } from './stores-helpers';

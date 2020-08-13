@@ -17,7 +17,7 @@ import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon, banIcon } from './icons';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { accountsSelector, accountsLoadedSelector } from 'app/accounts/reducer';
+import { accountsSelector, accountsLoadedSelector } from 'app/accounts/selectors';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
