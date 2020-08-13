@@ -8,7 +8,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
 import { AppIcon, editIcon } from 'app/shell/icons';
-// import styles from './ItemDescription.m.scss';
 import styles from './NotesArea.m.scss';
 import clsx from 'clsx';
 
@@ -35,7 +34,11 @@ export default function NotesArea({
 
   // text area for note editing
   if (notesOpen) {
-    return <NotesEditor notes={savedNotes} item={item} setNotesOpen={setNotesOpen} />;
+    return (
+      <div className={clsx(className, { [styles.minimal]: minimal })}>
+        <NotesEditor notes={savedNotes} item={item} setNotesOpen={setNotesOpen} />
+      </div>
+    );
   }
 
   // show notes if they exist, and an "add" or "edit" prompt
@@ -81,10 +84,11 @@ function NotesEditor({
   // dispatch notes updates
   const dispatch = useDispatch();
   const saveNotes = useCallback(() => {
+    const newNotes = textArea.current?.value.trim();
     dispatch(
       itemIsInstanced(item)
-        ? setItemNote({ itemId: item.id, note: textArea.current?.value })
-        : setItemHashNote({ itemHash: item.hash, note: textArea.current?.value })
+        ? setItemNote({ itemId: item.id, note: newNotes })
+        : setItemHashNote({ itemHash: item.hash, note: newNotes })
     );
   }, [dispatch, item]);
 
