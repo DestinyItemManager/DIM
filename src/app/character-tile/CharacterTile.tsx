@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import type { RootState } from 'app/store/reducers';
@@ -18,13 +18,25 @@ function isVault(store: DimStore): store is DimVault {
   return store.isVault;
 }
 
+interface StoreProps {
+  isPhonePortrait: boolean;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    isPhonePortrait: state.shell.isPhonePortrait,
+  };
+}
+
 /**
  * Render a basic character tile without any event handlers
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
-export default function CharacterTile({ store }: { store: DimStore }) {
+export default connect<StoreProps>(mapStateToProps)(function CharacterTile({
+  store,
+  isPhonePortrait,
+}: { store: DimStore } & StoreProps) {
   const maxTotalPower = Math.floor(store.stats?.maxTotalPower?.value || store.powerLevel);
-  const isPhonePortrait = useSelector((state: RootState) => state.shell.isPhonePortrait);
 
   return (
     <div className="character-tile">
@@ -58,4 +70,4 @@ export default function CharacterTile({ store }: { store: DimStore }) {
       </div>
     </div>
   );
-}
+});
