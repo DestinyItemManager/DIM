@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`filterComplete autocomplete terms for |is:b| 1`] = `
+Array [
+  "is:blue",
+  "is:black",
+]
+`;
