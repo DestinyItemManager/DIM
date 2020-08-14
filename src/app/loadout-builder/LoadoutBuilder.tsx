@@ -18,8 +18,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './filter/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import SearchFilterInput from 'app/search/SearchFilterInput';
-import { SearchFilters, searchFiltersConfigSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/search-filter';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -47,7 +46,7 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  filters: SearchFilters;
+  filter(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -100,7 +99,7 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
-      filters: searchFiltersConfigSelector(state),
+      filter: searchFilterSelector(state),
     };
   };
 }
@@ -117,15 +116,13 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
-  filters,
+  filter,
   preloadedLoadout,
 }: Props) {
   const [
-    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, query },
+    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
-
-  const filter = filters.filterFunction(query);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -177,11 +174,6 @@ function LoadoutBuilder({
 
   const menuContent = (
     <div className={styles.menuContent}>
-      <SearchFilterInput
-        placeholder={t('LoadoutBuilder.SearchPlaceholder')}
-        onQueryChanged={(query: string) => lbDispatch({ type: 'queryChanged', query })}
-      />
-
       <FilterBuilds
         statRanges={result?.statRanges}
         selectedStore={selectedStore as D2Store}
