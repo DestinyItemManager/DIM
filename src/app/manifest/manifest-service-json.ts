@@ -73,13 +73,11 @@ let version: string | null = null;
  * version has actually changed.
  */
 export const warnMissingDefinition = _.debounce(
-  async (_, getState) => {
+  async () => {
     const data = await d2GetManifest();
-    const language = settingsSelector(getState()).language;
-    const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
-
-    // The manifest has updated!
-    if (path !== version) {
+    // If none of the paths (for any language) matches what we downloaded...
+    if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
+      // The manifest has updated!
       showNotification({
         type: 'warning',
         title: t('Manifest.Outdated'),
