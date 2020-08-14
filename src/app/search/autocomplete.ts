@@ -128,7 +128,7 @@ function normalizeUsage(val: number) {
  */
 //
 function normalizeRecency(timestamp: number) {
-  const days = Math.ceil(timestamp / (1000 * 60 * 60 * 24));
+  const days = (Date.now() - timestamp) / (1000 * 60 * 60 * 24);
   const halfLife = 14; // two weeks
   return Math.pow(2, -days / halfLife);
 }
