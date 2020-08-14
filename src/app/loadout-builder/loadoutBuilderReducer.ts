@@ -20,7 +20,6 @@ export interface LoadoutBuilderState {
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
-  query: string;
 }
 
 const lbStateInit = ({
@@ -73,7 +72,6 @@ const lbStateInit = ({
       [ModPickerCategories.seasonal]: [],
     },
     minimumPower: 750,
-    query: '',
     selectedStoreId: selectedStoreId,
   };
 };
@@ -82,7 +80,6 @@ export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'minimumPowerChanged'; minimumPower: number }
-  | { type: 'queryChanged'; query: string }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -119,8 +116,6 @@ function lbStateReducer(
       return { ...state, statFilters: action.statFilters };
     case 'minimumPowerChanged':
       return { ...state, minimumPower: action.minimumPower };
-    case 'queryChanged':
-      return { ...state, query: action.query };
     case 'lockedMapChanged':
       return { ...state, lockedMap: action.lockedMap };
     case 'addItemToLockedMap': {
