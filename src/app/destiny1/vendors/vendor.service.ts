@@ -216,7 +216,9 @@ function VendorService(): VendorServiceType {
   ): Promise<[D1Store[], { [vendorHash: number]: Vendor }]> {
     const characters = stores.filter((s) => !s.isVault);
 
-    const reloadPromise = getDefinitions()
+    const reloadPromise = ((store.dispatch(getDefinitions()) as any) as Promise<
+      D1ManifestDefinitions
+    >)
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
@@ -484,7 +486,8 @@ function VendorService(): VendorServiceType {
 
     return processItems(
       { id: null } as any,
-      saleItems.map((i) => i.item)
+      saleItems.map((i) => i.item),
+      defs
     ).then((items) => {
       const itemsById = _.keyBy(items, (i) => i.id);
       const categories = _.compact(

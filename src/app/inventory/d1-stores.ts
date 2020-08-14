@@ -91,7 +91,7 @@ function StoreService(): D1StoreServiceType {
     resetIdTracker();
 
     const reloadPromise = Promise.all([
-      getDefinitions(),
+      (store.dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
       store.dispatch(loadNewItems(account)),
       getStores(account),
     ])
@@ -174,7 +174,7 @@ function StoreService(): D1StoreServiceType {
       items = result.items;
     }
 
-    return processItems(store, items).then((items) => {
+    return processItems(store, items, defs).then((items) => {
       store.items = items;
 
       // by type-bucket
