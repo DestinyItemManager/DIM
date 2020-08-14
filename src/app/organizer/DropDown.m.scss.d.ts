@@ -35,7 +35,6 @@ interface CssExports {
   'positive': string;
   'power': string;
   'rating': string;
-  'reacquirable': string;
   'right': string;
   'season': string;
   'selection': string;

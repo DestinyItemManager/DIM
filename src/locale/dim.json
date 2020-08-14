@@ -261,7 +261,6 @@
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
     "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
-    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -562,7 +561,6 @@
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
-    "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -751,7 +749,6 @@
       "PerksMods": "Perks, Mods & Shaders",
       "Quality": "Quality %",
       "Rating": "Rating",
-      "Reacquirable": "Reacquirable",
       "Season": "Season",
       "Source": "Source",
       "StatQuality": "Stat Quality",

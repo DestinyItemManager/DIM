@@ -202,7 +202,6 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           masterworked: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
-          reacquirable: ['reacquirable'],
           trashlist: ['trashlist'],
           wishlist: ['wishlist'],
           wishlistdupe: ['wishlistdupe'],
