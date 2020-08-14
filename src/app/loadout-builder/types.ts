@@ -80,9 +80,24 @@ export const ModPickerCategories = {
 } as const;
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
+/**
+ * Checks whether the passed in value is a ModPickerCategory.
+ */
+export function isModPickerCategory(value: unknown): value is ModPickerCategory {
+  return (
+    value === ModPickerCategories.general ||
+    value === ModPickerCategories.helmet ||
+    value === ModPickerCategories.gauntlets ||
+    value === ModPickerCategories.chest ||
+    value === ModPickerCategories.leg ||
+    value === ModPickerCategories.classitem ||
+    value === ModPickerCategories.seasonal
+  );
+}
+
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
-  key: number;
+  key?: number;
   mod: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
 }

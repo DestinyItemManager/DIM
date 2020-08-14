@@ -13,7 +13,7 @@ interface Props {
 
 function LockedArmor2ModIcon({ item, defs, onModClicked }: Props) {
   return (
-    <ClosableContainer onClose={onModClicked} key={item.mod.hash}>
+    <ClosableContainer onClose={onModClicked}>
       <div className={styles.emptyItem}>
         <SocketDetailsMod itemDef={item.mod} defs={defs} />
       </div>
