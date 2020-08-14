@@ -45,14 +45,6 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
               </td>
               <td>{t('Filter.Dupe')}</td>
             </tr>
-            {destinyVersion === 2 && (
-              <tr>
-                <td>
-                  <span>is:reacquirable</span>
-                </td>
-                <td>{t('Filter.Reacquirable')}</td>
-              </tr>
-            )}
             <tr>
               <td>
                 <span>is:equipped</span>

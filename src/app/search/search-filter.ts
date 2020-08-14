@@ -1,10 +1,5 @@
 import { D1Item, D2Item, DimItem } from '../inventory/item-types';
-import {
-  DestinyAmmunitionType,
-  DestinyClass,
-  DestinyCollectibleState,
-  DestinyItemSubType,
-} from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyClass, DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { ItemInfos, getNotes, getTag } from '../inventory/dim-item-info';
 import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -587,18 +582,6 @@ function searchFilters(
       dupelower(item: DimItem) {
         initDupes();
         return _lowerDupes[item.id];
-      },
-      reacquirable(item: DimItem) {
-        if (
-          item.isDestiny2() &&
-          item.collectibleState !== null &&
-          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
-          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
-        ) {
-          return true;
-        }
-
-        return false;
       },
       dupe(item: DimItem) {
         initDupes();

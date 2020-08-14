@@ -1,5 +1,7 @@
 ## Next
 
+* Removed `is:reacquireable` as it is inaccurate in its current state.
+
 ## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
 
 * Updated the character tiles, now uses triple dot instead of chevron
