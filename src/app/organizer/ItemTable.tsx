@@ -427,39 +427,48 @@ function ItemTable({
       ga('send', 'event', 'Download CSV', type);
     };
 
-    if (categories[1].id === 'weapons') {
-      const downloadWeaponCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Weapons');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
-        </button>
-      );
-    } else if (categories[1].id === 'armor') {
-      const downloadArmorCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Armor');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
-        </button>
-      );
-    } else {
-      const downloadGhostCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Ghost');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
-        </button>
-      );
+    switch (categories[1].id) {
+      case 'weapons': {
+        const downloadWeaponCsv = (e) => {
+          e.preventDefault();
+          downloadCsv('Weapons');
+          return false;
+        };
+        downloadAction = (
+          <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
+            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
+          </button>
+        );
+        break;
+      }
+      case 'hunter':
+      case 'titan':
+      case 'warlock': {
+        const downloadArmorCsv = (e) => {
+          e.preventDefault();
+          downloadCsv('Armor');
+          return false;
+        };
+        downloadAction = (
+          <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
+            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
+          </button>
+        );
+        break;
+      }
+      default: {
+        const downloadGhostCsv = (e) => {
+          e.preventDefault();
+          downloadCsv('Ghost');
+          return false;
+        };
+        downloadAction = (
+          <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
+            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
+          </button>
+        );
+        break;
+      }
     }
   }
 
