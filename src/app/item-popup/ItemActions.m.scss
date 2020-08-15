@@ -1,6 +1,13 @@
 .interaction {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+}
+
+.interactionV {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .infusePerk {

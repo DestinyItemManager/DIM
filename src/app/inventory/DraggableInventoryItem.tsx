@@ -8,6 +8,7 @@ import { settingsSelector } from 'app/settings/reducer';
 
 interface ExternalProps {
   item: DimItem;
+  isPhonePortrait?: boolean;
   children?: React.ReactNode;
 }
 
@@ -17,8 +18,13 @@ interface InternalProps {
 
 type Props = InternalProps & ExternalProps;
 
+export const mobileDragType = 'mobile-drag';
+
 function dragType(props: ExternalProps): string {
   const item = props.item;
+  if (props.isPhonePortrait) {
+    return mobileDragType;
+  }
   return item.notransfer ? `${item.owner}-${item.bucket.type}` : item.bucket.type!;
 }
 

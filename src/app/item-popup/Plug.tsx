@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
+import { useDrop } from 'react-dnd';
 import PressTip from '../dim-ui/PressTip';
-import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -12,6 +12,9 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
+
+import './ItemSockets.scss';
 
 export default function Plug({
   defs,
@@ -40,6 +43,12 @@ export default function Plug({
   onClick?(plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
 }) {
+  // Support dragging over plugs items on mobile
+  const [{ hovering }, drop] = useDrop({
+    accept: mobileDragType,
+    collect: (monitor) => ({ hovering: Boolean(monitor.isOver()) }),
+  });
+
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugDef.hash);
   if (!modDef || !isPluggableItem(modDef)) {
@@ -72,7 +81,7 @@ export default function Plug({
     });
 
   const contents = (
-    <div>
+    <div ref={drop}>
       <BungieImageAndAmmo
         hash={plug.plugDef.hash}
         className="item-mod"
@@ -101,8 +110,9 @@ export default function Plug({
       })}
       onClick={handleShiftClick}
     >
-      {!(hasMenu && isPhonePortrait) ? (
+      {!(hasMenu && isPhonePortrait) || hovering ? (
         <PressTip
+          forceOpen={hovering}
           tooltip={() => (
             <PlugTooltip
               item={item}

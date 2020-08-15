@@ -1,6 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
+import { useDrop } from 'react-dnd';
+import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import styles from './ItemActionButton.m.scss';
+import PressTip from 'app/dim-ui/PressTip';
 
 export function ItemActionButtonGroup({ children }: { children: React.ReactNode }) {
   return <div className={styles.locations}>{children}</div>;
@@ -23,14 +26,25 @@ export default function ItemActionButton({
   className?: string;
   onClick(): void;
 }) {
+  // Support dropping items on the action buttons on mobile
+  const [{ hovering }, drop] = useDrop({
+    accept: mobileDragType,
+    drop: onClick,
+    collect: (monitor) => ({ hovering: Boolean(monitor.isOver()) }),
+  });
+
   return (
-    <div
-      className={clsx(styles.button, className)}
-      title={title}
-      onClick={onClick}
-      style={icon ? { backgroundImage: `url("${icon}")` } : undefined}
-    >
-      <span>{label}</span>
-    </div>
+    <PressTip tooltip={title} forceOpen={hovering}>
+      <div
+        ref={drop}
+        className={clsx(styles.button, className)}
+        title={title}
+        aria-label={title}
+        onClick={onClick}
+        style={icon ? { backgroundImage: `url("${icon}")` } : undefined}
+      >
+        <span>{label}</span>
+      </div>
+    </PressTip>
   );
 }
