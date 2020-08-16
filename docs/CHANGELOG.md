@@ -8,6 +8,7 @@
 * Keyboard controls in the Notes field: ESC reverts and leaves editing, ENTER saves the value
 * Item notes can now be edited directly in the notes column of the Organizer tab
 * Mobile - changes in DIM beta only: different parts of the header now stick with you as you scroll down.
+* Armor CSV export appearing properly on the Organizer tab again.
 
 ## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
 
