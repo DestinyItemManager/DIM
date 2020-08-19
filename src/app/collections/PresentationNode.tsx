@@ -93,6 +93,7 @@ function PresentationNode({
   ownedItemHashes,
   path,
   parents,
+  setSetting,
   completedRecordsHidden,
   redactedRecordsRevealed,
   collectionCounts,
