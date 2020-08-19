@@ -1,6 +1,6 @@
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getDefinitions } from './d2-definitions';
+import { D2ManifestDefinitions } from './d2-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
 import { D2Categories } from './d2-bucket-categories';
@@ -50,10 +50,7 @@ _.forIn(D2Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.once(getBucketsUncached);
-
-async function getBucketsUncached() {
-  const defs = await getDefinitions();
+export function getBuckets(defs: D2ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
     byType: {},

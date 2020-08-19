@@ -5,8 +5,6 @@ import { DimStore } from '../inventory/store-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';
-import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import {
@@ -58,12 +56,13 @@ import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from './actions';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,
@@ -85,6 +84,7 @@ interface StoreProps {
   classTypeId: DestinyClass;
   stores: DimStore[];
   hasClassified: boolean;
+  buckets: InventoryBuckets;
   searchFilter(item: DimItem): boolean;
 }
 
@@ -126,6 +126,7 @@ function mapStateToProps() {
       classTypeId: dimStore.classType,
       account: currentAccountSelector(state)!,
       stores: storesSelector(state),
+      buckets: bucketsSelector(state)!,
       hasClassified: hasClassifiedSelector(state),
     };
   };
@@ -431,9 +432,8 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private makeRoomForPostmaster = () => {
-    const { dimStore } = this.props;
-    const bucketsService = dimStore.destinyVersion === 1 ? d1GetBuckets : d2GetBuckets;
-    return queueAction(() => makeRoomForPostmaster(dimStore, bucketsService));
+    const { dimStore, buckets } = this.props;
+    return queueAction(() => makeRoomForPostmaster(dimStore, buckets));
   };
 
   private pullFromPostmaster = () => {

@@ -10,9 +10,8 @@ import { getVault } from 'app/inventory/stores-helpers';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
-  bucketsService: () => Promise<InventoryBuckets>
+  buckets: InventoryBuckets
 ): Promise<void> {
-  const buckets = await bucketsService();
   const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
     (bucket: InventoryBucket) => store.buckets[bucket.hash]
   );

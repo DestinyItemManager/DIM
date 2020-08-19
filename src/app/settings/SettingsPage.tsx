@@ -163,7 +163,7 @@ function SettingsPage({
   dispatch,
 }: Props) {
   useEffect(() => {
-    getDefinitions();
+    dispatch(getDefinitions());
     dispatch(getPlatforms()).then(() => {
       const account = getActivePlatform();
       if (account) {

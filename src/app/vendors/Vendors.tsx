@@ -21,6 +21,7 @@ import {
   ownedItemsSelector,
   sortedStoresSelector,
   profileResponseSelector,
+  bucketsSelector,
 } from '../inventory/selectors';
 import { connect } from 'react-redux';
 import {
@@ -67,7 +68,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,

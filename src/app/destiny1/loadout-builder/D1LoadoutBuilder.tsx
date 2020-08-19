@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { D1Store } from '../../inventory/store-types';
 import { RootState } from 'app/store/types';
-import { storesSelector } from '../../inventory/selectors';
+import { storesSelector, bucketsSelector } from '../../inventory/selectors';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D1StoresService } from '../../inventory/d1-stores';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
@@ -57,7 +57,7 @@ type Props = StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state)!,
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     stores: storesSelector(state) as D1Store[],
     defs: state.manifest.d1Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,

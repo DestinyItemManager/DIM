@@ -28,7 +28,7 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
 import ArmorBucketIcon from '../ArmorBucketIcon';
 import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
@@ -215,7 +215,7 @@ function mapStateToProps() {
 
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
-    buckets: state.inventory.buckets!,
+    buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     perks: perksSelector(state, props),
     mods: unlockedPlugsSelector(state, props),

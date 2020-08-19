@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { isLoadoutBuilderItem } from '../utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import { connect } from 'react-redux';
 import { escapeRegExp } from 'app/search/search-filter';
@@ -146,7 +146,7 @@ function mapStateToProps() {
 
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
-    buckets: state.inventory.buckets!,
+    buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     mods: unlockedModsSelector(state, props),
     defs: state.manifest.d2Manifest!,

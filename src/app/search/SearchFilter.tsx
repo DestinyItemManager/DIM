@@ -18,7 +18,7 @@ import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import { setItemLockState } from 'app/inventory/item-move-service';
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { touch, touchItem } from 'app/inventory/actions';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
@@ -67,19 +67,15 @@ const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
-  const searchFilter = searchFilterSelector(state);
-  const stores = storesSelector(state);
-  const buckets = state.inventory.buckets;
-
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
-    searchFilter,
+    searchFilter: searchFilterSelector(state),
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
-    stores,
-    buckets,
+    stores: storesSelector(state),
+    buckets: bucketsSelector(state),
   };
 }
 
