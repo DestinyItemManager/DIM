@@ -159,9 +159,11 @@ export function createHttpClient(
       credentials: withCredentials ? 'include' : 'omit',
     });
     const response = await fetchFunction(fetchOptions);
-    throwHttpError(response);
     const data: ServerResponse<any> = await response.json();
+    // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
+    // then throw errors on generic http error codes
+    throwHttpError(response);
     return data;
   };
 }
