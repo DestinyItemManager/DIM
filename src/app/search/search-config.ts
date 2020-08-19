@@ -1,8 +1,8 @@
 import { itemTagSelectorList } from '../inventory/dim-item-info';
 import { modSlotTags } from 'app/utils/item-utils';
 
-import { D1Categories } from '../destiny1/d1-buckets';
-import { D2Categories } from '../destiny2/d2-buckets';
+import { D1Categories } from '../destiny1/d1-bucket-categories';
+import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
@@ -202,7 +202,6 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
           masterworked: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
-          reacquirable: ['reacquirable'],
           trashlist: ['trashlist'],
           wishlist: ['wishlist'],
           wishlistdupe: ['wishlistdupe'],

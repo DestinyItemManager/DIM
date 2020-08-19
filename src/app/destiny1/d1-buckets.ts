@@ -1,27 +1,8 @@
 import _ from 'lodash';
-import { getDefinitions } from './d1-definitions';
+import { D1ManifestDefinitions } from './d1-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
-
-export const D1Categories = {
-  Postmaster: ['LostItems', 'SpecialOrders', 'Messages'],
-  Weapons: ['Class', 'Primary', 'Special', 'Heavy'],
-  Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
-  General: [
-    'Artifact',
-    'Ghost',
-    'Consumable',
-    'Material',
-    'Ornaments',
-    'Emblem',
-    'Shader',
-    'Emote',
-    'Ship',
-    'Vehicle',
-    'Horn',
-  ],
-  Progress: ['Bounties', 'Quests', 'Missions'],
-};
+import { D1Categories } from './d1-bucket-categories';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType = {
@@ -74,8 +55,7 @@ _.forIn(D1Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.once(async () => {
-  const defs = await getDefinitions();
+export function getBuckets(defs: D1ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
     byType: {},
@@ -135,4 +115,4 @@ export const getBuckets = _.once(async () => {
     buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
   });
   return buckets;
-});
+}

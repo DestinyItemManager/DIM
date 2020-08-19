@@ -10,10 +10,14 @@ import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
-import { sortedStoresSelector, profileResponseSelector } from 'app/inventory/selectors';
+import {
+  sortedStoresSelector,
+  profileResponseSelector,
+  bucketsSelector,
+} from 'app/inventory/selectors';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { queueAction } from 'app/inventory/action-queue';
@@ -48,7 +52,7 @@ function mapStateToProps(state: RootState): StoreProps {
     isPhonePortrait: state.shell.isPhonePortrait,
     stores: sortedStoresSelector(state),
     defs: state.manifest.d2Manifest,
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
   };
 }
@@ -58,12 +62,6 @@ const refreshStores = () =>
 
 function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (!defs) {
-      getDefinitions();
-    }
-  }, [defs]);
 
   useEffect(() => {
     if (!profileInfo) {

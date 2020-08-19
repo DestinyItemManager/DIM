@@ -2,7 +2,6 @@ import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
-import { getActivePlatform } from '../accounts/platforms';
 import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
@@ -200,13 +199,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
     case PlatformErrorCodes.DestinyAccountNotFound:
       if (response.url.indexOf('/Account/') >= 0 && response.url.indexOf('/Character/') < 0) {
-        const account = getActivePlatform();
-        throw error(
-          t('BungieService.NoAccount', {
-            platform: account ? t(`Accounts.${account.platformLabel}`) : 'Unknown',
-          }),
-          errorCode
-        );
+        throw error(t('BungieService.NoAccount'), errorCode);
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);
       }

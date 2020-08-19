@@ -12,7 +12,6 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getBuckets } from '../destiny2/d2-buckets';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../utils/exceptions';
@@ -33,7 +32,7 @@ import { switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import { storesSelector } from './selectors';
+import { storesSelector, bucketsSelector } from './selectors';
 import { ThunkResult } from 'app/store/types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
@@ -193,12 +192,12 @@ function makeD2StoresService(): D2StoreServiceType {
     resetIdTracker();
 
     try {
-      const [defs, buckets, , profileInfo] = await Promise.all([
-        getDefinitions(),
-        getBuckets(),
+      const [defs, , profileInfo] = await Promise.all([
+        (store.dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
         store.dispatch(loadNewItems(account)),
         getStores(account),
       ]);
+      const buckets = bucketsSelector(store.getState())!;
       console.time('Process inventory');
 
       // TODO: components may be hidden (privacy)
@@ -257,7 +256,7 @@ function makeD2StoresService(): D2StoreServiceType {
       console.timeEnd('Process inventory');
 
       console.time('Inventory state update');
-      store.dispatch(update({ stores, buckets, profileResponse: profileInfo }));
+      store.dispatch(update({ stores, profileResponse: profileInfo }));
       console.timeEnd('Inventory state update');
 
       return stores;

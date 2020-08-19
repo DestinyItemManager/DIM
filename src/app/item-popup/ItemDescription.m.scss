@@ -9,21 +9,6 @@
   @include horizontal-space-children(10px);
 }
 
-.addNote {
-  cursor: pointer;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  &:hover {
-    color: $orange;
-  }
-  &.noNotesYet {
-    display: inline-block;
-  }
-}
-.addNoteTag {
-  font-weight: bold;
-}
-
 .description {
   margin: 5px 10px 5px;
   white-space: pre-wrap;

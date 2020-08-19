@@ -4,7 +4,7 @@ import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2Categories } from '../destiny2/d2-buckets';
+import { D2Categories } from '../destiny2/d2-bucket-categories';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots

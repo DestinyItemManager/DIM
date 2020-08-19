@@ -1,6 +1,18 @@
 ## Next
 
-Better touchscreen support for drag and drop
+* Better touchscreen support for drag and drop
+
+## 6.25.0 <span className="changelog-date">(2020-08-16)</span>
+
+* Removed `is:reacquireable` as it is inaccurate in its current state
+* Removed outline from clicked character headers on iOS
+* Adjusted spacing on items in the loadout drawer, so they can fit 3-wide again
+* Main (top) search field is now the place to filter items for the Loadout Optimizer
+* For real, stat bars should be the right length this time
+* Keyboard controls in the Notes field: ESC reverts and leaves editing, ENTER saves the value
+* Item notes can now be edited directly in the notes column of the Organizer tab
+* Mobile - changes in DIM beta only: different parts of the header now stick with you as you scroll down.
+* Armor CSV export appearing properly on the Organizer tab again.
 
 ## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
 

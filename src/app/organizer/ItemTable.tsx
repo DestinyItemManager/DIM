@@ -10,7 +10,7 @@ import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { showNotification } from 'app/notifications/notifications';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
@@ -50,6 +50,16 @@ const categoryToClass = {
   22: DestinyClass.Titan,
   21: DestinyClass.Warlock,
 };
+
+const downloadButtonSettings = [
+  { categoryId: ['weapons'], csvType: 'Weapons' as const, label: tl('Bucket.Weapons') },
+  {
+    categoryId: ['hunter', 'titan', 'warlock'],
+    csvType: 'Armor' as const,
+    label: tl('Bucket.Armor'),
+  },
+  { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
+];
 
 interface ProvidedProps {
   categories: ItemCategoryTreeNode[];
@@ -421,46 +431,25 @@ function ItemTable({
 
   // TODO: drive the CSV export off the same column definitions as this table!
   let downloadAction: ReactNode | null = null;
-  if (categories.length > 1) {
+  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
+    setting.categoryId.includes(categories[1]?.id)
+  );
+  if (downloadButtonSetting) {
     const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
       downloadCsvFiles(stores, itemInfos, type);
       ga('send', 'event', 'Download CSV', type);
     };
+    const downloadHandler = (e) => {
+      e.preventDefault();
+      downloadCsv(downloadButtonSetting.csvType);
+      return false;
+    };
 
-    if (categories[1].id === 'weapons') {
-      const downloadWeaponCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Weapons');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
-        </button>
-      );
-    } else if (categories[1].id === 'armor') {
-      const downloadArmorCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Armor');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
-        </button>
-      );
-    } else {
-      const downloadGhostCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Ghost');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
-        </button>
-      );
-    }
+    downloadAction = (
+      <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadHandler}>
+        <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
+      </button>
+    );
   }
 
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {

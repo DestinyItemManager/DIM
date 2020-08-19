@@ -1,13 +1,12 @@
 import {
   AppIcon,
-  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
-import { DestinyClass, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
 import {
   getItemDamageShortName,
@@ -56,6 +55,7 @@ import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponA
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import NotesArea from 'app/item-popup/NotesArea';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -64,7 +64,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
   return column.columnGroup ? column.columnGroup.id : column.id;
 }
 
-const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
+// const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
 /**
  * This function generates the columns.
@@ -313,18 +313,6 @@ export function getColumns(
         filter: (value) =>
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
-    destinyVersion === 2 && {
-      id: 'reacquirable',
-      header: t('Organizer.Columns.Reacquirable'),
-      value: (item) =>
-        item.isDestiny2() &&
-        item.collectibleState !== null &&
-        !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
-        !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled),
-      defaultSort: SortDirection.DESC,
-      cell: booleanCell,
-      filter: (value) => (value ? 'is:reacquirable' : 'not:reaquireable'),
-    },
     $featureFlags.reviewsEnabled && {
       id: 'rating',
       header: t('Organizer.Columns.Rating'),
@@ -542,6 +530,7 @@ export function getColumns(
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
       value: (item) => getNotes(item, itemInfos),
+      cell: (_, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:"${value}"`,
     },

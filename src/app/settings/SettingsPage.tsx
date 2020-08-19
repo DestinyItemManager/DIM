@@ -18,7 +18,8 @@ import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
-import { getPlatforms, getActivePlatform } from '../accounts/platforms';
+import { getPlatforms } from '../accounts/platforms';
+import { getActivePlatform } from '../accounts/get-active-platform';
 import { itemSortOrder } from './item-sort';
 import { Settings } from './initial-settings';
 import { settingsSelector } from './reducer';
@@ -162,7 +163,7 @@ function SettingsPage({
   dispatch,
 }: Props) {
   useEffect(() => {
-    getDefinitions();
+    dispatch(getDefinitions());
     dispatch(getPlatforms()).then(() => {
       const account = getActivePlatform();
       if (account) {

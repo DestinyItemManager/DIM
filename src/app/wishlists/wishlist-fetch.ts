@@ -10,6 +10,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { get } from 'idb-keyval';
 import { settingsReady } from 'app/settings/settings';
+import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -19,31 +20,41 @@ function hoursAgo(dateToCheck?: Date): number {
   return (Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
 }
 
+/**
+ * this performs both the initial fetch (after setting a new wishlist) (when arg0 exists)
+ * and subsequent fetches (checking for updates) (arg-less)
+ */
 export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
     await dispatch(loadWishListAndInfoFromIndexedDB());
-    if (newWishlistSource) {
-      dispatch(setSetting('wishListSource', newWishlistSource));
-    } else {
-      await settingsReady;
-    }
+    await settingsReady;
 
-    const wishListSource = settingsSelector(getState()).wishListSource;
+    const wishListSource = newWishlistSource ?? settingsSelector(getState()).wishListSource;
 
-    if (!wishListSource) {
+    if (!wishListSource || !isValidWishListUrlDomain(wishListSource)) {
+      showNotification({
+        type: 'warning',
+        title: t('WishListRoll.Header'),
+        body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedPrefixes.join('\n')}`,
+        duration: 10000,
+      });
+
       return;
     }
 
-    const wishListLastUpdated = wishListsSelector(getState()).lastFetched;
-    const existingWishListSource = wishListsSelector(getState()).wishListAndInfo.source;
+    const {
+      lastFetched: wishListLastUpdated,
+      wishListAndInfo: { source: existingWishListSource },
+    } = wishListsSelector(getState());
 
-    // Don't throttle updates if we're changing source
+    // Throttle updates if:
     if (
+      // this isn't a settings update, and
       !newWishlistSource &&
-      hoursAgo(wishListLastUpdated) < 24 &&
-      // Allow changes to settings to cause wish list updates - if the source is different
-      // from the existing source we'll continue to load even if we're within the window
-      (existingWishListSource === undefined || existingWishListSource === wishListSource)
+      // if the source settings match last time, and
+      (existingWishListSource === undefined || existingWishListSource === wishListSource) &&
+      // we already checked the wishlist today
+      hoursAgo(wishListLastUpdated) < 24
     ) {
       return;
     }
@@ -52,6 +63,10 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     try {
       const wishListResponse = await fetch(wishListSource);
       wishListText = await wishListResponse.text();
+      // if this is a new wishlist, set the setting now that we know it's fetchable
+      if (newWishlistSource) {
+        dispatch(setSetting('wishListSource', newWishlistSource));
+      }
     } catch (e) {
       console.error('Unable to load wish list', e);
       return;
@@ -117,12 +132,7 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
     }
 
     if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
-      dispatch(
-        loadWishLists({
-          lastFetched: wishListState.lastFetched,
-          wishListAndInfo: wishListState.wishListAndInfo,
-        })
-      );
+      dispatch(loadWishLists(wishListState));
     }
   };
 }

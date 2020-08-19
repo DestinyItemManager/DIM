@@ -43,6 +43,7 @@ module.exports = function csp(env) {
       'https://api.vendorengrams.xyz',
       // Wishlists
       'https://raw.githubusercontent.com',
+      'https://gist.githubusercontent.com',
       // DIM Sync
       'https://api.destinyitemmanager.com',
     ],

@@ -50,7 +50,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  const baseBar = item ? Math.min(stat.base, stat.value) : stat.value;
+  const baseBar = item?.bucket.inArmor ? Math.min(stat.base, stat.value) : stat.value;
 
   const segments: [number, string?][] = [[baseBar]];
 

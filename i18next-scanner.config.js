@@ -6,8 +6,8 @@ module.exports = {
     removeUnusedKeys: true,
     sort: true,
     func: {
-      list: ['t', 'i18next.t'],
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      list: ['t', 'i18next.t', 'tl'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     lngs: ['en'],
     ns: ['translation'],
@@ -16,8 +16,8 @@ module.exports = {
       loadPath: 'config/i18n.json',
       savePath: 'src/locale/dim.json',
       jsonIndent: 2,
-      lineEnding: '\n'
+      lineEnding: '\n',
     },
-    context: false
-  }
+    context: false,
+  },
 };
