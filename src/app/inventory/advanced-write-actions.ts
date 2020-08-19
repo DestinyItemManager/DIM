@@ -10,7 +10,7 @@ import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { get, set } from 'idb-keyval';
 import { t } from 'app/i18next-t';
 import { DimSocket, D2Item } from './item-types';
-import { httpAdapter } from '../bungie-api/bungie-service-helper';
+import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { showNotification } from '../notifications/notifications';
 
 let awaCache: {
@@ -29,7 +29,7 @@ export async function insertPlug(
 
   // TODO: if the plug costs resources to insert, add a confirmation
 
-  return insertSocketPlug(httpAdapter, {
+  return insertSocketPlug(authenticatedHttpClient, {
     actionToken,
     itemInstanceId: item.id,
     plug: {
