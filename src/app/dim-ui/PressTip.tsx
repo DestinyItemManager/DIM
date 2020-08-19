@@ -14,7 +14,6 @@ import _ from 'lodash';
 interface Props {
   tooltip: React.ReactNode;
   children: React.ReactElement<any, any>;
-  forceOpen?: boolean;
   allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ReactType;
@@ -85,6 +84,20 @@ type ControlProps = Props &
 
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
+ *
+ * Example:
+ *
+ * const ref = useRef<HTMLDivElement>(null);
+ * <PressTip.Control
+ *   open={true}
+ *   triggerRef={ref}
+ *   tooltip={() => (
+ *     <span>
+ *       PressTip Content
+ *     </span>
+ *   )}>
+ *   PressTip context element
+ * </PressTip.Control>
  */
 function Control({
   tooltip,
