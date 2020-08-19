@@ -36,6 +36,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
         type: 'warning',
         title: t('WishListRoll.Header'),
         body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedPrefixes.join('\n')}`,
+        duration: 10000,
       });
 
       return;
