@@ -37,7 +37,7 @@ export default function StoreInventoryItem({ item }: Props) {
     }
 
     // It a longpress happend and the touch move event files, do nothing.
-    if (longPressed && e.type === 'touchmove') {
+    if (longPressed.current && e.type === 'touchmove') {
       return;
     }
 
@@ -52,7 +52,7 @@ export default function StoreInventoryItem({ item }: Props) {
 
     // Start a timer for the longpress action
     timer.current = window.setTimeout(() => {
-      longPressed = true;
+      longPressed.current = true;
       showMobileInspect(item);
     }, LONGPRESS_TIMEOUT);
   };
