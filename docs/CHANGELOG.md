@@ -1,5 +1,7 @@
 ## Next
 
+* Better touchscreen support for drag and drop
+
 ## 6.25.0 <span className="changelog-date">(2020-08-16)</span>
 
 * Removed `is:reacquireable` as it is inaccurate in its current state
