@@ -20,11 +20,11 @@ export class HttpStatusError extends Error {
  * an error indicating the Bungie API sent back a parseable response,
  * and that response indicated the request was not successful
  */
-export class BungieError<T> extends Error {
+export class BungieError extends Error {
   code?: PlatformErrorCodes;
   status?: string;
   endpoint: string;
-  constructor(response: Partial<ServerResponse<T>>, request: Request) {
+  constructor(response: Partial<ServerResponse<any>>, request: Request) {
     super(response.Message);
     this.name = 'BungieError';
     this.code = response.ErrorCode;
@@ -43,6 +43,7 @@ function throwHttpError(response: Response) {
   }
   return response;
 }
+
 /**
  * sometimes what you have looks like a Response but it's actually an Error
  *
@@ -50,6 +51,7 @@ function throwHttpError(response: Response) {
  * but throws JS errors for "successful" fetches with Bungie error information
  */
 function throwBungieError<T>(serverResponse: ServerResponse<T>, request: Request) {
+  // There's an alternate error response that can be returned during maintenance
   const eMessage =
     serverResponse && (serverResponse as any).error && (serverResponse as any).error_description;
   if (eMessage) {
@@ -176,7 +178,7 @@ let timesThrottled = 0;
  *
  * @param httpClient use this client to make the API request
  */
-export function throttleHttpClient<T>(httpClient: HttpClient): HttpClient {
+export function responsivelyThrottleHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     if (timesThrottled > 0) {
       // Double the wait time, starting with 1 second, until we reach 5 minutes.
@@ -198,7 +200,7 @@ export function throttleHttpClient<T>(httpClient: HttpClient): HttpClient {
       timesThrottled = Math.floor(timesThrottled / 2);
       return result;
     } catch (e) {
-      switch ((e as BungieError<T>).code) {
+      switch ((e as BungieError).code) {
         case PlatformErrorCodes.ThrottleLimitExceededMinutes:
         case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
         case PlatformErrorCodes.ThrottleLimitExceededSeconds:

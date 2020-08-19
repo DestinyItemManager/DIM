@@ -13,6 +13,7 @@ import {
   HttpStatusError,
   createHttpClient,
   createFetchWithNonStoppingTimeout,
+  responsivelyThrottleHttpClient,
 } from './http-client';
 import { API_KEY } from './bungie-api-utils';
 
@@ -39,15 +40,20 @@ const notifyTimeout = _.throttle(
   { leading: true, trailing: false }
 );
 
-export const authenticatedHttpClient = createHttpClient(
-  createFetchWithNonStoppingTimeout(rateLimitedFetch(fetchWithBungieOAuth), TIMEOUT, notifyTimeout),
-  API_KEY,
-  true
+export const authenticatedHttpClient = responsivelyThrottleHttpClient(
+  createHttpClient(
+    createFetchWithNonStoppingTimeout(
+      rateLimitedFetch(fetchWithBungieOAuth),
+      TIMEOUT,
+      notifyTimeout
+    ),
+    API_KEY,
+    true
+  )
 );
-export const unauthenticatedHttpClient = createHttpClient(
-  createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-  API_KEY,
-  false
+
+export const unauthenticatedHttpClient = responsivelyThrottleHttpClient(
+  createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY, false)
 );
 
 /** Generate an error with a bit more info */
@@ -84,17 +90,20 @@ export async function handleErrors(error: Error) {
           : t('BungieService.NotConnected')
       );
     }
+
     // Token expired and other auth maladies
     if (error.status === 401 || error.status === 403) {
       goToLoginPage();
       throw dimError(t('BungieService.NotLoggedIn'), error.status);
     }
+
     // 526 = cloudflare
     // We don't catch 500s because the Bungie.net API started returning 500 for legitimate game conditions
     if (error.status >= 502 && error.status <= 526) {
       throw dimError(t('BungieService.Difficulties'), error.status);
     }
 
+    // if no specific other http error
     throw dimError(
       t('BungieService.NetworkError', {
         status: error.status,
@@ -104,8 +113,8 @@ export async function handleErrors(error: Error) {
     );
   }
 
+  // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
   if (error instanceof BungieError) {
-    // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
     switch (error.code ?? -1) {
       case PlatformErrorCodes.DestinyVendorNotFound:
         throw dimError(t('BungieService.VendorNotFound'), error.code!);
@@ -173,8 +182,12 @@ export async function handleErrors(error: Error) {
 }
 
 // Handle "DestinyUniquenessViolation" (1648)
-export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
-  if (e?.code === 1648) {
+export function handleUniquenessViolation(
+  error: BungieError,
+  item: DimItem,
+  store: DimStore
+): never {
+  if (error.code === 1648) {
     throw dimError(
       t('BungieService.ItemUniquenessExplanation', {
         // t('BungieService.ItemUniquenessExplanation_female')
@@ -184,8 +197,8 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
         character: store.name,
         context: store.genderName,
       }),
-      e.code
+      error.code
     );
   }
-  throw e;
+  throw error;
 }
