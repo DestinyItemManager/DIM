@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import PressTip from '../dim-ui/PressTip';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -48,6 +48,7 @@ export default function Plug({
     accept: mobileDragType,
     collect: (monitor) => ({ hovering: Boolean(monitor.isOver()) }),
   });
+  const ref = useRef<HTMLDivElement>(null);
 
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugDef.hash);
@@ -100,6 +101,17 @@ export default function Plug({
     </div>
   );
 
+  const tooltip = () => (
+    <PlugTooltip
+      item={item}
+      plug={plug}
+      defs={defs}
+      wishListsEnabled={wishListsEnabled}
+      bestPerks={bestPerks}
+      inventoryWishListRoll={inventoryWishListRoll}
+    />
+  );
+
   return (
     <div
       key={plug.plugDef.hash}
@@ -111,21 +123,13 @@ export default function Plug({
       onClick={handleShiftClick}
     >
       {!(hasMenu && isPhonePortrait) || hovering ? (
-        <PressTip
-          forceOpen={hovering}
-          tooltip={() => (
-            <PlugTooltip
-              item={item}
-              plug={plug}
-              defs={defs}
-              wishListsEnabled={wishListsEnabled}
-              bestPerks={bestPerks}
-              inventoryWishListRoll={inventoryWishListRoll}
-            />
-          )}
-        >
-          {contents}
-        </PressTip>
+        hovering ? (
+          <PressTip.Control tooltip={tooltip} triggerRef={ref} open={hovering}>
+            {contents}
+          </PressTip.Control>
+        ) : (
+          <PressTip tooltip={tooltip}>{contents}</PressTip>
+        )
       ) : (
         contents
       )}
