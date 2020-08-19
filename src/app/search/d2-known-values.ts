@@ -58,19 +58,15 @@ export const emptySocketHashes = [
   791435474, // InventoryItem "Empty Activity Mod Socket"
 ];
 
-/** these are checked against default rolls to determine if something's curated */
-export const curatedPlugsAllowList = [
-  PlugCategoryHashes.Frames,
-  PlugCategoryHashes.Guards,
-  PlugCategoryHashes.Blades,
-  PlugCategoryHashes.Tubes,
-  PlugCategoryHashes.Arrows,
-  PlugCategoryHashes.Batteries,
-  PlugCategoryHashes.Magazines,
-  PlugCategoryHashes.Scopes,
-  PlugCategoryHashes.MagazinesGl,
-  PlugCategoryHashes.Barrels,
-  PlugCategoryHashes.Bowstrings,
+/** if a socket is one of these, do not compare against
+ * collections roll for purposes of curatedness
+ */
+export const curatedIgnoreSocketHashes = [
+  3956125808, // intrinsic
+  1288200359, // shader
+  2572269636, // radiance
+  2218962841, // masterwork
+  3939863699, // mod slot
 ];
 
 export const armor2PlugCategoryHashesByName = {

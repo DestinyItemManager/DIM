@@ -432,6 +432,8 @@ export interface DimSocket {
    * Look at TODO to figure out the full list of possible plugs for this socket.
    */
   plugOptions: DimPlug[];
+  /** Plug hashes in this item visible in the collections roll, if this is a perk */
+  curatedRoll: number[] | null;
   /** Reusable plug items from runtime info, for the plug viewer. */
   reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */

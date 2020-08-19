@@ -46,7 +46,7 @@ import {
 } from './d1-known-values';
 import {
   breakerTypes,
-  curatedPlugsAllowList,
+  curatedIgnoreSocketHashes,
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
@@ -973,24 +973,24 @@ function searchFilters(
           return false;
         }
 
-        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
-        // const masterWork = item.masterworkInfo?.statValue === 10;
-        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
-
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        const oneSocketPerPlug = item.sockets?.allSockets
-          .filter((socket) =>
-            curatedPlugsAllowList.includes(socket?.plugged?.plugDef?.plug?.plugCategoryHash || 0)
-          )
-          .every((socket) => socket?.plugOptions.length === 1);
+        const matchesCollectionsRoll = item.sockets?.allSockets
+          .filter((socket) => (socket?.plugOptions.length || 0) > 0 && socket.curatedRoll)
+          .filter((socket) => {
+            const hash = socket.plugged?.plugDef?.plug?.plugCategoryHash || 0;
+            return hash !== 0 && !curatedIgnoreSocketHashes.includes(hash);
+          })
+          .every(
+            (socket) =>
+              socket.curatedRoll!.length === socket.plugOptions.length &&
+              socket.plugOptions.every(function (e, i) {
+                return e.plugDef.hash === socket.curatedRoll![i];
+              })
+          );
 
-        return (
-          legendaryWeapon &&
-          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
-          oneSocketPerPlug
-        );
+        return legendaryWeapon && matchesCollectionsRoll;
       },
       weapon(item: DimItem) {
         return (
