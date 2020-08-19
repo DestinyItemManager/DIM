@@ -59,10 +59,12 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
 
   return memoizeOne((query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
     // If there's a query, it's always the first entry
-    const queryItem = query && {
-      type: SearchItemType.Autocomplete,
-      query: query,
-    };
+    const queryItem = query
+      ? {
+          type: SearchItemType.Autocomplete,
+          query: query,
+        }
+      : undefined;
     // Generate completions of the current search
     const filterSuggestions = autocompleteTermSuggestions(query, caretIndex, filterComplete);
 
@@ -83,7 +85,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
           _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
           (i) => i.query
         ),
-        6
+        7
       ),
       helpItem,
     ];

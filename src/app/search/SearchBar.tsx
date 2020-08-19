@@ -137,30 +137,12 @@ export default React.forwardRef(function SearchFilterInput(
     }
   };
 
-  const clearFilter = useCallback(() => {
-    debouncedUpdateQuery('');
-    debouncedUpdateQuery.flush();
-    setLiveQuery('');
-    onClear?.();
-  }, [debouncedUpdateQuery, onClear]);
-
-  // Add some methods for refs to use
-  useImperativeHandle(
-    ref,
-    () => ({
-      focusFilterInput,
-      clearFilter,
-    }),
-    [focusFilterInput, clearFilter]
-  );
-
   // TODO: this seems inefficient
   const canonical = canonicalizeQuery(parseQuery(liveQuery));
   const saved = recentSearches.find((s) => s.query === canonical)?.saved;
 
   // This depends on blur firing first?
   const toggleSaved = () => {
-    // TODO: maybe don't save "trivial" searches (like single keywords?)
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
@@ -174,8 +156,7 @@ export default React.forwardRef(function SearchFilterInput(
 
   // why does the selection change when stores reload
 
-  // TODO: abandon downshift?
-  // TODO: autocompleter
+  // TODO: now time to do the mobile stuff
 
   console.log('items', items);
   // useCombobox from Downshift manages the state of the dropdown
@@ -189,9 +170,9 @@ export default React.forwardRef(function SearchFilterInput(
     highlightedIndex,
     getItemProps,
     // openMenu // we can call this on focus?
-    // reset
+    reset,
   } = useCombobox<SearchItem>({
-    isOpen: true,
+    // isOpen: true on mobile?
     items,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -220,11 +201,18 @@ export default React.forwardRef(function SearchFilterInput(
           )
         );
       } else {
-        clearFilter();
         autocompleter('', 0, recentSearches);
       }
     },
   });
+
+  const clearFilter = useCallback(() => {
+    debouncedUpdateQuery('');
+    debouncedUpdateQuery.flush();
+    onClear?.();
+    reset();
+    // TODO: reset autocompleter?
+  }, [debouncedUpdateQuery, onClear, reset]);
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -237,6 +225,16 @@ export default React.forwardRef(function SearchFilterInput(
     e.stopPropagation();
     dispatch(searchDeleted(item.query));
   };
+
+  // Add some methods for refs to use
+  useImperativeHandle(
+    ref,
+    () => ({
+      focusFilterInput,
+      clearFilter,
+    }),
+    [focusFilterInput, clearFilter]
+  );
 
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   // TODO: break this stuff uppppp
