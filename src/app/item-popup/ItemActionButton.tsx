@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import clsx from 'clsx';
 import { useDrop } from 'react-dnd';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
@@ -32,9 +32,10 @@ export default function ItemActionButton({
     drop: onClick,
     collect: (monitor) => ({ hovering: Boolean(monitor.isOver()) }),
   });
+  const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <PressTip tooltip={title} forceOpen={hovering}>
+    <PressTip.Control tooltip={title} triggerRef={ref} open={hovering}>
       <div
         ref={drop}
         className={clsx(styles.button, className)}
@@ -45,6 +46,6 @@ export default function ItemActionButton({
       >
         <span>{label}</span>
       </div>
-    </PressTip>
+    </PressTip.Control>
   );
 }
