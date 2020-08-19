@@ -1,5 +1,7 @@
 ## Next
 
+Better touchscreen support for drag and drop
+
 ## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
 
 * Updated the character tiles, now uses triple dot instead of chevron

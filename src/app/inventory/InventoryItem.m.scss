@@ -46,6 +46,11 @@
   }
 }
 
+.touchActive {
+  opacity: 0.5;
+  transition: opacity 150ms ease-in 50ms; // delay <= to delayTouchStart in Root.tsx
+}
+
 // Masterwork item image
 .masterwork {
   border-color: $masterwork-border-color;
