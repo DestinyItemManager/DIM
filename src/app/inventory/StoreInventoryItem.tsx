@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem } from './item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
@@ -22,13 +22,13 @@ const LONGPRESS_TIMEOUT = 200;
  */
 export default function StoreInventoryItem({ item }: Props) {
   const isPhonePortrait = useSelector(isPhonePortraitSelector);
-  const [longPressed, setLongPressed] = useState(false);
-  const [timerId, setTimerId] = useState<number>();
+  const longPressed = useRef<boolean>(false);
+  const timer = useRef<number>(0);
 
   const resetInspect = () => {
     showMobileInspect(undefined);
-    window.clearTimeout(timerId);
-    setLongPressed(false);
+    window.clearTimeout(timer.current);
+    longPressed.current = false;
   };
 
   const onTouch = (e: React.TouchEvent) => {
@@ -51,12 +51,10 @@ export default function StoreInventoryItem({ item }: Props) {
     }
 
     // Start a timer for the longpress action
-    setTimerId(
-      window.setTimeout(() => {
-        setLongPressed(true);
-        showMobileInspect(item);
-      }, LONGPRESS_TIMEOUT)
-    );
+    timer.current = window.setTimeout(() => {
+      longPressed = true;
+      showMobileInspect(item);
+    }, LONGPRESS_TIMEOUT);
   };
 
   const doubleClicked = (e: React.MouseEvent) => {

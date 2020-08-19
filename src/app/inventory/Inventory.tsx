@@ -70,7 +70,7 @@ function Inventory({ storesLoaded, account }: Props) {
       <DragPerformanceFix />
       {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
       {account.destinyVersion === 2 && <GearPower />}
-      {<MobileInspect />}
+      <MobileInspect />
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ClearNewItems account={account} />
     </ErrorBoundary>
