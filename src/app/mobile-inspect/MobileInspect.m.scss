@@ -40,17 +40,19 @@
   flex-direction: column;
 }
 
-.content,
 .header {
   display: flex;
   flex-direction: row;
-}
-
-.header {
   font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid gray;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .itemImg {
@@ -72,4 +74,8 @@
 :global(.mobile-preview .item-socket) {
   margin-right: 0;
   border: none;
+}
+
+:global(.mobile-preview .item-details) {
+  margin: 0;
 }
