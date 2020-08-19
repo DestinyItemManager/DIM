@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
@@ -18,10 +18,6 @@ interface Props {
   selectedStore?: DimStore;
   /** Fires if a store other than the selected store is tapped. */
   onTapped?(storeId: string): void;
-}
-
-interface State {
-  loadoutMenuOpen: boolean;
 }
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
@@ -62,55 +58,46 @@ const CharacterHeader = ({
  * This is the character dropdown used at the top of the inventory page.
  * It will render a {CharacterTile} in addition to a button for the loadout menu
  */
-export default class StoreHeading extends React.Component<Props, State> {
-  state: State = { loadoutMenuOpen: false };
-  private menuTrigger = React.createRef<HTMLDivElement>();
+export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onTapped }: Props) {
+  const [loadoutMenuOpen, setLoadoutMenuOpen] = useState(false);
+  const menuTrigger = useRef<HTMLDivElement>(null);
 
-  render() {
-    const { store, loadoutMenuRef } = this.props;
-    const { loadoutMenuOpen } = this.state;
-
-    let loadoutMenu;
-    if (loadoutMenuOpen) {
-      const menuContents = (
-        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu} className="loadout-menu">
-          <LoadoutPopup dimStore={store} onClick={this.clickOutsideLoadoutMenu} />
-        </ClickOutside>
-      );
-
-      loadoutMenu = loadoutMenuRef
-        ? ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
-        : menuContents;
-    }
-
-    return (
-      <div>
-        <CharacterHeader
-          store={store}
-          loadoutMenuOpen={loadoutMenuOpen}
-          menuRef={this.menuTrigger}
-          onClick={this.openLoadoutPopup}
-        />
-        {loadoutMenu}
-      </div>
-    );
-  }
-
-  private openLoadoutPopup = () => {
-    const { store, selectedStore, onTapped } = this.props;
-    const { loadoutMenuOpen } = this.state;
-
+  const openLoadoutPopup = () => {
     if (store !== selectedStore && onTapped) {
       onTapped?.(store.id);
       return;
     }
-
-    this.setState({ loadoutMenuOpen: !loadoutMenuOpen });
+    setLoadoutMenuOpen((open) => !open);
   };
 
-  private clickOutsideLoadoutMenu = (e) => {
-    if (!e || !this.menuTrigger.current || !this.menuTrigger.current.contains(e.target)) {
-      this.setState({ loadoutMenuOpen: false });
+  const clickOutsideLoadoutMenu = (e) => {
+    if (!e || !menuTrigger.current || !menuTrigger.current.contains(e.target)) {
+      setLoadoutMenuOpen(false);
     }
   };
+
+  let loadoutMenu: React.ReactNode | undefined;
+  if (loadoutMenuOpen) {
+    const menuContents = (
+      <ClickOutside onClickOutside={clickOutsideLoadoutMenu} className="loadout-menu">
+        <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
+      </ClickOutside>
+    );
+
+    loadoutMenu = loadoutMenuRef
+      ? ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+      : menuContents;
+  }
+
+  return (
+    <div>
+      <CharacterHeader
+        store={store}
+        loadoutMenuOpen={loadoutMenuOpen}
+        menuRef={menuTrigger}
+        onClick={openLoadoutPopup}
+      />
+      {loadoutMenu}
+    </div>
+  );
 }
