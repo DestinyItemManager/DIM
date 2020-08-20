@@ -399,7 +399,7 @@ module.exports = (env) => {
         // Detach stats from the sticky header on mobile
         '$featureFlags.unstickyStats': JSON.stringify(!env.release),
         // New search bar
-        '$featureFlags.newSearch': JSON.stringify(env.dev),
+        '$featureFlags.newSearch': JSON.stringify(!env.release),
       }),
 
       new WorkerPlugin({
