@@ -158,6 +158,7 @@ export default React.forwardRef(function SearchFilterInput(
     reset,
   } = useCombobox<SearchItem>({
     items,
+    isOpen: true,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -177,7 +178,6 @@ export default React.forwardRef(function SearchFilterInput(
           debouncedUpdateQuery.flush();
         }
         // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
-        console.log({ inputValue, selectedItem });
         setItems(
           autocompleter(
             inputValue,
