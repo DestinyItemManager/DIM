@@ -480,6 +480,7 @@ function compactUpdate(
       key = `${update.action}-${update.payload.recordHash}`;
       break;
     case 'search':
+    case 'delete_search':
       // These don't combine (though maybe they should be extended to include an array of usage times?)
       key = `unique-${unique++}`;
       break;
