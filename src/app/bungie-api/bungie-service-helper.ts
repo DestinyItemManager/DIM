@@ -41,6 +41,8 @@ const notifyTimeout = _.throttle(
   { leading: true, trailing: false }
 );
 
+// it would be really great if they implemented the pipeline operator soon
+/** used for most Bungie API requests */
 export const authenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(
@@ -54,7 +56,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
     )
   )
 );
-
+/** used to get manifest and global alerts*/
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(
@@ -85,6 +87,9 @@ export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   };
 }
 
+/**
+ * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
+ */
 export function handleErrors(error: Error) {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw new Error(
