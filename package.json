@@ -93,7 +93,7 @@
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-lodash": "^7.1.0",
-    "eslint-plugin-react": "7.20.0",
+    "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.0.0",
     "exports-loader": "^1.1.0",
     "file-loader": "^6.0.0",
@@ -112,7 +112,7 @@
     "jest": "^26.0.1",
     "json-sort-cli": "^1.15.19",
     "lodash-webpack-plugin": "^0.11.5",
-    "mini-css-extract-plugin": "^0.9.0",
+    "mini-css-extract-plugin": "^0.10.0",
     "mini-svg-data-uri": "^1.1.3",
     "mkcert": "^1.2.0",
     "node-sass": "^4.9.0",
@@ -127,7 +127,7 @@
     "stylelint": "^13.0.0",
     "svgo": "^1.3.2",
     "svgo-loader": "^2.2.1",
-    "terser-webpack-plugin": "^3.0.1",
+    "terser-webpack-plugin": "^4.1.0",
     "ts-jest": "^26.1.0",
     "ts-loader": "^8.0.1",
     "typescript": "^3.4.1",
@@ -138,7 +138,7 @@
     "webpack-dev-server": "^3.8.2",
     "webpack-notifier": "^1.6.0",
     "workbox-webpack-plugin": "^5.1.1",
-    "worker-plugin": "^4.0.3"
+    "worker-plugin": "^5.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
