@@ -440,7 +440,7 @@ function buildSocket(
           addPlugOption(built, plugged, plugOptions);
         }
       }
-      curatedRoll = plugSet?.reusablePlugItems.map((p) => p.plugItemHash) || [];
+      curatedRoll = plugSet?.reusablePlugItems.map((p) => p.plugItemHash) || null;
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {

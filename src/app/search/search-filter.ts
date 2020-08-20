@@ -977,10 +977,10 @@ function searchFilters(
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
         const matchesCollectionsRoll = item.sockets?.allSockets
-          .filter((socket) => (socket?.plugOptions.length || 0) > 0 && socket.curatedRoll)
+          .filter((socket) => socket?.plugOptions.length && socket.curatedRoll)
           .filter((socket) => {
-            const hash = socket.plugged?.plugDef?.plug?.plugCategoryHash || 0;
-            return hash !== 0 && !curatedIgnoreSocketHashes.includes(hash);
+            const hash = socket.plugged?.plugDef?.plug?.plugCategoryHash;
+            return hash && !curatedIgnoreSocketHashes.includes(hash);
           })
           .every(
             (socket) =>
