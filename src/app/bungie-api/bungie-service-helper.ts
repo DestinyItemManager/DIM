@@ -85,7 +85,7 @@ export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   };
 }
 
-export async function handleErrors(error: Error) {
+export function handleErrors(error: Error) {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw new Error(
       navigator.onLine ? t('BungieService.SlowResponse') : t('BungieService.NotConnected')
