@@ -58,17 +58,6 @@ export const emptySocketHashes = [
   791435474, // InventoryItem "Empty Activity Mod Socket"
 ];
 
-/** if a socket is one of these, do not compare against
- * collections roll for purposes of curatedness
- */
-export const curatedIgnoreSocketHashes = [
-  3956125808, // intrinsic
-  1288200359, // shader
-  2572269636, // radiance
-  2218962841, // masterwork
-  3939863699, // mod slot
-];
-
 export const armor2PlugCategoryHashesByName = {
   general: PlugCategoryHashes.EnhancementsV2General,
   helmet: PlugCategoryHashes.EnhancementsV2Head,

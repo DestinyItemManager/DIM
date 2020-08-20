@@ -46,7 +46,6 @@ import {
 } from './d1-known-values';
 import {
   breakerTypes,
-  curatedIgnoreSocketHashes,
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
@@ -977,11 +976,8 @@ function searchFilters(
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
         const matchesCollectionsRoll = item.sockets?.allSockets
+          // curatedRoll is only set for perk-style sockets
           .filter((socket) => socket?.plugOptions.length && socket.curatedRoll)
-          .filter((socket) => {
-            const hash = socket.plugged?.plugDef?.plug?.plugCategoryHash;
-            return hash && !curatedIgnoreSocketHashes.includes(hash);
-          })
           .every(
             (socket) =>
               socket.curatedRoll!.length === socket.plugOptions.length &&
