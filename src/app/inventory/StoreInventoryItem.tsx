@@ -32,7 +32,7 @@ export default function StoreInventoryItem({ item }: Props) {
   };
 
   const onTouch = (e: React.TouchEvent) => {
-    if (loadoutDialogOpen || CompareService.dialogOpen) {
+    if (loadoutDialogOpen || CompareService.dialogOpen || !isPhonePortrait) {
       return;
     }
 
