@@ -16,6 +16,7 @@ import {
   responsivelyThrottleHttpClient,
 } from './http-client';
 import { API_KEY } from './bungie-api-utils';
+import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -40,20 +41,28 @@ const notifyTimeout = _.throttle(
   { leading: true, trailing: false }
 );
 
-export const authenticatedHttpClient = responsivelyThrottleHttpClient(
-  createHttpClient(
-    createFetchWithNonStoppingTimeout(
-      rateLimitedFetch(fetchWithBungieOAuth),
-      TIMEOUT,
-      notifyTimeout
-    ),
-    API_KEY,
-    true
+export const authenticatedHttpClient = dimErrorHandledHttpClient(
+  responsivelyThrottleHttpClient(
+    createHttpClient(
+      createFetchWithNonStoppingTimeout(
+        rateLimitedFetch(fetchWithBungieOAuth),
+        TIMEOUT,
+        notifyTimeout
+      ),
+      API_KEY,
+      true
+    )
   )
 );
 
-export const unauthenticatedHttpClient = responsivelyThrottleHttpClient(
-  createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY, false)
+export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
+  responsivelyThrottleHttpClient(
+    createHttpClient(
+      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
+      API_KEY,
+      false
+    )
+  )
 );
 
 /** Generate an error with a bit more info */
@@ -61,6 +70,19 @@ export function dimError(message: string, errorCode: PlatformErrorCodes): DimErr
   const error: DimError = new Error(message);
   error.code = errorCode;
   return error;
+}
+
+/**
+ * wrap HttpClient in handling specific to DIM, using i18n strings, bounce to login, etc
+ */
+export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
+  return async (config: HttpClientConfig) => {
+    try {
+      return await httpClient(config);
+    } catch (e) {
+      handleErrors(e);
+    }
+  };
 }
 
 export async function handleErrors(error: Error) {
