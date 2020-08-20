@@ -42,7 +42,7 @@ function CharacterStat({ stat }: { stat: DimCharacterStat }) {
  * Render the character information: Max Power/Stat points.
  * May want to consider splitting D1 from D2 at some point.
  */
-export default React.memo(function CharacterStats({ stats, destinyVersion, storeId }: Props) {
+function CharacterStats({ stats, destinyVersion, storeId }: Props) {
   if (!stats) {
     return null;
   }
@@ -157,4 +157,6 @@ export default React.memo(function CharacterStats({ stats, destinyVersion, store
       </div>
     );
   }
-});
+}
+
+export default React.memo(CharacterStats);

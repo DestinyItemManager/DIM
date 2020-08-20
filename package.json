@@ -93,7 +93,7 @@
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-lodash": "^7.1.0",
-    "eslint-plugin-react": "7.20.0",
+    "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.0.0",
     "exports-loader": "^1.1.0",
     "file-loader": "^6.0.0",
