@@ -36,7 +36,6 @@ bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
 bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
-  mobile?: boolean;
   onClear?(): void;
 }
 
@@ -83,7 +82,6 @@ function mapStateToProps(state: RootState): StoreProps {
 export function SearchFilter(
   {
     isPhonePortrait,
-    mobile,
     setSearchQuery,
     searchQuery,
     searchQueryVersion,
@@ -201,7 +199,6 @@ export function SearchFilter(
     <SearchBar
       ref={ref}
       onQueryChanged={setSearchQuery}
-      alwaysShowClearButton={mobile}
       placeholder={placeholder}
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}
@@ -242,7 +239,7 @@ export function SearchFilter(
     <SearchFilterInput
       ref={ref}
       onQueryChanged={setSearchQuery}
-      alwaysShowClearButton={mobile}
+      alwaysShowClearButton={isPhonePortrait}
       placeholder={placeholder}
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}

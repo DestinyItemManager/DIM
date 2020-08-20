@@ -39,6 +39,7 @@ import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete'
 import HighlightedText from './HighlightedText';
 import { RootState } from 'app/store/types';
 import { searchConfigSelector } from './search-config';
+import { isPhonePortraitSelector } from 'app/inventory/selectors';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -49,8 +50,6 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
 };
 
 interface ProvidedProps {
-  /** Whether the "X" button that clears the selection should always be shown. */
-  alwaysShowClearButton?: boolean;
   /** Placeholder text when nothing has been typed */
   placeholder: string;
   /** Whether to autofocus this on mount */
@@ -94,7 +93,6 @@ export default React.forwardRef(function SearchFilterInput(
   {
     searchQueryVersion,
     searchQuery,
-    alwaysShowClearButton,
     placeholder,
     children,
     autoFocus,
@@ -109,6 +107,7 @@ export default React.forwardRef(function SearchFilterInput(
   const autocompleter = useSelector((state: RootState) =>
     createAutocompleter(searchConfigSelector(state))
   );
+  const isPhonePortrait = useSelector(isPhonePortraitSelector);
   const recentSearches = useSelector(recentSearchesSelector);
   const inputElement = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
@@ -137,28 +136,15 @@ export default React.forwardRef(function SearchFilterInput(
     }
   };
 
-  // TODO: this seems inefficient
+  // Is the current search saved?
   const canonical = canonicalizeQuery(parseQuery(liveQuery));
   const saved = recentSearches.find((s) => s.query === canonical)?.saved;
 
-  // This depends on blur firing first?
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
-  // TODO: Some interaction notes:
-  // * In chrome, selecting an item via keyboard/mouse replaces the current input value with that, but doesn't apply it until "Enter"
-  //   In downshift, focus remains on the input and changing the input would fire onInputValueChanged
-  // * On mobile, we should start with the menu open
-  // * When the user hits "enter" we should show a sheet of results
-  // * Should we not search until they blur/hit enter? no...
-
-  // why does the selection change when stores reload
-
-  // TODO: now time to do the mobile stuff
-
-  console.log('items', items);
   // useCombobox from Downshift manages the state of the dropdown
   const {
     isOpen,
@@ -169,11 +155,10 @@ export default React.forwardRef(function SearchFilterInput(
     getComboboxProps,
     highlightedIndex,
     getItemProps,
-    // openMenu // we can call this on focus?
     reset,
   } = useCombobox<SearchItem>({
-    // isOpen: true on mobile?
     items,
+    defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
@@ -211,7 +196,6 @@ export default React.forwardRef(function SearchFilterInput(
     debouncedUpdateQuery.flush();
     onClear?.();
     reset();
-    // TODO: reset autocompleter?
   }, [debouncedUpdateQuery, onClear, reset]);
 
   // Reset live query when search version changes
@@ -299,7 +283,7 @@ export default React.forwardRef(function SearchFilterInput(
         </button>
       )}
 
-      {(liveQuery.length > 0 || alwaysShowClearButton) && (
+      {(liveQuery.length > 0 || isPhonePortrait) && (
         <button
           type="button"
           className="filter-bar-button"
@@ -359,7 +343,7 @@ export default React.forwardRef(function SearchFilterInput(
                 )}
               </span>
               {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
-              {highlightedIndex === index &&
+              {(highlightedIndex === index || isPhonePortrait) &&
                 (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
                   <button
                     type="button"
