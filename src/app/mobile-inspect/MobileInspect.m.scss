@@ -2,7 +2,7 @@
 
 @keyframes zoom {
   from {
-    transform: scale(0.8);
+    transform: scale(0.85);
     opacity: 0;
   }
   to {
@@ -22,7 +22,7 @@
 
 .mobileInspectSheet,
 .mobileInspectSheet > * {
-  animation: zoom 200ms;
+  animation: zoom 100ms;
 }
 
 .container {
