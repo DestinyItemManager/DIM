@@ -9,6 +9,7 @@ import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
+import { showDragGhost } from 'app/mobile-inspect/drag-ghost';
 import { getCurrentStore } from './stores-helpers';
 
 interface Props {
@@ -27,17 +28,24 @@ export default function StoreInventoryItem({ item }: Props) {
 
   const resetInspect = () => {
     showMobileInspect(undefined);
+    showDragGhost(undefined);
     window.clearTimeout(timer.current);
     longPressed.current = false;
   };
 
   const onTouch = (e: React.TouchEvent) => {
-    if (loadoutDialogOpen || CompareService.dialogOpen || !isPhonePortrait) {
+    if (loadoutDialogOpen || CompareService.dialogOpen) {
       return;
     }
 
     // It a longpress happend and the touch move event files, do nothing.
     if (longPressed.current && e.type === 'touchmove') {
+      if (!isPhonePortrait) {
+        showDragGhost({
+          item,
+          transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
+        });
+      }
       return;
     }
 
@@ -53,7 +61,9 @@ export default function StoreInventoryItem({ item }: Props) {
     // Start a timer for the longpress action
     timer.current = window.setTimeout(() => {
       longPressed.current = true;
-      showMobileInspect(item);
+      if (isPhonePortrait) {
+        showMobileInspect(item);
+      }
     }, LONGPRESS_TIMEOUT);
   };
 
