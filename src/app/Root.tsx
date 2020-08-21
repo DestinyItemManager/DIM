@@ -17,7 +17,6 @@ function Root() {
       { backend: TouchBackend, transition: TouchTransition, options: { delayTouchStart: 150 } },
     ],
   };
-
   return (
     <Router>
       <Provider store={store}>

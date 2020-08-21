@@ -21,7 +21,6 @@ interface ProvidedProps {
   onTouch?(e: React.TouchEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
-  onTouch?(e: React.TouchEvent): void;
 }
 
 // Props from Redux via mapStateToProps
@@ -73,7 +72,6 @@ function ConnectedInventoryItem({
   onTouch,
   onShiftClick,
   onDoubleClick,
-  onTouch,
   searchHidden,
   inventoryWishListRoll,
   wishListsEnabled,
@@ -91,7 +89,6 @@ function ConnectedInventoryItem({
       onTouch={onTouch}
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
-      onTouch={onTouch}
       searchHidden={searchHidden}
       wishListsEnabled={wishListsEnabled}
       inventoryWishListRoll={inventoryWishListRoll}
