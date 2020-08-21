@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { DimItem } from './item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import ItemPopupTrigger from './ItemPopupTrigger';
@@ -7,13 +6,13 @@ import { CompareService } from '../compare/compare.service';
 import { moveItemTo } from './move-item';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { showDragGhost } from 'app/inventory/drag-ghost-item';
 import { getCurrentStore } from './stores-helpers';
 
 interface Props {
   item: DimItem;
+  isPhonePortrait?: boolean;
 }
 
 const LONGPRESS_TIMEOUT = 200;
@@ -21,8 +20,7 @@ const LONGPRESS_TIMEOUT = 200;
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default function StoreInventoryItem({ item }: Props) {
-  const isPhonePortrait = useSelector(isPhonePortraitSelector);
+export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
 
