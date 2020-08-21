@@ -158,7 +158,6 @@ export default React.forwardRef(function SearchFilterInput(
     reset,
   } = useCombobox<SearchItem>({
     items,
-    isOpen: true,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
