@@ -84,6 +84,20 @@ type ControlProps = Props &
 
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
+ *
+ * Example:
+ *
+ * const ref = useRef<HTMLDivElement>(null);
+ * <PressTip.Control
+ *   open={true}
+ *   triggerRef={ref}
+ *   tooltip={() => (
+ *     <span>
+ *       PressTip Content
+ *     </span>
+ *   )}>
+ *   PressTip context element
+ * </PressTip.Control>
  */
 function Control({
   tooltip,
