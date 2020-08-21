@@ -28,8 +28,9 @@
     .vault & {
       flex-direction: row;
       align-items: center;
-      @include phone-portrait {
-        align-items: flex-start;
+      .top,
+      .bottom {
+        flex: 1;
       }
     }
 
