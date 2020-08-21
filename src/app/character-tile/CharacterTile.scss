@@ -65,7 +65,6 @@
 
   .class,
   .race-gender {
-    text-transform: capitalize;
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -79,6 +78,7 @@
   .powerLevel,
   .light {
     color: $power;
+    margin-top: 1px;
 
     .app-icon {
       vertical-align: 70%;
@@ -97,12 +97,10 @@
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
-    font-weight: 400;
   }
 
   .top {
     font-size: 20px;
-    font-weight: 400;
 
     @include phone-portrait {
       .maxTotalPower {
