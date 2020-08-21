@@ -9,7 +9,7 @@ import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
-import { showDragGhost } from 'app/mobile-inspect/drag-ghost';
+import { showDragGhost } from 'app/inventory/drag-ghost-item';
 import { getCurrentStore } from './stores-helpers';
 
 interface Props {
@@ -26,7 +26,7 @@ export default function StoreInventoryItem({ item }: Props) {
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
 
-  const resetInspect = () => {
+  const resetTouch = () => {
     showMobileInspect(undefined);
     showDragGhost(undefined);
     window.clearTimeout(timer.current);
@@ -40,18 +40,19 @@ export default function StoreInventoryItem({ item }: Props) {
 
     // It a longpress happend and the touch move event files, do nothing.
     if (longPressed.current && e.type === 'touchmove') {
-      if (!isPhonePortrait) {
-        showDragGhost({
-          item,
-          transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
-        });
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
+        return;
       }
+      showDragGhost({
+        item,
+        transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
+      });
       return;
     }
 
-    // Always reset the inspect before any other event fires.
+    // Always reset the touch event before any other event fires.
     // Useful because if the start event happens twice before another type (it happens.)
-    resetInspect();
+    resetTouch();
 
     if (e.type !== 'touchstart') {
       // Abort longpress timer if touch moved, ended, or cancelled.
@@ -61,7 +62,7 @@ export default function StoreInventoryItem({ item }: Props) {
     // Start a timer for the longpress action
     timer.current = window.setTimeout(() => {
       longPressed.current = true;
-      if (isPhonePortrait) {
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
         showMobileInspect(item);
       }
     }, LONGPRESS_TIMEOUT);
@@ -79,11 +80,6 @@ export default function StoreInventoryItem({ item }: Props) {
     }
   };
 
-  let onTouchHandler;
-  if ($featureFlags.mobileInspect) {
-    onTouchHandler = onTouch;
-  }
-
   return (
     <DraggableInventoryItem item={item} isPhonePortrait={isPhonePortrait}>
       <ItemPopupTrigger item={item}>
@@ -94,7 +90,7 @@ export default function StoreInventoryItem({ item }: Props) {
             innerRef={ref}
             onClick={onClick}
             onDoubleClick={doubleClicked}
-            onTouch={onTouchHandler}
+            onTouch={onTouch}
           />
         )}
       </ItemPopupTrigger>

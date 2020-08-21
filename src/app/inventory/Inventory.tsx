@@ -20,9 +20,9 @@ import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import { storesLoadedSelector } from './selectors';
 import { useSubscription } from 'app/utils/hooks';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import DragGhostItem from './DragGhostItem';
 import { t } from 'app/i18next-t';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
-import DragGhost from 'app/mobile-inspect/DragGhost';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -72,7 +72,7 @@ function Inventory({ storesLoaded, account }: Props) {
       {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
       {account.destinyVersion === 2 && <GearPower />}
       <MobileInspect />
-      <DragGhost />
+      <DragGhostItem />
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ClearNewItems account={account} />
     </ErrorBoundary>
