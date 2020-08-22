@@ -13,10 +13,11 @@ interface Props {
 
 function LockedArmor2ModIcon({ item, defs, onModClicked }: Props) {
   const [showClose, setShowClose] = useState(false);
+  const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
   return (
     <div onMouseEnter={() => setShowClose(true)} onMouseLeave={() => setShowClose(false)}>
-      <ClosableContainer onClose={onModClicked} enabled={showClose}>
+      <ClosableContainer onClose={onModClicked} enabled={mobile || showClose}>
         <div className={styles.emptyItem}>
           <SocketDetailsMod itemDef={item.mod} defs={defs} />
         </div>
