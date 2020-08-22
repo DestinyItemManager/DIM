@@ -46,7 +46,15 @@
       "version": "detect"
     }
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "lodash", "jsx-a11y", "array-func"],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "lodash",
+    "jsx-a11y",
+    "array-func",
+    "react-redux"
+  ],
   "rules": {
     "no-console": "off",
     "no-empty": "off",
@@ -138,6 +146,7 @@
         "ignoreRestSiblings": true
       }
     ],
-    "array-func/prefer-array-from": "off"
+    "array-func/prefer-array-from": "off",
+    "react-redux/mapStateToProps-prefer-hoisted": "error"
   }
 }
