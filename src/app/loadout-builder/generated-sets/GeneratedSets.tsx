@@ -215,7 +215,20 @@ export default class GeneratedSets extends React.Component<Props, State> {
             )}
           </WindowScroller>
         ) : (
-          <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+          <>
+            <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+            <ul>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundExoticsAndMods')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundModsAreTooExpensive')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundSeasonalModNotSatisfied')}
+              </li>
+            </ul>
+          </>
         )}
       </div>
     );
