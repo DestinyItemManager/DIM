@@ -278,6 +278,7 @@ export const SocketDetailsMod = React.memo(
 
     return (
       <div
+        role="button"
         className={clsx('item', className)}
         title={itemDef.displayProperties.name}
         onClick={onClickFn}

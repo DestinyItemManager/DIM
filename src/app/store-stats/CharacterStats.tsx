@@ -138,7 +138,7 @@ function CharacterStats({ stats, destinyVersion, storeId }: Props) {
                   <div
                     className={clsx('stat', { pointerCursor: isMaxGearPower })}
                     aria-label={`${stat.name} ${stat.value}`}
-                    role="group"
+                    role={isMaxGearPower ? 'button' : 'group'}
                     onClick={
                       isMaxGearPower
                         ? () => {
