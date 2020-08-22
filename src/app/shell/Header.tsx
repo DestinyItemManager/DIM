@@ -29,6 +29,7 @@ import { useLocation, useHistory } from 'react-router';
 import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { setSearchQuery } from './actions';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -121,10 +122,8 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   const { pathname } = useLocation();
   useEffect(() => {
     setDropdownOpen(false);
-    if (searchFilter.current) {
-      searchFilter.current.clearFilter();
-    }
-  }, [pathname]);
+    dispatch(setSearchQuery(''));
+  }, [dispatch, pathname]);
 
   // Focus search when shown
   useEffect(() => {

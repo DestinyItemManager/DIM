@@ -194,10 +194,12 @@ export default React.forwardRef(function SearchFilterInput(
       // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
       switch (type) {
         case useCombobox.stateChangeTypes.FunctionReset:
-          return {
-            ...changes, // default Downshift new state changes on item selection.
-            isOpen: state.isOpen, // but keep menu open
-          };
+          return changes.inputValue !== undefined
+            ? {
+                ...changes, // default Downshift new state changes on item selection.
+                isOpen: state.isOpen, // but keep menu open
+              }
+            : changes;
         default:
           return changes; // otherwise business as usual.
       }
