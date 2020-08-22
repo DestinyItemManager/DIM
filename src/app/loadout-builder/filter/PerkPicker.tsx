@@ -351,7 +351,11 @@ class PerkPicker extends React.Component<Props, State> {
         ? ({ onClose }) => (
             <div className={styles.footer}>
               <div>
-                <button className={styles.submitButton} onClick={(e) => this.onSubmit(e, onClose)}>
+                <button
+                  type="button"
+                  className={styles.submitButton}
+                  onClick={(e) => this.onSubmit(e, onClose)}
+                >
                   {!isPhonePortrait && '⏎ '}
                   {t('LoadoutBuilder.SelectPerks')}
                 </button>
@@ -385,17 +389,15 @@ class PerkPicker extends React.Component<Props, State> {
                       </React.Fragment>
                     )
                 )}
-                <>
-                  <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
-                  {selectedSeasonalMods.map((item) => (
-                    <SocketDetailsMod
-                      key={item.mod.hash}
-                      itemDef={item.mod}
-                      defs={defs}
-                      className={styles.selectedPerk}
-                    />
-                  ))}
-                </>
+                <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
+                {selectedSeasonalMods.map((item) => (
+                  <SocketDetailsMod
+                    key={item.mod.hash}
+                    itemDef={item.mod}
+                    defs={defs}
+                    className={styles.selectedPerk}
+                  />
+                ))}
                 <GlobalHotkeys
                   hotkeys={[
                     {

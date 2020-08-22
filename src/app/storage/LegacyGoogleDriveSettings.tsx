@@ -63,41 +63,39 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     const adapter = SyncService.GoogleDriveStorage;
 
     return (
-      <>
-        <div className="storage-adapter">
-          <h3>{t('Storage.GDriveImport')}</h3>
-          <p>{t('Storage.GDriveImportExplain')}</p>
-          {googleApiBlocked ? (
-            <p>{t('Storage.GoogleApiBlocked')}</p>
-          ) : (
-            <div>
-              {adapter.enabled ? (
-                <>
-                  {driveInfo && (
-                    <div className="google-user">
-                      {driveInfo.user.emailAddress && (
-                        <div>
-                          {t('Storage.GDriveSignedIn', { email: driveInfo.user.emailAddress })}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <button className="dim-button" onClick={this.driveLogout}>
-                    <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
-                  </button>
-                </>
-              ) : (
-                <button className="dim-button" onClick={this.driveSync}>
-                  <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
+      <div className="storage-adapter">
+        <h3>{t('Storage.GDriveImport')}</h3>
+        <p>{t('Storage.GDriveImportExplain')}</p>
+        {googleApiBlocked ? (
+          <p>{t('Storage.GoogleApiBlocked')}</p>
+        ) : (
+          <div>
+            {adapter.enabled ? (
+              <>
+                {driveInfo && (
+                  <div className="google-user">
+                    {driveInfo.user.emailAddress && (
+                      <div>
+                        {t('Storage.GDriveSignedIn', { email: driveInfo.user.emailAddress })}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <button type="button" className="dim-button" onClick={this.driveLogout}>
+                  <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                 </button>
-              )}{' '}
-              <button className="dim-button" onClick={this.importFromLegacy}>
-                <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveImportButton')}</span>
+              </>
+            ) : (
+              <button type="button" className="dim-button" onClick={this.driveSync}>
+                <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
               </button>
-            </div>
-          )}
-        </div>
-      </>
+            )}{' '}
+            <button type="button" className="dim-button" onClick={this.importFromLegacy}>
+              <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveImportButton')}</span>
+            </button>
+          </div>
+        )}
+      </div>
     );
   }
 

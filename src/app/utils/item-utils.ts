@@ -38,9 +38,9 @@ export const specialtySocketTypeHashes = modSocketMetadata.map(
   (modMetadata) => modMetadata.socketTypeHash
 );
 
-export const specialtyModPlugCategoryHashes = modSocketMetadata
-  .map((modMetadata) => modMetadata.compatiblePlugCategoryHashes)
-  .flat();
+export const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
+  (modMetadata) => modMetadata.compatiblePlugCategoryHashes
+);
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
 export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {

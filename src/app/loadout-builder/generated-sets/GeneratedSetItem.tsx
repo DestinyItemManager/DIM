@@ -102,6 +102,7 @@ export default function GeneratedSetItem({
 
       {itemOptions.length > 1 ? (
         <button
+          type="button"
           className={styles.swapButton}
           title={t('LoadoutBuilder.ChooseAlternateTitle')}
           onClick={chooseReplacement}
@@ -111,6 +112,7 @@ export default function GeneratedSetItem({
       ) : (
         locked?.some((li) => li.type === 'item') && (
           <button
+            type="button"
             className={styles.swapButton}
             title={t('LoadoutBuilder.UnlockItem')}
             onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}

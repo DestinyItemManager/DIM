@@ -142,6 +142,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
           </span>
           <button
+            type="button"
             className={`dim-button ${styles.newLoadout}`}
             onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
           >

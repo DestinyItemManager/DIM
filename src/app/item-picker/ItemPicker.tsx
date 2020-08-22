@@ -118,10 +118,18 @@ function ItemPicker({
         />
         {!hideStoreEquip && (
           <div className="split-buttons">
-            <button className={clsx('dim-button', { selected: equipToggled })} onClick={setEquip}>
+            <button
+              type="button"
+              className={clsx('dim-button', { selected: equipToggled })}
+              onClick={setEquip}
+            >
               {t('MovePopup.Equip')}
             </button>
-            <button className={clsx('dim-button', { selected: !equipToggled })} onClick={setStore}>
+            <button
+              type="button"
+              className={clsx('dim-button', { selected: !equipToggled })}
+              onClick={setStore}
+            >
               {t('MovePopup.Store')}
             </button>
           </div>

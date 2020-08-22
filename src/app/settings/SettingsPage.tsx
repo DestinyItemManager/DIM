@@ -321,7 +321,7 @@ function SettingsPage({
               />
               {languageChanged && (
                 <div>
-                  <button className="dim-button" onClick={reloadDim}>
+                  <button type="button" className="dim-button" onClick={reloadDim}>
                     <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
                   </button>
                 </div>
@@ -361,7 +361,7 @@ function SettingsPage({
                     onChange={onChange}
                   />
                   {Math.max(48, settings.itemSize)}px
-                  <button className="dim-button" onClick={resetItemSize}>
+                  <button type="button" className="dim-button" onClick={resetItemSize}>
                     {t('Settings.ResetToDefault')}
                   </button>
                 </div>

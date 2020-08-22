@@ -75,7 +75,9 @@ function D1Farming({ store, makeRoomForItems, setSetting }: Props) {
             </div>
 
             <div>
-              <button onClick={D1FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+              <button type="button" onClick={D1FarmingService.stop}>
+                {t('FarmingMode.Stop')}
+              </button>
             </div>
           </div>
         </CSSTransition>
