@@ -29,6 +29,7 @@ import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { Hotkey } from 'app/hotkeys/hotkeys';
+import { setSearchQuery } from './actions';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -122,10 +123,8 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   const { pathname } = useLocation();
   useEffect(() => {
     setDropdownOpen(false);
-    if (searchFilter.current) {
-      searchFilter.current.clearFilter();
-    }
-  }, [pathname]);
+    dispatch(setSearchQuery(''));
+  }, [dispatch, pathname]);
 
   // Focus search when shown
   useEffect(() => {
