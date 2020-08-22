@@ -156,6 +156,8 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   }));
 }
 
+const caretEndRegex = /([\s)]|$)/;
+
 /**
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
@@ -170,7 +172,6 @@ export function autocompleteTermSuggestions(
   }
 
   // Seek to the end of the current part
-  const caretEndRegex = /[\s)]/;
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
   // Find the last word that looks like a search

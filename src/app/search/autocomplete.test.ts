@@ -13,6 +13,7 @@ describe('autocompleteTermSuggestions', () => {
   const cases = [
     ['is:haspower is:b', 16],
     ['(is:blue jun)', 11],
+    ['is:bow is:void', 11],
   ];
 
   test.each(cases)(

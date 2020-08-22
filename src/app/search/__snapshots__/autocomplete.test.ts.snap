@@ -13,6 +13,19 @@ Array [
 ]
 `;
 
+exports[`autocompleteTermSuggestions autocomplete within query for |is:bow is:void| with caret at position 11 1`] = `
+Array [
+  Object {
+    "highlightRange": Array [
+      7,
+      14,
+    ],
+    "query": "is:bow is:void",
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower is:b| with caret at position 16 1`] = `
 Array [
   Object {
