@@ -175,8 +175,8 @@ export const dimApi = (
               ...action.payload.profiles,
             },
             updateQueue: newUpdateQueue,
-            itemHashTags: action.payload.itemHashTags,
-            searches: action.payload.searches,
+            itemHashTags: action.payload.itemHashTags || initialState.itemHashTags,
+            searches: action.payload.searches || initialState.searches,
           }
         : {
             ...state,

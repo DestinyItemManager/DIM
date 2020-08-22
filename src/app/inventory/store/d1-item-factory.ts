@@ -16,8 +16,6 @@ import {
   DestinyDamageTypeDefinition,
   DestinyAmmunitionType,
 } from 'bungie-api-ts/destiny2';
-import { bucketsSelector } from '../selectors';
-import store from 'app/store/store';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -113,9 +111,9 @@ export function resetIdTracker() {
 export async function processItems(
   owner: D1Store,
   items: any[],
-  defs: D1ManifestDefinitions
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
 ): Promise<D1Item[]> {
-  const buckets = bucketsSelector(store.getState())!;
   const result: D1Item[] = [];
   for (const item of items) {
     let createdItem: D1Item | null = null;
@@ -303,7 +301,9 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const element = toD2DamageType(defs.DamageType.get(item.damageTypeHash));
+  const element = item.damageTypeHash
+    ? toD2DamageType(defs.DamageType.get(item.damageTypeHash))
+    : undefined;
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -508,7 +508,7 @@ export function createItemIndex(item: D1Item) {
 }
 
 function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
-  const talentGridDef = talentDefs.get(item.talentGridHash);
+  const talentGridDef = item.talentGridHash && talentDefs.get(item.talentGridHash);
   if (
     !item.progression ||
     !talentGridDef ||

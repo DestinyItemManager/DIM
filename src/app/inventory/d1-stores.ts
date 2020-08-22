@@ -174,7 +174,7 @@ function StoreService(): D1StoreServiceType {
       items = result.items;
     }
 
-    return processItems(store, items, defs).then((items) => {
+    return processItems(store, items, defs, buckets).then((items) => {
       store.items = items;
 
       // by type-bucket
