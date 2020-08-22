@@ -16,8 +16,6 @@ import {
   DestinyDamageTypeDefinition,
   DestinyAmmunitionType,
 } from 'bungie-api-ts/destiny2';
-import { bucketsSelector } from '../selectors';
-import store from 'app/store/store';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -113,9 +111,9 @@ export function resetIdTracker() {
 export async function processItems(
   owner: D1Store,
   items: any[],
-  defs: D1ManifestDefinitions
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
 ): Promise<D1Item[]> {
-  const buckets = bucketsSelector(store.getState())!;
   const result: D1Item[] = [];
   for (const item of items) {
     let createdItem: D1Item | null = null;
