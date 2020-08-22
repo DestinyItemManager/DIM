@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ClosableContainer from '../ClosableContainer';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { LockedArmor2Mod, LockedModBase } from '../types';
@@ -12,12 +12,16 @@ interface Props {
 }
 
 function LockedArmor2ModIcon({ item, defs, onModClicked }: Props) {
+  const [showClose, setShowClose] = useState(false);
+
   return (
-    <ClosableContainer onClose={onModClicked}>
-      <div className={styles.emptyItem}>
-        <SocketDetailsMod itemDef={item.mod} defs={defs} />
-      </div>
-    </ClosableContainer>
+    <div onMouseEnter={() => setShowClose(true)} onMouseLeave={() => setShowClose(false)}>
+      <ClosableContainer onClose={onModClicked} enabled={showClose}>
+        <div className={styles.emptyItem}>
+          <SocketDetailsMod itemDef={item.mod} defs={defs} />
+        </div>
+      </ClosableContainer>
+    </div>
   );
 }
 
