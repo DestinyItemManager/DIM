@@ -22,7 +22,6 @@ import React, {
   useEffect,
 } from 'react';
 
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
@@ -157,6 +156,7 @@ export default React.forwardRef(function SearchFilterInput(
     getItemProps,
     reset,
     openMenu,
+    closeMenu,
   } = useCombobox<SearchItem>({
     items,
     defaultIsOpen: isPhonePortrait,
@@ -166,28 +166,25 @@ export default React.forwardRef(function SearchFilterInput(
       // Handle selecting the special "help" item
       if (selectedItem?.type === SearchItemType.Help) {
         setFilterHelpOpen(true);
+        closeMenu();
         return;
       }
     },
     onInputValueChange: ({ inputValue, selectedItem }) => {
-      if (inputValue) {
-        setLiveQuery(inputValue);
-        debouncedUpdateQuery(inputValue);
-        // If we selected an item from the menu, apply it immediately
-        if (selectedItem) {
-          debouncedUpdateQuery.flush();
-        }
-        // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
-        setItems(
-          autocompleter(
-            inputValue,
-            inputElement.current!.selectionStart || liveQuery.length,
-            recentSearches
-          )
-        );
-      } else {
-        autocompleter('', 0, recentSearches);
+      setLiveQuery(inputValue || '');
+      debouncedUpdateQuery(inputValue || '');
+      // If we selected an item from the menu, apply it immediately
+      if (selectedItem) {
+        debouncedUpdateQuery.flush();
       }
+      // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
+      setItems(
+        autocompleter(
+          inputValue || '',
+          inputElement.current!.selectionStart || liveQuery.length,
+          recentSearches
+        )
+      );
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges;
@@ -240,9 +237,7 @@ export default React.forwardRef(function SearchFilterInput(
     [focusFilterInput, clearFilter]
   );
 
-  // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   // TODO: break this stuff uppppp
-  // TODO: memoize hotkeys
   return (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
@@ -250,29 +245,6 @@ export default React.forwardRef(function SearchFilterInput(
       enterkeyhint="search"
       {...getComboboxProps()}
     >
-      <GlobalHotkeys
-        hotkeys={[
-          {
-            combo: 'f',
-            description: t('Hotkey.StartSearch'),
-            callback: (event) => {
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-          {
-            combo: 'shift+f',
-            description: t('Hotkey.StartSearchClear'),
-            callback: (event) => {
-              clearFilter();
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-        ]}
-      />
       <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
       <input
         {...getInputProps({
