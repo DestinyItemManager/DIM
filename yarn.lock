@@ -4602,6 +4602,11 @@ eslint-config-prettier@^6.0.0:
   dependencies:
     get-stdin "^6.0.0"
 
+eslint-plugin-array-func@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-array-func/-/eslint-plugin-array-func-3.1.7.tgz#c47ce735eed2d9cb4129984d514898df4e0393ba"
+  integrity sha512-fB5TBICjHSTGToNTbCCgR8zsngpUkoCM31EMh/M/NEAyNg90i5rUuG0dnNNBML2n0BzM0nBE3sPvo2SEWf6jlA==
+
 eslint-plugin-jsx-a11y@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.3.1.tgz#99ef7e97f567cc6a5b8dd5ab95a94a67058a2660"

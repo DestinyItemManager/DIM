@@ -165,8 +165,7 @@ function SocketDetails({
   const energyTypeHash = item.energy?.energyTypeHash;
   const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
 
-  let mods = Array.from(modHashes)
-    .map((h) => defs.InventoryItem.get(h))
+  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
         i.inventory!.tierType !== TierType.Common &&

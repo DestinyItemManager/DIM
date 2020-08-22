@@ -286,7 +286,7 @@ function VendorService(): VendorServiceType {
       });
     });
 
-    mergedVendor.allItems = mergedVendor.categories.map((i) => i.saleItems).flat();
+    mergedVendor.allItems = mergedVendor.categories.flatMap((i) => i.saleItems);
 
     return mergedVendor;
   }

@@ -11,7 +11,8 @@
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "prettier/react",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:array-func/all"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -45,7 +46,7 @@
       "version": "detect"
     }
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "lodash", "jsx-a11y"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint", "lodash", "jsx-a11y", "array-func"],
   "rules": {
     "no-console": "off",
     "no-empty": "off",
@@ -136,6 +137,7 @@
         "argsIgnorePattern": "(^_|[iI]gnored)",
         "ignoreRestSiblings": true
       }
-    ]
+    ],
+    "array-func/prefer-array-from": "off"
   }
 }
