@@ -156,6 +156,7 @@ export default React.forwardRef(function SearchFilterInput(
     highlightedIndex,
     getItemProps,
     reset,
+    openMenu,
   } = useCombobox<SearchItem>({
     items,
     defaultIsOpen: isPhonePortrait,
@@ -188,14 +189,34 @@ export default React.forwardRef(function SearchFilterInput(
         autocompleter('', 0, recentSearches);
       }
     },
+    stateReducer: (state, actionAndChanges) => {
+      const { type, changes } = actionAndChanges;
+      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      switch (type) {
+        case useCombobox.stateChangeTypes.FunctionReset:
+          return {
+            ...changes, // default Downshift new state changes on item selection.
+            isOpen: state.isOpen, // but keep menu open
+          };
+        default:
+          return changes; // otherwise business as usual.
+      }
+    },
   });
+
+  const onFocus = () => {
+    if (!liveQuery) {
+      openMenu();
+    }
+  };
 
   const clearFilter = useCallback(() => {
     debouncedUpdateQuery('');
     debouncedUpdateQuery.flush();
     onClear?.();
     reset();
-  }, [debouncedUpdateQuery, onClear, reset]);
+    openMenu();
+  }, [debouncedUpdateQuery, onClear, reset, openMenu]);
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -256,6 +277,7 @@ export default React.forwardRef(function SearchFilterInput(
       <input
         {...getInputProps({
           onBlur,
+          onFocus,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',
