@@ -303,7 +303,9 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const element = toD2DamageType(defs.DamageType.get(item.damageTypeHash));
+  const element = item.damageTypeHash
+    ? toD2DamageType(defs.DamageType.get(item.damageTypeHash))
+    : undefined;
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -508,7 +510,7 @@ export function createItemIndex(item: D1Item) {
 }
 
 function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
-  const talentGridDef = talentDefs.get(item.talentGridHash);
+  const talentGridDef = item.talentGridHash && talentDefs.get(item.talentGridHash);
   if (
     !item.progression ||
     !talentGridDef ||
