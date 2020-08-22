@@ -439,8 +439,8 @@ function buildSocket(
           const built = buildDefinedPlug(defs, reusablePlug);
           addPlugOption(built, plugged, plugOptions);
         }
+        curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
       }
-      curatedRoll = plugSet?.reusablePlugItems.map((p) => p.plugItemHash) || [];
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {

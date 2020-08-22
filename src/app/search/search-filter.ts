@@ -975,6 +975,10 @@ function searchFilters(
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
+        if (!legendaryWeapon) {
+          return false;
+        }
+
         const matchesCollectionsRoll = item.sockets?.allSockets
           // curatedRoll is only set for perk-style sockets
           .filter((socket) => socket?.plugOptions.length && socket.curatedRoll)
@@ -986,7 +990,7 @@ function searchFilters(
               })
           );
 
-        return legendaryWeapon && matchesCollectionsRoll;
+        return matchesCollectionsRoll;
       },
       weapon(item: DimItem) {
         return (
