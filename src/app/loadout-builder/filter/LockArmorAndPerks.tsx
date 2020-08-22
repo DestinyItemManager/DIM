@@ -251,7 +251,7 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
+          <button type="button" className="dim-button" onClick={() => setFilterPerksOpen(true)}>
             <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
           </button>
           {filterPerksOpen &&
@@ -283,7 +283,7 @@ function LockArmorAndPerks({
             </div>
           )}
           <div className={styles.buttons}>
-            <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
+            <button type="button" className="dim-button" onClick={() => setFilterModsOpen(true)}>
               <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
             </button>
             {filterModsOpen &&
@@ -321,10 +321,10 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button className="dim-button" onClick={chooseLockItem}>
+          <button type="button" className="dim-button" onClick={chooseLockItem}>
             <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockItem')}
           </button>
-          <button className="dim-button" onClick={lockEquipped}>
+          <button type="button" className="dim-button" onClick={lockEquipped}>
             <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockEquipped')}
           </button>
         </div>
@@ -351,13 +351,13 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button className="dim-button" onClick={chooseExcludeItem}>
+          <button type="button" className="dim-button" onClick={chooseExcludeItem}>
             <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
           </button>
         </div>
       </LoadoutBucketDropTarget>
       {anyLocked && (
-        <button className="dim-button" onClick={resetLocked}>
+        <button type="button" className="dim-button" onClick={resetLocked}>
           {t('LoadoutBuilder.ResetLocked')}
         </button>
       )}

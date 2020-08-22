@@ -63,6 +63,7 @@ function ItemActions({
         <AppIcon icon={lockIcon} /> {t('Organizer.Lock')}
       </button>
       <button
+        type="button"
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="unlock"

@@ -122,12 +122,14 @@ export default class ItemReview extends React.Component<Props, State> {
               </div>
               <div className="community-review--report-buttons">
                 <button
+                  type="button"
                   className="dim-button community-review--report-yes"
                   onClick={this.reportReview}
                 >
                   <AppIcon icon={faFlag} /> {t('DtrReview.ReallyReport')}
                 </button>
                 <button
+                  type="button"
                   className="dim-button community-review--report-cancel"
                   onClick={this.closeFlagContext}
                 >

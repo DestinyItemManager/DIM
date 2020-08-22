@@ -125,6 +125,7 @@ export default class Developer extends React.Component<{}, State> {
                   size={25}
                 />
                 <button
+                  type="button"
                   className="dim-button"
                   onClick={this.getDimApiKey}
                   disabled={!apiKey || !dimAppName || dimAppName.length < 6}
@@ -145,6 +146,7 @@ export default class Developer extends React.Component<{}, State> {
               </li>
             </ol>
             <button
+              type="submit"
               className="dim-button"
               disabled={!(apiKey && clientId && clientSecret && dimAppName && dimApiKey)}
             >

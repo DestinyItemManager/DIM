@@ -175,6 +175,7 @@ class Compare extends React.Component<Props, State> {
           <div className="compare-options">
             {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
+                type="button"
                 key={index}
                 className="dim-button"
                 onClick={(e) => this.compareSimilar(e, items)}

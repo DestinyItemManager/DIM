@@ -180,10 +180,10 @@ class ItemReviews extends React.Component<Props, State> {
 
               {expandReview && (
                 <span ng-show="expandReview">
-                  <button className="dim-button" onClick={this.submitReview}>
+                  <button type="button" className="dim-button" onClick={this.submitReview}>
                     {t('DtrReview.Submit')}
                   </button>{' '}
-                  <button className="dim-button" onClick={this.cancelEdit}>
+                  <button type="button" className="dim-button" onClick={this.cancelEdit}>
                     {t('DtrReview.Cancel')}
                   </button>
                 </span>

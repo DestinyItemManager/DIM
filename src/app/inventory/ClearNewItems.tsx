@@ -48,7 +48,7 @@ function ClearNewItems({ showNewItems, hasNewItems, clearAllNewItems }: Props) {
           },
         ]}
       />
-      <button onClick={clearAllNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
+      <button type="button" onClick={clearAllNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
         <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
       </button>
     </div>

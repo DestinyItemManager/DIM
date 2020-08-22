@@ -42,11 +42,17 @@ export default class ItemMoveAmount extends React.Component<Props> {
           </datalist>
         </div>
         <div className="move-amount move-amount-buttons">
-          <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.min}>
+          <button
+            type="button"
+            className="move-amount-button dim-button"
+            tabIndex={-1}
+            onClick={this.min}
+          >
             1
           </button>
           {maximum > maxStackSize && (
             <button
+              type="button"
               className="move-amount-button dim-button"
               tabIndex={-1}
               onClick={this.downstack}
@@ -55,14 +61,25 @@ export default class ItemMoveAmount extends React.Component<Props> {
               {t('MoveAmount.MinusStack')}
             </button>
           )}
-          <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.decrement}>
+          <button
+            type="button"
+            className="move-amount-button dim-button"
+            tabIndex={-1}
+            onClick={this.decrement}
+          >
             -1
           </button>
-          <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.increment}>
+          <button
+            type="button"
+            className="move-amount-button dim-button"
+            tabIndex={-1}
+            onClick={this.increment}
+          >
             +1
           </button>
           {maximum > maxStackSize && (
             <button
+              type="button"
               className="move-amount-button dim-button"
               tabIndex={-1}
               onClick={this.upstack}
@@ -71,7 +88,12 @@ export default class ItemMoveAmount extends React.Component<Props> {
               {t('MoveAmount.PlusStack')}
             </button>
           )}
-          <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.max}>
+          <button
+            type="button"
+            className="move-amount-button dim-button"
+            tabIndex={-1}
+            onClick={this.max}
+          >
             {maximum.toLocaleString()}
           </button>
         </div>

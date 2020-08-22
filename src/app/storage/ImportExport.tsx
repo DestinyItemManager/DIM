@@ -70,7 +70,7 @@ export default function ImportExport({
     <div className="storage-adapter">
       <h3>{t('Storage.ImportExport')}</h3>
       <p>
-        <button className="dim-button" onClick={exportData}>
+        <button type="button" className="dim-button" onClick={exportData}>
           <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
         </button>
       </p>

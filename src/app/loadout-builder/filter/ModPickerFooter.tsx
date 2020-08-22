@@ -22,7 +22,7 @@ function ModPickerFooter(props: Props) {
   return (
     <div className={styles.footer}>
       <div>
-        <button className={styles.submitButton} onClick={onSubmit}>
+        <button type="button" className={styles.submitButton} onClick={onSubmit}>
           {!isPhonePortrait && '⏎ '}
           {t('LB.SelectMods')}
         </button>

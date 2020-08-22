@@ -278,7 +278,7 @@ function InfusionFinder({
             {result ? <ConnectedInventoryItem item={result} /> : missingItem}
           </div>
           <div className="infuseActions">
-            <button className="dim-button" onClick={switchDirection}>
+            <button type="button" className="dim-button" onClick={switchDirection}>
               <AppIcon icon={faRandom} /> {t('Infusion.SwitchDirection')}
             </button>
             {result && effectiveSource && effectiveTarget && (

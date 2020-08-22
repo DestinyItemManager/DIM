@@ -446,7 +446,11 @@ function ItemTable({
     };
 
     downloadAction = (
-      <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadHandler}>
+      <button
+        type="button"
+        className={clsx(styles.importButton, 'dim-button')}
+        onClick={downloadHandler}
+      >
         <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
       </button>
     );

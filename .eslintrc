@@ -78,6 +78,7 @@
     "react/no-access-state-in-setstate": "error",
     "react/no-this-in-sfc": "error",
     "react/no-unused-state": "error",
+    "react/button-has-type": "error",
     "lodash/collection-method-value": "error",
     "lodash/collection-return": "error",
     "lodash/no-extra-args": "error",
