@@ -158,7 +158,9 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <div className="dim-page">
         <ErrorPanel
           title={
-            isManifestError ? t('Accounts.ErrorLoadManifest') : t('Accounts.ErrorLoadInventory')
+            isManifestError
+              ? t('Accounts.ErrorLoadManifest')
+              : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
           showTwitters={true}
