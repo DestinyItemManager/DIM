@@ -1026,7 +1026,7 @@
     "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wunschliste mit Informationen über {{count, number}} Rolls geladen. {{titleAndDescription}}",
-    "InvalidExternalSource": "Bitte gib eine gültige URL für die externe Wunschlistenquelle ein. Die URL muss mit https://raw.githubusercontent.com beginnen",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Zuletzt aktualisiert: {{lastUpdatedDate}} um {{lastUpdatedTime}}",
     "Num": "{{num, number}} Rolls in deiner Wunschliste",
     "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",

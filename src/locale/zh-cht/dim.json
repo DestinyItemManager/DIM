@@ -1026,7 +1026,7 @@
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "願望單加載了某物品的信息。{{titleAndDescription}}",
     "ImportSuccess_plural": "願望單載入了有關{{count, number}} 個作品的資訊。{{titleAndDescription}}",
-    "InvalidExternalSource": "請為您的外部願望清單來源輸入一個有效的URL。URL必須以https://raw.githubusercontent.com開頭",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "在您的願望單中有{{num, number}} 個物品",
     "UpdateExternalSource": "更新願望清單來源",
