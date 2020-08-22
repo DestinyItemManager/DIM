@@ -1,8 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { LockedArmor2Mod, ModPickerCategory } from '../types';
+import { LockedArmor2Mod, ModPickerCategory, ModPickerCategories } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export default function ModPickerSection({
@@ -26,17 +27,26 @@ export default function ModPickerSection({
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
+  const lockedModCost = _.sumBy(locked, (l) => l.mod.plug.energyCost?.energyCost || 0);
+  const isNotGeneralOrSeasonal =
+    category !== ModPickerCategories.general && category !== ModPickerCategories.seasonal;
+  const allLockedAreAnyEnergy = locked?.every(
+    (locked) => locked.mod.plug.energyCost!.energyType === DestinyEnergyType.Any
+  );
+
   const isModUnSelectable = (item: LockedArmor2Mod) => {
-    if (locked && locked.length >= maximumSelectable) {
+    const itemEnergyCost = item.mod.plug.energyCost?.energyCost || 0;
+    if (
+      locked &&
+      (locked.length >= maximumSelectable ||
+        (isNotGeneralOrSeasonal && lockedModCost + itemEnergyCost > 10))
+    ) {
       return true;
     }
 
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
-      if (
-        item.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
-        locked?.every((locked) => locked.mod.plug.energyCost!.energyType === DestinyEnergyType.Any)
-      ) {
+      if (item.mod.plug.energyCost!.energyType === DestinyEnergyType.Any || allLockedAreAnyEnergy) {
         return false;
       }
 
