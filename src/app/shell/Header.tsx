@@ -16,7 +16,6 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
@@ -30,6 +29,7 @@ import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { Hotkey } from 'app/hotkeys/hotkeys';
+import { useHotkeys } from 'app/hotkeys/useHotkey';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -274,6 +274,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       },
     },
   ];
+  useHotkeys(hotkeys);
 
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
@@ -282,20 +283,18 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   return (
     <header id="header" className={showSearch ? 'search-expanded' : ''}>
-      <GlobalHotkeys hotkeys={hotkeys}>
-        <a
-          className="menu link menuItem"
-          ref={dropdownToggler}
-          onClick={toggleDropdown}
-          role="button"
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
-        >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </a>
-      </GlobalHotkeys>
+      <a
+        className="menu link menuItem"
+        ref={dropdownToggler}
+        onClick={toggleDropdown}
+        role="button"
+        aria-haspopup="menu"
+        aria-label={t('Header.Menu')}
+        aria-expanded={dropdownOpen}
+      >
+        <AppIcon icon={menuIcon} />
+        <MenuBadge />
+      </a>
       <TransitionGroup component={null}>
         {dropdownOpen && (
           <CSSTransition

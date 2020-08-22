@@ -6,7 +6,6 @@ import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import ItemActions from './ItemActions';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
@@ -29,6 +28,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'app/utils/hooks';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -210,6 +210,8 @@ function ItemPopupContainer({
     reposition();
   });
 
+  useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
+
   if (!currentItem?.item) {
     return null;
   }
@@ -257,24 +259,12 @@ function ItemPopupContainer({
       aria-modal="false"
     >
       <ClickOutside onClickOutside={onClose}>
-        <ItemTagHotkeys item={item}>
-          {header}
-          {body}
-          <div className="item-details">{footer}</div>
-        </ItemTagHotkeys>
+        <ItemTagHotkeys item={item} />
+        {header}
+        {body}
+        <div className="item-details">{footer}</div>
       </ClickOutside>
       <div className={clsx(styles.arrow, tierClasses[item.tier])} />
-      <GlobalHotkeys
-        hotkeys={[
-          {
-            combo: 'esc',
-            description: t('Hotkey.ClearDialog'),
-            callback: () => {
-              onClose();
-            },
-          },
-        ]}
-      />
     </div>
   );
 }

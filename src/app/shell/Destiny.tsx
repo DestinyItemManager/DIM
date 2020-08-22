@@ -3,7 +3,6 @@ import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 import { t } from 'app/i18next-t';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { connect } from 'react-redux';
@@ -22,6 +21,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { useHotkeys } from 'app/hotkeys/useHotkey';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -111,6 +111,32 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   const { path, url } = useRouteMatch();
 
+  // Define some hotkeys without implementation, so they show up in the help
+  const hotkeys: Hotkey[] = [
+    {
+      combo: 't',
+      description: t('Hotkey.ToggleDetails'),
+      callback() {
+        // Empty - this gets redefined in dimMoveItemProperties
+      },
+    },
+  ];
+
+  itemTagList.forEach((tag) => {
+    if (tag.hotkey) {
+      hotkeys.push({
+        combo: tag.hotkey,
+        description: t('Hotkey.MarkItemAs', {
+          tag: t(tag.label),
+        }),
+        callback() {
+          // Empty - this gets redefined in item-tag.component.ts
+        },
+      });
+    }
+  });
+  useHotkeys(hotkeys);
+
   if (!account) {
     return accountsLoaded ? (
       <div className="dim-page">
@@ -155,31 +181,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       </div>
     );
   }
-
-  // Define some hotkeys without implementation, so they show up in the help
-  const hotkeys: Hotkey[] = [
-    {
-      combo: 't',
-      description: t('Hotkey.ToggleDetails'),
-      callback() {
-        // Empty - this gets redefined in dimMoveItemProperties
-      },
-    },
-  ];
-
-  itemTagList.forEach((tag) => {
-    if (tag.hotkey) {
-      hotkeys.push({
-        combo: tag.hotkey,
-        description: t('Hotkey.MarkItemAs', {
-          tag: t(tag.label),
-        }),
-        callback() {
-          // Empty - this gets redefined in item-tag.component.ts
-        },
-      });
-    }
-  });
 
   return (
     <>
@@ -243,7 +244,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           </Route>
         </Switch>
       </div>
-      <GlobalHotkeys hotkeys={hotkeys} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
