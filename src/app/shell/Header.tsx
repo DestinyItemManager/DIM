@@ -313,9 +313,9 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       </Link>
       <div className="header-links">{reverseDestinyLinks}</div>
       <div className="header-right">
-        {account && (
-          <span className={clsx('search-link menuItem', { show: showSearch })}>
-            <SearchFilter onClear={hideSearch} ref={searchFilter} mobile={showSearch} />
+        {account && (!isPhonePortrait || showSearch) && (
+          <span className={clsx('search-link menuItem')}>
+            <SearchFilter onClear={hideSearch} ref={searchFilter} />
           </span>
         )}
         <Refresh />

@@ -398,6 +398,8 @@ module.exports = (env) => {
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Detach stats from the sticky header on mobile
         '$featureFlags.unstickyStats': JSON.stringify(!env.release),
+        // New search bar
+        '$featureFlags.newSearch': JSON.stringify(!env.release),
       }),
 
       new WorkerPlugin({

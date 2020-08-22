@@ -88,6 +88,7 @@ const canonicalize = [
     'is:rocketlauncher (perk:"tracking module" or perk:cluster)',
   ],
   ['( power:>1000 and -modslot:arrival ) ', '-modslot:arrival power:>1000'],
+  ['food fight', 'fight food'],
 ];
 
 test.each(cases)('parse |%s|', (query) => {

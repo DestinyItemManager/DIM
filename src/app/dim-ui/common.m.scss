@@ -13,3 +13,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.resetButton {
+  -webkit-appearance: button;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}

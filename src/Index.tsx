@@ -12,7 +12,7 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
-import { watchLanguageChanges } from './app/settings/settings';
+import { watchLanguageChanges } from './app/settings/observers';
 import { saveReviewsToIndexedDB } from './app/item-review/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
