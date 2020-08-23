@@ -338,7 +338,8 @@ class Compare extends React.Component<Props, State> {
       <ElementIcon key={exampleItem.id} element={exampleItem.element} />
     );
     const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
-    const specialtyModSlotName = getItemSpecialtyModSlotDisplayName(exampleItem);
+    const specialtyModSlotName =
+      (this.props.defs && getItemSpecialtyModSlotDisplayName(exampleItem, this.props.defs)) ?? '';
 
     // helper functions for filtering items
     const matchesExample = (key: keyof DimItem) => (item: DimItem) =>

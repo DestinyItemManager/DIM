@@ -11,6 +11,7 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType or EnergyType into a known english name
@@ -71,8 +72,15 @@ export const getSpecialtySocketMetadataByPlugCategoryHash = (
  *
  * `''` if not found, so you can let it stay blank or `||` it
  */
-export const getItemSpecialtyModSlotDisplayName = (item: DimItem): string =>
-  getSpecialtySocket(item)?.plugged?.plugDef.itemTypeDisplayName || '';
+export const getItemSpecialtyModSlotDisplayName = (
+  item: DimItem,
+  defs: D2ManifestDefinitions
+): string => {
+  const emptyModSocketHash = getSpecialtySocketMetadata(item)?.emptyModSocketHash;
+  return (
+    (emptyModSocketHash && defs.InventoryItem.get(emptyModSocketHash).itemTypeDisplayName) || ''
+  );
+};
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
