@@ -207,12 +207,21 @@ function SearchBar(
             ...changes,
             isOpen: false,
           };
+        case useCombobox.stateChangeTypes.InputKeyDownEscape: {
+          // Reimplement clear - we are controlling the input which break this
+          // See https://github.com/downshift-js/downshift/issues/1108
+          setLiveQuery('');
+          debouncedUpdateQuery('');
+          debouncedUpdateQuery.flush();
+          return changes;
+        }
         default:
           return changes; // otherwise business as usual.
       }
     },
   });
 
+  // This is a hack to fix https://github.com/downshift-js/downshift/issues/1108
   const onChange = (e) => {
     const inputValue = e.target.value;
     setLiveQuery(inputValue || '');
