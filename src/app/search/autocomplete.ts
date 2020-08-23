@@ -179,22 +179,15 @@ export function autocompleteTermSuggestions(
   if (match) {
     const term = match[1];
     const candidates = filterComplete(term);
-
-    const replace = (word: string) => {
-      word = word.toLowerCase();
-      return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
-    };
-
     const base = query.slice(0, match.index);
 
     // new query is existing query minus match plus suggestion
     return candidates.map((word) => {
-      const replacement = replace(word);
-      const newQuery = base + replacement + query.slice(caretIndex);
+      const newQuery = base + word + query.slice(caretIndex);
       return {
         query: newQuery,
         type: SearchItemType.Autocomplete,
-        highlightRange: [match.index, match.index + replacement.length],
+        highlightRange: [match.index, match.index + word.length],
         // TODO: help from the matched query
       };
     });
