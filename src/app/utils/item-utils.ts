@@ -76,7 +76,7 @@ export const getItemSpecialtyModSlotDisplayName = (
   item: DimItem,
   defs: D2ManifestDefinitions
 ): string => {
-  const { emptyModSocketHash } = getSpecialtySocketMetadata(item) ?? {};
+  const emptyModSocketHash = getSpecialtySocketMetadata(item)?.emptyModSocketHash;
   return (
     (emptyModSocketHash && defs.InventoryItem.get(emptyModSocketHash).itemTypeDisplayName) || ''
   );
