@@ -28,7 +28,7 @@ import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { searchUsed, saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { useCombobox } from 'downshift';
@@ -37,9 +37,11 @@ import clsx from 'clsx';
 import { parseQuery, canonicalizeQuery } from './query-parser';
 import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
 import HighlightedText from './HighlightedText';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { searchConfigSelector } from './search-config';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { createSelector } from 'reselect';
+import { Search } from '@destinyitemmanager/dim-api-types';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -66,7 +68,23 @@ interface ProvidedProps {
   onClear?(): void;
 }
 
-type Props = ProvidedProps;
+interface StoreProps {
+  recentSearches: Search[];
+  isPhonePortrait: boolean;
+  autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
+}
+
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+
+const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    recentSearches: recentSearchesSelector(state),
+    isPhonePortrait: isPhonePortraitSelector(state),
+    autocompleter: autoCompleterSelector(state),
+  };
+}
 
 const LazyFilterHelp = React.lazy(() =>
   import(/* webpackChunkName: "filter-help" */ './FilterHelp')
@@ -82,8 +100,6 @@ export interface SearchFilterRef {
   clearFilter(): void;
 }
 
-const aucocompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
-
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay. This is the new version of the component
@@ -91,7 +107,7 @@ const aucocompleterSelector = createSelector(searchConfigSelector, createAutocom
  *
  * TODO: Should this be the main search bar only, or should it also work for item picker, etc?
  */
-export default React.forwardRef(function SearchFilterInput(
+function SearchBar(
   {
     searchQueryVersion,
     searchQuery,
@@ -100,15 +116,16 @@ export default React.forwardRef(function SearchFilterInput(
     autoFocus,
     onQueryChanged,
     onClear,
+    dispatch,
+    autocompleter,
+    recentSearches,
+    isPhonePortrait,
   }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
+  console.time('Render SearchBar');
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
-  const dispatch = useDispatch();
-  const autocompleter = useSelector(aucocompleterSelector);
-  const isPhonePortrait = useSelector(isPhonePortraitSelector);
-  const recentSearches = useSelector(recentSearchesSelector);
   const inputElement = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
   // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
@@ -124,10 +141,6 @@ export default React.forwardRef(function SearchFilterInput(
     }, 500),
     [onQueryChanged]
   );
-
-  const focusFilterInput = useCallback(() => {
-    inputElement.current?.focus();
-  }, []);
 
   const onBlur = () => {
     if (liveQuery) {
@@ -241,10 +254,12 @@ export default React.forwardRef(function SearchFilterInput(
   useImperativeHandle(
     ref,
     () => ({
-      focusFilterInput,
+      focusFilterInput: () => {
+        inputElement.current?.focus();
+      },
       clearFilter,
     }),
-    [focusFilterInput, clearFilter]
+    [clearFilter]
   );
 
   // Setting this ref's value allows us to set the cursor position to a specific index on the next render
@@ -276,7 +291,7 @@ export default React.forwardRef(function SearchFilterInput(
 
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   // TODO: break this stuff uppppp
-  return (
+  const result = (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
@@ -397,4 +412,11 @@ export default React.forwardRef(function SearchFilterInput(
       </ul>
     </div>
   );
-});
+
+  console.timeEnd('Render SearchBar');
+  return result;
+}
+
+export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
+  React.forwardRef(SearchBar)
+);
