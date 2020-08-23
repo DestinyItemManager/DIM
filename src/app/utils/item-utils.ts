@@ -53,19 +53,10 @@ export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {
 };
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | undefined => {
-  // console.log(item);
-  // console.log(getSpecialtySocket(item));
-  // console.log(
-  //   modMetadataBySocketTypeHash[
-  //     getSpecialtySocket(item)?.socketDefinition.socketTypeHash || -99999999
-  //   ]
-  // );
-  _.noop();
-  return modMetadataBySocketTypeHash[
+export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | undefined =>
+  modMetadataBySocketTypeHash[
     getSpecialtySocket(item)?.socketDefinition.socketTypeHash || -99999999
   ];
-};
 
 /**
  * returns ModMetadata if the plugCategoryHash (from a mod definition's .plug) is known
