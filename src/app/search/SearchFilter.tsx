@@ -191,9 +191,46 @@ export function SearchFilter(
 
   // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
-  const placeholder = isPhonePortrait
-    ? t('Header.FilterHelpBrief')
-    : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' });
+  const placeholder = useMemo(
+    () =>
+      isPhonePortrait
+        ? t('Header.FilterHelpBrief')
+        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+    [isPhonePortrait]
+  );
+
+  const extras = (
+    <>
+      {!onProgress && (
+        <span className="filter-match-count">
+          {t('Header.FilterMatchCount', { count: filteredItems.length })}
+        </span>
+      )}
+      {isComparable && (
+        <span
+          onClick={compareMatching}
+          className="filter-bar-button"
+          title={t('Header.CompareMatching')}
+        >
+          <AppIcon icon={faClone} />
+        </span>
+      )}
+
+      {showSelect ? (
+        <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
+          {bulkItemTags.map((tag) => (
+            <option key={tag.type || 'default'} value={tag.type}>
+              {t(tag.label)}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
+          <AppIcon icon={tagIcon} />
+        </span>
+      )}
+    </>
+  );
 
   return $featureFlags.newSearch ? (
     <SearchBar
@@ -204,36 +241,7 @@ export function SearchFilter(
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}
     >
-      <>
-        {!onProgress && (
-          <span className="filter-match-count">
-            {t('Header.FilterMatchCount', { count: filteredItems.length })}
-          </span>
-        )}
-        {isComparable && (
-          <span
-            onClick={compareMatching}
-            className="filter-bar-button"
-            title={t('Header.CompareMatching')}
-          >
-            <AppIcon icon={faClone} />
-          </span>
-        )}
-
-        {showSelect ? (
-          <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
-            {bulkItemTags.map((tag) => (
-              <option key={tag.type || 'default'} value={tag.type}>
-                {t(tag.label)}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
-            <AppIcon icon={tagIcon} />
-          </span>
-        )}
-      </>
+      {extras}
     </SearchBar>
   ) : (
     <SearchFilterInput
@@ -245,36 +253,7 @@ export function SearchFilter(
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}
     >
-      <>
-        {!onProgress && (
-          <span className="filter-match-count">
-            {t('Header.FilterMatchCount', { count: filteredItems.length })}
-          </span>
-        )}
-        {isComparable && (
-          <span
-            onClick={compareMatching}
-            className="filter-bar-button"
-            title={t('Header.CompareMatching')}
-          >
-            <AppIcon icon={faClone} />
-          </span>
-        )}
-
-        {showSelect ? (
-          <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
-            {bulkItemTags.map((tag) => (
-              <option key={tag.type || 'default'} value={tag.type}>
-                {t(tag.label)}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
-            <AppIcon icon={tagIcon} />
-          </span>
-        )}
-      </>
+      {extras}
     </SearchFilterInput>
   );
 }
