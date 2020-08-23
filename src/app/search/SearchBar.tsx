@@ -179,11 +179,15 @@ function SearchBar(
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
-      // Handle selecting the special "help" item
-      if (selectedItem?.type === SearchItemType.Help) {
-        setFilterHelpOpen(true);
-      } else {
-        debouncedUpdateQuery.flush();
+      if (selectedItem) {
+        // Handle selecting the special "help" item
+        if (selectedItem.type === SearchItemType.Help) {
+          setFilterHelpOpen(true);
+        } else {
+          setLiveQuery(selectedItem.query);
+          debouncedUpdateQuery(selectedItem.query);
+          debouncedUpdateQuery.flush();
+        }
       }
     },
     stateReducer: (state, actionAndChanges) => {
