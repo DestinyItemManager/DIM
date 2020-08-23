@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './header.scss';
@@ -16,7 +16,6 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import { connect } from 'react-redux';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
@@ -29,7 +28,9 @@ import { useLocation, useHistory } from 'react-router';
 import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { Hotkey } from 'app/hotkeys/hotkeys';
 import { setSearchQuery } from './actions';
+import { useHotkeys } from 'app/hotkeys/useHotkey';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -55,10 +56,10 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLAnchorElement>(null);
-  const toggleDropdown = (e) => {
+  const toggleDropdown = useCallback((e) => {
     e.preventDefault();
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
-  };
+  }, []);
 
   const hideDropdown = (event) => {
     if (!dropdownToggler.current || !dropdownToggler.current.contains(event.target)) {
@@ -226,7 +227,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   const destinyLinks = <>{linkNodes}</>;
   const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
-  const hotkeys = [
+  const hotkeys: Hotkey[] = [
     {
       combo: 'm',
       description: t('Hotkey.Menu'),
@@ -242,7 +243,37 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
           }
       )
     ),
+    {
+      combo: 'f',
+      description: t('Hotkey.StartSearch'),
+      callback: (event) => {
+        if (searchFilter.current) {
+          searchFilter.current.focusFilterInput();
+          if (isPhonePortrait) {
+            setShowSearch(true);
+          }
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    },
+    {
+      combo: 'shift+f',
+      description: t('Hotkey.StartSearchClear'),
+      callback: (event) => {
+        if (searchFilter.current) {
+          searchFilter.current.clearFilter();
+          searchFilter.current.focusFilterInput();
+          if (isPhonePortrait) {
+            setShowSearch(true);
+          }
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    },
   ];
+  useHotkeys(hotkeys);
 
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
@@ -251,20 +282,18 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   return (
     <header id="header" className={showSearch ? 'search-expanded' : ''}>
-      <GlobalHotkeys hotkeys={hotkeys}>
-        <a
-          className="menu link menuItem"
-          ref={dropdownToggler}
-          onClick={toggleDropdown}
-          role="button"
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
-        >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </a>
-      </GlobalHotkeys>
+      <a
+        className="menu link menuItem"
+        ref={dropdownToggler}
+        onClick={toggleDropdown}
+        role="button"
+        aria-haspopup="menu"
+        aria-label={t('Header.Menu')}
+        aria-expanded={dropdownOpen}
+      >
+        <AppIcon icon={menuIcon} />
+        <MenuBadge />
+      </a>
       <TransitionGroup component={null}>
         {dropdownOpen && (
           <CSSTransition

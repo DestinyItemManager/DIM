@@ -1,20 +1,11 @@
-import { useEffect, useState } from 'react';
-import hotkeys, { Hotkey } from './hotkeys';
+import { Hotkey } from './hotkeys';
+import { useHotkeys } from './useHotkey';
 
-let componentId = 0;
-
-export default function GlobalHotkeys({
-  hotkeys: hotkeyDefs,
-  children,
-}: {
-  hotkeys: Hotkey[];
-  children?: any;
-}) {
-  const [id] = useState(() => componentId++);
-  useEffect(() => {
-    hotkeys.register(id, hotkeyDefs);
-    return () => hotkeys.unregister(id);
-  });
-
-  return children || null;
+/**
+ * Used to install global hotkeys that do not require focus and are included in the hotkey cheat sheet.
+ * Prefer useHotkey or useHotkeys hooks.
+ */
+export default function GlobalHotkeys({ hotkeys: hotkeyDefs }: { hotkeys: Hotkey[] }) {
+  useHotkeys(hotkeyDefs);
+  return null;
 }

@@ -10,7 +10,6 @@ import React, {
   useEffect,
 } from 'react';
 
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
 import { searchConfigSelector } from './search-config';
@@ -235,29 +234,6 @@ export default React.forwardRef(function SearchFilterInput(
 
   return (
     <div className="search-filter" role="search">
-      <GlobalHotkeys
-        hotkeys={[
-          {
-            combo: 'f',
-            description: t('Hotkey.StartSearch'),
-            callback: (event) => {
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-          {
-            combo: 'shift+f',
-            description: t('Hotkey.StartSearchClear'),
-            callback: (event) => {
-              clearFilter();
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-        ]}
-      />
       <AppIcon icon={searchIcon} className="search-bar-icon" />
       <input
         ref={inputElement}
