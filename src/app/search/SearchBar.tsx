@@ -142,10 +142,13 @@ function SearchBar(
     [onQueryChanged]
   );
 
+  const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (liveQuery) {
+    if (liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
+      // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));
+      lastBlurQuery.current = liveQuery;
     }
   };
 
@@ -170,9 +173,9 @@ function SearchBar(
     getItemProps,
     reset,
     openMenu,
-    setInputValue,
   } = useCombobox<SearchItem>({
     items,
+    inputValue: liveQuery,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -180,24 +183,9 @@ function SearchBar(
       // Handle selecting the special "help" item
       if (selectedItem?.type === SearchItemType.Help) {
         setFilterHelpOpen(true);
-        return;
-      }
-    },
-    onInputValueChange: ({ inputValue, selectedItem }) => {
-      setLiveQuery(inputValue || '');
-      debouncedUpdateQuery(inputValue || '');
-      // If we selected an item from the menu, apply it immediately
-      if (selectedItem) {
+      } else {
         debouncedUpdateQuery.flush();
       }
-      // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
-      setItems(
-        autocompleter(
-          inputValue || '',
-          inputElement.current!.selectionStart || liveQuery.length,
-          recentSearches
-        )
-      );
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges;
@@ -221,6 +209,22 @@ function SearchBar(
       }
     },
   });
+
+  const onChange = (e) => {
+    const inputValue = e.target.value;
+    console.log('onChange', { inputValue });
+    setLiveQuery(inputValue || '');
+    debouncedUpdateQuery(inputValue || '');
+    // TODO: set both of these at once?
+    // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
+    setItems(
+      autocompleter(
+        inputValue || '',
+        inputElement.current!.selectionStart || inputValue.length,
+        recentSearches
+      )
+    );
+  };
 
   const onFocus = () => {
     if (!liveQuery) {
@@ -282,7 +286,7 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && tabAutocompleteItem) {
       e.preventDefault();
-      setInputValue(tabAutocompleteItem.query);
+      setLiveQuery(tabAutocompleteItem.query);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
@@ -304,6 +308,7 @@ function SearchBar(
           onBlur,
           onFocus,
           onKeyDown,
+          onChange,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',

@@ -44,7 +44,7 @@
 
 .menuItem {
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: baseline;
+  align-items: center;
   padding: 7px 9px 7px 9px;
 
   @include phone-portrait {
@@ -110,5 +110,9 @@
   .highlightedItem & {
     color: #222;
     border-color: #222;
+  }
+
+  .menuItem:hover & {
+    display: none;
   }
 }

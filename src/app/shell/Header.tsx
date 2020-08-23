@@ -128,7 +128,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   // Focus search when shown
   useEffect(() => {
-    if (searchFilter.current) {
+    if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
   }, [showSearch]);
