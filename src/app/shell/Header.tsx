@@ -70,11 +70,11 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   // Mobile search bar
   const [showSearch, setShowSearch] = useState(false);
   const toggleSearch = () => setShowSearch((showSearch) => !showSearch);
-  const hideSearch = () => {
+  const hideSearch = useCallback(() => {
     if (showSearch) {
       setShowSearch(false);
     }
-  };
+  }, [showSearch]);
 
   // Install DIM as a PWA
   const [promptIosPwa, setPromptIosPwa] = useState(false);
@@ -128,7 +128,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   // Focus search when shown
   useEffect(() => {
-    if (searchFilter.current) {
+    if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
   }, [showSearch]);

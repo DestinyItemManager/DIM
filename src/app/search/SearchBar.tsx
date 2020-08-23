@@ -28,7 +28,7 @@ import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { searchUsed, saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { useCombobox } from 'downshift';
@@ -37,9 +37,11 @@ import clsx from 'clsx';
 import { parseQuery, canonicalizeQuery } from './query-parser';
 import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
 import HighlightedText from './HighlightedText';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { searchConfigSelector } from './search-config';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import { createSelector } from 'reselect';
+import { Search } from '@destinyitemmanager/dim-api-types';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -66,7 +68,23 @@ interface ProvidedProps {
   onClear?(): void;
 }
 
-type Props = ProvidedProps;
+interface StoreProps {
+  recentSearches: Search[];
+  isPhonePortrait: boolean;
+  autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
+}
+
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+
+const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    recentSearches: recentSearchesSelector(state),
+    isPhonePortrait: isPhonePortraitSelector(state),
+    autocompleter: autoCompleterSelector(state),
+  };
+}
 
 const LazyFilterHelp = React.lazy(() =>
   import(/* webpackChunkName: "filter-help" */ './FilterHelp')
@@ -89,7 +107,7 @@ export interface SearchFilterRef {
  *
  * TODO: Should this be the main search bar only, or should it also work for item picker, etc?
  */
-export default React.forwardRef(function SearchFilterInput(
+function SearchBar(
   {
     searchQueryVersion,
     searchQuery,
@@ -98,17 +116,15 @@ export default React.forwardRef(function SearchFilterInput(
     autoFocus,
     onQueryChanged,
     onClear,
+    dispatch,
+    autocompleter,
+    recentSearches,
+    isPhonePortrait,
   }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
-  const dispatch = useDispatch();
-  const autocompleter = useSelector((state: RootState) =>
-    createAutocompleter(searchConfigSelector(state))
-  );
-  const isPhonePortrait = useSelector(isPhonePortraitSelector);
-  const recentSearches = useSelector(recentSearchesSelector);
   const inputElement = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
   // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
@@ -125,20 +141,19 @@ export default React.forwardRef(function SearchFilterInput(
     [onQueryChanged]
   );
 
-  const focusFilterInput = useCallback(() => {
-    inputElement.current?.focus();
-  }, []);
-
+  const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (liveQuery) {
+    if (liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
+      // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));
+      lastBlurQuery.current = liveQuery;
     }
   };
 
   // Is the current search saved?
-  const canonical = canonicalizeQuery(parseQuery(liveQuery));
-  const saved = recentSearches.find((s) => s.query === canonical)?.saved;
+  const canonical = liveQuery ? canonicalizeQuery(parseQuery(liveQuery)) : '';
+  const saved = canonical ? recentSearches.find((s) => s.query === canonical)?.saved : false;
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
@@ -157,9 +172,9 @@ export default React.forwardRef(function SearchFilterInput(
     getItemProps,
     reset,
     openMenu,
-    setInputValue,
   } = useCombobox<SearchItem>({
     items,
+    inputValue: liveQuery,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -167,24 +182,9 @@ export default React.forwardRef(function SearchFilterInput(
       // Handle selecting the special "help" item
       if (selectedItem?.type === SearchItemType.Help) {
         setFilterHelpOpen(true);
-        return;
-      }
-    },
-    onInputValueChange: ({ inputValue, selectedItem }) => {
-      setLiveQuery(inputValue || '');
-      debouncedUpdateQuery(inputValue || '');
-      // If we selected an item from the menu, apply it immediately
-      if (selectedItem) {
+      } else {
         debouncedUpdateQuery.flush();
       }
-      // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
-      setItems(
-        autocompleter(
-          inputValue || '',
-          inputElement.current!.selectionStart || liveQuery.length,
-          recentSearches
-        )
-      );
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges;
@@ -209,6 +209,21 @@ export default React.forwardRef(function SearchFilterInput(
     },
   });
 
+  const onChange = (e) => {
+    const inputValue = e.target.value;
+    setLiveQuery(inputValue || '');
+    debouncedUpdateQuery(inputValue || '');
+    // TODO: set both of these at once?
+    // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
+    setItems(
+      autocompleter(
+        inputValue || '',
+        inputElement.current!.selectionStart || inputValue.length,
+        recentSearches
+      )
+    );
+  };
+
   const onFocus = () => {
     if (!liveQuery) {
       openMenu();
@@ -216,6 +231,7 @@ export default React.forwardRef(function SearchFilterInput(
   };
 
   const clearFilter = useCallback(() => {
+    setLiveQuery('');
     debouncedUpdateQuery('');
     debouncedUpdateQuery.flush();
     onClear?.();
@@ -228,21 +244,28 @@ export default React.forwardRef(function SearchFilterInput(
     if (searchQuery !== undefined) {
       setLiveQuery(searchQuery);
     }
-  }, [searchQueryVersion, searchQuery]);
+    // This should only happen when the query version changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQueryVersion]);
 
-  const deleteSearch = (e: React.MouseEvent, item: SearchItem) => {
-    e.stopPropagation();
-    dispatch(searchDeleted(item.query));
-  };
+  const deleteSearch = useCallback(
+    (e: React.MouseEvent, item: SearchItem) => {
+      e.stopPropagation();
+      dispatch(searchDeleted(item.query));
+    },
+    [dispatch]
+  );
 
   // Add some methods for refs to use
   useImperativeHandle(
     ref,
     () => ({
-      focusFilterInput,
+      focusFilterInput: () => {
+        inputElement.current?.focus();
+      },
       clearFilter,
     }),
-    [focusFilterInput, clearFilter]
+    [clearFilter]
   );
 
   // Setting this ref's value allows us to set the cursor position to a specific index on the next render
@@ -265,15 +288,13 @@ export default React.forwardRef(function SearchFilterInput(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && tabAutocompleteItem) {
       e.preventDefault();
-      setInputValue(tabAutocompleteItem.query);
+      setLiveQuery(tabAutocompleteItem.query);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
     }
   };
 
-  // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
-  // TODO: break this stuff uppppp
   return (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
@@ -287,6 +308,7 @@ export default React.forwardRef(function SearchFilterInput(
           onBlur,
           onFocus,
           onKeyDown,
+          onChange,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',
@@ -357,42 +379,72 @@ export default React.forwardRef(function SearchFilterInput(
               key={`${item.type}${item.query}`}
               {...getItemProps({ item, index })}
             >
-              <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-              <span className={styles.menuItemQuery}>
-                {item.type === SearchItemType.Help ? (
-                  t('Header.FilterHelpMenuItem')
-                ) : item.highlightRange ? (
-                  <HighlightedText
-                    text={item.query}
-                    startIndex={item.highlightRange[0]}
-                    endIndex={item.highlightRange[1]}
-                    className={styles.textHighlight}
-                  />
-                ) : (
-                  item.query
-                )}
-              </span>
-              {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
-              {!isPhonePortrait && item === tabAutocompleteItem && (
-                <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
-              )}
-              {!isPhonePortrait && highlightedIndex === index && (
-                <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
-              )}
-              {(highlightedIndex === index || isPhonePortrait) &&
-                (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-                  <button
-                    type="button"
-                    className={styles.deleteIcon}
-                    onClick={(e) => deleteSearch(e, item)}
-                    title={t('Header.DeleteSearch')}
-                  >
-                    <AppIcon icon={closeIcon} />
-                  </button>
-                )}
+              <Row
+                highlighted={highlightedIndex === index}
+                item={item}
+                isPhonePortrait={isPhonePortrait}
+                isTabAutocompleteItem={item === tabAutocompleteItem}
+                onClick={deleteSearch}
+              />
             </li>
           ))}
       </ul>
     </div>
   );
-});
+}
+
+export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
+  React.forwardRef(SearchBar)
+);
+
+const Row = React.memo(
+  ({
+    highlighted,
+    item,
+    isPhonePortrait,
+    isTabAutocompleteItem,
+    onClick,
+  }: {
+    highlighted: boolean;
+    item: SearchItem;
+    isPhonePortrait: boolean;
+    isTabAutocompleteItem: boolean;
+    onClick(e: React.MouseEvent, item: SearchItem);
+  }) => (
+    <>
+      <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+      <span className={styles.menuItemQuery}>
+        {item.type === SearchItemType.Help ? (
+          t('Header.FilterHelpMenuItem')
+        ) : item.highlightRange ? (
+          <HighlightedText
+            text={item.query}
+            startIndex={item.highlightRange[0]}
+            endIndex={item.highlightRange[1]}
+            className={styles.textHighlight}
+          />
+        ) : (
+          item.query
+        )}
+      </span>
+      {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
+      {!isPhonePortrait && isTabAutocompleteItem && (
+        <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
+      )}
+      {!isPhonePortrait && highlighted && (
+        <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
+      )}
+      {(highlighted || isPhonePortrait) &&
+        (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+          <button
+            type="button"
+            className={styles.deleteIcon}
+            onClick={(e) => onClick(e, item)}
+            title={t('Header.DeleteSearch')}
+          >
+            <AppIcon icon={closeIcon} />
+          </button>
+        )}
+    </>
+  )
+);
