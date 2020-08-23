@@ -27,13 +27,13 @@ type Props = ProvidedProps & StoreProps;
 function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
   const specialtySocket = getSpecialtySocket(item);
   const emptySlotHash = specialtySocket?.socketDefinition.singleInitialItemHash;
-  const emptySlotIcon = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
-  return emptySlotIcon ? (
-    <PressTip elementType="span" tooltip={emptySlotIcon.itemTypeDisplayName}>
+  const emptySlotItem = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
+  return emptySlotItem ? (
+    <PressTip elementType="span" tooltip={emptySlotItem.itemTypeDisplayName}>
       <div
         className={clsx(className, styles.specialtyModIcon, { [styles.lowRes]: lowRes })}
         style={bungieBackgroundStyle(
-          emptySlotIcon.displayProperties.icon,
+          emptySlotItem.displayProperties.icon,
           'linear-gradient(#0005, #0005)' // forced dark background to help w/ visibility
         )}
       />

@@ -10,7 +10,7 @@ import styles from './ItemTriage.m.scss';
 import _ from 'lodash';
 import { KeepJunkDial, getValueColors } from './ValueDial';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { classIcons } from 'app/inventory/StoreBucket';
 import AppIcon from 'app/shell/icons/AppIcon';
@@ -85,11 +85,11 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: getItemSpecialtyModSlotDisplayName,
+    runIf: getSpecialtySocketMetadata,
     render: (item) => (
       <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
     ),
-    value: getItemSpecialtyModSlotDisplayName,
+    value: (item) => getSpecialtySocketMetadata(item)?.tag ?? '',
   },
   armorSlot: {
     id: 'armorSlot',
