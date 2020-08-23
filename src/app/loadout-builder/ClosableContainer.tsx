@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ClosableContainer.m.scss';
+import clsx from 'clsx';
 
 /**
  * A generic wrapper that adds a "close" button in the top right corner.
@@ -16,7 +17,14 @@ export default function ClosableContainer({
   return (
     <div className={styles.container}>
       {children}
-      {enabled && <div className={styles.close} onClick={onClose} role="button" tabIndex={0} />}
+      {enabled && (
+        <div
+          className={clsx(styles.close, 'closeableContainer-close')}
+          onClick={onClose}
+          role="button"
+          tabIndex={0}
+        />
+      )}
     </div>
   );
 }
