@@ -160,6 +160,20 @@ function SearchBar(
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
+  const setQuery = useCallback(
+    (query: string, immediate = false) => {
+      setLiveQuery(query);
+      debouncedUpdateQuery(query);
+      if (immediate) {
+        debouncedUpdateQuery.flush();
+      }
+      setItems(
+        autocompleter(query, inputElement.current!.selectionStart || query.length, recentSearches)
+      );
+    },
+    [autocompleter, debouncedUpdateQuery, recentSearches]
+  );
+
   // useCombobox from Downshift manages the state of the dropdown
   const {
     isOpen,
@@ -184,9 +198,7 @@ function SearchBar(
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
         } else {
-          setLiveQuery(selectedItem.query);
-          debouncedUpdateQuery(selectedItem.query);
-          debouncedUpdateQuery.flush();
+          setQuery(selectedItem.query, true);
         }
       }
     },
@@ -201,18 +213,10 @@ function SearchBar(
                 isOpen: state.isOpen, // but keep menu open
               }
             : changes;
-        case useCombobox.stateChangeTypes.FunctionSelectItem:
-          // Whenever an item is selected, close the menu
-          return {
-            ...changes,
-            isOpen: false,
-          };
         case useCombobox.stateChangeTypes.InputKeyDownEscape: {
           // Reimplement clear - we are controlling the input which break this
           // See https://github.com/downshift-js/downshift/issues/1108
-          setLiveQuery('');
-          debouncedUpdateQuery('');
-          debouncedUpdateQuery.flush();
+          setQuery('', true);
           return changes;
         }
         default:
@@ -224,33 +228,21 @@ function SearchBar(
   // This is a hack to fix https://github.com/downshift-js/downshift/issues/1108
   const onChange = (e) => {
     const inputValue = e.target.value;
-    setLiveQuery(inputValue || '');
-    debouncedUpdateQuery(inputValue || '');
-    // TODO: set both of these at once?
-    // TODO: this isn't great - needs https://github.com/downshift-js/downshift/issues/1144
-    setItems(
-      autocompleter(
-        inputValue || '',
-        inputElement.current!.selectionStart || inputValue.length,
-        recentSearches
-      )
-    );
+    setQuery(inputValue || '');
   };
 
   const onFocus = () => {
-    if (!liveQuery) {
+    if (!liveQuery && !isOpen) {
       openMenu();
     }
   };
 
   const clearFilter = useCallback(() => {
-    setLiveQuery('');
-    debouncedUpdateQuery('');
-    debouncedUpdateQuery.flush();
+    setQuery('', true);
     onClear?.();
     reset();
     openMenu();
-  }, [debouncedUpdateQuery, onClear, reset, openMenu]);
+  }, [setQuery, onClear, reset, openMenu]);
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -301,7 +293,7 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && tabAutocompleteItem) {
       e.preventDefault();
-      setLiveQuery(tabAutocompleteItem.query);
+      setQuery(tabAutocompleteItem.query, true);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
