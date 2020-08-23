@@ -153,8 +153,8 @@ function SearchBar(
   };
 
   // Is the current search saved?
-  const canonical = canonicalizeQuery(parseQuery(liveQuery));
-  const saved = recentSearches.find((s) => s.query === canonical)?.saved;
+  const canonical = liveQuery ? canonicalizeQuery(parseQuery(liveQuery)) : '';
+  const saved = canonical ? recentSearches.find((s) => s.query === canonical)?.saved : false;
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
@@ -212,7 +212,6 @@ function SearchBar(
 
   const onChange = (e) => {
     const inputValue = e.target.value;
-    console.log('onChange', { inputValue });
     setLiveQuery(inputValue || '');
     debouncedUpdateQuery(inputValue || '');
     // TODO: set both of these at once?
@@ -233,6 +232,7 @@ function SearchBar(
   };
 
   const clearFilter = useCallback(() => {
+    setLiveQuery('');
     debouncedUpdateQuery('');
     debouncedUpdateQuery.flush();
     onClear?.();
@@ -249,10 +249,13 @@ function SearchBar(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQueryVersion]);
 
-  const deleteSearch = (e: React.MouseEvent, item: SearchItem) => {
-    e.stopPropagation();
-    dispatch(searchDeleted(item.query));
-  };
+  const deleteSearch = useCallback(
+    (e: React.MouseEvent, item: SearchItem) => {
+      e.stopPropagation();
+      dispatch(searchDeleted(item.query));
+    },
+    [dispatch]
+  );
 
   // Add some methods for refs to use
   useImperativeHandle(
@@ -293,8 +296,6 @@ function SearchBar(
     }
   };
 
-  // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
-  // TODO: break this stuff uppppp
   const result = (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
@@ -379,39 +380,13 @@ function SearchBar(
               key={`${item.type}${item.query}`}
               {...getItemProps({ item, index })}
             >
-              <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-              <span className={styles.menuItemQuery}>
-                {item.type === SearchItemType.Help ? (
-                  t('Header.FilterHelpMenuItem')
-                ) : item.highlightRange ? (
-                  <HighlightedText
-                    text={item.query}
-                    startIndex={item.highlightRange[0]}
-                    endIndex={item.highlightRange[1]}
-                    className={styles.textHighlight}
-                  />
-                ) : (
-                  item.query
-                )}
-              </span>
-              {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
-              {!isPhonePortrait && item === tabAutocompleteItem && (
-                <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
-              )}
-              {!isPhonePortrait && highlightedIndex === index && (
-                <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
-              )}
-              {(highlightedIndex === index || isPhonePortrait) &&
-                (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-                  <button
-                    type="button"
-                    className={styles.deleteIcon}
-                    onClick={(e) => deleteSearch(e, item)}
-                    title={t('Header.DeleteSearch')}
-                  >
-                    <AppIcon icon={closeIcon} />
-                  </button>
-                )}
+              <Row
+                highlighted={highlightedIndex === index}
+                item={item}
+                isPhonePortrait={isPhonePortrait}
+                isTabAutocompleteItem={item === tabAutocompleteItem}
+                onClick={deleteSearch}
+              />
             </li>
           ))}
       </ul>
@@ -424,4 +399,56 @@ function SearchBar(
 
 export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
   React.forwardRef(SearchBar)
+);
+
+const Row = React.memo(
+  ({
+    highlighted,
+    item,
+    isPhonePortrait,
+    isTabAutocompleteItem,
+    onClick,
+  }: {
+    highlighted: boolean;
+    item: SearchItem;
+    isPhonePortrait: boolean;
+    isTabAutocompleteItem: boolean;
+    onClick(e: React.MouseEvent, item: SearchItem);
+  }) => (
+    <>
+      <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+      <span className={styles.menuItemQuery}>
+        {item.type === SearchItemType.Help ? (
+          t('Header.FilterHelpMenuItem')
+        ) : item.highlightRange ? (
+          <HighlightedText
+            text={item.query}
+            startIndex={item.highlightRange[0]}
+            endIndex={item.highlightRange[1]}
+            className={styles.textHighlight}
+          />
+        ) : (
+          item.query
+        )}
+      </span>
+      {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
+      {!isPhonePortrait && isTabAutocompleteItem && (
+        <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
+      )}
+      {!isPhonePortrait && highlighted && (
+        <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
+      )}
+      {(highlighted || isPhonePortrait) &&
+        (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+          <button
+            type="button"
+            className={styles.deleteIcon}
+            onClick={(e) => onClick(e, item)}
+            title={t('Header.DeleteSearch')}
+          >
+            <AppIcon icon={closeIcon} />
+          </button>
+        )}
+    </>
+  )
 );
