@@ -20,6 +20,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useEffect,
+  useLayoutEffect,
 } from 'react';
 
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
@@ -157,6 +158,7 @@ export default React.forwardRef(function SearchFilterInput(
     getItemProps,
     reset,
     openMenu,
+    setInputValue,
   } = useCombobox<SearchItem>({
     items,
     defaultIsOpen: isPhonePortrait,
@@ -191,15 +193,21 @@ export default React.forwardRef(function SearchFilterInput(
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges;
-      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
       switch (type) {
         case useCombobox.stateChangeTypes.FunctionReset:
+          // Keep the menu open when we clear the input
           return changes.inputValue !== undefined
             ? {
                 ...changes, // default Downshift new state changes on item selection.
                 isOpen: state.isOpen, // but keep menu open
               }
             : changes;
+        case useCombobox.stateChangeTypes.FunctionSelectItem:
+          // Whenever an item is selected, close the menu
+          return {
+            ...changes,
+            isOpen: false,
+          };
         default:
           return changes; // otherwise business as usual.
       }
@@ -242,6 +250,33 @@ export default React.forwardRef(function SearchFilterInput(
     [focusFilterInput, clearFilter]
   );
 
+  // Setting this ref's value allows us to set the cursor position to a specific index on the next render
+  const selectionRef = useRef<number>();
+  useLayoutEffect(() => {
+    if (selectionRef.current !== undefined && inputElement.current) {
+      inputElement.current.setSelectionRange(selectionRef.current, selectionRef.current);
+      selectionRef.current = undefined;
+    }
+  });
+
+  // Implement tab completion on the tab key. If the highlighted item is an autocomplete suggestion,
+  // accept it. Otherwise, we scan from the beginning to find the first autocomplete suggestion and
+  // accept that. If there's nothing to accept, the tab key does its normal thing, which is to switch
+  // focus. The tabAutocompleteItem is computed as part of render so we can offer keyboard help.
+  const tabAutocompleteItem =
+    highlightedIndex > 0 && items[highlightedIndex]?.type === SearchItemType.Autocomplete
+      ? items[highlightedIndex]
+      : items.find((s) => s.type === SearchItemType.Autocomplete && s.query !== liveQuery);
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab' && tabAutocompleteItem) {
+      e.preventDefault();
+      setInputValue(tabAutocompleteItem.query);
+      if (tabAutocompleteItem.highlightRange) {
+        selectionRef.current = tabAutocompleteItem.highlightRange[1];
+      }
+    }
+  };
+
   // TODO: move the global hotkeys to SearchFilter so they don't apply everywhere
   // TODO: break this stuff uppppp
   // TODO: memoize hotkeys
@@ -280,6 +315,7 @@ export default React.forwardRef(function SearchFilterInput(
         {...getInputProps({
           onBlur,
           onFocus,
+          onKeyDown,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',
@@ -366,6 +402,12 @@ export default React.forwardRef(function SearchFilterInput(
                 )}
               </span>
               {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
+              {!isPhonePortrait && item === tabAutocompleteItem && (
+                <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
+              )}
+              {!isPhonePortrait && highlightedIndex === index && (
+                <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
+              )}
               {(highlightedIndex === index || isPhonePortrait) &&
                 (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
                   <button

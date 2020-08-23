@@ -407,12 +407,14 @@
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Start a search",
     "StartSearchClear": "Start a fresh search",
+    "Tab": "TAB",
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {

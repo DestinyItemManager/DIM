@@ -3,6 +3,7 @@
 interface CssExports {
   'deleteIcon': string;
   'highlightedItem': string;
+  'keyHelp': string;
   'menu': string;
   'menuItem': string;
   'menuItemHelp': string;
