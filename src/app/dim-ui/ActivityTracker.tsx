@@ -5,8 +5,7 @@ import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { dimNeedsUpdate } from 'app/register-service-worker';
-import { reloadDIM } from 'app/whats-new/WhatsNewLink';
+import { dimNeedsUpdate, reloadDIM } from 'app/register-service-worker';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/types';
 
@@ -19,6 +18,7 @@ interface StoreProps {
   autoRefresh: boolean;
   /** Whether to refresh profile when the page becomes visible after being in the background. */
   refreshProfileOnVisible: boolean;
+  hasSearchQuery: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -34,6 +34,7 @@ function mapStateToProps(state: RootState): StoreProps {
     destinyProfileMinimumRefreshInterval,
     autoRefresh,
     refreshProfileOnVisible,
+    hasSearchQuery: Boolean(state.shell.searchQuery),
   };
 }
 
@@ -117,7 +118,7 @@ class ActivityTracker extends React.Component<Props> {
       if (this.props.refreshProfileOnVisible) {
         this.refreshAccountData();
       }
-    } else if (dimNeedsUpdate) {
+    } else if (dimNeedsUpdate && !this.props.hasSearchQuery) {
       // Sneaky updates - if DIM is hidden and needs an update, do the update.
       reloadDIM();
     }
