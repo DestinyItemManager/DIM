@@ -37,9 +37,9 @@ import clsx from 'clsx';
 import { parseQuery, canonicalizeQuery } from './query-parser';
 import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
 import HighlightedText from './HighlightedText';
-import { RootState } from 'app/store/types';
 import { searchConfigSelector } from './search-config';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import { createSelector } from 'reselect';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -82,6 +82,8 @@ export interface SearchFilterRef {
   clearFilter(): void;
 }
 
+const aucocompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay. This is the new version of the component
@@ -104,9 +106,7 @@ export default React.forwardRef(function SearchFilterInput(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const dispatch = useDispatch();
-  const autocompleter = useSelector((state: RootState) =>
-    createAutocompleter(searchConfigSelector(state))
-  );
+  const autocompleter = useSelector(aucocompleterSelector);
   const isPhonePortrait = useSelector(isPhonePortraitSelector);
   const recentSearches = useSelector(recentSearchesSelector);
   const inputElement = useRef<HTMLInputElement>(null);

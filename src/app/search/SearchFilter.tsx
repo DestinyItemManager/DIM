@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
@@ -184,10 +184,10 @@ export function SearchFilter(
 
   const onTagClicked = () => setShowSelect(true);
 
-  const onClearFilter = () => {
+  const onClearFilter = useCallback(() => {
     setShowSelect(false);
     onClear?.();
-  };
+  }, [onClear]);
 
   // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
