@@ -1,4 +1,3 @@
-import React from 'react';
 import { itemTagList, TagValue, getTag } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { setItemTag, setItemHashTag } from '../inventory/actions';
