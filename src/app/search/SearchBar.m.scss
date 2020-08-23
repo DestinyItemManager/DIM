@@ -98,3 +98,17 @@
     border-bottom-color: #222;
   }
 }
+
+.keyHelp {
+  border-radius: 2px;
+  display: inline-block;
+  padding: 2px 4px;
+  margin-left: 4px;
+  font-size: 8px;
+  color: #ddd;
+  border: 1px solid #ddd;
+  .highlightedItem & {
+    color: #222;
+    border-color: #222;
+  }
+}
