@@ -100,6 +100,24 @@
         --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
     }
+
+    .item-drag-container:hover {
+      // don't display the default outline when hovering over a draggable subclass item
+      outline: none;
+
+      // allow the pseudo-element to render outside the bounds of the item
+      contain: layout style;
+
+      // render a hexagon-shaped pseudo-element to act as the border
+      &::before {
+        content: '';
+        position: absolute;
+        width: var(--item-size);
+        height: var(--item-size);
+        box-sizing: border-box;
+        background: url(~images/engram_outline.svg);
+      }
+    }
   }
 
   // Subclasses
