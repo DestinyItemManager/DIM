@@ -228,7 +228,9 @@ export default React.forwardRef(function SearchFilterInput(
     if (searchQuery !== undefined) {
       setLiveQuery(searchQuery);
     }
-  }, [searchQueryVersion, searchQuery]);
+    // This should only happen when the query version changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQueryVersion]);
 
   const deleteSearch = (e: React.MouseEvent, item: SearchItem) => {
     e.stopPropagation();
