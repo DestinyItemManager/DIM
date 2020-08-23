@@ -123,7 +123,6 @@ function SearchBar(
   }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
-  console.time('Render SearchBar');
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const inputElement = useRef<HTMLInputElement>(null);
@@ -296,7 +295,7 @@ function SearchBar(
     }
   };
 
-  const result = (
+  return (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
@@ -392,9 +391,6 @@ function SearchBar(
       </ul>
     </div>
   );
-
-  console.timeEnd('Render SearchBar');
-  return result;
 }
 
 export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
