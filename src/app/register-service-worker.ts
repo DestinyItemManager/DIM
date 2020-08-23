@@ -158,3 +158,49 @@ function isNewVersion(version: string) {
 
   return false;
 }
+
+/**
+ * Attempt to update the service worker and reload DIM with the new version.
+ */
+export async function reloadDIM() {
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+
+    if (!registration) {
+      console.error('SW: No registration!');
+      window.location.reload();
+      return;
+    }
+
+    if (!registration.waiting) {
+      // Just to ensure registration.waiting is available before
+      // calling postMessage()
+      console.error('SW: registration.waiting is null!');
+
+      const installingWorker = registration.installing;
+      if (installingWorker) {
+        console.log('SW: found an installing service worker');
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === 'installed') {
+            console.log('SW: installing service worker installed, skip waiting');
+            installingWorker.postMessage('skipWaiting');
+          }
+        };
+      } else {
+        window.location.reload();
+      }
+      return;
+    }
+
+    console.log('SW: posting skip waiting');
+    registration.waiting.postMessage('skipWaiting');
+
+    // insurance!
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  } catch (e) {
+    console.error('SW: Error checking registration:', e);
+    window.location.reload();
+  }
+}
