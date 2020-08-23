@@ -291,7 +291,7 @@ function SearchBar(
       ? items[highlightedIndex]
       : items.find((s) => s.type === SearchItemType.Autocomplete && s.query !== liveQuery);
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab' && tabAutocompleteItem) {
+    if (e.key === 'Tab' && !e.altKey && tabAutocompleteItem) {
       e.preventDefault();
       setQuery(tabAutocompleteItem.query, true);
       if (tabAutocompleteItem.highlightRange) {
