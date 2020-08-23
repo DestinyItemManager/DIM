@@ -5,6 +5,7 @@ import { stackableDrag } from './actions';
 import store from '../store/store';
 import { BehaviorSubject } from 'rxjs';
 import { settingsSelector } from 'app/settings/reducer';
+import clsx from 'clsx';
 
 interface ExternalProps {
   item: DimItem;
@@ -83,8 +84,10 @@ function collect(connect: DragSourceConnector): InternalProps {
   };
 }
 
-function DraggableInventoryItem({ connectDragSource, children }: Props) {
-  return connectDragSource(<div className="item-drag-container">{children}</div>);
+function DraggableInventoryItem({ connectDragSource, children, item }: Props) {
+  return connectDragSource(
+    <div className={clsx('item-drag-container', `item-type-${item.type}`)}>{children}</div>
+  );
 }
 
 /**
