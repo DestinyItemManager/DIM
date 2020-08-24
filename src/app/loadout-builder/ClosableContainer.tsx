@@ -8,22 +8,19 @@ import clsx from 'clsx';
 export default function ClosableContainer({
   children,
   enabled = true,
+  showCloseIconOnHover = false,
   onClose,
 }: {
   children: React.ReactNode;
   enabled?: boolean;
+  showCloseIconOnHover?: boolean;
   onClose(): void;
 }) {
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, { [styles.showCloseOnHover]: showCloseIconOnHover })}>
       {children}
       {enabled && (
-        <div
-          className={clsx(styles.close, 'closeableContainer-close')}
-          onClick={onClose}
-          role="button"
-          tabIndex={0}
-        />
+        <div className={clsx(styles.close)} onClick={onClose} role="button" tabIndex={0} />
       )}
     </div>
   );
