@@ -1,5 +1,7 @@
 ## Next
 
+## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
+
 * Better touchscreen support for drag and drop.
 * Wishlists now support Github gists (raw text URLs), so there's no need to set up an entire repository to host them. If you are making wishlists, you can try out changes easier than ever. If you're not making wishlists, hopefully you're using them. If you don't know what wishlists are, [here you go](https://destinyitemmanager.fandom.com/wiki/Wish_Lists)
 * Engrams get a more form-fitting outline on mouse hover.
