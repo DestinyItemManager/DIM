@@ -215,6 +215,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
               />
             )}
           </WindowScroller>
+        ) : $featureFlags.armor2ModPicker ? (
+          <>
+            <h3>{t('LoadoutBuilder.NoBuildsFoundWithReasons')}</h3>
+            <ul>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundExoticsAndMods')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundModsAreTooExpensive')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundSeasonalModNotSatisfied')}
+              </li>
+            </ul>
+          </>
         ) : (
           <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
         )}
