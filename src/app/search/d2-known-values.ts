@@ -263,3 +263,5 @@ export const breakerTypes = {
 };
 
 export const powerCapPlugSetHash = 573;
+
+export const MAX_ARMOR_ENERGY_CAPACITY = 10;

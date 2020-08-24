@@ -1,5 +1,6 @@
 import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
 
 interface SortParam {
   energy: {
@@ -90,7 +91,7 @@ export function canTakeAllSeasonalMods(
     if (
       item.energy &&
       (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.val + energy.val <= 10 &&
+      item.energy.val + energy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
       item.compatibleModSeasons?.includes(tag)
     ) {
       if (assignments) {
@@ -138,7 +139,7 @@ export function canTakeAllGeneralMods(
     if (
       item.energy &&
       (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.val + energy.val <= 10
+      item.energy.val + energy.val <= MAX_ARMOR_ENERGY_CAPACITY
     ) {
       if (assignments) {
         assignments[item.id].push(hash);
