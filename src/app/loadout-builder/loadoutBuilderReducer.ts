@@ -6,6 +6,7 @@ import {
   MinMaxIgnored,
   LockedItemType,
   ModPickerCategories,
+  ModPickerCategory,
 } from './types';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
@@ -20,6 +21,10 @@ export interface LoadoutBuilderState {
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
+  modPicker: {
+    open: boolean;
+    initialCategoryHash?: ModPickerCategory;
+  };
 }
 
 const lbStateInit = ({
@@ -73,6 +78,9 @@ const lbStateInit = ({
     },
     minimumPower: 750,
     selectedStoreId: selectedStoreId,
+    modPicker: {
+      open: false,
+    },
   };
 };
 
@@ -89,7 +97,9 @@ export type LoadoutBuilderAction =
       lockedMap: LockedMap;
       lockedSeasonalMods: LockedModBase[];
     }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap };
+  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
+  | { type: 'openModPicker'; initialCategoryHash?: ModPickerCategory }
+  | { type: 'closeModPicker' };
 
 // TODO: Move more logic inside the reducer
 function lbStateReducer(
@@ -150,6 +160,13 @@ function lbStateReducer(
       };
     case 'lockedArmor2ModsChanged':
       return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
+    case 'openModPicker':
+      return {
+        ...state,
+        modPicker: { open: true, initialCategoryHash: action.initialCategoryHash },
+      };
+    case 'closeModPicker':
+      return { ...state, modPicker: { open: false } };
   }
 }
 

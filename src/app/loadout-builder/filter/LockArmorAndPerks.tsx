@@ -33,7 +33,6 @@ import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
-import ModPicker from './ModPicker';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 interface ProvidedProps {
@@ -81,7 +80,6 @@ function LockArmorAndPerks({
   lbDispatch,
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
-  const [filterModsOpen, setFilterModsOpen] = useState(false);
 
   /**
    * Lock currently equipped items on a character
@@ -283,19 +281,13 @@ function LockArmorAndPerks({
             </div>
           )}
           <div className={styles.buttons}>
-            <button type="button" className="dim-button" onClick={() => setFilterModsOpen(true)}>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => lbDispatch({ type: 'openModPicker' })}
+            >
               <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
             </button>
-            {filterModsOpen &&
-              ReactDOM.createPortal(
-                <ModPicker
-                  classType={selectedStore.classType}
-                  lockedArmor2Mods={lockedArmor2Mods}
-                  onClose={() => setFilterModsOpen(false)}
-                  lbDispatch={lbDispatch}
-                />,
-                document.body
-              )}
           </div>
         </div>
       )}

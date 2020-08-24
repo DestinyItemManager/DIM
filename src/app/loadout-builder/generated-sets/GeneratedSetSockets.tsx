@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { LockedArmor2Mod } from '../types';
+import React, { Dispatch } from 'react';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { LockedArmor2Mod, ModPickerCategory } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import GeneratedSetMod from './GeneratedSetMod';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import SocketDetails from '../../item-popup/SocketDetails';
-import ReactDOM from 'react-dom';
 import styles from './GeneratedSetSockets.m.scss';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { armor2PlugCategoryHashes } from 'app/search/d2-known-values';
+import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -19,24 +20,24 @@ const undesireablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
 ];
 
-interface SocketAndPlug {
-  plug: PluggableInventoryItemDefinition;
-  socket: DimSocket;
+interface PlugAndCategory {
+  plugDef: PluggableInventoryItemDefinition;
+  category?: ModPickerCategory;
 }
 
 interface Props {
   item: DimItem;
   lockedMods: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
-function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
-  const [socketInfo, setSocketInfo] = useState<SocketAndPlug | null>(null);
+function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
   if (!item.isDestiny2()) {
     return null;
   }
 
-  const modsAndPerks: SocketAndPlug[] = [];
+  const modsAndPerks: PlugAndCategory[] = [];
   const modsToUse = [...lockedMods];
 
   for (const socket of item.sockets?.allSockets || []) {
@@ -62,34 +63,34 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      modsAndPerks.push({ plug: toSave, socket });
+      const category = getSpecialtySocketMetadataByPlugCategoryHash(toSave.plug.plugCategoryHash)
+        ? 'seasonal'
+        : armor2PlugCategoryHashes.includes(toSave.plug.plugCategoryHash)
+        ? toSave.plug.plugCategoryHash
+        : undefined;
+
+      modsAndPerks.push({ plugDef: toSave, category });
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map((socketAndPlug, index) => (
+        {modsAndPerks.map(({ plugDef, category }, index) => (
           <GeneratedSetMod
             key={index}
             gridColumn={(index % 2) + 1}
-            plugDef={socketAndPlug.plug}
+            plugDef={plugDef}
             defs={defs}
-            onClick={() => setSocketInfo(socketAndPlug)}
+            onClick={() =>
+              lbDispatch({
+                type: 'openModPicker',
+                initialCategoryHash: category,
+              })
+            }
           />
         ))}
       </div>
-      {socketInfo &&
-        ReactDOM.createPortal(
-          <SocketDetails
-            key={socketInfo.socket.socketIndex}
-            item={item}
-            socket={socketInfo.socket}
-            initialSelectedPlug={socketInfo.plug}
-            onClose={() => setSocketInfo(null)}
-          />,
-          document.body
-        )}
     </>
   );
 }

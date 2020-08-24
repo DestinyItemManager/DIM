@@ -64,8 +64,8 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
+  initialCategoryHash?: ModPickerCategory;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  onClose(): void;
 }
 
 interface StoreProps {
@@ -160,13 +160,15 @@ function ModPicker({
   defs,
   mods,
   language,
-  onClose,
   isPhonePortrait,
   lockedArmor2Mods,
+  initialCategoryHash,
   lbDispatch,
 }: Props) {
   const [height, setHeight] = useState<number | undefined>(undefined);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(
+    initialCategoryHash ? Armor2ModPlugCategoriesTitles[initialCategoryHash] : ''
+  );
   const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
   const itemContainer = useRef<HTMLDivElement | null>(null);
@@ -213,13 +215,12 @@ function ModPicker({
     [setLockedArmor2ModsInternal]
   );
 
-  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
+  const onSubmit = (e: React.FormEvent | KeyboardEvent) => {
     e.preventDefault();
     lbDispatch({
       type: 'lockedArmor2ModsChanged',
       lockedArmor2Mods: lockedArmor2ModsInternal,
     });
-    onClose();
   };
 
   const scrollToBucket = (categoryOrSeasonal: number | string) => {
@@ -242,7 +243,8 @@ function ModPicker({
       ? mods.filter(
           (mod) =>
             regexp.test(mod.displayProperties.name) ||
-            regexp.test(mod.displayProperties.description)
+            regexp.test(mod.displayProperties.description) ||
+            regexp.test(Armor2ModPlugCategoriesTitles[mod.plug.plugCategoryHash])
         )
       : mods;
   }, [language, query, mods]);
@@ -276,13 +278,13 @@ function ModPicker({
     category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
-    ? ({ onClose }) => (
+    ? () => (
         <ModPickerFooter
           defs={defs}
           categoryOrder={order}
           lockedArmor2Mods={lockedArmor2ModsInternal}
           isPhonePortrait={isPhonePortrait}
-          onSubmit={(e) => onSubmit(e, onClose)}
+          onSubmit={(e) => onSubmit(e)}
           onModSelected={onModRemoved}
         />
       )
@@ -290,7 +292,7 @@ function ModPicker({
 
   return (
     <Sheet
-      onClose={onClose}
+      onClose={() => lbDispatch({ type: 'closeModPicker' })}
       header={
         <ModPickerHeader
           categoryOrder={order}
