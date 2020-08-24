@@ -1026,7 +1026,7 @@
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count, number}} rollach.{{titleAndDescription}}",
-    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla zewnętrznego źródła listy życzeń. Adres URL musi zaczynać się od https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla zewnętrznego źródła listy życzeń. Adres URL musi zaczynać się od jednego z następujących:",
     "LastUpdated": "Ostatnia aktualizacja: {{lastUpdatedDate}} o {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",

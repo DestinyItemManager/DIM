@@ -12,13 +12,13 @@ import ExpandedRating from './ExpandedRating';
 import { ItemSubHeader } from './ItemSubHeader';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 
 export default function ItemPopupHeader({
   item,
@@ -52,6 +52,8 @@ export default function ItemPopupHeader({
   const light = item.primStat?.value.toString();
   const maxLight = item.isDestiny2() && item.powerCap;
 
+  useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
+
   const finalSeason = item.isDestiny2() && item.powerCap && getItemPowerCapFinalSeason(item);
   const powerCapString =
     light &&
@@ -65,11 +67,6 @@ export default function ItemPopupHeader({
         masterwork: item.isDestiny2() && item.masterwork,
       })}
     >
-      <GlobalHotkeys
-        hotkeys={[
-          { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded },
-        ]}
-      />
       <div className="item-title-container">
         {hasLeftIcon && (
           <div className="icon">

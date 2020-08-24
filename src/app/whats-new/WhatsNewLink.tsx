@@ -4,7 +4,7 @@ import { alerts$ } from './BungieAlerts';
 import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import './WhatsNewLink.scss';
 import { t } from 'app/i18next-t';
-import { dimNeedsUpdate$ } from '../register-service-worker';
+import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { NavLink } from 'react-router-dom';
@@ -79,48 +79,5 @@ export default class WhatsNewLink extends React.Component<{}, State> {
         {t('Header.WhatsNew')}
       </NavLink>
     );
-  }
-}
-
-export async function reloadDIM() {
-  try {
-    const registration = await navigator.serviceWorker.getRegistration();
-
-    if (!registration) {
-      console.error('SW: No registration!');
-      window.location.reload();
-      return;
-    }
-
-    if (!registration.waiting) {
-      // Just to ensure registration.waiting is available before
-      // calling postMessage()
-      console.error('SW: registration.waiting is null!');
-
-      const installingWorker = registration.installing!;
-      if (installingWorker) {
-        console.log('SW: found an installing service worker');
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            console.log('SW: installing service worker installed, skip waiting');
-            installingWorker.postMessage('skipWaiting');
-          }
-        };
-      } else {
-        window.location.reload();
-      }
-      return;
-    }
-
-    console.log('SW: posting skip waiting');
-    registration.waiting.postMessage('skipWaiting');
-
-    // insurance!
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
-  } catch (e) {
-    console.error('SW: Error checking registration:', e);
-    window.location.reload();
   }
 }

@@ -175,8 +175,8 @@ export const dimApi = (
               ...action.payload.profiles,
             },
             updateQueue: newUpdateQueue,
-            itemHashTags: action.payload.itemHashTags,
-            searches: action.payload.searches,
+            itemHashTags: action.payload.itemHashTags || initialState.itemHashTags,
+            searches: action.payload.searches || initialState.searches,
           }
         : {
             ...state,
@@ -342,6 +342,11 @@ export const dimApi = (
     case getType(actions.saveSearch):
       return produce(state, (draft) => {
         saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
+      });
+
+    case getType(actions.searchDeleted):
+      return produce(state, (draft) => {
+        deleteSearch(draft, account!.destinyVersion, action.payload);
       });
 
     // *** Triumphs ***
@@ -960,7 +965,13 @@ function trackTriumph(
 function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
   // Canonicalize the query so we always save it the same way
   try {
-    query = canonicalizeQuery(parseQuery(query));
+    const ast = parseQuery(query);
+    if (ast.op === 'filter' && ast.type === 'keyword') {
+      // don't save "trivial" single-keyword filters
+      // TODO: somehow also reject invalid searches (that don't match real keywords)
+      return;
+    }
+    query = canonicalizeQuery(ast);
   } catch (e) {
     console.error('Query not parseable - not saving', query, e);
     return;
@@ -1029,6 +1040,20 @@ function saveSearch(
     // Hmm, may need to tweak this
     throw new Error("Unable to save a search that's not in your history");
   }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'delete_search',
+    payload: {
+      query,
+    },
+    destinyVersion,
+  };
+
+  draft.searches[destinyVersion] = draft.searches[destinyVersion].filter((s) => s.query !== query);
 
   draft.updateQueue.push(updateAction);
 }

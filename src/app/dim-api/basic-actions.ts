@@ -48,6 +48,9 @@ export const saveSearch = createAction('dim-api/SAVE_SEARCH')<{
   saved: boolean;
 }>();
 
+/** Delete a saved search */
+export const searchDeleted = createAction('dim-api/DELETE_SEARCH')<string>();
+
 /**
  * This signals that we are about to flush the update queue.
  */

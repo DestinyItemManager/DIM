@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { dimNeedsUpdate } from 'app/register-service-worker';
-import { reloadDIM } from 'app/whats-new/WhatsNewLink';
+import { dimNeedsUpdate, reloadDIM } from 'app/register-service-worker';
 
 /**
  * "Sneaky Updates" - reload on navigation if DIM needs an update.

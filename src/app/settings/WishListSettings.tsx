@@ -154,31 +154,29 @@ function WishListSettings({
       </div>
 
       {wishListsEnabled && (
-        <>
-          <div className="setting">
-            <div className="horizontal">
-              <label>
-                {t('WishListRoll.Num', {
-                  num: numWishListRolls,
-                })}
-              </label>
-              <button className="dim-button" onClick={clearWishListEvent}>
-                {t('WishListRoll.Clear')}
-              </button>
-            </div>
-            {(title || description) && (
-              <div className="fineprint">
-                {title && (
-                  <div className="overflow-dots">
-                    <b>{title}</b>
-                    <br />
-                  </div>
-                )}
-                <div className="overflow-dots">{description}</div>
-              </div>
-            )}
+        <div className="setting">
+          <div className="horizontal">
+            <label>
+              {t('WishListRoll.Num', {
+                num: numWishListRolls,
+              })}
+            </label>
+            <button type="button" className="dim-button" onClick={clearWishListEvent}>
+              {t('WishListRoll.Clear')}
+            </button>
           </div>
-        </>
+          {(title || description) && (
+            <div className="fineprint">
+              {title && (
+                <div className="overflow-dots">
+                  <b>{title}</b>
+                  <br />
+                </div>
+              )}
+              <div className="overflow-dots">{description}</div>
+            </div>
+          )}
+        </div>
       )}
     </section>
   );

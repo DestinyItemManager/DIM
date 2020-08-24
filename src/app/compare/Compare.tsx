@@ -55,7 +55,7 @@ interface State {
   highlight?: string | number;
   sortedHash?: string | number;
   sortBetterFirst: boolean;
-  comparisonSets: { buttonLabel: React.ReactElement; items: DimItem[] }[];
+  comparisonSets: { buttonLabel: React.ReactNode; items: DimItem[] }[];
 }
 
 export interface StatInfo {
@@ -175,6 +175,7 @@ class Compare extends React.Component<Props, State> {
           <div className="compare-options">
             {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
+                type="button"
                 key={index}
                 className="dim-button"
                 onClick={(e) => this.compareSimilar(e, items)}
@@ -337,7 +338,8 @@ class Compare extends React.Component<Props, State> {
       <ElementIcon key={exampleItem.id} element={exampleItem.element} />
     );
     const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
-    const specialtyModSlotName = getItemSpecialtyModSlotDisplayName(exampleItem);
+    const specialtyModSlotName =
+      (this.props.defs && getItemSpecialtyModSlotDisplayName(exampleItem, this.props.defs)) ?? '';
 
     // helper functions for filtering items
     const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
@@ -355,19 +357,19 @@ class Compare extends React.Component<Props, State> {
     let comparisonSets = [
       // same slot on the same class
       {
-        buttonLabel: <>{exampleItem.typeName}</>,
+        buttonLabel: exampleItem.typeName,
         items: allArmors,
       },
 
       // above but also has to be armor 2.0
       {
-        buttonLabel: <>{[t('Compare.Armor2'), exampleItem.typeName].join(' + ')}</>,
+        buttonLabel: [t('Compare.Armor2'), exampleItem.typeName].join(' + '),
         items: hasEnergy(exampleItem) ? allArmors.filter(hasEnergy) : [],
       },
 
       // above but also the same seasonal mod slot, if it has one
       {
-        buttonLabel: <>{[specialtyModSlotName].join(' + ')}</>,
+        buttonLabel: [specialtyModSlotName].join(' + '),
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot)
@@ -376,14 +378,14 @@ class Compare extends React.Component<Props, State> {
 
       // armor 2.0 and needs to match energy capacity element
       {
-        buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
+        buttonLabel: [exampleItemElementIcon, exampleItem.typeName],
         items: hasEnergy(exampleItem)
           ? allArmors.filter(hasEnergy).filter(matchesExample('element'))
           : [],
       },
       // above but also the same seasonal mod slot, if it has one
       {
-        buttonLabel: <>{[exampleItemElementIcon, specialtyModSlotName]}</>,
+        buttonLabel: [exampleItemElementIcon, specialtyModSlotName],
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
             ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
@@ -392,13 +394,13 @@ class Compare extends React.Component<Props, State> {
 
       // basically stuff with the same name & categories
       {
-        buttonLabel: <>{exampleItem.name}</>,
+        buttonLabel: exampleItem.name,
         items: allArmors.filter((i) => makeDupeID(i) === makeDupeID(exampleItem)),
       },
 
       // above, but also needs to match energy capacity element
       {
-        buttonLabel: <>{[exampleItemElementIcon, exampleItem.name]}</>,
+        buttonLabel: [exampleItemElementIcon, exampleItem.name],
         items: hasEnergy(exampleItem)
           ? allArmors
               .filter(hasEnergy)
@@ -479,19 +481,19 @@ class Compare extends React.Component<Props, State> {
     let comparisonSets = [
       // same weapon type
       {
-        buttonLabel: <>{exampleItem.typeName}</>,
+        buttonLabel: exampleItem.typeName,
         items: allWeapons,
       },
 
       // above, but also same (kinetic/energy/heavy) slot
       {
-        buttonLabel: <>{[exampleItem.bucket.name, exampleItem.typeName].join(' + ')}</>,
+        buttonLabel: [exampleItem.bucket.name, exampleItem.typeName].join(' + '),
         items: allWeapons.filter((i) => i.bucket.name === exampleItem.bucket.name),
       },
 
       // same weapon type plus matching intrinsic (rpm+impact..... ish)
       {
-        buttonLabel: <>{[intrinsicName, exampleItem.typeName].join(' + ')}</>,
+        buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
         items: exampleItem.isDestiny2()
           ? allWeapons.filter(
               (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
@@ -501,13 +503,13 @@ class Compare extends React.Component<Props, State> {
 
       // same weapon type and also matching element (& usually same-slot because same element)
       {
-        buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
+        buttonLabel: [exampleItemElementIcon, exampleItem.typeName],
         items: allWeapons.filter(matchesExample('element')),
       },
 
       // exact same weapon, judging by name. might span multiple expansions.
       {
-        buttonLabel: <>{exampleItem.name}</>,
+        buttonLabel: exampleItem.name,
         items: allWeapons.filter(matchesExample('name')),
       },
     ];

@@ -9,8 +9,8 @@
 .movePopupDialog {
   min-height: 77px;
   width: 375px;
-  // arguably the part of the app that deserves this value most
-  z-index: 9999;
+  // Mod drawer has z-index of 12 and needs to sit over this
+  z-index: 11;
 
   --backgroundColor: 0, 0%, 0%;
 

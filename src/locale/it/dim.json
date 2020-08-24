@@ -1026,7 +1026,7 @@
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count, number}} rolls. {{titleAndDescription}}",
-    "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con uno dei seguenti:",
     "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
     "Num": "{{num, number}} roll nella tua lista desideri",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",

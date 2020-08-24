@@ -117,7 +117,6 @@ function toggleArrayElement<T>(element: T, arr: T[]) {
 /** places a divider between each element of arr */
 function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
   return arr
-    .map((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
-    .flat()
+    .flatMap((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
     .slice(0, -1);
 }

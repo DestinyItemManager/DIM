@@ -446,7 +446,11 @@ function ItemTable({
     };
 
     downloadAction = (
-      <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadHandler}>
+      <button
+        type="button"
+        className={clsx(styles.importButton, 'dim-button')}
+        onClick={downloadHandler}
+      >
         <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
       </button>
     );
@@ -660,6 +664,7 @@ function TableRow({
   return (
     <>
       {filteredColumns.map((column: ColumnDefinition) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={narrowQueryFunction(row, column)}

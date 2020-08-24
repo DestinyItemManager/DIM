@@ -29,30 +29,42 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     await dispatch(loadWishListAndInfoFromIndexedDB());
     await settingsReady;
 
-    const wishListSource = newWishlistSource ?? settingsSelector(getState()).wishListSource;
+    const existingWishListSource = settingsSelector(getState()).wishListSource;
 
-    if (!wishListSource || !isValidWishListUrlDomain(wishListSource)) {
+    // a blank source was submitted, indicating an intention to clear the wishlist
+    if (newWishlistSource === '' && newWishlistSource !== existingWishListSource) {
+      dispatch(setSetting('wishListSource', newWishlistSource));
+      return;
+    }
+
+    const wishlistToFetch = newWishlistSource ?? existingWishListSource;
+    // done if there's neither an existing nor new URL
+    if (!wishlistToFetch) {
+      return;
+    }
+
+    // there's a source if we reached this far, but check if it's invalid
+    if (!isValidWishListUrlDomain(wishlistToFetch)) {
       showNotification({
         type: 'warning',
         title: t('WishListRoll.Header'),
         body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedPrefixes.join('\n')}`,
         duration: 10000,
       });
-
       return;
     }
 
     const {
       lastFetched: wishListLastUpdated,
-      wishListAndInfo: { source: existingWishListSource },
+      wishListAndInfo: { source: loadedWishListSource },
     } = wishListsSelector(getState());
 
     // Throttle updates if:
     if (
       // this isn't a settings update, and
       !newWishlistSource &&
-      // if the source settings match last time, and
-      (existingWishListSource === undefined || existingWishListSource === wishListSource) &&
+      // if the intended fetch target is already the source of the loaded list
+      (loadedWishListSource === undefined || loadedWishListSource === wishlistToFetch) &&
       // we already checked the wishlist today
       hoursAgo(wishListLastUpdated) < 24
     ) {
@@ -61,19 +73,29 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
     let wishListText: string;
     try {
-      const wishListResponse = await fetch(wishListSource);
+      const wishListResponse = await fetch(wishlistToFetch);
+      if (wishListResponse.status < 200 || wishListResponse.status >= 300) {
+        throw new Error(
+          `failed fetch -- ${wishListResponse.status} ${wishListResponse.statusText}`
+        );
+      }
       wishListText = await wishListResponse.text();
       // if this is a new wishlist, set the setting now that we know it's fetchable
       if (newWishlistSource) {
         dispatch(setSetting('wishListSource', newWishlistSource));
       }
     } catch (e) {
+      showNotification({
+        type: 'warning',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportFailed'),
+      });
       console.error('Unable to load wish list', e);
       return;
     }
 
     const wishListAndInfo = toWishList(wishListText);
-    wishListAndInfo.source = wishListSource;
+    wishListAndInfo.source = wishlistToFetch;
 
     const existingWishLists = wishListsSelector(getState());
 

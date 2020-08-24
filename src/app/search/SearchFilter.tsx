@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue, TagValue } from '../inventory/dim-item-info';
@@ -26,6 +26,7 @@ import { useLocation } from 'react-router';
 import { emptyArray, emptySet } from 'app/utils/empty';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
+import SearchBar from './SearchBar';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -35,7 +36,6 @@ bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
 bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
-  mobile?: boolean;
   onClear?(): void;
 }
 
@@ -82,7 +82,6 @@ function mapStateToProps(state: RootState): StoreProps {
 export function SearchFilter(
   {
     isPhonePortrait,
-    mobile,
     setSearchQuery,
     searchQuery,
     searchQueryVersion,
@@ -185,57 +184,76 @@ export function SearchFilter(
 
   const onTagClicked = () => setShowSelect(true);
 
-  const onClearFilter = () => {
+  const onClearFilter = useCallback(() => {
     setShowSelect(false);
     onClear?.();
-  };
+  }, [onClear]);
 
   // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
-  const placeholder = isPhonePortrait
-    ? t('Header.FilterHelpBrief')
-    : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
+  const placeholder = useMemo(
+    () =>
+      isPhonePortrait
+        ? t('Header.FilterHelpBrief')
+        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+    [isPhonePortrait]
+  );
 
-  return (
-    <SearchFilterInput
+  const extras = (
+    <>
+      {!onProgress && (
+        <span className="filter-match-count">
+          {t('Header.FilterMatchCount', { count: filteredItems.length })}
+        </span>
+      )}
+      {isComparable && (
+        <span
+          onClick={compareMatching}
+          className="filter-bar-button"
+          title={t('Header.CompareMatching')}
+        >
+          <AppIcon icon={faClone} />
+        </span>
+      )}
+
+      {showSelect ? (
+        <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
+          {bulkItemTags.map((tag) => (
+            <option key={tag.type || 'default'} value={tag.type}>
+              {t(tag.label)}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
+          <AppIcon icon={tagIcon} />
+        </span>
+      )}
+    </>
+  );
+
+  return $featureFlags.newSearch ? (
+    <SearchBar
       ref={ref}
       onQueryChanged={setSearchQuery}
-      alwaysShowClearButton={mobile}
       placeholder={placeholder}
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}
     >
-      <>
-        {!onProgress && (
-          <span className="filter-match-count">
-            {t('Header.FilterMatchCount', { count: filteredItems.length })}
-          </span>
-        )}
-        {isComparable && (
-          <span
-            onClick={compareMatching}
-            className="filter-bar-button"
-            title={t('Header.CompareMatching')}
-          >
-            <AppIcon icon={faClone} />
-          </span>
-        )}
-
-        {showSelect ? (
-          <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
-            {bulkItemTags.map((tag) => (
-              <option key={tag.type || 'default'} value={tag.type}>
-                {t(tag.label)}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
-            <AppIcon icon={tagIcon} />
-          </span>
-        )}
-      </>
+      {extras}
+    </SearchBar>
+  ) : (
+    <SearchFilterInput
+      ref={ref}
+      onQueryChanged={setSearchQuery}
+      alwaysShowClearButton={isPhonePortrait}
+      placeholder={placeholder}
+      onClear={onClearFilter}
+      searchQueryVersion={searchQueryVersion}
+      searchQuery={searchQuery}
+    >
+      {extras}
     </SearchFilterInput>
   );
 }

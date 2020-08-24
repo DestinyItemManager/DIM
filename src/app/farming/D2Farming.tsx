@@ -43,7 +43,9 @@ function D2Farming({ store }: Props) {
             </span>
 
             <span>
-              <button onClick={D2FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+              <button type="button" onClick={D2FarmingService.stop}>
+                {t('FarmingMode.Stop')}
+              </button>
             </span>
           </div>
         </CSSTransition>

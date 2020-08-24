@@ -1,7 +1,7 @@
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { makeProfileKeyFromAccount } from './reducer';
-import { currentAccountSelector } from 'app/accounts/selectors';
+import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;
@@ -15,3 +15,11 @@ export const currentProfileSelector = createSelector(
   (currentAccount, profiles) =>
     currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined
 );
+
+/**
+ * Returns all recent/saved searches.
+ *
+ * TODO: Sort/trim this list
+ */
+export const recentSearchesSelector = (state: RootState) =>
+  state.dimApi.searches[destinyVersionSelector(state)];

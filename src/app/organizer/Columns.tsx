@@ -373,7 +373,7 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: getItemSpecialtyModSlotDisplayName,
+        value: (item) => getItemSpecialtyModSlotDisplayName(item, defs),
         cell: (value, item) =>
           value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
         filter: (_, item) => {
