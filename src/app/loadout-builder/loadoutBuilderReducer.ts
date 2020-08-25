@@ -6,7 +6,6 @@ import {
   MinMaxIgnored,
   LockedItemType,
   ModPickerCategories,
-  ModPickerCategory,
 } from './types';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
@@ -23,7 +22,7 @@ export interface LoadoutBuilderState {
   minimumPower: number;
   modPicker: {
     open: boolean;
-    initialCategoryHash?: ModPickerCategory;
+    initialQuery?: string;
   };
 }
 
@@ -98,7 +97,7 @@ export type LoadoutBuilderAction =
       lockedSeasonalMods: LockedModBase[];
     }
   | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
-  | { type: 'openModPicker'; initialCategoryHash?: ModPickerCategory }
+  | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' };
 
 // TODO: Move more logic inside the reducer
@@ -163,7 +162,7 @@ function lbStateReducer(
     case 'openModPicker':
       return {
         ...state,
-        modPicker: { open: true, initialCategoryHash: action.initialCategoryHash },
+        modPicker: { open: true, initialQuery: action.initialQuery },
       };
     case 'closeModPicker':
       return { ...state, modPicker: { open: false } };

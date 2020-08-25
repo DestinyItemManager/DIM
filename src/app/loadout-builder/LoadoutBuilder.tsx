@@ -261,7 +261,7 @@ function LoadoutBuilder({
             <ModPicker
               classType={selectedStore.classType}
               lockedArmor2Mods={lockedArmor2Mods}
-              initialCategoryHash={modPicker.initialCategoryHash}
+              initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}
             />,
             document.body
