@@ -689,10 +689,13 @@
     "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
+    "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "Expand item details",
     "Infuse": "Infuse",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}"
@@ -710,6 +713,7 @@
     "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"

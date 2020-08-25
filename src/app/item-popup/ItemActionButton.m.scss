@@ -8,9 +8,6 @@
   cursor: pointer;
   user-select: none;
 
-  &:last-child {
-    margin-right: 10px;
-  }
   &:focus {
     outline-width: 5px;
   }

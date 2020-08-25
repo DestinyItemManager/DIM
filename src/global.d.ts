@@ -38,6 +38,8 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable detached stats from sticky header on mobile */
   unstickyStats: boolean;
+  /** Enable new mobile inspect view when dragging an item */
+  mobileInspect: boolean;
   /** New search bar */
   newSearch: boolean;
 };

@@ -6,11 +6,13 @@ import { CompareService } from '../compare/compare.service';
 import { moveItemTo } from './move-item';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { showDragGhost } from 'app/inventory/drag-ghost-item';
 import { getCurrentStore } from './stores-helpers';
 
 interface Props {
   item: DimItem;
+  isPhonePortrait?: boolean;
 }
 
 const LONGPRESS_TIMEOUT = 200;
@@ -18,11 +20,12 @@ const LONGPRESS_TIMEOUT = 200;
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default function StoreInventoryItem({ item }: Props) {
+export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
 
   const resetTouch = () => {
+    showMobileInspect(undefined);
     showDragGhost(undefined);
     window.clearTimeout(timer.current);
     longPressed.current = false;
@@ -35,6 +38,9 @@ export default function StoreInventoryItem({ item }: Props) {
 
     // It a longpress happend and the touch move event files, do nothing.
     if (longPressed.current && e.type === 'touchmove') {
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
+        return;
+      }
       showDragGhost({
         item,
         transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
@@ -54,6 +60,9 @@ export default function StoreInventoryItem({ item }: Props) {
     // Start a timer for the longpress action
     timer.current = window.setTimeout(() => {
       longPressed.current = true;
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
+        showMobileInspect(item);
+      }
     }, LONGPRESS_TIMEOUT);
   };
 
@@ -70,7 +79,7 @@ export default function StoreInventoryItem({ item }: Props) {
   };
 
   return (
-    <DraggableInventoryItem item={item}>
+    <DraggableInventoryItem item={item} isPhonePortrait={isPhonePortrait}>
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
           <ConnectedInventoryItem

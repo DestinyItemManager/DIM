@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
-import { sortedStoresSelector } from './selectors';
+import { sortedStoresSelector, isPhonePortraitSelector } from './selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon, addIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
@@ -34,6 +34,7 @@ interface StoreProps {
   itemSortOrder: string[];
   allStores: DimStore[];
   characterOrder: string;
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -45,6 +46,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     // We only need this property when this is a vault armor bucket
     allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
     characterOrder: characterOrderSelector(state),
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -60,7 +62,15 @@ export const classIcons = {
 /**
  * A single bucket of items (for a single store).
  */
-function StoreBucket({ items, itemSortOrder, bucket, store, allStores, characterOrder }: Props) {
+function StoreBucket({
+  items,
+  itemSortOrder,
+  bucket,
+  store,
+  allStores,
+  characterOrder,
+  isPhonePortrait,
+}: Props) {
   const pickEquipItem = useCallback(async () => {
     try {
       const { item, equip } = await showItemPicker({
@@ -91,7 +101,7 @@ function StoreBucket({ items, itemSortOrder, bucket, store, allStores, character
           <React.Fragment key={classType}>
             <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
             {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
-              <StoreInventoryItem key={item.index} item={item} />
+              <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
             ))}
           </React.Fragment>
         ))}
@@ -110,7 +120,11 @@ function StoreBucket({ items, itemSortOrder, bucket, store, allStores, character
       {equippedItem && (
         <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
           <div className="equipped-item">
-            <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
+            <StoreInventoryItem
+              key={equippedItem.index}
+              item={equippedItem}
+              isPhonePortrait={isPhonePortrait}
+            />
           </div>
           {bucket.hasTransferDestination && (
             <a
@@ -133,7 +147,7 @@ function StoreBucket({ items, itemSortOrder, bucket, store, allStores, character
         className={clsx({ 'not-equippable': !store.isVault && !equippedItem })}
       >
         {unequippedItems.map((item) => (
-          <StoreInventoryItem key={item.index} item={item} />
+          <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
         ))}
         {store.isDestiny2() &&
         bucket.hash === ENGRAMS_BUCKET && // Engrams. D1 uses this same bucket hash for "Missions"
