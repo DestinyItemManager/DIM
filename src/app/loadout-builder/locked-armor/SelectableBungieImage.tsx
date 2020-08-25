@@ -10,6 +10,8 @@ import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import ClosableContainer from '../ClosableContainer';
 import { TRACTION_PERK } from 'app/search/d2-known-values';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { StatValue } from 'app/item-popup/PlugTooltip';
+import { armorStatHashes } from 'app/search/search-filter-values';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting
@@ -116,6 +118,13 @@ export function SelectableArmor2Mod({
         <div className={styles.perkInfo}>
           <div className={styles.perkTitle}>{mod.mod.displayProperties.name}</div>
           <div className={styles.perkDescription}>{mod.mod.displayProperties.description}</div>
+          {mod.mod.investmentStats
+            .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
+            .map((stat) => (
+              <div className={styles.plugStats} key={stat.statTypeHash}>
+                <StatValue value={stat.value} defs={defs} statHash={stat.statTypeHash} />
+              </div>
+            ))}
         </div>
       </div>
     </ClosableContainer>
