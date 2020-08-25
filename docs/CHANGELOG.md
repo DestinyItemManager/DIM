@@ -13,6 +13,7 @@
 ### Beta Only
 * Loadout Optimizer: DIM Beta is now using the new Mod Picker, a separate and improved picker just for armor mods. Try it out and let us know how it feels
 * In Beta only, the filter search bar has been upgraded to remember recent searches and let you save your favorite searches.
+* Phone/mobile resolutions will now show a mini-popup to make inspecting and moving items much easier.
 
 ## 6.25.0 <span className="changelog-date">(2020-08-16)</span>
 
