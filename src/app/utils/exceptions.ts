@@ -42,7 +42,9 @@ if ($featureFlags.sentry) {
     // We're flooding Sentry for some reason
     sampleRate: 0.05,
     beforeSend: function (event, hint) {
-      event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
+      if (hint.originalException.errorCode) {
+        event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
+      }
       return event;
     },
   });
