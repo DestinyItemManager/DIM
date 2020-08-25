@@ -41,6 +41,10 @@ if ($featureFlags.sentry) {
     attachStackTrace: true,
     // We're flooding Sentry for some reason
     sampleRate: 0.05,
+    beforeSend: function (event, hint) {
+      event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
+      return event;
+    },
   });
 
   reportException = (name: string, e: Error, errorInfo?: {}) => {
