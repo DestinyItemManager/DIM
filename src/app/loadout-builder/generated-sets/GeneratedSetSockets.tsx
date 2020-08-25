@@ -82,11 +82,14 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={() =>
-              lbDispatch({
-                type: 'openModPicker',
-                initialCategoryHash: category,
-              })
+            onClick={
+              category
+                ? () =>
+                    lbDispatch({
+                      type: 'openModPicker',
+                      initialCategoryHash: category,
+                    })
+                : undefined
             }
           />
         ))}
