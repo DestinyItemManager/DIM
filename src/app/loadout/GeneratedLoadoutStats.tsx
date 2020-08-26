@@ -59,6 +59,10 @@ export function GeneratedLoadoutStats({
   items: DimItem[];
   loadout: Loadout;
 }) {
+  if (defs.isDestiny1()) {
+    // just D2, for now
+    return null;
+  }
   const armorItems = getItemsInListByCategory({ buckets, category: 'Armor', items });
   const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
   if (weaponItems.missingBuckets) {
