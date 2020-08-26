@@ -21,6 +21,7 @@ import React, {
   useImperativeHandle,
   useEffect,
   useLayoutEffect,
+  useMemo,
 } from 'react';
 
 import { Loading } from 'app/dim-ui/Loading';
@@ -144,12 +145,6 @@ function SearchBar(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const inputElement = useRef<HTMLInputElement>(null);
-  const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
-  // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
-  useEffect(() => {
-    setItems(autocompleter(liveQuery, inputElement.current?.selectionStart || 0, recentSearches));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recentSearches]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
@@ -182,11 +177,18 @@ function SearchBar(
     (query: string) => {
       setLiveQuery(query);
       debouncedUpdateQuery(query);
-      setItems(
-        autocompleter(query, inputElement.current!.selectionStart || query.length, recentSearches)
-      );
     },
-    [autocompleter, debouncedUpdateQuery, recentSearches]
+    [debouncedUpdateQuery]
+  );
+
+  const items = useMemo(
+    () =>
+      autocompleter(
+        liveQuery,
+        inputElement.current?.selectionStart || liveQuery.length,
+        recentSearches
+      ),
+    [autocompleter, liveQuery, recentSearches]
   );
 
   // useCombobox from Downshift manages the state of the dropdown
