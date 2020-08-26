@@ -56,7 +56,9 @@ import { isUsedModSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import NotesArea from 'app/item-popup/NotesArea';
+import { encode } from 'querystring';
 
+console.log(encode({ a: 1, b: 2 }));
 /**
  * Get the ID used to select whether this column is shown or not.
  */
