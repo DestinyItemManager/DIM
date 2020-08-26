@@ -237,12 +237,10 @@ function SearchBar(
   };
 
   const clearFilter = useCallback(() => {
-    setLiveQuery('');
-    debouncedUpdateQuery('');
     onClear?.();
     reset();
     openMenu();
-  }, [debouncedUpdateQuery, onClear, reset, openMenu]);
+  }, [onClear, reset, openMenu]);
 
   // Reset live query when search version changes
   useEffect(() => {
