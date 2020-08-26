@@ -2,9 +2,13 @@ import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
 import { v4 as uuidv4 } from 'uuid';
-import { DimStore } from 'app/inventory/store-types';
+import { DimStore, DimCharacterStat } from 'app/inventory/store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
+import { armorStats } from 'app/inventory/store/stats';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -61,6 +65,27 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 
     return Math.floor(exactLight * 10) / 10;
   }
+}
+
+/** Returns a map of armor hashes to stats. There should be just one of each item */
+export function getArmorStats(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  items: DimItem[]
+): { [hashHash: number]: DimCharacterStat } {
+  const statsByArmorHash = armorStats
+    .map((statHash) => defs.Stat.get(statHash))
+    .reduce((ret, { hash, displayProperties: { description, icon, name } }) => {
+      ret[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
+      return ret;
+    }, {});
+
+  return items.reduce((ret, item) => {
+    const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
+    Object.keys(ret).forEach((hash) => {
+      ret[hash].value += itemStats[hash]?.[0].value ?? 0;
+    });
+    return ret;
+  }, statsByArmorHash);
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
