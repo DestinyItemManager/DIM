@@ -231,7 +231,7 @@ function SearchBar(
   });
 
   const onFocus = () => {
-    if (!liveQuery && !isOpen) {
+    if (!liveQuery && !isOpen && !autoFocus) {
       openMenu();
     }
   };
