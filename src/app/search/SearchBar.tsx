@@ -161,12 +161,9 @@ function SearchBar(
   };
 
   const setQuery = useCallback(
-    (query: string, immediate = false) => {
+    (query: string) => {
       setLiveQuery(query);
       debouncedUpdateQuery(query);
-      if (immediate) {
-        debouncedUpdateQuery.flush();
-      }
       setItems(
         autocompleter(query, inputElement.current!.selectionStart || query.length, recentSearches)
       );
@@ -198,7 +195,7 @@ function SearchBar(
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
         } else {
-          setQuery(selectedItem.query, true);
+          setQuery(selectedItem.query);
         }
       }
     },
@@ -216,7 +213,7 @@ function SearchBar(
         case useCombobox.stateChangeTypes.InputKeyDownEscape: {
           // Reimplement clear - we are controlling the input which break this
           // See https://github.com/downshift-js/downshift/issues/1108
-          setQuery('', true);
+          setQuery('');
           return changes;
         }
         default:
@@ -238,7 +235,7 @@ function SearchBar(
   };
 
   const clearFilter = useCallback(() => {
-    setQuery('', true);
+    setQuery('');
     onClear?.();
     reset();
     openMenu();
@@ -293,7 +290,7 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && tabAutocompleteItem) {
       e.preventDefault();
-      setQuery(tabAutocompleteItem.query, true);
+      setQuery(tabAutocompleteItem.query);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
