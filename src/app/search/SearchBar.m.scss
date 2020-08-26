@@ -118,3 +118,7 @@
     display: none;
   }
 }
+
+.saveSearchButton > :global(.app-icon) {
+  color: $orange !important;
+}

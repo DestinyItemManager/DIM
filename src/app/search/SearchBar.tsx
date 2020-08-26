@@ -336,7 +336,7 @@ function SearchBar(
       {liveQuery.length > 0 && (
         <button
           type="button"
-          className="filter-bar-button"
+          className={clsx('filter-bar-button', styles.saveSearchButton)}
           onClick={toggleSaved}
           title={t('Header.SaveSearch')}
         >
