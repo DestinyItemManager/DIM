@@ -10,12 +10,6 @@ interface State {
   dimAppName?: string;
 }
 
-//   interface ParsedUrlQuery extends NodeJS.Dict<string | string[]> { }
-// (alias) parse(str: string, delimeter?: string | undefined, eq?: string | undefined): {
-//   [key: string]: string | string[] | null;
-// }
-//  parse(str: string, sep?: string | undefined, eq?: string | undefined, options?: ParseOptions | undefined): ParsedUrlQuery
-
 export default class Developer extends React.Component<{}, State> {
   constructor(props) {
     super(props);

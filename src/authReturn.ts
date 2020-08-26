@@ -4,6 +4,7 @@ import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
+  // allow typescript to assume no unusual array values sent in the query string
   const queryString = parse(window.location.href) as NodeJS.Dict<string>;
 
   const code = queryString.code;
