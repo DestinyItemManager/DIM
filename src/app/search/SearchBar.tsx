@@ -297,6 +297,10 @@ function SearchBar(
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
+    } else if (e.key === 'Home' || e.key === 'End') {
+      // Disable the use of Home/End to select items in the menu
+      // https://github.com/downshift-js/downshift/issues/1162
+      (e.nativeEvent as any).preventDownshiftDefault = true;
     }
   };
 
