@@ -173,14 +173,6 @@ function SearchBar(
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
-  const setQuery = useCallback(
-    (query: string) => {
-      setLiveQuery(query);
-      debouncedUpdateQuery(query);
-    },
-    [debouncedUpdateQuery]
-  );
-
   const items = useMemo(
     () =>
       autocompleter(
@@ -201,11 +193,11 @@ function SearchBar(
     getComboboxProps,
     highlightedIndex,
     getItemProps,
+    setInputValue,
     reset,
     openMenu,
   } = useCombobox<SearchItem>({
     items,
-    inputValue: liveQuery,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -214,8 +206,6 @@ function SearchBar(
         // Handle selecting the special "help" item
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
-        } else {
-          setQuery(selectedItem.query);
         }
       }
     },
@@ -230,23 +220,15 @@ function SearchBar(
                 isOpen: state.isOpen, // but keep menu open
               }
             : changes;
-        case useCombobox.stateChangeTypes.InputKeyDownEscape: {
-          // Reimplement clear - we are controlling the input which break this
-          // See https://github.com/downshift-js/downshift/issues/1108
-          setQuery('');
-          return changes;
-        }
         default:
           return changes; // otherwise business as usual.
       }
     },
+    onInputValueChange: ({ inputValue }) => {
+      setLiveQuery(inputValue || '');
+      debouncedUpdateQuery(inputValue || '');
+    },
   });
-
-  // This is a hack to fix https://github.com/downshift-js/downshift/issues/1108
-  const onChange = (e) => {
-    const inputValue = e.target.value;
-    setQuery(inputValue || '');
-  };
 
   const onFocus = () => {
     if (!liveQuery && !isOpen) {
@@ -255,16 +237,17 @@ function SearchBar(
   };
 
   const clearFilter = useCallback(() => {
-    setQuery('');
+    setLiveQuery('');
+    debouncedUpdateQuery('');
     onClear?.();
     reset();
     openMenu();
-  }, [setQuery, onClear, reset, openMenu]);
+  }, [debouncedUpdateQuery, onClear, reset, openMenu]);
 
   // Reset live query when search version changes
   useEffect(() => {
     if (searchQuery !== undefined && (searchQueryVersion || 0) > 0) {
-      setLiveQuery(searchQuery);
+      setInputValue(searchQuery);
     }
     // This should only happen when the query version changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -310,7 +293,7 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && tabAutocompleteItem) {
       e.preventDefault();
-      setQuery(tabAutocompleteItem.query);
+      setInputValue(tabAutocompleteItem.query);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
@@ -334,7 +317,6 @@ function SearchBar(
           onBlur,
           onFocus,
           onKeyDown,
-          onChange,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',
