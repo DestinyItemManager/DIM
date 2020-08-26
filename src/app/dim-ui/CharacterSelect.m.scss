@@ -37,7 +37,7 @@
 
 .tile {
   height: 46px;
-  min-width: 230px;
+  width: 100%;
   @include phone-portrait {
     min-width: 260px;
     margin-bottom: 6px;
