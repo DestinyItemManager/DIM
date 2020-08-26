@@ -45,7 +45,7 @@
 .menuItem {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  padding: 7px 9px 7px 9px;
+  padding: 6px 9px 6px 9px;
 
   @include phone-portrait {
     align-items: center;
@@ -73,6 +73,8 @@
 .menuItemQuery {
   flex: 1;
   white-space: normal;
+  padding: 1px 0;
+  overflow: hidden;
 }
 
 .menuItemHelp {
