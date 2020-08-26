@@ -154,6 +154,10 @@
 
   &.notChosen {
     background-color: transparent;
+
+    &.compareChosen {
+      background-color: #48ba7bbb;
+    }
   }
 }
 

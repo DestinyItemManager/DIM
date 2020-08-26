@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import React, { useEffect, useState } from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimSocketCategory, DimPlug, DimSocket } from '../inventory/item-types';
+import { D2Item, DimSocketCategory, DimPlug, DimSocket, DimItem } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { connect } from 'react-redux';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
@@ -25,6 +25,12 @@ interface ProvidedProps {
   item: D2Item;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
+  updateSocketComparePlug?(value: {
+    item: DimItem;
+    categoryHash: number;
+    socket: DimSocket;
+    plug: DimPlug;
+  }): void;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   onShiftClick?(lockedItem: LockedItemType): void;
@@ -68,6 +74,7 @@ function ItemSockets({
   isPhonePortrait,
   onShiftClick,
   dispatch,
+  updateSocketComparePlug,
 }: Props) {
   if ($featureFlags.reviewsEnabled) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -80,6 +87,18 @@ function ItemSockets({
   }
 
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+
+  const handleSocketClick = (
+    item: DimItem,
+    categoryHash: number,
+    socket: DimSocket,
+    plug: DimPlug
+  ) => {
+    // TODO: setSocketInMenu?
+    if (updateSocketComparePlug && plug.stats) {
+      updateSocketComparePlug({ item, categoryHash, socket, plug });
+    }
+  };
 
   if (!item.sockets || !defs) {
     return null;
@@ -131,12 +150,13 @@ function ItemSockets({
                 defs={defs}
                 item={item}
                 isPhonePortrait={isPhonePortrait}
+                categoryHash={category.category.hash}
                 socket={socketInfo}
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
                 classesByHash={classesByHash}
                 bestPerks={bestPerks}
-                onClick={() => setSocketInMenu(socketInfo)}
+                onClick={handleSocketClick}
                 onShiftClick={onShiftClick}
               />
             ))}
@@ -233,6 +253,7 @@ function Socket({
   defs,
   item,
   socket,
+  categoryHash,
   wishListsEnabled,
   inventoryWishListRoll,
   classesByHash,
@@ -244,13 +265,14 @@ function Socket({
   defs: D2ManifestDefinitions;
   item: D2Item;
   socket: DimSocket;
+  categoryHash: number;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   bestPerks: Set<number>;
   isPhonePortrait: boolean;
-  onClick(plug: DimPlug): void;
+  onClick(item: DimItem, categoryHash: number, socket: DimSocket, plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
@@ -274,7 +296,9 @@ function Socket({
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}
-          onClick={hasMenu ? onClick : undefined}
+          onClick={() => {
+            onClick(item, categoryHash, socket, plug);
+          }}
           onShiftClick={onShiftClick}
         />
       ))}

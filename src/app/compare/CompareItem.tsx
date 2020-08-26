@@ -1,5 +1,5 @@
 import React from 'react';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimSocket, DimPlug } from '../inventory/item-types';
 import ItemTagSelector from '../item-popup/ItemTagSelector';
 import LockButton from '../item-popup/LockButton';
 import { AppIcon, searchIcon } from '../shell/icons';
@@ -16,6 +16,7 @@ export default function CompareItem({
   remove,
   highlight,
   setHighlight,
+  updateSocketComparePlug,
 }: {
   item: DimItem;
   stats: StatInfo[];
@@ -23,6 +24,12 @@ export default function CompareItem({
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
+  updateSocketComparePlug(value: {
+    item: DimItem;
+    categoryHash: number;
+    socket: DimSocket;
+    plug: DimPlug;
+  }): void;
 }) {
   return (
     <div className="compare-item">
@@ -48,7 +55,9 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <ItemSockets item={item} minimal={true} />}
+      {item.isDestiny2() && item.sockets && (
+        <ItemSockets item={item} minimal={true} updateSocketComparePlug={updateSocketComparePlug} />
+      )}
     </div>
   );
 }

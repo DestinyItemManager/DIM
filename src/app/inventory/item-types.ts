@@ -425,6 +425,8 @@ export interface DimSocket {
   socketIndex: number;
   /** The currently inserted plug item, if any. */
   plugged: DimPlug | null;
+  /** The plug item being compared, if any. */
+  comparePlugged?: DimPlug | null;
   /**
    * The displayable/searchable list of potential plug choices for this socket.
    * For perks, this is all the potential perks in the perk column.

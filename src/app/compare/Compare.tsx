@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { DimItem, DimStat } from '../inventory/item-types';
+import { DimItem, DimStat, DimSocket, DimPlug } from '../inventory/item-types';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
@@ -168,6 +168,84 @@ class Compare extends React.Component<Props, State> {
 
     const stats = this.getAllStatsSelector(this.state, this.props);
 
+    // TODO: Stash and create new branch
+    // TODO: Should this go into its own module?
+    // TODO: ItemPopupContainer / ItemPopupBody needs this function too
+    // TODO: Mobile view?
+    const updateSocketComparePlug = ({
+      item,
+      categoryHash,
+      socket,
+      plug,
+    }: {
+      item: DimItem;
+      categoryHash: number;
+      socket: DimSocket;
+      plug: DimPlug;
+    }) => {
+      // Exit early if this is a D1 item or an item without sockets
+      if (!item.isDestiny2() || !item.sockets || item.sockets === undefined) {
+        return null;
+      }
+
+      const { socketIndex } = socket;
+      const itemIndex = comparisonItems.indexOf(item);
+      const categoryIndex = item.sockets.categories.findIndex(
+        (category) => category.category.hash === categoryHash
+      );
+      // Create deep copies of arrays to prevent directly mutating state
+      // (_.cloneDeep is resulting in object mutation)
+      const itemStatsClone: DimStat[] = JSON.parse(JSON.stringify(item.stats));
+      const itemCategorySocketsClone: DimSocket[] = JSON.parse(
+        JSON.stringify(item.sockets.categories[categoryIndex].sockets)
+      );
+      // socketIndex is correct for allSockets, but not categories[].sockets
+      // TODO: Confirm socket is always off by 1, otherwise this should use hashes to find plugs
+      const prevPlug =
+        itemCategorySocketsClone[socketIndex - 1].comparePlugged ??
+        itemCategorySocketsClone[socketIndex - 1].plugged;
+
+      // If the clicked plug is different to the current plug
+      if (plug.plugDef.hash !== prevPlug?.plugDef.hash) {
+        itemCategorySocketsClone[socketIndex - 1].comparePlugged = plug;
+
+        // Get stats affected by prevPlug and remove from stats
+        for (const statHash in prevPlug?.stats) {
+          const statIndex = itemStatsClone.findIndex(
+            (stat) => stat.statHash === parseInt(statHash)
+          );
+          itemStatsClone[statIndex].value =
+            itemStatsClone[statIndex].value - prevPlug?.stats[statHash];
+        }
+
+        // Get stats affected by new plug and add to stats
+        for (const statHash in plug.stats) {
+          const statIndex = itemStatsClone.findIndex(
+            (stat) => stat.statHash === parseInt(statHash)
+          );
+          itemStatsClone[statIndex].value = itemStatsClone[statIndex].value + plug.stats[statHash];
+        }
+
+        // Write new item data
+        item.stats = itemStatsClone;
+        // item.sockets.allSockets = itemAllSocketsClone;
+        item.sockets.categories[categoryIndex].sockets = itemCategorySocketsClone;
+
+        // Set state object, replacing original item in array
+        this.setState((prevState) => {
+          const updatedComparisonItems = [
+            ...prevState.comparisonItems.slice(0, itemIndex),
+            item,
+            ...prevState.comparisonItems.slice(itemIndex + 1),
+          ];
+
+          return {
+            comparisonItems: updatedComparisonItems,
+          };
+        });
+      }
+    };
+
     return (
       <Sheet
         onClose={this.cancel}
@@ -214,6 +292,7 @@ class Compare extends React.Component<Props, State> {
                   remove={this.remove}
                   setHighlight={this.setHighlight}
                   highlight={highlight}
+                  updateSocketComparePlug={updateSocketComparePlug}
                 />
               ))}
             </div>
