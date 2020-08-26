@@ -9,18 +9,16 @@ import './search-filter.scss';
 import { searchFilterSelector } from './search-filter';
 import { DimItem } from '../inventory/item-types';
 import { loadingTracker } from '../shell/loading-tracker';
-import { showNotification } from '../notifications/notifications';
 import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
-import { setItemLockState } from 'app/inventory/item-move-service';
 import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
-import { touch, touchItem } from 'app/inventory/actions';
 import { useLocation } from 'react-router';
 import { emptyArray, emptySet } from 'app/utils/empty';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { querySelector } from 'app/shell/reducer';
+import { bulkLockItems } from 'app/inventory/lock-items';
 
 const bulkItemTags = Array.from(itemTagSelectorList);
 bulkItemTags.push({ type: 'clear', label: tl('Tags.ClearTag') });
@@ -40,14 +38,12 @@ interface StoreProps {
 
 type DispatchProps = {
   bulkTagItems(items: DimItem[], tag: TagValue): void;
-  touchStores(): void;
-  touchItem(id: string): void;
+  bulkLockItems(items: DimItem[], locked: boolean): void;
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
   bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
-  touchStores: touch,
-  touchItem: (id) => dispatch(touchItem(id)),
+  bulkLockItems: (items, locked) => dispatch(bulkLockItems(items, locked) as any),
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
@@ -71,9 +67,8 @@ function MainSearchBarActions({
   stores,
   buckets,
   searchFilter,
-  touchStores,
-  touchItem,
   bulkTagItems,
+  bulkLockItems,
 }: Props) {
   const location = useLocation();
 
@@ -126,35 +121,9 @@ function MainSearchBarActions({
 
       if (selectedTag === 'lock' || selectedTag === 'unlock') {
         // Bulk locking/unlocking
-
         const state = selectedTag === 'lock';
         const lockables = filteredItems.filter((i) => i.lockable);
-        try {
-          for (const item of lockables) {
-            await setItemLockState(item, state);
-
-            // TODO: Gotta do this differently in react land
-            item.locked = state;
-            touchItem(item.id);
-          }
-          showNotification({
-            type: 'success',
-            title: state
-              ? t('Filter.LockAllSuccess', { num: lockables.length })
-              : t('Filter.UnlockAllSuccess', { num: lockables.length }),
-          });
-        } catch (e) {
-          showNotification({
-            type: 'error',
-            title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-            body: e.message,
-          });
-        } finally {
-          // Touch the stores service to update state
-          if (lockables.length) {
-            touchStores();
-          }
-        }
+        bulkLockItems(lockables, state);
       } else {
         // Bulk tagging
         const tagItems = filteredItems.filter((i) => i.taggable);
