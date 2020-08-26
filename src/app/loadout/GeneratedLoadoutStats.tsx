@@ -43,10 +43,6 @@ function getItemsInListByCategory({
     return !item;
   });
 
-  if (missingBuckets.length) {
-    console.log('some missing items', missingBuckets);
-  }
-
   return { itemSet, missingBuckets };
 }
 
@@ -75,7 +71,6 @@ export function GeneratedLoadoutStats({
   }
 
   if (armorItems.missingBuckets.length) {
-    console.log('missing armor items', armorItems.missingBuckets);
     return null;
   }
 
