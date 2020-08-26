@@ -12,6 +12,7 @@ interface CssExports {
   'menuOpen': string;
   'open': string;
   'openButton': string;
+  'saveSearchButton': string;
   'searchBar': string;
   'textHighlight': string;
 }

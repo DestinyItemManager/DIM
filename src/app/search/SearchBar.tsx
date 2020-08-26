@@ -21,6 +21,7 @@ import React, {
   useImperativeHandle,
   useEffect,
   useLayoutEffect,
+  useMemo,
 } from 'react';
 
 import { Loading } from 'app/dim-ui/Loading';
@@ -78,11 +79,29 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    recentSearches: recentSearchesSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
-    autocompleter: autoCompleterSelector(state),
+function mapStateToProps() {
+  let prevSearchQueryVersion: number | undefined;
+  let prevSearchQuery: string | undefined;
+
+  return (
+    state: RootState,
+    { searchQuery, searchQueryVersion }: ProvidedProps
+  ): StoreProps & { searchQuery?: string } => {
+    // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
+    // doesn't change, so we don't trigger an update.
+    let manipulatedSearchQuery = prevSearchQuery;
+    if (searchQueryVersion != prevSearchQueryVersion) {
+      manipulatedSearchQuery = searchQuery;
+      prevSearchQuery = searchQuery;
+      prevSearchQueryVersion = searchQueryVersion;
+    }
+
+    return {
+      recentSearches: recentSearchesSelector(state),
+      isPhonePortrait: isPhonePortraitSelector(state),
+      autocompleter: autoCompleterSelector(state),
+      searchQuery: manipulatedSearchQuery,
+    };
   };
 }
 
@@ -126,12 +145,6 @@ function SearchBar(
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const inputElement = useRef<HTMLInputElement>(null);
-  const [items, setItems] = useState(() => autocompleter(liveQuery, 0, recentSearches));
-  // TODO: this isn't great. We need https://github.com/downshift-js/downshift/issues/1144
-  useEffect(() => {
-    setItems(autocompleter(liveQuery, inputElement.current?.selectionStart || 0, recentSearches));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recentSearches]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
@@ -160,18 +173,14 @@ function SearchBar(
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
-  const setQuery = useCallback(
-    (query: string, immediate = false) => {
-      setLiveQuery(query);
-      debouncedUpdateQuery(query);
-      if (immediate) {
-        debouncedUpdateQuery.flush();
-      }
-      setItems(
-        autocompleter(query, inputElement.current!.selectionStart || query.length, recentSearches)
-      );
-    },
-    [autocompleter, debouncedUpdateQuery, recentSearches]
+  const items = useMemo(
+    () =>
+      autocompleter(
+        liveQuery,
+        inputElement.current?.selectionStart || liveQuery.length,
+        recentSearches
+      ),
+    [autocompleter, liveQuery, recentSearches]
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -184,11 +193,11 @@ function SearchBar(
     getComboboxProps,
     highlightedIndex,
     getItemProps,
+    setInputValue,
     reset,
     openMenu,
   } = useCombobox<SearchItem>({
     items,
-    inputValue: liveQuery,
     defaultIsOpen: isPhonePortrait,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
@@ -197,8 +206,6 @@ function SearchBar(
         // Handle selecting the special "help" item
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
-        } else {
-          setQuery(selectedItem.query, true);
         }
       }
     },
@@ -213,41 +220,32 @@ function SearchBar(
                 isOpen: state.isOpen, // but keep menu open
               }
             : changes;
-        case useCombobox.stateChangeTypes.InputKeyDownEscape: {
-          // Reimplement clear - we are controlling the input which break this
-          // See https://github.com/downshift-js/downshift/issues/1108
-          setQuery('', true);
-          return changes;
-        }
         default:
           return changes; // otherwise business as usual.
       }
     },
+    onInputValueChange: ({ inputValue }) => {
+      setLiveQuery(inputValue || '');
+      debouncedUpdateQuery(inputValue || '');
+    },
   });
 
-  // This is a hack to fix https://github.com/downshift-js/downshift/issues/1108
-  const onChange = (e) => {
-    const inputValue = e.target.value;
-    setQuery(inputValue || '');
-  };
-
   const onFocus = () => {
-    if (!liveQuery && !isOpen) {
+    if (!liveQuery && !isOpen && !autoFocus) {
       openMenu();
     }
   };
 
   const clearFilter = useCallback(() => {
-    setQuery('', true);
     onClear?.();
     reset();
     openMenu();
-  }, [setQuery, onClear, reset, openMenu]);
+  }, [onClear, reset, openMenu]);
 
   // Reset live query when search version changes
   useEffect(() => {
-    if (searchQuery !== undefined) {
-      setLiveQuery(searchQuery);
+    if (searchQuery !== undefined && (searchQueryVersion || 0) > 0) {
+      setInputValue(searchQuery);
     }
     // This should only happen when the query version changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -293,10 +291,14 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && !e.altKey && tabAutocompleteItem) {
       e.preventDefault();
-      setQuery(tabAutocompleteItem.query, true);
+      setInputValue(tabAutocompleteItem.query);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
+    } else if (e.key === 'Home' || e.key === 'End') {
+      // Disable the use of Home/End to select items in the menu
+      // https://github.com/downshift-js/downshift/issues/1162
+      (e.nativeEvent as any).preventDownshiftDefault = true;
     }
   };
 
@@ -313,7 +315,6 @@ function SearchBar(
           onBlur,
           onFocus,
           onKeyDown,
-          onChange,
           ref: inputElement,
           className: 'filter-input',
           autoComplete: 'off',
@@ -332,7 +333,7 @@ function SearchBar(
       {liveQuery.length > 0 && (
         <button
           type="button"
-          className="filter-bar-button"
+          className={clsx('filter-bar-button', styles.saveSearchButton)}
           onClick={toggleSaved}
           title={t('Header.SaveSearch')}
         >
