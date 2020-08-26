@@ -78,11 +78,29 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    recentSearches: recentSearchesSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
-    autocompleter: autoCompleterSelector(state),
+function mapStateToProps() {
+  let prevSearchQueryVersion: number | undefined;
+  let prevSearchQuery: string | undefined;
+
+  return (
+    state: RootState,
+    { searchQuery, searchQueryVersion }: ProvidedProps
+  ): StoreProps & { searchQuery?: string } => {
+    // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
+    // doesn't change, so we don't trigger an update.
+    let manipulatedSearchQuery = prevSearchQuery;
+    if (searchQueryVersion != prevSearchQueryVersion) {
+      manipulatedSearchQuery = searchQuery;
+      prevSearchQuery = searchQuery;
+      prevSearchQueryVersion = searchQueryVersion;
+    }
+
+    return {
+      recentSearches: recentSearchesSelector(state),
+      isPhonePortrait: isPhonePortraitSelector(state),
+      autocompleter: autoCompleterSelector(state),
+      searchQuery: manipulatedSearchQuery,
+    };
   };
 }
 
@@ -243,7 +261,7 @@ function SearchBar(
 
   // Reset live query when search version changes
   useEffect(() => {
-    if (searchQuery !== undefined) {
+    if (searchQuery !== undefined && (searchQueryVersion || 0) > 0) {
       setLiveQuery(searchQuery);
     }
     // This should only happen when the query version changes
