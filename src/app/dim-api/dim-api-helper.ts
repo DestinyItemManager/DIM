@@ -1,5 +1,5 @@
 import { HttpClientConfig } from 'bungie-api-ts/http';
-import { stringify } from 'simple-query-string';
+import { stringify } from 'querystring';
 import {
   getActiveToken as getBungieToken,
   FatalTokenError,

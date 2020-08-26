@@ -1,5 +1,5 @@
 import React from 'react';
-import { parse } from 'simple-query-string';
+import { parse } from 'querystring';
 import { registerApp } from 'app/dim-api/register-app';
 
 interface State {
@@ -13,7 +13,8 @@ interface State {
 export default class Developer extends React.Component<{}, State> {
   constructor(props) {
     super(props);
-    const urlParams = parse(window.location.href);
+    // we ask typescript to trust that we won't do array values as URL params
+    const urlParams = parse(window.location.href) as NodeJS.Dict<string>;
     this.state = {
       apiKey: localStorage.getItem('apiKey') || urlParams.apiKey || undefined,
       clientId: localStorage.getItem('oauthClientId') || urlParams.oauthClientId || undefined,

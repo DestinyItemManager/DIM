@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
 import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
-import { stringify } from 'simple-query-string';
+import { stringify } from 'querystring';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { delay } from 'app/utils/util';
