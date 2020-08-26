@@ -14,7 +14,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
-import { bulkTagItems } from 'app/inventory/tag-items';
+import { bulkTagItems, bulkLockItems } from 'app/inventory/bulk-actions';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -42,7 +42,6 @@ import { StatInfo } from 'app/compare/Compare';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
-import { bulkLockItems } from 'app/inventory/lock-items';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,

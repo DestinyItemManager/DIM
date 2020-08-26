@@ -10,7 +10,7 @@ import { searchFilterSelector } from './search-filter';
 import { DimItem } from '../inventory/item-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { CompareService } from '../compare/compare.service';
-import { bulkTagItems } from 'app/inventory/tag-items';
+import { bulkTagItems, bulkLockItems } from 'app/inventory/bulk-actions';
 import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { useLocation } from 'react-router';
@@ -18,7 +18,6 @@ import { emptyArray, emptySet } from 'app/utils/empty';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { querySelector } from 'app/shell/reducer';
-import { bulkLockItems } from 'app/inventory/lock-items';
 
 const bulkItemTags = Array.from(itemTagSelectorList);
 bulkItemTags.push({ type: 'clear', label: tl('Tags.ClearTag') });
