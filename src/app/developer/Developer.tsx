@@ -13,7 +13,7 @@ export default class Developer extends React.Component<{}, State> {
   constructor(props) {
     super(props);
     // we ask typescript to trust that we won't do array values as URL params
-    const urlParams = new URL(window.location.href).searchParams;
+    const urlParams = new URLSearchParams(window.location.search);
     this.state = {
       apiKey: localStorage.getItem('apiKey') || urlParams.get('apiKey') || undefined,
       clientId:
