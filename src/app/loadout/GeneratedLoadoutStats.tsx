@@ -63,21 +63,29 @@ export function GeneratedLoadoutStats({
     // just D2, for now
     return null;
   }
+
+  // Get items in current loadout per category
   const armorItems = getItemsInListByCategory({ buckets, category: 'Armor', items });
   const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
-  if (weaponItems.missingBuckets) {
-    const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
-    const maxWeapons: DimItem[] = weaponItems.missingBuckets
-      .map((bucket) => items.find((item) => bucket.type === item.type)!)
-      .flat(0);
-    weaponItems.itemSet.concat(maxWeapons);
-    maxLightItemSet(stores, subclass).unrestricted;
-  }
 
   if (armorItems.missingBuckets.length) {
+    // If any armor types are missing, don't compute stats or power levels.
     return null;
   }
 
+  if (weaponItems.missingBuckets) {
+    // If any weapon types are missing, fill them in with max weapons to assume light level
+    const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
+    const maxPowerItems = maxLightItemSet(stores, subclass).unrestricted;
+    const maxWeapons = _.compact(
+      weaponItems.missingBuckets.map(
+        (bucket) => maxPowerItems.find((item) => bucket.type === item.type)!
+      )
+    );
+    weaponItems.itemSet.push(...maxWeapons);
+  }
+
+  // Compute stats and power level.
   const stats = getArmorStats(defs, armorItems.itemSet);
   const power =
     getLight(stores[0], weaponItems.itemSet.concat(armorItems.itemSet)) +
@@ -87,7 +95,7 @@ export function GeneratedLoadoutStats({
     <div className="stat-bars destiny2">
       <div className="power">
         <PressTip
-          tooltip={weaponItems.missingBuckets.length ? () => t('Assuming max weapons') : null}
+          tooltip={weaponItems.missingBuckets.length ? () => t('Loadouts.AssumeMaxWeapons') : null}
         >
           <>
             <AppIcon icon={powerActionIcon} />

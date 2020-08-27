@@ -71,21 +71,24 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 export function getArmorStats(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   items: DimItem[]
-): { [hashHash: number]: DimCharacterStat } {
-  const statsByArmorHash = armorStats
-    .map((statHash) => defs.Stat.get(statHash))
-    .reduce((ret, { hash, displayProperties: { description, icon, name } }) => {
-      ret[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
-      return ret;
-    }, {});
+): { [hash: number]: DimCharacterStat } {
+  const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
-  return items.reduce((ret, item) => {
+  // Construct map of stat hash to DimCharacterStat
+  const statsByArmorHash: { [hash: number]: DimCharacterStat } = {};
+  statDefs.forEach(({ hash, displayProperties: { description, icon, name } }) => {
+    statsByArmorHash[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
+  });
+
+  // Sum the items stats into the statsByArmorHash
+  items.forEach((item) => {
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
-    Object.keys(ret).forEach((hash) => {
-      ret[hash].value += itemStats[hash]?.[0].value ?? 0;
+    Object.entries(statsByArmorHash).forEach(([hash, stat]) => {
+      stat.value += itemStats[hash]?.[0].value ?? 0;
     });
-    return ret;
-  }, statsByArmorHash);
+  });
+
+  return statsByArmorHash;
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
