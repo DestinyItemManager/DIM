@@ -218,12 +218,10 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
   };
 
   return (
-    <>
-      <div className={clsx(styles.value, optionalClasses)}>
-        {stat.value}
-        {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
-      </div>
-    </>
+    <div className={clsx(styles.value, optionalClasses)}>
+      {stat.value}
+      {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
+    </div>
   );
 }
 

@@ -10,7 +10,6 @@ import React, {
   useEffect,
 } from 'react';
 
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
 import { searchConfigSelector } from './search-config';
@@ -23,15 +22,20 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { useSelector } from 'react-redux';
 
 interface ProvidedProps {
+  /** Whether the "X" button that clears the selection should always be shown. */
   alwaysShowClearButton?: boolean;
+  /** Placeholder text when nothing has been typed */
   placeholder: string;
   autoFocus?: boolean;
+  /** A fake property that can be used to force the "live" query to be replaced with the one from props */
   searchQueryVersion?: number;
+  /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
   searchQuery?: string;
-  /** Children are used as optional extra action buttons when there is a query. */
+  /** Children are used as optional extra action buttons only when there is a query. */
   children?: React.ReactChild;
-  /** TODO: have an initialQuery prop */
+  /** Fired whenever the query changes (already debounced) */
   onQueryChanged(query: string): void;
+  /** Fired whenever the query has been cleared */
   onClear?(): void;
 }
 
@@ -60,8 +64,11 @@ const filterNames = [
   'description',
 ];
 
+/** An interface for interacting with the search filter through a ref */
 export interface SearchFilterRef {
+  /** Switch focus to the filter field */
   focusFilterInput(): void;
+  /** Clear the filter field */
   clearFilter(): void;
 }
 
@@ -227,30 +234,7 @@ export default React.forwardRef(function SearchFilterInput(
 
   return (
     <div className="search-filter" role="search">
-      <GlobalHotkeys
-        hotkeys={[
-          {
-            combo: 'f',
-            description: t('Hotkey.StartSearch'),
-            callback: (event) => {
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-          {
-            combo: 'shift+f',
-            description: t('Hotkey.StartSearchClear'),
-            callback: (event) => {
-              clearFilter();
-              focusFilterInput();
-              event.preventDefault();
-              event.stopPropagation();
-            },
-          },
-        ]}
-      />
-      <AppIcon icon={searchIcon} />
+      <AppIcon icon={searchIcon} className="search-bar-icon" />
       <input
         ref={inputElement}
         className="filter-input"

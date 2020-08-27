@@ -218,7 +218,7 @@ function mapStateToProps() {
     buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     perks: perksSelector(state, props),
-    mods: unlockedPlugsSelector(state, props),
+    mods: (!$featureFlags.armor2ModPicker && unlockedPlugsSelector(state, props)) || [],
     defs: state.manifest.d2Manifest!,
   });
 }
@@ -351,7 +351,11 @@ class PerkPicker extends React.Component<Props, State> {
         ? ({ onClose }) => (
             <div className={styles.footer}>
               <div>
-                <button className={styles.submitButton} onClick={(e) => this.onSubmit(e, onClose)}>
+                <button
+                  type="button"
+                  className={styles.submitButton}
+                  onClick={(e) => this.onSubmit(e, onClose)}
+                >
                   {!isPhonePortrait && '⏎ '}
                   {t('LoadoutBuilder.SelectPerks')}
                 </button>
@@ -385,17 +389,15 @@ class PerkPicker extends React.Component<Props, State> {
                       </React.Fragment>
                     )
                 )}
-                <>
-                  <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
-                  {selectedSeasonalMods.map((item) => (
-                    <SocketDetailsMod
-                      key={item.mod.hash}
-                      itemDef={item.mod}
-                      defs={defs}
-                      className={styles.selectedPerk}
-                    />
-                  ))}
-                </>
+                <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
+                {selectedSeasonalMods.map((item) => (
+                  <SocketDetailsMod
+                    key={item.mod.hash}
+                    itemDef={item.mod}
+                    defs={defs}
+                    className={styles.selectedPerk}
+                  />
+                ))}
                 <GlobalHotkeys
                   hotkeys={[
                     {
@@ -423,7 +425,7 @@ class PerkPicker extends React.Component<Props, State> {
                   key={bucketId}
                   defs={defs}
                   bucket={buckets.byHash[bucketId]}
-                  mods={queryFilteredMods[bucketId]}
+                  mods={queryFilteredMods[bucketId] || []}
                   perks={queryFilteredPerks[bucketId]}
                   burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
                   locked={selectedPerks[bucketId] || []}
@@ -432,12 +434,14 @@ class PerkPicker extends React.Component<Props, State> {
                 />
               )
           )}
-          <SeasonalModPicker
-            mods={queryFilteredSeasonalMods}
-            defs={defs}
-            locked={selectedSeasonalMods}
-            onSeasonalModSelected={this.onSeasonalModSelected}
-          />
+          {!$featureFlags.armor2ModPicker && (
+            <SeasonalModPicker
+              mods={queryFilteredSeasonalMods}
+              defs={defs}
+              locked={selectedSeasonalMods}
+              onSeasonalModSelected={this.onSeasonalModSelected}
+            />
+          )}
         </div>
       </Sheet>
     );

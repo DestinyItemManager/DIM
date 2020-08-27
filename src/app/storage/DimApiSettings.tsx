@@ -115,7 +115,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.DeleteAllDataLabel')}</label>
-          <button className="dim-button" onClick={deleteAllData}>
+          <button type="button" className="dim-button" onClick={deleteAllData}>
             <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
           </button>
         </div>

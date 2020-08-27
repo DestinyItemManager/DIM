@@ -373,8 +373,10 @@
     "BungieNetAlert": "Bungie Alert",
     "Clear": "Clear search filter",
     "CompareMatching": "Compare filtered items",
+    "DeleteSearch": "Delete Search",
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
+    "FilterHelpMenuItem": "Filters Help...",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
@@ -385,6 +387,7 @@
     "Refresh": "Refresh Destiny Data",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
+    "SaveSearch": "Save Search",
     "Shop": "Shop",
     "UpgradeDIM": "Update DIM",
     "WhatsNew": "What's New"
@@ -400,12 +403,14 @@
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Start a search",
     "StartSearchClear": "Start a fresh search",
+    "Tab": "TAB",
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
+    "NoBuildsFoundExoticsAndMods": "You have an exotic and five seasonal mods locked.",
+    "NoBuildsFoundModsAreTooExpensive": "The selected mods' energy requirements are too high.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "You are missing an item to hold one of the selected seasonal mods.",
+    "NoBuildsFoundWithReasons": "No builds found. Common causes of this include:",
     "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
@@ -680,10 +689,13 @@
     "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
+    "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "Expand item details",
     "Infuse": "Infuse",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "Keep",
     "LockAll": "Lock Items",
     "TagItem": "Tag Item",
-    "TagItems": "Tag Items",
     "UnlockAll": "Unlock Items"
   },
   "Triumphs": {
@@ -1026,7 +1038,7 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
     "UpdateExternalSource": "Update Wish List Source",

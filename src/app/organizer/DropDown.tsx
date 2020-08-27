@@ -52,6 +52,7 @@ function DropDown({
   return (
     <ClickOutside onClickOutside={() => setDropdownOpen(false)} className={styles.dropDown}>
       <button
+        type="button"
         className={`dim-button ${styles.button}`}
         disabled={buttonDisabled}
         onClick={() => setDropdownOpen(!dropdownOpen)}

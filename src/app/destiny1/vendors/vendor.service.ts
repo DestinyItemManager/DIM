@@ -14,6 +14,8 @@ import store from '../../store/store';
 import { BehaviorSubject, ConnectableObservable, Observable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, tap, filter, map } from 'rxjs/operators';
 import { getVault } from 'app/inventory/stores-helpers';
+import rxStore from '../../store/store';
+import { bucketsSelector } from 'app/inventory/selectors';
 
 /*
 const allVendors = [
@@ -286,7 +288,7 @@ function VendorService(): VendorServiceType {
       });
     });
 
-    mergedVendor.allItems = mergedVendor.categories.map((i) => i.saleItems).flat();
+    mergedVendor.allItems = mergedVendor.categories.flatMap((i) => i.saleItems);
 
     return mergedVendor;
   }
@@ -484,10 +486,13 @@ function VendorService(): VendorServiceType {
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
+    const buckets = bucketsSelector(rxStore.getState())!;
+
     return processItems(
       { id: null } as any,
       saleItems.map((i) => i.item),
-      defs
+      defs,
+      buckets
     ).then((items) => {
       const itemsById = _.keyBy(items, (i) => i.id);
       const categories = _.compact(

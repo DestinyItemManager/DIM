@@ -848,7 +848,7 @@
   },
   "Stats": {
     "Custom": "Total Personalizado",
-    "CustomDesc": "Total personalizado de estadísticas base seleccionadas, ignorando modificadores u obras maestras. Visita Ajustes para configurar cuales estadísticas están incluidas.",
+    "CustomDesc": "Estadísticas totales personalizadas de base seleccionadas, ignorando modificadores u obras maestras. Visita Ajustes para configurar cuales estadísticas están incluidas.",
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",
@@ -1026,7 +1026,7 @@
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count, number}} tiradas.{{titleAndDescription}}",
-    "InvalidExternalSource": "Por favor, introduce una URL válida para la fuente de su lista de deseos externa. La URL debe empezar con https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Por favor, introduzca una URL válida para su lista de deseos externa. La URL debe empezar con algo de lo siguiente:",
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",

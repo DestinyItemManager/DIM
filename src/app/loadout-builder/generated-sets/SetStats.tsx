@@ -24,9 +24,7 @@ function SetStats({ defs, set, statOrder, enabledStats }: Props) {
   const totalTier = calculateTotalTier(set.stats);
   const enabledTier = sumEnabledStats(set.stats, enabledStats);
   // class items is the only array larger than 1 and it cannot have incorrect stats
-  const incorrectStats = _.uniq(
-    set.armor.map((items) => getPossiblyIncorrectStats(items[0])).flat()
-  );
+  const incorrectStats = _.uniq(set.armor.flatMap((items) => getPossiblyIncorrectStats(items[0])));
 
   const displayStats = { ...set.stats };
 

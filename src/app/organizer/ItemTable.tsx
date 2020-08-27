@@ -9,13 +9,12 @@ import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { showNotification } from 'app/notifications/notifications';
 import { t, tl } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
-import { bulkTagItems } from 'app/inventory/tag-items';
+import { bulkTagItems, bulkLockItems } from 'app/inventory/bulk-actions';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -30,11 +29,10 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { getColumns, getColumnSelectionId } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { setItemLockState } from 'app/inventory/item-move-service';
 import { emptyObject, emptyArray } from 'app/utils/empty';
 import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch, setItemNote, touchItem } from 'app/inventory/actions';
+import { setItemNote } from 'app/inventory/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
@@ -262,37 +260,10 @@ function ItemTable({
     },
     [dispatch, columns, enabledColumns, itemType]
   );
-  // TODO: stolen from SearchFilter, should probably refactor into a shared thing
+
   const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
     const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-
-    const state = lock;
-    try {
-      for (const item of selectedItems) {
-        await setItemLockState(item, state);
-
-        // TODO: Gotta do this differently in react land
-        item.locked = lock;
-        dispatch(touchItem(item.id));
-      }
-      showNotification({
-        type: 'success',
-        title: state
-          ? t('Filter.LockAllSuccess', { num: selectedItems.length })
-          : t('Filter.UnlockAllSuccess', { num: selectedItems.length }),
-      });
-    } catch (e) {
-      showNotification({
-        type: 'error',
-        title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-        body: e.message,
-      });
-    } finally {
-      // Touch the stores service to update state
-      if (selectedItems.length) {
-        dispatch(touch());
-      }
-    }
+    dispatch(bulkLockItems(selectedItems, lock));
   });
 
   const onNote = (note?: string) => {
@@ -446,7 +417,11 @@ function ItemTable({
     };
 
     downloadAction = (
-      <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadHandler}>
+      <button
+        type="button"
+        className={clsx(styles.importButton, 'dim-button')}
+        onClick={downloadHandler}
+      >
         <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
       </button>
     );
@@ -660,6 +635,7 @@ function TableRow({
   return (
     <>
       {filteredColumns.map((column: ColumnDefinition) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={narrowQueryFunction(row, column)}

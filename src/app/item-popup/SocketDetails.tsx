@@ -165,8 +165,7 @@ function SocketDetails({
   const energyTypeHash = item.energy?.energyTypeHash;
   const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
 
-  let mods = Array.from(modHashes)
-    .map((h) => defs.InventoryItem.get(h))
+  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
         i.inventory!.tierType !== TierType.Common &&
@@ -278,6 +277,7 @@ export const SocketDetailsMod = React.memo(
 
     return (
       <div
+        role="button"
         className={clsx('item', className)}
         title={itemDef.displayProperties.name}
         onClick={onClickFn}

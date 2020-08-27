@@ -142,6 +142,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
           </span>
           <button
+            type="button"
             className={`dim-button ${styles.newLoadout}`}
             onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
           >
@@ -214,6 +215,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
               />
             )}
           </WindowScroller>
+        ) : $featureFlags.armor2ModPicker ? (
+          <>
+            <h3>{t('LoadoutBuilder.NoBuildsFoundWithReasons')}</h3>
+            <ul>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundExoticsAndMods')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundModsAreTooExpensive')}
+              </li>
+              <li className={styles.emptyListReason}>
+                {t('LoadoutBuilder.NoBuildsFoundSeasonalModNotSatisfied')}
+              </li>
+            </ul>
+          </>
         ) : (
           <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
         )}

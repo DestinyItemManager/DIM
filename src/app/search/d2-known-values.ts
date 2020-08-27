@@ -58,21 +58,6 @@ export const emptySocketHashes = [
   791435474, // InventoryItem "Empty Activity Mod Socket"
 ];
 
-/** these are checked against default rolls to determine if something's curated */
-export const curatedPlugsAllowList = [
-  PlugCategoryHashes.Frames,
-  PlugCategoryHashes.Guards,
-  PlugCategoryHashes.Blades,
-  PlugCategoryHashes.Tubes,
-  PlugCategoryHashes.Arrows,
-  PlugCategoryHashes.Batteries,
-  PlugCategoryHashes.Magazines,
-  PlugCategoryHashes.Scopes,
-  PlugCategoryHashes.MagazinesGl,
-  PlugCategoryHashes.Barrels,
-  PlugCategoryHashes.Bowstrings,
-];
-
 export const armor2PlugCategoryHashesByName = {
   general: PlugCategoryHashes.EnhancementsV2General,
   helmet: PlugCategoryHashes.EnhancementsV2Head,
@@ -278,3 +263,5 @@ export const breakerTypes = {
 };
 
 export const powerCapPlugSetHash = 573;
+
+export const MAX_ARMOR_ENERGY_CAPACITY = 10;

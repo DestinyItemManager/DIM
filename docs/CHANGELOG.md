@@ -1,5 +1,20 @@
 ## Next
 
+## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
+
+* Better touchscreen support for drag and drop.
+* Wishlists now support Github gists (raw text URLs), so there's no need to set up an entire repository to host them. If you are making wishlists, you can try out changes easier than ever. If you're not making wishlists, hopefully you're using them. If you don't know what wishlists are, [here you go](https://destinyitemmanager.fandom.com/wiki/Wish_Lists)
+* Engrams get a more form-fitting outline on mouse hover.
+* If you have a search query active, DIM will not automatically reload to update itself.
+* The `is:curated` search has been overhauled to better find curated rolls.
+* Fixes to how the character headers look in different browsers.
+* Fixed the missing armor.csv button on the Organizer.
+
+### Beta Only
+* Loadout Optimizer: DIM Beta is now using the new Mod Picker, a separate and improved picker just for armor mods. Try it out and let us know how it feels
+* In Beta only, the filter search bar has been upgraded to remember recent searches and let you save your favorite searches.
+* Phone/mobile resolutions will now show a mini-popup to make inspecting and moving items much easier.
+
 ## 6.25.0 <span className="changelog-date">(2020-08-16)</span>
 
 * Removed `is:reacquireable` as it is inaccurate in its current state

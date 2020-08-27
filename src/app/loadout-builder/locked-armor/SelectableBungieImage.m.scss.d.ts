@@ -9,6 +9,7 @@ interface CssExports {
   'perkInfo': string;
   'perkThumb': string;
   'perkTitle': string;
+  'plugStats': string;
   'unselectable': string;
 }
 export const cssExports: CssExports;

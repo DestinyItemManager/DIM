@@ -90,15 +90,13 @@ export default function ItemMoveLocation({ item, itemOwnerStore, store, moveItem
         <ItemActionButton
           className={styles.moveVault}
           title={t('MovePopup.Vault')}
-          aria-label={`${t('MovePopup.Equip')} ${store.name}`}
           onClick={moveItem}
           label={t('MovePopup.Vault')}
         />
       )}
       {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
         <ItemActionButton
-          title={store.name}
-          aria-label={`${t('MovePopup.Equip')} ${store.name}`}
+          title={t('MovePopup.EquipWithName', { character: store.name })}
           onClick={equipItem}
           icon={store.icon}
           label={t('MovePopup.Equip')}
@@ -106,8 +104,7 @@ export default function ItemMoveLocation({ item, itemOwnerStore, store, moveItem
       )}
       {canShowStore(store) && (
         <ItemActionButton
-          title={store.name}
-          aria-label={`${t('MovePopup.Store')} ${store.name}`}
+          title={t('MovePopup.StoreWithName', { character: store.name })}
           onClick={moveItem}
           icon={store.icon}
           label={t('MovePopup.Store')}

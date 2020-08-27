@@ -14,7 +14,7 @@ interface State {
 
 function mapStateToProps(state: RootState) {
   return {
-    isDraggingStack: state.inventory.isDraggingStack,
+    isDraggingStack: state.inventory.isDraggingStack && !state.shell.isPhonePortrait,
   };
 }
 

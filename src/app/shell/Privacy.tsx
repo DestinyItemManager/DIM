@@ -7,7 +7,7 @@ export default function Privacy() {
   return (
     <div className={`dim-page dim-static-page ${styles.privacy}`}>
       <h1>Privacy Policy</h1>
-      <p>Last updated October 6, 2019</p>
+      <p>Last updated August 23, 2020</p>
 
       <ol style={{ padding: 0, listStylePosition: 'inside' }}>
         <li>
@@ -104,10 +104,10 @@ export default function Privacy() {
                   in order to store your data and sync it between instances of DIM or other Destiny
                   apps. This information is only accessible to you and the DIM team. Information
                   stored in DIM Sync includes your DIM preferences and settings, loadouts, any
-                  per-item item tags and notes, and a history of actions performed in DIM Sync (e.g.
-                  when you change a tag or save a loadout). Your Bungie.net authentication
-                  information is sent to DIM Sync only in order to verify your account - it is not
-                  saved.
+                  per-item item tags and notes, saved and recently used search filters, and a
+                  history of actions performed in DIM Sync (e.g. when you change a tag or save a
+                  loadout). Your Bungie.net authentication information is sent to DIM Sync only in
+                  order to verify your account - it is not saved.
                 </li>
               </ol>
             </li>

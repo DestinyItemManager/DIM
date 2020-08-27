@@ -17,6 +17,7 @@ import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
 import _ from 'lodash';
 import { settingsSelector } from 'app/settings/reducer';
+import SearchBar from 'app/search/SearchBar';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -110,18 +111,35 @@ function ItemPicker({
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        <SearchFilterInput
-          ref={filterInput}
-          placeholder={t('ItemPicker.SearchPlaceholder')}
-          autoFocus={autoFocus}
-          onQueryChanged={setQuery}
-        />
+        {$featureFlags.newSearch ? (
+          <SearchBar
+            ref={filterInput}
+            placeholder={t('ItemPicker.SearchPlaceholder')}
+            autoFocus={autoFocus}
+            onQueryChanged={setQuery}
+          />
+        ) : (
+          <SearchFilterInput
+            ref={filterInput}
+            placeholder={t('ItemPicker.SearchPlaceholder')}
+            autoFocus={autoFocus}
+            onQueryChanged={setQuery}
+          />
+        )}
         {!hideStoreEquip && (
           <div className="split-buttons">
-            <button className={clsx('dim-button', { selected: equipToggled })} onClick={setEquip}>
+            <button
+              type="button"
+              className={clsx('dim-button', { selected: equipToggled })}
+              onClick={setEquip}
+            >
               {t('MovePopup.Equip')}
             </button>
-            <button className={clsx('dim-button', { selected: !equipToggled })} onClick={setStore}>
+            <button
+              type="button"
+              className={clsx('dim-button', { selected: !equipToggled })}
+              onClick={setStore}
+            >
               {t('MovePopup.Store')}
             </button>
           </div>

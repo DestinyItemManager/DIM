@@ -23,13 +23,14 @@
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0px 0px 10px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    margin: 4px 6px 2px 0px;
+    margin: 0 6px;
 
     .vault & {
       flex-direction: row;
       align-items: center;
-      @include phone-portrait {
-        align-items: flex-start;
+      .top,
+      .bottom {
+        flex: 1;
       }
     }
 
@@ -65,11 +66,9 @@
 
   .class,
   .race-gender {
-    text-transform: capitalize;
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: 1.4em;
   }
 
   .powerLevel {
@@ -80,6 +79,7 @@
   .powerLevel,
   .light {
     color: $power;
+    margin-top: 1px;
 
     .app-icon {
       vertical-align: 70%;
@@ -94,18 +94,14 @@
 
   .top,
   .bottom {
-    flex: 1;
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
-    font-weight: 400;
   }
 
   .top {
     font-size: 20px;
-    font-weight: 400;
-    height: 24px;
 
     @include phone-portrait {
       .maxTotalPower {
@@ -120,7 +116,6 @@
 .bottom {
   font-size: 12px;
   color: white;
-  height: 14px;
   @include phone-portrait {
     .vault & {
       display: grid;

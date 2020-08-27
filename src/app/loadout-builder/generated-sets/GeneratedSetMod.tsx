@@ -24,6 +24,7 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
 
   return (
     <div
+      role="button"
       className={clsx(classes)}
       style={{ gridColumn }}
       title={plugDef.displayProperties.name}

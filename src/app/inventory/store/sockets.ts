@@ -266,6 +266,7 @@ function buildDefinedSocket(
     socketIndex: index,
     plugged: null,
     plugOptions,
+    curatedRoll: null,
     reusablePlugItems: [],
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
@@ -421,6 +422,7 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
+  let curatedRoll: number[] | null = null;
   if (isPerk) {
     if (reusablePlugs) {
       // Get options from live info
@@ -428,6 +430,7 @@ function buildSocket(
         const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData);
         addPlugOption(built, plugged, plugOptions);
       }
+      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
     } else if (socketDef.reusablePlugSetHash) {
       // Get options from plug set, instead of live info
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
@@ -436,6 +439,7 @@ function buildSocket(
           const built = buildDefinedPlug(defs, reusablePlug);
           addPlugOption(built, plugged, plugOptions);
         }
+        curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
       }
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
@@ -443,6 +447,7 @@ function buildSocket(
         const built = buildDefinedPlug(defs, reusablePlug);
         addPlugOption(built, plugged, plugOptions);
       }
+      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
     }
   }
 
@@ -454,6 +459,7 @@ function buildSocket(
     socketIndex: index,
     plugged,
     plugOptions,
+    curatedRoll,
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,

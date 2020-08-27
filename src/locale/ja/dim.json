@@ -1026,7 +1026,7 @@
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされた欲しい物リスト {{titleAndDescription}}",
     "ImportSuccess_plural": "{{count, number}} ロールに関する情報がロードされたウィッシュリスト。{{titleAndDescription}}",
-    "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLはhttps://raw.githubusercontent.comで始まる必要があります",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "最終更新: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
     "UpdateExternalSource": "ウィッシュリストのソースをアップデート",

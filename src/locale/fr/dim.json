@@ -1026,7 +1026,7 @@
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
     "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count, number}} versions.{{titleAndDescription}}",
-    "InvalidExternalSource": "Veuillez entrer une URL valide pour votre source externe de liste de souhaits. L'URL doit commencer par https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Dernière mise à jour : {{lastUpdatedDate}} à {{lastUpdatedTime}}",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
     "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",

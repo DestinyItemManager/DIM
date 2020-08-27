@@ -17,7 +17,7 @@ export interface ItemPopupExtraInfo {
   mod?: boolean;
 }
 
-export function showItemPopup(item: DimItem, element: Element, extraInfo?: ItemPopupExtraInfo) {
+export function showItemPopup(item: DimItem, element?: Element, extraInfo?: ItemPopupExtraInfo) {
   showItemPopup$.next({ item, element, extraInfo });
 }
 

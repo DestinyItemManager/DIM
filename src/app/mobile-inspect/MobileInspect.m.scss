@@ -1,0 +1,81 @@
+@import '../variables.scss';
+
+@keyframes zoom {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.mobileInspectSheet {
+  min-width: 100%;
+  max-width: fit-content;
+  position: fixed;
+  top: 25%;
+  backface-visibility: hidden;
+  z-index: 12;
+}
+
+.mobileInspectSheet,
+.mobileInspectSheet > * {
+  animation: zoom 100ms;
+}
+
+.container {
+  box-shadow: 0 0 3px 0px black;
+  margin: 20px;
+  padding: 20px;
+  background-color: black;
+  border-radius: 3px;
+  border-top: 5px solid rgba(255, 255, 255, 0.5);
+}
+
+.headerInfo,
+.inspectRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.itemImg {
+  height: 30px;
+  min-width: 30px;
+  margin-right: 10px;
+}
+
+// Opacity to the background when open
+:global(.mobile-preview .inventory-content) {
+  opacity: 0.2;
+}
+
+:global(.mobile-preview-fade .inventory-content) {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+:global(.mobile-preview .item-socket) {
+  margin-right: 0;
+  border: none;
+}
+
+:global(.mobile-preview .item-details) {
+  margin: 0;
+}

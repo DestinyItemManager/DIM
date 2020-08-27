@@ -392,7 +392,9 @@ export function* lexer(query: string): Generator<Token> {
 export function canonicalizeQuery(query: QueryAST, depth = 0) {
   switch (query.op) {
     case 'filter':
-      return `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
+      return query.type === 'keyword'
+        ? `${/\s/.test(query.args) ? `"${query.args}"` : query.args}`
+        : `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
     case 'not':
       return `-${canonicalizeQuery(query.operand, depth + 1)}`;
     case 'and':

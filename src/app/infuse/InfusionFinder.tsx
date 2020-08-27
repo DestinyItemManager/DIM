@@ -25,6 +25,7 @@ import { InfuseDirection, DestinyVersion } from '@destinyitemmanager/dim-api-typ
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
+import SearchBar from 'app/search/SearchBar';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -278,7 +279,7 @@ function InfusionFinder({
             {result ? <ConnectedInventoryItem item={result} /> : missingItem}
           </div>
           <div className="infuseActions">
-            <button className="dim-button" onClick={switchDirection}>
+            <button type="button" className="dim-button" onClick={switchDirection}>
               <AppIcon icon={faRandom} /> {t('Infusion.SwitchDirection')}
             </button>
             {result && effectiveSource && effectiveTarget && (
@@ -295,11 +296,19 @@ function InfusionFinder({
           </div>
         </div>
         <div className="infuseSearch">
-          <SearchFilterInput
-            onQueryChanged={onQueryChanged}
-            placeholder="Filter items"
-            autoFocus={autoFocus}
-          />
+          {$featureFlags.newSearch ? (
+            <SearchBar
+              onQueryChanged={onQueryChanged}
+              placeholder={t('Infusion.Filter')}
+              autoFocus={autoFocus}
+            />
+          ) : (
+            <SearchFilterInput
+              onQueryChanged={onQueryChanged}
+              placeholder={t('Infusion.Filter')}
+              autoFocus={autoFocus}
+            />
+          )}
         </div>
       </div>
     </div>

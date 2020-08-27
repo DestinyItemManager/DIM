@@ -1,6 +1,6 @@
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
 import { Tokens, Token } from './oauth-tokens';
-import { stringify } from 'simple-query-string';
+import { stringify } from 'querystring';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
@@ -26,7 +26,7 @@ export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tok
   );
 }
 
-export function getAccessTokenFromCode(code: number): Promise<Tokens> {
+export function getAccessTokenFromCode(code: string): Promise<Tokens> {
   return Promise.resolve(
     fetch(TOKEN_URL, {
       method: 'POST',

@@ -11,10 +11,17 @@ import { useSelector } from 'react-redux';
 import ItemMoveAmount from './ItemMoveAmount';
 import ItemMoveLocation from './ItemMoveLocation';
 import { showInfuse } from '../infuse/infuse';
+import { showItemPopup } from 'app/item-popup/item-popup';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import { getStore } from 'app/inventory/stores-helpers';
 
-export default function ItemActions({ item }: { item: DimItem }) {
+export default function ItemActions({
+  item,
+  mobileInspect,
+}: {
+  item: DimItem;
+  mobileInspect?: boolean;
+}) {
   const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const store = getStore(stores, item.owner);
@@ -66,7 +73,7 @@ export default function ItemActions({ item }: { item: DimItem }) {
 
   return (
     <>
-      {maximum > 1 && (
+      {maximum > 1 && !mobileInspect && (
         <ItemMoveAmount
           amount={amount}
           maximum={maximum}
@@ -74,7 +81,7 @@ export default function ItemActions({ item }: { item: DimItem }) {
           onAmountChanged={onAmountChanged}
         />
       )}
-      <div className={styles.interaction}>
+      <div className={mobileInspect ? styles.interactionV : styles.interaction}>
         {stores.map((buttonStore) => (
           <ItemMoveLocation
             key={buttonStore.id}
@@ -103,6 +110,13 @@ export default function ItemActions({ item }: { item: DimItem }) {
         )}
         {item.infusionFuel && (
           <ItemActionButtonGroup>
+            {mobileInspect && (
+              <ItemActionButton
+                onClick={() => showItemPopup(item)}
+                title={t('MovePopup.ItemDetailSheet')}
+                label={t('MovePopup.Details')}
+              />
+            )}
             <ItemActionButton
               className={clsx(styles.infusePerk, {
                 [styles.destiny2]: item.isDestiny2(),

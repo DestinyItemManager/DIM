@@ -35,10 +35,10 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
-      <button className="dim-button" onClick={openLoadout}>
+      <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
-      <button className="dim-button" onClick={equipItems}>
+      <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
     </div>

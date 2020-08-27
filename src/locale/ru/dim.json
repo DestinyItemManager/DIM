@@ -1026,7 +1026,7 @@
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
     "ImportSuccess_plural": "Список пожеланий загружен с информацией о {{count, number}} роллах. {{titleAndDescription}}",
-    "InvalidExternalSource": "Пожалуйста, введите действительную ссылку для вашего внешнего источника списка желаний. Она должна начинаться с [https://raw.githubusercontent.com...]",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Последнее обновление: {{lastUpdatedDate}} в {{lastUpdatedTime}}",
     "Num": "{{num, number}} перк-роллов в вашем списке желаний",
     "UpdateExternalSource": "Обновить список желаний",

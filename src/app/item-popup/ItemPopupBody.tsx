@@ -138,7 +138,7 @@ export default function ItemPopupBody({
           )
         ) : (
           <div className="item-popup-collapsed item-details">
-            <button className="dim-button" onClick={onToggleExpanded}>
+            <button type="button" className="dim-button" onClick={onToggleExpanded}>
               <AppIcon icon={openDropdownIcon} /> {t('MovePopup.Expand')}
             </button>
           </div>
