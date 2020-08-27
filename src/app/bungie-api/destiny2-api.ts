@@ -25,7 +25,6 @@ import {
   getItem,
   DestinyItemResponse,
   setQuestTrackedState,
-  DestinyVendorFilter,
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -195,7 +194,6 @@ export async function getVendors(
       // TODO: We should try to defer this until the popup is open!
       DestinyComponentType.ItemPlugObjectives,
     ],
-    filter: DestinyVendorFilter.None,
   });
   return response.Response;
 }
@@ -210,7 +208,6 @@ export async function getVendorsMinimal(
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
     components: [DestinyComponentType.Vendors],
-    filter: DestinyVendorFilter.None,
   });
   return response.Response;
 }
