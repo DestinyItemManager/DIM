@@ -1,14 +1,11 @@
-import { parse } from 'querystring';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
-  // allow typescript to assume no unusual array values sent in the query string
-  const queryString = parse(window.location.href) as NodeJS.Dict<string>;
-
-  const code = queryString.code;
-  const state = queryString.state;
+  const queryParams = new URL(window.location.href).searchParams;
+  const code = queryParams.get('code');
+  const state = queryParams.get('state');
 
   if (!code?.length) {
     setError("We expected an authorization code parameter from Bungie.net, but didn't get one.");

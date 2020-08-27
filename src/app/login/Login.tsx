@@ -5,14 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { useLocation } from 'react-router';
-import { parse } from 'querystring';
 
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 export default function Login() {
   const { search } = useLocation();
-  const { reauth } = parse(search);
+  const reauth = new URLSearchParams(search).get('reauth');
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();
@@ -26,9 +25,12 @@ export default function Login() {
     !/(OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)/.test(navigator.userAgent);
 
   const authorizationURL = (reauth) =>
-    `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${authorizationState}${
-      reauth ? '&reauth=true' : ''
-    }`;
+    `https://www.bungie.net/en/OAuth/Authorize?${new URLSearchParams({
+      client_id: clientId,
+      response_type: 'code',
+      state: authorizationState,
+      ...(reauth && { reauth }),
+    })}`;
 
   const [apiPermissionGranted, setApiPermissionGranted] = useState(
     localStorage.getItem('dim-api-enabled') !== 'false'
