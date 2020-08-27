@@ -23,7 +23,7 @@ import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useLocation } from 'react-router';
-import { parse } from 'querystring';
+import { parse } from 'simple-query-string';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { useLocation } from 'react-router';
-import { parse } from 'querystring';
+import { parse } from 'simple-query-string';
 
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
