@@ -263,6 +263,7 @@ function LoadoutBuilder({
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}
+              onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,
             document.body
           )}

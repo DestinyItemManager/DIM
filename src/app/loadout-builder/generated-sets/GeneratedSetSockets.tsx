@@ -14,7 +14,8 @@ import styles from './GeneratedSetSockets.m.scss';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
-import { Armor2ModPlugCategoriesTitles } from '../utils';
+import { armor2ModPlugCategoriesTitles } from '../utils';
+import { t } from 'app/i18next-t';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -96,7 +97,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
                       initialQuery:
                         category === ModPickerCategories.seasonal
                           ? season?.toString()
-                          : Armor2ModPlugCategoriesTitles[category],
+                          : t(armor2ModPlugCategoriesTitles[category]),
                     })
                 : undefined
             }

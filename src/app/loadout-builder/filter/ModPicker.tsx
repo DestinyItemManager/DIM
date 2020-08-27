@@ -19,7 +19,7 @@ import {
   isModPickerCategory,
 } from '../types';
 import _ from 'lodash';
-import { isLoadoutBuilderItem, Armor2ModPlugCategoriesTitles } from '../utils';
+import { isLoadoutBuilderItem, armor2ModPlugCategoriesTitles } from '../utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
@@ -38,6 +38,7 @@ import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { t } from 'app/i18next-t';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
@@ -55,6 +56,7 @@ interface ProvidedProps {
   classType: DestinyClass;
   initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  onClose(): void;
 }
 
 interface StoreProps {
@@ -110,7 +112,7 @@ function mapStateToProps() {
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods
-      const allMods = Object.values(plugSets).flatMap((sets) => {
+      const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
         const unlockedPlugs: number[] = [];
 
         for (const plugSetHash of sets) {
@@ -149,7 +151,7 @@ function mapStateToProps() {
         return transformedMods.sort(sortMods);
       });
 
-      return _.uniqBy(allMods, (mod) => mod.mod.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.mod.hash);
     }
   );
 
@@ -173,6 +175,7 @@ function ModPicker({
   lockedArmor2Mods,
   initialQuery,
   lbDispatch,
+  onClose,
 }: Props) {
   const [height, setHeight] = useState<number | undefined>(undefined);
   const [query, setQuery] = useState(initialQuery || '');
@@ -222,12 +225,13 @@ function ModPicker({
     [setLockedArmor2ModsInternal]
   );
 
-  const onSubmit = (e: React.FormEvent | KeyboardEvent) => {
+  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
     lbDispatch({
       type: 'lockedArmor2ModsChanged',
       lockedArmor2Mods: lockedArmor2ModsInternal,
     });
+    onClose();
   };
 
   const scrollToBucket = (categoryOrSeasonal: number | string) => {
@@ -238,7 +242,7 @@ function ModPicker({
 
   const order = Object.values(ModPickerCategories).map((category) => ({
     category,
-    translatedName: Armor2ModPlugCategoriesTitles[category],
+    translatedName: t(armor2ModPlugCategoriesTitles[category]),
   }));
 
   const queryFilteredMods = useMemo(() => {
@@ -252,7 +256,7 @@ function ModPicker({
             regexp.test(mod.mod.displayProperties.name) ||
             regexp.test(mod.mod.displayProperties.description) ||
             (mod.season && regexp.test(mod.season.toString())) ||
-            regexp.test(Armor2ModPlugCategoriesTitles[mod.category])
+            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
         )
       : mods;
   }, [language, query, mods]);
@@ -279,13 +283,13 @@ function ModPicker({
     category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
-    ? () => (
+    ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
           categoryOrder={order}
           lockedArmor2Mods={lockedArmor2ModsInternal}
           isPhonePortrait={isPhonePortrait}
-          onSubmit={(e) => onSubmit(e)}
+          onSubmit={(e) => onSubmit(e, onClose)}
           onModSelected={onModRemoved}
         />
       )
@@ -293,7 +297,7 @@ function ModPicker({
 
   return (
     <Sheet
-      onClose={() => lbDispatch({ type: 'closeModPicker' })}
+      onClose={onClose}
       header={
         <ModPickerHeader
           categoryOrder={order}
@@ -313,7 +317,7 @@ function ModPicker({
             mods={modsByCategory[category]}
             defs={defs}
             locked={lockedArmor2ModsInternal[category]}
-            title={Armor2ModPlugCategoriesTitles[category]}
+            title={t(armor2ModPlugCategoriesTitles[category])}
             category={category}
             maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
             energyMustMatch={!isGeneralOrSeasonal(category)}
