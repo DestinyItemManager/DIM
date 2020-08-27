@@ -94,6 +94,10 @@ export async function httpAdapter(
 export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Request {
   let url = config.url;
   if (config.params) {
+    // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
+    for (const key in config.params) {
+      typeof config.params[key] === 'undefined' && delete config.params[key];
+    }
     url = `${url}?${new URLSearchParams(config.params).toString()}`;
   }
 
