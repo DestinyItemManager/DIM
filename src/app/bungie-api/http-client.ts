@@ -1,7 +1,7 @@
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig, HttpClient } from 'bungie-api-ts/http';
 
-import { stringify } from 'simple-query-string';
+import { stringify } from 'querystring';
 import { delay } from 'app/utils/util';
 import _ from 'lodash';
 
