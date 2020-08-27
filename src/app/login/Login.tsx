@@ -24,13 +24,15 @@ export default function Login() {
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
     !/(OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)/.test(navigator.userAgent);
 
-  const authorizationURL = (reauth) =>
-    `https://www.bungie.net/en/OAuth/Authorize?${new URLSearchParams({
+  const authorizationURL = (reauth) => {
+    const queryParams = new URLSearchParams({
       client_id: clientId,
       response_type: 'code',
       state: authorizationState,
       ...(reauth && { reauth }),
-    })}`;
+    });
+    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams}`;
+  };
 
   const [apiPermissionGranted, setApiPermissionGranted] = useState(
     localStorage.getItem('dim-api-enabled') !== 'false'
