@@ -63,6 +63,7 @@ export function SearchFilter(
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}
+      mainSearchBar={true}
     >
       {extras}
     </SearchBar>
