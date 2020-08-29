@@ -80,7 +80,11 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
     }
   }
 
-  const getOnClick = (category?: ModPickerCategory, season?: number) => {
+  const getOnClick = (
+    plugDef: PluggableInventoryItemDefinition,
+    category?: ModPickerCategory,
+    season?: number
+  ) => {
     if (category) {
       const initialQuery =
         category === ModPickerCategories.seasonal
@@ -88,7 +92,8 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
           : t(armor2ModPlugCategoriesTitles[category]);
       return () => lbDispatch({ type: 'openModPicker', initialQuery });
     } else {
-      return () => lbDispatch({ type: 'openPerkPicker' });
+      return () =>
+        lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
     }
   };
 
@@ -101,7 +106,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={getOnClick(category, season)}
+            onClick={getOnClick(plugDef, category, season)}
           />
         ))}
       </div>

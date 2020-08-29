@@ -24,7 +24,10 @@ export interface LoadoutBuilderState {
     open: boolean;
     initialQuery?: string;
   };
-  perkPickerOpen: boolean;
+  perkPicker: {
+    open: boolean;
+    initialQuery?: string;
+  };
 }
 
 const lbStateInit = ({
@@ -81,7 +84,9 @@ const lbStateInit = ({
     modPicker: {
       open: false,
     },
-    perkPickerOpen: false,
+    perkPicker: {
+      open: false,
+    },
   };
 };
 
@@ -101,7 +106,7 @@ export type LoadoutBuilderAction =
   | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
-  | { type: 'openPerkPicker' }
+  | { type: 'openPerkPicker'; initialQuery?: string }
   | { type: 'closePerkPicker' };
 
 // TODO: Move more logic inside the reducer
@@ -171,9 +176,9 @@ function lbStateReducer(
     case 'closeModPicker':
       return { ...state, modPicker: { open: false } };
     case 'openPerkPicker':
-      return { ...state, perkPickerOpen: true };
+      return { ...state, perkPicker: { open: true, initialQuery: action.initialQuery } };
     case 'closePerkPicker':
-      return { ...state, perkPickerOpen: false };
+      return { ...state, perkPicker: { open: false } };
   }
 }
 

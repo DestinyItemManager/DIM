@@ -130,7 +130,7 @@ function LoadoutBuilder({
       selectedStoreId,
       statFilters,
       modPicker,
-      perkPickerOpen,
+      perkPicker,
     },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
@@ -275,13 +275,14 @@ function LoadoutBuilder({
             />,
             document.body
           )}
-        {perkPickerOpen &&
+        {perkPicker.open &&
           ReactDOM.createPortal(
             <PerkPicker
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
               lockedSeasonalMods={lockedSeasonalMods}
+              initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
             />,

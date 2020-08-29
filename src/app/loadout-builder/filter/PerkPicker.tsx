@@ -80,6 +80,7 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedSeasonalMods: LockedModBase[];
   classType: DestinyClass;
+  initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -236,11 +237,12 @@ function PerkPicker({
   items,
   language,
   isPhonePortrait,
+  initialQuery,
   onClose,
   lbDispatch,
 }: Props) {
   const [height, setHeight] = useState<number | undefined>(undefined);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery || '');
   const [selectedPerks, setSelectedPerks] = useState(copy(lockedMap));
   const [selectedSeasonalMods, setSelectedSeasonalMods] = useState(copy(lockedSeasonalMods));
   const itemContainer = useRef<HTMLDivElement>(null);
