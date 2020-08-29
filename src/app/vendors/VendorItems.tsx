@@ -13,6 +13,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { Link } from 'react-router-dom';
 import spiderMats from 'data/d2/spider-mats.json';
 import { VENDORS } from 'app/search/d2-known-values';
+import missingFactionTokenHashes from 'data/d2/missing-faction-tokens.json';
 
 const itemSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.typeName),
@@ -54,6 +55,7 @@ export default function VendorItems({
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
+          .filter((tokenValues) => !missingFactionTokenHashes.includes(Number(tokenValues))) // TODO: remove when bad token hashes no longer exist
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
         ...currencies,
