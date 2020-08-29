@@ -80,6 +80,18 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
     }
   }
 
+  const getOnClick = (category?: ModPickerCategory, season?: number) => {
+    if (category) {
+      const initialQuery =
+        category === ModPickerCategories.seasonal
+          ? season?.toString()
+          : t(armor2ModPlugCategoriesTitles[category]);
+      return () => lbDispatch({ type: 'openModPicker', initialQuery });
+    } else {
+      return () => lbDispatch({ type: 'openPerkPicker' });
+    }
+  };
+
   return (
     <>
       <div className={styles.lockedItems}>
@@ -89,18 +101,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={
-              category
-                ? () =>
-                    lbDispatch({
-                      type: 'openModPicker',
-                      initialQuery:
-                        category === ModPickerCategories.seasonal
-                          ? season?.toString()
-                          : t(armor2ModPlugCategoriesTitles[category]),
-                    })
-                : undefined
-            }
+            onClick={getOnClick(category, season)}
           />
         ))}
       </div>
