@@ -55,7 +55,7 @@ export default function VendorItems({
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
-          .filter((tokenValues) => !missingFactionTokenHashes.includes(Number(tokenValues)))
+          .filter((tokenValues) => !missingFactionTokenHashes.includes(Number(tokenValues))) // TODO: remove when bad token hashes no longer exist
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
         ...currencies,
