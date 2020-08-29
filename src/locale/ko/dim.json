@@ -373,8 +373,10 @@
     "BungieNetAlert": "Bungie 알림",
     "Clear": "검색 필터 초기화",
     "CompareMatching": "필터링된 아이템 비교",
+    "DeleteSearch": "검색 삭제",
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
+    "FilterHelpMenuItem": "필터 도움말...",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
@@ -385,6 +387,7 @@
     "Refresh": "데스티니 데이터 새로고침",
     "ReloadApp": "앱 새로고침",
     "ReportBug": "버그 제보",
+    "SaveSearch": "검색 저장",
     "Shop": "상점",
     "UpgradeDIM": "DIM 업데이트",
     "WhatsNew": "새로운 기능"
@@ -400,12 +403,14 @@
     "ClearDialog": "대화 상자 숨기기",
     "ClearNewItems": "새 아이템 지우기",
     "ClearNewItemsTitle": "키보드 단축키: X",
+    "Enter": "엔터",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "Menu": "메뉴 표시 전환",
     "RefreshInventory": "소지품 새로고침",
     "ShowHotkeys": "키보드 단축키 표시",
     "StartSearch": "검색 시작",
     "StartSearchClear": "새로운 검색 시작",
+    "Tab": "탭",
     "ToggleDetails": "모든 아이템 정보 표시 토글"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "에너지나 특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFound": "빌드가 없습니다. 필터링 조건을 확장해보세요.",
+    "NoBuildsFoundExoticsAndMods": "경이 아이템과 다섯 개의 시즌 개조 부품이 잠겨져 있습니다.",
+    "NoBuildsFoundModsAreTooExpensive": "선택된 개조 부품의 에너지 요구량이 너무 많습니다.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "선택된 시즌 개조 부품을 장착할 수 있는 아이템이 없습니다.",
+    "NoBuildsFoundWithReasons": "빌드를 찾을 수 없습니다. 일반적인 원인은 다음과 같습니다:",
     "NumCombinations": "조합 {{count, number}}개",
     "NumCombinations_plural": "조합 {{count, number}}개",
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
@@ -680,10 +689,13 @@
     "AddNote": "메모 추가",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
     "Consolidate": "모으기",
+    "Details": "팝업",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
-    "Expand": "아이템 세부 정보 확장",
+    "EquipWithName": "{{character}}에게 장착",
+    "Expand": "아이템 세부정보 확장",
     "Infuse": "주입",
+    "ItemDetailSheet": "아이템 세부정보 열기",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Unlock": "{{itemType}} 잠금 해제하기"
@@ -701,6 +713,7 @@
     "Rewards": "보상:",
     "Split": "분할",
     "Store": "보관",
+    "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "보관",
     "LockAll": "아이템 잠금",
     "TagItem": "태그 추가",
-    "TagItems": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"
   },
   "Triumphs": {

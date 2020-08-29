@@ -373,8 +373,10 @@
     "BungieNetAlert": "Alarm od Bungie",
     "Clear": "Wyczyść filtry szukania",
     "CompareMatching": "Porównaj filtrowane przedmioty",
+    "DeleteSearch": "Usuń Wyszukiwanie",
     "FilterHelp": "Szukaj przedmiotu/perk, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
+    "FilterHelpMenuItem": "Pomoc z filtrami...",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
@@ -385,6 +387,7 @@
     "Refresh": "Odśwież Dane Destiny",
     "ReloadApp": "Przeładuj aplikację",
     "ReportBug": "Zgłoś błąd",
+    "SaveSearch": "Zapisz wyszukiwanie",
     "Shop": "Sklep",
     "UpgradeDIM": "Aktualizuj DIM",
     "WhatsNew": "Co nowego"
@@ -400,12 +403,14 @@
     "ClearDialog": "Zamknij dialog",
     "ClearNewItems": "Wyczyść nowe przedmioty",
     "ClearNewItemsTitle": "Skrót klawiszowy: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Oznacz przedmiot jako '{{tag}}'",
     "Menu": "Przełącz menu",
     "RefreshInventory": "Odśwież ekwipunek",
     "ShowHotkeys": "Pokaż skróty klawiszowe",
     "StartSearch": "Rozpocznij wyszukiwanie",
     "StartSearchClear": "Rozpocznij nowe wyszukiwanie",
+    "Tab": "TAB",
     "ToggleDetails": "Przełącz pokazywanie pełnych szczegółów przedmiotu"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Wybierz energię lub perk",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
     "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
+    "NoBuildsFoundExoticsAndMods": "Masz zablokowany egzotyk i pięć sezonowych modyfikacji.",
+    "NoBuildsFoundModsAreTooExpensive": "Zapotrzebowanie na energię wybranych modyfikacji jest zbyt wysokie.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "Brakuje Ci przedmiotu do trzymania jednego z wybranych modyfikacji sezonowych.",
+    "NoBuildsFoundWithReasons": "Nie znaleziono kompilacji. Powszechne przyczyny tego obejmują:",
     "NumCombinations": "{{count, number}} kombinacja",
     "NumCombinations_plural": "{{count, number}} kombinacji",
     "OptimizerExplanation": "Wybierz perki, filtry, uporządkuj statystyki lub zablokuj przedmioty aby zwęzić twoje potencjalne uzbrojenia.",
@@ -600,7 +609,7 @@
     "FindAnother": "Znajdź następny {{name}}",
     "FromEquipped": "Założone",
     "GatherEngrams": "Zbieraj Engramy",
-    "GatherEngramsExceptExotics": "Egzotyczne",
+    "GatherEngramsExceptExotics": "Egzotyki",
     "Generated": "Uzbrojenie T{{tier}}",
     "ItemLeveling": "Levelowanie Przedmiotów",
     "LoadoutName": "Nazwa uzbrojenia",
@@ -680,10 +689,13 @@
     "AddNote": "Dodaj notatkę",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
     "Consolidate": "Połącz",
+    "Details": "Wyskakujące okno",
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
+    "EquipWithName": "Załóż na {{character}}",
     "Expand": "Rozwiń szczegóły przedmiotu",
     "Infuse": "Nasyć",
+    "ItemDetailSheet": "Pokaż szczegóły przedmiotu",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
       "Unlock": "Odblokuj {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Nagrody:",
     "Split": "Podziel",
     "Store": "Sklep",
+    "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}}{{typeName}}",
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "Zachowaj",
     "LockAll": "Zablokuj przedmioty",
     "TagItem": "Otaguj przedmiot",
-    "TagItems": "Otaguj przedmioty",
     "UnlockAll": "Odblokuj Przedmioty"
   },
   "Triumphs": {

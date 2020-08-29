@@ -373,8 +373,10 @@
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
     "CompareMatching": "比较过滤器物品",
+    "DeleteSearch": "删除搜索",
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
+    "FilterHelpMenuItem": "过滤器帮助...",
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
     "Filters": "过滤器",
@@ -385,6 +387,7 @@
     "Refresh": "刷新命运数据",
     "ReloadApp": "重新载入应用",
     "ReportBug": "报告错误",
+    "SaveSearch": "保存搜索",
     "Shop": "商店",
     "UpgradeDIM": "更新DIM",
     "WhatsNew": "新增内容"
@@ -400,12 +403,14 @@
     "ClearDialog": "关闭对话",
     "ClearNewItems": "清除新物品提示",
     "ClearNewItemsTitle": "键盘快捷键：X",
+    "Enter": "回车",
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "Menu": "切换菜单",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "显示键盘快速键",
     "StartSearch": "开始搜索",
     "StartSearchClear": "重新搜索",
+    "Tab": "制表符",
     "ToggleDetails": "切换显示物品完整详情页"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "选择能量或特性",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFound": "没有找到配装。请尝试扩大你的过滤器范围。",
+    "NoBuildsFoundExoticsAndMods": "你已锁定了一件异域装备与五个赛季模组。",
+    "NoBuildsFoundModsAreTooExpensive": "所选模组的能量需求过高。",
+    "NoBuildsFoundSeasonalModNotSatisfied": "你缺少一件物品来安装一个选定的赛季模组。",
+    "NoBuildsFoundWithReasons": "找不到配装。常见原因包括：",
     "NumCombinations": "{{count, number}} 个组合",
     "NumCombinations_plural": "{{count, number}} 个组合",
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
@@ -680,10 +689,13 @@
     "AddNote": "添加备注",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
+    "Details": "Popup",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "展开项目详细信息",
     "Infuse": "灌注",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
       "Unlock": "解锁{{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "奖励：",
     "Split": "拆分",
     "Store": "寄存",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "保留",
     "LockAll": "锁定物品",
     "TagItem": "标记物品",
-    "TagItems": "标记物品",
     "UnlockAll": "解锁物品"
   },
   "Triumphs": {
