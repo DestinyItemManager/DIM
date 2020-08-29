@@ -145,7 +145,9 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   //       we aren't going to do different sorts for query vs. non-query
   const recentSearchesForQuery = query
     ? recentSearches.filter((s) => s.query.includes(query))
-    : Array.from(recentSearches);
+    : recentSearches
+    ? Array.from(recentSearches)
+    : [];
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => ({
     type: s.saved
       ? SearchItemType.Saved

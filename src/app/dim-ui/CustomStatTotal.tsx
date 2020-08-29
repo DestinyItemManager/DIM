@@ -59,7 +59,7 @@ export function StatTotalToggle({
                 .map((statHash) => (
                   <StatToggleButton
                     key={statHash}
-                    stat={defs.Stat.get(statHash)}
+                    stat={statHash && defs.Stat.get(statHash)}
                     toggleStat={toggleStat}
                     readOnly={readOnly}
                   />

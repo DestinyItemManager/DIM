@@ -22,4 +22,4 @@ export const currentProfileSelector = createSelector(
  * TODO: Sort/trim this list
  */
 export const recentSearchesSelector = (state: RootState) =>
-  state.dimApi.searches[destinyVersionSelector(state)];
+  state.dimApi.searches?.[destinyVersionSelector(state)];
