@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPickerState } from './item-picker';
 import Sheet from '../dim-ui/Sheet';
@@ -8,7 +8,7 @@ import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
 import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
-import SearchFilterInput, { SearchFilterRef } from '../search/SearchFilterInput';
+import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import clsx from 'clsx';
@@ -73,16 +73,6 @@ function ItemPicker({
 }: Props) {
   const [query, setQuery] = useState('');
   const [equipToggled, setEquipToggled] = useState(equip ?? preferEquip);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-
-  const itemContainer = useRef<HTMLDivElement>(null);
-  const filterInput = useRef<SearchFilterRef>(null);
-
-  useEffect(() => {
-    if (itemContainer.current && !height) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [height]);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
@@ -113,14 +103,12 @@ function ItemPicker({
       <div className="item-picker-search">
         {$featureFlags.newSearch ? (
           <SearchBar
-            ref={filterInput}
             placeholder={t('ItemPicker.SearchPlaceholder')}
             autoFocus={autoFocus}
             onQueryChanged={setQuery}
           />
         ) : (
           <SearchFilterInput
-            ref={filterInput}
             placeholder={t('ItemPicker.SearchPlaceholder')}
             autoFocus={autoFocus}
             onQueryChanged={setQuery}
@@ -158,9 +146,14 @@ function ItemPicker({
   }, [allItems, filter, itemSortOrder, sortBy]);
 
   return (
-    <Sheet onClose={onSheetClosedFn} header={header} sheetClassName="item-picker">
+    <Sheet
+      onClose={onSheetClosedFn}
+      header={header}
+      sheetClassName="item-picker"
+      freezeInitialHeight={true}
+    >
       {({ onClose }) => (
-        <div className="sub-bucket" ref={itemContainer} style={{ height }}>
+        <div className="sub-bucket">
           {items.map((item) => (
             <ConnectedInventoryItem
               key={item.index}
