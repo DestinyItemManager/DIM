@@ -445,7 +445,8 @@ export function makeItem(
     createdItem.lockable ||
       createdItem.classified ||
       // Shaders
-      createdItem.bucket.hash === SHADERS_BUCKET
+      createdItem.bucket.hash === SHADERS_BUCKET ||
+      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod)
   );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean(

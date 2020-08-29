@@ -7,7 +7,6 @@ interface CssExports {
   'complete': string;
   'exotic': string;
   'exoticMasterwork': string;
-  'icon': string;
   'iconOverlay': string;
   'icons': string;
   'legendary': string;

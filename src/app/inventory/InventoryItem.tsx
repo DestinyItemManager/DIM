@@ -141,11 +141,11 @@ export default function InventoryItem({
         </div>
       )}
       {(tag || item.locked || notes) && (
-        <div className={styles.icons}>
-          {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
-          {tag && <TagIcon className={styles.icon} tag={tag} />}
-          {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
-        </div>
+        <IconsContainer>
+          {item.locked && <AppIcon icon={lockIcon} />}
+          {tag && <TagIcon tag={tag} />}
+          {notes && <AppIcon icon={stickyNoteIcon} />}
+        </IconsContainer>
       )}
       {isNew && <NewItemIndicator />}
       {subclassPath?.super && (
@@ -171,4 +171,8 @@ export function borderless(item: DimItem) {
         item.itemCategoryHashes?.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram
   );
+}
+
+export function IconsContainer({ children }: { children: React.ReactNode }) {
+  return <div className={styles.icons}>{children}</div>;
 }

@@ -12,8 +12,12 @@ import {
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/types';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { connect } from 'react-redux';
+import {
+  storesSelector,
+  profileResponseSelector,
+  itemHashTagsSelector,
+} from 'app/inventory/selectors';
+import { connect, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -25,6 +29,10 @@ import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 import { emptySet } from 'app/utils/empty';
 import { getModCostInfo } from 'app/collections/Mod';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import TagIcon from 'app/inventory/TagIcon';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { stickyNoteIcon } from 'app/shell/icons';
+import { IconsContainer } from 'app/inventory/InventoryItem';
 
 interface ProvidedProps {
   item: D2Item;
@@ -273,6 +281,11 @@ export const SocketDetailsMod = React.memo(
   }) => {
     const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
 
+    const itemHashTags = useSelector(itemHashTagsSelector);
+
+    const tag = itemHashTags?.[itemDef.hash]?.tag;
+    const notes = itemHashTags?.[itemDef.hash]?.notes;
+
     const onClickFn = onClick && (() => onClick(itemDef));
 
     return (
@@ -293,6 +306,13 @@ export const SocketDetailsMod = React.memo(
             />
             <div className="energyCost">{energyCost}</div>
           </>
+        )}
+
+        {(tag || notes) && (
+          <IconsContainer>
+            {tag && <TagIcon tag={tag} />}
+            {notes && <AppIcon icon={stickyNoteIcon} />}
+          </IconsContainer>
         )}
       </div>
     );
