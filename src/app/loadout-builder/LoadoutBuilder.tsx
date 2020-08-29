@@ -123,15 +123,7 @@ function LoadoutBuilder({
   preloadedLoadout,
 }: Props) {
   const [
-    {
-      lockedMap,
-      lockedSeasonalMods,
-      lockedArmor2Mods,
-      selectedStoreId,
-      statFilters,
-      modPicker,
-      perkPicker,
-    },
+    { lockedMap, lockedArmor2Mods, selectedStoreId, statFilters, modPicker, perkPicker },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -160,7 +152,6 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
-    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -202,7 +193,6 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedSeasonalMods={lockedSeasonalMods}
         lockedArmor2Mods={lockedArmor2Mods}
         lbDispatch={lbDispatch}
       />
@@ -261,7 +251,6 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
-            lockedSeasonalMods={lockedSeasonalMods}
           />
         )}
         {modPicker.open &&
@@ -281,7 +270,6 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
-              lockedSeasonalMods={lockedSeasonalMods}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedItemType, BurnItem, LockedModBase, LockedArmor2Mod } from '../types';
+import { LockedItemType, BurnItem, LockedArmor2Mod } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -40,7 +40,6 @@ export function SelectableMod({
   selected,
   unselectable,
   onLockedPerk,
-  onLockedModBase,
 }: {
   mod: PluggableInventoryItemDefinition;
   // plugSet this mod appears in
@@ -50,14 +49,11 @@ export function SelectableMod({
   selected: boolean;
   unselectable?: boolean;
   onLockedPerk?(perk: LockedItemType): void;
-  onLockedModBase?(mod: LockedModBase): void;
 }) {
   const handleClick = (e) => {
     e.preventDefault();
     if (bucket && onLockedPerk) {
       onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
-    } else if (onLockedModBase) {
-      onLockedModBase({ mod, plugSetHash });
     }
   };
 

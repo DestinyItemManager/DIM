@@ -51,12 +51,10 @@ function GeneratedSet({
     return null;
   }
 
-  const assignedMods = $featureFlags.armor2ModPicker
-    ? assignModsToArmorSet(
-        set.armor.map((items) => items[0]),
-        lockedArmor2Mods
-      )
-    : {};
+  const assignedMods = assignModsToArmorSet(
+    set.armor.map((items) => items[0]),
+    lockedArmor2Mods
+  );
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>

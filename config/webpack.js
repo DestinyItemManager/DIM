@@ -390,8 +390,6 @@ module.exports = (env) => {
         '$featureFlags.wishLists': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
-        // Enable the Armor 2 Mod picker
-        '$featureFlags.armor2ModPicker': JSON.stringify(!env.release),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup

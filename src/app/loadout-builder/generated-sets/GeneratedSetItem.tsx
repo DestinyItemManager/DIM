@@ -2,13 +2,11 @@ import React, { useMemo, Dispatch } from 'react';
 import { DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType, LockedArmor2Mod, StatTypes } from '../types';
-import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
-import { lockedItemsEqual } from '../utils';
 import { generateMixesFromPerks } from '../utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -75,18 +73,12 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
-  const onShiftClick = (lockedItem: LockedItemType) => {
-    locked?.some((li) => lockedItemsEqual(lockedItem, li))
-      ? removeLockedItem(lockedItem)
-      : addLockedItem(lockedItem);
-  };
-
   const lockedPerks: DestinyInventoryItemDefinition[] = [];
   /*  TODO: atm I just have all mods here but this will move to only old ones
       when we get closer to releasing as perk picker will only have old mods */
   const lockedOldMods: DestinyInventoryItemDefinition[] = [];
 
-  if ($featureFlags.armor2ModPicker && locked?.length) {
+  if (locked?.length) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk' && matchLockedItem(item, lockedItem)) {
         lockedPerks.push(lockedItem.perk);
@@ -121,24 +113,14 @@ export default function GeneratedSetItem({
           </button>
         )
       )}
-      {!$featureFlags.armor2ModPicker && item.isDestiny2() && (
-        <ItemSockets
+      <div className={styles.lockedSockets}>
+        <GeneratedSetSockets
           item={item}
-          minimal={true}
-          classesByHash={classesByHash}
-          onShiftClick={onShiftClick}
+          lockedMods={lockedMods}
+          defs={defs}
+          lbDispatch={lbDispatch}
         />
-      )}
-      {$featureFlags.armor2ModPicker && (
-        <div className={styles.lockedSockets}>
-          <GeneratedSetSockets
-            item={item}
-            lockedMods={lockedMods}
-            defs={defs}
-            lbDispatch={lbDispatch}
-          />
-        </div>
-      )}
+      </div>
     </div>
   );
 }

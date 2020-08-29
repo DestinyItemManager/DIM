@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { DimSocket, DimSockets, D2Item, DimItem } from '../../inventory/item-types';
 import { ProcessSocket, ProcessMod, ProcessSockets, ProcessItem, ProcessArmorSet } from './types';
 import {
-  LockedModBase,
   ArmorSet,
   statHashToType,
   StatTypes,
@@ -28,39 +27,6 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
       plugItemHash: dimPlug.plugDef.hash,
     })),
   };
-}
-
-/**
- * Maps the seasonal mods from the PerkPicker to ProcessMods.
- *
- * TODO When ModPicker is fully merged delete this.
- */
-export function mapSeasonalModsToProcessMods(
-  lockedSeasonalMods: readonly LockedModBase[]
-): ProcessMod[] {
-  const metadatas = lockedSeasonalMods.map((mod) => ({
-    mod,
-    metadata: getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash),
-  }));
-
-  const modMetadata: ProcessMod[] = [];
-  for (const entry of metadatas) {
-    modMetadata.push({
-      hash: entry.mod.mod.hash,
-      season: entry.metadata?.season,
-      tag: entry.metadata?.tag,
-      energy: {
-        type: entry.mod.mod.plug.energyCost!.energyType,
-        val: entry.mod.mod.plug.energyCost!.energyCost,
-      },
-      investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
-        statTypeHash,
-        value,
-      })),
-    });
-  }
-
-  return modMetadata;
 }
 
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {

@@ -8,14 +8,9 @@ import {
   ProcessArmorSet,
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
-  ProcessMod,
 } from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import {
-  canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
-  canTakeAllGeneralMods,
-} from './processUtils';
+import { canTakeAllSeasonalMods, canTakeAllGeneralMods } from './processUtils';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -91,7 +86,6 @@ function insertIntoSetTracker(
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
-  processedSeasonalMods: ProcessMod[],
   modStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ProcessMods,
   assumeMasterwork: boolean,
@@ -105,8 +99,6 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
-
-  processedSeasonalMods.sort(sortProcessModsOrProcessItems);
 
   const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
   const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
@@ -265,8 +257,6 @@ export function process(
               // For mod armour 2 mods we do seasonal first as its more likely to have energy specific mods.
               // TODO Check validity of this with the energy contraints in.
               if (
-                (processedSeasonalMods.length &&
-                  !canTakeAllSeasonalMods(processedSeasonalMods, armor)) ||
                 (lockedArmor2ModMap.seasonal.length &&
                   !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
                 (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&

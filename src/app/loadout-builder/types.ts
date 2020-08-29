@@ -48,13 +48,12 @@ export interface LockedPerk {
   perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
 }
-export interface LockedModBase {
-  mod: PluggableInventoryItemDefinition;
-  plugSetHash: number;
-}
-export interface LockedMod extends LockedModBase {
+
+export interface LockedMod {
   type: 'mod';
   bucket: InventoryBucket;
+  mod: PluggableInventoryItemDefinition;
+  plugSetHash: number;
 }
 export interface LockedBurn {
   type: 'burn';
