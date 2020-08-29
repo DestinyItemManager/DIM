@@ -55,6 +55,8 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
 interface ProvidedProps {
   /** Placeholder text when nothing has been typed */
   placeholder: string;
+  /** Is this the main search bar in the header? It behaves somewhat differently. */
+  mainSearchBar?: boolean;
   /** Whether to autofocus this on mount */
   autoFocus?: boolean;
   /** A fake property that can be used to force the "live" query to be replaced with the one from props */
@@ -130,6 +132,7 @@ function SearchBar(
   {
     searchQueryVersion,
     searchQuery,
+    mainSearchBar,
     placeholder,
     children,
     autoFocus,
@@ -198,7 +201,7 @@ function SearchBar(
     openMenu,
   } = useCombobox<SearchItem>({
     items,
-    defaultIsOpen: isPhonePortrait,
+    defaultIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
@@ -240,8 +243,10 @@ function SearchBar(
     debouncedUpdateQuery('');
     reset();
     onClear?.();
-    openMenu();
-  }, [onClear, reset, openMenu, debouncedUpdateQuery]);
+    if (!isPhonePortrait) {
+      openMenu();
+    }
+  }, [onClear, reset, openMenu, debouncedUpdateQuery, isPhonePortrait]);
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -342,7 +347,7 @@ function SearchBar(
         </button>
       )}
 
-      {(liveQuery.length > 0 || isPhonePortrait) && (
+      {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
         <button
           type="button"
           className="filter-bar-button"
