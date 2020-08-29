@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { LockedArmor2Mod } from '../types';
+import React, { Dispatch } from 'react';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import {
+  LockedArmor2Mod,
+  ModPickerCategory,
+  ModPickerCategories,
+  isModPickerCategory,
+} from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import GeneratedSetMod from './GeneratedSetMod';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import SocketDetails from '../../item-popup/SocketDetails';
-import ReactDOM from 'react-dom';
 import styles from './GeneratedSetSockets.m.scss';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { armor2ModPlugCategoriesTitles } from '../utils';
+import { t } from 'app/i18next-t';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -19,24 +26,25 @@ const undesireablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
 ];
 
-interface SocketAndPlug {
-  plug: PluggableInventoryItemDefinition;
-  socket: DimSocket;
+interface PlugAndCategory {
+  plugDef: PluggableInventoryItemDefinition;
+  category?: ModPickerCategory;
+  season?: number;
 }
 
 interface Props {
   item: DimItem;
   lockedMods: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
-function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
-  const [socketInfo, setSocketInfo] = useState<SocketAndPlug | null>(null);
+function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
   if (!item.isDestiny2()) {
     return null;
   }
 
-  const modsAndPerks: SocketAndPlug[] = [];
+  const modsAndPerks: PlugAndCategory[] = [];
   const modsToUse = [...lockedMods];
 
   for (const socket of item.sockets?.allSockets || []) {
@@ -62,34 +70,40 @@ function GeneratedSetSockets({ item, lockedMods, defs }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      modsAndPerks.push({ plug: toSave, socket });
+      const metadata = getSpecialtySocketMetadataByPlugCategoryHash(toSave.plug.plugCategoryHash);
+      const category =
+        (isModPickerCategory(toSave.plug.plugCategoryHash) && toSave.plug.plugCategoryHash) ||
+        (metadata && ModPickerCategories.seasonal) ||
+        undefined;
+
+      modsAndPerks.push({ plugDef: toSave, category, season: metadata?.season });
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map((socketAndPlug, index) => (
+        {modsAndPerks.map(({ plugDef, category, season }, index) => (
           <GeneratedSetMod
             key={index}
             gridColumn={(index % 2) + 1}
-            plugDef={socketAndPlug.plug}
+            plugDef={plugDef}
             defs={defs}
-            onClick={() => setSocketInfo(socketAndPlug)}
+            onClick={
+              category
+                ? () =>
+                    lbDispatch({
+                      type: 'openModPicker',
+                      initialQuery:
+                        category === ModPickerCategories.seasonal
+                          ? season?.toString()
+                          : t(armor2ModPlugCategoriesTitles[category]),
+                    })
+                : undefined
+            }
           />
         ))}
       </div>
-      {socketInfo &&
-        ReactDOM.createPortal(
-          <SocketDetails
-            key={socketInfo.socket.socketIndex}
-            item={item}
-            socket={socketInfo.socket}
-            initialSelectedPlug={socketInfo.plug}
-            onClose={() => setSocketInfo(null)}
-          />,
-          document.body
-        )}
     </>
   );
 }

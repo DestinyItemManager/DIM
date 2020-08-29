@@ -29,6 +29,8 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import ModPicker from './filter/ModPicker';
+import ReactDOM from 'react-dom';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -120,7 +122,7 @@ function LoadoutBuilder({
   preloadedLoadout,
 }: Props) {
   const [
-    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters },
+    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, modPicker },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -254,8 +256,18 @@ function LoadoutBuilder({
             lockedSeasonalMods={lockedSeasonalMods}
           />
         )}
+        {modPicker.open &&
+          ReactDOM.createPortal(
+            <ModPicker
+              classType={selectedStore.classType}
+              lockedArmor2Mods={lockedArmor2Mods}
+              initialQuery={modPicker.initialQuery}
+              lbDispatch={lbDispatch}
+              onClose={() => lbDispatch({ type: 'closeModPicker' })}
+            />,
+            document.body
+          )}
       </PageWithMenu.Contents>
-
       <LoadoutDrawer />
     </PageWithMenu>
   );

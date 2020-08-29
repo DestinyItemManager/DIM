@@ -100,6 +100,7 @@ export interface LockedArmor2Mod {
   key?: number;
   mod: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
+  season?: number;
 }
 
 export type LockedArmor2ModMap = {

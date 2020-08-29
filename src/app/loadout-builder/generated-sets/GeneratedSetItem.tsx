@@ -131,7 +131,12 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          <GeneratedSetSockets item={item} lockedMods={lockedMods} defs={defs} />
+          <GeneratedSetSockets
+            item={item}
+            lockedMods={lockedMods}
+            defs={defs}
+            lbDispatch={lbDispatch}
+          />
         </div>
       )}
     </div>

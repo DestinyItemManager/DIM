@@ -6,7 +6,14 @@ import {
   DimSocket,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { statValues, LockedItemType, LockedMod, LockedArmor2Mod, StatTypes } from './types';
+import {
+  statValues,
+  LockedItemType,
+  LockedMod,
+  LockedArmor2Mod,
+  StatTypes,
+  ModPickerCategories,
+} from './types';
 import {
   DestinyInventoryItemDefinition,
   TierType,
@@ -16,6 +23,7 @@ import {
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { tl } from 'app/i18next-t';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -401,3 +409,13 @@ export function someModHasEnergyRequirement(
 ) {
   return mods.some((mod) => mod.mod.plug.energyCost!.energyType !== DestinyEnergyType.Any);
 }
+
+export const armor2ModPlugCategoriesTitles = {
+  [ModPickerCategories.general]: tl('LB.General'),
+  [ModPickerCategories.helmet]: tl('LB.Helmet'),
+  [ModPickerCategories.gauntlets]: tl('LB.Gauntlets'),
+  [ModPickerCategories.chest]: tl('LB.Chest'),
+  [ModPickerCategories.leg]: tl('LB.Legs'),
+  [ModPickerCategories.classitem]: tl('LB.ClassItem'),
+  [ModPickerCategories.seasonal]: tl('LB.Seasonal'),
+};

@@ -20,6 +20,10 @@ export interface LoadoutBuilderState {
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
+  modPicker: {
+    open: boolean;
+    initialQuery?: string;
+  };
 }
 
 const lbStateInit = ({
@@ -73,6 +77,9 @@ const lbStateInit = ({
     },
     minimumPower: 750,
     selectedStoreId: selectedStoreId,
+    modPicker: {
+      open: false,
+    },
   };
 };
 
@@ -89,7 +96,9 @@ export type LoadoutBuilderAction =
       lockedMap: LockedMap;
       lockedSeasonalMods: LockedModBase[];
     }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap };
+  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
+  | { type: 'openModPicker'; initialQuery?: string }
+  | { type: 'closeModPicker' };
 
 // TODO: Move more logic inside the reducer
 function lbStateReducer(
@@ -150,6 +159,13 @@ function lbStateReducer(
       };
     case 'lockedArmor2ModsChanged':
       return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
+    case 'openModPicker':
+      return {
+        ...state,
+        modPicker: { open: true, initialQuery: action.initialQuery },
+      };
+    case 'closeModPicker':
+      return { ...state, modPicker: { open: false } };
   }
 }
 

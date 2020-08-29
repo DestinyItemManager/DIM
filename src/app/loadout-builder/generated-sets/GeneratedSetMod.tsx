@@ -11,7 +11,7 @@ interface Props {
   plugDef: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   gridColumn: number;
-  onClick(): void;
+  onClick?(): void;
 }
 
 function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
