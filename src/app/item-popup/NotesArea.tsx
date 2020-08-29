@@ -112,6 +112,10 @@ function NotesEditor({
 
   useEffect(() => saveNotes, [saveNotes]);
 
+  const onClick = (e: React.MouseEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
+  };
+
   return (
     <form name="notes">
       <textarea
@@ -121,6 +125,7 @@ function NotesEditor({
         placeholder={t('Notes.Help')}
         maxLength={maxLength}
         value={liveNotes}
+        onClick={onClick}
         onChange={onNotesUpdated}
         onBlur={stopEvents}
         onKeyDown={onKeyDown}
