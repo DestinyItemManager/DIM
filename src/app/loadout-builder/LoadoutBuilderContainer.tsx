@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores';
@@ -16,6 +16,7 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { useSubscription } from 'app/utils/hooks';
 import LoadoutBuilder from './LoadoutBuilder';
 import { Location } from 'history';
+import { D1StoresService } from 'app/inventory/d1-stores';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -40,29 +41,24 @@ function mapStateToProps() {
   });
 }
 
+function getStoresService(account: DestinyAccount) {
+  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
+}
+
 /**
  * The Loadout Optimizer screen
  * TODO This isn't really a container but I can't think of a better name. It's more like
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
-  useSubscription(
-    useCallback(
-      () =>
-        D2StoresService.getStoresStream(account).subscribe((stores) => {
-          if (!stores || !stores.length) {
-            return;
-          }
-        }),
-      [account]
-    )
-  );
+  useEffect(() => {
+    if (!stores.length) {
+      getStoresService(account).getStoresStream(account);
+    }
+  });
 
-  useSubscription(
-    useCallback(
-      () => refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
-      []
-    )
+  useSubscription(() =>
+    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
   );
 
   if (!stores || !stores.length || !defs) {

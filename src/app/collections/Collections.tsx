@@ -18,12 +18,16 @@ import PresentationNodeRoot from './PresentationNodeRoot';
 import { useSubscription } from 'app/utils/hooks';
 import { useParams } from 'react-router';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { D1StoresService } from 'app/inventory/d1-stores';
+import { queueAction } from 'app/inventory/action-queue';
+import { DimStore } from 'app/inventory/store-types';
 
 interface ProvidedProps {
   account: DestinyAccount;
 }
 
 interface StoreProps {
+  stores: DimStore[];
   buckets?: InventoryBuckets;
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
@@ -48,25 +52,29 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
+    stores: storesSelector(state),
     ownedItemHashes: ownedItemHashesSelector(state),
     profileResponse: profileResponseSelector(state),
   });
 }
 
-const refreshStores = () =>
-  refresh$.subscribe(() => {
-    D2StoresService.reloadStores();
-  });
+function getStoresService(account: DestinyAccount) {
+  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
+}
 
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-function Collections({ account, buckets, ownedItemHashes, defs, profileResponse }: Props) {
+function Collections({ account, stores, buckets, ownedItemHashes, defs, profileResponse }: Props) {
   useEffect(() => {
-    D2StoresService.getStoresStream(account);
-  }, [account]);
+    if (!stores.length) {
+      getStoresService(account).getStoresStream(account);
+    }
+  });
 
-  useSubscription(refreshStores);
+  useSubscription(() =>
+    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
+  );
 
   const { presentationNodeHashStr } = useParams();
   const presentationNodeHash = presentationNodeHashStr
