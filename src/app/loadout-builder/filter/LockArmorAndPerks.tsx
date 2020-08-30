@@ -111,7 +111,6 @@ function LockArmorAndPerks({
     const order = Object.values(LockableBuckets);
     try {
       const { item } = await showItemPicker({
-        hideStoreEquip: true,
         filterItems: (item: DimItem) =>
           Boolean(
             isLoadoutBuilderItem(item) &&

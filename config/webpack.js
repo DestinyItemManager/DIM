@@ -401,7 +401,7 @@ module.exports = (env) => {
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
         // New search bar
-        '$featureFlags.newSearch': JSON.stringify(!env.release),
+        '$featureFlags.newSearch': JSON.stringify(true),
       }),
 
       new WorkerPlugin({

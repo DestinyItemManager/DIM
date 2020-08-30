@@ -106,7 +106,7 @@ type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; equip?: boolean; shift: boolean; items: DimItem[] }
+  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -149,7 +149,7 @@ function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, equip, shift, items } = action;
+      const { item, shift, items } = action;
 
       if (!item.canBeInLoadout()) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -159,7 +159,7 @@ function stateReducer(state: State, action: Action): State {
       return loadout
         ? {
             ...state,
-            loadout: addItem(loadout, item, equip, shift, items),
+            loadout: addItem(loadout, item, shift, items),
           }
         : state;
     }
@@ -194,8 +194,6 @@ function stateReducer(state: State, action: Action): State {
 function addItem(
   loadout: Readonly<Loadout>,
   item: DimItem,
-  /** Whether the item should be equipped in the loadout or not. Leave undefined for a sensible default. */
-  equip: boolean | undefined,
   shift: boolean,
   items: DimItem[]
 ): Loadout {
@@ -217,8 +215,7 @@ function addItem(
 
     if (!dupe) {
       if (typeInventory.length < maxSlots) {
-        loadoutItem.equipped =
-          equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
+        loadoutItem.equipped = item.equipment && typeInventory.length === 0;
         if (loadoutItem.equipped) {
           for (const otherItem of typeInventory) {
             findItem(otherItem).equipped = false;
@@ -446,8 +443,8 @@ function LoadoutDrawer({
     stores,
   ]);
 
-  const onAddItem = (item: DimItem, e?: MouseEvent, equip?: boolean) =>
-    stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), equip, items });
+  const onAddItem = (item: DimItem, e?: MouseEvent) =>
+    stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items });
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
@@ -477,7 +474,7 @@ function LoadoutDrawer({
     const loadoutClassType = loadout?.classType;
 
     try {
-      const { item, equip } = await showItemPicker({
+      const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
           item.hash === warnItem.hash &&
           item.canBeInLoadout() &&
@@ -486,14 +483,13 @@ function LoadoutDrawer({
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
-        equip: warnItem.equipped,
 
         // don't show information related to selected perks so we don't give the impression
         // that we will update perk selections when applying the loadout
         ignoreSelectedPerks: true,
       });
 
-      onAddItem(item, undefined, equip);
+      onAddItem(item);
       onRemoveItem(warnItem);
     } catch (e) {}
   };

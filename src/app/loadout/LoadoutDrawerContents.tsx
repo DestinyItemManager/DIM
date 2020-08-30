@@ -78,7 +78,7 @@ export default function LoadoutDrawerContents(
     itemSortOrder: string[];
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
-    add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+    add(item: DimItem, e?: MouseEvent): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -109,7 +109,7 @@ export default function LoadoutDrawerContents(
           {typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
-              onClick={() => pickLoadoutItem(loadout, itemsByBucket, bucket, add)}
+              onClick={() => pickLoadoutItem(loadout, bucket, add)}
               className="dim-button loadout-add"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
@@ -125,7 +125,7 @@ export default function LoadoutDrawerContents(
             loadoutItems={loadout.items}
             items={itemsByBucket[bucket.hash] || []}
             itemSortOrder={itemSortOrder}
-            pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, itemsByBucket, bucket, add)}
+            pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add)}
             equip={equip}
             remove={remove}
           />
@@ -137,9 +137,8 @@ export default function LoadoutDrawerContents(
 
 async function pickLoadoutItem(
   loadout: Loadout,
-  itemsByBucket: { [bucketId: string]: DimItem[] },
   bucket: InventoryBucket,
-  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
+  add: (item: DimItem, e?: MouseEvent) => void
 ) {
   const loadoutClassType = loadout?.classType;
 
@@ -147,10 +146,8 @@ async function pickLoadoutItem(
     return loadout?.items.some((i) => i.id === item.id && i.hash === i.hash);
   }
 
-  const hasEquippedItem = (itemsByBucket[bucket.hash] || []).some((i) => i.equipped);
-
   try {
-    const { item, equip } = await showItemPicker({
+    const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
         item.bucket.hash === bucket.hash &&
         (!loadout ||
@@ -160,14 +157,13 @@ async function pickLoadoutItem(
         item.canBeInLoadout() &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-      equip: !hasEquippedItem,
 
       // don't show information related to selected perks so we don't give the impression
       // that we will update perk selections when applying the loadout
       ignoreSelectedPerks: true,
     });
 
-    add(item, undefined, equip);
+    add(item);
   } catch (e) {}
 }
 
