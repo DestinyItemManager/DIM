@@ -250,7 +250,7 @@ function SettingsPage({
     // archetype: 'Archetype'
   };
 
-  const charColOptions = _.range(3, 6).map((num) => ({
+  const charColOptions = _.range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
