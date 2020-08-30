@@ -42,6 +42,8 @@ declare const $featureFlags: {
   mobileInspect: boolean;
   /** New search bar */
   newSearch: boolean;
+  /** Move subclass out of weapons */
+  newArrangement: boolean;
 };
 
 declare namespace React {

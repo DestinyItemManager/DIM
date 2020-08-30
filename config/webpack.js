@@ -402,6 +402,8 @@ module.exports = (env) => {
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
         // New search bar
         '$featureFlags.newSearch': JSON.stringify(!env.release),
+        // Rearrange buckets in categories
+        '$featureFlags.newArrangement': JSON.stringify(!env.release),
       }),
 
       new WorkerPlugin({
