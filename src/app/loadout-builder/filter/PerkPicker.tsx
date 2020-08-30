@@ -241,20 +241,12 @@ function PerkPicker({
   onClose,
   lbDispatch,
 }: Props) {
-  const [height, setHeight] = useState<number | undefined>(undefined);
   const [query, setQuery] = useState(initialQuery || '');
   const [selectedPerks, setSelectedPerks] = useState(copy(lockedMap));
   const [selectedSeasonalMods, setSelectedSeasonalMods] = useState(copy(lockedSeasonalMods));
-  const itemContainer = useRef<HTMLDivElement>(null);
   const filterInput = useRef<SearchFilterRef>(null);
 
   const order = Object.values(LockableBuckets);
-
-  useLayoutEffect(() => {
-    if (itemContainer.current) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [itemContainer]);
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {
@@ -451,34 +443,38 @@ function PerkPicker({
       : undefined;
 
   return (
-    <Sheet onClose={onClose} header={header} footer={footer} sheetClassName="item-picker">
-      <div ref={itemContainer} style={{ height }}>
-        {order.map(
-          (bucketId) =>
-            ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
-              (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
-              <PerksForBucket
-                key={bucketId}
-                defs={defs}
-                bucket={buckets.byHash[bucketId]}
-                mods={queryFilteredMods[bucketId] || []}
-                perks={queryFilteredPerks[bucketId]}
-                burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
-                locked={selectedPerks[bucketId] || []}
-                items={items[bucketId]}
-                onPerkSelected={(perk) => onPerkSelected(perk, buckets.byHash[bucketId])}
-              />
-            )
-        )}
-        {!$featureFlags.armor2ModPicker && (
-          <SeasonalModPicker
-            mods={queryFilteredSeasonalMods}
-            defs={defs}
-            locked={selectedSeasonalMods}
-            onSeasonalModSelected={onSeasonalModSelected}
-          />
-        )}
-      </div>
+    <Sheet
+      onClose={onClose}
+      header={header}
+      footer={footer}
+      sheetClassName="item-picker"
+      freezeInitialHeight={true}
+    >
+      {order.map(
+        (bucketId) =>
+          ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
+            (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
+            <PerksForBucket
+              key={bucketId}
+              defs={defs}
+              bucket={buckets.byHash[bucketId]}
+              mods={queryFilteredMods[bucketId] || []}
+              perks={queryFilteredPerks[bucketId]}
+              burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
+              locked={selectedPerks[bucketId] || []}
+              items={items[bucketId]}
+              onPerkSelected={(perk) => onPerkSelected(perk, buckets.byHash[bucketId])}
+            />
+          )
+      )}
+      {!$featureFlags.armor2ModPicker && (
+        <SeasonalModPicker
+          mods={queryFilteredSeasonalMods}
+          defs={defs}
+          locked={selectedSeasonalMods}
+          onSeasonalModSelected={onSeasonalModSelected}
+        />
+      )}
     </Sheet>
   );
 }
