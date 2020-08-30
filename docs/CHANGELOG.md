@@ -1,5 +1,7 @@
 ## Next
 
+* Add character stats to loadout sheet if full armor set is added.
+
 ## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
 
 * Better touchscreen support for drag and drop.
