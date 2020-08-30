@@ -67,7 +67,22 @@ export async function getLinkedAccounts(
 export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
-    DestinyComponentType.Profiles,
+    DestinyComponentType.ProfileInventories,
+    DestinyComponentType.ProfileCurrencies,
+    DestinyComponentType.Characters,
+    DestinyComponentType.CharacterInventories,
+    DestinyComponentType.CharacterEquipment,
+    DestinyComponentType.ItemInstances
+  );
+}
+
+/**
+ * Get the rest of the user's stores on this platform. This includes characters, vault, and item information.
+ */
+export function getStoresDetails(platform: DestinyAccount): Promise<DestinyProfileResponse> {
+  return getProfile(
+    platform,
+    DestinyComponentType.Profiles, // Likely missing it, but not seeing where this is used
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
     DestinyComponentType.Characters,

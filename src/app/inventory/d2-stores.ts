@@ -10,7 +10,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getCharacters, getStores } from '../bungie-api/destiny2-api';
+import { getCharacters, getStores, getStoresDetails } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
@@ -105,10 +105,10 @@ export function mergeCollectibles(
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
   const allCollectibles = {
-    ...profileCollectibles.data?.collectibles,
+    ...profileCollectibles?.data?.collectibles,
   };
 
-  _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
+  _.forIn(characterCollectibles?.data || {}, ({ collectibles }) => {
     Object.assign(allCollectibles, collectibles);
   });
 
@@ -185,17 +185,15 @@ function makeD2StoresService(): D2StoreServiceType {
     return promise;
   }
 
-  /**
-   * Returns a promise for a fresh view of the stores and their items.
-   */
-  async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
-    resetIdTracker();
-
+  async function loadData(
+    account: DestinyAccount,
+    fetchStores: any
+  ): Promise<D2Store[] | undefined> {
     try {
       const [defs, , profileInfo] = await Promise.all([
         (store.dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
         store.dispatch(loadNewItems(account)),
-        getStores(account),
+        fetchStores(account),
       ]);
       const buckets = bucketsSelector(store.getState())!;
       console.time('Process inventory');
@@ -278,6 +276,20 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   /**
+   * Returns a promise for a fresh view of the stores and their items.
+   */
+  async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
+    resetIdTracker();
+
+    const stores = await loadData(account, getStores);
+
+    // async load the rest (no await)
+    loadData(account, getStoresDetails);
+
+    return stores;
+  }
+
+  /**
    * Process a single character from its raw form to a DIM store, with all the items.
    */
   function processCharacter(
@@ -295,9 +307,9 @@ function makeD2StoresService(): D2StoreServiceType {
     const profileInventory = profileInfo.profileInventory.data?.items || [];
     const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
     const itemComponents = profileInfo.itemComponents;
-    const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
+    const progressions = profileInfo.characterProgressions?.data?.[characterId]?.progressions || [];
     const uninstancedItemObjectives =
-      profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
+      profileInfo.characterProgressions?.data?.[characterId]?.uninstancedItemObjectives || [];
 
     const store = makeCharacter(defs, character, lastPlayedDate);
 
