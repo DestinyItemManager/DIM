@@ -11,12 +11,10 @@ import { SearchFilters, searchFiltersConfigSelector } from '../search/search-fil
 import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
 import _ from 'lodash';
-import { settingsSelector } from 'app/settings/reducer';
 import SearchBar from 'app/search/SearchBar';
 
 type ProvidedProps = ItemPickerState & {
@@ -28,7 +26,6 @@ interface StoreProps {
   filters: SearchFilters;
   itemSortOrder: string[];
   isPhonePortrait: boolean;
-  preferEquip: boolean;
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
@@ -44,7 +41,6 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     filters: searchFiltersConfigSelector(state),
     itemSortOrder: itemSortOrderSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    preferEquip: settingsSelector(state).itemPickerEquip,
   });
 }
 
@@ -56,45 +52,31 @@ type DispatchProps = typeof mapDispatchToProps;
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function ItemPicker({
-  equip,
-  preferEquip,
   allItems,
   prompt,
   filters,
   itemSortOrder,
-  hideStoreEquip,
   sortBy,
   isPhonePortrait,
   ignoreSelectedPerks,
   onItemSelected,
   onCancel,
   onSheetClosed,
-  setSetting,
 }: Props) {
   const [query, setQuery] = useState('');
-  const [equipToggled, setEquipToggled] = useState(equip ?? preferEquip);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
-    onItemSelected({ item, equip: equipToggled });
+    onItemSelected({ item });
     onClose();
   };
 
   const onSheetClosedFn = () => {
     onCancel();
     onSheetClosed();
-  };
-
-  const setEquip = () => {
-    setEquipToggled(true);
-    setSetting('itemPickerEquip', true);
-  };
-  const setStore = () => {
-    setEquipToggled(false);
-    setSetting('itemPickerEquip', false);
   };
 
   const header = (
@@ -113,24 +95,6 @@ function ItemPicker({
             autoFocus={autoFocus}
             onQueryChanged={setQuery}
           />
-        )}
-        {!hideStoreEquip && (
-          <div className="split-buttons">
-            <button
-              type="button"
-              className={clsx('dim-button', { selected: equipToggled })}
-              onClick={setEquip}
-            >
-              {t('MovePopup.Equip')}
-            </button>
-            <button
-              type="button"
-              className={clsx('dim-button', { selected: !equipToggled })}
-              onClick={setStore}
-            >
-              {t('MovePopup.Store')}
-            </button>
-          </div>
         )}
       </div>
     </div>

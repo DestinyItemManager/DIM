@@ -297,7 +297,7 @@ function makeD2StoresService(): D2StoreServiceType {
     const itemComponents = profileInfo.itemComponents;
     const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
     const uninstancedItemObjectives =
-      profileInfo.characterProgressions.data?.[characterId].uninstancedItemObjectives || [];
+      profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
 
     const store = makeCharacter(defs, character, lastPlayedDate);
 

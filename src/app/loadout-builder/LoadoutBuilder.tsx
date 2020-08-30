@@ -31,6 +31,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ModPicker from './filter/ModPicker';
 import ReactDOM from 'react-dom';
+import PerkPicker from './filter/PerkPicker';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -122,7 +123,15 @@ function LoadoutBuilder({
   preloadedLoadout,
 }: Props) {
   const [
-    { lockedMap, lockedSeasonalMods, lockedArmor2Mods, selectedStoreId, statFilters, modPicker },
+    {
+      lockedMap,
+      lockedSeasonalMods,
+      lockedArmor2Mods,
+      selectedStoreId,
+      statFilters,
+      modPicker,
+      perkPicker,
+    },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -191,7 +200,6 @@ function LoadoutBuilder({
       />
 
       <LockArmorAndPerks
-        items={filteredItems}
         selectedStore={selectedStore}
         lockedMap={lockedMap}
         lockedSeasonalMods={lockedSeasonalMods}
@@ -264,6 +272,19 @@ function LoadoutBuilder({
               initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
+            />,
+            document.body
+          )}
+        {perkPicker.open &&
+          ReactDOM.createPortal(
+            <PerkPicker
+              classType={selectedStore.classType}
+              items={filteredItems}
+              lockedMap={lockedMap}
+              lockedSeasonalMods={lockedSeasonalMods}
+              initialQuery={perkPicker.initialQuery}
+              onClose={() => lbDispatch({ type: 'closePerkPicker' })}
+              lbDispatch={lbDispatch}
             />,
             document.body
           )}

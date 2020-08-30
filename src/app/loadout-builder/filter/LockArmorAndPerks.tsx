@@ -1,4 +1,4 @@
-import React, { useState, Dispatch } from 'react';
+import React, { Dispatch } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from '../utils';
@@ -8,7 +8,6 @@ import {
   LockedExclude,
   LockedBurn,
   LockedItemCase,
-  ItemsByBucket,
   LockedPerk,
   LockedMap,
   LockedMod,
@@ -26,8 +25,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
 import LoadoutBucketDropTarget from '../locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import PerkPicker from './PerkPicker';
-import ReactDOM from 'react-dom';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -37,7 +34,6 @@ import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
-  items: ItemsByBucket;
   lockedMap: LockedMap;
   lockedSeasonalMods: LockedModBase[];
   lockedArmor2Mods: LockedArmor2ModMap;
@@ -73,14 +69,11 @@ function LockArmorAndPerks({
   lockedMap,
   lockedSeasonalMods,
   lockedArmor2Mods,
-  items,
   buckets,
   stores,
   isPhonePortrait,
   lbDispatch,
 }: Props) {
-  const [filterPerksOpen, setFilterPerksOpen] = useState(false);
-
   /**
    * Lock currently equipped items on a character
    * Recomputes matched sets
@@ -118,7 +111,6 @@ function LockArmorAndPerks({
     const order = Object.values(LockableBuckets);
     try {
       const { item } = await showItemPicker({
-        hideStoreEquip: true,
         filterItems: (item: DimItem) =>
           Boolean(
             isLoadoutBuilderItem(item) &&
@@ -249,21 +241,13 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button type="button" className="dim-button" onClick={() => setFilterPerksOpen(true)}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => lbDispatch({ type: 'openPerkPicker' })}
+          >
             <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
           </button>
-          {filterPerksOpen &&
-            ReactDOM.createPortal(
-              <PerkPicker
-                classType={selectedStore.classType}
-                items={items}
-                lockedMap={lockedMap}
-                lockedSeasonalMods={lockedSeasonalMods}
-                onClose={() => setFilterPerksOpen(false)}
-                lbDispatch={lbDispatch}
-              />,
-              document.body
-            )}
         </div>
       </div>
       {$featureFlags.armor2ModPicker && (

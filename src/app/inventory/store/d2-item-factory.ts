@@ -175,7 +175,7 @@ export function makeFakeItem(
   buckets: InventoryBuckets,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   itemHash: number,
-  itemInstanceId: string = itemHash.toString(),
+  itemInstanceId = '0',
   quantity = 1,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;

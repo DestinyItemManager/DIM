@@ -1,5 +1,16 @@
 ## Next
 
+* The search bar now remembers your past searches and allows you to save your favorite searches. These saved and recent searches are synced between devices using DIM Sync.
+* The quick item picker (plus icon) menu no longer has an option to equip the selected item. Instead it will always just move the item - very few users selected "Equip" and it won't ever work in game activities.
+* Added background colors for items and characters before their images load in, which should reduce the "pop-in" effect.
+* Shaders can be tagged from the Collections page and the tags/notes show up there as well.
+* Shift+Click on the Notes field in Organizer while in edit mode no longer applies a search.
+* For pages with sidebars (like Progress), scrollbars appearing will no longer cover content.
+
+### Beta Only
+
+* Long-pressing on an item in mobile mode will bring up a quick actions menu - drag and release on a button to apply the action to the item you pressed on.
+
 ## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
 
 * Better touchscreen support for drag and drop.

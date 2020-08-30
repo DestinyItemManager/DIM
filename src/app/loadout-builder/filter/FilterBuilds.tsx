@@ -77,7 +77,7 @@ export default function FilterBuilds({
           </label>
           <RangeSelector
             min={750}
-            max={parseInt(selectedStore.stats.maxGearPower!.value.toString(), 10)}
+            max={parseInt(selectedStore.stats.maxGearPower?.value.toString() ?? '750', 10)}
             initialValue={minimumPower}
             onChange={(minPower: number) => dispatch(setSetting('loMinPower', minPower))}
           />
