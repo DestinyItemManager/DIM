@@ -12,7 +12,7 @@ interface Props {
   stats: DimStore['stats'];
 }
 
-function D1CharacterStats({ stats }: Props) {
+export default function D1CharacterStats({ stats }: Props) {
   const statList = statsWithTiers.map((h) => stats[h]);
   const tooltips = statList.map((stat) => {
     if (stat) {
@@ -58,5 +58,3 @@ function D1CharacterStats({ stats }: Props) {
     </div>
   );
 }
-
-export default React.memo(D1CharacterStats);
