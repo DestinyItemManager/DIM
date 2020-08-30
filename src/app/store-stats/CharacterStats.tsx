@@ -66,7 +66,7 @@ function CharacterStat({ stats, storeId, className }: CharacterStatProps) {
   );
 }
 
-export const PowerFormula = React.memo(function ({ stats, storeId }: Props) {
+export function PowerFormula({ stats, storeId }: Props) {
   const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
     <>
       {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
@@ -92,9 +92,9 @@ export const PowerFormula = React.memo(function ({ stats, storeId }: Props) {
   );
 
   return <CharacterStat stats={statInfos} storeId={storeId} className="powerFormula" />;
-});
+}
 
-export const LoadoutStats = React.memo(function ({ stats, storeId }: Props) {
+export function LoadoutStats({ stats, storeId }: Props) {
   const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
     `${stat.name}: ${stat.value}\n${stat.description}`;
 
@@ -103,4 +103,4 @@ export const LoadoutStats = React.memo(function ({ stats, storeId }: Props) {
     .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
   return <CharacterStat stats={statInfos} storeId={storeId} />;
-});
+}

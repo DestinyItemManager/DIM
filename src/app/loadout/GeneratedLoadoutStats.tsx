@@ -64,15 +64,13 @@ export function GeneratedLoadoutStats({
     return null;
   }
 
-  // Get items in current loadout per category
   const armorItems = getItemsInListByCategory({ buckets, category: 'Armor', items });
-  const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
-
   if (armorItems.missingBuckets.length) {
     // If any armor types are missing, don't compute stats or power levels.
     return null;
   }
 
+  const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
   if (weaponItems.missingBuckets) {
     // If any weapon types are missing, fill them in with max weapons to assume light level
     const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
@@ -94,9 +92,7 @@ export function GeneratedLoadoutStats({
   return (
     <div className="stat-bars destiny2">
       <div className="power">
-        <PressTip
-          tooltip={weaponItems.missingBuckets.length ? () => t('Loadouts.AssumeMaxWeapons') : null}
-        >
+        <PressTip tooltip={weaponItems.missingBuckets.length && t('Loadouts.AssumeMaxWeapons')}>
           <>
             <AppIcon icon={powerActionIcon} />
             <FractionalPowerLevel power={power} />
