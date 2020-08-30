@@ -1,6 +1,12 @@
 ## Next
 
-* The new Mod Picker is now available, a separate and improved picker just for armor mods.
+* The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
+  * A new Mod Picker component to let you choose armor 2.0 mods to lock.
+  * The mod sockets show in the optimiser are now the locked mods, rather than the mods currently equipped on the item.
+  * Clicking on a mod socket will open the picker to show available mods for that slot. Note that locking a mod from this won't guarantee it gets locked to the item specifically.
+  * Items have different levels of grouping depending on the requirements of the locked mods. Locking no mods keeps the previous grouping behaviour.
+  * The mods stats contribution is now shown in the picker.
+  * The Mod Picker can now filter for items from a specific season, just filter by the season number directly e.g. "11" for arrivals.
 
 ## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
 
