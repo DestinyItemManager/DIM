@@ -143,7 +143,7 @@ function Control({
   }, [open, triggerRef]);
 
   if (!tooltip) {
-    return <div>{children}</div>;
+    return <Component>{children}</Component>;
   }
 
   // TODO: if we reuse a stable tooltip container instance we could animate between them
