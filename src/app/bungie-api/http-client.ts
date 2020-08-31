@@ -1,9 +1,6 @@
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig, HttpClient } from 'bungie-api-ts/http';
-
-import { stringify } from 'querystring';
 import { delay } from 'app/utils/util';
-import _ from 'lodash';
 
 /**
  * an error indicating a non-200 response code
@@ -144,20 +141,17 @@ export function createHttpClient(
   return async (config: HttpClientConfig) => {
     let url = config.url;
     if (config.params) {
-      url = `${url}?${stringify(config.params)}`;
+      // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
+      for (const key in config.params) {
+        typeof config.params[key] === 'undefined' && delete config.params[key];
+      }
+      url = `${url}?${new URLSearchParams(config.params).toString()}`;
     }
 
     const fetchOptions = new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: config.body
-        ? {
-            'X-API-Key': apiKey,
-            'Content-Type': 'application/json',
-          }
-        : {
-            'X-API-Key': apiKey,
-          },
+      headers: { 'X-API-Key': apiKey, ...(config.body && { 'Content-Type': 'application/json' }) },
       credentials: withCredentials ? 'include' : 'omit',
     });
     const response = await fetchFunction(fetchOptions);
@@ -174,23 +168,20 @@ let timesThrottled = 0;
 /**
  * accepts an HttpClient and returns it with added throttling. throttles by increasing amounts
  * as it encounters Bungie API responses that indicate we should back off the requests, and
- * any errors upstream
+ * passes any thrown errors upstream
  *
  * @param httpClient use this client to make the API request
+ * @param onThrottle run this when throttling happens. information about the throttling is passed in
  */
-export function responsivelyThrottleHttpClient(httpClient: HttpClient): HttpClient {
+export function responsivelyThrottleHttpClient(
+  httpClient: HttpClient,
+  onThrottle: (timesThrottled: number, waitTime: number, url: string) => void
+): HttpClient {
   return async (config: HttpClientConfig) => {
     if (timesThrottled > 0) {
       // Double the wait time, starting with 1 second, until we reach 5 minutes.
       const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, timesThrottled) * 500);
-      console.log(
-        'Throttled',
-        timesThrottled,
-        'times, waiting',
-        waitTime,
-        'ms before calling',
-        config.url
-      );
+      onThrottle(timesThrottled, waitTime, config.url);
       await delay(waitTime);
     }
 

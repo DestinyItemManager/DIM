@@ -41,7 +41,9 @@ const notifyTimeout = _.throttle(
   { leading: true, trailing: false }
 );
 
-<<<<<<< HEAD
+const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
+  console.log('Throttled', timesThrottled, 'times, waiting', waitTime, 'ms before calling', url);
+
 // it would be really great if they implemented the pipeline operator soon
 /** used for most Bungie API requests */
 export const authenticatedHttpClient = dimErrorHandledHttpClient(
@@ -54,9 +56,11 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
       ),
       API_KEY,
       true
-    )
+    ),
+    logThrottle
   )
 );
+
 /** used to get manifest and global alerts*/
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
@@ -64,91 +68,10 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
       createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
       API_KEY,
       false
-    )
+    ),
+    logThrottle
   )
 );
-=======
-const ourFetch = rateLimitedFetch(fetchWithBungieOAuth);
-
-let numThrottled = 0;
-
-export async function httpAdapter(
-  config: HttpClientConfig,
-  skipAuth?: boolean
-): Promise<ServerResponse<any>> {
-  const startTime = Date.now();
-  const timer = setTimeout(() => notifyTimeout(startTime, TIMEOUT), TIMEOUT);
-
-  if (numThrottled > 0) {
-    // Double the wait time, starting with 1 second, until we reach 5 minutes.
-    const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, numThrottled) * 500);
-    console.log(
-      'Throttled',
-      numThrottled,
-      'times, waiting',
-      waitTime,
-      'ms before calling',
-      config.url
-    );
-    await delay(waitTime);
-  }
-
-  const whichFetch = skipAuth ? fetch : ourFetch;
-  try {
-    const result = await Promise.resolve(whichFetch(buildOptions(config, skipAuth))).then(
-      handleErrors,
-      handleErrors
-    );
-    // Quickly heal from being throttled
-    numThrottled = Math.floor(numThrottled / 2);
-    return result;
-  } catch (e) {
-    switch (e.code) {
-      case PlatformErrorCodes.ThrottleLimitExceededMinutes:
-      case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
-      case PlatformErrorCodes.ThrottleLimitExceededSeconds:
-      case PlatformErrorCodes.DestinyThrottledByGameServer:
-      case PlatformErrorCodes.PerApplicationThrottleExceeded:
-      case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
-      case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
-      case PlatformErrorCodes.PerUserThrottleExceeded:
-      case PlatformErrorCodes.SystemDisabled:
-        numThrottled++;
-        break;
-    }
-    throw e;
-  } finally {
-    if (timer) {
-      clearTimeout(timer);
-    }
-  }
-}
-
-export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Request {
-  let url = config.url;
-  if (config.params) {
-    // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
-    for (const key in config.params) {
-      typeof config.params[key] === 'undefined' && delete config.params[key];
-    }
-    url = `${url}?${new URLSearchParams(config.params).toString()}`;
-  }
-
-  return new Request(url, {
-    method: config.method,
-    body: config.body ? JSON.stringify(config.body) : undefined,
-    headers: config.body
-      ? {
-          'X-API-Key': API_KEY,
-          'Content-Type': 'application/json',
-        }
-      : {
-          'X-API-Key': API_KEY,
-        },
-    credentials: skipAuth ? 'omit' : 'include',
-  });
-}
->>>>>>> 6a3b9c1762cc7ff30711a22d0613b3d688862dc5
 
 /** Generate an error with a bit more info */
 export function dimError(message: string, errorCode: PlatformErrorCodes): DimError {
