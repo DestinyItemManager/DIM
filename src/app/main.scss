@@ -414,3 +414,19 @@ a.dim-button {
     margin: auto 0 auto 4px;
   }
 }
+
+.gradientBackground {
+  &::before {
+    @include below-header;
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background-position: center top;
+    background-repeat: no-repeat;
+    content: '';
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    will-change: transform;
+    z-index: -1;
+  }
+}

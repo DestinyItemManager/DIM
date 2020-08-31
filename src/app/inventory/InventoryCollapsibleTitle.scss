@@ -32,6 +32,9 @@
         background-color: rgba(0, 0, 0, 0.2);
       }
     }
+    .gradientBackground & {
+      background-color: transparent !important;
+    }
   }
 
   &.collapsed {

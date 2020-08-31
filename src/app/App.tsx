@@ -119,6 +119,7 @@ function App({
         'show-new-items': showNewItems,
         'ms-edge': /Edge/.test(navigator.userAgent),
         ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
+        gradientBackground: $featureFlags.gradientBackground,
       })}
     >
       <ScrollToTop />

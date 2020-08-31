@@ -44,6 +44,8 @@ declare const $featureFlags: {
   newSearch: boolean;
   /** Move subclass out of weapons */
   newArrangement: boolean;
+  /** New background */
+  gradientBackground: boolean;
 };
 
 declare namespace React {
