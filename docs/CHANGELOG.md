@@ -1,5 +1,7 @@
 ## Next
 
+* Use the dark theme for Twitter widget ➡️
+
 ## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
 
 * The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
