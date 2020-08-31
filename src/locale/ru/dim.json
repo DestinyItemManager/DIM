@@ -373,8 +373,10 @@
     "BungieNetAlert": "Оповещение Bungie",
     "Clear": "Сбросить поиск/фильтр",
     "CompareMatching": "Сравнить найденные предметы",
+    "DeleteSearch": "Delete Search",
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
+    "FilterHelpMenuItem": "Filters Help...",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
@@ -385,6 +387,7 @@
     "Refresh": "Обновить данные Destiny",
     "ReloadApp": "Перезагрузить DIM",
     "ReportBug": "Сообщить об ошибке",
+    "SaveSearch": "Save Search",
     "Shop": "Магазин",
     "UpgradeDIM": "(!) Обновить DIM",
     "WhatsNew": "Свежие Изменения"
@@ -400,12 +403,14 @@
     "ClearDialog": "Скрыть",
     "ClearNewItems": "Сбросить \"новые предметы\"",
     "ClearNewItemsTitle": "Горячая клавиша: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Маркировать предмет: '{{tag}}'",
     "Menu": "Закрепить меню",
     "RefreshInventory": "Обновить инвентарь",
     "ShowHotkeys": "Показать сочетания клавиш",
     "StartSearch": "Начать поиск",
     "StartSearchClear": "Начать новый поиск",
+    "Tab": "TAB",
     "ToggleDetails": "Показывать полное описание предметов"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFound": "Нет подходящих предметов. Попробуйте расширить критерии Подбора по Бонусам, Характеристикам.",
+    "NoBuildsFoundExoticsAndMods": "You have an exotic and five seasonal mods locked.",
+    "NoBuildsFoundModsAreTooExpensive": "The selected mods' energy requirements are too high.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "You are missing an item to hold one of the selected seasonal mods.",
+    "NoBuildsFoundWithReasons": "No builds found. Common causes of this include:",
     "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
@@ -680,10 +689,13 @@
     "AddNote": "Добавить заметку",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
+    "Details": "Popup",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "Развернуть описание",
     "Infuse": "СИНТЕЗ",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
       "Unlock": "Разблокировать {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Награды:",
     "Split": "Делить",
     "Store": "Дать",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "Оставить",
     "LockAll": "Заблокировать всё",
     "TagItem": "Тег",
-    "TagItems": "Отметить предметы",
     "UnlockAll": "Разблокировать всё"
   },
   "Triumphs": {

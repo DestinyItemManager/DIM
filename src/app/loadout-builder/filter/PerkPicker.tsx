@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useRef, useState, useEffect } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
@@ -80,6 +80,7 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedSeasonalMods: LockedModBase[];
   classType: DestinyClass;
+  initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -223,283 +224,259 @@ function mapStateToProps() {
   });
 }
 
-interface State {
-  query: string;
-  height?: number;
-  selectedPerks: LockedMap;
-  selectedSeasonalMods: LockedModBase[];
-}
-
 /**
  * A sheet that allows picking a perk.
  */
-class PerkPicker extends React.Component<Props, State> {
-  state: State = {
-    query: '',
-    selectedPerks: copy(this.props.lockedMap),
-    selectedSeasonalMods: copy(this.props.lockedSeasonalMods),
-  };
-  private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterRef>();
+function PerkPicker({
+  defs,
+  lockedMap,
+  lockedSeasonalMods,
+  perks,
+  mods,
+  buckets,
+  items,
+  language,
+  isPhonePortrait,
+  initialQuery,
+  onClose,
+  lbDispatch,
+}: Props) {
+  const [query, setQuery] = useState(initialQuery || '');
+  const [selectedPerks, setSelectedPerks] = useState(copy(lockedMap));
+  const [selectedSeasonalMods, setSelectedSeasonalMods] = useState(copy(lockedSeasonalMods));
+  const filterInput = useRef<SearchFilterRef>(null);
 
-  componentDidMount() {
-    if (this.itemContainer.current) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
+  const order = Object.values(LockableBuckets);
+
+  useEffect(() => {
+    if (!isPhonePortrait && filterInput.current) {
+      filterInput.current.focusFilterInput();
     }
-    if (!this.props.isPhonePortrait && this.filterInput.current) {
-      this.filterInput.current.focusFilterInput();
-    }
-  }
+  }, [isPhonePortrait, filterInput]);
 
-  componentDidUpdate() {
-    if (this.itemContainer.current && !this.state.height) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
-    }
-  }
-
-  render() {
-    const { defs, perks, mods, buckets, items, language, onClose, isPhonePortrait } = this.props;
-    const { query, height, selectedPerks, selectedSeasonalMods } = this.state;
-
-    const order = Object.values(LockableBuckets);
-
-    // On iOS at least, focusing the keyboard pushes the content off the screen
-    const autoFocus =
-      !this.props.isPhonePortrait &&
-      !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
-    const header = (
-      <div>
-        <h1>{t('LB.ChooseAPerk')}</h1>
-        <div className="item-picker-search">
-          <div className="search-filter" role="search">
-            <AppIcon icon={searchIcon} />
-            <input
-              className="filter-input"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              autoFocus={autoFocus}
-              placeholder="Search perk name and description"
-              type="text"
-              name="filter"
-              value={query}
-              onChange={(e) => this.setState({ query: e.currentTarget.value })}
-            />
-          </div>
-        </div>
-        <div className={styles.tabs}>
-          {order.map((bucketId) => (
-            <div
-              key={bucketId}
-              className={styles.tab}
-              onClick={() => this.scrollToBucket(bucketId)}
-            >
-              <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
-              {buckets.byHash[bucketId].name}
-            </div>
-          ))}
-          <div className={styles.tab} onClick={() => this.scrollToBucket('seasonal')}>
-            {t('LB.Season')}
-          </div>
-        </div>
-      </div>
-    );
-
-    // Only some languages effectively use the \b regex word boundary
-    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
-      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
-      : new RegExp(escapeRegExp(query), 'i');
-
-    const queryFilteredPerks = query.length
-      ? _.mapValues(perks, (bucketPerks) =>
-          bucketPerks.filter(
-            (perk) =>
-              regexp.test(perk.displayProperties.name) ||
-              regexp.test(perk.displayProperties.description)
-          )
-        )
-      : perks;
-
-    const queryFilteredMods = query.length
-      ? _.mapValues(mods, (bucketMods) =>
-          bucketMods.filter(
-            (mod) =>
-              regexp.test(mod.item.displayProperties.name) ||
-              regexp.test(mod.item.displayProperties.description)
-          )
-        )
-      : mods;
-
-    const queryFilteredBurns = query.length
-      ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
-      : burns;
-
-    const queryFilteredSeasonalMods = _.uniqBy(
-      Object.values(queryFilteredMods).flatMap((bucktedMods) =>
-        bucktedMods
-          .filter(({ item }) =>
-            getSpecialtySocketMetadataByPlugCategoryHash(item.plug.plugCategoryHash)
-          )
-          .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
-      ),
-      ({ mod }) => mod.hash
-    );
-
-    const footer =
-      Object.values(selectedPerks).some((f) => Boolean(f?.length)) || selectedSeasonalMods.length
-        ? ({ onClose }) => (
-            <div className={styles.footer}>
-              <div>
-                <button
-                  type="button"
-                  className={styles.submitButton}
-                  onClick={(e) => this.onSubmit(e, onClose)}
-                >
-                  {!isPhonePortrait && '⏎ '}
-                  {t('LoadoutBuilder.SelectPerks')}
-                </button>
-              </div>
-              <div className={styles.selectedPerks}>
-                {order.map(
-                  (bucketHash) =>
-                    selectedPerks[bucketHash] && (
-                      <React.Fragment key={bucketHash}>
-                        <ArmorBucketIcon
-                          bucket={buckets.byHash[bucketHash]}
-                          className={styles.armorIcon}
-                        />
-                        {selectedPerks[bucketHash]!.map((lockedItem) => (
-                          <LockedItemIcon
-                            key={
-                              (lockedItem.type === 'mod' && lockedItem.mod.hash) ||
-                              (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
-                              (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
-                              'unknown'
-                            }
-                            defs={defs}
-                            lockedItem={lockedItem}
-                            onClick={() => {
-                              if (lockedItem.bucket) {
-                                this.onPerkSelected(lockedItem, lockedItem.bucket);
-                              }
-                            }}
-                          />
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
-                <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
-                {selectedSeasonalMods.map((item) => (
-                  <SocketDetailsMod
-                    key={item.mod.hash}
-                    itemDef={item.mod}
-                    defs={defs}
-                    className={styles.selectedPerk}
-                  />
-                ))}
-                <GlobalHotkeys
-                  hotkeys={[
-                    {
-                      combo: 'enter',
-                      description: t('LoadoutBuilder.SelectPerks'),
-                      callback: (event) => {
-                        this.onSubmit(event, onClose);
-                      },
-                    },
-                  ]}
-                />
-              </div>
-            </div>
-          )
-        : undefined;
-
-    return (
-      <Sheet onClose={onClose} header={header} footer={footer} sheetClassName="item-picker">
-        <div ref={this.itemContainer} style={{ height }}>
-          {order.map(
-            (bucketId) =>
-              ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
-                (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
-                <PerksForBucket
-                  key={bucketId}
-                  defs={defs}
-                  bucket={buckets.byHash[bucketId]}
-                  mods={queryFilteredMods[bucketId] || []}
-                  perks={queryFilteredPerks[bucketId]}
-                  burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
-                  locked={selectedPerks[bucketId] || []}
-                  items={items[bucketId]}
-                  onPerkSelected={(perk) => this.onPerkSelected(perk, buckets.byHash[bucketId])}
-                />
-              )
-          )}
-          {!$featureFlags.armor2ModPicker && (
-            <SeasonalModPicker
-              mods={queryFilteredSeasonalMods}
-              defs={defs}
-              locked={selectedSeasonalMods}
-              onSeasonalModSelected={this.onSeasonalModSelected}
-            />
-          )}
-        </div>
-      </Sheet>
-    );
-  }
-
-  private onPerkSelected = (item: LockedItemType, bucket: InventoryBucket) => {
-    const { selectedPerks } = this.state;
-
+  const onPerkSelected = (item: LockedItemType, bucket: InventoryBucket) => {
     const perksForBucket = selectedPerks[bucket.hash];
     if (perksForBucket?.some((li) => lockedItemsEqual(li, item))) {
-      this.setState({
-        selectedPerks: {
-          ...selectedPerks,
-          [bucket.hash]: removeLockedItem(item, selectedPerks[bucket.hash]),
-        },
+      setSelectedPerks({
+        ...selectedPerks,
+        [bucket.hash]: removeLockedItem(item, selectedPerks[bucket.hash]),
       });
     } else {
-      this.setState({
-        selectedPerks: {
-          ...selectedPerks,
-          [bucket.hash]: addLockedItem(item, selectedPerks[bucket.hash]),
-        },
+      setSelectedPerks({
+        ...selectedPerks,
+        [bucket.hash]: addLockedItem(item, selectedPerks[bucket.hash]),
       });
     }
   };
 
-  private onSeasonalModSelected = (item: LockedModBase): void => {
-    const { selectedSeasonalMods } = this.state;
-
+  const onSeasonalModSelected = (item: LockedModBase): void => {
     if (selectedSeasonalMods.some((li) => li.mod.hash === item.mod.hash)) {
-      this.setState({
-        selectedSeasonalMods: selectedSeasonalMods.filter(
-          (existing) => existing.mod.hash !== item.mod.hash
-        ),
-      });
+      setSelectedSeasonalMods(
+        selectedSeasonalMods.filter((existing) => existing.mod.hash !== item.mod.hash)
+      );
     } else {
-      this.setState({
-        selectedSeasonalMods: [...selectedSeasonalMods, item],
-      });
+      setSelectedSeasonalMods([...selectedSeasonalMods, item]);
     }
   };
 
-  private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
+  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    this.props.lbDispatch({
+    lbDispatch({
       type: 'lockedMapAndSeasonalModsChanged',
-      lockedMap: this.state.selectedPerks,
-      lockedSeasonalMods: this.state.selectedSeasonalMods,
+      lockedMap: selectedPerks,
+      lockedSeasonalMods: selectedSeasonalMods,
     });
     onClose();
   };
 
-  private scrollToBucket = (bucketIdOrSeasonal: number | string) => {
+  const scrollToBucket = (bucketIdOrSeasonal: number | string) => {
     const elementId =
       bucketIdOrSeasonal === 'seasonal' ? bucketIdOrSeasonal : `perk-bucket-${bucketIdOrSeasonal}`;
     const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };
+
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const autoFocus =
+    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
+  const header = (
+    <div>
+      <h1>{t('LB.ChooseAPerk')}</h1>
+      <div className="item-picker-search">
+        <div className="search-filter" role="search">
+          <AppIcon icon={searchIcon} />
+          <input
+            className="filter-input"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            autoFocus={autoFocus}
+            placeholder="Search perk name and description"
+            type="text"
+            name="filter"
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+          />
+        </div>
+      </div>
+      <div className={styles.tabs}>
+        {order.map((bucketId) => (
+          <div key={bucketId} className={styles.tab} onClick={() => scrollToBucket(bucketId)}>
+            <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
+            {buckets.byHash[bucketId].name}
+          </div>
+        ))}
+        <div className={styles.tab} onClick={() => scrollToBucket('seasonal')}>
+          {t('LB.Season')}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Only some languages effectively use the \b regex word boundary
+  const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
+    ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
+    : new RegExp(escapeRegExp(query), 'i');
+
+  const queryFilteredPerks = query.length
+    ? _.mapValues(perks, (bucketPerks) =>
+        bucketPerks.filter(
+          (perk) =>
+            regexp.test(perk.displayProperties.name) ||
+            regexp.test(perk.displayProperties.description)
+        )
+      )
+    : perks;
+
+  const queryFilteredMods = query.length
+    ? _.mapValues(mods, (bucketMods) =>
+        bucketMods.filter(
+          (mod) =>
+            regexp.test(mod.item.displayProperties.name) ||
+            regexp.test(mod.item.displayProperties.description)
+        )
+      )
+    : mods;
+
+  const queryFilteredBurns = query.length
+    ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
+    : burns;
+
+  const queryFilteredSeasonalMods = _.uniqBy(
+    Object.values(queryFilteredMods).flatMap((bucktedMods) =>
+      bucktedMods
+        .filter(({ item }) =>
+          getSpecialtySocketMetadataByPlugCategoryHash(item.plug.plugCategoryHash)
+        )
+        .map(({ item, plugSetHash }) => ({ mod: item, plugSetHash }))
+    ),
+    ({ mod }) => mod.hash
+  );
+
+  const footer =
+    Object.values(selectedPerks).some((f) => Boolean(f?.length)) || selectedSeasonalMods.length
+      ? ({ onClose }) => (
+          <div className={styles.footer}>
+            <div>
+              <button
+                type="button"
+                className={styles.submitButton}
+                onClick={(e) => onSubmit(e, onClose)}
+              >
+                {!isPhonePortrait && '⏎ '}
+                {t('LoadoutBuilder.SelectPerks')}
+              </button>
+            </div>
+            <div className={styles.selectedPerks}>
+              {order.map(
+                (bucketHash) =>
+                  selectedPerks[bucketHash] && (
+                    <React.Fragment key={bucketHash}>
+                      <ArmorBucketIcon
+                        bucket={buckets.byHash[bucketHash]}
+                        className={styles.armorIcon}
+                      />
+                      {selectedPerks[bucketHash]!.map((lockedItem) => (
+                        <LockedItemIcon
+                          key={
+                            (lockedItem.type === 'mod' && lockedItem.mod.hash) ||
+                            (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
+                            (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
+                            'unknown'
+                          }
+                          defs={defs}
+                          lockedItem={lockedItem}
+                          onClick={() => {
+                            if (lockedItem.bucket) {
+                              onPerkSelected(lockedItem, lockedItem.bucket);
+                            }
+                          }}
+                        />
+                      ))}
+                    </React.Fragment>
+                  )
+              )}
+              <span className={styles.seasonalFooterIndicator}>{t('LB.Season')}</span>
+              {selectedSeasonalMods.map((item) => (
+                <SocketDetailsMod
+                  key={item.mod.hash}
+                  itemDef={item.mod}
+                  defs={defs}
+                  className={styles.selectedPerk}
+                />
+              ))}
+              <GlobalHotkeys
+                hotkeys={[
+                  {
+                    combo: 'enter',
+                    description: t('LoadoutBuilder.SelectPerks'),
+                    callback: (event) => {
+                      onSubmit(event, onClose);
+                    },
+                  },
+                ]}
+              />
+            </div>
+          </div>
+        )
+      : undefined;
+
+  return (
+    <Sheet
+      onClose={onClose}
+      header={header}
+      footer={footer}
+      sheetClassName="item-picker"
+      freezeInitialHeight={true}
+    >
+      {order.map(
+        (bucketId) =>
+          ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
+            (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
+            <PerksForBucket
+              key={bucketId}
+              defs={defs}
+              bucket={buckets.byHash[bucketId]}
+              mods={queryFilteredMods[bucketId] || []}
+              perks={queryFilteredPerks[bucketId]}
+              burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
+              locked={selectedPerks[bucketId] || []}
+              items={items[bucketId]}
+              onPerkSelected={(perk) => onPerkSelected(perk, buckets.byHash[bucketId])}
+            />
+          )
+      )}
+      {!$featureFlags.armor2ModPicker && (
+        <SeasonalModPicker
+          mods={queryFilteredSeasonalMods}
+          defs={defs}
+          locked={selectedSeasonalMods}
+          onSeasonalModSelected={onSeasonalModSelected}
+        />
+      )}
+    </Sheet>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(PerkPicker);

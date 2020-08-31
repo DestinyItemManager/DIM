@@ -373,8 +373,10 @@
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
     "CompareMatching": "Comparer les éléments filtrés",
+    "DeleteSearch": "Delete Search",
     "FilterHelp": "Rechercher objet/compétence, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
+    "FilterHelpMenuItem": "Filters Help...",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
     "Filters": "Filtres",
@@ -385,6 +387,7 @@
     "Refresh": "Rafraîchir les données Destiny",
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
+    "SaveSearch": "Save Search",
     "Shop": "Boutique",
     "UpgradeDIM": "Mettre à jour DIM",
     "WhatsNew": "Quoi de neuf"
@@ -400,12 +403,14 @@
     "ClearDialog": "Fermer le dialogue",
     "ClearNewItems": "Effacer les nouveaux objets",
     "ClearNewItemsTitle": "Raccourci clavier: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "Menu": "Activer/Désactive le menu",
     "RefreshInventory": "Actualiser l'inventaire",
     "ShowHotkeys": "Afficher les raccourcis clavier",
     "StartSearch": "Commencer une recherche",
     "StartSearchClear": "Commencer une nouvelle recherche",
+    "Tab": "TAB",
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Sélectionner un élément ou une compétence",
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFound": "Aucune présélection possible trouvé. Essayez d'augmenter vos critères de filtrage.",
+    "NoBuildsFoundExoticsAndMods": "You have an exotic and five seasonal mods locked.",
+    "NoBuildsFoundModsAreTooExpensive": "The selected mods' energy requirements are too high.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "You are missing an item to hold one of the selected seasonal mods.",
+    "NoBuildsFoundWithReasons": "No builds found. Common causes of this include:",
     "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "Sélectionnez des attributs, filtrez et réorganisez les statistiques, et verrouillez des objets pour réduire votre nombre d'arsenaux potentiels.",
@@ -680,10 +689,13 @@
     "AddNote": "Ajouter une note",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
+    "Details": "Popup",
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Armer",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "Étendre les détails de l'objet",
     "Infuse": "Infuser",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
       "Unlock": "Débloquer {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Récompenses:",
     "Split": "Couper",
     "Store": "Dépôt",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "Garder",
     "LockAll": "Verouiller les objets",
     "TagItem": "Ajouter une balise à l'objet",
-    "TagItems": "Ajouter une balise aux objets",
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triumphs": {

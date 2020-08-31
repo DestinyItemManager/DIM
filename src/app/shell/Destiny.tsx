@@ -10,10 +10,6 @@ import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ErrorPanel from './ErrorPanel';
-import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { getToken } from 'app/bungie-api/oauth-tokens';
-import { AppIcon, banIcon } from './icons';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { accountsSelector, accountsLoadedSelector } from 'app/accounts/selectors';
@@ -153,31 +149,18 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   if (profileError) {
     const isManifestError = profileError.name === 'ManifestError';
-    const token = getToken()!;
     return (
       <div className="dim-page">
         <ErrorPanel
           title={
-            isManifestError ? t('Accounts.ErrorLoadManifest') : t('Accounts.ErrorLoadInventory')
+            isManifestError
+              ? t('Accounts.ErrorLoadManifest')
+              : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
           showTwitters={true}
           showReload={true}
-        >
-          {!isManifestError &&
-            account.destinyVersion === 1 &&
-            profileError.code === PlatformErrorCodes.DestinyUnexpectedError && (
-              <p>
-                <ExternalLink
-                  className="dim-button"
-                  href={`https://www.bungie.net/en/Profile/Settings/254/${token.bungieMembershipId}?category=Accounts`}
-                >
-                  <AppIcon icon={banIcon} /> {t('Accounts.UnlinkTwitchButton')}
-                </ExternalLink>{' '}
-                <b>{t('Accounts.UnlinkTwitch')}</b>
-              </p>
-            )}
-        </ErrorPanel>
+        />
       </div>
     );
   }

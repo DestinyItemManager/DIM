@@ -28,6 +28,9 @@ export default function ModPickerSection({
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
+  if (!mods.length) {
+    return null;
+  }
   const lockedModCost = _.sumBy(locked, (l) => l.mod.plug.energyCost?.energyCost || 0);
   const isNotGeneralOrSeasonal =
     category !== ModPickerCategories.general && category !== ModPickerCategories.seasonal;

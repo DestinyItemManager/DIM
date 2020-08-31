@@ -373,8 +373,10 @@
     "BungieNetAlert": "Avviso da Bungie",
     "Clear": "Cancella filtro di ricerca",
     "CompareMatching": "Confronta oggetti filtrati",
+    "DeleteSearch": "Elimina Ricerca",
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
+    "FilterHelpMenuItem": "Aiuto per Filtri...",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
@@ -385,6 +387,7 @@
     "Refresh": "Aggiorna i dati di Destiny",
     "ReloadApp": "Ricarica App",
     "ReportBug": "Segnala un bug",
+    "SaveSearch": "Salva Ricerca",
     "Shop": "Negozio",
     "UpgradeDIM": "Aggiorna DIM",
     "WhatsNew": "Cosa c'è di nuovo"
@@ -400,12 +403,14 @@
     "ClearDialog": "Chiudi",
     "ClearNewItems": "Pulisci nuovi oggetti",
     "ClearNewItemsTitle": "Scorciatoia da tastiera: X",
+    "Enter": "INVIO",
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "Menu": "Attiva/Disattiva menù",
     "RefreshInventory": "Aggiorna l'inventario",
     "ShowHotkeys": "Mostra scorciatoie da tastiera",
     "StartSearch": "Inizia una ricerca",
     "StartSearchClear": "Inizia una ricerca",
+    "Tab": "TAB",
     "ToggleDetails": "Bottone per mostrare o meno tutti i dettagli dell'oggetto"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Seleziona elemento o perk",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFound": "Nessuna build trovata. Prova ad espandere i criteri di filtraggio.",
+    "NoBuildsFoundExoticsAndMods": "Hai una esotica e cinque Modifiche stagionali bloccate.",
+    "NoBuildsFoundModsAreTooExpensive": "I requisiti energetici della Modifica selezionata sono troppo alti.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "Ti manca un oggetto per contenere una delle Modifiche stagionali.",
+    "NoBuildsFoundWithReasons": "Nessuna build trovata. Le possibili cause sono:",
     "NumCombinations": "{{count, number}} combinazione",
     "NumCombinations_plural": "{{count, number}} combinazioni",
     "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
@@ -680,10 +689,13 @@
     "AddNote": "Aggiungi una nota",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
+    "Details": "Popup",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
+    "EquipWithName": "Equipaggia su {{character}}",
     "Expand": "Espandi dettagli oggetto",
     "Infuse": "Infus",
+    "ItemDetailSheet": "Apri dettagli oggetto",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
       "Unlock": "Sblocca {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Ricompense:",
     "Split": "Dividi",
     "Store": "Muovi",
+    "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "Consumable": "{{typeName}} {{classType}}",
       "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}"
@@ -941,7 +954,6 @@
     "Keep": "Tieni",
     "LockAll": "Blocca Oggetti",
     "TagItem": "Etichetta Oggetto",
-    "TagItems": "Etichetta Oggetti",
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triumphs": {

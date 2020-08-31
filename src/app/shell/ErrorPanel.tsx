@@ -26,6 +26,7 @@ const twitters = (
           via: 'BungieHelp',
           username: 'BungieHelp',
           height: '100%',
+          theme: 'dark',
         }}
       />
       <Timeline
@@ -38,6 +39,7 @@ const twitters = (
           via: 'ThisIsDIM',
           username: 'ThisIsDIM',
           height: '100%',
+          theme: 'dark',
         }}
       />
     </React.Suspense>

@@ -373,8 +373,10 @@
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
     "CompareMatching": "比較篩檢程式物品",
+    "DeleteSearch": "Delete Search",
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
+    "FilterHelpMenuItem": "Filters Help...",
     "FilterMatchCount": "1個物品",
     "FilterMatchCount_plural": "{{count}} 個物品",
     "Filters": "篩檢程式",
@@ -385,6 +387,7 @@
     "Refresh": "刷新命運資料",
     "ReloadApp": "重新載入應用",
     "ReportBug": "報告錯誤",
+    "SaveSearch": "Save Search",
     "Shop": "商店",
     "UpgradeDIM": "更新DIM",
     "WhatsNew": "新增內容"
@@ -400,12 +403,14 @@
     "ClearDialog": "關閉對話",
     "ClearNewItems": "清除新物品提示",
     "ClearNewItemsTitle": "鍵盤快速鍵：X",
+    "Enter": "ENTER",
     "MarkItemAs": "將物品標記為 “{{tag}}”",
     "Menu": "切換菜單",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "顯示鍵盤快速鍵",
     "StartSearch": "開始搜索",
     "StartSearchClear": "重新搜索",
+    "Tab": "TAB",
     "ToggleDetails": "切換顯示物品完整詳情頁"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "創建配裝",
     "NoBuildsFound": "沒有找到配裝。請嘗試擴大你的篩檢程式範圍。",
+    "NoBuildsFoundExoticsAndMods": "You have an exotic and five seasonal mods locked.",
+    "NoBuildsFoundModsAreTooExpensive": "The selected mods' energy requirements are too high.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "You are missing an item to hold one of the selected seasonal mods.",
+    "NoBuildsFoundWithReasons": "No builds found. Common causes of this include:",
     "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "選擇特性和篩檢程式、重新排列狀態、或鎖定物品來縮小你可能的配裝範圍。",
@@ -680,10 +689,13 @@
     "AddNote": "添加備註",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
+    "Details": "Popup",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
+    "EquipWithName": "Equip to {{character}}",
     "Expand": "展開項目詳細信息",
     "Infuse": "灌注",
+    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
       "Unlock": "解鎖{{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "獎勵：",
     "Split": "拆分",
     "Store": "寄存",
+    "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}}{{typeName}}",
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "保留",
     "LockAll": "鎖定物品",
     "TagItem": "標記物品",
-    "TagItems": "標記物品",
     "UnlockAll": "解鎖物品"
   },
   "Triumphs": {
