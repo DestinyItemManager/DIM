@@ -39,6 +39,7 @@ function WhatsNew({ language }: Props) {
             via: 'ThisIsDIM',
             username: 'ThisIsDIM',
             height: '100%',
+            theme: 'dark',
           }}
         />
       </div>
