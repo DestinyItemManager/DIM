@@ -32,6 +32,7 @@ import { useLocation } from 'react-router';
 import { emptyArray } from 'app/utils/empty';
 import { loadoutsSelector } from './reducer';
 import { updateLoadout } from './actions';
+import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -547,6 +548,13 @@ function LoadoutDrawer({
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
+      />
+      <GeneratedLoadoutStats
+        defs={defs}
+        stores={stores}
+        buckets={buckets}
+        items={items}
+        loadout={loadout}
       />
     </div>
   );

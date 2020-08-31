@@ -15,6 +15,7 @@
 * Shaders can be tagged from the Collections page and the tags/notes show up there as well.
 * Shift+Click on the Notes field in Organizer while in edit mode no longer applies a search.
 * For pages with sidebars (like Progress), scrollbars appearing will no longer cover content.
+* Add character stats to loadout sheet if full armor set is added.
 
 ### Beta Only
 
