@@ -14,7 +14,7 @@ import { selectedSubclassPath } from './subclass';
 import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
-const itemTierDogearStyles = {
+const itemTierStyles = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
   Common: styles.basic,
@@ -85,16 +85,18 @@ export default function InventoryItem({
       item.talentGrid &&
       selectedSubclassPath(item.talentGrid)) ||
     null;
+  const noBorder = borderless(item);
   const itemStyles = {
     [styles.touchActive]: touchActive,
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
+    [itemTierStyles[item.tier]]: !noBorder && !(item.isDestiny2?.() && item.plug),
   };
   const itemImageStyles = clsx('item-img', {
     [styles.complete]: item.complete || isCapped,
-    [styles.borderless]: borderless(item),
+    [styles.borderless]: noBorder,
     [styles.masterwork]: item.masterwork,
   });
 
@@ -136,7 +138,7 @@ export default function InventoryItem({
         />
       )}
       {item.iconOverlay && (
-        <div className={clsx(styles.iconOverlay, itemTierDogearStyles[item.tier])}>
+        <div className={clsx(styles.iconOverlay)}>
           <BungieImage src={item.iconOverlay} />
         </div>
       )}
