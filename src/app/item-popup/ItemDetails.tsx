@@ -193,9 +193,8 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           </div>
         )}
 
-      {!extraInfo.mod && extraInfo.collectible && (
+      {!extraInfo.mod && (
         <div className="item-details">
-          <div>{extraInfo.collectible.sourceString}</div>
           {extraInfo.owned && (
             <div>
               <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
@@ -211,7 +210,6 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {extraInfo.mod && (
         <div className="item-details mods">
-          {extraInfo.collectible && <div>{extraInfo.collectible.sourceString}</div>}
           {extraInfo.owned && (
             <div>
               <img className="owned-icon" src={modificationIcon} /> {t('MovePopup.OwnedMod')}
