@@ -1,5 +1,27 @@
 ## Next
 
+## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
+
+* The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
+  * A new Mod Picker component to let you choose armor 2.0 mods to lock.
+  * The mod sockets shown in the optimiser are now the locked mods, rather than the mods currently equipped on the item.
+  * Clicking on a mod socket will open the picker to show available mods for that slot. Note that locking a mod from this won't guarantee it gets locked to the item specifically.
+  * Items have different levels of grouping depending on the requirements of the locked mods. Locking no mods keeps the previous grouping behaviour.
+  * The mods stat contributions are now shown in the picker.
+  * The Mod Picker can now filter for items from a specific season, just filter by the season number directly e.g. "11" for arrivals.
+* The search bar now remembers your past searches and allows you to save your favorite searches. These saved and recent searches are synced between devices using DIM Sync.
+* The quick item picker (plus icon) menu no longer has an option to equip the selected item. Instead it will always just move the item - very few users selected "Equip" and it won't ever work in game activities.
+* Added background colors for items and characters before their images load in, which should reduce the "pop-in" effect.
+* Shaders can be tagged from the Collections page and the tags/notes show up there as well.
+* Shift+Click on the Notes field in Organizer while in edit mode no longer applies a search.
+* For pages with sidebars (like Progress), scrollbars appearing will no longer cover content.
+* Add character stats to loadout sheet if full armor set is added.
+
+### Beta Only
+
+* Long-pressing on an item in mobile mode will bring up a quick actions menu - drag and release on a button to apply the action to the item you pressed on.
+* Move Sub-class out of Weapons to the General category
+
 ## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
 
 * Better touchscreen support for drag and drop.

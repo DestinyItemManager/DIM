@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
-import CharacterStats from '../store-stats/CharacterStats';
+import { PowerFormula, LoadoutStats } from '../store-stats/CharacterStats';
+import D1CharacterStats from './D1CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import VaultCapacity from './VaultCapacity';
 import styles from './StoreStats.m.scss';
@@ -35,12 +36,13 @@ export default function StoreStats({
           <AccountCurrencies store={store} />
           {shouldShowCapacity(isPhonePortrait) && <VaultCapacity store={store} />}
         </div>
+      ) : store.destinyVersion === 1 ? (
+        <D1CharacterStats stats={store.stats} />
       ) : (
-        <CharacterStats
-          destinyVersion={store.destinyVersion}
-          stats={store.stats}
-          storeId={store.id}
-        />
+        <div className="stat-bars destiny2">
+          <PowerFormula stats={store.stats} storeId={store.id} />
+          <LoadoutStats stats={store.stats} storeId={store.id} />
+        </div>
       )}
     </div>
   );
