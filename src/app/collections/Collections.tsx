@@ -68,7 +68,7 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
 
   useSubscription(refreshStores);
 
-  const { presentationNodeHashStr } = useParams();
+  const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;
