@@ -41,8 +41,8 @@ interface ProvidedProps {
 
 type Props = ProvidedProps;
 
-const LazyFilterHelp = React.lazy(() =>
-  import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+const LazyFilterHelp = React.lazy(
+  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
 /** matches a keyword that's probably a math comparison */
