@@ -414,6 +414,7 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
+    "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
     "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Infusion Fuel Finder",
