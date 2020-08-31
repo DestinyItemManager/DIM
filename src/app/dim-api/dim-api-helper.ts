@@ -1,5 +1,4 @@
 import { HttpClientConfig } from 'bungie-api-ts/http';
-import { stringify } from 'simple-query-string';
 import {
   getActiveToken as getBungieToken,
   FatalTokenError,
@@ -29,7 +28,7 @@ export async function unauthenticatedApi<T>(
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
   const headers = {};
@@ -72,7 +71,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
   const headers = {

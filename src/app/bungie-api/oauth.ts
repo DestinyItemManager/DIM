@@ -1,6 +1,5 @@
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
 import { Tokens, Token } from './oauth-tokens';
-import { stringify } from 'simple-query-string';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
@@ -8,15 +7,16 @@ const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
 export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tokens> {
   // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
+  const body = new URLSearchParams({
+    grant_type: 'refresh_token', // eslint-disable-line @typescript-eslint/naming-convention
+    refresh_token: refreshToken.value, // eslint-disable-line @typescript-eslint/naming-convention
+    client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
+    client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
+  });
   return Promise.resolve(
     fetch(TOKEN_URL, {
       method: 'POST',
-      body: stringify({
-        grant_type: 'refresh_token', // eslint-disable-line @typescript-eslint/naming-convention
-        refresh_token: refreshToken.value, // eslint-disable-line @typescript-eslint/naming-convention
-        client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
-        client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
-      }),
+      body,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -26,16 +26,17 @@ export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tok
   );
 }
 
-export function getAccessTokenFromCode(code: number): Promise<Tokens> {
+export function getAccessTokenFromCode(code: string): Promise<Tokens> {
+  const body = new URLSearchParams({
+    grant_type: 'authorization_code', // eslint-disable-line @typescript-eslint/naming-convention
+    code,
+    client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
+    client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
+  });
   return Promise.resolve(
     fetch(TOKEN_URL, {
       method: 'POST',
-      body: stringify({
-        grant_type: 'authorization_code', // eslint-disable-line @typescript-eslint/naming-convention
-        code,
-        client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
-        client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
-      }),
+      body,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
