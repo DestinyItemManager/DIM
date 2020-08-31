@@ -15,6 +15,10 @@ export default function Catalysts({
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
 }) {
+  if (!profileResponse.characterRecords) {
+    return null;
+  }
+
   const catalystPresentationNode = defs.PresentationNode.get(CATALYSTS_ROOT_NODE);
   const firstCharacterRecords = Object.values(profileResponse.characterRecords.data || {})[0]
     .records;

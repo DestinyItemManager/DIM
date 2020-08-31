@@ -41,6 +41,8 @@ import { getArtifactBonus } from './stores-helpers';
 import { ItemPowerSet } from './ItemPowerSet';
 import { StatHashes } from 'data/d2/generated-enums';
 
+let isFirstLoad = true;
+
 /**
  * Update the high level character information for all the stores
  * (level, power, stats, etc.). This does not update the
@@ -281,10 +283,15 @@ function makeD2StoresService(): D2StoreServiceType {
   async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
     resetIdTracker();
 
-    const stores = await loadData(account, getStores);
+    const storePromise = loadData(account, isFirstLoad ? getStores : getStoresDetails);
 
-    // async load the rest (no await)
-    loadData(account, getStoresDetails);
+    const stores = await storePromise;
+
+    if (isFirstLoad) {
+      // async load the rest (no await)
+      loadData(account, getStoresDetails);
+      isFirstLoad = false;
+    }
 
     return stores;
   }

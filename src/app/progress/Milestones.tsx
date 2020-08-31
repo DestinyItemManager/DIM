@@ -27,7 +27,7 @@ export default function Milestones({
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = profileInfo?.characterProgressions?.data?.[store.id];
-  const season = profileInfo.profile.data?.currentSeasonHash
+  const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
   const seasonPass = season?.seasonPassHash

@@ -187,10 +187,10 @@ export function getRecordComponent(
   profileResponse: DestinyProfileResponse
 ): DestinyRecordComponent | undefined {
   return recordDef.scope === DestinyScope.Character
-    ? profileResponse.characterRecords.data
+    ? profileResponse.characterRecords?.data
       ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
       : undefined
-    : profileResponse.profileRecords.data
+    : profileResponse.profileRecords?.data
     ? profileResponse.profileRecords.data.records[recordDef.hash]
     : undefined;
 }

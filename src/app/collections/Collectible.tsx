@@ -60,7 +60,7 @@ export function getCollectibleState(
   profileResponse: DestinyProfileResponse
 ) {
   return collectibleDef.scope === DestinyScope.Character
-    ? profileResponse.characterCollectibles.data
+    ? profileResponse.characterCollectibles?.data
       ? _.minBy(
           // Find the version of the collectible that's unlocked, if any
           Object.values(profileResponse.characterCollectibles.data)
@@ -69,7 +69,7 @@ export function getCollectibleState(
           (state) => state & DestinyCollectibleState.NotAcquired
         )
       : undefined
-    : profileResponse.profileCollectibles.data
+    : profileResponse.profileCollectibles?.data
     ? profileResponse.profileCollectibles.data.collectibles[collectibleDef.hash].state
     : undefined;
 }

@@ -82,7 +82,6 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
 export function getStoresDetails(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
-    DestinyComponentType.Profiles, // Likely missing it, but not seeing where this is used
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
     DestinyComponentType.Characters,
@@ -101,6 +100,8 @@ export function getStoresDetails(platform: DestinyAccount): Promise<DestinyProfi
     DestinyComponentType.ItemReusablePlugs,
     // TODO: We should try to defer this until the popup is open!
     DestinyComponentType.ItemPlugObjectives,
+    // TODO: We should defer, used in /vendors (Milestones.tsx) for current season hash
+    DestinyComponentType.Profiles,
     // TODO: we should defer this unless you're on the collections screen
     DestinyComponentType.Records,
     DestinyComponentType.Metrics
