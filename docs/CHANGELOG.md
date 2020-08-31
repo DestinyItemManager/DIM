@@ -19,6 +19,7 @@
 ### Beta Only
 
 * Long-pressing on an item in mobile mode will bring up a quick actions menu - drag and release on a button to apply the action to the item you pressed on.
+* Move Sub-class out of Weapons to the General category
 
 ## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
 
