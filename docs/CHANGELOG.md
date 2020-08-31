@@ -1,5 +1,7 @@
 ## Next
 
+## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
+
 * The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
   * A new Mod Picker component to let you choose armor 2.0 mods to lock.
   * The mod sockets shown in the optimiser are now the locked mods, rather than the mods currently equipped on the item.
