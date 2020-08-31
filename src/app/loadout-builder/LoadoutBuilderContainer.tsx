@@ -1,22 +1,15 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2StoresService } from '../inventory/d2-stores';
-import { DimStore } from '../inventory/store-types';
 import { RootState } from 'app/store/types';
-import { sortedStoresSelector } from '../inventory/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { refresh$ } from 'app/shell/refresh';
-import { queueAction } from 'app/inventory/action-queue';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
 import { Loadout } from 'app/loadout/loadout-types';
-import { useSubscription } from 'app/utils/hooks';
 import LoadoutBuilder from './LoadoutBuilder';
 import { Location } from 'history';
-import { D1StoresService } from 'app/inventory/d1-stores';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -26,7 +19,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  stores: DimStore[];
   defs?: D2ManifestDefinitions;
 }
 
@@ -36,13 +28,8 @@ type Props = ProvidedProps &
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    stores: sortedStoresSelector(state),
     defs: state.manifest.d2Manifest,
   });
-}
-
-function getStoresService(account: DestinyAccount) {
-  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
 }
 
 /**
@@ -50,28 +37,13 @@ function getStoresService(account: DestinyAccount) {
  * TODO This isn't really a container but I can't think of a better name. It's more like
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
-function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
-  useEffect(() => {
-    if (!stores.length) {
-      getStoresService(account).getStoresStream(account);
-    }
-  });
-
-  useSubscription(() =>
-    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
-  );
-
-  if (!stores || !stores.length || !defs) {
+function LoadoutBuilderContainer({ account, defs, location }: Props) {
+  if (!defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   return (
-    <LoadoutBuilder
-      account={account}
-      stores={stores}
-      defs={defs}
-      preloadedLoadout={location.state?.loadout}
-    />
+    <LoadoutBuilder account={account} defs={defs} preloadedLoadout={location.state?.loadout} />
   );
 }
 

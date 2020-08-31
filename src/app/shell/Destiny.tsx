@@ -22,6 +22,7 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
+import StoresLoader from 'app/dim-ui/StoresLoader';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -183,7 +184,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   }
 
   return (
-    <>
+    <StoresLoader account={account}>
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
@@ -196,7 +197,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           )}
           {account.destinyVersion === 2 && (
             <Route path={`${path}/collections`} exact>
-              <Collections account={account} />
+              <Collections />
             </Route>
           )}
           <Route path={`${path}/optimizer`} exact>
@@ -207,7 +208,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
             )}
           </Route>
           <Route path={`${path}/organizer`} exact>
-            <Organizer account={account} />
+            <Organizer />
           </Route>
           {account.destinyVersion === 2 && (
             <Route
@@ -247,7 +248,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
-    </>
+    </StoresLoader>
   );
 }
 
