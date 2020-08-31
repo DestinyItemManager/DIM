@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
-    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -414,6 +412,7 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
+    "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
     "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Infusion Fuel Finder",
