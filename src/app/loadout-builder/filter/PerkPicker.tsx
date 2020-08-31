@@ -1,4 +1,4 @@
-import React, { Dispatch, useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { Dispatch, useRef, useState, useEffect } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
