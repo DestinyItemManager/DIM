@@ -404,6 +404,8 @@ module.exports = (env) => {
         '$featureFlags.newSearch': JSON.stringify(true),
         // Rearrange buckets in categories
         '$featureFlags.newArrangement': JSON.stringify(!env.release),
+        // New background design
+        '$featureFlags.gradientBackground': JSON.stringify(env.dev),
       }),
 
       new WorkerPlugin({
