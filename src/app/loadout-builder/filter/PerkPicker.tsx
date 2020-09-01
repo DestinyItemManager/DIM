@@ -39,7 +39,7 @@ import { settingsSelector } from 'app/settings/reducer';
 import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import SeasonalModPicker from './SeasonalModPicker';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { SearchFilterRef } from 'app/search/SearchBar';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';

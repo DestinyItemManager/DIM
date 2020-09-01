@@ -40,8 +40,6 @@ declare const $featureFlags: {
   unstickyStats: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** New search bar */
-  newSearch: boolean;
   /** Move subclass out of weapons */
   newArrangement: boolean;
   /** New background */

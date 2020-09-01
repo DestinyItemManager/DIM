@@ -400,8 +400,6 @@ module.exports = (env) => {
         '$featureFlags.unstickyStats': JSON.stringify(!env.release),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
-        // New search bar
-        '$featureFlags.newSearch': JSON.stringify(true),
         // Rearrange buckets in categories
         '$featureFlags.newArrangement': JSON.stringify(!env.release),
         // New background design
