@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './PresentationNode.scss';
 import Collectible from './Collectible';
-import { DestinyProfileResponse, DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
 import Record from './Record';
 import clsx from 'clsx';
@@ -18,33 +17,11 @@ import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
 import Metrics from './Metrics';
-import ErrorPanel from 'app/shell/ErrorPanel';
 import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import { DimPresentationNode } from './presentation-nodes';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
-
-/** Display the item as a category, through which sub-items are filtered. */
-const displayStyle = {
-  0: 'Category',
-  1: 'Badge',
-  2: 'Medals',
-  3: 'Collectible',
-  4: 'Record',
-};
-
-const screenStyle = {
-  0: 'Default',
-  1: 'CategorySets',
-  2: 'Badge',
-};
-
-const nodeStyle = {
-  0: 'Default',
-  1: 'Category',
-  2: 'Collectibles',
-  3: 'Records',
-};
 
 interface StoreProps {
   completedRecordsHidden: boolean;
@@ -52,19 +29,11 @@ interface StoreProps {
 }
 
 interface ProvidedProps {
-  presentationNodeHash: number;
+  node: DimPresentationNode;
   defs: D2ManifestDefinitions;
-  buckets?: InventoryBuckets;
-  profileResponse: DestinyProfileResponse;
   ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
-  collectionCounts: {
-    [nodeHash: number]: {
-      acquired: number;
-      visible: number;
-    };
-  };
   onNodePathSelected(nodePath: number[]): void;
 }
 
@@ -86,21 +55,19 @@ function isInputElement(element: HTMLElement): element is HTMLInputElement {
 }
 
 function PresentationNode({
-  presentationNodeHash,
+  node,
   defs,
-  profileResponse,
-  buckets,
   ownedItemHashes,
   path,
   parents,
   setSetting,
   completedRecordsHidden,
   redactedRecordsRevealed,
-  collectionCounts,
   onNodePathSelected,
 }: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
+  const presentationNodeHash = node.nodeDef.hash;
 
   useEffect(() => {
     if (
@@ -131,27 +98,14 @@ function PresentationNode({
     return false;
   };
 
-  const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
-  if (presentationNodeDef.redacted) {
-    return null;
-  }
-
-  if (!presentationNodeDef) {
-    return (
-      <ErrorPanel
-        title="Bad presentation node"
-        error={new Error(`This isn't real ${presentationNodeHash}`)}
-      />
-    );
-  }
-
-  const { visible, acquired } = collectionCounts[presentationNodeHash];
+  const { visible, acquired, nodeDef } = node;
   const completed = Boolean(acquired >= visible);
 
   if (!visible) {
     return null;
   }
 
+  // TODO: use nodes as parents?
   const parent = parents.slice(-1)[0];
   const thisAndParents = [...parents, presentationNodeHash];
 
@@ -160,10 +114,13 @@ function PresentationNode({
     (p) => defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
+  const isTriumphsRootNode = presentationNodeHash === TRIUMPHS_ROOT_NODE;
+  const isInTriumphs = thisAndParents[0] !== TRIUMPHS_ROOT_NODE;
+
   // todo: export this hash/depth and clean up the boolean string
   const alwaysExpanded =
     // if we're not in triumphs
-    (thisAndParents[0] !== TRIUMPHS_ROOT_NODE &&
+    (isInTriumphs &&
       // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
       thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
     // or this is manually selected to be forced expanded
@@ -182,31 +139,24 @@ function PresentationNode({
 
   const title = (
     <span className="node-name">
-      {presentationNodeDef.displayProperties.icon && (
+      {nodeDef.displayProperties.icon && (
         <BungieImage
           src={
-            presentationNodeDef.displayProperties.iconSequences?.[0]?.frames?.[1] ??
-            presentationNodeDef.displayProperties.icon
+            nodeDef.displayProperties.iconSequences?.[0]?.frames?.[1] ??
+            nodeDef.displayProperties.icon
           }
         />
       )}{' '}
-      {presentationNodeDef.displayProperties.name}
+      {nodeDef.displayProperties.name}
     </span>
   );
 
   return (
     <div
-      className={clsx(
-        'presentation-node',
-        `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
-        `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
-        `node-style-${nodeStyle[presentationNodeDef.nodeType]}`,
-        `level-${thisAndParents.length}`,
-        {
-          'only-child': onlyChild,
-          'always-expanded': alwaysExpanded,
-        }
-      )}
+      className={clsx('presentation-node', {
+        'only-child': onlyChild,
+        'always-expanded': alwaysExpanded,
+      })}
     >
       {!onlyChild && (
         <div
@@ -242,7 +192,7 @@ function PresentationNode({
           </div>
         </div>
       )}
-      {childrenExpanded && presentationNodeHash === TRIUMPHS_ROOT_NODE && (
+      {childrenExpanded && isTriumphsRootNode && (
         <div className="presentationNodeOptions">
           <Checkbox
             label={t('Triumphs.HideCompleted')}
@@ -259,57 +209,45 @@ function PresentationNode({
         </div>
       )}
       {childrenExpanded &&
-        presentationNodeDef.children.presentationNodes.map((node) => (
+        node.childPresentationNodes?.map((subNode) => (
           <ConnectedPresentationNode
-            key={node.presentationNodeHash}
-            presentationNodeHash={node.presentationNodeHash}
+            key={subNode.nodeDef.hash}
+            node={subNode}
             defs={defs}
-            profileResponse={profileResponse}
-            buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             path={path}
             parents={thisAndParents}
             onNodePathSelected={onNodePathSelected}
-            collectionCounts={collectionCounts}
           />
         ))}
       {childrenExpanded && visible > 0 && (
         <>
-          {presentationNodeDef.children.collectibles.length > 0 && (
+          {node.collectibles && node.collectibles.length > 0 && (
             <div className="collectibles">
-              {buckets &&
-                presentationNodeDef.children.collectibles.map((collectible) => (
-                  <Collectible
-                    key={collectible.collectibleHash}
-                    collectibleHash={collectible.collectibleHash}
-                    defs={defs}
-                    profileResponse={profileResponse}
-                    buckets={buckets}
-                    ownedItemHashes={ownedItemHashes}
-                  />
-                ))}
+              {node.collectibles.map((collectible) => (
+                <Collectible
+                  key={collectible.collectibleDef.hash}
+                  collectible={collectible}
+                  owned={Boolean(ownedItemHashes?.has(collectible.collectibleDef.itemHash))}
+                />
+              ))}
             </div>
           )}
-          {presentationNodeDef.children.records.length > 0 && (
+          {node.records && node.records.length > 0 && (
             <div className="records">
-              {presentationNodeDef.children.records.map((record) => (
+              {node.records.map((record) => (
                 <Record
-                  key={record.recordHash}
-                  recordHash={record.recordHash}
+                  key={record.recordDef.hash}
+                  record={record}
                   defs={defs}
-                  profileResponse={profileResponse}
                   completedRecordsHidden={completedRecordsHidden}
                   redactedRecordsRevealed={redactedRecordsRevealed}
                 />
               ))}
             </div>
           )}
-          {presentationNodeDef.children.metrics.length > 0 && (
-            <Metrics
-              metrics={presentationNodeDef.children.metrics}
-              defs={defs}
-              profileResponse={profileResponse}
-            />
+          {node.metrics && node.metrics.length > 0 && (
+            <Metrics metrics={node.metrics} defs={defs} />
           )}
         </>
       )}

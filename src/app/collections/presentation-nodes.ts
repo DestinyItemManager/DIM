@@ -37,13 +37,13 @@ export const enum TrackedRecordState {
 }
 
 export interface DimRecord {
-  record: DestinyRecordComponent;
+  recordComponent: DestinyRecordComponent;
   recordDef: DestinyRecordDefinition;
   tracked: TrackedRecordState; // TODO: not needed here?
 }
 
 export interface DimMetric {
-  metric: DestinyMetricComponent;
+  metricComponent: DestinyMetricComponent;
   metricDef: DestinyMetricDefinition;
 }
 
@@ -51,7 +51,6 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
-  owned: boolean; // TODO: not needed here?
 }
 
 export interface DimPresentationNodeSearchResult {
@@ -94,7 +93,7 @@ export function toPresentationNodeTree(
     const records = toRecords(defs, profileResponse, presentationNodeDef.children.records);
     const visible = records.length;
     const acquired = count(records, (r) =>
-      Boolean(r.record.state & DestinyRecordState.RecordRedeemed)
+      Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
     );
 
     // add an entry for self and return
@@ -109,7 +108,7 @@ export function toPresentationNodeTree(
 
     // TODO: class based on displayStyle
     const visible = metrics.length;
-    const acquired = count(metrics, (m) => Boolean(m.metric.objectiveProgress.complete));
+    const acquired = count(metrics, (m) => Boolean(m.metricComponent.objectiveProgress.complete));
     return {
       nodeDef: presentationNodeDef,
       visible,
@@ -193,14 +192,16 @@ function toCollectibles(
         profileResponse.itemComponents,
         collectibleDef.itemHash
       );
-      return (
-        item && {
-          state,
-          collectibleDef,
-          item,
-          owned: false,
-        }
-      );
+      if (!item) {
+        return null;
+      }
+      item.missingSockets = false;
+      return {
+        state,
+        collectibleDef,
+        item,
+        owned: false,
+      };
     })
   );
 }
@@ -211,34 +212,36 @@ function toRecords(
   recordHashes: DestinyPresentationNodeRecordChildEntry[]
 ): DimRecord[] {
   return _.compact(
-    recordHashes.map(({ recordHash }) => {
-      const recordDef = defs.Record.get(recordHash);
-      if (!recordDef) {
-        return null;
-      }
-      const record = getRecordComponent(recordDef, profileResponse);
-
-      if (
-        record === undefined ||
-        record.state & DestinyRecordState.Invisible ||
-        recordDef.redacted
-      ) {
-        return null;
-      }
-
-      // TODO: incorporate dim sync data?
-      const tracked =
-        profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash
-          ? TrackedRecordState.TrackedInGame
-          : TrackedRecordState.Untracked;
-
-      return {
-        record,
-        recordDef,
-        tracked,
-      };
-    })
+    recordHashes.map(({ recordHash }) => toRecord(defs, profileResponse, recordHash))
   );
+}
+
+export function toRecord(
+  defs: D2ManifestDefinitions,
+  profileResponse: DestinyProfileResponse,
+  recordHash: number
+) {
+  const recordDef = defs.Record.get(recordHash);
+  if (!recordDef) {
+    return null;
+  }
+  const record = getRecordComponent(recordDef, profileResponse);
+
+  if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
+    return null;
+  }
+
+  // TODO: incorporate dim sync data?
+  const tracked =
+    profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash
+      ? TrackedRecordState.TrackedInGame
+      : TrackedRecordState.Untracked;
+
+  return {
+    recordComponent: record,
+    recordDef,
+    tracked,
+  };
 }
 
 function toMetrics(
@@ -259,7 +262,7 @@ function toMetrics(
       }
 
       return {
-        metric,
+        metricComponent: metric,
         metricDef,
       };
     })
