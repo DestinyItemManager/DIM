@@ -81,13 +81,14 @@ export default function ItemActions({
           onAmountChanged={onAmountChanged}
         />
       )}
-      <div className={mobileInspect ? styles.interactionV : styles.interaction}>
+      <div className={styles.interaction}>
         {stores.map((buttonStore) => (
           <ItemMoveLocation
             key={buttonStore.id}
             item={item}
             store={buttonStore}
             itemOwnerStore={store}
+            vertical={Boolean(mobileInspect)}
             moveItemTo={onMoveItemTo}
           />
         ))}
@@ -109,14 +110,7 @@ export default function ItemActions({
           />
         )}
         {item.infusionFuel && (
-          <ItemActionButtonGroup>
-            {mobileInspect && (
-              <ItemActionButton
-                onClick={() => showItemPopup(item)}
-                title={t('MovePopup.ItemDetailSheet')}
-                label={t('MovePopup.Details')}
-              />
-            )}
+          <ItemActionButtonGroup vertical={Boolean(mobileInspect)}>
             <ItemActionButton
               className={clsx(styles.infusePerk, {
                 [styles.destiny2]: item.isDestiny2(),
@@ -127,6 +121,13 @@ export default function ItemActions({
               title={t('Infusion.Infusion')}
               label={t('MovePopup.Infuse')}
             />
+            {mobileInspect && (
+              <ItemActionButton
+                onClick={() => showItemPopup(item)}
+                title={t('MovePopup.ItemDetailSheet')}
+                label={t('MovePopup.Details')}
+              />
+            )}
           </ItemActionButtonGroup>
         )}
       </div>

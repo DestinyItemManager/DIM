@@ -18,6 +18,7 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
+import MobileInspect from 'app/mobile-inspect/MobileInspect';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -228,6 +229,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
         </Switch>
       </div>
       <ItemPopupContainer boundarySelector=".store-header" />
+      {$featureFlags.mobileInspect && <MobileInspect />}
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
     </>
