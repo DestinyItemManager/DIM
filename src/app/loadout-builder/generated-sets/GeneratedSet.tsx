@@ -61,8 +61,20 @@ function GeneratedSet({
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
-        <SetStats defs={defs} set={set} statOrder={statOrder} enabledStats={enabledStats} />
-        <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
+        <SetStats
+          defs={defs}
+          stats={set.stats}
+          items={set.armor.map((items) => items[0])}
+          maxPower={set.maxPower}
+          statOrder={statOrder}
+          enabledStats={enabledStats}
+        />
+        <GeneratedSetButtons
+          set={set}
+          store={selectedStore!}
+          onLoadoutSet={setCreateLoadout}
+          onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
+        />
       </div>
       <div className={styles.items}>
         {set.armor.map((items, index) => (

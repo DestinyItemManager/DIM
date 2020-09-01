@@ -29,10 +29,10 @@ import { Loadout, LoadoutItem } from './loadout-types';
 import produce from 'immer';
 import { useSubscription } from 'app/utils/hooks';
 import { useLocation } from 'react-router';
-import { emptyArray } from 'app/utils/empty';
 import { loadoutsSelector } from './reducer';
 import { updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
+import { getItemsFromLoadoutItems } from './loadout-utils';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -332,54 +332,6 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
   });
 }
 
-/**
- * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
- * are returned as warnitems.
- */
-function findItems(
-  loadoutItems: LoadoutItem[] | undefined,
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  stores: DimStore[]
-): [DimItem[], DimItem[]] {
-  if (!loadoutItems) {
-    return [emptyArray(), emptyArray()];
-  }
-
-  const findItem = (loadoutItem: LoadoutItem) => {
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-          return item;
-        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
-          return item;
-        }
-      }
-    }
-    return undefined;
-  };
-
-  const items: DimItem[] = [];
-  const warnitems: DimItem[] = [];
-  for (const loadoutItem of loadoutItems) {
-    const item = findItem(loadoutItem);
-    if (item) {
-      items.push(item);
-    } else {
-      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-      if (itemDef) {
-        // TODO: makeFakeItem
-        warnitems.push({
-          ...loadoutItem,
-          icon: itemDef.displayProperties?.icon || itemDef.icon,
-          name: itemDef.displayProperties?.name || itemDef.itemName,
-        } as DimItem);
-      }
-    }
-  }
-
-  return [items, warnitems];
-}
-
 function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
@@ -437,7 +389,7 @@ function LoadoutDrawer({
   useSubscription(() => editLoadout$.subscribe(editLoadout));
 
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => findItems(loadout?.items, defs, stores), [
+  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadout?.items, defs, stores), [
     defs,
     loadout?.items,
     stores,

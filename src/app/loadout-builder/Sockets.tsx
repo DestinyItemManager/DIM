@@ -1,21 +1,18 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   LockedArmor2Mod,
   ModPickerCategory,
   ModPickerCategories,
   isModPickerCategory,
-} from '../types';
+} from './types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import GeneratedSetMod from './GeneratedSetMod';
+import Mod from './Mod';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import styles from './GeneratedSetSockets.m.scss';
+import styles from './Sockets.m.scss';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
-import { armor2ModPlugCategoriesTitles } from '../utils';
-import { t } from 'app/i18next-t';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
@@ -34,18 +31,22 @@ interface PlugAndCategory {
 
 interface Props {
   item: DimItem;
-  lockedMods: LockedArmor2Mod[];
+  lockedMods?: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  onSocketClick?(
+    plugDef: PluggableInventoryItemDefinition,
+    category?: ModPickerCategory,
+    season?: number
+  ): void;
 }
 
-function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
+function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
   if (!item.isDestiny2()) {
     return null;
   }
 
   const modsAndPerks: PlugAndCategory[] = [];
-  const modsToUse = [...lockedMods];
+  const modsToUse = lockedMods ? [...lockedMods] : [];
 
   for (const socket of item.sockets?.allSockets || []) {
     const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -80,33 +81,16 @@ function GeneratedSetSockets({ item, lockedMods, defs, lbDispatch }: Props) {
     }
   }
 
-  const getOnClick = (
-    plugDef: PluggableInventoryItemDefinition,
-    category?: ModPickerCategory,
-    season?: number
-  ) => {
-    if (category) {
-      const initialQuery =
-        category === ModPickerCategories.seasonal
-          ? season?.toString()
-          : t(armor2ModPlugCategoriesTitles[category]);
-      return () => lbDispatch({ type: 'openModPicker', initialQuery });
-    } else {
-      return () =>
-        lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
-    }
-  };
-
   return (
     <>
       <div className={styles.lockedItems}>
         {modsAndPerks.map(({ plugDef, category, season }, index) => (
-          <GeneratedSetMod
+          <Mod
             key={index}
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={getOnClick(plugDef, category, season)}
+            onClick={() => onSocketClick?.(plugDef, category, season)}
           />
         ))}
       </div>

@@ -1,3 +1,11 @@
+.container {
+  img {
+    vertical-align: middle;
+    height: 16px;
+    width: 16px;
+  }
+}
+
 .light {
   composes: light from global;
   float: none;

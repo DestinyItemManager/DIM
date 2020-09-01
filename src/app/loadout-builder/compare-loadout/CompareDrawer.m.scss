@@ -1,0 +1,48 @@
+@import '../../variables.scss';
+
+.header {
+  font-size: 20px;
+  margin: 4px;
+}
+
+.content {
+  margin: 16px;
+}
+
+.setHeader {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.loadoutSelect {
+  padding: 1px;
+  margin: 4px 0;
+}
+
+.set {
+  display: flex;
+  flex-direction: row;
+}
+
+.item {
+  display: grid;
+  grid-template-areas:
+    'item sockets'
+    'button sockets';
+  gap: 6px;
+  width: min-content;
+  align-items: start;
+  justify-content: start;
+  margin: 7px 14px 14px 0;
+
+  @include phone-portrait {
+    grid-template-columns: min-content min-content 1fr;
+    grid-template-areas: 'item sockets button';
+    width: 100%;
+  }
+
+  > *:first-child {
+    grid-area: item;
+  }
+}

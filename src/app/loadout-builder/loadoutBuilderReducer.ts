@@ -6,6 +6,7 @@ import {
   MinMaxIgnored,
   LockedItemType,
   ModPickerCategories,
+  ArmorSet,
 } from './types';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
@@ -28,6 +29,7 @@ export interface LoadoutBuilderState {
     open: boolean;
     initialQuery?: string;
   };
+  compareSet?: ArmorSet;
 }
 
 const lbStateInit = ({
@@ -107,7 +109,9 @@ export type LoadoutBuilderAction =
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
-  | { type: 'closePerkPicker' };
+  | { type: 'closePerkPicker' }
+  | { type: 'openCompareDrawer'; set: ArmorSet }
+  | { type: 'closeCompareDrawer' };
 
 // TODO: Move more logic inside the reducer
 function lbStateReducer(
@@ -179,6 +183,10 @@ function lbStateReducer(
       return { ...state, perkPicker: { open: true, initialQuery: action.initialQuery } };
     case 'closePerkPicker':
       return { ...state, perkPicker: { open: false } };
+    case 'openCompareDrawer':
+      return { ...state, compareSet: action.set };
+    case 'closeCompareDrawer':
+      return { ...state, compareSet: undefined };
   }
 }
 

@@ -17,10 +17,12 @@ export default function GeneratedSetButtons({
   store,
   set,
   onLoadoutSet,
+  onCompareSet,
 }: {
   store: DimStore;
   set: ArmorSet;
   onLoadoutSet(loadout: Loadout): void;
+  onCompareSet(): void;
 }) {
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
@@ -35,6 +37,9 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
+      <button type="button" className="dim-button" onClick={onCompareSet}>
+        Compare Loadout
+      </button>
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>

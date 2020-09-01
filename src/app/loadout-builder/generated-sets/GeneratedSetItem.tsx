@@ -1,20 +1,26 @@
 import React, { useMemo, Dispatch } from 'react';
-import { DimItem } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, LockedArmor2Mod, StatTypes } from '../types';
+import {
+  LockedItemType,
+  LockedArmor2Mod,
+  StatTypes,
+  ModPickerCategories,
+  ModPickerCategory,
+} from '../types';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
-import { lockedItemsEqual } from '../utils';
+import { lockedItemsEqual, armor2ModPlugCategoriesTitles } from '../utils';
 import { generateMixesFromPerks } from '../utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { matchLockedItem } from '../preProcessFilter';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import GeneratedSetSockets from './GeneratedSetSockets';
+import Sockets from '../Sockets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -95,6 +101,22 @@ export default function GeneratedSetItem({
     }
   }
 
+  const onSocketClick = (
+    plugDef: PluggableInventoryItemDefinition,
+    category?: ModPickerCategory,
+    season?: number
+  ) => {
+    if (category) {
+      const initialQuery =
+        category === ModPickerCategories.seasonal
+          ? season?.toString()
+          : t(armor2ModPlugCategoriesTitles[category]);
+      lbDispatch({ type: 'openModPicker', initialQuery });
+    } else {
+      lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
+    }
+  };
+
   return (
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
@@ -130,12 +152,7 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          <GeneratedSetSockets
-            item={item}
-            lockedMods={lockedMods}
-            defs={defs}
-            lbDispatch={lbDispatch}
-          />
+          <Sockets item={item} lockedMods={lockedMods} defs={defs} onSocketClick={onSocketClick} />
         </div>
       )}
     </div>

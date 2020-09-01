@@ -9,6 +9,7 @@ import { armorStats } from 'app/inventory/store/stats';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { emptyArray } from 'app/utils/empty';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -183,4 +184,52 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     amount: item.amount,
     equipped,
   };
+}
+
+/**
+ * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
+ * are returned as warnitems.
+ */
+export function getItemsFromLoadoutItems(
+  loadoutItems: LoadoutItem[] | undefined,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  stores: DimStore[]
+): [DimItem[], DimItem[]] {
+  if (!loadoutItems) {
+    return [emptyArray(), emptyArray()];
+  }
+
+  const findItem = (loadoutItem: LoadoutItem) => {
+    for (const store of stores) {
+      for (const item of store.items) {
+        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
+          return item;
+        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+          return item;
+        }
+      }
+    }
+    return undefined;
+  };
+
+  const items: DimItem[] = [];
+  const warnitems: DimItem[] = [];
+  for (const loadoutItem of loadoutItems) {
+    const item = findItem(loadoutItem);
+    if (item) {
+      items.push(item);
+    } else {
+      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
+      if (itemDef) {
+        // TODO: makeFakeItem
+        warnitems.push({
+          ...loadoutItem,
+          icon: itemDef.displayProperties?.icon || itemDef.icon,
+          name: itemDef.displayProperties?.name || itemDef.itemName,
+        } as DimItem);
+      }
+    }
+  }
+
+  return [items, warnitems];
 }

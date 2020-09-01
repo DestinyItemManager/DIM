@@ -4,7 +4,7 @@ import { getModCostInfo } from 'app/collections/Mod';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import clsx from 'clsx';
-import styles from './GeneratedSetMod.m.scss';
+import styles from './Mod.m.scss';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 interface Props {

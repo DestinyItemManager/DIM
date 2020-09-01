@@ -32,6 +32,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ModPicker from './filter/ModPicker';
 import ReactDOM from 'react-dom';
 import PerkPicker from './filter/PerkPicker';
+import CompareDrawer from './compare-loadout/CompareDrawer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -131,6 +132,7 @@ function LoadoutBuilder({
       statFilters,
       modPicker,
       perkPicker,
+      compareSet,
     },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
@@ -285,6 +287,19 @@ function LoadoutBuilder({
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
+            />,
+            document.body
+          )}
+        {compareSet &&
+          ReactDOM.createPortal(
+            <CompareDrawer
+              set={compareSet}
+              lockedModMap={lockedArmor2Mods}
+              defs={defs}
+              classType={selectedStore.classType}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
           )}
