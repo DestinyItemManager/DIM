@@ -18,8 +18,6 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
 import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
-import StoresLoader from 'app/dim-ui/StoresLoader';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -65,7 +63,6 @@ interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
   profileError?: DimError;
-  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -77,7 +74,6 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
         account.destinyVersion === props.destinyVersion
     ),
     profileError: state.inventory.profileError,
-    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -86,7 +82,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileError }: Props) {
+function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -170,11 +166,11 @@ function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileEr
   }
 
   return (
-    <StoresLoader account={account}>
+    <>
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
-            <Inventory account={account} isPhonePortrait={isPhonePortrait} />
+            <Inventory account={account} />
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/progress`} exact>
@@ -183,7 +179,7 @@ function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileEr
           )}
           {account.destinyVersion === 2 && (
             <Route path={`${path}/collections`} exact>
-              <Collections />
+              <Collections account={account} />
             </Route>
           )}
           <Route path={`${path}/optimizer`} exact>
@@ -194,7 +190,7 @@ function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileEr
             )}
           </Route>
           <Route path={`${path}/organizer`} exact>
-            <Organizer />
+            <Organizer account={account} />
           </Route>
           {account.destinyVersion === 2 && (
             <Route
@@ -234,7 +230,7 @@ function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileEr
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
-    </StoresLoader>
+    </>
   );
 }
 
