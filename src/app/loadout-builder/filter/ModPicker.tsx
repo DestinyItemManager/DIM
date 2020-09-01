@@ -1,12 +1,4 @@
-import React, {
-  Dispatch,
-  useState,
-  useRef,
-  useLayoutEffect,
-  useCallback,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { Dispatch, useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -177,17 +169,9 @@ function ModPicker({
   lbDispatch,
   onClose,
 }: Props) {
-  const [height, setHeight] = useState<number | undefined>(undefined);
   const [query, setQuery] = useState(initialQuery || '');
   const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
-  const itemContainer = useRef<HTMLDivElement | null>(null);
-
-  useLayoutEffect(() => {
-    if (itemContainer.current) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [itemContainer]);
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {
@@ -310,22 +294,20 @@ function ModPicker({
       footer={footer}
       sheetClassName="item-picker"
     >
-      <div ref={itemContainer} style={{ height }}>
-        {Object.values(ModPickerCategories).map((category) => (
-          <ModPickerSection
-            key={category}
-            mods={modsByCategory[category]}
-            defs={defs}
-            locked={lockedArmor2ModsInternal[category]}
-            title={t(armor2ModPlugCategoriesTitles[category])}
-            category={category}
-            maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
-            energyMustMatch={!isGeneralOrSeasonal(category)}
-            onModSelected={onModSelected}
-            onModRemoved={onModRemoved}
-          />
-        ))}
-      </div>
+      {Object.values(ModPickerCategories).map((category) => (
+        <ModPickerSection
+          key={category}
+          mods={modsByCategory[category]}
+          defs={defs}
+          locked={lockedArmor2ModsInternal[category]}
+          title={t(armor2ModPlugCategoriesTitles[category])}
+          category={category}
+          maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
+          energyMustMatch={!isGeneralOrSeasonal(category)}
+          onModSelected={onModSelected}
+          onModRemoved={onModRemoved}
+        />
+      ))}
     </Sheet>
   );
 }

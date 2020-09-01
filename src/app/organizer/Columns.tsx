@@ -50,7 +50,6 @@ import styles from './ItemTable.m.scss';
 import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
 import { t } from 'app/i18next-t';
 import { percent, getColor } from 'app/shell/filters';
-import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -246,7 +245,6 @@ export function getColumns(
                 powerCap: value,
                 finalSeason: getItemPowerCapFinalSeason(item),
               })}
-              <PowerCapDisclaimer item={item} />
             </>
           ),
         defaultSort: SortDirection.DESC,

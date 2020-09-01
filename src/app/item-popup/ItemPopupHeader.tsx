@@ -16,7 +16,6 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 
@@ -116,7 +115,6 @@ export default function ItemPopupHeader({
       {powerCapString && (
         <div className="item-subtitle">
           <div>{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
-          <PowerCapDisclaimer item={item} />
         </div>
       )}
       {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}

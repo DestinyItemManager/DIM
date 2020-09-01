@@ -16,9 +16,10 @@ import MobileInspect from 'app/mobile-inspect/MobileInspect';
 
 interface Props {
   account: DestinyAccount;
+  isPhonePortrait: boolean;
 }
 
-export default function Inventory({ account }: Props) {
+export default function Inventory({ account, isPhonePortrait }: Props) {
   return (
     <ErrorBoundary name="Inventory">
       <Stores />
@@ -28,7 +29,7 @@ export default function Inventory({ account }: Props) {
       <DragPerformanceFix />
       {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
       {account.destinyVersion === 2 && <GearPower />}
-      <MobileInspect />
+      {$featureFlags.mobileInspect && isPhonePortrait && <MobileInspect />}
       <DragGhostItem />
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ClearNewItems account={account} />

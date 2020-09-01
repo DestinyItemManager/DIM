@@ -68,7 +68,8 @@
       flex-direction: row;
       justify-items: left;
       align-items: center;
-      &:first-child {
+      &.powerFormula {
+        margin-bottom: 3px;
         img {
           opacity: 0.6;
           height: 17px;
@@ -101,7 +102,6 @@
         }
       }
       &:nth-child(n + 2) {
-        margin-top: 3px;
         justify-content: space-between;
       }
     }

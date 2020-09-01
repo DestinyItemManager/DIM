@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
 import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
-import { stringify } from 'simple-query-string';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { delay } from 'app/utils/util';
@@ -95,7 +94,11 @@ export async function httpAdapter(
 export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Request {
   let url = config.url;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
+    for (const key in config.params) {
+      typeof config.params[key] === 'undefined' && delete config.params[key];
+    }
+    url = `${url}?${new URLSearchParams(config.params).toString()}`;
   }
 
   return new Request(url, {

@@ -10,10 +10,6 @@ import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ErrorPanel from './ErrorPanel';
-import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { getToken } from 'app/bungie-api/oauth-tokens';
-import { AppIcon, banIcon } from './icons';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { accountsSelector, accountsLoadedSelector } from 'app/accounts/selectors';
@@ -23,6 +19,7 @@ import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import StoresLoader from 'app/dim-ui/StoresLoader';
+import { isPhonePortraitSelector } from 'app/inventory/selectors';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(() =>
@@ -68,6 +65,7 @@ interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
   profileError?: DimError;
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -79,6 +77,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
         account.destinyVersion === props.destinyVersion
     ),
     profileError: state.inventory.profileError,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -87,7 +86,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
+function Destiny({ accountsLoaded, account, isPhonePortrait, dispatch, profileError }: Props) {
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -154,31 +153,18 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   if (profileError) {
     const isManifestError = profileError.name === 'ManifestError';
-    const token = getToken()!;
     return (
       <div className="dim-page">
         <ErrorPanel
           title={
-            isManifestError ? t('Accounts.ErrorLoadManifest') : t('Accounts.ErrorLoadInventory')
+            isManifestError
+              ? t('Accounts.ErrorLoadManifest')
+              : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
           showTwitters={true}
           showReload={true}
-        >
-          {!isManifestError &&
-            account.destinyVersion === 1 &&
-            profileError.code === PlatformErrorCodes.DestinyUnexpectedError && (
-              <p>
-                <ExternalLink
-                  className="dim-button"
-                  href={`https://www.bungie.net/en/Profile/Settings/254/${token.bungieMembershipId}?category=Accounts`}
-                >
-                  <AppIcon icon={banIcon} /> {t('Accounts.UnlinkTwitchButton')}
-                </ExternalLink>{' '}
-                <b>{t('Accounts.UnlinkTwitch')}</b>
-              </p>
-            )}
-        </ErrorPanel>
+        />
       </div>
     );
   }
@@ -188,7 +174,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
-            <Inventory account={account} />
+            <Inventory account={account} isPhonePortrait={isPhonePortrait} />
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/progress`} exact>
