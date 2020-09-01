@@ -39,20 +39,29 @@ export const storesLoadedSelector = (state: RootState) => storesSelector(state).
 /** The current (last played) character */
 export const currentStoreSelector = (state: RootState) => getCurrentStore(storesSelector(state));
 
+/** The actual raw profile response from the Bungie.net profile API */
+export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
+
 /** A set containing all the hashes of owned items. */
 export const ownedItemsSelector = () =>
-  createSelector(storesSelector, (stores) => {
+  createSelector(profileResponseSelector, storesSelector, (profileResponse, stores) => {
     const ownedItemHashes = new Set<number>();
     for (const store of stores) {
       for (const item of store.items) {
         ownedItemHashes.add(item.hash);
       }
     }
+    if (profileResponse?.profilePlugSets?.data) {
+      for (const plugSet of Object.values(profileResponse.profilePlugSets.data.plugs)) {
+        for (const plug of plugSet) {
+          if (plug.canInsert) {
+            ownedItemHashes.add(plug.plugItemHash);
+          }
+        }
+      }
+    }
     return ownedItemHashes;
   });
-
-/** The actual raw profile response from the Bungie.net profile API */
-export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>

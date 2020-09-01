@@ -50,7 +50,7 @@ export default function Collectible({
       item={item}
       owned={owned}
       unavailable={!acquired}
-      extraData={{ collectible: collectibleDef, owned, acquired }}
+      extraData={{ owned, acquired }}
     />
   );
 }
