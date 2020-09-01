@@ -293,6 +293,7 @@ function ModPicker({
       }
       footer={footer}
       sheetClassName="item-picker"
+      freezeInitialHeight={true}
     >
       {Object.values(ModPickerCategories).map((category) => (
         <ModPickerSection
