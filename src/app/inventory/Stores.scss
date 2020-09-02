@@ -68,6 +68,9 @@
     .phone-portrait & {
       background-color: transparent;
     }
+    .gradientBackground & {
+      background-color: transparent;
+    }
   }
 
   > div {
@@ -212,6 +215,12 @@
         margin: 0 5px;
       }
     }
+  }
+  .gradientBackground & {
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
   }
 }
 

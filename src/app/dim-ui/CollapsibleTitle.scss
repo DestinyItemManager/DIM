@@ -38,6 +38,14 @@
     color: #ccc;
     background-color: black;
   }
+
+  .gradientBackground & {
+    background-color: rgba(0, 0, 0, 0.2);
+    &:hover,
+    &.collapsed {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
 }
 
 .collapse-icon {

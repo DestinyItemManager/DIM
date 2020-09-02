@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import clsx from 'clsx';
 import { useDrop } from 'react-dnd';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import styles from './ItemActionButton.m.scss';
@@ -35,13 +34,13 @@ export default function ItemActionButton({
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <PressTip.Control tooltip={title} triggerRef={ref} open={hovering}>
+    <PressTip.Control tooltip={title} triggerRef={ref} open={hovering} className={styles.button}>
       <div
         ref={drop}
-        className={clsx(styles.button, className)}
         title={title}
         aria-label={title}
         onClick={onClick}
+        className={className}
         style={icon ? { backgroundImage: `url("${icon}")` } : undefined}
       >
         <span>{label}</span>

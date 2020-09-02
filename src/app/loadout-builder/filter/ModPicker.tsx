@@ -27,7 +27,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import ModPickerHeader from './ModPickerHeader';
 import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { SearchFilterRef } from 'app/search/SearchBar';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { t } from 'app/i18next-t';
@@ -293,6 +293,7 @@ function ModPicker({
       }
       footer={footer}
       sheetClassName="item-picker"
+      freezeInitialHeight={true}
     >
       {Object.values(ModPickerCategories).map((category) => (
         <ModPickerSection
