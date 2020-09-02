@@ -4979,11 +4979,6 @@ eventemitter2@~0.4.13:
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-0.4.14.tgz#8f61b75cde012b2e9eb284d4545583b5643b61ab"
   integrity sha1-j2G3XN4BKy6esoTUVFWDtWQ7Yas=
 
-eventemitter3@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
-  integrity sha1-teEHm1n7XhuidxwKmTvgYKWMmbo=
-
 eventemitter3@^4.0.0:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.4.tgz#b5463ace635a083d018bdc7c917b4c5f10a85384"
@@ -11850,20 +11845,6 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-textarea-caret@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/textarea-caret/-/textarea-caret-3.1.0.tgz#5d5a35bb035fd06b2ff0e25d5359e97f2655087f"
-  integrity sha512-cXAvzO9pP5CGa6NKx0WYHl+8CHKZs8byMkt3PCJBCmq2a34YA9pO1NrQET5pzeqnBjBdToF5No4rrmkDUgQC2Q==
-
-textcomplete@^0.18.0:
-  version "0.18.2"
-  resolved "https://registry.yarnpkg.com/textcomplete/-/textcomplete-0.18.2.tgz#de0d806567102f7e32daffcbcc3db05af1515eb5"
-  integrity sha512-Z7RocuECp4S/Dld2swLRdXPYqCCMZvKmwrZHp8MQA4UJHX171/MjLeAj0uENEJPpa8JOtU01PK0iuVQUoFjSfg==
-  dependencies:
-    eventemitter3 "^2.0.3"
-    textarea-caret "^3.0.1"
-    undate "^0.2.3"
-
 throat@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-5.0.0.tgz#c5199235803aad18754a667d659b5e72ce16764b"
@@ -12193,11 +12174,6 @@ unc-path-regex@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha1-5z3T17DXxe2G+6xrCufYxqadUPo=
-
-undate@^0.2.3:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/undate/-/undate-0.2.4.tgz#ccb2a8cf38edc035d1006fcb2909c4c6024a8400"
-  integrity sha512-k1WTRVhI076HYqP6e3pZPzS7K2xNAcuhCcWOPjHmR8SwU3byyKYvyNZ4XTEAd7Ofe40+wrEjNq6WmmO8WoUVNg==
 
 underscore.string@~3.3.5:
   version "3.3.5"

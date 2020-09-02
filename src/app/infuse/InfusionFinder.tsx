@@ -15,7 +15,6 @@ import { newLoadout, convertToLoadoutItem } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import SearchFilterInput from '../search/SearchFilterInput';
 import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
@@ -275,19 +274,11 @@ function InfusionFinder({
           </div>
         </div>
         <div className="infuseSearch">
-          {$featureFlags.newSearch ? (
-            <SearchBar
-              onQueryChanged={onQueryChanged}
-              placeholder={t('Infusion.Filter')}
-              autoFocus={autoFocus}
-            />
-          ) : (
-            <SearchFilterInput
-              onQueryChanged={onQueryChanged}
-              placeholder={t('Infusion.Filter')}
-              autoFocus={autoFocus}
-            />
-          )}
+          <SearchBar
+            onQueryChanged={onQueryChanged}
+            placeholder={t('Infusion.Filter')}
+            autoFocus={autoFocus}
+          />
         </div>
       </div>
     </div>
