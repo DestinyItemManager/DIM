@@ -64,7 +64,7 @@ export interface DimPresentationNodeSearchResult {
 /** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
 export function toPresentationNodeTree(
   defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  buckets: InventoryBuckets | undefined,
   profileResponse: DestinyProfileResponse,
   node: number
 ): DimPresentationNode | null {
@@ -72,7 +72,7 @@ export function toPresentationNodeTree(
   if (presentationNodeDef.redacted) {
     return null;
   }
-  if (presentationNodeDef.children.collectibles?.length) {
+  if (buckets && presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
       defs,
       buckets,

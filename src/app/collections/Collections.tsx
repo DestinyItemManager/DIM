@@ -80,6 +80,8 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
   const badgesRootNodeHash =
     profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
+  const collectionsRootHash =
+    profileResponse.profileCollectibles.data?.collectionCategoriesRootNodeHash;
 
   return (
     <div className="collections-page d2-vendors dim-page">
@@ -87,15 +89,17 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
         <Catalysts defs={defs} profileResponse={profileResponse} />
       </ErrorBoundary>
       <ErrorBoundary name="Collections">
-        <PresentationNodeRoot
-          presentationNodeHash={3790247699}
-          defs={defs}
-          profileResponse={profileResponse}
-          buckets={buckets}
-          ownedItemHashes={ownedItemHashes}
-          openedPresentationHash={presentationNodeHash}
-          showPlugSets={true}
-        />
+        {collectionsRootHash && (
+          <PresentationNodeRoot
+            presentationNodeHash={collectionsRootHash}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+            showPlugSets={true}
+          />
+        )}
         {badgesRootNodeHash && (
           <PresentationNodeRoot
             presentationNodeHash={badgesRootNodeHash}
