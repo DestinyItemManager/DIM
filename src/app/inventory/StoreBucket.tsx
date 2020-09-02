@@ -73,7 +73,7 @@ function StoreBucket({
 }: Props) {
   const pickEquipItem = useCallback(async () => {
     try {
-      const { item, equip } = await showItemPicker({
+      const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
           item.bucket.hash === bucket.hash && item.canBeEquippedBy(store),
         prompt: t('MovePopup.PullItem', {
@@ -82,7 +82,7 @@ function StoreBucket({
         }),
       });
 
-      moveItemTo(item, store, equip, item.amount);
+      moveItemTo(item, store, false, item.amount);
     } catch (e) {}
   }, [bucket.hash, bucket.name, store]);
 

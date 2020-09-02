@@ -1,5 +1,4 @@
 import React from 'react';
-import { parse } from 'simple-query-string';
 import { registerApp } from 'app/dim-api/register-app';
 
 interface State {
@@ -13,14 +12,18 @@ interface State {
 export default class Developer extends React.Component<{}, State> {
   constructor(props) {
     super(props);
-    const urlParams = parse(window.location.href);
+    // we ask typescript to trust that we won't do array values as URL params
+    const urlParams = new URLSearchParams(window.location.search);
     this.state = {
-      apiKey: localStorage.getItem('apiKey') || urlParams.apiKey || undefined,
-      clientId: localStorage.getItem('oauthClientId') || urlParams.oauthClientId || undefined,
+      apiKey: localStorage.getItem('apiKey') || urlParams.get('apiKey') || undefined,
+      clientId:
+        localStorage.getItem('oauthClientId') || urlParams.get('oauthClientId') || undefined,
       clientSecret:
-        localStorage.getItem('oauthClientSecret') || urlParams.oauthClientSecret || undefined,
-      dimApiKey: localStorage.getItem('dimApiKey') || urlParams.dimApiKey || undefined,
-      dimAppName: localStorage.getItem('dimAppName') || urlParams.dimAppName || undefined,
+        localStorage.getItem('oauthClientSecret') ||
+        urlParams.get('oauthClientSecret') ||
+        undefined,
+      dimApiKey: localStorage.getItem('dimApiKey') || urlParams.get('dimApiKey') || undefined,
+      dimAppName: localStorage.getItem('dimAppName') || urlParams.get('dimAppName') || undefined,
     };
   }
 

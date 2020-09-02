@@ -28,7 +28,17 @@ export default function CharacterTile({ store }: { store: DimStore }) {
 
   return (
     <div className="character-tile">
-      <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
+      <div
+        className="background"
+        style={{
+          backgroundImage: `url("${store.background}")`,
+          backgroundColor: store.isDestiny2()
+            ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
+                store.color.blue
+              )}`
+            : 'black',
+        }}
+      />
       <CharacterEmblem store={store} />
       <div className="character-text">
         <div className="top">

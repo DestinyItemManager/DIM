@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
 import { StatHashes } from 'data/d2/generated-enums';
 
 export default function CompareStat({
@@ -51,7 +50,6 @@ export default function CompareStat({
           Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
             <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>
           )}
-        {stat.id === 'PowerCap' && <PowerCapDisclaimer item={item} />}
       </span>
     </div>
   );

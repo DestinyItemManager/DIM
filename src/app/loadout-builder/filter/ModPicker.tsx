@@ -1,12 +1,4 @@
-import React, {
-  Dispatch,
-  useState,
-  useRef,
-  useLayoutEffect,
-  useCallback,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { Dispatch, useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -19,7 +11,7 @@ import {
   isModPickerCategory,
 } from '../types';
 import _ from 'lodash';
-import { isLoadoutBuilderItem } from '../utils';
+import { isLoadoutBuilderItem, armor2ModPlugCategoriesTitles } from '../utils';
 import copy from 'fast-copy';
 import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
@@ -35,35 +27,26 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import ModPickerHeader from './ModPickerHeader';
 import ModPickerFooter from './ModPickerFooter';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { t } from 'app/i18next-t';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { SearchFilterRef } from 'app/search/SearchBar';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-
-const Armor2ModPlugCategoriesTitles = {
-  [ModPickerCategories.general]: t('LB.General'),
-  [ModPickerCategories.helmet]: t('LB.Helmet'),
-  [ModPickerCategories.gauntlets]: t('LB.Gauntlets'),
-  [ModPickerCategories.chest]: t('LB.Chest'),
-  [ModPickerCategories.leg]: t('LB.Legs'),
-  [ModPickerCategories.classitem]: t('LB.ClassItem'),
-  [ModPickerCategories.seasonal]: t('LB.Seasonal'),
-};
+import { t } from 'app/i18next-t';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((i) => i.plug.energyCost?.energyType),
-  compareBy((i) => i.plug.energyCost?.energyCost),
-  compareBy((i) => i.displayProperties.name)
+const sortMods = chainComparator<LockedArmor2Mod>(
+  compareBy((l) => (l.season ? -l.season : 0)),
+  compareBy((l) => l.mod.plug.energyCost?.energyType),
+  compareBy((l) => l.mod.plug.energyCost?.energyCost),
+  compareBy((l) => l.mod.displayProperties.name)
 );
 
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
+  initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -73,7 +56,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: PluggableInventoryItemDefinition[];
+  mods: LockedArmor2Mod[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -121,7 +104,7 @@ function mapStateToProps() {
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods
-      const allMods = Object.values(plugSets).flatMap((sets) => {
+      const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
         const unlockedPlugs: number[] = [];
 
         for (const plugSetHash of sets) {
@@ -133,14 +116,34 @@ function mapStateToProps() {
           }
         }
 
-        return unlockedPlugs
-          .map((i) => defs.InventoryItem.get(i))
-          .filter(isPluggableItem)
-          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
-          .sort(sortMods);
+        const transformedMods: LockedArmor2Mod[] = [];
+
+        for (const plug of unlockedPlugs) {
+          const def = defs.InventoryItem.get(plug);
+
+          if (
+            isPluggableItem(def) &&
+            isArmor2Mod(def) &&
+            def.plug.insertionMaterialRequirementHash !== 0
+          ) {
+            const metadata = getSpecialtySocketMetadataByPlugCategoryHash(
+              def.plug.plugCategoryHash
+            );
+            const category =
+              (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
+              (metadata && ModPickerCategories.seasonal) ||
+              undefined;
+
+            if (category) {
+              transformedMods.push({ mod: def, category, season: metadata?.season });
+            }
+          }
+        }
+
+        return transformedMods.sort(sortMods);
       });
 
-      return _.uniqBy(allMods, (mod) => mod.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.mod.hash);
     }
   );
 
@@ -160,22 +163,15 @@ function ModPicker({
   defs,
   mods,
   language,
-  onClose,
   isPhonePortrait,
   lockedArmor2Mods,
+  initialQuery,
   lbDispatch,
+  onClose,
 }: Props) {
-  const [height, setHeight] = useState<number | undefined>(undefined);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery || '');
   const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
-  const itemContainer = useRef<HTMLDivElement | null>(null);
-
-  useLayoutEffect(() => {
-    if (itemContainer.current) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [itemContainer]);
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {
@@ -230,7 +226,7 @@ function ModPicker({
 
   const order = Object.values(ModPickerCategories).map((category) => ({
     category,
-    translatedName: Armor2ModPlugCategoriesTitles[category],
+    translatedName: t(armor2ModPlugCategoriesTitles[category]),
   }));
 
   const queryFilteredMods = useMemo(() => {
@@ -241,8 +237,10 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.displayProperties.name) ||
-            regexp.test(mod.displayProperties.description)
+            regexp.test(mod.mod.displayProperties.name) ||
+            regexp.test(mod.mod.displayProperties.description) ||
+            (mod.season && regexp.test(mod.season.toString())) ||
+            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
         )
       : mods;
   }, [language, query, mods]);
@@ -259,14 +257,7 @@ function ModPicker({
     };
 
     for (const mod of queryFilteredMods) {
-      if (getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)) {
-        rtn.seasonal.push({ mod, category: 'seasonal' });
-      } else if (isModPickerCategory(mod.plug.plugCategoryHash)) {
-        rtn[mod.plug.plugCategoryHash].push({
-          mod,
-          category: mod.plug.plugCategoryHash,
-        });
-      }
+      rtn[mod.category].push(mod);
     }
 
     return rtn;
@@ -302,23 +293,22 @@ function ModPicker({
       }
       footer={footer}
       sheetClassName="item-picker"
+      freezeInitialHeight={true}
     >
-      <div ref={itemContainer} style={{ height }}>
-        {Object.values(ModPickerCategories).map((category) => (
-          <ModPickerSection
-            key={category}
-            mods={modsByCategory[category]}
-            defs={defs}
-            locked={lockedArmor2ModsInternal[category]}
-            title={Armor2ModPlugCategoriesTitles[category]}
-            category={category}
-            maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
-            energyMustMatch={!isGeneralOrSeasonal(category)}
-            onModSelected={onModSelected}
-            onModRemoved={onModRemoved}
-          />
-        ))}
-      </div>
+      {Object.values(ModPickerCategories).map((category) => (
+        <ModPickerSection
+          key={category}
+          mods={modsByCategory[category]}
+          defs={defs}
+          locked={lockedArmor2ModsInternal[category]}
+          title={t(armor2ModPlugCategoriesTitles[category])}
+          category={category}
+          maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
+          energyMustMatch={!isGeneralOrSeasonal(category)}
+          onModSelected={onModSelected}
+          onModRemoved={onModRemoved}
+        />
+      ))}
     </Sheet>
   );
 }

@@ -67,7 +67,6 @@ export default function GeneratedSetItem({
     try {
       const { item } = await showItemPicker({
         prompt: t('LoadoutBuilder.ChooseAlternate'),
-        hideStoreEquip: true,
         filterItems: (item: DimItem) => ids.has(item.id),
       });
 
@@ -131,7 +130,12 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          <GeneratedSetSockets item={item} lockedMods={lockedMods} defs={defs} />
+          <GeneratedSetSockets
+            item={item}
+            lockedMods={lockedMods}
+            defs={defs}
+            lbDispatch={lbDispatch}
+          />
         </div>
       )}
     </div>

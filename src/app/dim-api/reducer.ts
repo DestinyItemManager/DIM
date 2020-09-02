@@ -176,7 +176,10 @@ export const dimApi = (
             },
             updateQueue: newUpdateQueue,
             itemHashTags: action.payload.itemHashTags || initialState.itemHashTags,
-            searches: action.payload.searches || initialState.searches,
+            searches: {
+              ...state.searches,
+              ...action.payload.searches,
+            },
           }
         : {
             ...state,

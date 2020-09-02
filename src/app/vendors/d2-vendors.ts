@@ -187,7 +187,10 @@ export function getVendorItems(
   }
 }
 
-export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGroup[]) {
+export function filterVendorGroupsToUnacquired(
+  vendorGroups: readonly D2VendorGroup[],
+  ownedItemHashes: Set<number>
+) {
   return vendorGroups
     .map((group) => ({
       ...group,
@@ -197,8 +200,10 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
           items: vendor.items.filter(
             (item) =>
               item.item?.isDestiny2() &&
-              item.item.collectibleState !== null &&
-              item.item.collectibleState & DestinyCollectibleState.NotAcquired
+              (item.item.collectibleState !== null
+                ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
+                : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+                  !ownedItemHashes.has(item.item.hash))
           ),
         }))
         .filter((v) => v.items.length),

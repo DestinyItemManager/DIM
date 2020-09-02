@@ -1,16 +1,13 @@
-import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
-  const queryString = parse(window.location.href);
+  const queryParams = new URL(window.location.href).searchParams;
+  const code = queryParams.get('code');
+  const state = queryParams.get('state');
 
-  const code = queryString.code;
-  const state = queryString.state;
-  const authorized = code?.length > 0;
-
-  if (!authorized) {
+  if (!code?.length) {
     setError("We expected an authorization code parameter from Bungie.net, but didn't get one.");
     return;
   }

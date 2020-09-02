@@ -391,7 +391,7 @@ module.exports = (env) => {
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the Armor 2 Mod picker
-        '$featureFlags.armor2ModPicker': JSON.stringify(!env.release),
+        '$featureFlags.armor2ModPicker': JSON.stringify(true),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup
@@ -400,8 +400,10 @@ module.exports = (env) => {
         '$featureFlags.unstickyStats': JSON.stringify(!env.release),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
-        // New search bar
-        '$featureFlags.newSearch': JSON.stringify(!env.release),
+        // Rearrange buckets in categories
+        '$featureFlags.newArrangement': JSON.stringify(!env.release),
+        // New background design
+        '$featureFlags.gradientBackground': JSON.stringify(env.dev),
       }),
 
       new WorkerPlugin({

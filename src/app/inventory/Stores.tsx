@@ -124,7 +124,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             {$featureFlags.unstickyStats && (
               <StoreStats
                 store={selectedStore}
-                style={storeBackgroundColor(selectedStore, 0, true)}
+                style={{ ...storeBackgroundColor(selectedStore, 0, true), paddingBottom: 8 }}
               />
             )}
             <StoresInventory

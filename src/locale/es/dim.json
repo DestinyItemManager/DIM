@@ -373,8 +373,10 @@
     "BungieNetAlert": "Alerta de Bungie",
     "Clear": "Limpiar filtro de búsqueda",
     "CompareMatching": "Comparar objetos filtrados",
+    "DeleteSearch": "Borrar Búsqueda",
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
+    "FilterHelpMenuItem": "Ayuda de Filtros...",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
     "Filters": "Filtros",
@@ -385,6 +387,7 @@
     "Refresh": "Actualizar datos de Destiny",
     "ReloadApp": "Recargar App",
     "ReportBug": "Informar de un Error",
+    "SaveSearch": "Guardar Búsqueda",
     "Shop": "Tienda",
     "UpgradeDIM": "Actualizar DIM",
     "WhatsNew": "¿Qué hay de nuevo?"
@@ -400,12 +403,14 @@
     "ClearDialog": "Descartar diálogo",
     "ClearNewItems": "Despejar objetos nuevos",
     "ClearNewItemsTitle": "Atajo de teclado: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
     "RefreshInventory": "Actualizar inventario",
     "ShowHotkeys": "Mostrar atajos del teclado",
     "StartSearch": "Empezar una búsqueda",
     "StartSearchClear": "Comenzar nueva búsqueda",
+    "Tab": "TABULADOR",
     "ToggleDetails": "Mostrar detalles completos de objeto"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Selecciona elemento o ventaja",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFound": "No se encontraron equipaciones. Intenta expandir tus criterios de filtrado.",
+    "NoBuildsFoundExoticsAndMods": "Tienes un exótico y cinco modificadores de temporada bloqueados.",
+    "NoBuildsFoundModsAreTooExpensive": "Los requisitos de energía de los modificadores seleccionados son muy altos.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "Te falta un objeto para mantener uno de los modificadores de temporada seleccionados.",
+    "NoBuildsFoundWithReasons": "No se encontraron equipaciones. Causes comunes de esto incluyen:",
     "NumCombinations": "{{count, number}} combinación",
     "NumCombinations_plural": "{{count, number}} combinaciones",
     "OptimizerExplanation": "Selecciona ventajas, filtra y reordena estadísticas, y bloquea objetos para reducir tus equipaciones potenciales.",
@@ -680,10 +689,13 @@
     "AddNote": "Añadir una nota",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
+    "Details": "Emergente",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Poner",
+    "EquipWithName": "Equipar en {{character}}",
     "Expand": "Expandir detalles del objeto",
     "Infuse": "Infundir",
+    "ItemDetailSheet": "Abrir detalles del objeto",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
       "Unlock": "Desbloquear {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Recompensas:",
     "Split": "Partir",
     "Store": "Meter",
+    "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}"
@@ -941,7 +954,6 @@
     "Keep": "Guardar",
     "LockAll": "Bloquear objetos",
     "TagItem": "Etiqueta de objeto",
-    "TagItems": "Etiquetar objetos",
     "UnlockAll": "Desbloquear objetos"
   },
   "Triumphs": {
@@ -1026,7 +1038,7 @@
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count, number}} tiradas.{{titleAndDescription}}",
-    "InvalidExternalSource": "Por favor, introduzca una URL válida para su lista de deseos externa. La URL debe empezar con algo de lo siguiente:",
+    "InvalidExternalSource": "Por favor, introduzca una URL válida para su lista de deseos externa. La URL debe empezar con algunos de lo siguientes:",
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",

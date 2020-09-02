@@ -373,8 +373,10 @@
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
     "CompareMatching": "Comparar itens filtrados",
+    "DeleteSearch": "Apagar pesquisa",
     "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
+    "FilterHelpMenuItem": "Ajuda sobre filtros...",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
@@ -385,6 +387,7 @@
     "Refresh": "Atualizar dados do Destiny",
     "ReloadApp": "Recarregar o App",
     "ReportBug": "Relatar Falhas",
+    "SaveSearch": "Salvar pesquisa",
     "Shop": "Loja",
     "UpgradeDIM": "Atualize o DIM",
     "WhatsNew": "Novidades"
@@ -400,12 +403,14 @@
     "ClearDialog": "Dispensar diálogo",
     "ClearNewItems": "Limpar novos itens",
     "ClearNewItemsTitle": "Tecla de atalho: X",
+    "Enter": "ENTER",
     "MarkItemAs": "Marcar item como '{{tag}}'",
     "Menu": "Alternar menu",
     "RefreshInventory": "Atualizar inventário",
     "ShowHotkeys": "Exibir teclas de atalho",
     "StartSearch": "Iniciar uma busca",
     "StartSearchClear": "Iniciar uma busca limpa",
+    "Tab": "TAB",
     "ToggleDetails": "Mostrar todos os detalhes do item"
   },
   "Infusion": {
@@ -554,6 +559,10 @@
     "LockPerk": "Selecione uma energia ou perk",
     "NewEmptyLoadout": "Criar set vazio",
     "NoBuildsFound": "Nenhuma construção compatível. Tente flexibilizar seu critério de filtragem.",
+    "NoBuildsFoundExoticsAndMods": "Você tem um exótico e cinco mods sazonais bloqueados.",
+    "NoBuildsFoundModsAreTooExpensive": "As exigências de energia dos mods selecionados são altas demais.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "Falta um item para guardar um dos mods sazonais selecionados.",
+    "NoBuildsFoundWithReasons": "Nenhuma construção compatível. As causas mais comuns podem incluir:",
     "NumCombinations": "{{count, number}} combinação",
     "NumCombinations_plural": "{{count, number}} combinações",
     "OptimizerExplanation": "Selecione perks, filtre, reorganize atributos e trave itens para estreitar o número de sets em potencial.",
@@ -680,10 +689,13 @@
     "AddNote": "Adicionar anotação",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
+    "Details": "Popup",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
+    "EquipWithName": "Equipar em {{character}}",
     "Expand": "Expandir detalhes do item",
     "Infuse": "Infunda",
+    "ItemDetailSheet": "Abrir detalhes do item",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
       "Unlock": "Destravar {{itemType}}"
@@ -701,6 +713,7 @@
     "Rewards": "Recompensas:",
     "Split": "Dividir",
     "Store": "Mover",
+    "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -941,7 +954,6 @@
     "Keep": "Manter",
     "LockAll": "Travar Itens",
     "TagItem": "Marcar item",
-    "TagItems": "Marcar itens",
     "UnlockAll": "Destravar itens"
   },
   "Triumphs": {

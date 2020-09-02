@@ -7,7 +7,7 @@ import { DimStore } from '../../inventory/store-types';
 import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
-import CharacterStats from '../../store-stats/CharacterStats';
+import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
@@ -49,7 +49,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
             </>
           )}{' '}
           <div className="dim-stats">
-            <CharacterStats destinyVersion={1} stats={setType.tiers[activesets].stats} />
+            <D1CharacterStats stats={setType.tiers[activesets].stats} />
           </div>
         </div>
         <div className="loadout-builder-section">

@@ -23,7 +23,6 @@ import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useLocation } from 'react-router';
-import { parse } from 'simple-query-string';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';
@@ -78,12 +77,13 @@ function SingleVendor({
 
   // TODO: get for all characters, or let people select a character? This is a hack
   // we at least need to display that character!
-  let characterId = parse(search).characterId as string;
+  const characterId =
+    (search && new URLSearchParams(search).get('characterId')) ||
+    (stores.length && getCurrentStore(stores)?.id);
   if (!characterId) {
-    if (stores.length) {
-      characterId = getCurrentStore(stores)!.id;
-    }
+    throw new Error('no characters chosen or found to use for vendor API call');
   }
+
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
 
