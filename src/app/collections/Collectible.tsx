@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function Collectible({ collectible, owned }: Props) {
-  const { state, collectibleDef, item } = collectible;
+  const { state, item } = collectible;
   const acquired = !(state & DestinyCollectibleState.NotAcquired);
 
   return (

@@ -17,7 +17,6 @@ import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
 import Metrics from './Metrics';
-import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 import { DimPresentationNode } from './presentation-nodes';
 
 /** root PresentationNodes to lock in expanded state */
@@ -34,6 +33,8 @@ interface ProvidedProps {
   ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
+  isTriumphsRootNode?: boolean;
+  isInTriumphs?: boolean;
   onNodePathSelected(nodePath: number[]): void;
 }
 
@@ -64,6 +65,8 @@ function PresentationNode({
   completedRecordsHidden,
   redactedRecordsRevealed,
   onNodePathSelected,
+  isTriumphsRootNode,
+  isInTriumphs,
 }: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
@@ -114,13 +117,10 @@ function PresentationNode({
     (p) => defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
-  const isTriumphsRootNode = presentationNodeHash === TRIUMPHS_ROOT_NODE;
-  const isInTriumphs = thisAndParents[0] !== TRIUMPHS_ROOT_NODE;
-
   // todo: export this hash/depth and clean up the boolean string
   const alwaysExpanded =
     // if we're not in triumphs
-    (isInTriumphs &&
+    (!isInTriumphs &&
       // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
       thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
     // or this is manually selected to be forced expanded
@@ -218,6 +218,7 @@ function PresentationNode({
             path={path}
             parents={thisAndParents}
             onNodePathSelected={onNodePathSelected}
+            isInTriumphs={isInTriumphs}
           />
         ))}
       {childrenExpanded && visible > 0 && (

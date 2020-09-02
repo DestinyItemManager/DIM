@@ -7,7 +7,6 @@ import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record from './Record';
 import { itemsForPlugSet } from './plugset-helpers';
-import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 import { toPresentationNodeTree, toRecord } from './presentation-nodes';
 
 interface Props {
@@ -17,6 +16,7 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   buckets?: InventoryBuckets;
   defs: D2ManifestDefinitions;
+  isTriumphs?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -33,6 +33,7 @@ export default function PresentationNodeRoot({
   profileResponse,
   ownedItemHashes,
   showPlugSets,
+  isTriumphs,
 }: Props) {
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -47,10 +48,6 @@ export default function PresentationNodeRoot({
       node = defs.PresentationNode.get(currentHash);
     }
     fullNodePath.unshift(presentationNodeHash);
-  }
-
-  if (!buckets) {
-    return null;
   }
 
   const nodeTree = toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash);
@@ -72,7 +69,7 @@ export default function PresentationNodeRoot({
 
   return (
     <>
-      {presentationNodeHash === TRIUMPHS_ROOT_NODE && trackedRecord && (
+      {isTriumphs && trackedRecord && (
         <div className="progress-for-character">
           <div className="records">
             <Record
@@ -92,6 +89,8 @@ export default function PresentationNodeRoot({
         path={fullNodePath}
         onNodePathSelected={setNodePath}
         parents={[]}
+        isTriumphsRootNode={isTriumphs}
+        isInTriumphs={isTriumphs}
       />
 
       {buckets &&

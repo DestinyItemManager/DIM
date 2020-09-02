@@ -31,7 +31,7 @@ import { useSubscription } from 'app/utils/hooks';
 import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import { RAID_NODE } from 'app/search/d2-known-values';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -121,8 +121,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     return null;
   }
 
-  const triumphTitle = defs.PresentationNode.get(TRIUMPHS_ROOT_NODE).displayProperties.name;
-  const sealTitle = defs.PresentationNode.get(SEALS_ROOT_NODE).displayProperties.name;
+  const recordsRootHash = profileInfo.profileRecords.data?.recordCategoriesRootNodeHash;
+  const sealsRootHash = profileInfo.profileRecords.data?.recordSealsRootNodeHash;
+  const triumphTitle =
+    recordsRootHash && defs.PresentationNode.get(recordsRootHash).displayProperties.name;
+  const sealTitle =
+    sealsRootHash && defs.PresentationNode.get(sealsRootHash).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
 
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
@@ -208,25 +212,30 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                 </CollapsibleTitle>
               </section>
 
-              <section id="triumphs">
-                <ErrorBoundary name="Triumphs">
-                  <PresentationNodeRoot
-                    presentationNodeHash={TRIUMPHS_ROOT_NODE}
-                    defs={defs}
-                    profileResponse={profileInfo}
-                  />
-                </ErrorBoundary>
-              </section>
+              {recordsRootHash && (
+                <section id="triumphs">
+                  <ErrorBoundary name="Triumphs">
+                    <PresentationNodeRoot
+                      presentationNodeHash={recordsRootHash}
+                      defs={defs}
+                      profileResponse={profileInfo}
+                      isTriumphs={true}
+                    />
+                  </ErrorBoundary>
+                </section>
+              )}
 
-              <section id="seals">
-                <ErrorBoundary name="Seals">
-                  <PresentationNodeRoot
-                    presentationNodeHash={SEALS_ROOT_NODE}
-                    defs={defs}
-                    profileResponse={profileInfo}
-                  />
-                </ErrorBoundary>
-              </section>
+              {sealsRootHash && (
+                <section id="seals">
+                  <ErrorBoundary name="Seals">
+                    <PresentationNodeRoot
+                      presentationNodeHash={sealsRootHash}
+                      defs={defs}
+                      profileResponse={profileInfo}
+                    />
+                  </ErrorBoundary>
+                </section>
+              )}
             </div>
           </Hammer>
         </PageWithMenu.Contents>
