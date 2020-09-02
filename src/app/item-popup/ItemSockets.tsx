@@ -95,7 +95,7 @@ function ItemSockets({
     plug: DimPlug
   ) => {
     // TODO: setSocketInMenu?
-    if (updateSocketComparePlug && plug.stats) {
+    if (updateSocketComparePlug) {
       updateSocketComparePlug({ item, categoryHash, socket, plug });
     }
   };

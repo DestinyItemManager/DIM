@@ -168,9 +168,7 @@ class Compare extends React.Component<Props, State> {
 
     const stats = this.getAllStatsSelector(this.state, this.props);
 
-    // TODO: Stash and create new branch
     // TODO: Should this go into its own module?
-    // TODO: ItemPopupContainer / ItemPopupBody needs this function too
     // TODO: Mobile view?
     const updateSocketComparePlug = ({
       item,
@@ -210,25 +208,35 @@ class Compare extends React.Component<Props, State> {
         itemCategorySocketsClone[socketIndex - 1].comparePlugged = plug;
 
         // Get stats affected by prevPlug and remove from stats
-        for (const statHash in prevPlug?.stats) {
-          const statIndex = itemStatsClone.findIndex(
-            (stat) => stat.statHash === parseInt(statHash)
-          );
-          itemStatsClone[statIndex].value =
-            itemStatsClone[statIndex].value - prevPlug?.stats[statHash];
+        if (prevPlug?.stats) {
+          for (const statHash in prevPlug?.stats) {
+            const statIndex = itemStatsClone.findIndex(
+              (stat) => stat.statHash === parseInt(statHash)
+            );
+            // Some statHashes are missing from codebase
+            // (e.g. 3291498656 on sidearm The Last Dance)
+            if (statIndex !== -1) {
+              itemStatsClone[statIndex].value =
+                itemStatsClone[statIndex].value - prevPlug?.stats[statHash];
+            }
+          }
         }
 
         // Get stats affected by new plug and add to stats
-        for (const statHash in plug.stats) {
-          const statIndex = itemStatsClone.findIndex(
-            (stat) => stat.statHash === parseInt(statHash)
-          );
-          itemStatsClone[statIndex].value = itemStatsClone[statIndex].value + plug.stats[statHash];
+        if (plug.stats) {
+          for (const statHash in plug.stats) {
+            const statIndex = itemStatsClone.findIndex(
+              (stat) => stat.statHash === parseInt(statHash)
+            );
+            if (statIndex !== -1) {
+              itemStatsClone[statIndex].value =
+                itemStatsClone[statIndex].value + plug.stats[statHash];
+            }
+          }
         }
 
         // Write new item data
         item.stats = itemStatsClone;
-        // item.sockets.allSockets = itemAllSocketsClone;
         item.sockets.categories[categoryIndex].sockets = itemCategorySocketsClone;
 
         // Set state object, replacing original item in array
