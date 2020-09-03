@@ -32,6 +32,9 @@ import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RAID_NODE } from 'app/search/d2-known-values';
+import { DimItem } from 'app/inventory/item-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { querySelector } from 'app/shell/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -43,6 +46,8 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
+  searchQuery?: string;
+  searchFilter?(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -54,13 +59,24 @@ function mapStateToProps(state: RootState): StoreProps {
     defs: state.manifest.d2Manifest,
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
+    searchQuery: querySelector(state),
+    searchFilter: searchFilterSelector(state),
   };
 }
 
 const refreshStores = () =>
   refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
 
-function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
+function Progress({
+  account,
+  defs,
+  stores,
+  isPhonePortrait,
+  buckets,
+  profileInfo,
+  searchQuery,
+  searchFilter,
+}: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -75,21 +91,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  // TODO: Searchable (item, description)
-  // TODO: triumph search?
   // TODO: track triumphs?
   // TODO: close / pinnacle triumphs?
-  // TODO: move vendor load into faction component?
-  // TODO: badge the corner of expired bounties (red background, clock)
-  // TODO: show rewards in item popup
-  // TODO: show "flavor text" in item popup (itemDef.displaySource)
-  // TODO: show expiration in item popup
-  // TODO: show tracked overlay
-  // TODO: do our own display, don't need the full inventory item right?
-  // TODO: break up into components!
-  // TODO: grid the triumphs
-  // TODO: show expiration
-  // TODO: separate milestones (daily, weekly, story?)
   // TODO: make milestones and pursuits look similar?
   // TODO: search/filter by activity
   // TODO: dropdowns for searches (reward, activity)
@@ -220,6 +223,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                       defs={defs}
                       profileResponse={profileInfo}
                       isTriumphs={true}
+                      searchQuery={searchQuery}
+                      searchFilter={searchFilter}
                     />
                   </ErrorBoundary>
                 </section>
@@ -232,6 +237,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                       presentationNodeHash={sealsRootHash}
                       defs={defs}
                       profileResponse={profileInfo}
+                      searchQuery={searchQuery}
+                      searchFilter={searchFilter}
                     />
                   </ErrorBoundary>
                 </section>

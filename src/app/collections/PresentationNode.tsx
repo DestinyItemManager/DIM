@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './PresentationNode.scss';
-import Collectible from './Collectible';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
-import Record from './Record';
 import clsx from 'clsx';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
@@ -16,8 +14,8 @@ import Checkbox from '../settings/Checkbox';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
-import Metrics from './Metrics';
 import { DimPresentationNode } from './presentation-nodes';
+import PresentationNodeLeaf from './PresentationNodeLeaf';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -222,35 +220,13 @@ function PresentationNode({
           />
         ))}
       {childrenExpanded && visible > 0 && (
-        <>
-          {node.collectibles && node.collectibles.length > 0 && (
-            <div className="collectibles">
-              {node.collectibles.map((collectible) => (
-                <Collectible
-                  key={collectible.collectibleDef.hash}
-                  collectible={collectible}
-                  owned={Boolean(ownedItemHashes?.has(collectible.collectibleDef.itemHash))}
-                />
-              ))}
-            </div>
-          )}
-          {node.records && node.records.length > 0 && (
-            <div className="records">
-              {node.records.map((record) => (
-                <Record
-                  key={record.recordDef.hash}
-                  record={record}
-                  defs={defs}
-                  completedRecordsHidden={completedRecordsHidden}
-                  redactedRecordsRevealed={redactedRecordsRevealed}
-                />
-              ))}
-            </div>
-          )}
-          {node.metrics && node.metrics.length > 0 && (
-            <Metrics metrics={node.metrics} defs={defs} />
-          )}
-        </>
+        <PresentationNodeLeaf
+          node={node}
+          defs={defs}
+          ownedItemHashes={ownedItemHashes}
+          completedRecordsHidden={completedRecordsHidden}
+          redactedRecordsRevealed={redactedRecordsRevealed}
+        />
       )}
     </div>
   );

@@ -12,6 +12,7 @@ import {
   DestinyPresentationNodeRecordChildEntry,
   DestinyRecordState,
   DestinyPresentationNodeMetricChildEntry,
+  DestinyDisplayPropertiesDefinition,
 } from 'bungie-api-ts/destiny2';
 import { DimItem } from 'app/inventory/item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -20,14 +21,17 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import _ from 'lodash';
 import { count } from 'app/utils/util';
 
-export interface DimPresentationNode {
+export interface DimPresentationNodeLeaf {
+  records?: DimRecord[];
+  collectibles?: DimCollectible[];
+  metrics?: DimMetric[];
+}
+
+export interface DimPresentationNode extends DimPresentationNodeLeaf {
   nodeDef: DestinyPresentationNodeDefinition;
   visible: number;
   acquired: number;
   childPresentationNodes?: DimPresentationNode[];
-  records?: DimRecord[];
-  collectibles?: DimCollectible[];
-  metrics?: DimMetric[];
 }
 
 export const enum TrackedRecordState {
@@ -53,12 +57,9 @@ export interface DimCollectible {
   item: DimItem;
 }
 
-export interface DimPresentationNodeSearchResult {
+export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf {
   /** The sequence of nodes from outside to inside ending in the leaf node that contains our matching records/collectibles/metrics */
   path: DimPresentationNode[];
-  records?: DimRecord[];
-  collectibles?: DimCollectible[];
-  metrics?: DimMetric[];
 }
 
 /** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
@@ -151,7 +152,7 @@ export function filterPresentationNodesToSearch(
   path: DimPresentationNode[]
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
-  if (node.nodeDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+  if (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) {
     // Return this whole node
     return [
       {
@@ -163,7 +164,7 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(c, searchQuery, filterItems)
+      filterPresentationNodesToSearch(c, searchQuery, filterItems, [...path, node])
     );
   }
 
@@ -178,25 +179,49 @@ export function filterPresentationNodesToSearch(
           },
         ]
       : [];
-
-    // filter out nothings?
   }
 
   if (node.records) {
-    return node.records.filter(
-      (r) =>
-        r.recordDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.recordDef.displayProperties.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const records = node.records.filter((r) =>
+      searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
     );
+
+    return records.length
+      ? [
+          {
+            path: [...path, node],
+            records,
+          },
+        ]
+      : [];
   }
 
   if (node.metrics) {
-    return node.metrics.filter(
-      (r) =>
-        r.metricDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.metricDef.displayProperties.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const metrics = node.metrics.filter((r) =>
+      searchDisplayProperties(r.metricDef.displayProperties, searchQuery)
     );
+
+    return metrics.length
+      ? [
+          {
+            path: [...path, node],
+            metrics,
+          },
+        ]
+      : [];
   }
+
+  return [];
+}
+
+function searchDisplayProperties(
+  displayProperties: DestinyDisplayPropertiesDefinition,
+  searchQuery: string
+) {
+  return (
+    displayProperties.name.toLowerCase().includes(searchQuery) ||
+    displayProperties.description.toLowerCase().includes(searchQuery)
+  );
 }
 
 function toCollectibles(

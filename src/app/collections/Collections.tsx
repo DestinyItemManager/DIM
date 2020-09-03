@@ -18,6 +18,9 @@ import PresentationNodeRoot from './PresentationNodeRoot';
 import { useSubscription } from 'app/utils/hooks';
 import { useParams } from 'react-router';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { DimItem } from 'app/inventory/item-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { querySelector } from 'app/shell/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -28,6 +31,8 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
+  searchQuery?: string;
+  searchFilter?(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -50,6 +55,8 @@ function mapStateToProps() {
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
     profileResponse: profileResponseSelector(state),
+    searchQuery: querySelector(state),
+    searchFilter: searchFilterSelector(state),
   });
 }
 
@@ -61,7 +68,15 @@ const refreshStores = () =>
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-function Collections({ account, buckets, ownedItemHashes, defs, profileResponse }: Props) {
+function Collections({
+  account,
+  buckets,
+  ownedItemHashes,
+  defs,
+  profileResponse,
+  searchQuery,
+  searchFilter,
+}: Props) {
   useEffect(() => {
     D2StoresService.getStoresStream(account);
   }, [account]);
@@ -85,9 +100,11 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
 
   return (
     <div className="collections-page d2-vendors dim-page">
-      <ErrorBoundary name="Catalysts">
-        <Catalysts defs={defs} profileResponse={profileResponse} />
-      </ErrorBoundary>
+      {!searchQuery && (
+        <ErrorBoundary name="Catalysts">
+          <Catalysts defs={defs} profileResponse={profileResponse} />
+        </ErrorBoundary>
+      )}
       <ErrorBoundary name="Collections">
         {collectionsRootHash && (
           <PresentationNodeRoot
@@ -98,6 +115,8 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
             ownedItemHashes={ownedItemHashes}
             openedPresentationHash={presentationNodeHash}
             showPlugSets={true}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
           />
         )}
         {badgesRootNodeHash && (
@@ -108,6 +127,8 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             openedPresentationHash={presentationNodeHash}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
           />
         )}
         {metricsRootNodeHash && (
@@ -118,6 +139,8 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             openedPresentationHash={presentationNodeHash}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
           />
         )}
       </ErrorBoundary>

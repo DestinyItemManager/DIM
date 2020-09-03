@@ -7,7 +7,13 @@ import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record from './Record';
 import { itemsForPlugSet } from './plugset-helpers';
-import { toPresentationNodeTree, toRecord } from './presentation-nodes';
+import {
+  filterPresentationNodesToSearch,
+  toPresentationNodeTree,
+  toRecord,
+} from './presentation-nodes';
+import { DimItem } from 'app/inventory/item-types';
+import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 
 interface Props {
   presentationNodeHash: number;
@@ -16,10 +22,12 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   buckets?: InventoryBuckets;
   defs: D2ManifestDefinitions;
+  searchQuery?: string;
   isTriumphs?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
+  searchFilter?(item: DimItem): boolean;
 }
 
 /**
@@ -33,6 +41,8 @@ export default function PresentationNodeRoot({
   profileResponse,
   ownedItemHashes,
   showPlugSets,
+  searchQuery,
+  searchFilter,
   isTriumphs,
 }: Props) {
   const [nodePath, setNodePath] = useState<number[]>([]);
@@ -53,6 +63,20 @@ export default function PresentationNodeRoot({
   const nodeTree = toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash);
   if (!nodeTree) {
     return null;
+  }
+
+  if (searchQuery && searchFilter) {
+    const searchResults = filterPresentationNodesToSearch(nodeTree, searchQuery, searchFilter, []);
+
+    console.log({ searchResults, searchQuery });
+    return (
+      <PresentationNodeSearchResults
+        searchResults={searchResults}
+        defs={defs}
+        ownedItemHashes={ownedItemHashes}
+        profileResponse={profileResponse}
+      />
+    );
   }
 
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
