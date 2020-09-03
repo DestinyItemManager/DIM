@@ -9,7 +9,7 @@ const blmResourcesLink = 'https://blacklivesmatters.carrd.co/';
 /**
  * A popup we can enable to get the word out about important issues for the DIM community. Edit the body directly.
  */
-const IssueBanner = () => {
+export default function IssueBanner() {
   const [isMinimized, setIsMinimized] = useState(true);
 
   const openCampaign = () => {
@@ -62,6 +62,4 @@ const IssueBanner = () => {
       )}
     </div>
   );
-};
-
-export { IssueBanner };
+}
