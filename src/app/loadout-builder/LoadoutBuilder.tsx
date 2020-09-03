@@ -294,11 +294,13 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <CompareDrawer
               set={compareSet}
-              lockedModMap={lockedArmor2Mods}
+              lockedMap={lockedMap}
+              lockedArmor2Mods={lockedArmor2Mods}
               defs={defs}
               classType={selectedStore.classType}
               statOrder={statOrder}
               enabledStats={enabledStats}
+              assumeMasterwork={assumeMasterwork}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

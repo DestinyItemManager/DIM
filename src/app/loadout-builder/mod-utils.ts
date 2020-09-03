@@ -70,15 +70,17 @@ function assignAllSeasonalMods(
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
 
+const emptyResult: [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] = [{}, []];
+
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
-): Record<string, LockedArmor2Mod[]> {
+): [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] {
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
     if (!item.isDestiny2()) {
-      return {};
+      return emptyResult;
     } else {
       assignments[item.id] = [];
     }
@@ -113,5 +115,13 @@ export function assignModsToArmorSet(
   );
 
   const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
-  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
+  const assignedMods = _.mapValues(assignments, (modHashes) =>
+    modHashes.map((modHash) => modsByHash[modHash])
+  );
+  const assigned = Object.values(assignedMods).flat();
+  const unassignedMods = Object.values(lockedArmor2Mods)
+    .flat()
+    .filter((unassign) => !assigned.some((assign) => assign.key === unassign.key));
+
+  return [assignedMods, unassignedMods];
 }

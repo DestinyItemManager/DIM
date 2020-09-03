@@ -90,7 +90,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={() => onSocketClick?.(plugDef, category, season)}
+            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category, season) : undefined}
           />
         ))}
       </div>
