@@ -32,7 +32,6 @@ const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTyp
 const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
-export const modMetadataBySeason = objectifyArray(modSocketMetadata, 'season');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.tag);

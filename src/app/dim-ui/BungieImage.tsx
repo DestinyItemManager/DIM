@@ -35,6 +35,8 @@ export function bungieBackgroundStyle(src: BungieImagePath) {
 }
 /**
  * Produce a style object that sets the background image to an image on bungie.net.
+ *
+ * Has extra settings because sometimes life throws bad CSS choices your way
  */
 export function bungieBackgroundStyleAdvanced(
   src: BungieImagePath,
