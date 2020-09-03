@@ -10,10 +10,10 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
 import {
   getItemDamageShortName,
-  getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
   getItemPowerCapFinalSeason,
   getMasterworkStatNames,
+  modMetadataByTag,
 } from 'app/utils/item-utils';
 
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -371,9 +371,18 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getItemSpecialtyModSlotDisplayName(item, defs),
+        value: (item) => getSpecialtySocketMetadata(item)?.tag,
         cell: (value, item) =>
-          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
+          value && (
+            <SpecialtyModSlotIcon
+              className={styles.modslotIcon}
+              item={item}
+              showAllSupportedSeasons={true}
+            />
+          ),
+        sort: compareBy((tag) =>
+          typeof tag === 'string' ? modMetadataByTag[tag]?.season ?? 99 : 99
+        ),
         filter: (_, item) => {
           const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
           return `modslot:${modSocketTypeHash?.tag || 'none'}`;
@@ -564,7 +573,7 @@ function PerksCell({
         s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-        isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
               !s.plugged.plugDef.itemCategoryHashes?.includes(

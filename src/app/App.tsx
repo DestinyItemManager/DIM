@@ -24,12 +24,12 @@ import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
 import { t } from './i18next-t';
-import { IssueBanner } from './banner/IssueBanner';
+import IssueBanner from './banner/IssueBanner';
 import { set } from 'idb-keyval';
 import ErrorPanel from './shell/ErrorPanel';
 
-const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
+const WhatsNew = React.lazy(
+  () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
 
 // These three are all from the same chunk

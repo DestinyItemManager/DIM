@@ -3,6 +3,7 @@
 interface CssExports {
   'button': string;
   'locations': string;
+  'locationsV': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

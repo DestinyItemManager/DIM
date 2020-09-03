@@ -4,8 +4,14 @@ import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import styles from './ItemActionButton.m.scss';
 import PressTip from 'app/dim-ui/PressTip';
 
-export function ItemActionButtonGroup({ children }: { children: React.ReactNode }) {
-  return <div className={styles.locations}>{children}</div>;
+export function ItemActionButtonGroup({
+  vertical,
+  children,
+}: {
+  vertical: boolean;
+  children: React.ReactNode;
+}) {
+  return <div className={vertical ? styles.locationsV : styles.locations}>{children}</div>;
 }
 
 /**

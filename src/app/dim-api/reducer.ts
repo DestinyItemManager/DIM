@@ -26,7 +26,7 @@ import { emptyArray } from 'app/utils/empty';
 import { parseQuery, canonicalizeQuery } from 'app/search/query-parser';
 
 export interface DimApiState {
-  globalSettings: GlobalSettings & { showIssueBanner: boolean };
+  globalSettings: GlobalSettings;
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
@@ -111,7 +111,7 @@ export const initialState: DimApiState = {
     ...defaultGlobalSettings,
     // 2019-12-17 we've been asked to disable auto-refresh
     autoRefresh: false,
-    showIssueBanner: true,
+    showIssueBanner: false,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),

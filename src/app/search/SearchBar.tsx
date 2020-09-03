@@ -107,8 +107,8 @@ function mapStateToProps() {
   };
 }
 
-const LazyFilterHelp = React.lazy(() =>
-  import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+const LazyFilterHelp = React.lazy(
+  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
@@ -212,21 +212,6 @@ function SearchBar(
         }
       }
     },
-    stateReducer: (state, actionAndChanges) => {
-      const { type, changes } = actionAndChanges;
-      switch (type) {
-        case useCombobox.stateChangeTypes.FunctionReset:
-          // Keep the menu open when we clear the input
-          return changes.inputValue !== undefined
-            ? {
-                ...changes, // default Downshift new state changes on item selection.
-                isOpen: state.isOpen, // but keep menu open
-              }
-            : changes;
-        default:
-          return changes; // otherwise business as usual.
-      }
-    },
     onInputValueChange: ({ inputValue }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
@@ -243,10 +228,7 @@ function SearchBar(
     debouncedUpdateQuery('');
     reset();
     onClear?.();
-    if (!isPhonePortrait) {
-      openMenu();
-    }
-  }, [onClear, reset, openMenu, debouncedUpdateQuery, isPhonePortrait]);
+  }, [onClear, reset, debouncedUpdateQuery]);
 
   // Reset live query when search version changes
   useEffect(() => {

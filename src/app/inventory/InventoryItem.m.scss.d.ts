@@ -19,7 +19,6 @@ interface CssExports {
   'subclassPathBottom': string;
   'subclassPathMiddle': string;
   'subclassPathTop': string;
-  'touchActive': string;
   'xpBar': string;
   'xpBarAmount': string;
 }
