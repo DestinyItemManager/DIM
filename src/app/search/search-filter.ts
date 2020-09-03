@@ -782,6 +782,12 @@ function searchFilters(
             ))
         );
       },
+      mod(item: DimItem, filterValue: string) {
+        return this.perk(item, filterValue);
+      },
+      modname(item: DimItem, filterValue: string) {
+        return this.perkname(item, filterValue);
+      },
       modslot(item: DimItem, filterValue: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
         return (

@@ -46,6 +46,8 @@ const filterNames = [
   'source',
   'perk',
   'perkname',
+  'mod',
+  'modname',
   'name',
   'description',
 ];
