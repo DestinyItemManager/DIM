@@ -1,5 +1,7 @@
 @import '../variables.scss';
 
+$animationSpeed: 150ms;
+
 @keyframes zoom {
   from {
     transform: scale(0.85);
@@ -11,18 +13,33 @@
   }
 }
 
+.sheetBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background-color: #333333;
+  z-index: 13;
+}
+
+.inspectActive {
+  opacity: 0.8;
+  transition: opacity $animationSpeed;
+}
+
 .mobileInspectSheet {
-  min-width: 100%;
-  max-width: fit-content;
+  width: 100%;
   position: fixed;
   top: 25%;
   backface-visibility: hidden;
-  z-index: 12;
+  z-index: 13;
 }
 
-.mobileInspectSheet,
-.mobileInspectSheet > * {
-  animation: zoom 100ms;
+.mobileInspectSheet {
+  animation: zoom $animationSpeed;
 }
 
 .container {
@@ -51,31 +68,37 @@
 
 .content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
+
+  :global(.item-socket-category) {
+    margin: 0;
+    margin-bottom: 10px;
+    margin-right: 4px;
+  }
+
+  :global(.item-socket-category-Reusable) {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  :global(.item-details) {
+    margin: 10px 0;
+  }
+
+  :global(.item-socket-category-Reusable .item-socket) {
+    margin-right: 0;
+    border: none;
+  }
+}
+
+.locations {
+  flex-direction: column;
+  padding: 10px;
 }
 
 .itemImg {
   height: 30px;
   min-width: 30px;
   margin-right: 10px;
-}
-
-// Opacity to the background when open
-:global(.mobile-preview .inventory-content) {
-  opacity: 0.2;
-}
-
-:global(.mobile-preview-fade .inventory-content) {
-  opacity: 1;
-  transition: opacity 500ms;
-}
-
-:global(.mobile-preview .item-socket) {
-  margin-right: 0;
-  border: none;
-}
-
-:global(.mobile-preview .item-details) {
-  margin: 0;
 }

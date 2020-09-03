@@ -18,7 +18,6 @@ interface ProvidedProps {
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e: React.MouseEvent): void;
-  onTouch?(e: React.TouchEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
 }
@@ -69,7 +68,6 @@ function ConnectedInventoryItem({
   notes,
   rating,
   onClick,
-  onTouch,
   onShiftClick,
   onDoubleClick,
   searchHidden,
@@ -86,7 +84,6 @@ function ConnectedInventoryItem({
       notes={notes}
       rating={rating}
       onClick={onClick}
-      onTouch={onTouch}
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
