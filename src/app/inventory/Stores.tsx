@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { DimStore, DimVault } from './store-types';
-import { InventoryBuckets } from './inventory-buckets';
+import { InventoryBuckets, InventoryBucket } from './inventory-buckets';
 import { t } from 'app/i18next-t';
+import { scrollToPosition } from 'app/dim-ui/scroll';
 import './Stores.scss';
 import StoreHeading from '../character-tile/StoreHeading';
 import { RootState } from 'app/store/types';
@@ -43,9 +44,13 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   const currentStore = getCurrentStore(stores)!;
 
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if ($featureFlags.mobileCategoryStrip) {
+      setSelectedCategoryId('Weapons');
+    }
     setTimeout(() => {
       /* Set a CSS variable so we can style things based on the height of the header */
       const element = document.querySelector('.store-header');
@@ -55,7 +60,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
           .style.setProperty('--store-header-height', element.clientHeight + 'px');
       }
     }, 0);
-  });
+  }, []);
 
   if (!stores.length || !buckets) {
     return null;
@@ -78,6 +83,15 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
     } else if (e.direction === 4 && selectedStoreIndex > 0) {
       setSelectedStoreId(stores[selectedStoreIndex - 1].id);
     }
+  };
+
+  const handleCategoryChange = (category: string) => {
+    if (category === selectedCategoryId) {
+      // If user selects the category they are already on, scroll to top
+      scrollToPosition({ top: 0 });
+      return;
+    }
+    setSelectedCategoryId(category);
   };
 
   if (isPhonePortrait) {
@@ -129,12 +143,29 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             )}
             <StoresInventory
               stores={[selectedStore]}
+              selectedCategoryId={selectedCategoryId}
               vault={vault}
               currentStore={currentStore}
               buckets={buckets}
             />
           </div>
         </Hammer>
+
+        {$featureFlags.mobileCategoryStrip && (
+          <div className="store-row store-header category-options">
+            {Object.keys(buckets.byCategory)
+              .filter((category) => category !== 'Postmaster')
+              .map((category) => (
+                <div
+                  key={category}
+                  onClick={() => handleCategoryChange(category)}
+                  className={clsx({ selected: category === selectedCategoryId })}
+                >
+                  {category}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -183,47 +214,85 @@ function categoryHasItems(
 
 export default connect<StoreProps>(mapStateToProps)(Stores);
 
-function StoresInventory({
-  buckets,
-  stores,
-  currentStore,
-  vault,
-}: {
+interface InventoryContainerProps {
+  selectedCategoryId?: string;
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimVault;
-}) {
+}
+
+function CollapsibleContainer({
+  buckets,
+  category,
+  stores,
+  currentStore,
+  inventoryBucket,
+  vault,
+}: { category: string; inventoryBucket: InventoryBucket[] } & InventoryContainerProps) {
+  if (!categoryHasItems(buckets, category, stores, currentStore)) {
+    return null;
+  }
+
+  return (
+    <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
+      {/*
+          t('Bucket.Inventory')
+          t('Bucket.Postmaster')
+          t('Bucket.General')
+          t('Bucket.Progress')
+          t('Bucket.Unknown')
+        */}
+      {inventoryBucket.map((bucket) => (
+        <StoreBuckets
+          key={bucket.hash}
+          bucket={bucket}
+          stores={stores}
+          vault={vault}
+          currentStore={currentStore}
+        />
+      ))}
+    </InventoryCollapsibleTitle>
+  );
+}
+
+function StoresInventory(props: InventoryContainerProps) {
+  const { selectedCategoryId, buckets, stores, currentStore, vault } = props;
+
+  if (selectedCategoryId) {
+    return (
+      <>
+        {selectedCategoryId === 'Inventory' && (
+          <CollapsibleContainer
+            {...props}
+            buckets={buckets}
+            category={'Postmaster'}
+            inventoryBucket={buckets.byCategory['Postmaster']}
+          />
+        )}
+        {buckets.byCategory[selectedCategoryId].map((bucket) => (
+          <StoreBuckets
+            key={bucket.hash}
+            bucket={bucket}
+            stores={stores}
+            vault={vault}
+            currentStore={currentStore}
+          />
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
-      {Object.keys(buckets.byCategory).map(
-        (category) =>
-          categoryHasItems(buckets, category, stores, currentStore) && (
-            <InventoryCollapsibleTitle
-              key={category}
-              title={t(`Bucket.${category}`)}
-              sectionId={category}
-              stores={stores}
-            >
-              {/*
-                  t('Bucket.Inventory')
-                  t('Bucket.Postmaster')
-                  t('Bucket.General')
-                  t('Bucket.Progress')
-                  t('Bucket.Unknown')
-                */}
-              {buckets.byCategory[category].map((bucket) => (
-                <StoreBuckets
-                  key={bucket.hash}
-                  bucket={bucket}
-                  stores={stores}
-                  vault={vault}
-                  currentStore={currentStore}
-                />
-              ))}
-            </InventoryCollapsibleTitle>
-          )
-      )}
+      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
+        <CollapsibleContainer
+          key={category}
+          {...props}
+          category={category}
+          inventoryBucket={inventoryBucket}
+        />
+      ))}
       {stores[0].isDestiny1() && <D1ReputationSection stores={stores} />}
     </>
   );

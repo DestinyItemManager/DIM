@@ -232,3 +232,19 @@
     background-color: #666;
   }
 }
+
+.category-options {
+  display: flex;
+  height: 40px;
+  position: fixed;
+  bottom: 0;
+  top: inherit;
+  left: 0;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  opacity: 0.97;
+  .selected {
+    font-weight: bold;
+  }
+}
