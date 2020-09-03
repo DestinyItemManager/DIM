@@ -192,7 +192,7 @@ class Compare extends React.Component<Props, State> {
         header={
           <div className="compare-options">
             <Checkbox
-              label={'Use Base Stats'}
+              label={t('Compare.CompareBaseStats')}
               name="compareBaseStats"
               value={compareBaseStats}
               onChange={onChange}

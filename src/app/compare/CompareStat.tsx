@@ -23,12 +23,12 @@ export default function CompareStat({
   setHighlight?(value?: string | number): void;
 }) {
   const itemStat = stat.getStat(item);
-
+  compareBaseStats = Boolean(compareBaseStats && item.bucket.inArmor);
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight?.(stat.id)}
-      style={getColor(statRange(itemStat, stat, compareBaseStats && item.bucket.inArmor), 'color')}
+      style={getColor(statRange(itemStat, stat, compareBaseStats), 'color')}
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
@@ -41,7 +41,7 @@ export default function CompareStat({
               <span>{itemStat.value}</span>
               <RecoilStat value={itemStat.value} />
             </span>
-          ) : compareBaseStats && item.bucket.inArmor ? (
+          ) : compareBaseStats ? (
             itemStat.base ?? itemStat.value
           ) : (
             itemStat.value
