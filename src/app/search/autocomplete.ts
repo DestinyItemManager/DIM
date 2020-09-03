@@ -66,10 +66,21 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         }
       : undefined;
     // Generate completions of the current search
-    const filterSuggestions = autocompleteTermSuggestions(query, caretIndex, filterComplete);
+    let filterSuggestions = autocompleteTermSuggestions(query, caretIndex, filterComplete);
 
     // Recent/saved searches
     const recentSearchItems = filterSortRecentSearches(query, recentSearches);
+    const [savedSearches, historySearchItems] = _.partition(
+      recentSearchItems,
+      (s) => s.type === SearchItemType.Saved
+    );
+
+    if (recentSearchItems.length > 0) {
+      filterSuggestions = _.take(
+        filterSuggestions,
+        Math.max(0, 7 - savedSearches.length - Math.min(historySearchItems.length, 4))
+      );
+    }
 
     // Help is always last...
     // Add an item for opening the filter help
@@ -82,7 +93,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     return [
       ..._.take(
         _.uniqBy(
-          _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
+          _.compact([queryItem, ...savedSearches, ...filterSuggestions, ...historySearchItems]),
           (i) => i.query
         ),
         7
