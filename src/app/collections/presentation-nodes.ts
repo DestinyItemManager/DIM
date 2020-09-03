@@ -142,29 +142,62 @@ export function toPresentationNodeTree(
   }
 }
 
-/*
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
 export function filterPresentationNodesToSearch(
-  presentationNodeRoot: DimPresentationNode,
+  node: DimPresentationNode,
   searchQuery: string,
-  filterItems: (item: DimItem) => boolean
+  filterItems: (item: DimItem) => boolean,
+  path: DimPresentationNode[]
 ): DimPresentationNodeSearchResult[] {
-  return vendorGroups
-    .map((group) => ({
-      ...group,
-      vendors: group.vendors
-        .map((vendor) => ({
-          ...vendor,
-          items: vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ? vendor.items
-            : vendor.items.filter((i) => i.item && filterItems(i.item)),
-        }))
-        .filter((v) => v.items.length),
-    }))
-    .filter((g) => g.vendors.length);
+  // If the node itself matches
+  if (node.nodeDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+    // Return this whole node
+    return [
+      {
+        path: [...path, node],
+      },
+    ];
+  }
+
+  if (node.childPresentationNodes) {
+    // TODO: build up the tree?
+    return node.childPresentationNodes.flatMap((c) =>
+      filterPresentationNodesToSearch(c, searchQuery, filterItems)
+    );
+  }
+
+  if (node.collectibles) {
+    const collectibles = node.collectibles.filter((c) => filterItems(c.item));
+
+    return collectibles.length
+      ? [
+          {
+            path: [...path, node],
+            collectibles,
+          },
+        ]
+      : [];
+
+    // filter out nothings?
+  }
+
+  if (node.records) {
+    return node.records.filter(
+      (r) =>
+        r.recordDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.recordDef.displayProperties.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  if (node.metrics) {
+    return node.metrics.filter(
+      (r) =>
+        r.metricDef.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.metricDef.displayProperties.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
 }
-*/
 
 function toCollectibles(
   defs: D2ManifestDefinitions,
