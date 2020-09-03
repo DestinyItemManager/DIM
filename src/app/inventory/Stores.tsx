@@ -44,13 +44,12 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   const currentStore = getCurrentStore(stores)!;
 
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(
+    $featureFlags.mobileCategoryStrip ? 'Weapons' : undefined
+  );
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if ($featureFlags.mobileCategoryStrip) {
-      setSelectedCategoryId('Weapons');
-    }
     setTimeout(() => {
       /* Set a CSS variable so we can style things based on the height of the header */
       const element = document.querySelector('.store-header');
@@ -60,7 +59,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
           .style.setProperty('--store-header-height', element.clientHeight + 'px');
       }
     }, 0);
-  }, []);
+  });
 
   if (!stores.length || !buckets) {
     return null;
@@ -152,7 +151,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
         </Hammer>
 
         {$featureFlags.mobileCategoryStrip && (
-          <div className="store-row store-header category-options">
+          <div className="category-options">
             {Object.keys(buckets.byCategory)
               .filter((category) => category !== 'Postmaster')
               .map((category) => (
@@ -161,7 +160,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
                   onClick={() => handleCategoryChange(category)}
                   className={clsx({ selected: category === selectedCategoryId })}
                 >
-                  {category}
+                  {t(`Bucket.${category}`)}
                 </div>
               ))}
           </div>

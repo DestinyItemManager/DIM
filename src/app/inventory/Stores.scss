@@ -240,15 +240,26 @@
 
 .category-options {
   display: flex;
-  height: 40px;
+  background-color: black;
+  height: 50px;
   position: fixed;
   bottom: 0;
   top: inherit;
   left: 0;
-  width: 100%;
+  width: 94%;
+  padding: 0 3%;
   justify-content: space-around;
-  align-items: center;
-  opacity: 0.97;
+
+  > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    padding-bottom: 1px;
+  }
   .selected {
     font-weight: bold;
   }
