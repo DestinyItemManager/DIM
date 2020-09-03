@@ -44,6 +44,8 @@ declare const $featureFlags: {
   newArrangement: boolean;
   /** New background */
   gradientBackground: boolean;
+  /** Use mobile category strip on inventory page */
+  mobileCategoryStrip: boolean;
 };
 
 declare namespace React {
