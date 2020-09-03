@@ -28,8 +28,8 @@ import { IssueBanner } from './banner/IssueBanner';
 import { set } from 'idb-keyval';
 import ErrorPanel from './shell/ErrorPanel';
 
-const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
+const WhatsNew = React.lazy(
+  () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
 
 // These three are all from the same chunk

@@ -150,7 +150,7 @@ function StoreBucket({
           <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
         ))}
         {store.isDestiny2() &&
-        bucket.hash === ENGRAMS_BUCKET && // Engrams. D1 uses this same bucket hash for "Missions"
+          bucket.hash === ENGRAMS_BUCKET && // Engrams. D1 uses this same bucket hash for "Missions"
           _.times(bucket.capacity - unequippedItems.length, (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
           ))}
