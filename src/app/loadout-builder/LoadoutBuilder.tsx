@@ -36,11 +36,11 @@ import PerkPicker from './filter/PerkPicker';
 interface ProvidedProps {
   account: DestinyAccount;
   defs: D2ManifestDefinitions;
+  stores: DimStore[];
   preloadedLoadout?: Loadout;
 }
 
 interface StoreProps {
-  stores: DimStore[];
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
   minimumPower: number;
@@ -96,7 +96,6 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const { loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(state);
     return {
-      stores: storesSelector(state),
       statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
       minimumPower: loMinPower,

@@ -5,7 +5,7 @@ import { RootState } from 'app/store/types';
 import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
 import './search-filter.scss';
-import SearchFilterInput, { SearchFilterRef } from './SearchFilterInput';
+import { SearchFilterRef } from './SearchBar';
 import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 import SearchBar from './SearchBar';
 import MainSearchBarActions from './MainSearchBarActions';
@@ -55,7 +55,7 @@ export function SearchFilter(
 
   const extras = useMemo(() => <MainSearchBarActions />, []);
 
-  return $featureFlags.newSearch ? (
+  return (
     <SearchBar
       ref={ref}
       onQueryChanged={setSearchQuery}
@@ -67,18 +67,6 @@ export function SearchFilter(
     >
       {extras}
     </SearchBar>
-  ) : (
-    <SearchFilterInput
-      ref={ref}
-      onQueryChanged={setSearchQuery}
-      alwaysShowClearButton={isPhonePortrait}
-      placeholder={placeholder}
-      onClear={onClearFilter}
-      searchQueryVersion={searchQueryVersion}
-      searchQuery={searchQuery}
-    >
-      {extras}
-    </SearchFilterInput>
   );
 }
 

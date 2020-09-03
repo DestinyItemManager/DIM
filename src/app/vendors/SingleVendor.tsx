@@ -77,12 +77,13 @@ function SingleVendor({
 
   // TODO: get for all characters, or let people select a character? This is a hack
   // we at least need to display that character!
-  let characterId = new URL(search).searchParams.get('characterId')!;
+  const characterId =
+    (search && new URLSearchParams(search).get('characterId')) ||
+    (stores.length && getCurrentStore(stores)?.id);
   if (!characterId) {
-    if (stores.length) {
-      characterId = getCurrentStore(stores)!.id;
-    }
+    throw new Error('no characters chosen or found to use for vendor API call');
   }
+
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
 

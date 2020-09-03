@@ -27,7 +27,7 @@ import { accountRoute } from 'app/routes';
 import { useLocation, useHistory } from 'react-router';
 import styles from './Header.m.scss';
 import { useSubscription } from 'app/utils/hooks';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { SearchFilterRef } from 'app/search/SearchBar';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { setSearchQuery } from './actions';
 import { useHotkeys } from 'app/hotkeys/useHotkey';

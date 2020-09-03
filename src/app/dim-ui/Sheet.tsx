@@ -175,7 +175,7 @@ export default function Sheet({
 
         <div
           className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
-          style={frozenHeight ? { flexBasis: frozenHeight, flexShrink: 0 } : undefined}
+          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContentsRefFn}
         >
           {_.isFunction(children) ? children({ onClose }) : children}

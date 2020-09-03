@@ -181,7 +181,7 @@ function Vendors({
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
   if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
   }
   if (vendorGroups && searchQuery.length) {
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);

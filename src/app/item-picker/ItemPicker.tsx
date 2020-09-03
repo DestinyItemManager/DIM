@@ -8,7 +8,6 @@ import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/selectors';
 import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
-import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { t } from 'app/i18next-t';
@@ -83,19 +82,11 @@ function ItemPicker({
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        {$featureFlags.newSearch ? (
-          <SearchBar
-            placeholder={t('ItemPicker.SearchPlaceholder')}
-            autoFocus={autoFocus}
-            onQueryChanged={setQuery}
-          />
-        ) : (
-          <SearchFilterInput
-            placeholder={t('ItemPicker.SearchPlaceholder')}
-            autoFocus={autoFocus}
-            onQueryChanged={setQuery}
-          />
-        )}
+        <SearchBar
+          placeholder={t('ItemPicker.SearchPlaceholder')}
+          autoFocus={autoFocus}
+          onQueryChanged={setQuery}
+        />
       </div>
     </div>
   );
