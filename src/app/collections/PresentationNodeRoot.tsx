@@ -66,7 +66,12 @@ export default function PresentationNodeRoot({
   }
 
   if (searchQuery && searchFilter) {
-    const searchResults = filterPresentationNodesToSearch(nodeTree, searchQuery, searchFilter, []);
+    const searchResults = filterPresentationNodesToSearch(
+      nodeTree,
+      searchQuery.toLowerCase(),
+      searchFilter,
+      []
+    );
 
     console.log({ searchResults, searchQuery });
     return (
