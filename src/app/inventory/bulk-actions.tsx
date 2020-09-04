@@ -1,15 +1,15 @@
-import React from 'react';
-import { showNotification } from 'app/notifications/notifications';
-import { tagConfig, TagValue, getTag } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
+import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, undoIcon } from 'app/shell/icons';
-import { DimItem } from './item-types';
 import { ThunkResult } from 'app/store/types';
-import { setItemTagsBulk, setItemHashTag, touchItem, touch } from './actions';
-import { itemInfosSelector, itemHashTagsSelector } from './selectors';
 import _ from 'lodash';
+import React from 'react';
+import { setItemHashTag, setItemTagsBulk, touch, touchItem } from './actions';
+import { getTag, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
+import { DimItem } from './item-types';
+import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 /**
  * Bulk tag items, with an undo button in a notification.

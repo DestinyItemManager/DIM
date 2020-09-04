@@ -1,13 +1,13 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { D2VendorGroup } from './d2-vendors';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import React from 'react';
+import menuStyles from 'app/dim-ui/PageWithMenu.m.scss';
+import { t } from 'app/i18next-t';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import menuStyles from 'app/dim-ui/PageWithMenu.m.scss';
-import styles from './VendorsMenu.m.scss';
-import { t } from 'app/i18next-t';
+import React from 'react';
 import vendorEngramSvg from '../../images/engram.svg';
+import { D2VendorGroup } from './d2-vendors';
+import styles from './VendorsMenu.m.scss';
 
 export default function VendorsMenu({
   groups,

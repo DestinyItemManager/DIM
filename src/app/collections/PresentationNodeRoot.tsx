@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import PresentationNode from './PresentationNode';
+import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
 import {
-  DestinyProfileResponse,
   DestinyCollectibleState,
+  DestinyProfileResponse,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import { getCollectibleState } from './Collectible';
-import { count } from '../utils/util';
+import React, { useState } from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import PlugSet from './PlugSet';
-import _ from 'lodash';
-import Record, { getRecordComponent } from './Record';
+import { count } from '../utils/util';
+import { getCollectibleState } from './Collectible';
 import { getMetricComponent } from './Metric';
+import PlugSet from './PlugSet';
 import { itemsForPlugSet } from './plugset-helpers';
-import { TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import PresentationNode from './PresentationNode';
+import Record, { getRecordComponent } from './Record';
 
 interface Props {
   presentationNodeHash: number;

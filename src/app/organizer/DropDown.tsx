@@ -1,10 +1,10 @@
-import React, { useState, ReactNode } from 'react';
-import styles from './DropDown.m.scss';
-import { AppIcon, moveDownIcon, enabledIcon, unselectedCheckIcon } from 'app/shell/icons';
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import { AppIcon, enabledIcon, moveDownIcon, unselectedCheckIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import React, { ReactNode, useState } from 'react';
+import styles from './DropDown.m.scss';
 
 export interface DropDownItem {
   id: string;

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { t } from 'app/i18next-t';
-import './storage.scss';
 import clsx from 'clsx';
-import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { percent } from '../shell/filters';
+import './storage.scss';
 
 export default function LocalStorageInfo({ showDetails }: { showDetails: boolean }) {
   const [browserMayClearData, setBrowserMayClearData] = useState(true);

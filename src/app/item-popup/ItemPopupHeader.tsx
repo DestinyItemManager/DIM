@@ -1,23 +1,22 @@
-import React from 'react';
-import { DimItem, D2Item } from '../inventory/item-types';
-import ItemTagSelector from './ItemTagSelector';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import LockButton from './LockButton';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { AppIcon, faClone, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
-import { CompareService } from '../compare/compare.service';
-import { ammoTypeClass } from './ammo-type';
-import ExpandedRating from './ExpandedRating';
-import { ItemSubHeader } from './ItemSubHeader';
-import './ItemPopupHeader.scss';
-import { hideItemPopup } from './item-popup';
-import { DamageType } from 'bungie-api-ts/destiny2';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { getItemDamageShortName } from 'app/utils/item-utils';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { getItemDamageShortName, getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { DamageType } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React from 'react';
+import { CompareService } from '../compare/compare.service';
+import ExternalLink from '../dim-ui/ExternalLink';
+import { D2Item, DimItem } from '../inventory/item-types';
+import { AppIcon, faChevronCircleUp, faClone, openDropdownIcon } from '../shell/icons';
+import { ammoTypeClass } from './ammo-type';
+import ExpandedRating from './ExpandedRating';
+import { hideItemPopup } from './item-popup';
+import './ItemPopupHeader.scss';
+import { ItemSubHeader } from './ItemSubHeader';
+import ItemTagSelector from './ItemTagSelector';
+import LockButton from './LockButton';
 
 export default function ItemPopupHeader({
   item,

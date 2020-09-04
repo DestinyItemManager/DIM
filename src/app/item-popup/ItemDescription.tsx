@@ -1,15 +1,15 @@
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import NotesArea from './NotesArea';
+import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
-import ishtarLogo from '../../images/ishtar-collective.svg';
-import styles from './ItemDescription.m.scss';
-import { connect } from 'react-redux';
+import { DimItem } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
+import React from 'react';
+import { connect } from 'react-redux';
+import ishtarLogo from '../../images/ishtar-collective.svg';
+import styles from './ItemDescription.m.scss';
+import NotesArea from './NotesArea';
 
 interface ProvidedProps {
   item: DimItem;

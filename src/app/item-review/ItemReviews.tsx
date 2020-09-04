@@ -1,29 +1,29 @@
-import React from 'react';
-import { DimItem } from '../inventory/item-types';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { t } from 'app/i18next-t';
-import './item-review.scss';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import React from 'react';
 import { connect } from 'react-redux';
+import { D2ReviewMode, getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
+import { DimItem } from '../inventory/item-types';
+import RatingIcon from '../inventory/RatingIcon';
 import {
   AppIcon,
-  thumbsUpIcon,
-  thumbsDownIcon,
-  faThumbsUpRegular,
   faThumbsDownRegular,
+  faThumbsUpRegular,
+  thumbsDownIcon,
+  thumbsUpIcon,
 } from '../shell/icons';
-import { getRating, ratingsSelector, getReviews, getUserReview, shouldShowRating } from './reducer';
-import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
+import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
+import { saveUserReview } from './actions';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
+import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
+import { getItemReviews, reportReview, submitReview } from './destiny-tracker.service';
+import { DtrRating } from './dtr-api-types';
+import './item-review.scss';
 import ItemReview from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
-import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
-import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { getItemReviews, submitReview, reportReview } from './destiny-tracker.service';
-import { DtrRating } from './dtr-api-types';
-import { saveUserReview } from './actions';
-import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
-import RatingIcon from '../inventory/RatingIcon';
-import { settingsSelector } from 'app/settings/reducer';
+import { getRating, getReviews, getUserReview, ratingsSelector, shouldShowRating } from './reducer';
 
 interface ProvidedProps {
   item: DimItem;

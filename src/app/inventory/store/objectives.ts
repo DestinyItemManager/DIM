@@ -1,12 +1,12 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DestinyItemComponent,
   DestinyItemObjectivesComponent,
-  DestinyObjectiveProgress,
   DestinyObjectiveDefinition,
+  DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import { DimFlavorObjective } from '../item-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.

@@ -1,9 +1,9 @@
-import { DimStore } from '../inventory/store-types';
-import { DimWishList, WishListRoll } from './types';
-import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
-import _ from 'lodash';
 import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { DimWishList, WishListRoll } from './types';
 
 export const enum UiWishListRoll {
   Good = 1,

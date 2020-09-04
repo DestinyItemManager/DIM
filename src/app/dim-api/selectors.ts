@@ -1,7 +1,7 @@
+import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { makeProfileKeyFromAccount } from './reducer';
-import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;

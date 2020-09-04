@@ -1,6 +1,6 @@
 import { observeStore } from 'app/utils/redux-utils';
-import { settingsSelector } from './reducer';
 import i18next from 'i18next';
+import { settingsSelector } from './reducer';
 
 export function watchLanguageChanges() {
   return observeStore(

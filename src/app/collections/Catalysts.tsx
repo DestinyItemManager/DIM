@@ -1,12 +1,11 @@
+import { t } from 'app/i18next-t';
+import { CATALYSTS_ROOT_NODE } from 'app/search/d2-known-values';
 import { DestinyProfileResponse, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
-import { t } from 'app/i18next-t';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import './collections.scss';
 import Record from './Record';
-import { CATALYSTS_ROOT_NODE } from 'app/search/d2-known-values';
 
 export default function Catalysts({
   defs,

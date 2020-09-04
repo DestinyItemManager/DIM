@@ -1,16 +1,16 @@
+import clsx from 'clsx';
 import React from 'react';
 import {
+  ConnectDropTarget,
   DropTarget,
-  DropTargetSpec,
   DropTargetConnector,
   DropTargetMonitor,
-  ConnectDropTarget,
+  DropTargetSpec,
 } from 'react-dnd';
-import clsx from 'clsx';
 import { InventoryBucket } from './inventory-buckets';
-import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import moveDroppedItem from './move-dropped-item';
+import { DimStore } from './store-types';
 
 interface ExternalProps {
   bucket: InventoryBucket;

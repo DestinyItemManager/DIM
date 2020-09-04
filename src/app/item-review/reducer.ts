@@ -1,20 +1,19 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { WorkingD2Rating, D2ItemReviewResponse, D2ItemUserReview } from './d2-dtr-api-types';
-import { WorkingD1Rating, D1ItemReviewResponse, D1ItemUserReview } from './d1-dtr-api-types';
-import { DimItem } from '../inventory/item-types';
-import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
-import { RootState, ThunkResult } from 'app/store/types';
-import produce from 'immer';
-import { DtrRating } from './dtr-api-types';
-import { get } from 'idb-keyval';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
-import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
-import { AccountsAction } from '../accounts/reducer';
-import { setCurrentAccount } from '../accounts/actions';
 import { settingsSelector } from 'app/settings/reducer';
+import { RootState, ThunkResult } from 'app/store/types';
+import { get } from 'idb-keyval';
+import produce from 'immer';
+import { Reducer } from 'redux';
+import { createSelector } from 'reselect';
+import { ActionType, getType } from 'typesafe-actions';
+import { setCurrentAccount } from '../accounts/actions';
+import { AccountsAction } from '../accounts/reducer';
+import { getD2Roll, getReviewKey } from '../destinyTrackerApi/d2-itemTransformer';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { DimItem } from '../inventory/item-types';
+import * as actions from './actions';
+import { D1ItemReviewResponse, D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
+import { D2ItemReviewResponse, D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
+import { DtrRating } from './dtr-api-types';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {

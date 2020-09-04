@@ -1,15 +1,15 @@
-import React from 'react';
-import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
-import ItemDetails from './ItemDetails';
-import { ItemPopupExtraInfo } from './item-popup';
+import { ItemTriage } from 'app/item-triage/ItemTriage';
 import clsx from 'clsx';
+import React from 'react';
+import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import { DimItem } from '../inventory/item-types';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
-import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import { ItemPopupExtraInfo } from './item-popup';
+import ItemDetails from './ItemDetails';
 import './ItemPopupBody.scss';
-import { ItemTriage } from 'app/item-triage/ItemTriage';
 
 export const enum ItemPopupTab {
   Overview,

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import {
   AuditLogEntry,
   ItemAnnotationLogEntry,
   SettingsLogEntry,
 } from '@destinyitemmanager/dim-api-types';
-import { getAuditLog } from 'app/dim-api/dim-api';
 import { DestinyAccount, PLATFORM_ICONS } from 'app/accounts/destiny-account';
 import { accountsSelector } from 'app/accounts/selectors';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import styles from './AuditLog.m.scss';
-import { AppIcon } from 'app/shell/icons';
-import { t } from 'app/i18next-t';
+import { getAuditLog } from 'app/dim-api/dim-api';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { AppIcon } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import styles from './AuditLog.m.scss';
 
 interface StoreProps {
   accounts: readonly DestinyAccount[];

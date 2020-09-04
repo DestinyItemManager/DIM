@@ -1,10 +1,10 @@
-import _ from 'lodash';
-import { count } from '../utils/util';
-import { D2Item } from '../inventory/item-types';
-import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
-import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { UPGRADE_MASTERWORK } from 'app/search/d2-known-values';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { D2Item } from '../inventory/item-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { count } from '../utils/util';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
   ratingCount: number;

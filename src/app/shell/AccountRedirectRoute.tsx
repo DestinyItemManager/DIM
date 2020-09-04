@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { t } from 'app/i18next-t';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'app/store/types';
-import ErrorPanel from './ErrorPanel';
-import { accountsLoadedSelector, currentAccountSelector } from 'app/accounts/selectors';
-import { Redirect, useRouteMatch } from 'react-router';
 import { getPlatforms } from 'app/accounts/platforms';
+import { accountsLoadedSelector, currentAccountSelector } from 'app/accounts/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, useRouteMatch } from 'react-router';
+import ErrorPanel from './ErrorPanel';
 
 /**
  * When rendered at a particular path, this component will wait for the last-used account to be loaded

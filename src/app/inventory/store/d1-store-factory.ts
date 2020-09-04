@@ -1,14 +1,14 @@
-import _ from 'lodash';
-import { count } from '../../utils/util';
-import { getCharacterStatsData } from './character-utils';
-import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { t } from 'app/i18next-t';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
-import { D1Store, D1Vault, DimVault } from '../store-types';
-import { D1Item } from '../item-types';
+import _ from 'lodash';
+import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
+import { count } from '../../utils/util';
 import { D1StoresService } from '../d1-stores';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D1Item } from '../item-types';
+import { D1Store, D1Vault, DimVault } from '../store-types';
+import { getCharacterStatsData } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {

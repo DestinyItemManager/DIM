@@ -1,13 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimSocket } from 'app/inventory/item-types';
-import React from 'react';
-import { RootState } from 'app/store/types';
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
-import { connect } from 'react-redux';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadata, modMetadataByTag } from 'app/utils/item-utils';
-import styles from './SpecialtyModSlotIcon.m.scss';
-import PressTip from './PressTip';
 import clsx from 'clsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import PressTip from './PressTip';
+import styles from './SpecialtyModSlotIcon.m.scss';
 
 interface ProvidedProps {
   item: DimItem;

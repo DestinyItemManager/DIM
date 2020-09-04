@@ -1,14 +1,13 @@
-import { t } from 'app/i18next-t';
-import React from 'react';
-import { StatTypes, MinMax, MinMaxIgnored } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { statHashes } from '../types';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
-import styles from './TierSelect.m.scss';
-import _ from 'lodash';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
+import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
 import clsx from 'clsx';
+import _ from 'lodash';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
 const INCLUDE = 'include';

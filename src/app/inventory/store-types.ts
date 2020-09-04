@@ -1,15 +1,15 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
   DestinyClass,
-  DestinyProgression,
-  DestinyFactionDefinition,
   DestinyColor,
   DestinyDisplayPropertiesDefinition,
+  DestinyFactionDefinition,
+  DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import { DimItem, D2Item, D1Item } from './item-types';
+import { ConnectableObservable } from 'rxjs';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
-import { ConnectableObservable } from 'rxjs';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { D1Item, D2Item, DimItem } from './item-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this

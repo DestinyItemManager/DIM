@@ -1,45 +1,45 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { t } from 'app/i18next-t';
+import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import { ThunkResult } from 'app/store/types';
 import {
   DestinyCharacterComponent,
-  SingleComponentResponse,
-  DictionaryComponentResponse,
+  DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
+  DestinyItemComponent,
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
-  DestinyCollectibleComponent,
-  DestinyItemComponent,
+  DictionaryComponentResponse,
+  SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { getCharacters, getStores } from '../bungie-api/destiny2-api';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import { reportException } from '../utils/exceptions';
-import { getLight } from '../loadout/loadout-utils';
-import { resetIdTracker, processItems } from './store/d2-item-factory';
-import { makeVault, makeCharacter, getCharacterStatsData } from './store/d2-store-factory';
-import { cleanInfos } from './dim-item-info';
-import { t } from 'app/i18next-t';
-import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
-import { InventoryBuckets } from './inventory-buckets';
-import { fetchRatings } from '../item-review/destiny-tracker.service';
-import store from '../store/store';
-import { update, loadNewItems, error, charactersUpdated, CharacterInfo } from './actions';
-import { loadingTracker } from '../shell/loading-tracker';
-import { showNotification } from '../notifications/notifications';
-import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
-import { switchMap, publishReplay, merge, take } from 'rxjs/operators';
+import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
+import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
-import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import { storesSelector, bucketsSelector } from './selectors';
-import { ThunkResult } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/selectors';
-import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
-import { getArtifactBonus } from './stores-helpers';
+import { getCharacters, getStores } from '../bungie-api/destiny2-api';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
+import { bungieNetPath } from '../dim-ui/BungieImage';
+import { fetchRatings } from '../item-review/destiny-tracker.service';
+import { getLight } from '../loadout/loadout-utils';
+import { showNotification } from '../notifications/notifications';
+import { loadingTracker } from '../shell/loading-tracker';
+import store from '../store/store';
+import { reportException } from '../utils/exceptions';
+import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
+import { cleanInfos } from './dim-item-info';
+import { InventoryBuckets } from './inventory-buckets';
 import { ItemPowerSet } from './ItemPowerSet';
-import { StatHashes } from 'data/d2/generated-enums';
+import { bucketsSelector, storesSelector } from './selectors';
+import { D2Store, D2StoreServiceType, D2Vault } from './store-types';
+import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
+import { processItems, resetIdTracker } from './store/d2-item-factory';
+import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
+import { getArtifactBonus } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores

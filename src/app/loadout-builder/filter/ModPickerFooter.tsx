@@ -1,11 +1,10 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-
-import styles from './ModPickerFooter.m.scss';
-import { LockedArmor2ModMap, LockedArmor2Mod } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import React from 'react';
+import { LockedArmor2Mod, LockedArmor2ModMap } from '../types';
+import LockedArmor2ModIcon from './LockedArmor2ModIcon';
+import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;

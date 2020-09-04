@@ -1,14 +1,14 @@
-import React from 'react';
-import helmet from 'destiny-icons/armor_types/helmet.svg';
-import gauntlets from 'destiny-icons/armor_types/gloves.svg';
-import chest from 'destiny-icons/armor_types/chest.svg';
-import legs from 'destiny-icons/armor_types/boots.svg';
-import classItem from 'destiny-icons/armor_types/class.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
-import ghost from 'destiny-icons/general/ghost.svg';
 import { DimItem } from 'app/inventory/item-types';
+import legs from 'destiny-icons/armor_types/boots.svg';
+import chest from 'destiny-icons/armor_types/chest.svg';
+import classItem from 'destiny-icons/armor_types/class.svg';
+import gauntlets from 'destiny-icons/armor_types/gloves.svg';
+import helmet from 'destiny-icons/armor_types/helmet.svg';
+import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
+import ghost from 'destiny-icons/general/ghost.svg';
+import powerWeapon from 'destiny-icons/general/power_weapon.svg';
+import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
+import React from 'react';
 import BungieImage from '../BungieImage';
 
 const bucketIcons = {

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useSubscription } from 'app/utils/hooks';
 import InventoryItem from 'app/inventory/InventoryItem';
-import { showDragGhost$, DragGhostProps } from './drag-ghost-item';
-
+import { useSubscription } from 'app/utils/hooks';
+import React, { useState } from 'react';
+import { DragGhostProps, showDragGhost$ } from './drag-ghost-item';
 import styles from './DragGhostItem.m.scss';
 
 /**

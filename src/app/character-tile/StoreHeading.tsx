@@ -1,14 +1,14 @@
-import React, { useRef, useState } from 'react';
-import clsx from 'clsx';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
-import './StoreHeading.scss';
-import LoadoutPopup from '../loadout/LoadoutPopup';
-import ClickOutside from '../dim-ui/ClickOutside';
+import clsx from 'clsx';
+import React, { useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import ClickOutside from '../dim-ui/ClickOutside';
+import { DimStore } from '../inventory/store-types';
+import LoadoutPopup from '../loadout/LoadoutPopup';
 import { AppIcon, faEllipsisV } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';
+import './StoreHeading.scss';
 
 interface Props {
   store: DimStore;

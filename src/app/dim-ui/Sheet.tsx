@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
-import './Sheet.scss';
-import { AppIcon, disabledIcon } from '../shell/icons';
-import { config, animated, useSpring } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import clsx from 'clsx';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import clsx from 'clsx';
 import _ from 'lodash';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { animated, config, useSpring } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
+import { AppIcon, disabledIcon } from '../shell/icons';
+import './Sheet.scss';
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);

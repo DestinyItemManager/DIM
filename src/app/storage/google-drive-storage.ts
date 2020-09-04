@@ -1,7 +1,7 @@
-import { getToken } from '../bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
-import { StorageAdapter, DimData } from './sync.service';
 import { Subject } from 'rxjs';
+import { getToken } from '../bungie-api/oauth-tokens';
+import { DimData, StorageAdapter } from './sync.service';
 
 declare const gapi: any;
 declare global {

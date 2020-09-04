@@ -1,5 +1,5 @@
-import { StatTypes, ModPickerCategory } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { ModPickerCategory, StatTypes } from '../types';
 
 export interface ProcessPlug {
   stats: {

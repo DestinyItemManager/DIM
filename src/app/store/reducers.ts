@@ -1,17 +1,17 @@
-import { combineReducers, Reducer } from 'redux';
-import { accounts } from '../accounts/reducer';
-import { inventory } from '../inventory/reducer';
-import { shell } from '../shell/reducer';
-import { reviews } from '../item-review/reducer';
-import { loadouts } from '../loadout/reducer';
-import { wishLists } from '../wishlists/reducer';
-import { farming } from '../farming/reducer';
-import { manifest } from '../manifest/reducer';
-import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-api/reducer';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 import { vendors } from 'app/vendors/reducer';
+import { combineReducers, Reducer } from 'redux';
+import { accounts } from '../accounts/reducer';
+import { dimApi, DimApiState, initialState as dimApiInitialState } from '../dim-api/reducer';
+import { farming } from '../farming/reducer';
+import { inventory } from '../inventory/reducer';
+import { reviews } from '../item-review/reducer';
+import { loadouts } from '../loadout/reducer';
+import { manifest } from '../manifest/reducer';
+import { shell } from '../shell/reducer';
+import { wishLists } from '../wishlists/reducer';
 import { RootState } from './types';
-import { currentAccountSelector } from 'app/accounts/selectors';
 
 const reducer: Reducer<RootState> = (state, action) => {
   const combinedReducers = combineReducers({

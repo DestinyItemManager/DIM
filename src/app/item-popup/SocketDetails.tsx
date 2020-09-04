@@ -1,30 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { DimSocket, D2Item, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import Sheet from 'app/dim-ui/Sheet';
+import { getModCostInfo } from 'app/collections/Mod';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import Sheet from 'app/dim-ui/Sheet';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { D2Item, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptySet } from 'app/utils/empty';
 import {
-  SocketPlugSources,
-  TierType,
-  DestinyInventoryItemDefinition,
   DestinyEnergyType,
+  DestinyInventoryItemDefinition,
   DestinyItemPlug,
   DestinyItemPlugBase,
+  SocketPlugSources,
+  TierType,
 } from 'bungie-api-ts/destiny2';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/types';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { connect } from 'react-redux';
 import clsx from 'clsx';
-import styles from './SocketDetails.m.scss';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
+import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import _ from 'lodash';
+import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
-import { emptySet } from 'app/utils/empty';
-import { getModCostInfo } from 'app/collections/Mod';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 
 interface ProvidedProps {
   item: D2Item;

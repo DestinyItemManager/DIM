@@ -1,18 +1,18 @@
 import { t } from 'app/i18next-t';
-import React, { useState } from 'react';
-import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
-import './BungieAlerts.scss';
+import { useSubscription } from 'app/utils/hooks';
 import { deepEqual } from 'fast-equals';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { timer, from, empty } from 'rxjs';
+import React, { useState } from 'react';
+import { empty, from, timer } from 'rxjs';
 import {
-  switchMap,
-  startWith,
+  catchError,
   distinctUntilChanged,
   shareReplay,
-  catchError,
+  startWith,
+  switchMap,
 } from 'rxjs/operators';
-import { useSubscription } from 'app/utils/hooks';
+import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
+import ExternalLink from '../dim-ui/ExternalLink';
+import './BungieAlerts.scss';
 
 export const alerts$ = timer(0, 10 * 60 * 1000).pipe(
   // Fetch global alerts, but swallow errors

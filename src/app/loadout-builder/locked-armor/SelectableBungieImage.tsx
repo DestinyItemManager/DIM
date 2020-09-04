@@ -1,17 +1,17 @@
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import React from 'react';
-import { LockedItemType, BurnItem, LockedModBase, LockedArmor2Mod } from '../types';
-import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
-import styles from './SelectableBungieImage.m.scss';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
-import ClosableContainer from '../ClosableContainer';
-import { TRACTION_PERK } from 'app/search/d2-known-values';
+import { t } from 'app/i18next-t';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { TRACTION_PERK } from 'app/search/d2-known-values';
 import { armorStatHashes } from 'app/search/search-filter-values';
+import clsx from 'clsx';
+import React from 'react';
+import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
+import ClosableContainer from '../ClosableContainer';
+import { BurnItem, LockedArmor2Mod, LockedItemType, LockedModBase } from '../types';
+import styles from './SelectableBungieImage.m.scss';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting

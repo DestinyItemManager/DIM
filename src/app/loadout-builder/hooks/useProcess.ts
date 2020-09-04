@@ -1,29 +1,29 @@
-import { wrap, releaseProxy } from 'comlink';
-import _ from 'lodash';
-import { useEffect, useState, useMemo } from 'react';
-import {
-  ItemsByBucket,
-  LockedMap,
-  LockedArmor2ModMap,
-  ArmorSet,
-  StatTypes,
-  MinMaxIgnored,
-  MinMax,
-  LockedModBase,
-  bucketsToCategories,
-  ModPickerCategories,
-  statHashes,
-} from '../types';
 import { DimItem } from 'app/inventory/item-types';
-import { ProcessItemsByBucket } from '../processWorker/types';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { releaseProxy, wrap } from 'comlink';
+import _ from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  mapDimItemToProcessItem,
-  mapSeasonalModsToProcessMods,
   getTotalModStatChanges,
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
+  mapDimItemToProcessItem,
+  mapSeasonalModsToProcessMods,
 } from '../processWorker/mappers';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { ProcessItemsByBucket } from '../processWorker/types';
+import {
+  ArmorSet,
+  bucketsToCategories,
+  ItemsByBucket,
+  LockedArmor2ModMap,
+  LockedMap,
+  LockedModBase,
+  MinMax,
+  MinMaxIgnored,
+  ModPickerCategories,
+  statHashes,
+  StatTypes,
+} from '../types';
 import { someModHasEnergyRequirement } from '../utils';
 
 interface ProcessState {

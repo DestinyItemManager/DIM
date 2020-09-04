@@ -1,11 +1,11 @@
-import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
-import { DestinyClass, BungieMembershipType } from 'bungie-api-ts/destiny2';
-import { DeleteLoadoutUpdateWithRollback } from './api-types';
-import { prepareToFlushUpdates, finishedUpdates } from './basic-actions';
-import { setSetting } from 'app/settings/actions';
-import { setItemTag, setItemHashTag } from 'app/inventory/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { setSetting } from 'app/settings/actions';
+import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
+import { DeleteLoadoutUpdateWithRollback } from './api-types';
+import { finishedUpdates, prepareToFlushUpdates } from './basic-actions';
+import { dimApi, DimApiState, initialState as apiInitialState } from './reducer';
 
 const currentAccount: DestinyAccount = {
   membershipId: '98765',

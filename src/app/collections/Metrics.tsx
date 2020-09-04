@@ -1,14 +1,14 @@
-import React from 'react';
-import Metric from './Metric';
-import _ from 'lodash';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { ALL_TRAIT } from 'app/search/d2-known-values';
 import {
   DestinyPresentationNodeMetricChildEntry,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import _ from 'lodash';
+import React from 'react';
+import Metric from './Metric';
 import styles from './Metrics.m.scss';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { ALL_TRAIT } from 'app/search/d2-known-values';
 
 export default function Metrics({
   metrics,

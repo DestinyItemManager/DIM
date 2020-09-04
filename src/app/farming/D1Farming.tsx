@@ -1,15 +1,14 @@
-import React, { useRef } from 'react';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
+import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { farmingStoreSelector } from './reducer';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { DimStore } from '../inventory/store-types';
+import { setSetting } from '../settings/actions';
 import './farming.scss';
 import { D1FarmingService } from './farming.service';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { setSetting } from '../settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
+import { farmingStoreSelector } from './reducer';
 
 interface StoreProps {
   makeRoomForItems: boolean;

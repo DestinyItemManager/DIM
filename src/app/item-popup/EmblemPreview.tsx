@@ -1,8 +1,8 @@
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
 import MetricBanner from 'app/collections/MetricBanner';
-import BungieImage from 'app/dim-ui/BungieImage';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { DimItem } from 'app/inventory/item-types';
+import React from 'react';
 import styles from './EmblemPreview.m.scss';
 
 export default function EmblemPreview({

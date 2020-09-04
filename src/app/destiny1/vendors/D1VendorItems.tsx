@@ -1,9 +1,9 @@
-import React from 'react';
 import _ from 'lodash';
+import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
-import { Vendor, VendorCost } from './vendor.service';
-import D1VendorItem from './D1VendorItem';
 import styles from '../../vendors/VendorItems.m.scss';
+import D1VendorItem from './D1VendorItem';
+import { Vendor, VendorCost } from './vendor.service';
 
 /**
  * Display the items for a single vendor, organized by category.

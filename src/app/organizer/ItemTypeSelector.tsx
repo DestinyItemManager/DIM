@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import _ from 'lodash';
-import styles from './ItemTypeSelector.m.scss';
 import clsx from 'clsx';
-
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
+import ghost from 'destiny-icons/general/ghost.svg';
+import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
+import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
+import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
 import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
-import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
 import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg';
 import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg';
@@ -19,21 +21,18 @@ import sidearm from 'destiny-icons/weapons/sidearm.svg';
 import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
-import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
-import helmet from '../../../destiny-icons/armor_types/helmet.svg';
-import gauntlets from '../../../destiny-icons/armor_types/gloves.svg';
-import chest from '../../../destiny-icons/armor_types/chest.svg';
+import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
+import _ from 'lodash';
+import React, { useMemo } from 'react';
 import legs from '../../../destiny-icons/armor_types/boots.svg';
+import chest from '../../../destiny-icons/armor_types/chest.svg';
 import classItem from '../../../destiny-icons/armor_types/class.svg';
-import titan from '../../../destiny-icons/general/class_titan.svg';
+import gauntlets from '../../../destiny-icons/armor_types/gloves.svg';
+import helmet from '../../../destiny-icons/armor_types/helmet.svg';
 import hunter from '../../../destiny-icons/general/class_hunter.svg';
+import titan from '../../../destiny-icons/general/class_titan.svg';
 import warlock from '../../../destiny-icons/general/class_warlock.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
-import ghost from 'destiny-icons/general/ghost.svg';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import styles from './ItemTypeSelector.m.scss';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode

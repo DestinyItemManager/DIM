@@ -1,32 +1,32 @@
-import {
-  DestinyInventoryItemDefinition,
-  DestinyStatDisplayDefinition,
-  DestinyStatGroupDefinition,
-  DestinyItemInvestmentStatDefinition,
-  DestinyStatDefinition,
-  DestinyItemStatsComponent,
-  DestinyDisplayPropertiesDefinition,
-  DestinyStatAggregationType,
-  DestinyStatCategory,
-  DestinySocketCategoryStyle,
-  DestinyClass,
-} from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
 import { t } from 'app/i18next-t';
-import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
+import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   armorBuckets,
   ARMOR_STAT_CAP,
-  TOTAL_STAT_HASH,
   CUSTOM_TOTAL_STAT_HASH,
+  TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
-import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import reduxStore from '../../store/store';
 import { settingsSelector } from 'app/settings/reducer';
+import { compareBy } from 'app/utils/comparators';
+import {
+  DestinyClass,
+  DestinyDisplayPropertiesDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemInvestmentStatDefinition,
+  DestinyItemStatsComponent,
+  DestinySocketCategoryStyle,
+  DestinyStatAggregationType,
+  DestinyStatCategory,
+  DestinyStatDefinition,
+  DestinyStatDisplayDefinition,
+  DestinyStatGroupDefinition,
+} from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import reduxStore from '../../store/store';
+import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
+import { D2Item, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.

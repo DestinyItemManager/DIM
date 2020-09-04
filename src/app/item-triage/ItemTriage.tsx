@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { D2Item } from '../inventory/item-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import SpecialtyModSlotIcon, {
-  getArmorSlotSpecificModSocketDisplayName,
-  ArmorSlotSpecificModSocketIcon,
-} from 'app/dim-ui/SpecialtyModSlotIcon';
-import ElementIcon from 'app/inventory/ElementIcon';
-import styles from './ItemTriage.m.scss';
-import _ from 'lodash';
-import { KeepJunkDial, getValueColors } from './ValueDial';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { getAllItems } from 'app/inventory/stores-helpers';
-import { classIcons } from 'app/inventory/StoreBucket';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
-import PressTip from 'app/dim-ui/PressTip';
-import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/types';
-import { useSelector } from 'react-redux';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import PressTip from 'app/dim-ui/PressTip';
+import SpecialtyModSlotIcon, {
+  ArmorSlotSpecificModSocketIcon,
+  getArmorSlotSpecificModSocketDisplayName,
+} from 'app/dim-ui/SpecialtyModSlotIcon';
+import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { classIcons } from 'app/inventory/StoreBucket';
+import { getAllItems } from 'app/inventory/stores-helpers';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { settingsSelector } from 'app/settings/reducer';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { RootState } from 'app/store/types';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { D2Item } from '../inventory/item-types';
+import styles from './ItemTriage.m.scss';
+import { getValueColors, KeepJunkDial } from './ValueDial';
 
 /** a factor of interest */
 interface Factor {

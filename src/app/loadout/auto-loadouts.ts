@@ -1,13 +1,13 @@
-import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { optimalLoadout, newLoadout, convertToLoadoutItem, optimalItemSet } from './loadout-utils';
-import { DimStore } from '../inventory/store-types';
-import { DimItem } from '../inventory/item-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { Loadout } from './loadout-types';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
+import copy from 'fast-copy';
+import _ from 'lodash';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { Loadout } from './loadout-types';
+import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from './loadout-utils';
 
 /**
  *  A dynamic loadout set up to level weapons and armor

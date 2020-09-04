@@ -1,17 +1,15 @@
-import {
-  D1ItemWithNormalStats,
-  ArmorTypes,
-  ItemBucket,
-  SetType,
-  ArmorSet,
-  LockedPerkHash,
-} from './types';
-
-import { D1Item } from '../../inventory/item-types';
-
 import _ from 'lodash';
-import { DimStore, D1Store } from '../../inventory/store-types';
+import { D1Item } from '../../inventory/item-types';
+import { D1Store, DimStore } from '../../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
+import {
+  ArmorSet,
+  ArmorTypes,
+  D1ItemWithNormalStats,
+  ItemBucket,
+  LockedPerkHash,
+  SetType,
+} from './types';
 
 function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   if (!armorpiece.normalStats) {

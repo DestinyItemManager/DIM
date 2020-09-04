@@ -1,19 +1,17 @@
-import React, { useMemo, Dispatch } from 'react';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
+import { showItemPicker } from 'app/item-picker/item-picker';
+import ItemSockets from 'app/item-popup/ItemSockets';
+import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import React, { Dispatch, useMemo } from 'react';
 import { DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, LockedArmor2Mod, StatTypes } from '../types';
-import ItemSockets from 'app/item-popup/ItemSockets';
-import _ from 'lodash';
-import styles from './GeneratedSetItem.m.scss';
-import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
-import { showItemPicker } from 'app/item-picker/item-picker';
-import { t } from 'app/i18next-t';
-import { lockedItemsEqual } from '../utils';
-import { generateMixesFromPerks } from '../utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { matchLockedItem } from '../preProcessFilter';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { matchLockedItem } from '../preProcessFilter';
+import { LockedArmor2Mod, LockedItemType, StatTypes } from '../types';
+import { generateMixesFromPerks, lockedItemsEqual } from '../utils';
+import styles from './GeneratedSetItem.m.scss';
 import GeneratedSetSockets from './GeneratedSetSockets';
 
 /**

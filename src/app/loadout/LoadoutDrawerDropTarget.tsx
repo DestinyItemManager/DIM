@@ -1,14 +1,13 @@
+import clsx from 'clsx';
 import React from 'react';
 import {
+  ConnectDropTarget,
   DropTarget,
-  DropTargetSpec,
   DropTargetConnector,
   DropTargetMonitor,
-  ConnectDropTarget,
+  DropTargetSpec,
 } from 'react-dnd';
-import clsx from 'clsx';
 import { DimItem } from '../inventory/item-types';
-import _ from 'lodash';
 
 interface ExternalProps {
   bucketTypes: string[];

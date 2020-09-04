@@ -1,11 +1,11 @@
-import _ from 'lodash';
 import {
-  DestinyVendorSaleItemComponent,
   DestinyInventoryItemDefinition,
+  DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
-import { D2Item } from '../inventory/item-types';
-import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { D2Item } from '../inventory/item-types';
+import { D2ItemFetchRequest, DtrD2BasicItem } from '../item-review/d2-dtr-api-types';
 
 /**
  * Lookup keys for review data in the cache.

@@ -1,13 +1,13 @@
-import React from 'react';
-import { DimItem } from './item-types';
-import DraggableInventoryItem from './DraggableInventoryItem';
-import ItemPopupTrigger from './ItemPopupTrigger';
-import { CompareService } from '../compare/compare.service';
-import { moveItemTo } from './move-item';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
-import { getCurrentStore } from './stores-helpers';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import React from 'react';
+import { CompareService } from '../compare/compare.service';
+import ConnectedInventoryItem from './ConnectedInventoryItem';
+import DraggableInventoryItem from './DraggableInventoryItem';
+import { DimItem } from './item-types';
+import ItemPopupTrigger from './ItemPopupTrigger';
+import { moveItemTo } from './move-item';
+import { getCurrentStore } from './stores-helpers';
 
 interface Props {
   item: DimItem;

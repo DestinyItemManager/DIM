@@ -1,13 +1,13 @@
-import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { t } from 'app/i18next-t';
-import './ClearNewItems.scss';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import NewItemIndicator from './NewItemIndicator';
-import { settingsSelector } from 'app/settings/reducer';
 import { clearAllNewItems } from 'app/inventory/actions';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { DestinyAccount } from '../accounts/destiny-account';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import './ClearNewItems.scss';
+import NewItemIndicator from './NewItemIndicator';
 
 interface ProvidedProps {
   account: DestinyAccount;

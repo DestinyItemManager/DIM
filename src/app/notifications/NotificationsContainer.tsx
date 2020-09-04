@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { Notify, notifications$ } from './notifications';
-import Notification from './Notification';
-import './NotificationsContainer.scss';
-import { config, useTransition } from 'react-spring';
 import { useSubscription } from 'app/utils/hooks';
+import React, { useCallback, useState } from 'react';
+import { config, useTransition } from 'react-spring';
+import Notification from './Notification';
+import { notifications$, Notify } from './notifications';
+import './NotificationsContainer.scss';
 
 const spring = { ...config.stiff, precision: 0.1, clamp: true };
 

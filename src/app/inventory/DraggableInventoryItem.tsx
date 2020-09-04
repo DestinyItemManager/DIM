@@ -1,16 +1,16 @@
-import React, { useRef, useState } from 'react';
-import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } from 'react-dnd';
-import { DimItem } from './item-types';
-import { stackableDrag } from './actions';
-import store from '../store/store';
-import { BehaviorSubject } from 'rxjs';
+import { CompareService } from 'app/compare/compare.service';
+import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
+import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import { settingsSelector } from 'app/settings/reducer';
 import clsx from 'clsx';
-import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
+import React, { useRef, useState } from 'react';
+import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
+import { BehaviorSubject } from 'rxjs';
+import store from '../store/store';
+import { stackableDrag } from './actions';
 import { showDragGhost } from './drag-ghost-item';
-import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
-import { CompareService } from 'app/compare/compare.service';
-import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import { DimItem } from './item-types';
 
 interface ExternalProps {
   item: DimItem;

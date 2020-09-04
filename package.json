@@ -130,6 +130,7 @@
     "notify-webpack-plugin": "^2.0.0",
     "postcss-loader": "^3.0.0",
     "prettier": "^2.0.4",
+    "prettier-plugin-organize-imports": "^1.1.1",
     "pretty-quick": "^3.0.0",
     "raw-loader": "^4.0.0",
     "react-test-renderer": "^16.10.2",
