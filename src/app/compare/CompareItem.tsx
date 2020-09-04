@@ -17,6 +17,8 @@ export default function CompareItem({
   highlight,
   setHighlight,
   updateSocketComparePlug,
+  adjustedItemPlugs,
+  adjustedItemStats,
 }: {
   item: DimItem;
   stats: StatInfo[];
@@ -30,6 +32,8 @@ export default function CompareItem({
     socket: DimSocket;
     plug: DimPlug;
   }): void;
+  adjustedItemPlugs: { [socketIndex: number]: DimPlug } | undefined;
+  adjustedItemStats: { [statHash: number]: number } | undefined;
 }) {
   return (
     <div className="compare-item">
@@ -52,11 +56,17 @@ export default function CompareItem({
           stat={stat}
           setHighlight={setHighlight}
           highlight={highlight}
+          adjustedItemStats={adjustedItemStats}
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.isDestiny2() && item.sockets && (
-        <ItemSockets item={item} minimal={true} updateSocketComparePlug={updateSocketComparePlug} />
+        <ItemSockets
+          item={item}
+          minimal={true}
+          updateSocketComparePlug={updateSocketComparePlug}
+          adjustedItemPlugs={adjustedItemPlugs}
+        />
       )}
     </div>
   );

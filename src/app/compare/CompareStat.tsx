@@ -14,19 +14,22 @@ export default function CompareStat({
   item,
   highlight,
   setHighlight,
+  adjustedItemStats,
 }: {
   stat: StatInfo;
   item: DimItem;
   highlight?: number | string | undefined;
   setHighlight?(value?: string | number): void;
+  adjustedItemStats?: { [statHash: number]: number } | undefined;
 }) {
   const itemStat = stat.getStat(item);
+  const adjustedStatValue = itemStat ? adjustedItemStats?.[itemStat.statHash] : undefined;
 
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight?.(stat.id)}
-      style={getColor(statRange(itemStat, stat), 'color')}
+      style={getColor(statRange(itemStat, stat, adjustedStatValue), 'color')}
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
@@ -36,11 +39,11 @@ export default function CompareStat({
         {itemStat?.value !== undefined ? (
           itemStat.statHash === StatHashes.RecoilDirection ? (
             <span className="stat-recoil">
-              <span>{itemStat.value}</span>
-              <RecoilStat value={itemStat.value} />
+              <span>{adjustedItemStats?.[itemStat.statHash] ?? itemStat.value}</span>
+              <RecoilStat value={adjustedItemStats?.[itemStat.statHash] ?? itemStat.value} />
             </span>
           ) : (
-            itemStat.value
+            adjustedItemStats?.[itemStat.statHash] ?? itemStat.value
           )
         ) : (
           t('Stats.NotApplicable')
@@ -58,7 +61,8 @@ export default function CompareStat({
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
   stat: { value?: number; statHash: number; qualityPercentage?: { min: number } } | undefined,
-  statInfo: StatInfo
+  statInfo: StatInfo,
+  adjustedStatValue: number | undefined
 ) {
   if (!stat) {
     return -1;
@@ -72,7 +76,15 @@ function statRange(
   }
 
   if (statInfo.lowerBetter) {
+    if (adjustedStatValue) {
+      return (
+        (100 * (statInfo.max - (adjustedStatValue || statInfo.max))) / (statInfo.max - statInfo.min)
+      );
+    }
     return (100 * (statInfo.max - (stat.value || statInfo.max))) / (statInfo.max - statInfo.min);
+  }
+  if (adjustedStatValue) {
+    return (100 * ((adjustedStatValue || 0) - statInfo.min)) / (statInfo.max - statInfo.min);
   }
   return (100 * ((stat.value || 0) - statInfo.min)) / (statInfo.max - statInfo.min);
 }

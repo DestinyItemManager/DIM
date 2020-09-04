@@ -31,6 +31,7 @@ interface ProvidedProps {
     socket: DimSocket;
     plug: DimPlug;
   }): void;
+  adjustedItemPlugs?: { [socketIndex: number]: DimPlug } | undefined;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   onShiftClick?(lockedItem: LockedItemType): void;
@@ -75,6 +76,7 @@ function ItemSockets({
   onShiftClick,
   dispatch,
   updateSocketComparePlug,
+  adjustedItemPlugs,
 }: Props) {
   if ($featureFlags.reviewsEnabled) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -158,6 +160,7 @@ function ItemSockets({
                 bestPerks={bestPerks}
                 onClick={handleSocketClick}
                 onShiftClick={onShiftClick}
+                adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex - 1]}
               />
             ))}
           </div>
@@ -261,6 +264,7 @@ function Socket({
   isPhonePortrait,
   onClick,
   onShiftClick,
+  adjustedPlug,
 }: {
   defs: D2ManifestDefinitions;
   item: D2Item;
@@ -274,6 +278,7 @@ function Socket({
   isPhonePortrait: boolean;
   onClick(item: DimItem, categoryHash: number, socket: DimSocket, plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
+  adjustedPlug?: DimPlug | undefined;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 
@@ -300,6 +305,7 @@ function Socket({
             onClick(item, categoryHash, socket, plug);
           }}
           onShiftClick={onShiftClick}
+          adjustedPlug={adjustedPlug}
         />
       ))}
     </div>

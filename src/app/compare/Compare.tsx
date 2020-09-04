@@ -56,6 +56,8 @@ interface State {
   sortedHash?: string | number;
   sortBetterFirst: boolean;
   comparisonSets: { buttonLabel: React.ReactNode; items: DimItem[] }[];
+  adjustedPlugs?: { [itemId: string]: { [socketIndex: number]: DimPlug } } | undefined;
+  adjustedStats?: { [itemId: string]: { [statHash: number]: number } } | undefined;
 }
 
 export interface StatInfo {
@@ -115,6 +117,8 @@ class Compare extends React.Component<Props, State> {
       sortedHash,
       highlight,
       comparisonSets,
+      adjustedPlugs,
+      adjustedStats,
     } = this.state;
 
     if (!show || unsortedComparisonItems.length === 0) {
@@ -174,7 +178,7 @@ class Compare extends React.Component<Props, State> {
       item,
       categoryHash,
       socket,
-      plug,
+      plug: clickedPlug,
     }: {
       item: DimItem;
       categoryHash: number;
@@ -186,70 +190,90 @@ class Compare extends React.Component<Props, State> {
         return null;
       }
 
-      const { socketIndex } = socket;
-      const itemIndex = comparisonItems.indexOf(item);
+      let { socketIndex } = socket;
       const categoryIndex = item.sockets.categories.findIndex(
         (category) => category.category.hash === categoryHash
       );
       // Create deep copies of arrays to prevent directly mutating state
       // (_.cloneDeep is resulting in object mutation)
       const itemStatsClone: DimStat[] = JSON.parse(JSON.stringify(item.stats));
-      const itemCategorySocketsClone: DimSocket[] = JSON.parse(
-        JSON.stringify(item.sockets.categories[categoryIndex].sockets)
-      );
+
       // socketIndex is correct for allSockets, but not categories[].sockets
       // TODO: Confirm socket is always off by 1, otherwise this should use hashes to find plugs
-      const prevPlug =
-        itemCategorySocketsClone[socketIndex - 1].comparePlugged ??
-        itemCategorySocketsClone[socketIndex - 1].plugged;
+      socketIndex -= 1;
+      if (
+        (adjustedPlugs?.[item.id]?.[socketIndex] === undefined &&
+          clickedPlug.plugDef.hash !==
+            item.sockets.categories[categoryIndex].sockets[socketIndex].plugged?.plugDef.hash) ||
+        clickedPlug.plugDef.hash !== adjustedPlugs?.[item.id]?.[socketIndex]?.plugDef.hash
+      ) {
+        // Clone stats so state isn't directly mutated by math
+        const updateAdjustedPlugs =
+          _.isEmpty(adjustedPlugs) || adjustedPlugs === undefined
+            ? { [item.id]: {} }
+            : _.cloneDeep(adjustedPlugs);
+        const updateAdjustedStats =
+          _.isEmpty(adjustedStats) || adjustedStats === undefined
+            ? { [item.id]: {} }
+            : _.cloneDeep(adjustedStats);
 
-      // If the clicked plug is different to the current plug
-      if (plug.plugDef.hash !== prevPlug?.plugDef.hash) {
-        itemCategorySocketsClone[socketIndex - 1].comparePlugged = plug;
+        const prevAdjustedPlug =
+          updateAdjustedPlugs[item.id][socketIndex] ??
+          item.sockets.categories[categoryIndex].sockets[socketIndex].plugged;
 
-        // Get stats affected by prevPlug and remove from stats
-        if (prevPlug?.stats) {
-          for (const statHash in prevPlug?.stats) {
-            const statIndex = itemStatsClone.findIndex(
-              (stat) => stat.statHash === parseInt(statHash)
-            );
-            // Some statHashes are missing from codebase
-            // (e.g. 3291498656 on sidearm The Last Dance)
-            if (statIndex !== -1) {
-              itemStatsClone[statIndex].value =
-                itemStatsClone[statIndex].value - prevPlug?.stats[statHash];
-            }
-          }
-        }
-
-        // Get stats affected by new plug and add to stats
-        if (plug.stats) {
-          for (const statHash in plug.stats) {
+        // Remove old plug stats from adjustedStats
+        if (prevAdjustedPlug?.stats) {
+          for (const statHash in prevAdjustedPlug.stats) {
             const statIndex = itemStatsClone.findIndex(
               (stat) => stat.statHash === parseInt(statHash)
             );
             if (statIndex !== -1) {
-              itemStatsClone[statIndex].value =
-                itemStatsClone[statIndex].value + plug.stats[statHash];
+              if (updateAdjustedStats[item.id][statHash]) {
+                updateAdjustedStats[item.id][statHash] -= prevAdjustedPlug.stats[statHash];
+              } else {
+                updateAdjustedStats[item.id][statHash] =
+                  itemStatsClone[statIndex].value - prevAdjustedPlug.stats[statHash];
+              }
             }
           }
         }
 
-        // Write new item data
-        item.stats = itemStatsClone;
-        item.sockets.categories[categoryIndex].sockets = itemCategorySocketsClone;
+        // Add new plug stats to adjustedStats
+        if (clickedPlug.stats) {
+          for (const statHash in clickedPlug.stats) {
+            const statIndex = itemStatsClone.findIndex(
+              (stat) => stat.statHash === parseInt(statHash)
+            );
+            if (statIndex !== -1) {
+              if (updateAdjustedStats[item.id][statHash]) {
+                updateAdjustedStats[item.id][statHash] += clickedPlug.stats[statHash];
+              } else {
+                updateAdjustedStats[item.id][statHash] =
+                  itemStatsClone[statIndex].value + clickedPlug.stats[statHash];
+              }
+            }
+          }
+        }
 
-        // Set state object, replacing original item in array
-        this.setState((prevState) => {
-          const updatedComparisonItems = [
-            ...prevState.comparisonItems.slice(0, itemIndex),
-            item,
-            ...prevState.comparisonItems.slice(itemIndex + 1),
-          ];
+        const isCurrentPlug =
+          clickedPlug.plugDef.hash ===
+          item.sockets.categories[categoryIndex].sockets[socketIndex].plugged?.plugDef.hash;
 
-          return {
-            comparisonItems: updatedComparisonItems,
-          };
+        // Add / remove plugs from adjustedPlugs
+        if (isCurrentPlug) {
+          delete updateAdjustedPlugs?.[item.id]?.[socketIndex];
+        } else {
+          updateAdjustedPlugs[item.id][socketIndex] = clickedPlug;
+        }
+
+        if (_.isEmpty(updateAdjustedPlugs[item.id])) {
+          delete updateAdjustedPlugs[item.id];
+          delete updateAdjustedStats[item.id];
+        }
+
+        this.setState({
+          adjustedPlugs: updateAdjustedPlugs,
+          adjustedStats: updateAdjustedStats,
         });
       }
     };
@@ -301,6 +325,8 @@ class Compare extends React.Component<Props, State> {
                   setHighlight={this.setHighlight}
                   highlight={highlight}
                   updateSocketComparePlug={updateSocketComparePlug}
+                  adjustedItemPlugs={adjustedPlugs?.[item.id] ?? undefined}
+                  adjustedItemStats={adjustedStats?.[item.id] ?? undefined}
                 />
               ))}
             </div>
@@ -327,6 +353,8 @@ class Compare extends React.Component<Props, State> {
       comparisonItems: [],
       highlight: undefined,
       sortedHash: undefined,
+      adjustedPlugs: undefined,
+      adjustedStats: undefined,
     });
     CompareService.dialogOpen = false;
   };
