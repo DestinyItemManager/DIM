@@ -1,79 +1,27 @@
 import { t } from 'app/i18next-t';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { DimStore } from 'app/inventory/store-types';
-import {
-  sortedStoresSelector,
-  profileResponseSelector,
-  bucketsSelector,
-} from 'app/inventory/selectors';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import { queueAction } from 'app/inventory/action-queue';
 import Pursuits from './Pursuits';
 import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { useSubscription } from 'app/utils/hooks';
 import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import withStoresLoader from 'app/utils/withStoresLoader';
+import type { StoresLoadedProps } from 'app/utils/withStoresLoader';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
+type Props = StoresLoadedProps;
 
-interface StoreProps {
-  isPhonePortrait: boolean;
-  buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
-  stores: DimStore[];
-  profileInfo?: DestinyProfileResponse;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    isPhonePortrait: state.shell.isPhonePortrait,
-    stores: sortedStoresSelector(state),
-    defs: state.manifest.d2Manifest,
-    buckets: bucketsSelector(state),
-    profileInfo: profileResponseSelector(state),
-  };
-}
-
-const refreshStores = () =>
-  refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
-
-function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
+function Progress({ defsD2: defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (!profileInfo) {
-      D2StoresService.getStoresStream(account);
-    }
-  });
-
-  useSubscription(refreshStores);
-
-  if (!defs || !profileInfo || !stores.length) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
 
   // TODO: Searchable (item, description)
   // TODO: triumph search?
@@ -116,10 +64,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   const selectedStore = selectedStoreId
     ? getStore(stores, selectedStoreId)!
     : getCurrentStore(stores)!;
-
-  if (!defs || !buckets) {
-    return null;
-  }
 
   const triumphTitle = defs.PresentationNode.get(TRIUMPHS_ROOT_NODE).displayProperties.name;
   const sealTitle = defs.PresentationNode.get(SEALS_ROOT_NODE).displayProperties.name;
@@ -235,4 +179,4 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(Progress);
+export default withStoresLoader(Progress);

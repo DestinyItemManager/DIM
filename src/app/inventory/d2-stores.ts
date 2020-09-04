@@ -7,6 +7,7 @@ import {
   DestinyProfileResponse,
   DestinyCollectibleComponent,
   DestinyItemComponent,
+  DestinyComponentType,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -40,6 +41,9 @@ import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getArtifactBonus } from './stores-helpers';
 import { ItemPowerSet } from './ItemPowerSet';
 import { StatHashes } from 'data/d2/generated-enums';
+
+let isFirstLoad = true;
+let components: DestinyComponentType[] | undefined;
 
 /**
  * Update the high level character information for all the stores
@@ -105,10 +109,10 @@ export function mergeCollectibles(
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
   const allCollectibles = {
-    ...profileCollectibles.data?.collectibles,
+    ...profileCollectibles?.data?.collectibles,
   };
 
-  _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
+  _.forIn(characterCollectibles?.data || {}, ({ collectibles }) => {
     Object.assign(allCollectibles, collectibles);
   });
 
@@ -121,7 +125,7 @@ export const D2StoresService = makeD2StoresService();
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
  */
-function makeD2StoresService(): D2StoreServiceType {
+export function makeD2StoresService(): D2StoreServiceType {
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
@@ -162,7 +166,9 @@ function makeD2StoresService(): D2StoreServiceType {
    *
    * @return a stream of store updates
    */
-  function getStoresStream(account: DestinyAccount) {
+  function getStoresStream(account: DestinyAccount, firstLoadComponents?: DestinyComponentType[]) {
+    components = firstLoadComponents;
+
     accountStream.next(account);
     // Start the stream the first time it's asked for. Repeated calls
     // won't do anything.
@@ -191,11 +197,33 @@ function makeD2StoresService(): D2StoreServiceType {
   async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
     resetIdTracker();
 
+    const stores = await loadStoresData(account, isFirstLoad ? components : undefined);
+
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      if (components) {
+        // async load the rest (no await)
+        loadStoresData(account);
+      }
+    }
+
+    return stores;
+  }
+
+  /**
+   * Returns a promise for a fresh view of the stores and their items.
+   */
+  async function loadStoresData(
+    account: DestinyAccount,
+    components?: DestinyComponentType[]
+  ): Promise<D2Store[] | undefined> {
+    resetIdTracker();
+
     try {
       const [defs, , profileInfo] = await Promise.all([
         (store.dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
         store.dispatch(loadNewItems(account)),
-        getStores(account),
+        getStores(account, components),
       ]);
       const buckets = bucketsSelector(store.getState())!;
       console.time('Process inventory');
@@ -295,9 +323,9 @@ function makeD2StoresService(): D2StoreServiceType {
     const profileInventory = profileInfo.profileInventory.data?.items || [];
     const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
     const itemComponents = profileInfo.itemComponents;
-    const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
+    const progressions = profileInfo.characterProgressions?.data?.[characterId]?.progressions || [];
     const uninstancedItemObjectives =
-      profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
+      profileInfo.characterProgressions?.data?.[characterId]?.uninstancedItemObjectives || [];
 
     const store = makeCharacter(defs, character, lastPlayedDate);
 

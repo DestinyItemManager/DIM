@@ -5,10 +5,8 @@ import {
   DestinyCollectibleComponent,
 } from 'bungie-api-ts/destiny2';
 import React, { useState, useEffect, useMemo } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { loadingTracker } from '../shell/loading-tracker';
-import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
@@ -17,12 +15,7 @@ import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import {
-  ownedItemsSelector,
-  sortedStoresSelector,
-  profileResponseSelector,
-  bucketsSelector,
-} from '../inventory/selectors';
+import { ownedItemsSelector, bucketsSelector } from '../inventory/selectors';
 import { connect } from 'react-redux';
 import {
   D2VendorGroup,
@@ -45,18 +38,13 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { loadAllVendors } from './actions';
 import { useSubscription } from 'app/utils/hooks';
 import { VendorsState } from './reducer';
+import withStoresLoader from 'app/utils/withStoresLoader';
+import { StoresLoadedProps } from 'app/utils/withStoresLoader';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
 interface StoreProps {
-  stores: DimStore[];
-  buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
-  isPhonePortrait: boolean;
+  buckets?: InventoryBuckets;
   searchQuery: string;
-  profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
   filterItems(item: DimItem): boolean;
@@ -66,33 +54,29 @@ function mapStateToProps() {
   const ownedItemSelectorInstance = ownedItemsSelector();
 
   return (state: RootState): StoreProps => ({
-    stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    defs: state.manifest.d2Manifest,
-    isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
-    profileResponse: profileResponseSelector(state),
     vendorEngramDrops: state.vendorDrops.vendorDrops,
     vendors: state.vendors.vendorsByCharacter,
   });
 }
 
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+type Props = StoresLoadedProps & StoreProps & ThunkDispatchProp;
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 function Vendors({
-  defs,
+  defsD2: defs,
   stores,
   buckets,
   ownedItemHashes,
   isPhonePortrait,
   searchQuery,
   filterItems,
-  profileResponse,
+  profileInfo,
   vendorEngramDrops,
   vendors,
   dispatch,
@@ -139,15 +123,12 @@ function Vendors({
 
   const mergedCollectibles = useMemo(
     () =>
-      profileResponse
-        ? mergeCollectibles(
-            profileResponse.profileCollectibles,
-            profileResponse.characterCollectibles
-          )
+      profileInfo
+        ? mergeCollectibles(profileInfo.profileCollectibles, profileInfo.characterCollectibles)
         : emptyObject<{
             [x: number]: DestinyCollectibleComponent;
           }>(),
-    [profileResponse]
+    [profileInfo]
   );
 
   const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
@@ -187,7 +168,7 @@ function Vendors({
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
   }
 
-  const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
+  const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileInfo);
 
   return (
     <PageWithMenu>
@@ -310,4 +291,4 @@ function enhanceOwnedItemsWithPlugSets(
   return allItems;
 }
 
-export default connect<StoreProps>(mapStateToProps)(Vendors);
+export default withStoresLoader(connect<StoreProps>(mapStateToProps)(Vendors));

@@ -26,9 +26,8 @@ const Inventory = React.lazy(
 const Progress = React.lazy(
   () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
 );
-const LoadoutBuilderContainer = React.lazy(
-  () =>
-    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
+const LoadoutBuilder = React.lazy(
+  () => import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilder')
 );
 const D1LoadoutBuilder = React.lazy(
   () =>
@@ -86,7 +85,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
+function Destiny({ accountsLoaded, account, destinyVersion, dispatch, profileError }: Props) {
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -173,55 +172,35 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
     <>
       <div id="content">
         <Switch>
-          <Route path={`${path}/inventory`} exact>
-            <Inventory account={account} />
-          </Route>
-          {account.destinyVersion === 2 && (
-            <Route path={`${path}/progress`} exact>
-              <Progress account={account} />
-            </Route>
+          <Route path={`${path}/inventory`} exact component={Inventory} />
+          {destinyVersion === 2 && <Route path={`${path}/progress`} exact component={Progress} />}
+          {destinyVersion === 2 && (
+            <Route path={`${path}/collections`} exact component={Collections} />
           )}
-          {account.destinyVersion === 2 && (
-            <Route path={`${path}/collections`} exact>
-              <Collections account={account} />
-            </Route>
-          )}
-          <Route path={`${path}/optimizer`} exact>
-            {account.destinyVersion === 2 ? (
-              <LoadoutBuilderContainer account={account} />
-            ) : (
-              <D1LoadoutBuilder />
-            )}
-          </Route>
-          <Route path={`${path}/organizer`} exact>
-            <Organizer account={account} />
-          </Route>
-          {account.destinyVersion === 2 && (
+          <Route
+            path={`${path}/optimizer`}
+            exact
+            component={destinyVersion === 2 ? LoadoutBuilder : D1LoadoutBuilder}
+          />
+          <Route path={`${path}/organizer`} exact component={Organizer} />
+          {destinyVersion === 2 && (
             <Route
               path={`${path}/vendors/:vendorId`}
               exact
               render={({ match }) => (
-                <SingleVendor
-                  key={match.params.vendorId}
-                  account={account}
-                  vendorHash={match.params.vendorId}
-                />
+                <SingleVendor key={match.params.vendorId} vendorHash={match.params.vendorId} />
               )}
             />
           )}
           <Route path={`${path}/vendors`} exact>
-            {account.destinyVersion === 2 ? (
-              <Vendors account={account} />
-            ) : (
-              <D1Vendors account={account} />
-            )}
+            {destinyVersion === 2 ? <Vendors /> : <D1Vendors account={account} />}
           </Route>
-          {account.destinyVersion === 1 && (
+          {destinyVersion === 1 && (
             <Route path={`${path}/record-books`} exact>
               <RecordBooks account={account} />
             </Route>
           )}
-          {account.destinyVersion === 1 && (
+          {destinyVersion === 1 && (
             <Route path={`${path}/activities`} exact>
               <Activities account={account} />
             </Route>

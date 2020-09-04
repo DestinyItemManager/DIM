@@ -3,9 +3,8 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React, { useMemo, useRef } from 'react';
 import { connect } from 'react-redux';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { D2Store } from '../inventory/store-types';
 import { RootState } from 'app/store/types';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
@@ -17,7 +16,6 @@ import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './filter/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { searchFilterSelector } from 'app/search/search-filter';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
@@ -32,12 +30,16 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ModPicker from './filter/ModPicker';
 import ReactDOM from 'react-dom';
 import PerkPicker from './filter/PerkPicker';
+import { Location } from 'history';
+import { withRouter, StaticContext } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
+import withStoresLoader from 'app/utils/withStoresLoader';
+import type { StoresLoadedProps } from 'app/utils/withStoresLoader';
 
 interface ProvidedProps {
-  account: DestinyAccount;
-  defs: D2ManifestDefinitions;
-  stores: DimStore[];
-  preloadedLoadout?: Loadout;
+  location: Location<{
+    loadout?: Loadout | undefined;
+  }>;
 }
 
 interface StoreProps {
@@ -45,14 +47,16 @@ interface StoreProps {
   assumeMasterwork: boolean;
   minimumPower: number;
   minimumStatTotal: number;
-  isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
   filter(item: DimItem): boolean;
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps &
+  StoresLoadedProps &
+  StoreProps &
+  RouteComponentProps<{}, StaticContext, { loadout?: Loadout }>;
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
@@ -100,7 +104,6 @@ function mapStateToProps() {
       assumeMasterwork: loAssumeMasterwork,
       minimumPower: loMinPower,
       minimumStatTotal: loMinStatTotal,
-      isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       filter: searchFilterSelector(state),
     };
@@ -118,9 +121,9 @@ function LoadoutBuilder({
   minimumStatTotal,
   isPhonePortrait,
   items,
-  defs,
+  defsD2: defs,
   filter,
-  preloadedLoadout,
+  location,
 }: Props) {
   const [
     {
@@ -133,7 +136,7 @@ function LoadoutBuilder({
       perkPicker,
     },
     lbDispatch,
-  ] = useLbState(stores, preloadedLoadout);
+  ] = useLbState(stores, location.state?.loadout);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -294,4 +297,4 @@ function LoadoutBuilder({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
+export default withRouter(withStoresLoader(connect<StoreProps>(mapStateToProps)(LoadoutBuilder)));

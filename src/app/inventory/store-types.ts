@@ -4,6 +4,7 @@ import {
   DestinyFactionDefinition,
   DestinyColor,
   DestinyDisplayPropertiesDefinition,
+  DestinyComponentType,
 } from 'bungie-api-ts/destiny2';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -19,7 +20,10 @@ export interface StoreServiceType<StoreType = DimStore> {
   /** Get a list of all characters plus the vault. */
   getStores(): StoreType[];
   /** A stream of store updates for a particular account. */
-  getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
+  getStoresStream(
+    account: DestinyAccount,
+    components?: DestinyComponentType[]
+  ): ConnectableObservable<StoreType[] | undefined>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
 }

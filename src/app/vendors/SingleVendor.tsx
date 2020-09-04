@@ -1,22 +1,12 @@
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useEffect } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
-import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { connect } from 'react-redux';
-import {
-  storesSelector,
-  ownedItemsSelector,
-  profileResponseSelector,
-  bucketsSelector,
-} from '../inventory/selectors';
+import { ownedItemsSelector } from '../inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
@@ -30,34 +20,27 @@ import clsx from 'clsx';
 import { VendorsState } from './reducer';
 import { loadAllVendors } from './actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import withStoresLoader from 'app/utils/withStoresLoader';
+import type { StoresLoadedProps } from 'app/utils/withStoresLoader';
 
 interface ProvidedProps {
-  account: DestinyAccount;
   vendorHash: number;
 }
 
 interface StoreProps {
-  stores: DimStore[];
-  defs?: D2ManifestDefinitions;
-  buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
-  profileResponse?: DestinyProfileResponse;
   vendors: VendorsState['vendorsByCharacter'];
 }
 
 function mapStateToProps() {
   const ownedItemSelectorInstance = ownedItemsSelector();
   return (state: RootState): StoreProps => ({
-    stores: storesSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
-    buckets: bucketsSelector(state),
-    defs: state.manifest.d2Manifest,
-    profileResponse: profileResponseSelector(state),
     vendors: state.vendors.vendorsByCharacter,
   });
 }
 
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoresLoadedProps & StoreProps & ThunkDispatchProp;
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
@@ -67,8 +50,8 @@ function SingleVendor({
   stores,
   buckets,
   ownedItemHashes,
-  defs,
-  profileResponse,
+  defsD2: defs,
+  profileInfo,
   vendorHash,
   dispatch,
   vendors,
@@ -118,9 +101,6 @@ function SingleVendor({
     return <ErrorPanel error={vendorData.error} />;
   }
   if (vendorDef.returnWithVendorRequest) {
-    if (!profileResponse) {
-      return <ShowPageLoading message={t('Loading.Profile')} />;
-    }
     if (!vendorResponse) {
       return <ShowPageLoading message={t('Loading.Vendors')} />;
     }
@@ -144,8 +124,8 @@ function SingleVendor({
     .join(', ');
   // TODO: there's a cool background image but I'm not sure how to use it
 
-  const mergedCollectibles = profileResponse
-    ? mergeCollectibles(profileResponse.profileCollectibles, profileResponse.characterCollectibles)
+  const mergedCollectibles = profileInfo
+    ? mergeCollectibles(profileInfo.profileCollectibles, profileInfo.characterCollectibles)
     : {};
 
   const d2Vendor = toVendor(
@@ -191,4 +171,4 @@ function SingleVendor({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(SingleVendor);
+export default withStoresLoader(connect<StoreProps>(mapStateToProps)(SingleVendor));
