@@ -208,7 +208,7 @@ export function filterPresentationNodesToSearch(
   return [];
 }
 
-function searchDisplayProperties(
+export function searchDisplayProperties(
   displayProperties: DestinyDisplayPropertiesDefinition,
   searchQuery: string
 ) {

@@ -5,13 +5,8 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
-import Record from './Record';
 import { itemsForPlugSet } from './plugset-helpers';
-import {
-  filterPresentationNodesToSearch,
-  toPresentationNodeTree,
-  toRecord,
-} from './presentation-nodes';
+import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
 import { DimItem } from 'app/inventory/item-types';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 
@@ -83,11 +78,6 @@ export default function PresentationNodeRoot({
     );
   }
 
-  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
-  const trackedRecord = trackedRecordHash
-    ? toRecord(defs, profileResponse, trackedRecordHash)
-    : null;
-
   const plugSetCollections = [
     // Emotes
     { hash: 1155321287, displayItem: 3960522253 },
@@ -97,19 +87,6 @@ export default function PresentationNodeRoot({
 
   return (
     <>
-      {isTriumphs && trackedRecord && (
-        <div className="progress-for-character">
-          <div className="records">
-            <Record
-              record={trackedRecord}
-              defs={defs}
-              completedRecordsHidden={false}
-              redactedRecordsRevealed={true}
-            />
-          </div>
-        </div>
-      )}
-
       <PresentationNode
         node={nodeTree}
         defs={defs}

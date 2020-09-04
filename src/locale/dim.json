@@ -799,15 +799,18 @@
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
     "Progress": "Progress",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Secret Triumph"
+    "SecretTriumph": "Secret Triumph",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

@@ -35,6 +35,8 @@ import { RAID_NODE } from 'app/search/d2-known-values';
 import { DimItem } from 'app/inventory/item-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/reducer';
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { TrackedTriumphs } from './TrackedTriumphs';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -47,6 +49,7 @@ interface StoreProps {
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
+  trackedTriumphs: number[];
   searchFilter?(item: DimItem): boolean;
 }
 
@@ -61,6 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
     searchFilter: searchFilterSelector(state),
+    trackedTriumphs: trackedTriumphsSelector(state),
   };
 }
 
@@ -76,6 +80,7 @@ function Progress({
   profileInfo,
   searchQuery,
   searchFilter,
+  trackedTriumphs,
 }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
@@ -143,9 +148,11 @@ function Progress({
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
+    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
     { id: 'triumphs', title: triumphTitle },
     { id: 'seals', title: sealTitle },
   ];
+  const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
     <ErrorBoundary name="Progress">
@@ -210,6 +217,22 @@ function Progress({
                   <div className="progress-row">
                     <ErrorBoundary name="Raids">
                       <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
+
+              <section id="trackedTriumphs">
+                <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+                  <div className="progress-row">
+                    <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
+                      <TrackedTriumphs
+                        trackedTriumphs={trackedTriumphs}
+                        trackedRecordHash={trackedRecordHash}
+                        defs={defs}
+                        profileResponse={profileInfo}
+                        searchQuery={searchQuery}
+                      />
                     </ErrorBoundary>
                   </div>
                 </CollapsibleTitle>

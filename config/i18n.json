@@ -820,7 +820,10 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Secret Triumph"
+    "SecretTriumph": "Secret Triumph",
+    "TrackedTriumphs": "Tracked Triumphs",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM."
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
