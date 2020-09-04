@@ -73,7 +73,6 @@ export default function PresentationNodeRoot({
       []
     );
 
-    console.log({ searchResults, searchQuery });
     return (
       <PresentationNodeSearchResults
         searchResults={searchResults}

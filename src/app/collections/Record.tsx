@@ -20,13 +20,16 @@ import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import { percent } from 'app/shell/filters';
 import _ from 'lodash';
 import { DimRecord } from './presentation-nodes';
+import { useDispatch, useSelector } from 'react-redux';
+import { trackTriumph } from 'app/dim-api/basic-actions';
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { RootState } from 'app/store/types';
 
 interface Props {
   record: DimRecord;
   defs: D2ManifestDefinitions;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
-  trackedTriumphs: number[];
 }
 
 interface RecordInterval {
@@ -43,11 +46,12 @@ export default function Record({
   defs,
   completedRecordsHidden,
   redactedRecordsRevealed,
-  trackedTriumphs,
 }: Props) {
   const { recordDef, trackedInGame, recordComponent } = record;
+  console.log(`Render ${recordDef.displayProperties.name}`);
   const state = recordComponent.state;
   const recordHash = recordDef.hash;
+  const dispatch = useDispatch();
 
   const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
   const unlocked = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
@@ -56,7 +60,9 @@ export default function Record({
     !unlocked &&
     !acquired &&
     Boolean(state & DestinyRecordState.Obscured);
-  const trackedByDim = trackedTriumphs.includes(recordHash);
+  const trackedInDim = useSelector((state: RootState) =>
+    trackedTriumphsSelector(state).includes(recordHash)
+  );
   const loreLink =
     !obscured &&
     recordDef.loreHash &&
@@ -147,6 +153,10 @@ export default function Record({
 
   // TODO: show track badge greyed out / on hover
   // TODO: track on click
+  const toggleTracked = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch(trackTriumph({ recordHash, tracked: !trackedInDim }));
+  };
 
   return (
     <div
@@ -155,6 +165,7 @@ export default function Record({
         unlocked,
         obscured,
         tracked: trackedInGame,
+        trackedInDim,
         multistep: intervals.length > 0,
       })}
     >
@@ -179,7 +190,11 @@ export default function Record({
           </div>
         )}
         {trackedInGame && <img className="trackedIcon" src={trackedIcon} />}
-        {trackedByDim && <img className="trackedIcon" src={dimTrackedIcon} />}
+        {(!acquired || trackedInDim) && (
+          <div role="button" onClick={toggleTracked} className="dimTrackedIcon">
+            <img src={dimTrackedIcon} />
+          </div>
+        )}
       </div>
       {intervalProgressBar}
     </div>

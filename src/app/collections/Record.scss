@@ -64,6 +64,16 @@
     border-color: $blue;
   }
 
+  &.trackedInDim {
+    position: relative;
+    border-color: $orange;
+    border-width: 2px;
+    background: linear-gradient(
+      scale-color($orange, $alpha: -100%) 0%,
+      scale-color($orange, $alpha: -90%) 100%
+    );
+  }
+
   &.tracked {
     position: relative;
     border-color: #bdfc7f;
@@ -85,6 +95,36 @@
     height: auto !important;
     right: 50px;
     top: -2px;
+  }
+
+  .dimTrackedIcon {
+    position: absolute;
+    display: none;
+    right: calc(58px + var(--item-size) / 3.1);
+    top: -9px;
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    padding: 8px;
+    transition: transform 300ms ease-in-out;
+    transform-origin: center 8px;
+    opacity: 0.7;
+    &:hover {
+      transform: scale(1.5);
+    }
+    img {
+      width: calc(var(--item-size) / 3.1) !important;
+      height: auto !important;
+    }
+  }
+  &:hover .dimTrackedIcon {
+    display: block;
+    opacity: 0.7;
+  }
+  &.trackedInDim .dimTrackedIcon {
+    display: block;
+    opacity: 1;
+    top: -10px;
   }
 
   .record-lore img {

@@ -33,8 +33,7 @@ export async function getDimApiProfile(account?: DestinyAccount) {
       ? {
           platformMembershipId: account.membershipId,
           destinyVersion: account.destinyVersion,
-          // TODO: triumphs
-          components: 'settings,loadouts,tags,hashtags,searches',
+          components: 'settings,loadouts,tags,hashtags,searches,triumphs',
         }
       : {
           components: 'settings',

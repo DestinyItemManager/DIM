@@ -224,6 +224,7 @@ input[type='search'] {
   padding-left: env(safe-area-inset-left);
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
+  scroll-margin-top: $header-height;
   &::before {
     clear: both;
     content: '';
