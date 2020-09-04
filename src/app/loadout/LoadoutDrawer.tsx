@@ -436,10 +436,12 @@ function LoadoutDrawer({
   };
   useSubscription(() => editLoadout$.subscribe(editLoadout));
 
+  const loadoutItems = loadout?.items;
+
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => findItems(loadout?.items, defs, stores), [
+  const [items, warnitems] = useMemo(() => findItems(loadoutItems, defs, stores), [
     defs,
-    loadout?.items,
+    loadoutItems,
     stores,
   ]);
 
