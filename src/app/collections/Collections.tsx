@@ -141,6 +141,7 @@ function Collections({
             openedPresentationHash={presentationNodeHash}
             searchQuery={searchQuery}
             searchFilter={searchFilter}
+            overrideName={t('Progress.StatTrackers')}
           />
         )}
       </ErrorBoundary>

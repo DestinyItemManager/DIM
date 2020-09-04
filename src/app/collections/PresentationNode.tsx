@@ -33,6 +33,7 @@ interface ProvidedProps {
   parents: number[];
   isTriumphsRootNode?: boolean;
   isInTriumphs?: boolean;
+  overrideName?: string;
   onNodePathSelected(nodePath: number[]): void;
 }
 
@@ -65,6 +66,7 @@ function PresentationNode({
   onNodePathSelected,
   isTriumphsRootNode,
   isInTriumphs,
+  overrideName,
 }: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
@@ -145,7 +147,7 @@ function PresentationNode({
           }
         />
       )}{' '}
-      {nodeDef.displayProperties.name}
+      {overrideName || nodeDef.displayProperties.name}
     </span>
   );
 

@@ -19,6 +19,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   searchQuery?: string;
   isTriumphs?: boolean;
+  overrideName?: string;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -39,6 +40,7 @@ export default function PresentationNodeRoot({
   searchQuery,
   searchFilter,
   isTriumphs,
+  overrideName,
 }: Props) {
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -96,6 +98,7 @@ export default function PresentationNodeRoot({
         parents={[]}
         isTriumphsRootNode={isTriumphs}
         isInTriumphs={isTriumphs}
+        overrideName={overrideName}
       />
 
       {buckets &&
