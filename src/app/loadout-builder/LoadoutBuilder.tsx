@@ -170,11 +170,14 @@ function LoadoutBuilder({
 
   const combos = result?.combos || 0;
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
+  const sets = result?.sets;
 
-  const filteredSets = useMemo(
-    () => sortGeneratedSets(lockedMap, statOrder, enabledStats, result?.sets),
-    [lockedMap, statOrder, enabledStats, result?.sets]
-  );
+  const filteredSets = useMemo(() => sortGeneratedSets(lockedMap, statOrder, enabledStats, sets), [
+    lockedMap,
+    statOrder,
+    enabledStats,
+    sets,
+  ]);
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);
 
