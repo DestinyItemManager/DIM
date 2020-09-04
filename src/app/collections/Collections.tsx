@@ -31,6 +31,7 @@ import {
 import { refresh$ } from '../shell/refresh';
 import Catalysts from './Catalysts';
 import './collections.scss';
+import LegacyTriumphs from './LegacyTriumphs';
 import PresentationNodeRoot from './PresentationNodeRoot';
 
 interface ProvidedProps {
@@ -139,6 +140,7 @@ function Collections({
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
     { id: 'catalysts', title: t('Vendors.Catalysts') },
+    { id: 'legacyTriumphs', title: t('Progress.LegacyTriumphs') },
     { id: 'triumphs', title: triumphTitle },
     { id: 'seals', title: sealsTitle },
     { id: 'collections', title: t('Vendors.Collections') },
@@ -192,6 +194,21 @@ function Collections({
             <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId="catalysts">
               <ErrorBoundary name="Catalysts">
                 <Catalysts defs={defs} profileResponse={profileResponse} />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
+        {recordsRootHash && (
+          <section id="legacyTriumphs">
+            <CollapsibleTitle title={t('Progress.LegacyTriumphs')} sectionId="legacyTriumphs">
+              <ErrorBoundary name="Legacy Triumphs">
+                <LegacyTriumphs
+                  presentationNodeHash={recordsRootHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  searchQuery={searchQuery}
+                  completedRecordsHidden={completedRecordsHidden}
+                />
               </ErrorBoundary>
             </CollapsibleTitle>
           </section>

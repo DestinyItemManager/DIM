@@ -16,7 +16,8 @@ interface Props {
   children: React.ReactElement<any, any>;
   allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
-  elementType?: React.ReactType;
+  elementType?: React.ElementType;
+  className?: string;
 }
 
 /** Makes a custom popper that doesn't have the event listeners modifier */
