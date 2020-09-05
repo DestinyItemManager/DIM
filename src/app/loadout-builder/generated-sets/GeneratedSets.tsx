@@ -1,24 +1,24 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { newLoadout } from 'app/loadout/loadout-utils';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import _ from 'lodash';
 import React, { Dispatch } from 'react';
+import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
   ArmorSet,
-  StatTypes,
-  LockedMap,
   LockedArmor2ModMap,
-  ModPickerCategories,
+  LockedMap,
   LockedModBase,
+  ModPickerCategories,
+  StatTypes,
 } from '../types';
-import { WindowScroller, List } from 'react-virtualized';
-import GeneratedSet from './GeneratedSet';
-import { newLoadout } from 'app/loadout/loadout-utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './GeneratedSets.m.scss';
-import _ from 'lodash';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { someModHasEnergyRequirement } from '../utils';
+import GeneratedSet from './GeneratedSet';
+import styles from './GeneratedSets.m.scss';
 
 const statsWarning =
   'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';

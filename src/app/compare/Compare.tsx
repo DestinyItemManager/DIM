@@ -1,49 +1,58 @@
-import React from 'react';
+import { itemPop } from 'app/dim-ui/scroll';
+import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import clsx from 'clsx';
-import { DimItem, DimStat } from '../inventory/item-types';
-import _ from 'lodash';
-import { CompareService } from './compare.service';
-import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
-import { createSelector } from 'reselect';
-import CompareItem from './CompareItem';
-import './compare.scss';
-import { Subscriptions } from '../utils/rx-utils';
-import { connect } from 'react-redux';
-import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { RootState } from 'app/store/types';
-import Sheet from '../dim-ui/Sheet';
-import { showNotification } from '../notifications/notifications';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { getAllItems } from 'app/inventory/stores-helpers';
+import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { makeDupeID } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { setSetting } from 'app/settings/actions';
+import Checkbox from 'app/settings/Checkbox';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
 import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { DimStore } from 'app/inventory/store-types';
-import { storesSelector } from 'app/inventory/selectors';
-import { getAllItems } from 'app/inventory/stores-helpers';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { itemPop } from 'app/dim-ui/scroll';
-import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { powerCapPlugSetHash } from 'app/search/d2-known-values';
+import React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { createSelector } from 'reselect';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import Sheet from '../dim-ui/Sheet';
+import { DimItem, DimStat } from '../inventory/item-types';
+import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
+import { showNotification } from '../notifications/notifications';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { Subscriptions } from '../utils/rx-utils';
+import './compare.scss';
+import { CompareService } from './compare.service';
+import CompareItem from './CompareItem';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
   defs?: D2ManifestDefinitions;
+  compareBaseStats: boolean;
 }
 
-type Props = StoreProps & RouteComponentProps;
+const mapDispatchToProps = {
+  setSetting,
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     ratings: ratingsSelector(state),
     stores: storesSelector(state),
     defs: state.manifest.d2Manifest,
+    compareBaseStats: settingsSelector(state).compareBaseStats,
   };
 }
 
@@ -67,7 +76,10 @@ export interface StatInfo {
   lowerBetter: boolean;
   getStat: StatGetter;
 }
-type StatGetter = (item: DimItem) => DimStat | { value?: number; statHash: number } | undefined;
+
+/** a DimStat with, at minimum, a statHash */
+export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
+type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 class Compare extends React.Component<Props, State> {
   state: State = {
@@ -82,6 +94,7 @@ class Compare extends React.Component<Props, State> {
   private getAllStatsSelector = createSelector(
     (state: State) => state.comparisonItems,
     (_state: State, props: Props) => props.ratings,
+    (_state: State, props: Props) => props.compareBaseStats,
     getAllStats
   );
 
@@ -108,7 +121,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { ratings } = this.props;
+    const { ratings, compareBaseStats, setSetting } = this.props;
     const {
       show,
       comparisonItems: unsortedComparisonItems,
@@ -121,6 +134,10 @@ class Compare extends React.Component<Props, State> {
       CompareService.dialogOpen = false;
       return null;
     }
+
+    const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+      setSetting(e.target.name as any, e.target.checked);
+    };
 
     const comparisonItems = !sortedHash
       ? unsortedComparisonItems
@@ -173,6 +190,12 @@ class Compare extends React.Component<Props, State> {
         onClose={this.cancel}
         header={
           <div className="compare-options">
+            <Checkbox
+              label={t('Compare.CompareBaseStats')}
+              name="compareBaseStats"
+              value={compareBaseStats}
+              onChange={onChange}
+            />
             {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
                 type="button"
@@ -214,6 +237,7 @@ class Compare extends React.Component<Props, State> {
                   remove={this.remove}
                   setHighlight={this.setHighlight}
                   highlight={highlight}
+                  compareBaseStats={compareBaseStats}
                 />
               ))}
             </div>
@@ -540,8 +564,13 @@ class Compare extends React.Component<Props, State> {
   };
 }
 
-function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings']) {
+function getAllStats(
+  comparisonItems: DimItem[],
+  ratings: ReviewsState['ratings'],
+  compareBaseStats: boolean
+) {
   const firstComparison = comparisonItems[0];
+  compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
 
   if ($featureFlags.reviewsEnabled) {
@@ -625,8 +654,14 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
       if (itemStat) {
-        stat.min = Math.min(stat.min, itemStat.value || 0);
-        stat.max = Math.max(stat.max, itemStat.value || 0);
+        stat.min = Math.min(
+          stat.min,
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+        );
+        stat.max = Math.max(
+          stat.max,
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+        );
         stat.enabled = stat.min !== stat.max;
         stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
@@ -660,4 +695,6 @@ function makeFakeStat(
   };
 }
 
-export default withRouter(connect<StoreProps>(mapStateToProps)(Compare));
+export default withRouter(
+  connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(Compare)
+);

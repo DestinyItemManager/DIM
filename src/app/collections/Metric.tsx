@@ -1,11 +1,10 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import _ from 'lodash';
-import styles from './Metric.m.scss';
-import clsx from 'clsx';
-import MetricBanner from './MetricBanner';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { ObjectiveValue } from 'app/progress/Objective';
+import clsx from 'clsx';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import styles from './Metric.m.scss';
+import MetricBanner from './MetricBanner';
 import { DimMetric } from './presentation-nodes';
 
 interface Props {

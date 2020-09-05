@@ -1,12 +1,12 @@
 import {
+  battleNetIcon,
   dimEngramIcon,
-  dimPowerIcon,
-  dimPowerAltIcon,
   dimHunterIcon,
+  dimPowerAltIcon,
+  dimPowerIcon,
   dimTitanIcon,
   dimWarlockIcon,
   stadiaIcon,
-  battleNetIcon,
 } from './custom';
 
 const faArchive = 'fas fa-archive';

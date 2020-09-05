@@ -1,4 +1,4 @@
-import { DimWorkingUserReview, DimUserReview, DtrReviewer } from './dtr-api-types';
+import { DimUserReview, DimWorkingUserReview, DtrReviewer } from './dtr-api-types';
 
 /**
  * A fetch request for a single weapon. Expected to be part of a bulk (array) fetch request.

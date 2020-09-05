@@ -1,29 +1,29 @@
-import _ from 'lodash';
+import { tl } from 'app/i18next-t';
 import {
-  DimPlug,
-  DimItem,
   D2Item,
+  DimItem,
+  DimPlug,
   DimSocket,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
+import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import {
-  statValues,
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+  DestinyItemSubType,
+  TierType,
+} from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import {
+  LockedArmor2Mod,
   LockedItemType,
   LockedMod,
-  LockedArmor2Mod,
-  StatTypes,
   ModPickerCategories,
+  StatTypes,
+  statValues,
 } from './types';
-import {
-  DestinyInventoryItemDefinition,
-  TierType,
-  DestinyItemSubType,
-  DestinyEnergyType,
-} from 'bungie-api-ts/destiny2';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import { tl } from 'app/i18next-t';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.

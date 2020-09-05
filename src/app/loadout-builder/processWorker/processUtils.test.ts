@@ -1,10 +1,10 @@
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
   ProcessItemSubset,
+  sortProcessModsOrProcessItems,
 } from './processUtils';
 import { ProcessMod } from './types';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 function getMod(
   season: number,

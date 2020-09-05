@@ -1,7 +1,6 @@
-import React from 'react';
-import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
-import _ from 'lodash';
+import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import React from 'react';
 import { DimCollectible } from './presentation-nodes';
 
 interface Props {

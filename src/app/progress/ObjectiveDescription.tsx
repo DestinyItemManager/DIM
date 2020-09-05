@@ -1,10 +1,9 @@
-import React from 'react';
-import _ from 'lodash';
-import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
-import BungieImage from '../dim-ui/BungieImage';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
+import React from 'react';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
 
 export default function ObjectiveDescription({
   progressDescription,

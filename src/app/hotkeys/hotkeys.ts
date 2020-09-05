@@ -1,5 +1,5 @@
-import Mousetrap from 'mousetrap';
 import _ from 'lodash';
+import Mousetrap from 'mousetrap';
 
 // A unique ID generator
 let componentId = 0;

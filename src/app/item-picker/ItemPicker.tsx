@@ -1,20 +1,20 @@
-import React, { useState, useMemo } from 'react';
-import { DimItem } from '../inventory/item-types';
-import { ItemPickerState } from './item-picker';
+import { t } from 'app/i18next-t';
+import SearchBar from 'app/search/SearchBar';
+import { RootState } from 'app/store/types';
+import _ from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { connect, MapStateToProps } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { connect, MapStateToProps } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { createSelector } from 'reselect';
+import { DimItem } from '../inventory/item-types';
 import { storesSelector } from '../inventory/selectors';
 import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
-import { sortItems } from '../shell/filters';
-import { itemSortOrderSelector } from '../settings/item-sort';
-import { t } from 'app/i18next-t';
-import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
-import _ from 'lodash';
-import SearchBar from 'app/search/SearchBar';
+import { itemSortOrderSelector } from '../settings/item-sort';
+import { sortItems } from '../shell/filters';
+import { ItemPickerState } from './item-picker';
+import './ItemPicker.scss';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;

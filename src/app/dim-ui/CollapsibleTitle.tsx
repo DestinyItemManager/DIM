@@ -1,12 +1,12 @@
-import React from 'react';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import { toggleCollapsedSection } from '../settings/actions';
-import { Dispatch } from 'redux';
-import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
-import clsx from 'clsx';
-import './CollapsibleTitle.scss';
 import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { toggleCollapsedSection } from '../settings/actions';
+import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
+import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
   sectionId: string;

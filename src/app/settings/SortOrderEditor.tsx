@@ -1,15 +1,15 @@
-import React from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import clsx from 'clsx';
-import './SortOrderEditor.scss';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
-  reorderIcon,
   AppIcon,
   enabledIcon,
-  moveUpIcon,
   moveDownIcon,
+  moveUpIcon,
+  reorderIcon,
   unselectedCheckIcon,
 } from '../shell/icons';
+import './SortOrderEditor.scss';
 
 export interface SortProperty {
   readonly id: string;

@@ -1,20 +1,19 @@
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LockedItemType } from 'app/loadout-builder/types';
 import clsx from 'clsx';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import PressTip from '../dim-ui/PressTip';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
+import PressTip from '../dim-ui/PressTip';
+import { D2Item, DimPlug, DimSocket } from '../inventory/item-types';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BestRatedIcon from './BestRatedIcon';
-import PlugTooltip from './PlugTooltip';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { LockedItemType } from 'app/loadout-builder/types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
-
 import './ItemSockets.scss';
+import PlugTooltip from './PlugTooltip';
 
 export default function Plug({
   defs,

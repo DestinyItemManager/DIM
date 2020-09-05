@@ -1,7 +1,7 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import React from 'react';
 
 export function ItemSubHeader({ item }: { item: DimItem }) {
   const light = item.primStat?.value.toString();

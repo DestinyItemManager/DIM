@@ -1,20 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './PresentationNode.scss';
-import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
-import BungieImage from '../dim-ui/BungieImage';
-import clsx from 'clsx';
-import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
-import { deepEqual } from 'fast-equals';
-import { percent } from '../shell/filters';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import { setSetting } from '../settings/actions';
-import { RootState } from 'app/store/types';
-import Checkbox from '../settings/Checkbox';
-import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { deepEqual } from 'fast-equals';
+import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
+import { setSetting } from '../settings/actions';
+import Checkbox from '../settings/Checkbox';
+import { percent } from '../shell/filters';
+import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { DimPresentationNode } from './presentation-nodes';
+import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 
 /** root PresentationNodes to lock in expanded state */

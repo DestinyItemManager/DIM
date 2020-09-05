@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Sheet from 'app/dim-ui/Sheet';
-import styles from './IssueBanner.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
+import React, { useState } from 'react';
+import styles from './IssueBanner.m.scss';
 
 const blmResourcesLink = 'https://blacklivesmatters.carrd.co/';
 

@@ -1,16 +1,15 @@
-import { bulkFetchVendorItems, bulkFetchKioskItems } from '../item-review/destiny-tracker.service';
-import {
-  DestinyVendorsResponse,
-  DestinyVendorSaleItemComponent,
-  DestinyVendorResponse,
-  DestinyVendorItemDefinition,
-  DestinyVendorDefinition,
-} from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
-import { DtrRating } from '../item-review/dtr-api-types';
+import {
+  DestinyVendorDefinition,
+  DestinyVendorItemDefinition,
+  DestinyVendorResponse,
+  DestinyVendorSaleItemComponent,
+  DestinyVendorsResponse,
+} from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { bulkFetchKioskItems, bulkFetchVendorItems } from '../item-review/destiny-tracker.service';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 function isWeaponOrArmor(
   defs: D2ManifestDefinitions,

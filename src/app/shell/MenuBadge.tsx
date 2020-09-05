@@ -1,8 +1,8 @@
 import React from 'react';
-import '../whats-new/WhatsNewLink.scss';
-import './MenuBadge.scss';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
+import '../whats-new/WhatsNewLink.scss';
 import { AppIcon, updateIcon } from './icons';
+import './MenuBadge.scss';
 
 /**
  * A badge for the hamburger menu - must be kept in sync with WhatsNewLink, but may also incorporate other sources.

@@ -85,6 +85,7 @@
     "Archetype": "Archetype",
     "Armor2": "Armor 2.0",
     "ButtonHelp": "Compare Items",
+    "CompareBaseStats": "Show Base Stats",
     "Error": {
       "Archetype": "Cannot compare this item as it is not a {{type}}.",
       "Class": "Cannot compare this item as it is not for a {{class}}."

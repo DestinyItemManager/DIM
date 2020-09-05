@@ -2,8 +2,8 @@
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
 
-import { DimStore, DimVault } from './store-types';
 import { DimItem } from './item-types';
+import { DimStore, DimVault } from './store-types';
 
 /**
  * Get whichever character was last played.

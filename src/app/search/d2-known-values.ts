@@ -1,4 +1,4 @@
-import { DestinyEnergyType, DamageType } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 // ✨ magic values ✨

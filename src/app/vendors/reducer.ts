@@ -1,10 +1,9 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { AccountsAction } from '../accounts/reducer';
-import { setCurrentAccount } from '../accounts/actions';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import { setCurrentAccount } from '../accounts/actions';
+import { AccountsAction } from '../accounts/reducer';
+import * as actions from './actions';
 
 // TODO: This may really belong in InventoryState
 // TODO: Save to IDB?

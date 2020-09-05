@@ -1,12 +1,11 @@
-import { hot } from 'react-hot-loader/root';
+import { MouseTransition, TouchTransition } from 'dnd-multi-backend';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { DndProvider } from 'react-dnd-multi-backend';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd-multi-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { TouchTransition, MouseTransition } from 'dnd-multi-backend';
-
+import { hot } from 'react-hot-loader/root';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import store from './store/store';
 

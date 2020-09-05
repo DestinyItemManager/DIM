@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { useSubscription } from 'app/utils/hooks';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import ItemActions from 'app/item-popup/ItemActions';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { ItemSubHeader } from 'app/item-popup/ItemSubHeader';
-import { showMobileInspect$ } from './mobile-inspect';
-
-import styles from './MobileInspect.m.scss';
 import ItemSockets from 'app/item-popup/ItemSockets';
+import { ItemSubHeader } from 'app/item-popup/ItemSubHeader';
+import { useSubscription } from 'app/utils/hooks';
+import React, { useState } from 'react';
+import { showMobileInspect$ } from './mobile-inspect';
+import styles from './MobileInspect.m.scss';
 
 export const enum Inspect {
   default = 1,

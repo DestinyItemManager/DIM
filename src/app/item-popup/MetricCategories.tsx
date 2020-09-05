@@ -1,6 +1,6 @@
-import React from 'react';
-import BungieImage from 'app/dim-ui/BungieImage';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import React from 'react';
 import styles from './MetricCategories.m.scss';
 
 export default function MetricCategories({

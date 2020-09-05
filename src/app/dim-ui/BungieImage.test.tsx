@@ -1,6 +1,6 @@
+import { render } from '@testing-library/react';
 import React from 'react';
 import BungieImage, { bungieBackgroundStyle, BungieImagePath, bungieNetPath } from './BungieImage';
-import { render } from '@testing-library/react';
 
 test('bungie image prefixes with ', () => {
   const { container } = render(<BungieImage src="/foo.jpg" />);

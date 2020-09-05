@@ -1,9 +1,9 @@
+import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 import React from 'react';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
-import { t } from 'app/i18next-t';
 import styles from './UserGuideLink.m.scss';
-import clsx from 'clsx';
 
 /**
  * Link to a specific topic in the DIM User Guide wiki.

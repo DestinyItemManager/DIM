@@ -1,48 +1,46 @@
-import './search-filter.scss';
-
-import {
-  AppIcon,
-  disabledIcon,
-  helpIcon,
-  searchIcon,
-  faClock,
-  starIcon,
-  moveUpIcon,
-  moveDownIcon,
-  unTrackedIcon,
-  closeIcon,
-  starOutlineIcon,
-} from '../shell/icons';
+import { Search } from '@destinyitemmanager/dim-api-types';
+import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
+import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { Loading } from 'app/dim-ui/Loading';
+import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
+import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import clsx from 'clsx';
+import { useCombobox } from 'downshift';
+import _ from 'lodash';
 import React, {
   Suspense,
-  useState,
-  useRef,
   useCallback,
-  useImperativeHandle,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react';
-
-import { Loading } from 'app/dim-ui/Loading';
 import ReactDOM from 'react-dom';
-import Sheet from 'app/dim-ui/Sheet';
-import _ from 'lodash';
-import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
-import { searchUsed, saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
-import { useCombobox } from 'downshift';
-import styles from './SearchBar.m.scss';
-import clsx from 'clsx';
-import { parseQuery, canonicalizeQuery } from './query-parser';
-import createAutocompleter, { SearchItemType, SearchItem } from './autocomplete';
-import HighlightedText from './HighlightedText';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { searchConfigSelector } from './search-config';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { createSelector } from 'reselect';
-import { Search } from '@destinyitemmanager/dim-api-types';
+import {
+  AppIcon,
+  closeIcon,
+  disabledIcon,
+  faClock,
+  helpIcon,
+  moveDownIcon,
+  moveUpIcon,
+  searchIcon,
+  starIcon,
+  starOutlineIcon,
+  unTrackedIcon,
+} from '../shell/icons';
+import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
+import HighlightedText from './HighlightedText';
+import { canonicalizeQuery, parseQuery } from './query-parser';
+import { searchConfigSelector } from './search-config';
+import './search-filter.scss';
+import styles from './SearchBar.m.scss';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -212,21 +210,6 @@ function SearchBar(
         }
       }
     },
-    stateReducer: (state, actionAndChanges) => {
-      const { type, changes } = actionAndChanges;
-      switch (type) {
-        case useCombobox.stateChangeTypes.FunctionReset:
-          // Keep the menu open when we clear the input
-          return changes.inputValue !== undefined
-            ? {
-                ...changes, // default Downshift new state changes on item selection.
-                isOpen: state.isOpen, // but keep menu open
-              }
-            : changes;
-        default:
-          return changes; // otherwise business as usual.
-      }
-    },
     onInputValueChange: ({ inputValue }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
@@ -243,10 +226,7 @@ function SearchBar(
     debouncedUpdateQuery('');
     reset();
     onClear?.();
-    if (!isPhonePortrait) {
-      openMenu();
-    }
-  }, [onClear, reset, openMenu, debouncedUpdateQuery, isPhonePortrait]);
+  }, [onClear, reset, debouncedUpdateQuery]);
 
   // Reset live query when search version changes
   useEffect(() => {

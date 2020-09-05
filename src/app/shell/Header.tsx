@@ -1,36 +1,36 @@
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './header.scss';
-import logo from 'images/logo-type-right-light.svg';
-import ClickOutside from '../dim-ui/ClickOutside';
-import Refresh from './refresh';
-import WhatsNewLink from '../whats-new/WhatsNewLink';
-import MenuBadge from './MenuBadge';
-import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
-import { default as SearchFilter } from '../search/SearchFilter';
-import { installPrompt$ } from './app-install';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/selectors';
 import MenuAccounts from 'app/accounts/MenuAccounts';
-import ReactDOM from 'react-dom';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import { Link, NavLink } from 'react-router-dom';
-import _ from 'lodash';
-import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
-import { accountRoute } from 'app/routes';
-import { useLocation, useHistory } from 'react-router';
-import styles from './Header.m.scss';
-import { useSubscription } from 'app/utils/hooks';
-import { SearchFilterRef } from 'app/search/SearchBar';
 import { Hotkey } from 'app/hotkeys/hotkeys';
-import { setSearchQuery } from './actions';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import { accountRoute } from 'app/routes';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import clsx from 'clsx';
+import logo from 'images/logo-type-right-light.svg';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import vendorEngramSvg from '../../images/engram.svg';
+import { DestinyAccount } from '../accounts/destiny-account';
+import ClickOutside from '../dim-ui/ClickOutside';
+import ExternalLink from '../dim-ui/ExternalLink';
+import { default as SearchFilter } from '../search/SearchFilter';
+import WhatsNewLink from '../whats-new/WhatsNewLink';
+import { setSearchQuery } from './actions';
+import { installPrompt$ } from './app-install';
+import styles from './Header.m.scss';
+import './header.scss';
+import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import MenuBadge from './MenuBadge';
+import Refresh from './refresh';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -100,10 +100,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     }
   };
 
+  const destinyVersion = account?.destinyVersion;
+
   // Poll for vendor engrams
   const engramRefreshTimer = useRef<number>();
   useEffect(() => {
-    if ($featureFlags.vendorEngrams && account?.destinyVersion == 2) {
+    if ($featureFlags.vendorEngrams && destinyVersion == 2) {
       setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
       return () => {
         if (engramRefreshTimer.current) {
@@ -114,7 +116,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     } else {
       return;
     }
-  }, [account?.destinyVersion, dispatch]);
+  }, [destinyVersion, dispatch]);
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);

@@ -232,6 +232,9 @@ input[type='search'] {
     margin-top: -1px;
     height: 0;
   }
+  @include phone-portrait {
+    margin-bottom: 30px;
+  }
 }
 
 h2,

@@ -1,13 +1,12 @@
+import { DimItem } from 'app/inventory/item-types';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import PresentationNode from './PresentationNode';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
-import _ from 'lodash';
 import { itemsForPlugSet } from './plugset-helpers';
 import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
-import { DimItem } from 'app/inventory/item-types';
+import PresentationNode from './PresentationNode';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 
 interface Props {

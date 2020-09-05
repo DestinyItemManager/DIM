@@ -1,10 +1,10 @@
-import React from 'react';
-import Metric from './Metric';
-import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './Metrics.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
+import _ from 'lodash';
+import React from 'react';
+import Metric from './Metric';
+import styles from './Metrics.m.scss';
 import { DimMetric } from './presentation-nodes';
 
 export default function Metrics({

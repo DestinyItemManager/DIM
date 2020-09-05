@@ -1,9 +1,8 @@
+import clsx from 'clsx';
 import React from 'react';
+import { AppIcon, collapseIcon } from '../shell/icons';
 import './Account.scss';
 import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';
-import clsx from 'clsx';
-import { AppIcon, collapseIcon } from '../shell/icons';
-import _ from 'lodash';
 
 function Account(
   {

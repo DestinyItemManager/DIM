@@ -1,18 +1,19 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import React from 'react';
 import { RootState } from 'app/store/types';
-import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import { connect } from 'react-redux';
-import { getSpecialtySocket } from 'app/utils/item-utils';
-import styles from './SpecialtyModSlotIcon.m.scss';
-import PressTip from './PressTip';
+import { getSpecialtySocketMetadata, modMetadataByTag } from 'app/utils/item-utils';
 import clsx from 'clsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import PressTip from './PressTip';
+import styles from './SpecialtyModSlotIcon.m.scss';
 
 interface ProvidedProps {
   item: DimItem;
   className?: string;
   lowRes?: boolean;
+  showAllSupportedSeasons?: boolean;
 }
 interface StoreProps {
   defs: D2ManifestDefinitions;
@@ -24,21 +25,37 @@ function mapStateToProps() {
 }
 type Props = ProvidedProps & StoreProps;
 
-function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
-  const specialtySocket = getSpecialtySocket(item);
-  const emptySlotHash = specialtySocket?.socketDefinition.singleInitialItemHash;
-  const emptySlotItem = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
-  return emptySlotItem ? (
-    <PressTip elementType="span" tooltip={emptySlotItem.itemTypeDisplayName}>
-      <div
-        className={clsx(className, styles.specialtyModIcon, { [styles.lowRes]: lowRes })}
-        style={bungieBackgroundStyle(
-          emptySlotItem.displayProperties.icon,
-          'linear-gradient(#0005, #0005)' // forced dark background to help w/ visibility
-        )}
-      />
-    </PressTip>
-  ) : null;
+function SpecialtyModSlotIcon({ item, className, lowRes, defs, showAllSupportedSeasons }: Props) {
+  const { emptyModSocketHash, compatibleTags } = getSpecialtySocketMetadata(item) ?? {};
+  if (!emptyModSocketHash || !compatibleTags) {
+    return null;
+  }
+  const emptySlotHashes = showAllSupportedSeasons
+    ? compatibleTags.map((tag) => modMetadataByTag[tag]!.emptyModSocketHash)
+    : [emptyModSocketHash];
+  const emptySlotItems = emptySlotHashes.map((hash) => defs.InventoryItem.get(hash));
+  return (
+    <>
+      {emptySlotItems.map((emptySlotItem) => {
+        const isMainSlotType = emptySlotItem.hash === emptyModSocketHash;
+        return (
+          <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
+            <div
+              className={clsx(className, styles.specialtyModIcon, {
+                [styles.lowRes]: lowRes,
+                [styles.secondarySeason]: !isMainSlotType,
+              })}
+              style={bungieBackgroundStyleAdvanced(
+                emptySlotItem.displayProperties.icon,
+                'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
+                isMainSlotType ? 2 : 1
+              )}
+            />
+          </PressTip>
+        );
+      })}
+    </>
+  );
 }
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);
 

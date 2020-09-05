@@ -1,14 +1,13 @@
-import _ from 'lodash';
 import {
-  DestinyVendorSaleItemComponent,
   DestinyVendorItemDefinition,
+  DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
 import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
-import { translateToDtrItem, getD2Roll } from './d2-itemTransformer';
-import { getItemStoreKey } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
+import { getItemStoreKey } from '../item-review/reducer';
+import { getD2Roll, translateToDtrItem } from './d2-itemTransformer';
 
 // How long to consider an item rating "fresh" - 24 hours
 export const ITEM_RATING_EXPIRATION = 24 * 60 * 60 * 1000;

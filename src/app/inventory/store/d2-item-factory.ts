@@ -1,4 +1,10 @@
-import { D2Item, DimPerk } from '../item-types';
+import { t } from 'app/i18next-t';
+import {
+  ENGRAMS_BUCKET,
+  MODIFICATIONS_BUCKET,
+  SHADERS_BUCKET,
+  THE_FORBIDDEN_BUCKET,
+} from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -14,30 +20,23 @@ import {
   ItemState,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import { buildFlavorObjective, buildObjectives } from './objectives';
-
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Events from 'data/d2/events.json';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
-import { D2Store } from '../store-types';
+import { reportException } from '../../utils/exceptions';
 import { D2StoresService } from '../d2-stores';
 import { InventoryBuckets } from '../inventory-buckets';
-import _ from 'lodash';
+import { D2Item, DimPerk } from '../item-types';
+import { D2Store } from '../store-types';
 import { buildMasterwork } from './masterwork';
+import { buildFlavorObjective, buildObjectives } from './objectives';
+import { getSeason } from './season';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
-import { reportException } from '../../utils/exceptions';
-import { t } from 'app/i18next-t';
-import { getSeason } from './season';
-import {
-  ENGRAMS_BUCKET,
-  MODIFICATIONS_BUCKET,
-  SHADERS_BUCKET,
-  THE_FORBIDDEN_BUCKET,
-} from 'app/search/d2-known-values';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];

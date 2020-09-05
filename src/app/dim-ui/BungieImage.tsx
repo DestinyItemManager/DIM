@@ -1,5 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
 
 /**
  * A relative path to a Bungie.net image asset.
@@ -28,10 +28,28 @@ export default React.memo(function BungieImage(props: BungieImageProps) {
 /**
  * Produce a style object that sets the background image to an image on bungie.net.
  */
-export function bungieBackgroundStyle(src: BungieImagePath, additionalBackground?: string) {
-  additionalBackground = additionalBackground ? `, ${additionalBackground}` : '';
+export function bungieBackgroundStyle(src: BungieImagePath) {
   return {
-    backgroundImage: `url("${bungieNetPath(src)}")${additionalBackground}`,
+    backgroundImage: `url("${bungieNetPath(src)}")`,
+  };
+}
+/**
+ * Produce a style object that sets the background image to an image on bungie.net.
+ *
+ * Has extra settings because sometimes life throws bad CSS choices your way
+ */
+export function bungieBackgroundStyleAdvanced(
+  src: BungieImagePath,
+  additionalBackground?: string,
+  stacks = 1
+) {
+  const backgrounds = Array(stacks).fill(`url("${bungieNetPath(src)}")`);
+  if (additionalBackground) {
+    backgrounds.push(additionalBackground);
+  }
+
+  return {
+    backgroundImage: backgrounds.join(', '),
   };
 }
 

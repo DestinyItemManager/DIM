@@ -1,29 +1,29 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import {
-  DestinyRecordDefinition,
-  DestinyRecordState,
-  DestinyRecordComponent,
-  DestinyUnlockValueUIStyle,
-  DestinyObjectiveProgress,
-} from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
-import './Record.scss';
-import Objective from '../progress/Objective';
-import BungieImage from '../dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
-import ishtarIcon from '../../images/ishtar-collective.svg';
-import ExternalLink from '../dim-ui/ExternalLink';
-import trackedIcon from 'images/trackedIcon.svg';
-import dimTrackedIcon from 'images/dimTrackedIcon.svg';
-import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
-import { percent } from 'app/shell/filters';
-import _ from 'lodash';
-import { DimRecord } from './presentation-nodes';
-import { useDispatch, useSelector } from 'react-redux';
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
+import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
+import {
+  DestinyObjectiveProgress,
+  DestinyRecordComponent,
+  DestinyRecordDefinition,
+  DestinyRecordState,
+  DestinyUnlockValueUIStyle,
+} from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import trackedIcon from 'images/trackedIcon.svg';
+import _ from 'lodash';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ishtarIcon from '../../images/ishtar-collective.svg';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
+import ExternalLink from '../dim-ui/ExternalLink';
+import Objective from '../progress/Objective';
+import { DimRecord } from './presentation-nodes';
+import './Record.scss';
 
 interface Props {
   record: DimRecord;

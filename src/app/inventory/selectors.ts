@@ -1,15 +1,14 @@
-import { RootState } from 'app/store/types';
-import { createSelector } from 'reselect';
-import { characterSortSelector } from '../settings/character-sort';
-import _ from 'lodash';
-import { currentProfileSelector } from 'app/dim-api/selectors';
-import { emptyObject } from 'app/utils/empty';
-import { getCurrentStore } from './stores-helpers';
-import { ItemInfos } from './dim-item-info';
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
+import { currentProfileSelector } from 'app/dim-api/selectors';
+import { RootState } from 'app/store/types';
+import { emptyObject } from 'app/utils/empty';
+import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
+import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
+import { characterSortSelector } from '../settings/character-sort';
+import { ItemInfos } from './dim-item-info';
+import { getCurrentStore } from './stores-helpers';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;

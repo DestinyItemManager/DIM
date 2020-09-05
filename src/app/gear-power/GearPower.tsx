@@ -1,20 +1,20 @@
+import BungieImage from 'app/dim-ui/BungieImage';
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import { itemPop } from 'app/dim-ui/scroll';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import { t } from 'app/i18next-t';
+import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import { getLight } from 'app/loadout/loadout-utils';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import clsx from 'clsx';
 import React, { useState } from 'react';
-import { showGearPower$ } from './gear-power';
+import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
 import { D2Store } from '../inventory/store-types';
-import { RootState } from 'app/store/types';
+import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
-import { useSelector } from 'react-redux';
-import { t } from 'app/i18next-t';
-import { useSubscription } from 'app/utils/hooks';
-import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import { getLight } from 'app/loadout/loadout-utils';
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { itemPop } from 'app/dim-ui/scroll';
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
-import clsx from 'clsx';
 
 const bucketClassNames = {
   Kinetic: styles.kinetic,

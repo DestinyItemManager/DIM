@@ -1,13 +1,12 @@
-import { DestinyRecordState, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React from 'react';
-import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
 import { t } from 'app/i18next-t';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import Record from './Record';
 import { CATALYSTS_ROOT_NODE } from 'app/search/d2-known-values';
+import { DestinyProfileResponse, DestinyRecordState } from 'bungie-api-ts/destiny2';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import './collections.scss';
 import { toPresentationNodeTree } from './presentation-nodes';
+import Record from './Record';
 
 export default function Catalysts({
   defs,

@@ -1,8 +1,7 @@
+import clsx from 'clsx';
 import React from 'react';
 import { DimItem, DimStat } from '../inventory/item-types';
-import _ from 'lodash';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
-import clsx from 'clsx';
 import styles from './ItemStats.m.scss';
 
 export default function ItemStats({

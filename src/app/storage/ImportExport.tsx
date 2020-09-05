@@ -1,11 +1,10 @@
-import React from 'react';
-import './storage.scss';
+import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
-import FileUpload from 'app/dim-ui/FileUpload';
+import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
-import _ from 'lodash';
-import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import './storage.scss';
 import { DimData } from './sync.service';
 
 declare global {

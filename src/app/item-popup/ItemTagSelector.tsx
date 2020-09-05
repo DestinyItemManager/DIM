@@ -1,13 +1,13 @@
-import React from 'react';
-import { itemTagSelectorList, TagValue, getTag } from '../inventory/dim-item-info';
-import { connect } from 'react-redux';
-import { DimItem } from '../inventory/item-types';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { t } from 'app/i18next-t';
-import './ItemTagSelector.scss';
-import { setItemTag, setItemHashTag } from 'app/inventory/actions';
-import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
+import React from 'react';
+import { connect } from 'react-redux';
+import { getTag, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
+import { DimItem } from '../inventory/item-types';
+import './ItemTagSelector.scss';
 
 interface ProvidedProps {
   item: DimItem;

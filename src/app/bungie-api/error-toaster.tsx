@@ -1,8 +1,8 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import { AppIcon, twitterIcon } from '../shell/icons';
-import { NotifyInput } from '../notifications/notifications';
+import React from 'react';
 import ExternalLink from '../dim-ui/ExternalLink';
+import { NotifyInput } from '../notifications/notifications';
+import { AppIcon, twitterIcon } from '../shell/icons';
 
 /**
  * Generates parameters for a toaster based on an error, including DIM and Bungie twitter links.
