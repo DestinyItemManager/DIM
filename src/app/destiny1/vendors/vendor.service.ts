@@ -15,6 +15,7 @@ import { updateVendorRankings } from '../../item-review/destiny-tracker.service'
 import { loadingTracker } from '../../shell/loading-tracker';
 import { default as rxStore, default as store } from '../../store/store';
 import { D1ManifestDefinitions, getDefinitions } from '../d1-definitions';
+import { factionAligned } from '../d1-factions';
 
 /*
 const allVendors = [
@@ -336,20 +337,6 @@ function VendorService(): VendorServiceType {
   function factionLevel(store: D1Store, factionHash: number) {
     const rep = store.progression?.progressions.find((rep) => rep.faction?.hash === factionHash);
     return rep?.level || 0;
-  }
-
-  /**
-   * Whether or not this character is aligned with the given faction.
-   */
-  function factionAligned(store: D1Store, factionHash: number) {
-    const factionsByHash = {
-      489342053: 'Future War Cult',
-      2397602219: 'Dead Orbit',
-      3197190122: 'New Monarchy',
-    };
-    const factionAlignment = store.factionAlignment();
-
-    return factionAlignment === factionsByHash[factionHash];
   }
 
   /**
