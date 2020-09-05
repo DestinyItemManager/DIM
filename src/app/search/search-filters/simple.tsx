@@ -1,4 +1,5 @@
-import { DimItem, D2Item } from 'app/inventory/item-types';
+import { tl } from 'app/i18next-t';
+import { D2Item, DimItem } from 'app/inventory/item-types';
 import { FilterDefinition } from '../filter-types';
 
 const newItems: Set<string> = new Set();
@@ -7,14 +8,14 @@ const newItems: Set<string> = new Set();
 const simpleFilters: FilterDefinition[] = [
   {
     keywords: ['hascapacity', 'armor2.0'],
-    description: ['Filter.Energy'],
+    description: [tl('Filter.Energy')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) => Boolean(item.energy),
   },
   {
     keywords: ['weapon'],
-    description: ['Filter.Categories'],
+    description: [tl('Filter.Categories')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) =>
@@ -24,77 +25,77 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: ['armor'],
-    description: ['Filter.Categories'],
+    description: [tl('Filter.Categories')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.bucket?.sort === 'Armor',
   },
   {
     keywords: ['equipment', 'equippable'],
-    description: ['Filter.Equipment'],
+    description: [tl('Filter.Equipment')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.equipment,
   },
   {
     keywords: ['postmaster', 'inpostmaster'],
-    description: ['Filter.Postmaster'],
+    description: [tl('Filter.Postmaster')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.location?.inPostmaster,
   },
   {
     keywords: ['equipped'],
-    description: ['Filter.Equipped'],
+    description: [tl('Filter.Equipped')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.equipped,
   },
   {
     keywords: ['transferable', 'movable'],
-    description: ['Filter.Transferable'],
+    description: [tl('Filter.Transferable')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => !item.notransfer,
   },
   {
     keywords: ['stackable'],
-    description: ['Filter.Stackable'],
+    description: [tl('Filter.Stackable')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.maxStackSize > 1,
   },
   {
     keywords: ['infusable', 'infuse'],
-    description: ['Filter.Infusable'],
+    description: [tl('Filter.Infusable')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.infusable,
   },
   {
     keywords: ['locked'],
-    description: ['Filter.Locked'],
+    description: [tl('Filter.Locked')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.locked,
   },
   {
     keywords: ['unlocked'],
-    description: ['Filter.Locked'],
+    description: [tl('Filter.Locked')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => !item.locked,
   },
   {
     keywords: ['masterwork', 'masterworks'],
-    description: ['Filter.RarityTier'],
+    description: [tl('Filter.RarityTier')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.masterwork,
   },
   {
     keywords: ['new'],
-    description: ['Filter.NewItems'],
+    description: [tl('Filter.NewItems')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => newItems.has(item.id),

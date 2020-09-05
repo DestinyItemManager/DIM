@@ -1,14 +1,15 @@
-import { DimItem, D2Item } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
+import { tl } from 'app/i18next-t';
+import { D2Item, DimItem } from 'app/inventory/item-types';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
-import D2Sources from 'data/d2/source-info';
 import missingSources from 'data/d2/missing-source-info';
+import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import { breakerTypes, D2ItemCategoryHashesByName, powerfulSources } from '../d2-known-values';
-import { D2Categories } from 'app/destiny2/d2-buckets';
+import { FilterDefinition } from '../filter-types';
+import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
 
 const tierMap = {
   white: 'common',
@@ -44,7 +45,7 @@ const knownValuesFilters: FilterDefinition[] = [
       'purple',
       'yellow',
     ],
-    description: ['Filter.RarityTier'],
+    description: [tl('Filter.RarityTier')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
@@ -52,7 +53,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['special', 'primary', 'heavy'],
-    description: ['Filter.AmmoType'],
+    description: [tl('Filter.AmmoType')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item, filterValue: string) =>
@@ -60,7 +61,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['titan', 'hunter', 'warlock'],
-    description: ['Filter.Class'],
+    description: [tl('Filter.Class')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
@@ -68,7 +69,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['reacquirable'],
-    description: ['Filter.Reacquirable'],
+    description: [tl('Filter.Reacquirable')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) =>
@@ -81,21 +82,21 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['cosmetic'],
-    description: ['Filter.Categories'],
+    description: [tl('Filter.Categories')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => cosmeticTypes.includes(item.type),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
-    description: ['Filter.ContributeLight'],
+    description: [tl('Filter.ContributeLight')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
     keywords: ['breaker'],
-    description: ['Filter.Breaker'],
+    description: [tl('Filter.Breaker')],
     format: 'query',
     suggestionsGenerator: Object.keys(breakerTypes),
     destinyVersion: 2,
@@ -104,7 +105,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: damageTypeNames,
-    description: ['Filter.DamageType'],
+    description: [tl('Filter.DamageType')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
@@ -114,7 +115,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: Object.values(D2Categories)
       .flat()
       .map((v) => v.toLowerCase()),
-    description: ['Filter.ArmorCategory'], // or 'Filter.WeaponClass'
+    description: [tl('Filter.ArmorCategory')], // or 'Filter.WeaponClass'
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
@@ -125,7 +126,7 @@ const knownValuesFilters: FilterDefinition[] = [
       ...D1ItemCategoryHashes,
       ...D2ItemCategoryHashesByName,
     }),
-    description: ['Filter.WeaponType'],
+    description: [tl('Filter.WeaponType')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item, filterValue: string) => {
@@ -139,7 +140,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['powerfulreward'],
-    description: ['Filter.PowerfulReward'],
+    description: [tl('Filter.PowerfulReward')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
@@ -147,7 +148,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['source'],
-    description: ['Filter.Event'], // or 'Filter.Source'
+    description: [tl('Filter.Event')], // or 'Filter.Source'
     format: 'query',
     suggestionsGenerator: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,

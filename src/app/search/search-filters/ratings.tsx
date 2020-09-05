@@ -1,15 +1,15 @@
+import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import _ from 'lodash';
 import { getRating, ReviewsState, shouldShowRating } from 'app/item-review/reducer';
-import { rangeStringToComparator } from './range-numeric';
 import { FilterDefinition } from '../filter-types';
+import { rangeStringToComparator } from './range-numeric';
 
 const ratings = {} as ReviewsState['ratings'];
 
 const ratingsFilters: FilterDefinition[] = [
   {
     keywords: ['rating'],
-    description: ['Filter.Rating'],
+    description: [tl('Filter.Rating')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -28,7 +28,7 @@ const ratingsFilters: FilterDefinition[] = [
   },
   {
     keywords: ['ratingcount'],
-    description: ['Filter.RatingCount'],
+    description: [tl('Filter.RatingCount')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -42,7 +42,7 @@ const ratingsFilters: FilterDefinition[] = [
   },
   {
     keywords: ['rated', 'hasrating'],
-    description: ['Filter.HasRating'],
+    description: [tl('Filter.HasRating')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => {

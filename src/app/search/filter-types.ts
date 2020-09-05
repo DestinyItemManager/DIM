@@ -1,6 +1,6 @@
-import { DimItem } from 'app/inventory/item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 type I18nInput = Parameters<typeof t>;
 
 // a filter can return various bool-ish values
@@ -66,11 +66,14 @@ export type FilterDefinition = PreprocessorFilterPairs & {
   suggestionsGenerator?: string[] | string[][] | ((defs: D2ManifestDefinitions) => string[]);
 
   /** is provided a list of all items. calculates some kind of stats before running the search */
+  // TODO: have this take getState() or be a redux action?
+  // TODO: have this be async!
   contextGenerator?: (allItems: DimItem[], filterValue?: string) => void;
 };
 
 /*
-this may be overkill. let's skip it for now in favor of saying filter functions should accept DimItem
+this may be overkill. let's skip it for now in favor of saying filter functions should accept DimItem,
+though in the near future we may want to be able to filter on different things such as Records, Mods, etc.
 
 type DimItemVersion = DimItem | D1Item | D2Item;
 

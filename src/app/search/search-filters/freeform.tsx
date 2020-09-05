@@ -1,9 +1,10 @@
-import { DimItem } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
+import { tl } from 'app/i18next-t';
 import { getNotes, ItemInfos } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { settingsSelector } from 'app/settings/reducer';
-import store from '../../store/store';
 import latinise from 'voca/latinise';
+import store from '../../store/store';
+import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
 const isLatinBased = (() =>
@@ -30,7 +31,7 @@ const itemInfos: ItemInfos = {};
 const freeformFilters: FilterDefinition[] = [
   {
     keywords: ['notes'],
-    description: ['Filter.Notes'],
+    description: [tl('Filter.Notes')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: plainString,
@@ -41,7 +42,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: ['name'],
-    description: ['Filter.PartialMatch'],
+    description: [tl('Filter.PartialMatch')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: plainString,
@@ -50,7 +51,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: ['description'],
-    description: ['Filter.PartialMatch'],
+    description: [tl('Filter.PartialMatch')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: plainString,
@@ -59,7 +60,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: ['perk'],
-    description: ['Filter.PartialMatch'],
+    description: [tl('Filter.PartialMatch')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
@@ -73,7 +74,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: ['perkname'],
-    description: ['Filter.PartialMatch'],
+    description: [tl('Filter.PartialMatch')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
@@ -87,7 +88,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: ['keyword'],
-    description: ['Filter.PartialMatch'],
+    description: [tl('Filter.PartialMatch')],
     format: 'freeform',
     destinyVersion: 0,
     filterValuePreprocessor: plainString,
@@ -142,9 +143,7 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
   if (!Array.isArray(displayProperties)) {
     displayProperties = [displayProperties];
   }
-  return displayProperties
-    .map((d) => getStringsFromDisplayProperties(d, includeDescription))
-    .flat();
+  return displayProperties.flatMap((d) => getStringsFromDisplayProperties(d, includeDescription));
 }
 
 /** includes name and description unless you set the arg2 flag */
@@ -152,15 +151,13 @@ export function getStringsFromAllSockets(item: DimItem, includeDescription = tru
   return (
     (item.isDestiny2() &&
       item.sockets &&
-      item.sockets.sockets
-        .map((socket) => {
-          const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
-            plug.plugItem.displayProperties,
-            plug.perks.map((perk) => perk.displayProperties),
-          ]);
-          return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
-        })
-        .flat()) ||
+      item.sockets.sockets.flatMap((socket) => {
+        const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
+          plug.plugItem.displayProperties,
+          plug.perks.map((perk) => perk.displayProperties),
+        ]);
+        return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
+      })) ||
     []
   );
 }

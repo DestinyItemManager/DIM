@@ -1,14 +1,15 @@
-import { DimItem, D2Item } from 'app/inventory/item-types';
+import { tl } from 'app/i18next-t';
+import { D2Item, DimItem } from 'app/inventory/item-types';
+import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
-import { rangeStringToComparator } from './range-numeric';
-import { maxStatLoadout, maxLightItemSet } from 'app/loadout/auto-loadouts';
 import {
   armorAnyStatHashes,
   armorStatHashes,
   searchableStatNames,
   statHashByName,
 } from '../search-filter-values';
+import { rangeStringToComparator } from './range-numeric';
 
 let _maxStatValues: {
   [key: string]: { [key: string]: { value: number; base: number } };
@@ -21,7 +22,7 @@ let _maxPowerLoadoutItems: string[] = [];
 const statFilters: FilterDefinition[] = [
   {
     keywords: ['stat'],
-    description: ['Filter.Stats'],
+    description: [tl('Filter.Stats')],
     format: 'range',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 0,
@@ -29,7 +30,7 @@ const statFilters: FilterDefinition[] = [
   },
   {
     keywords: ['basestat'],
-    description: ['Filter.StatsBase'],
+    description: [tl('Filter.StatsBase')],
     format: 'range',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 0,
@@ -38,7 +39,7 @@ const statFilters: FilterDefinition[] = [
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
     keywords: ['maxstatloadout'],
-    description: ['Filter.StatsLoadout'],
+    description: [tl('Filter.StatsLoadout')],
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -53,7 +54,7 @@ const statFilters: FilterDefinition[] = [
   },
   {
     keywords: ['maxstatvalue'],
-    description: ['Filter.StatsMax'],
+    description: [tl('Filter.StatsMax')],
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -63,7 +64,7 @@ const statFilters: FilterDefinition[] = [
   },
   {
     keywords: ['maxbasestatvalue'],
-    description: ['Filter.StatsMax'],
+    description: [tl('Filter.StatsMax')],
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -73,7 +74,7 @@ const statFilters: FilterDefinition[] = [
   },
   {
     keywords: ['maxpower'],
-    description: ['Filter.MaxPower'],
+    description: [tl('Filter.MaxPower')],
     format: 'simple',
     destinyVersion: 2,
     contextGenerator: calculateMaxPowerLoadoutItems,

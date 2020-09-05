@@ -1,6 +1,7 @@
+import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
 import { Loadout } from '../../loadout/loadout-types';
+import { FilterDefinition } from '../filter-types';
 
 const loadouts: Loadout[] = [];
 const _loadoutItemIds: Set<string> = new Set();
@@ -8,7 +9,7 @@ const _loadoutItemIds: Set<string> = new Set();
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: ['inloadout'],
-    description: ['Filter.InLoadout'],
+    description: [tl('Filter.InLoadout')],
     format: 'simple',
     destinyVersion: 0,
     contextGenerator: collectItemsInLoadouts,

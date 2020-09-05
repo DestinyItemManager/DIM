@@ -1,9 +1,9 @@
+import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import _ from 'lodash';
-import { FilterDefinition } from '../filter-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { FilterDefinition } from '../filter-types';
 import { makeDupeID } from '../search-filter';
-import { _duplicates, initDupes, checkIfIsDupe } from './dupes';
+import { checkIfIsDupe, initDupes, _duplicates } from './dupes';
 
 const inventoryWishListRolls: { [key: string]: InventoryWishListRoll } = {};
 
@@ -13,14 +13,14 @@ export const checkIfIsWishlist = (item: DimItem) =>
 const wishlistFilters: FilterDefinition[] = [
   {
     keywords: ['wishlist'],
-    description: ['Filter.Wishlist'],
+    description: [tl('Filter.Wishlist')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: checkIfIsWishlist,
   },
   {
     keywords: ['wishlistdupe'],
-    description: ['Filter.WishlistDupe'],
+    description: [tl('Filter.WishlistDupe')],
     format: 'simple',
     destinyVersion: 0,
     contextGenerator: initDupes,
@@ -35,7 +35,7 @@ const wishlistFilters: FilterDefinition[] = [
   },
   {
     keywords: ['wishlistnotes'],
-    description: ['Filter.WishlistNotes'],
+    description: [tl('Filter.WishlistNotes')],
     format: 'freeform',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
@@ -43,7 +43,7 @@ const wishlistFilters: FilterDefinition[] = [
   },
   {
     keywords: ['trashlist'],
-    description: ['Filter.Trashlist'],
+    description: [tl('Filter.Trashlist')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => inventoryWishListRolls[item.id]?.isUndesirable,

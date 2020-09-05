@@ -1,6 +1,7 @@
-import { DimItem, D2Item } from 'app/inventory/item-types';
-import _ from 'lodash';
+import { tl } from 'app/i18next-t';
+import { D2Item, DimItem } from 'app/inventory/item-types';
 import { D2SeasonInfo } from 'data/d2/d2-season-info';
+import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
 const rangeStringRegex = /^[<=>]{0,2}$/;
@@ -33,7 +34,7 @@ export function rangeStringToComparator(rangeString: string) {
 const simpleRangeFilters: FilterDefinition[] = [
   {
     keywords: ['stack'],
-    description: ['Filter.StackLevel'],
+    description: [tl('Filter.StackLevel')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -42,7 +43,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['light'],
-    description: ['Filter.LightLevel'],
+    description: [tl('Filter.LightLevel')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -51,7 +52,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['year'],
-    description: ['Filter.Year'],
+    description: [tl('Filter.Year')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -65,7 +66,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['level'],
-    description: ['Filter.RequiredLevel'],
+    description: [tl('Filter.RequiredLevel')],
     format: 'range',
     destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
@@ -74,7 +75,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['powerlimit'],
-    description: ['Filter.PowerLimit'],
+    description: [tl('Filter.PowerLimit')],
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: rangeStringToComparator,

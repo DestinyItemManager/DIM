@@ -1,13 +1,13 @@
-import { DimItem } from 'app/inventory/item-types';
-import _ from 'lodash';
-import { rangeStringToComparator } from './range-numeric';
-import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
+import { tl } from 'app/i18next-t';
 import { getTag } from 'app/inventory/dim-item-info';
-
+import { DimItem } from 'app/inventory/item-types';
 import { itemInfosSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/reducers';
-import { FilterDefinition } from '../filter-types';
+import { RootState } from 'app/store/types';
+import _ from 'lodash';
+import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER } from '../d2-known-values';
+import { FilterDefinition } from '../filter-types';
+import { rangeStringToComparator } from './range-numeric';
 
 export let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
 const _lowerDupes = {};
@@ -15,7 +15,7 @@ const _lowerDupes = {};
 const dupeFilters: FilterDefinition[] = [
   {
     keywords: ['dupe'],
-    description: ['Filter.Dupe'],
+    description: [tl('Filter.Dupe')],
     format: 'simple',
     destinyVersion: 0,
     contextGenerator: initDupes,
@@ -23,7 +23,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['dupelower'],
-    description: ['Filter.Dupe'],
+    description: [tl('Filter.Dupe')],
     format: 'simple',
     destinyVersion: 0,
     contextGenerator: initDupes,
@@ -31,7 +31,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['count'],
-    description: ['Filter.Dupe'],
+    description: [tl('Filter.Dupe')],
     format: 'range',
     destinyVersion: 0,
     contextGenerator: initDupes,

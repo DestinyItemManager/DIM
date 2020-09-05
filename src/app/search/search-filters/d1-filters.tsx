@@ -1,3 +1,4 @@
+import { tl } from 'app/i18next-t';
 import { D1Item } from 'app/inventory/item-types';
 import {
   boosts,
@@ -13,7 +14,7 @@ import { rangeStringToComparator } from './range-numeric';
 const d1Filters: FilterDefinition[] = [
   {
     keywords: ['sublime'],
-    description: ['Filter.RarityTier'],
+    description: [tl('Filter.RarityTier')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => sublimeEngrams.includes(item.hash),
@@ -22,7 +23,7 @@ const d1Filters: FilterDefinition[] = [
     // Upgraded will show items that have enough XP to unlock all
     // their nodes and only need the nodes to be purchased.
     keywords: ['upgraded'],
-    description: ['Filter.Leveling.Upgraded', { term: 'upgraded' }],
+    description: [tl('Filter.Leveling.Upgraded'), { term: 'upgraded' }],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid?.xpComplete && !item.complete,
@@ -30,7 +31,7 @@ const d1Filters: FilterDefinition[] = [
   {
     // Complete shows items that are fully leveled.
     keywords: ['complete'],
-    description: ['Filter.Leveling.Complete', { term: 'complete' }],
+    description: [tl('Filter.Leveling.Complete'), { term: 'complete' }],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.complete,
@@ -38,21 +39,21 @@ const d1Filters: FilterDefinition[] = [
   {
     // Incomplete will show items that are not fully leveled.
     keywords: ['incomplete'],
-    description: ['Filter.Leveling.Incomplete', { term: 'incomplete' }],
+    description: [tl('Filter.Leveling.Incomplete'), { term: 'incomplete' }],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid && !item.complete,
   },
   {
     keywords: ['xpcomplete'],
-    description: ['Filter.Leveling.XPComplete', { term: 'xpcomplete' }],
+    description: [tl('Filter.Leveling.XPComplete'), { term: 'xpcomplete' }],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid?.xpComplete,
   },
   {
     keywords: ['xpincomplete', 'needsxp'],
-    description: ['Filter.Leveling.NeedsXP', { term: 'xpincomplete/needsxp' }],
+    description: [tl('Filter.Leveling.NeedsXP'), { term: 'xpincomplete/needsxp' }],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid && !item.talentGrid.xpComplete,
@@ -60,21 +61,21 @@ const d1Filters: FilterDefinition[] = [
 
   {
     keywords: ['ascended', 'assended', 'asscended'],
-    description: ['ascended'],
+    description: [tl('ascended')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid?.hasAscendNode && item.talentGrid.ascended,
   },
   {
     keywords: ['unascended', 'unassended', 'unasscended'],
-    description: ['unascended'],
+    description: [tl('unascended')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid?.hasAscendNode && !item.talentGrid.ascended,
   },
   {
     keywords: ['tracked', 'untracked'],
-    description: ['Filter.Tracked'],
+    description: [tl('Filter.Tracked')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) =>
@@ -82,21 +83,21 @@ const d1Filters: FilterDefinition[] = [
   },
   {
     keywords: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-    description: ['Filter.Reforgeable'],
+    description: [tl('Filter.Reforgeable')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.talentGrid?.nodes.some((n) => n.hash === 617082448),
   },
   {
     keywords: ['engram'],
-    description: ['Filter.Engrams'],
+    description: [tl('Filter.Engrams')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item) => item.isEngram,
   },
   {
     keywords: ['intellect', 'discipline', 'strength'],
-    description: ['Filter.NamedStat'],
+    description: [tl('Filter.NamedStat')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) =>
@@ -106,7 +107,7 @@ const d1Filters: FilterDefinition[] = [
   },
   {
     keywords: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-    description: ['Filter.Glimmer.Glimmer'],
+    description: [tl('Filter.Glimmer.Glimmer')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) => {
@@ -123,7 +124,7 @@ const d1Filters: FilterDefinition[] = [
   },
   {
     keywords: ['ornamentable', 'ornamentmissing', 'ornamentunlocked'],
-    description: ['Filter.Ornament'],
+    description: [tl('Filter.Ornament')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) => {
@@ -141,7 +142,7 @@ const d1Filters: FilterDefinition[] = [
   },
   {
     keywords: ['quality', 'percentage'],
-    description: ['Filter.Quality', { percentage: 'percentage', quality: 'quality' }],
+    description: [tl('Filter.Quality'), { percentage: 'percentage', quality: 'quality' }],
     format: 'range',
     destinyVersion: 1,
     filterValuePreprocessor: rangeStringToComparator,
@@ -169,7 +170,7 @@ const d1Filters: FilterDefinition[] = [
       'ev',
       'gunsmith',
     ],
-    description: ['Filter.Vendor'],
+    description: [tl('Filter.Vendor')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) => {
@@ -209,7 +210,7 @@ const d1Filters: FilterDefinition[] = [
       'dawning',
       'aot',
     ],
-    description: ['Filter.Release'],
+    description: [tl('Filter.Release')],
     format: 'simple',
     destinyVersion: 1,
     filterFunction: (item: D1Item, filterValue: string) => {

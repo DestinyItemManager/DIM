@@ -1,9 +1,9 @@
+import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
-
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { FilterDefinition } from '../filter-types';
 
 const stores: DimStore[] = [];
 const currentStore: DimStore = {} as DimStore;
@@ -12,7 +12,7 @@ const currentStore: DimStore = {} as DimStore;
 const locationFilters: FilterDefinition[] = [
   {
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
-    description: ['Filter.Location'],
+    description: [tl('Filter.Location')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) => {
@@ -43,7 +43,7 @@ const locationFilters: FilterDefinition[] = [
   },
   {
     keywords: ['onwrongclass'],
-    description: ['Filter.Class'],
+    description: [tl('Filter.Class')],
     format: 'simple',
     destinyVersion: 0,
     filterFunction: (item: DimItem) => {
@@ -62,7 +62,7 @@ const locationFilters: FilterDefinition[] = [
   },
   {
     keywords: ['invault', 'incurrentchar'],
-    description: ['Filter.Location'],
+    description: [tl('Filter.Location')],
     format: 'query',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) => {

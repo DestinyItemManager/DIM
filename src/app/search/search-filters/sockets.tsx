@@ -1,29 +1,29 @@
+import { tl } from 'app/i18next-t';
 import { D2Item } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
-import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { getSpecialtySocketMetadata, modSlotTags } from 'app/utils/item-utils';
+import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import {
-  curatedPlugsAllowList,
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
   emptySocketHashes,
   SHADERS_BUCKET,
 } from '../d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { FilterDefinition } from '../filter-types';
 
 const socketFilters: FilterDefinition[] = [
   {
     keywords: ['randomroll'],
-    description: ['Filter.RandomRoll'],
+    description: [tl('Filter.RandomRoll')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
-      Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems),
+      Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
   },
   {
     keywords: ['curated'],
-    description: ['Filter.Curated'],
+    description: [tl('Filter.Curated')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) => {
@@ -38,9 +38,9 @@ const socketFilters: FilterDefinition[] = [
       const legendaryWeapon =
         item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-      const oneSocketPerPlug = item.sockets?.sockets
+      const oneSocketPerPlug = item.sockets?.allSockets
         .filter((socket) =>
-          curatedPlugsAllowList.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash || 0)
+          curatedPlugsAllowList.includes(socket?.plugged?.plugDef?.plug?.plugCategoryHash || 0)
         )
         .every((socket) => socket?.plugOptions.length === 1);
 
@@ -53,31 +53,31 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: ['shaded', 'hasshader'],
-    description: ['Filter.HasShader'],
+    description: [tl('Filter.HasShader')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
-      item.sockets?.sockets.some((socket) =>
+      item.sockets?.allSockets.some((socket) =>
         Boolean(
-          socket.plug?.plugItem.plug &&
-            socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
-            socket.plug.plugItem.hash !== DEFAULT_SHADER
+          socket.plugged?.plugDef.plug &&
+            socket.plugged.plugDef.plug.plugCategoryHash === SHADERS_BUCKET &&
+            socket.plugged.plugDef.hash !== DEFAULT_SHADER
         )
       ),
   },
   {
     keywords: ['ornamented', 'hasornament'],
-    description: ['Filter.HasOrnament'],
+    description: [tl('Filter.HasOrnament')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
-      item.sockets?.sockets.some((socket) =>
+      item.sockets?.allSockets.some((socket) =>
         Boolean(
-          socket.plug &&
-            socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-            socket.plug.plugItem.hash !== DEFAULT_GLOW &&
-            !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-            !socket.plug.plugItem.itemCategoryHashes?.includes(
+          socket.plugged &&
+            socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament &&
+            socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+            !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+            !socket.plugged.plugDef.itemCategoryHashes?.includes(
               ItemCategoryHashes.ArmorModsGlowEffects
             )
         )
@@ -85,49 +85,49 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: ['hasmod'],
-    description: ['Filter.Mods.Y2'],
+    description: [tl('Filter.Mods.Y2')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
-      item.sockets?.sockets.some((socket) =>
+      item.sockets?.allSockets.some((socket) =>
         Boolean(
-          socket.plug &&
-            !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-            socket.plug.plugItem.plug &&
-            socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+          socket.plugged &&
+            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+            socket.plugged.plugDef.plug &&
+            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
-            socket.plug.plugItem.perks.length &&
+            socket.plugged.plugDef.perks.length &&
             // enforce that this doesn't have an energy cost (y3 reusables)
-            !socket.plug.plugItem.plug.energyCost
+            !socket.plugged.plugDef.plug.energyCost
         )
       ),
   },
   {
     keywords: ['modded'],
-    description: ['Filter.Mods.Y3'],
+    description: [tl('Filter.Mods.Y3')],
     format: 'simple',
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       Boolean(item.energy) &&
       item.sockets &&
-      item.sockets.sockets.some((socket) =>
+      item.sockets.allSockets.some((socket) =>
         Boolean(
-          socket.plug &&
-            !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-            socket.plug.plugItem.plug &&
-            socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+          socket.plugged &&
+            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+            socket.plugged.plugDef.plug &&
+            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
-            socket.plug.plugItem.perks.length
+            socket.plugged.plugDef.perks.length
         )
       ),
   },
   {
     keywords: ['modslot'],
-    description: ['Filter.ModSlot'],
+    description: [tl('Filter.ModSlot')],
     format: 'query',
     suggestionsGenerator: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,
@@ -141,7 +141,7 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: ['holdsmod'],
-    description: ['Filter.HoldsMod'],
+    description: [tl('Filter.HoldsMod')],
     format: 'query',
     suggestionsGenerator: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,

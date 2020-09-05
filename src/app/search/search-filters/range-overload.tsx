@@ -1,11 +1,11 @@
+import { tl } from 'app/i18next-t';
 import { D2Item } from 'app/inventory/item-types';
-import _ from 'lodash';
-import * as hashes from '../search-filter-values';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import seasonTags from 'data/d2/season-tags.json';
 import * as D2Values from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import * as hashes from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
-import seasonTags from 'data/d2/season-tags.json';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 
 /** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
@@ -20,7 +20,7 @@ const mathCheck = /^[\d<>=]/;
 const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: ['masterwork'],
-    description: ['Filter.Masterwork'],
+    description: [tl('Filter.Masterwork')],
     format: 'rangeoverload',
     destinyVersion: 2,
     filterValuePreprocessor: (filterValue: string) => {
@@ -42,7 +42,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['energycapacity'],
-    description: ['Filter.Energy'],
+    description: [tl('Filter.Energy')],
     format: 'rangeoverload',
     destinyVersion: 2,
     filterValuePreprocessor: (filterValue: string) => {
@@ -57,7 +57,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['season'],
-    description: ['Filter.Season'],
+    description: [tl('Filter.Season')],
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: seasonRangeStringToComparator,
@@ -66,7 +66,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['sunsetsafter'],
-    description: ['Filter.SunsetAfter'],
+    description: [tl('Filter.SunsetAfter')],
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: seasonRangeStringToComparator,
