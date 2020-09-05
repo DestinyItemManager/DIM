@@ -17,7 +17,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { assignModsToArmorSet } from '../mod-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { connect } from 'react-redux';
 import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -27,6 +27,7 @@ import SetStats from '../generated-sets/SetStats';
 import { getTotalModStatChanges } from '../processWorker/mappers';
 import { DimItem } from 'app/inventory/item-types';
 import Mod from '../Mod';
+import { updateLoadout } from 'app/loadout/actions';
 
 function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
   const baseStats = _.mapValues(
@@ -91,7 +92,7 @@ interface StoreProps {
   loadouts: Loadout[];
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
@@ -112,6 +113,7 @@ function CompareDrawer({
   enabledStats,
   assumeMasterwork,
   onClose,
+  dispatch,
 }: Props) {
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
@@ -157,11 +159,30 @@ function CompareDrawer({
     lockedArmor2Mods
   );
 
+  const onSaveLoadout = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const loadoutToSave = selectedLoadout;
+
+    if (!loadoutToSave) {
+      return;
+    }
+
+    dispatch(updateLoadout(loadoutToSave));
+    onClose();
+  };
+
   const header = <div className={styles.header}>Compare Loadout</div>;
+
   return (
     <Sheet onClose={onClose} header={header}>
       <div className={styles.content}>
-        <div className={styles.setHeader}>Optimiser Set</div>
+        <div className={styles.setHeader}>
+          <div className={styles.setTitle}>Optimiser Set</div>
+          <button className="dim-button" type="button" onClick={onSaveLoadout}>
+            {`Save as ${selectedLoadout?.name}`}
+          </button>
+        </div>
         <SetStats
           defs={defs}
           items={set.armor.map((items) => items[0])}
@@ -178,20 +199,22 @@ function CompareDrawer({
             </div>
           ))}
         </div>
-        <div className={styles.setHeader}>Loadout</div>
-        <select
-          className={styles.loadoutSelect}
-          onChange={(event) => {
-            const selected = useableLoadouts.find((l) => l.id === event.target.value);
-            setSelectedLoadout(selected);
-          }}
-        >
-          {useableLoadouts.map((l) => (
-            <option key={l.id} value={l.id} selected={l.id === selectedLoadout?.id}>
-              {l.name}
-            </option>
-          ))}
-        </select>
+        <div className={styles.setHeader}>
+          <div className={styles.setTitle}>Loadout</div>
+          <select
+            className={styles.loadoutSelect}
+            onChange={(event) => {
+              const selected = useableLoadouts.find((l) => l.id === event.target.value);
+              setSelectedLoadout(selected);
+            }}
+          >
+            {useableLoadouts.map((l) => (
+              <option key={l.id} value={l.id} selected={l.id === selectedLoadout?.id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <SetStats
           defs={defs}
           items={loadoutItems}
@@ -208,7 +231,9 @@ function CompareDrawer({
             </div>
           ))}
         </div>
-        <div className={styles.unassigned}>These mods could not be assigned to the loadout.</div>
+        {Boolean(loadoutUnassignedMods.length) && (
+          <div className={styles.unassigned}>These mods could not be assigned to the loadout.</div>
+        )}
         <div className={styles.unassignedMods}>
           {loadoutUnassignedMods.map((unassigned) => (
             <Mod key={unassigned.key} plugDef={unassigned.mod} defs={defs} large={true} />

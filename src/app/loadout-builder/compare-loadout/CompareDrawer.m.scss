@@ -7,9 +7,20 @@
 
 .content {
   margin: 16px;
+  display: inline-block;
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 .setHeader {
+  margin: 0 4px 4px 0;
+}
+
+.setTitle {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
@@ -44,6 +55,10 @@
 
   > *:first-child {
     grid-area: item;
+  }
+
+  &:last-child {
+    margin-right: 0;
   }
 }
 

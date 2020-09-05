@@ -7,6 +7,7 @@ interface CssExports {
   'loadoutSelect': string;
   'set': string;
   'setHeader': string;
+  'setTitle': string;
   'unassigned': string;
   'unassignedMods': string;
 }
