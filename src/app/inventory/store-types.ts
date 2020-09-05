@@ -201,8 +201,6 @@ export interface D1Store extends DimStore<D1Item> {
   // TODO: shape?
   advisors: any;
 
-  /** Which faction is this character currently aligned with? */
-  factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
 }
 

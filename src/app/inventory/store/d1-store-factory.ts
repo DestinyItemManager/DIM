@@ -26,12 +26,6 @@ const progressionMeta = {
   2576753410: { label: 'SRL', order: 11 },
 };
 
-const factionBadges = {
-  969832704: 'Future War Cult',
-  27411484: 'Dead Orbit',
-  2954371221: 'New Monarchy',
-};
-
 /**
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
@@ -108,15 +102,6 @@ export const StoreProto = {
     this.items = [...this.items, item];
     this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
     item.owner = this.id;
-  },
-
-  factionAlignment(this: D1Store) {
-    const badge = this.buckets[375726501].find((i) => factionBadges[i.hash]);
-    if (!badge) {
-      return null;
-    }
-
-    return factionBadges[badge.hash];
   },
 
   isDestiny1(this: D1Store) {
