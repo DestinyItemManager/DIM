@@ -277,7 +277,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
+    ...['notes:', 'perk:', 'perkname:', 'mod:', 'modname:', 'name:', 'description:'],
   ];
 
   // create suggestion stubs for filter names

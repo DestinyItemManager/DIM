@@ -27,6 +27,7 @@ import { t } from './i18next-t';
 import IssueBanner from './banner/IssueBanner';
 import { set } from 'idb-keyval';
 import ErrorPanel from './shell/ErrorPanel';
+import AccountRedirectRoute from './shell/AccountRedirectRoute';
 
 const WhatsNew = React.lazy(
   () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -183,6 +184,22 @@ function App({
                     <Developer />
                   </Route>
                 )}
+                <Route
+                  path={[
+                    '/inventory',
+                    '/progress',
+                    '/collections',
+                    '/optimizer',
+                    '/organizer',
+                    '/vendors/:vendorId',
+                    '/vendors',
+                    '/record-books',
+                    '/activities',
+                  ]}
+                  exact
+                >
+                  <AccountRedirectRoute />
+                </Route>
                 <Route>
                   <DefaultAccount />
                 </Route>

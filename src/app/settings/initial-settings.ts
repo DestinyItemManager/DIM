@@ -6,6 +6,7 @@ export interface Settings extends DimApiSettings {
   readonly organizerColumnsGhost: string[];
   readonly loMinPower: number;
   readonly loMinStatTotal: number;
+  compareBaseStats: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -15,4 +16,5 @@ export const initialSettingsState: Settings = {
   loMinPower: 750,
   loMinStatTotal: 55,
   organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'ghost', 'perks', 'notes'],
+  compareBaseStats: false,
 };

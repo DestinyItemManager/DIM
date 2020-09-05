@@ -100,10 +100,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     }
   };
 
+  const destinyVersion = account?.destinyVersion;
+
   // Poll for vendor engrams
   const engramRefreshTimer = useRef<number>();
   useEffect(() => {
-    if ($featureFlags.vendorEngrams && account?.destinyVersion == 2) {
+    if ($featureFlags.vendorEngrams && destinyVersion == 2) {
       setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
       return () => {
         if (engramRefreshTimer.current) {
@@ -114,7 +116,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     } else {
       return;
     }
-  }, [account?.destinyVersion, dispatch]);
+  }, [destinyVersion, dispatch]);
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);

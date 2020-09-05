@@ -12,6 +12,7 @@ import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 export default function CompareItem({
   item,
   stats,
+  compareBaseStats,
   itemClick,
   remove,
   highlight,
@@ -19,6 +20,7 @@ export default function CompareItem({
 }: {
   item: DimItem;
   stats: StatInfo[];
+  compareBaseStats?: boolean;
   highlight: number | string | undefined;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
@@ -45,6 +47,7 @@ export default function CompareItem({
           stat={stat}
           setHighlight={setHighlight}
           highlight={highlight}
+          compareBaseStats={compareBaseStats}
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}

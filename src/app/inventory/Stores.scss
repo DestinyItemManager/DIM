@@ -237,3 +237,30 @@
     background-color: #666;
   }
 }
+
+.category-options {
+  display: flex;
+  background-color: black;
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  top: inherit;
+  left: 0;
+  width: 94%;
+  padding: 0 3%;
+  justify-content: space-around;
+
+  > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    padding-bottom: 1px;
+  }
+  .selected {
+    font-weight: bold;
+  }
+}
