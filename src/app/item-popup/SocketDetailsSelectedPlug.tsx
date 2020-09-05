@@ -1,8 +1,11 @@
+import { getActivePlatform } from 'app/accounts/get-active-platform';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
+  DimSocket,
   DimStat,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
@@ -25,11 +28,13 @@ const costStatHashes = [
 
 export default function SocketDetailsSelectedPlug({
   plug,
+  socket,
   defs,
   item,
   currentPlug,
 }: {
   plug: PluggableInventoryItemDefinition;
+  socket: DimSocket;
   defs: D2ManifestDefinitions;
   item: DimItem;
   currentPlug: DimPlug | null;
@@ -82,26 +87,37 @@ export default function SocketDetailsSelectedPlug({
     })
   );
 
+  const onInsertPlug = async () => {
+    const response = await insertPlug(getActivePlatform()!, item, socket, plug.hash);
+    if (response.item) {
+      // Update the item!
+    }
+
+    // close the menu?
+  };
+
+  const costs = materialRequirementSet?.materials.map((material) => {
+    const materialDef = defs.InventoryItem.get(material.itemHash);
+    return (
+      materialDef &&
+      material.count > 0 &&
+      !material.omitFromRequirements && (
+        <div className={styles.material} key={material.itemHash}>
+          {material.count.toLocaleString()}
+          <BungieImage
+            src={materialDef.displayProperties.icon}
+            title={materialDef.displayProperties.name}
+          />
+        </div>
+      )
+    );
+  });
+
   return (
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} defs={defs} />
-        {materialRequirementSet?.materials.map((material) => {
-          const materialDef = defs.InventoryItem.get(material.itemHash);
-          return (
-            materialDef &&
-            material.count > 0 &&
-            !material.omitFromRequirements && (
-              <div className={styles.material} key={material.itemHash}>
-                {material.count.toLocaleString()}
-                <BungieImage
-                  src={materialDef.displayProperties.icon}
-                  title={materialDef.displayProperties.name}
-                />
-              </div>
-            )
-          );
-        })}
+        {!$featureFlags.advancedWriteActions && costs}
       </div>
       <div className={styles.modDescription}>
         <h3>
@@ -125,6 +141,12 @@ export default function SocketDetailsSelectedPlug({
         ))}
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      {$featureFlags.advancedWriteActions && (
+        <button type="button" onClick={onInsertPlug}>
+          Insert Mod
+          {costs}
+        </button>
+      )}
     </div>
   );
 }
