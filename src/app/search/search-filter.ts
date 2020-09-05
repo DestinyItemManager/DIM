@@ -54,6 +54,7 @@ import {
   SEASONAL_ARTIFACT_BUCKET,
   SHADERS_BUCKET,
 } from './d2-known-values';
+import { FilterContext, FilterDefinition, ItemFilter, ValidFilterOutput } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
 import {
@@ -117,7 +118,11 @@ export const makeSeasonalDupeID = (item: DimItem) =>
 // Selectors
 //
 
-/** A selector for the search config for a particular destiny version. */
+/**
+ * A selector for the search config for a particular destiny version. This must
+ * depend on every bit of data in FilterContext so that we regenerate the filter
+ * function whenever any of them changes.
+ */
 export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
@@ -128,15 +133,125 @@ export const searchFiltersConfigSelector = createSelector(
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
-  searchFilters
+  makeSearchFilterFactory
 );
 
 /** A selector for a function for searching items, given the current search query. */
 export const searchFilterSelector = createSelector(
   querySelector,
   searchFiltersConfigSelector,
-  (query, filters) => filters.filterFunction(query)
+  (query, filterFactory) => filterFactory(query)
 );
+
+function makeSearchFilterFactory(
+  { filters }: SearchConfig,
+  stores: DimStore[],
+  currentStore: DimStore,
+  loadouts: Loadout[],
+  inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
+  ratings: ReviewsState['ratings'],
+  newItems: Set<string>,
+  itemInfos: ItemInfos,
+  itemHashTags: {
+    [itemHash: string]: ItemHashTag;
+  }
+) {
+  const filterContext: FilterContext = {
+    stores,
+    currentStore,
+    loadouts,
+    inventoryWishListRolls,
+    ratings,
+    newItems,
+    itemInfos,
+    itemHashTags,
+  };
+
+  return (query: string): ItemFilter => {
+    query = query.trim().toLowerCase();
+    if (!query.length) {
+      // By default, show anything that doesn't have the archive tag
+      return (item: DimItem) => getTag(item, itemInfos, itemHashTags) !== 'archive';
+    }
+
+    const parsedQuery = parseQuery(query);
+
+    // TODO: map of filter to context?
+
+    // Transform our query syntax tree into a filter function by recursion.
+    // TODO: break these out into standalone, tested functions!
+    const transformAST = (ast: QueryAST): ((item: DimItem) => ValidFilterOutput) => {
+      switch (ast.op) {
+        case 'and': {
+          const fns = ast.operands.map(transformAST);
+          return (item) => {
+            for (const fn of fns) {
+              if (!fn(item)) {
+                return false;
+              }
+            }
+            return true;
+          };
+        }
+        case 'or': {
+          const fns = ast.operands.map(transformAST);
+          return (item) => {
+            for (const fn of fns) {
+              if (fn(item)) {
+                return true;
+              }
+            }
+            return false;
+          };
+        }
+        case 'not': {
+          const fn = transformAST(ast.operand);
+          return (item) => !fn(item);
+        }
+        case 'filter': {
+          // TODO: break this out into its own function that takes the filter table as an arg
+          const { type: filterName, args: filterValue } = ast;
+
+          const filterDef = filters[filterName];
+          if (filterDef) {
+            // run the contextGenerator against all items if it exists. this prepares things like "maxpower" or "dupe"
+            filterDef.contextGenerator?.(filterContext, filterValue);
+            return prepareFilter(filterDef, filterValue);
+          }
+
+          // TODO: mark invalid!
+          return () => true;
+        }
+      }
+
+      return () => true;
+    };
+
+    return transformAST(parsedQuery);
+  };
+}
+
+/**
+ * Generate a filter function from a filter definition.
+ */
+export function prepareFilter(
+  filter: FilterDefinition,
+  filterValue: string
+): (item: DimItem) => ValidFilterOutput {
+  if (filter.filterValuePreprocessor) {
+    if (filter.filterFunction) {
+      // if there is a filterValuePreprocessor, there will be a filterValue
+      const preprocessedfilterValue = filter.filterValuePreprocessor(filterValue);
+      // feed that into filterFunction
+      return (item: DimItem) => filter.filterFunction(item, preprocessedfilterValue);
+    } else {
+      // if there is just a filterValuePreprocessor, it returns the filter function directly
+      return filter.filterValuePreprocessor(filterValue);
+    }
+  }
+  // if there was no preprocessor, the raw filterValue string goes into the filter function alongside each item
+  return (item: DimItem) => filter.filterFunction(item, filterValue);
+}
 
 /**
  * compares a number to a parsed string which contains a math operator and a number.

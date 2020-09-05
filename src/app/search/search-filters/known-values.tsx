@@ -122,16 +122,13 @@ const knownValuesFilters: FilterDefinition[] = [
       item.type?.toLowerCase() === filterValue,
   },
   {
-    keywords: Object.keys({
-      ...D1ItemCategoryHashes,
-      ...D2ItemCategoryHashesByName,
-    }),
+    keywords: Object.keys(itemCategoryHashesByName),
     description: [tl('Filter.WeaponType')],
     format: 'simple',
     destinyVersion: 2,
+    filterValuePreprocessor: (filterValue) => filterValue.replace(/\s/g, ''),
     filterFunction: (item: D2Item, filterValue: string) => {
-      const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
-
+      const categoryHash = itemCategoryHashesByName[filterValue];
       if (!categoryHash) {
         return false;
       }

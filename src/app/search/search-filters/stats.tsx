@@ -2,7 +2,7 @@ import { tl } from 'app/i18next-t';
 import { D2Item, DimItem } from 'app/inventory/item-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
-import { FilterDefinition } from '../filter-types';
+import { FilterContext, FilterDefinition } from '../filter-types';
 import {
   armorAnyStatHashes,
   armorStatHashes,
@@ -107,8 +107,7 @@ function statFilterFromString(filterValue: string, byBaseValue = false) {
   };
 }
 
-function findMaxStatLoadout(allItems: DimItem[], statName: string) {
-  const stores = allItems[0].getStoresService().getStores();
+function findMaxStatLoadout({ stores }: FilterContext, statName: string) {
   const maxStatHash = statHashByName[statName];
   if (!_maxStatLoadoutItems[statName]) {
     _maxStatLoadoutItems[statName] = [];
@@ -138,8 +137,7 @@ function checkIfHasMaxStatValue(item: D2Item, statName: string, byBaseValue = fa
   return matchingStats && Boolean(matchingStats.length);
 }
 
-function gatherHighestStatsPerSlot(allItems: DimItem[]) {
-  const stores = allItems[0].getStoresService().getStores();
+function gatherHighestStatsPerSlot({ stores }: FilterContext) {
   if (_maxStatValues === null) {
     _maxStatValues = {};
     for (const store of stores) {
@@ -171,8 +169,7 @@ function gatherHighestStatsPerSlot(allItems: DimItem[]) {
   }
 }
 
-function calculateMaxPowerLoadoutItems(allItems: DimItem[]) {
-  const stores = allItems[0].getStoresService().getStores();
+function calculateMaxPowerLoadoutItems({ stores }: FilterContext) {
   _maxPowerLoadoutItems = [];
   stores.forEach((store) => {
     _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).equippable.map((i) => i.id));

@@ -6,7 +6,7 @@ import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER } from '../d2-known-values';
-import { FilterDefinition } from '../filter-types';
+import { FilterContext, FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
 export let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
@@ -85,13 +85,9 @@ const dupeComparator = reverseComparator(
   )
 );
 
-export function initDupes(
-  allItems: DimItem[]
-  // stores: DimStore[],itemInfos: ItemInfos
-) {
+export function initDupes({ stores }: FilterContext) {
+  // TODO: need to reset this each time (memoize)
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-  const stores = allItems[0].getStoresService().getStores();
-
   if (_duplicates === null) {
     _duplicates = {};
     for (const store of stores) {

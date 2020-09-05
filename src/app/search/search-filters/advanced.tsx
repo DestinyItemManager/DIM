@@ -5,17 +5,18 @@ import { FilterDefinition } from '../filter-types';
 const advancedFilters: FilterDefinition[] = [
   {
     keywords: ['id'],
-    description: [tl('find an item by id')],
+    description: [tl('Filters.ItemId')],
     format: 'freeform',
     destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) => item.id === filterValue,
   },
   {
     keywords: ['hash'],
-    description: [tl('find an item by hash')],
+    description: [tl('Filters.ItemHash')],
     format: 'freeform',
     destinyVersion: 0,
-    filterFunction: (item: DimItem, filterValue: string) => item.hash.toString() === filterValue,
+    filterValuePreprocessor: (filterValue) => parseInt(filterValue, 10),
+    filterFunction: (item: DimItem, itemHash: number) => item.hash === itemHash,
   },
 ];
 

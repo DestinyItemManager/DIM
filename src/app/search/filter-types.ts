@@ -1,13 +1,39 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
+import { ReviewsState } from 'app/item-review/reducer';
+import { Loadout } from 'app/loadout/loadout-types';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 type I18nInput = Parameters<typeof t>;
 
 // a filter can return various bool-ish values
 type ValidFilterOutput = boolean | null | undefined;
 
-type preprocessedValues = string | RegExp | ((a: number) => boolean);
+export type ItemFilter = (item: DimItem) => ValidFilterOutput;
+
+type preprocessedValues = string | RegExp | number | ((a: number) => boolean);
 type PreprocessorFilterPairs = PreprocessorFilterPair<preprocessedValues>;
+
+/**
+ * A slice of data that could be used by contextGenerator functions to
+ * initialize some data required by particular filters. If a new filter needs
+ * context that isn't here, add it to this interface and makeSearchFilterFactory
+ * in search-filter.ts.
+ */
+export interface FilterContext {
+  stores: DimStore[];
+  currentStore: DimStore;
+  loadouts: Loadout[];
+  inventoryWishListRolls: { [key: string]: InventoryWishListRoll };
+  ratings: ReviewsState['ratings'];
+  newItems: Set<string>;
+  itemInfos: ItemInfos;
+  itemHashTags: {
+    [itemHash: string]: ItemHashTag;
+  };
+}
 
 // there are three valid combinations of filterValuePreprocessor and filterFunction:
 type PreprocessorFilterPair<T extends preprocessedValues> =
@@ -25,7 +51,7 @@ type PreprocessorFilterPair<T extends preprocessedValues> =
     }
   | {
       // filterValuePreprocessor returns a function that accepts an item,
-      filterValuePreprocessor: (filterValue: string) => (item: DimItem) => ValidFilterOutput;
+      filterValuePreprocessor: (filterValue: string) => ItemFilter;
       // and that function is used AS the filterFunction once per item
       filterFunction?: undefined;
     };
@@ -60,15 +86,16 @@ export type FilterDefinition = PreprocessorFilterPairs & {
   destinyVersion: 0 | 1 | 2;
 
   /** a rich element to show in fancy search bar, instead of just letters */
-  breadcrumb?: (filterValue?: string) => JSX.Element;
+  // TODO: do this later
+  // breadcrumb?: (filterValue?: string) => JSX.Element;
 
   /** given the manifest, prep a set of suggestion based on, idk, perk names for instance? */
-  suggestionsGenerator?: string[] | string[][] | ((defs: D2ManifestDefinitions) => string[]);
+  // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing
+  suggestionsGenerator?: string[]; // | string[][] | ((defs: D2ManifestDefinitions) => string[]);
 
-  /** is provided a list of all items. calculates some kind of stats before running the search */
-  // TODO: have this take getState() or be a redux action?
-  // TODO: have this be async!
-  contextGenerator?: (allItems: DimItem[], filterValue?: string) => void;
+  /** is provided a list of all items. calculates some kind of global information before running the search */
+  // TODO: move context into the filter functions themselves?
+  contextGenerator?: (context: FilterContext, filterValue?: string) => void;
 };
 
 /*
