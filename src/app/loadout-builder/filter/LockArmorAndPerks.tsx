@@ -8,6 +8,7 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { settingsSelector } from 'app/settings/reducer';
 import { addIcon, AppIcon, faTimesCircle } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
@@ -114,7 +115,7 @@ function LockArmorAndPerks({
         filterItems: (item: DimItem) =>
           Boolean(
             isLoadoutBuilderItem(item) &&
-              item.canBeEquippedBy(selectedStore) &&
+              itemCanBeEquippedBy(item, selectedStore) &&
               (!filter || filter(item))
           ),
         sortBy: (item) => order.indexOf(item.bucket.hash),

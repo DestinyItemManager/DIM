@@ -1,4 +1,3 @@
-import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { t } from 'app/i18next-t';
 import {
   DestinyAmmunitionType,
@@ -35,27 +34,6 @@ const _moveTouchTimestamps = new Map<string, number>();
 // Prototype for Item objects - add methods to this to add them to all
 // items.
 const ItemProto = {
-  // Can this item be equipped by the given store?
-  canBeEquippedBy(this: D1Item, store: D1Store) {
-    if (store.isVault) {
-      return false;
-    }
-
-    return (
-      this.equipment &&
-      // For the right class
-      (this.classType === DestinyClass.Unknown || this.classType === store.classType) &&
-      // nothing we are too low-level to equip
-      this.equipRequiredLevel <= store.level &&
-      // can be moved or is already here
-      (!this.notransfer || this.owner === store.id) &&
-      !this.location.inPostmaster &&
-      factionItemAligns(store, this)
-    );
-  },
-  canBeInLoadout(this: D1Item) {
-    return this.equipment || this.type === 'Material' || this.type === 'Consumable';
-  },
   // Mark that this item has been moved manually
   updateManualMoveTimestamp(this: D1Item) {
     this.lastManuallyMoved = Date.now();

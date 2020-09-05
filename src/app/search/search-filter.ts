@@ -6,6 +6,7 @@ import {
   getItemDamageShortName,
   getItemPowerCapFinalSeason,
   getSpecialtySocketMetadata,
+  itemCanBeEquippedBy,
 } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass, DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
@@ -665,7 +666,7 @@ function searchFilters(
           !item.bucket.accountWide &&
           item.classType !== DestinyClass.Unknown &&
           ownerStore &&
-          !item.canBeEquippedBy(ownerStore) &&
+          !itemCanBeEquippedBy(item, ownerStore) &&
           !item.location?.inPostmaster
         );
       },
