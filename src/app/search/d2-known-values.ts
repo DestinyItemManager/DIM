@@ -188,8 +188,6 @@ export const armorBuckets = {
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const TRIUMPHS_ROOT_NODE = 1024788583;
-export const SEALS_ROOT_NODE = 1652422747;
 export const CATALYSTS_ROOT_NODE = 1111248994;
 export const RAID_NODE = 2975760062;
 

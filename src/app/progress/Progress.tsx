@@ -1,9 +1,11 @@
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { queueAction } from 'app/inventory/action-queue';
 import { D2StoresService } from 'app/inventory/d2-stores';
+import { DimItem } from 'app/inventory/item-types';
 import {
   bucketsSelector,
   profileResponseSelector,
@@ -11,7 +13,9 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import { RAID_NODE } from 'app/search/d2-known-values';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { querySelector } from 'app/shell/reducer';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -31,6 +35,7 @@ import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
+import { TrackedTriumphs } from './TrackedTriumphs';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -42,6 +47,9 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
+  searchQuery?: string;
+  trackedTriumphs: number[];
+  searchFilter?(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -53,13 +61,26 @@ function mapStateToProps(state: RootState): StoreProps {
     defs: state.manifest.d2Manifest,
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
+    searchQuery: querySelector(state),
+    searchFilter: searchFilterSelector(state),
+    trackedTriumphs: trackedTriumphsSelector(state),
   };
 }
 
 const refreshStores = () =>
   refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
 
-function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
+function Progress({
+  account,
+  defs,
+  stores,
+  isPhonePortrait,
+  buckets,
+  profileInfo,
+  searchQuery,
+  searchFilter,
+  trackedTriumphs,
+}: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -74,21 +95,8 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  // TODO: Searchable (item, description)
-  // TODO: triumph search?
   // TODO: track triumphs?
   // TODO: close / pinnacle triumphs?
-  // TODO: move vendor load into faction component?
-  // TODO: badge the corner of expired bounties (red background, clock)
-  // TODO: show rewards in item popup
-  // TODO: show "flavor text" in item popup (itemDef.displaySource)
-  // TODO: show expiration in item popup
-  // TODO: show tracked overlay
-  // TODO: do our own display, don't need the full inventory item right?
-  // TODO: break up into components!
-  // TODO: grid the triumphs
-  // TODO: show expiration
-  // TODO: separate milestones (daily, weekly, story?)
   // TODO: make milestones and pursuits look similar?
   // TODO: search/filter by activity
   // TODO: dropdowns for searches (reward, activity)
@@ -120,8 +128,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     return null;
   }
 
-  const triumphTitle = defs.PresentationNode.get(TRIUMPHS_ROOT_NODE).displayProperties.name;
-  const sealTitle = defs.PresentationNode.get(SEALS_ROOT_NODE).displayProperties.name;
+  const recordsRootHash = profileInfo.profileRecords.data?.recordCategoriesRootNodeHash;
+  const sealsRootHash = profileInfo.profileRecords.data?.recordSealsRootNodeHash;
+  const triumphTitle =
+    recordsRootHash && defs.PresentationNode.get(recordsRootHash).displayProperties.name;
+  const sealTitle =
+    sealsRootHash && defs.PresentationNode.get(sealsRootHash).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
 
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
@@ -135,9 +147,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
+    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
     { id: 'triumphs', title: triumphTitle },
     { id: 'seals', title: sealTitle },
   ];
+  const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
     <ErrorBoundary name="Progress">
@@ -207,25 +221,50 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                 </CollapsibleTitle>
               </section>
 
-              <section id="triumphs">
-                <ErrorBoundary name="Triumphs">
-                  <PresentationNodeRoot
-                    presentationNodeHash={TRIUMPHS_ROOT_NODE}
-                    defs={defs}
-                    profileResponse={profileInfo}
-                  />
-                </ErrorBoundary>
+              <section id="trackedTriumphs">
+                <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+                  <div className="progress-row">
+                    <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
+                      <TrackedTriumphs
+                        trackedTriumphs={trackedTriumphs}
+                        trackedRecordHash={trackedRecordHash}
+                        defs={defs}
+                        profileResponse={profileInfo}
+                        searchQuery={searchQuery}
+                      />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
               </section>
 
-              <section id="seals">
-                <ErrorBoundary name="Seals">
-                  <PresentationNodeRoot
-                    presentationNodeHash={SEALS_ROOT_NODE}
-                    defs={defs}
-                    profileResponse={profileInfo}
-                  />
-                </ErrorBoundary>
-              </section>
+              {recordsRootHash && (
+                <section id="triumphs">
+                  <ErrorBoundary name="Triumphs">
+                    <PresentationNodeRoot
+                      presentationNodeHash={recordsRootHash}
+                      defs={defs}
+                      profileResponse={profileInfo}
+                      isTriumphs={true}
+                      searchQuery={searchQuery}
+                      searchFilter={searchFilter}
+                    />
+                  </ErrorBoundary>
+                </section>
+              )}
+
+              {sealsRootHash && (
+                <section id="seals">
+                  <ErrorBoundary name="Seals">
+                    <PresentationNodeRoot
+                      presentationNodeHash={sealsRootHash}
+                      defs={defs}
+                      profileResponse={profileInfo}
+                      searchQuery={searchQuery}
+                      searchFilter={searchFilter}
+                    />
+                  </ErrorBoundary>
+                </section>
+              )}
             </div>
           </Hammer>
         </PageWithMenu.Contents>

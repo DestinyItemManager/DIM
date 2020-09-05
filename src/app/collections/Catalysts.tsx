@@ -5,6 +5,7 @@ import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import './collections.scss';
+import { toPresentationNodeTree } from './presentation-nodes';
 import Record from './Record';
 
 export default function Catalysts({
@@ -14,30 +15,33 @@ export default function Catalysts({
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
 }) {
-  const catalystPresentationNode = defs.PresentationNode.get(CATALYSTS_ROOT_NODE);
-  const firstCharacterRecords = Object.values(profileResponse.characterRecords.data || {})[0]
-    .records;
+  const catalystsNode = toPresentationNodeTree(
+    defs,
+    undefined,
+    profileResponse,
+    CATALYSTS_ROOT_NODE
+  );
+  if (!catalystsNode || !catalystsNode.childPresentationNodes) {
+    return null;
+  }
 
-  const catalystRecordHashes = catalystPresentationNode.children.presentationNodes
-    // flatten the 3 catalyst categories into a set of all catalyst hashes
-    .flatMap((p) =>
-      defs.PresentationNode.get(p.presentationNodeHash).children.records.map((r) => r.recordHash)
-    )
+  const records = catalystsNode.childPresentationNodes
+    .flatMap((c) => c.records!)
     // filter out catalysts which aren't acquired at all, or have been completed
-    .filter((h) => {
-      const state = firstCharacterRecords[h] ? firstCharacterRecords[h].state : 0;
-      return !(state & DestinyRecordState.Obscured) || state & DestinyRecordState.RecordRedeemed;
-    });
+    .filter(
+      (r) =>
+        !(r.recordComponent.state & DestinyRecordState.Obscured) ||
+        r.recordComponent.state & DestinyRecordState.RecordRedeemed
+    );
 
   return (
     <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
       <div className="records catalysts">
-        {catalystRecordHashes.map((catalystRecordHash) => (
+        {records.map((record) => (
           <Record
-            key={catalystRecordHash}
-            recordHash={catalystRecordHash}
+            key={record.recordDef.hash}
+            record={record}
             defs={defs}
-            profileResponse={profileResponse}
             completedRecordsHidden={true}
             redactedRecordsRevealed={true}
           />
