@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Laden deines Charakters und Inventars nicht möglich",
+    "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Wenn du dein Twitch-Konto mit Bungie.net verknüpfst, werden deine D1-Konten nicht mehr funktionieren.",
-    "UnlinkTwitchButton": "Twitch Konto trennen",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Urtyp",
     "Armor2": "Rüstung 2.0",
     "ButtonHelp": "Items vergleichen",
+    "CompareBaseStats": "Grundstatistiken anzeigen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
       "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist."
@@ -414,6 +413,7 @@
     "ToggleDetails": "Zeige/verstecke vollständige Item-Details"
   },
   "Infusion": {
+    "Filter": "Gegenstände filtern",
     "InfuseSource": "Item auswählen um es in {{name}} zu infundieren",
     "InfuseTarget": "Item zum Infundieren in {{name}} auswählen",
     "Infusion": "Finde Infusions-Material",
@@ -594,6 +594,7 @@
     "AppliedError": "Keines der Items in deinem Loadout konnte übertragen werden.",
     "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Items hatten Fehler.",
     "ApplySearch": "Suche \"{{query}}\" übertragen",
+    "AssumeMaxWeapons": "Annahme von Waffen mit maximalem Powerlevel",
     "Before": "Bevor '{{name}}'",
     "ChooseItem": "{{name}} hinzufügen",
     "Classified": "Einige deiner Items sind klassifiziert und können nicht in die Max-Power-Berechnung einbezogen werden.",
@@ -711,6 +712,7 @@
     "ReadLoreLink": "Lese Lore",
     "ReviewsTab": "Berichte",
     "Rewards": "Belohnungen:",
+    "SendToVault": "An Tresor senden",
     "Split": "Teilen",
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
@@ -873,7 +875,6 @@
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
     "PowerCap": "Power Limit",
-    "PowerCapDisclaimer": "Informationen zum Power Limit sind möglicherweise falsch für Rüstungen aus Raids oder Waffen aus den Raids \"Letzter Wunsch\" und \"Garten der Erlösung\". ",
     "PowerCapWithSeason": "{{powerCap}} (Saison {{finalSeason}} max)",
     "PowerModifier": "Power gewährt durch saisonalen Erfahrungsfortschritt",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",

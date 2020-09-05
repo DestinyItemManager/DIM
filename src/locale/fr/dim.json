@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny",
+    "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Lier votre compte Twitch à votre compte Bungie.net empêchera vos comptes D1 de fonctionner.",
-    "UnlinkTwitchButton": "Dissocier Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Archétype",
     "Armor2": "Armure 2.0",
     "ButtonHelp": "Comparer des Objets",
+    "CompareBaseStats": "Show Base Stats",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
       "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
@@ -414,6 +413,7 @@
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
   },
   "Infusion": {
+    "Filter": "Filter items",
     "InfuseSource": "Sélectionnez un objet dans lequel infuser {{name}}",
     "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}",
     "Infusion": "Chercheur de Carburant à Infusion",
@@ -594,6 +594,7 @@
     "AppliedError": "Aucun des objets de votre arsenal n'a pu être transféré.",
     "AppliedWarn": "Votre arsenal a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
+    "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "Avant '{{name}}'",
     "ChooseItem": "Ajouter {{name}}",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
@@ -711,6 +712,7 @@
     "ReadLoreLink": "Read lore",
     "ReviewsTab": "Évaluations",
     "Rewards": "Récompenses:",
+    "SendToVault": "Send to Vault",
     "Split": "Couper",
     "Store": "Dépôt",
     "StoreWithName": "Store on {{character}}",
@@ -873,7 +875,6 @@
     "OfMaxRoll": "{{range}} des stats parfaites",
     "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
     "PowerCap": "Limite de Puissance",
-    "PowerCapDisclaimer": "Les informations de Limite de Puissance peuvent être incorrectes pour les armures provenant de n'importe quel raid, ou les armes provenant des raids \"Dernier Vœu\" et \"Jardin du Salut\"",
     "PowerCapWithSeason": "{{powerCap}} (Saison maximale {{finalSeason}})",
     "PowerModifier": "Puissance accordée par la progression d'experience saisonnière",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
