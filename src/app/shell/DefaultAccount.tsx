@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { t } from 'app/i18next-t';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
-import ErrorPanel from './ErrorPanel';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { currentAccountSelector, accountsLoadedSelector } from 'app/accounts/selectors';
 import { getPlatforms } from 'app/accounts/platforms';
-import { accountRoute } from 'app/routes';
-import { Redirect } from 'react-router';
+import { accountsLoadedSelector, currentAccountSelector } from 'app/accounts/selectors';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { accountRoute } from 'app/routes';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import ErrorPanel from './ErrorPanel';
 
 interface StoreProps {
   activeAccount?: DestinyAccount;

@@ -1,16 +1,16 @@
-import React from 'react';
-import _ from 'lodash';
-import PressTip from 'app/dim-ui/PressTip';
-import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-import { ArmorSet, statHashes, StatTypes } from '../types';
-import { calculateTotalTier, sumEnabledStats } from './utils';
-import { t } from 'app/i18next-t';
-import { statTier } from '../utils';
-import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
+import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import React from 'react';
+import { ArmorSet, statHashes, StatTypes } from '../types';
+import { statTier } from '../utils';
 import styles from './SetStats.m.scss';
+import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
   defs: D2ManifestDefinitions;

@@ -1,10 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import type { DimStore, DimVault } from 'app/inventory/store-types';
+import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
+import clsx from 'clsx';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import './CharacterTile.scss';
 
 const CharacterEmblem = ({ store }: { store: DimStore }) => (

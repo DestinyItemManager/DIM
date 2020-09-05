@@ -1,7 +1,10 @@
+import { ThunkResult } from 'app/store/types';
+import { reportException } from 'app/utils/exceptions';
 import {
   DestinyActivityDefinition,
   DestinyActivityModeDefinition,
   DestinyActivityModifierDefinition,
+  DestinyBreakerTypeDefinition,
   DestinyClassDefinition,
   DestinyCollectibleDefinition,
   DestinyDamageTypeDefinition,
@@ -19,6 +22,7 @@ import {
   DestinyObjectiveDefinition,
   DestinyPlaceDefinition,
   DestinyPlugSetDefinition,
+  DestinyPowerCapDefinition,
   DestinyPresentationNodeDefinition,
   DestinyProgressionDefinition,
   DestinyRaceDefinition,
@@ -34,16 +38,10 @@ import {
   DestinyTraitDefinition,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
-  DestinyPowerCapDefinition,
-  DestinyBreakerTypeDefinition,
 } from 'bungie-api-ts/destiny2';
-
+import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
 import { ManifestDefinitions } from './definitions';
-import _ from 'lodash';
-import { setD2Manifest } from '../manifest/actions';
-import { reportException } from 'app/utils/exceptions';
-import { ThunkResult } from 'app/store/types';
 
 const lazyTables = [
   'InventoryItem',

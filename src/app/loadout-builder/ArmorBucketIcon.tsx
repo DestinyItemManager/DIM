@@ -1,11 +1,11 @@
-import React from 'react';
-import catIconHelmet from '../../images/catIconHelmet.svg';
-import catIconGauntlets from '../../images/catIconGauntlets.svg';
-import catIconChest from '../../images/catIconChest.svg';
-import catIconBoots from '../../images/catIconBoots.svg';
-import catIconClass from '../../images/catIconClass.svg';
-import catIconGhost from '../../images/catIconGhost.svg';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import React from 'react';
+import catIconBoots from '../../images/catIconBoots.svg';
+import catIconChest from '../../images/catIconChest.svg';
+import catIconClass from '../../images/catIconClass.svg';
+import catIconGauntlets from '../../images/catIconGauntlets.svg';
+import catIconGhost from '../../images/catIconGhost.svg';
+import catIconHelmet from '../../images/catIconHelmet.svg';
 
 export default function ArmorBucketIcon({
   bucket,

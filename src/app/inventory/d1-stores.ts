@@ -1,23 +1,23 @@
 import _ from 'lodash';
+import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
+import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportException } from '../utils/exceptions';
 import { getStores } from '../bungie-api/destiny1-api';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { cleanInfos } from './dim-item-info';
-import { makeCharacter, makeVault } from './store/d1-store-factory';
-import { resetIdTracker, processItems } from './store/d1-item-factory';
-import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
-import { D1Item } from './item-types';
-import { InventoryBuckets } from './inventory-buckets';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
-import store from '../store/store';
-import { update, loadNewItems, error } from './actions';
-import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
-import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
-import { take, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { storesSelector, bucketsSelector } from './selectors';
+import { loadingTracker } from '../shell/loading-tracker';
+import store from '../store/store';
+import { reportException } from '../utils/exceptions';
+import { error, loadNewItems, update } from './actions';
+import { cleanInfos } from './dim-item-info';
+import { InventoryBuckets } from './inventory-buckets';
+import { D1Item } from './item-types';
+import { bucketsSelector, storesSelector } from './selectors';
+import { D1Store, D1StoreServiceType, D1Vault, DimVault } from './store-types';
+import { processItems, resetIdTracker } from './store/d1-item-factory';
+import { makeCharacter, makeVault } from './store/d1-store-factory';
 
 export const D1StoresService = StoreService();
 

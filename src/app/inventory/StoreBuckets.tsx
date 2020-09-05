@@ -1,11 +1,11 @@
+import { postmasterAlmostFull } from 'app/loadout/postmaster';
+import clsx from 'clsx';
 import React from 'react';
+import { storeBackgroundColor } from '../shell/filters';
+import { InventoryBucket } from './inventory-buckets';
+import { PullFromPostmaster } from './PullFromPostmaster';
 import { DimStore, DimVault } from './store-types';
 import StoreBucket from './StoreBucket';
-import { InventoryBucket } from './inventory-buckets';
-import clsx from 'clsx';
-import { PullFromPostmaster } from './PullFromPostmaster';
-import { storeBackgroundColor } from '../shell/filters';
-import { postmasterAlmostFull } from 'app/loadout/postmaster';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({

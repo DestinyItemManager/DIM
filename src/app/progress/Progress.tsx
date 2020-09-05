@@ -1,37 +1,36 @@
-import { t } from 'app/i18next-t';
-import React, { useState, useEffect } from 'react';
-import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
-import './progress.scss';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { refresh$ } from '../shell/refresh';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import PresentationNodeRoot from '../collections/PresentationNodeRoot';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { DimStore } from 'app/inventory/store-types';
-import {
-  sortedStoresSelector,
-  profileResponseSelector,
-  bucketsSelector,
-} from 'app/inventory/selectors';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import { queueAction } from 'app/inventory/action-queue';
-import Pursuits from './Pursuits';
-import Milestones from './Milestones';
-import Ranks from './Ranks';
-import Raids from './Raids';
-import Hammer from 'react-hammerjs';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { useSubscription } from 'app/utils/hooks';
-import { getStore, getCurrentStore } from 'app/inventory/stores-helpers';
-import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { queueAction } from 'app/inventory/action-queue';
+import { D2StoresService } from 'app/inventory/d2-stores';
+import {
+  bucketsSelector,
+  profileResponseSelector,
+  sortedStoresSelector,
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { RAID_NODE, SEALS_ROOT_NODE, TRIUMPHS_ROOT_NODE } from 'app/search/d2-known-values';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import React, { useEffect, useState } from 'react';
+import Hammer from 'react-hammerjs';
+import { connect } from 'react-redux';
+import { DestinyAccount } from '../accounts/destiny-account';
+import PresentationNodeRoot from '../collections/PresentationNodeRoot';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { refresh$ } from '../shell/refresh';
+import Milestones from './Milestones';
+import './progress.scss';
+import Pursuits from './Pursuits';
+import Raids from './Raids';
+import Ranks from './Ranks';
+import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 
 interface ProvidedProps {
   account: DestinyAccount;

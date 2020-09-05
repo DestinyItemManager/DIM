@@ -1,7 +1,7 @@
-import React from 'react';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import styles from './Privacy.m.scss';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import styles from './Privacy.m.scss';
 
 export default function Privacy() {
   return (

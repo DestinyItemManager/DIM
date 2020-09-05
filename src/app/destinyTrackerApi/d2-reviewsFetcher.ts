@@ -1,17 +1,16 @@
-import _ from 'lodash';
+import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
+import { ThunkResult } from 'app/store/types';
 import { getActivePlatform } from '../accounts/get-active-platform';
-import { loadingTracker } from '../shell/loading-tracker';
-import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
-import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
+import { reviewsLoaded } from '../item-review/actions';
 import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { getItemReviewsKey, getReviews } from '../item-review/reducer';
+import { loadingTracker } from '../shell/loading-tracker';
 import { getRollAndPerks } from './d2-itemTransformer';
+import { handleD2Errors } from './d2-trackerErrorHandler';
+import { dtrD2ReviewsEndpoint, dtrFetch } from './dtr-service-helper';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getReviews, getItemReviewsKey } from '../item-review/reducer';
-import { reviewsLoaded } from '../item-review/actions';
-import { ThunkResult } from 'app/store/types';
-import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 /**
  * Redux action that populates community (which may include the current user's) reviews for a given item.

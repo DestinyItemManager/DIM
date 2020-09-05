@@ -1,13 +1,13 @@
-import React from 'react';
-import { DimVersions } from './versions';
-import { alerts$ } from './BungieAlerts';
-import { GlobalAlert } from '../bungie-api/bungie-core-api';
-import './WhatsNewLink.scss';
 import { t } from 'app/i18next-t';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
-import { NavLink } from 'react-router-dom';
+import { alerts$ } from './BungieAlerts';
+import { DimVersions } from './versions';
+import './WhatsNewLink.scss';
 
 interface State {
   dimNeedsUpdate: boolean;

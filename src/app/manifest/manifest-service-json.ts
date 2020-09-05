@@ -1,20 +1,19 @@
-import _ from 'lodash';
-import { get, set, del } from 'idb-keyval';
-
-import { reportException } from '../utils/exceptions';
-import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
-import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
+import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
+import { settingsSelector } from 'app/settings/reducer';
+import { loadingEnd, loadingStart } from 'app/shell/actions';
+import { ThunkResult } from 'app/store/types';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { dedupePromise } from 'app/utils/util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
-import { showNotification } from '../notifications/notifications';
-import { settingsSelector } from 'app/settings/reducer';
-import { emptyObject, emptyArray } from 'app/utils/empty';
-import { loadingStart, loadingEnd } from 'app/shell/actions';
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
-import { ThunkResult } from 'app/store/types';
-import { dedupePromise } from 'app/utils/util';
+import { del, get, set } from 'idb-keyval';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
+import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
+import { showNotification } from '../notifications/notifications';
+import { settingsReady } from '../settings/settings';
+import { reportException } from '../utils/exceptions';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!

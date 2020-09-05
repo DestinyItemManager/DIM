@@ -1,19 +1,19 @@
+import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { ThunkResult } from 'app/store/types';
+import { dedupePromise } from 'app/utils/util';
+import { del, get } from 'idb-keyval';
 import _ from 'lodash';
+import { goToLoginPage } from '../bungie-api/authenticated-fetch';
+import { removeToken } from '../bungie-api/oauth-tokens';
+import { loadingTracker } from '../shell/loading-tracker';
+import * as actions from './actions';
+import { getBungieAccount } from './bungie-account';
 import {
   compareAccounts,
   DestinyAccount,
   getDestinyAccountsForBungieAccount,
 } from './destiny-account';
-import { getBungieAccount } from './bungie-account';
-import * as actions from './actions';
-import { loadingTracker } from '../shell/loading-tracker';
-import { goToLoginPage } from '../bungie-api/authenticated-fetch';
-import { accountsSelector, currentAccountSelector, accountsLoadedSelector } from './selectors';
-import { ThunkResult } from 'app/store/types';
-import { dedupePromise } from 'app/utils/util';
-import { removeToken } from '../bungie-api/oauth-tokens';
-import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
-import { del, get } from 'idb-keyval';
+import { accountsLoadedSelector, accountsSelector, currentAccountSelector } from './selectors';
 
 const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
   console.log('Load accounts from IDB');

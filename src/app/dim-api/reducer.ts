@@ -1,29 +1,29 @@
-import * as actions from './basic-actions';
-import * as settingsActions from '../settings/actions';
-import * as loadoutActions from '../loadout/actions';
-import * as inventoryActions from '../inventory/actions';
-import { clearWishLists } from 'app/wishlists/actions';
-import { ActionType, getType } from 'typesafe-actions';
-import _ from 'lodash';
-import { ProfileUpdateWithRollback, DeleteLoadoutUpdateWithRollback } from './api-types';
-import { initialSettingsState, Settings } from '../settings/initial-settings';
 import {
-  TagValue,
-  GlobalSettings,
   defaultGlobalSettings,
-  ProfileUpdateResult,
-  Loadout,
   DestinyVersion,
-  LoadoutItem,
+  GlobalSettings,
   ItemAnnotation,
-  Search,
   ItemHashTag,
+  Loadout,
+  LoadoutItem,
+  ProfileUpdateResult,
+  Search,
+  TagValue,
 } from '@destinyitemmanager/dim-api-types';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
-import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { emptyArray } from 'app/utils/empty';
-import { parseQuery, canonicalizeQuery } from 'app/search/query-parser';
+import { clearWishLists } from 'app/wishlists/actions';
+import produce, { Draft } from 'immer';
+import _ from 'lodash';
+import { ActionType, getType } from 'typesafe-actions';
+import * as inventoryActions from '../inventory/actions';
+import * as loadoutActions from '../loadout/actions';
+import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
+import * as settingsActions from '../settings/actions';
+import { initialSettingsState, Settings } from '../settings/initial-settings';
+import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
+import * as actions from './basic-actions';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;

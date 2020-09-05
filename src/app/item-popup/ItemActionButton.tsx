@@ -1,8 +1,8 @@
+import PressTip from 'app/dim-ui/PressTip';
+import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import styles from './ItemActionButton.m.scss';
-import PressTip from 'app/dim-ui/PressTip';
 
 export function ItemActionButtonGroup({
   vertical,

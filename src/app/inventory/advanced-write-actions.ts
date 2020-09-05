@@ -1,17 +1,17 @@
-import { DestinyAccount } from '../accounts/destiny-account';
-import {
-  AwaType,
-  AwaAuthorizationResult,
-  AwaUserSelection,
-  insertSocketPlug,
-  DestinySocketArrayType,
-} from 'bungie-api-ts/destiny2';
-import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
-import { get, set } from 'idb-keyval';
 import { t } from 'app/i18next-t';
-import { DimSocket, D2Item } from './item-types';
+import {
+  AwaAuthorizationResult,
+  AwaType,
+  AwaUserSelection,
+  DestinySocketArrayType,
+  insertSocketPlug,
+} from 'bungie-api-ts/destiny2';
+import { get, set } from 'idb-keyval';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { httpAdapter } from '../bungie-api/bungie-service-helper';
+import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
+import { D2Item, DimSocket } from './item-types';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };

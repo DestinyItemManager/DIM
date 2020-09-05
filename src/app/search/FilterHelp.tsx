@@ -1,12 +1,11 @@
-import './FilterHelp.scss';
-
-import React from 'react';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import { destinyVersionSelector } from 'app/accounts/selectors';
-import { t } from 'app/i18next-t';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import './FilterHelp.scss';
 
 function mapStateToProps(state: RootState) {
   return {

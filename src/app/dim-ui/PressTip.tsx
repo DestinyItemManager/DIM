@@ -1,15 +1,15 @@
+import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
+import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import { Instance, Options, Padding, popperGenerator } from '@popperjs/core/lib/popper-lite';
+import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
-import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
-import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
-import offset from '@popperjs/core/lib/modifiers/offset';
-import arrow from '@popperjs/core/lib/modifiers/arrow';
 import styles from './PressTip.m.scss';
-import _ from 'lodash';
 
 interface Props {
   tooltip: React.ReactNode;

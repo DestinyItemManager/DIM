@@ -1,5 +1,5 @@
 import { get } from 'idb-keyval';
-import { StorageAdapter, DimData } from './sync.service';
+import { DimData, StorageAdapter } from './sync.service';
 
 /**
  * Local storage using IndexedDB. IndexedDB has large storage limits,

@@ -1,6 +1,6 @@
+import { BehaviorSubject, combineLatest, empty, from, of, timer } from 'rxjs';
+import { catchError, distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { reportException } from './utils/exceptions';
-import { BehaviorSubject, empty, from, timer, of, combineLatest } from 'rxjs';
-import { switchMap, catchError, map, distinctUntilChanged, shareReplay, tap } from 'rxjs/operators';
 
 /**
  * A function that will attempt to update the service worker in place.

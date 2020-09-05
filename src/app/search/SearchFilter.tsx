@@ -1,14 +1,12 @@
-import React, { useMemo, useCallback } from 'react';
 import { t } from 'app/i18next-t';
-import { connect, MapDispatchToPropsFunction } from 'react-redux';
+import { querySelector, searchQueryVersionSelector } from 'app/shell/reducer';
 import { RootState } from 'app/store/types';
+import React, { useCallback, useMemo } from 'react';
+import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { setSearchQuery } from '../shell/actions';
-import _ from 'lodash';
-import './search-filter.scss';
-import { SearchFilterRef } from './SearchBar';
-import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
-import SearchBar from './SearchBar';
 import MainSearchBarActions from './MainSearchBarActions';
+import './search-filter.scss';
+import SearchBar, { SearchFilterRef } from './SearchBar';
 
 interface ProvidedProps {
   onClear?(): void;

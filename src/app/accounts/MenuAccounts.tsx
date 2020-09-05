@@ -1,18 +1,18 @@
+import { t } from 'app/i18next-t';
+import { accountRoute } from 'app/routes';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import clsx from 'clsx';
+import _ from 'lodash';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { AppIcon, signOutIcon } from '../shell/icons';
+import Account from './Account';
 import './Account.scss';
 import { DestinyAccount } from './destiny-account';
-import { AppIcon, signOutIcon } from '../shell/icons';
-import { currentAccountSelector } from './selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Account from './Account';
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { logOut } from './platforms';
-import { accountRoute } from 'app/routes';
 import styles from './MenuAccounts.m.scss';
-import clsx from 'clsx';
+import { logOut } from './platforms';
+import { currentAccountSelector } from './selectors';
 
 interface ProvidedProps {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;

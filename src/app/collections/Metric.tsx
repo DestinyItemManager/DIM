@@ -1,16 +1,15 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import {
-  DestinyProfileResponse,
-  DestinyMetricDefinition,
-  DestinyMetricComponent,
-} from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import styles from './Metric.m.scss';
-import clsx from 'clsx';
-import MetricBanner from './MetricBanner';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { ObjectiveValue } from 'app/progress/Objective';
+import {
+  DestinyMetricComponent,
+  DestinyMetricDefinition,
+  DestinyProfileResponse,
+} from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import styles from './Metric.m.scss';
+import MetricBanner from './MetricBanner';
 
 interface Props {
   metricHash: number;

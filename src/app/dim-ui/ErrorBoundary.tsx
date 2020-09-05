@@ -1,6 +1,6 @@
+import ErrorPanel from 'app/shell/ErrorPanel';
 import React from 'react';
 import { reportException } from '../utils/exceptions';
-import ErrorPanel from 'app/shell/ErrorPanel';
 
 interface Props {
   name: string;

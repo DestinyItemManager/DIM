@@ -1,14 +1,12 @@
-import _ from 'lodash';
-import { get, set, del } from 'idb-keyval';
-
-import { reportException } from '../utils/exceptions';
-import { settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';
-import { showNotification } from '../notifications/notifications';
 import { settingsSelector } from 'app/settings/reducer';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
 import { dedupePromise } from 'app/utils/util';
+import { del, get, set } from 'idb-keyval';
+import { showNotification } from '../notifications/notifications';
+import { settingsReady } from '../settings/settings';
+import { reportException } from '../utils/exceptions';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!

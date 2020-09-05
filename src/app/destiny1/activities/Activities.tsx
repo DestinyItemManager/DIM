@@ -1,20 +1,20 @@
-import React from 'react';
-import clsx from 'clsx';
-import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
-import { DimStore, D1Store } from '../../inventory/store-types';
-import { RootState } from 'app/store/types';
-import { sortedStoresSelector } from '../../inventory/selectors';
-import CharacterTileButton from '../../character-tile/CharacterTileButton';
-import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { AppIcon, starIcon } from '../../shell/icons';
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { D1ManifestDefinitions } from '../d1-definitions';
-import { D1StoresService } from '../../inventory/d1-stores';
-import { DestinyAccount } from '../../accounts/destiny-account';
-import { connect } from 'react-redux';
-import './activities.scss';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import _ from 'lodash';
+import React from 'react';
+import { connect } from 'react-redux';
+import { DestinyAccount } from '../../accounts/destiny-account';
+import CharacterTileButton from '../../character-tile/CharacterTileButton';
+import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
+import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
+import { D1StoresService } from '../../inventory/d1-stores';
+import { sortedStoresSelector } from '../../inventory/selectors';
+import { D1Store, DimStore } from '../../inventory/store-types';
+import { AppIcon, starIcon } from '../../shell/icons';
+import { D1ManifestDefinitions } from '../d1-definitions';
+import './activities.scss';
 
 interface Skull {
   displayName: string;

@@ -1,13 +1,12 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import './storage.scss';
-import { SyncService, DimData } from './sync.service';
-import _ from 'lodash';
+import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { AppIcon, restoreIcon, signInIcon, signOutIcon } from '../shell/icons';
 import { reportException } from '../utils/exceptions';
-import { AppIcon, signOutIcon, signInIcon, restoreIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
-import { RouteComponentProps, withRouter } from 'react-router';
+import './storage.scss';
+import { DimData, SyncService } from './sync.service';
 
 declare global {
   interface Window {

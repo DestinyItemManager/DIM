@@ -1,19 +1,19 @@
-import { DimStore } from 'app/inventory/store-types';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { queuedAction } from 'app/inventory/action-queue';
-import { loadingTracker } from 'app/shell/loading-tracker';
-import { showNotification } from 'app/notifications/notifications';
-import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import _ from 'lodash';
+import { queuedAction } from 'app/inventory/action-queue';
+import { updateCharacters } from 'app/inventory/d2-stores';
 import { dimItemService, MoveReservations } from 'app/inventory/item-move-service';
+import { DimItem } from 'app/inventory/item-types';
+import { loadoutNotification } from 'app/inventory/MoveNotifications';
+import { DimStore } from 'app/inventory/store-types';
+import { getItemAcrossStores, getStore, getVault } from 'app/inventory/stores-helpers';
+import { showNotification } from 'app/notifications/notifications';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import copy from 'fast-copy';
+import _ from 'lodash';
 import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
-import copy from 'fast-copy';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { loadoutFromAllItems } from './loadout-utils';
-import { getItemAcrossStores, getVault, getStore } from 'app/inventory/stores-helpers';
-import { updateCharacters } from 'app/inventory/d2-stores';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({

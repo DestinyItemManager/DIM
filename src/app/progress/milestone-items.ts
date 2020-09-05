@@ -1,22 +1,22 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { D2Item } from 'app/inventory/item-types';
 import { ItemProto } from 'app/inventory/store/d2-item-factory';
 import {
   DestinyAmmunitionType,
-  DestinyMilestone,
   DestinyClass,
+  DestinyDisplayPropertiesDefinition,
+  DestinyMilestone,
   DestinyMilestoneDefinition,
   DestinyMilestoneQuest,
-  DestinyDisplayPropertiesDefinition,
-  DestinyMilestoneRewardEntry,
   DestinyMilestoneRewardCategoryDefinition,
+  DestinyMilestoneRewardEntry,
   DestinyMilestoneType,
   DestinyObjectiveProgress,
 } from 'bungie-api-ts/destiny2';
-import { t } from 'app/i18next-t';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import _ from 'lodash';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,

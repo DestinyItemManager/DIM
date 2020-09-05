@@ -1,12 +1,12 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { getInventoryWishListRolls } from './wishlists';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
-import { WishListAndInfo } from './types';
+import { Reducer } from 'redux';
 import { createSelector } from 'reselect';
+import { ActionType, getType } from 'typesafe-actions';
 import { storesSelector } from '../inventory/selectors';
+import * as actions from './actions';
+import { WishListAndInfo } from './types';
+import { getInventoryWishListRolls } from './wishlists';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 

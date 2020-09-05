@@ -1,11 +1,11 @@
-import _ from 'lodash';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
   armor2PlugCategoryHashesByName,
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
+import _ from 'lodash';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
 // todo: get this from d2-known-values
 export type StatTypes =

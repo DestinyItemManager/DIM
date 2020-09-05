@@ -1,17 +1,16 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { DimStore } from './store-types';
-import { AccountsAction } from '../accounts/reducer';
-import { setCurrentAccount } from '../accounts/actions';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import { setCurrentAccount } from '../accounts/actions';
+import { AccountsAction } from '../accounts/reducer';
+import * as actions from './actions';
+import { DimItem } from './item-types';
+import { DimStore } from './store-types';
 import { StoreProto as D1StoreProto } from './store/d1-store-factory';
-import { getItemAcrossStores, getStore } from './stores-helpers';
 import { ItemProto } from './store/d2-item-factory';
+import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
+import { getItemAcrossStores, getStore } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {

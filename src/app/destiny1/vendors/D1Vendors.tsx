@@ -1,14 +1,14 @@
-import React from 'react';
-import { DestinyAccount } from '../../accounts/destiny-account';
-import { Subscriptions } from '../../utils/rx-utils';
-import { refresh$ } from '../../shell/refresh';
-import { dimVendorService, Vendor } from './vendor.service';
-import { D1Store } from '../../inventory/store-types';
-import _ from 'lodash';
-import D1Vendor from './D1Vendor';
-import styles from './D1Vendors.m.scss';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import _ from 'lodash';
+import React from 'react';
+import { DestinyAccount } from '../../accounts/destiny-account';
+import { D1Store } from '../../inventory/store-types';
+import { refresh$ } from '../../shell/refresh';
+import { Subscriptions } from '../../utils/rx-utils';
+import D1Vendor from './D1Vendor';
+import styles from './D1Vendors.m.scss';
+import { dimVendorService, Vendor } from './vendor.service';
 
 interface Props {
   account: DestinyAccount;

@@ -1,10 +1,10 @@
-import { buildSearchConfig } from './search-config';
+import { Search } from '@destinyitemmanager/dim-api-types';
 import {
-  makeFilterComplete,
   autocompleteTermSuggestions,
   filterSortRecentSearches,
+  makeFilterComplete,
 } from './autocomplete';
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { buildSearchConfig } from './search-config';
 
 describe('autocompleteTermSuggestions', () => {
   const searchConfig = buildSearchConfig(2);

@@ -1,10 +1,9 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
-import { storesSelector } from '../inventory/selectors';
 import { RootState } from 'app/store/types';
+import { Reducer } from 'redux';
+import { createSelector } from 'reselect';
+import { ActionType, getType } from 'typesafe-actions';
+import { storesSelector } from '../inventory/selectors';
+import * as actions from './actions';
 
 export const farmingStoreSelector = () =>
   createSelector(

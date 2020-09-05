@@ -1,38 +1,37 @@
-import React from 'react';
+import { itemPop } from 'app/dim-ui/scroll';
+import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import clsx from 'clsx';
-import { DimItem, DimStat } from '../inventory/item-types';
-import _ from 'lodash';
-import { CompareService } from './compare.service';
-import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
-import { createSelector } from 'reselect';
-import CompareItem from './CompareItem';
-import './compare.scss';
-import { Subscriptions } from '../utils/rx-utils';
-import { connect } from 'react-redux';
-import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { RootState } from 'app/store/types';
-import Sheet from '../dim-ui/Sheet';
-import { showNotification } from '../notifications/notifications';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { getAllItems } from 'app/inventory/stores-helpers';
+import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { makeDupeID } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { setSetting } from 'app/settings/actions';
+import Checkbox from 'app/settings/Checkbox';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
 import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { DimStore } from 'app/inventory/store-types';
-import { storesSelector } from 'app/inventory/selectors';
-import { getAllItems } from 'app/inventory/stores-helpers';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { itemPop } from 'app/dim-ui/scroll';
-import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { powerCapPlugSetHash } from 'app/search/d2-known-values';
-import Checkbox from 'app/settings/Checkbox';
-import { settingsSelector } from 'app/settings/reducer';
-import { setSetting } from 'app/settings/actions';
+import React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { createSelector } from 'reselect';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import Sheet from '../dim-ui/Sheet';
+import { DimItem, DimStat } from '../inventory/item-types';
+import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
+import { showNotification } from '../notifications/notifications';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { Subscriptions } from '../utils/rx-utils';
+import './compare.scss';
+import { CompareService } from './compare.service';
+import CompareItem from './CompareItem';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];

@@ -1,26 +1,24 @@
-import {
-  SetType,
-  ArmorTypes,
-  D1ItemWithNormalStats,
-  LockedPerkHash,
-  ItemBucket,
-  ArmorSet,
-} from './types';
-import intellectIcon from 'images/intellect.png';
 import disciplineIcon from 'images/discipline.png';
+import intellectIcon from 'images/intellect.png';
 import strengthIcon from 'images/strength.png';
-
-import {
-  getBestArmor,
-  genSetHash,
-  calcArmorStats,
-  getBonusConfig,
-  getActiveHighestSets,
-} from './utils';
-
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store } from '../../inventory/store-types';
+import {
+  ArmorSet,
+  ArmorTypes,
+  D1ItemWithNormalStats,
+  ItemBucket,
+  LockedPerkHash,
+  SetType,
+} from './types';
+import {
+  calcArmorStats,
+  genSetHash,
+  getActiveHighestSets,
+  getBestArmor,
+  getBonusConfig,
+} from './utils';
 
 export function getSetBucketsStep(
   activeGuardian: D1Store,

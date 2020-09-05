@@ -1,7 +1,7 @@
+import { loadingEnd, loadingStart } from 'app/shell/actions';
+import { ThunkDispatchProp } from 'app/store/types';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { ThunkDispatchProp } from 'app/store/types';
-import { loadingStart, loadingEnd } from 'app/shell/actions';
 
 interface ProvidedProps {
   message: string;

@@ -1,9 +1,8 @@
-import { ManifestDefinitions } from '../destiny2/definitions';
-import _ from 'lodash';
-import { getManifest } from '../manifest/d1-manifest-service';
-import { setD1Manifest } from '../manifest/actions';
-import { reportException } from 'app/utils/exceptions';
 import { ThunkResult } from 'app/store/types';
+import { reportException } from 'app/utils/exceptions';
+import { ManifestDefinitions } from '../destiny2/definitions';
+import { setD1Manifest } from '../manifest/actions';
+import { getManifest } from '../manifest/d1-manifest-service';
 
 const lazyTables = [
   'InventoryItem',

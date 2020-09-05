@@ -1,8 +1,8 @@
-import React from 'react';
 import clsx from 'clsx';
-import { DimStore } from '../inventory/store-types';
-import CharacterTileButton from '../character-tile/CharacterTileButton';
+import React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import CharacterTileButton from '../character-tile/CharacterTileButton';
+import { DimStore } from '../inventory/store-types';
 import styles from './CharacterSelect.m.scss';
 
 /**

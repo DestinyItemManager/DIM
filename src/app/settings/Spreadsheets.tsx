@@ -1,14 +1,14 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
 import FileUpload from 'app/dim-ui/FileUpload';
-import { AppIcon, spreadsheetIcon } from '../shell/icons';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import { DropzoneOptions } from 'react-dropzone';
-import { DimStore } from 'app/inventory/store-types';
+import { t } from 'app/i18next-t';
 import { ItemInfos } from 'app/inventory/dim-item-info';
-import { connect } from 'react-redux';
-import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { itemInfosSelector, storesLoadedSelector, storesSelector } from 'app/inventory/selectors';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { DimStore } from 'app/inventory/store-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import React from 'react';
+import { DropzoneOptions } from 'react-dropzone';
+import { connect } from 'react-redux';
+import { AppIcon, spreadsheetIcon } from '../shell/icons';
 
 interface StoreProps {
   disabled?: boolean;

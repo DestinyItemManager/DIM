@@ -1,5 +1,5 @@
-import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import { emptySet } from 'app/utils/empty';
+import { DimWishList, WishListAndInfo, WishListRoll } from './types';
 
 /**
  * The title should follow the following format:

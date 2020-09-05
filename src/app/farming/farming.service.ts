@@ -1,19 +1,18 @@
-import _ from 'lodash';
+import { bucketsSelector, itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { getVault } from 'app/inventory/stores-helpers';
+import { settingsSelector } from 'app/settings/reducer';
+import { from, Subscription } from 'rxjs';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { DestinyAccount } from '../accounts/destiny-account';
+import { D1StoresService } from '../inventory/d1-stores';
+import { InventoryBucket } from '../inventory/inventory-buckets';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
-import { D1StoresService } from '../inventory/d1-stores';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { refresh } from '../shell/refresh';
 import { D1Store, DimStore } from '../inventory/store-types';
-import * as actions from './actions';
-import rxStore from '../store/store';
-import { InventoryBucket } from '../inventory/inventory-buckets';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
-import { Subscription, from } from 'rxjs';
-import { filter, tap, map, exhaustMap } from 'rxjs/operators';
-import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector, itemHashTagsSelector, bucketsSelector } from 'app/inventory/selectors';
-import { getVault } from 'app/inventory/stores-helpers';
+import { refresh } from '../shell/refresh';
+import rxStore from '../store/store';
+import * as actions from './actions';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners

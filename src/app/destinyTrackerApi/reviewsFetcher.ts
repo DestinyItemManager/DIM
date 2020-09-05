@@ -1,19 +1,19 @@
-import { handleErrors } from './trackerErrorHandler';
-import { loadingTracker } from '../shell/loading-tracker';
+import { ThunkResult } from 'app/store/types';
 import { D1Item } from '../inventory/item-types';
-import { dtrFetch } from './dtr-service-helper';
+import { reviewsLoaded } from '../item-review/actions';
 import {
-  D1ItemReviewResponse,
-  D1ItemUserReview,
   ActualD1ItemReviewResponse,
   ActualD1ItemUserReview,
+  D1ItemReviewResponse,
+  D1ItemUserReview,
 } from '../item-review/d1-dtr-api-types';
+import { getItemReviewsKey, getReviews } from '../item-review/reducer';
+import { loadingTracker } from '../shell/loading-tracker';
+import { dtrFetch } from './dtr-service-helper';
 import { getRollAndPerks } from './itemTransformer';
+import { handleErrors } from './trackerErrorHandler';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getReviews, getItemReviewsKey } from '../item-review/reducer';
-import { reviewsLoaded } from '../item-review/actions';
-import { ThunkResult } from 'app/store/types';
 
 /**
  * Redux action that populates community (which may include the current user's) reviews for a given item.

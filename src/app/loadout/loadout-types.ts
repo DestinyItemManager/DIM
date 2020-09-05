@@ -1,5 +1,5 @@
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export interface LoadoutItem {
   id: string;

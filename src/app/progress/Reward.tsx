@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import styles from './Reward.m.scss';

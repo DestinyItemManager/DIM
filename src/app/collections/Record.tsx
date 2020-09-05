@@ -1,25 +1,25 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
+import { percent } from 'app/shell/filters';
 import {
+  DestinyObjectiveProgress,
   DestinyProfileResponse,
-  DestinyScope,
+  DestinyRecordComponent,
   DestinyRecordDefinition,
   DestinyRecordState,
-  DestinyRecordComponent,
+  DestinyScope,
   DestinyUnlockValueUIStyle,
-  DestinyObjectiveProgress,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import './Record.scss';
-import Objective from '../progress/Objective';
-import BungieImage from '../dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
-import ishtarIcon from '../../images/ishtar-collective.svg';
-import ExternalLink from '../dim-ui/ExternalLink';
-import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
-import { percent } from 'app/shell/filters';
+import trackedIcon from 'images/trackedIcon.svg';
 import _ from 'lodash';
+import React from 'react';
+import ishtarIcon from '../../images/ishtar-collective.svg';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
+import ExternalLink from '../dim-ui/ExternalLink';
+import Objective from '../progress/Objective';
+import './Record.scss';
 
 interface Props {
   recordHash: number;

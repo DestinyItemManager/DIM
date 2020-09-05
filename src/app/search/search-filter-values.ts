@@ -1,11 +1,11 @@
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { D1LightStats } from './d1-known-values';
 import {
+  CUSTOM_TOTAL_STAT_HASH,
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
   TOTAL_STAT_HASH,
-  CUSTOM_TOTAL_STAT_HASH,
 } from './d2-known-values';
 
 // ✨ magic values ✨

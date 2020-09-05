@@ -1,13 +1,13 @@
+import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import type { DimStore, DimVault } from 'app/inventory/store-types';
+import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import type { DimStore, DimVault } from 'app/inventory/store-types';
-import { PowerFormula, LoadoutStats } from '../store-stats/CharacterStats';
-import D1CharacterStats from './D1CharacterStats';
+import { LoadoutStats, PowerFormula } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
-import VaultCapacity from './VaultCapacity';
+import D1CharacterStats from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import VaultCapacity from './VaultCapacity';
 
 function isVault(store: DimStore): store is DimVault {
   return store.isVault;

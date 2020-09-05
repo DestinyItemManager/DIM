@@ -1,22 +1,21 @@
-import _ from 'lodash';
-import { LockableBuckets, StatTypes, MinMaxIgnored, MinMax } from '../types';
-import { statTier } from '../utils';
-import { statHashes } from '../types';
-import {
-  ProcessItemsByBucket,
-  ProcessItem,
-  ProcessArmorSet,
-  IntermediateProcessArmorSet,
-  LockedArmor2ProcessMods,
-  ProcessMod,
-} from './types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
+import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { statTier } from '../utils';
 import {
+  canTakeAllGeneralMods,
   canTakeAllSeasonalMods,
   sortProcessModsOrProcessItems,
-  canTakeAllGeneralMods,
 } from './processUtils';
-import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
+import {
+  IntermediateProcessArmorSet,
+  LockedArmor2ProcessMods,
+  ProcessArmorSet,
+  ProcessItem,
+  ProcessItemsByBucket,
+  ProcessMod,
+} from './types';
 
 const RETURNED_ARMOR_SETS = 200;
 
