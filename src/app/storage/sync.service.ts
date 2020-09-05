@@ -1,11 +1,11 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { Settings } from 'app/settings/initial-settings';
 import _ from 'lodash';
+import { percent } from '../shell/filters';
 import { reportException } from '../utils/exceptions';
-import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { humanBytes } from './human-bytes';
-import { percent } from '../shell/filters';
-import { Settings } from 'app/settings/initial-settings';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { IndexedDBStorage } from './indexed-db-storage';
 
 export interface DimData {
   // The last selected platform membership ID

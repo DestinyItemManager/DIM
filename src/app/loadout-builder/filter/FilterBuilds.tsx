@@ -1,14 +1,13 @@
-import { t } from 'app/i18next-t';
-import React, { useCallback, useState } from 'react';
-import { D2Store } from '../../inventory/store-types';
-import { StatTypes, MinMaxIgnored, MinMax } from '../types';
-import TierSelect from './TierSelect';
-import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './FilterBuilds.m.scss';
-import { useDispatch } from 'react-redux';
+import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
-import { statHashes } from '../types';
+import _ from 'lodash';
+import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { D2Store } from '../../inventory/store-types';
+import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import styles from './FilterBuilds.m.scss';
+import TierSelect from './TierSelect';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -77,7 +76,7 @@ export default function FilterBuilds({
           </label>
           <RangeSelector
             min={750}
-            max={parseInt(selectedStore.stats.maxGearPower!.value.toString(), 10)}
+            max={parseInt(selectedStore.stats.maxGearPower?.value.toString() ?? '750', 10)}
             initialValue={minimumPower}
             onChange={(minPower: number) => dispatch(setSetting('loMinPower', minPower))}
           />

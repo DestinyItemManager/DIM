@@ -1,18 +1,17 @@
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
-import { DimStore } from '../inventory/store-types';
-import { DimItem } from '../inventory/item-types';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { showNotification } from '../notifications/notifications';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { getVault } from 'app/inventory/stores-helpers';
+import _ from 'lodash';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { showNotification } from '../notifications/notifications';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
-  bucketsService: () => Promise<InventoryBuckets>
+  buckets: InventoryBuckets
 ): Promise<void> {
-  const buckets = await bucketsService();
   const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
     (bucket: InventoryBucket) => store.buckets[bucket.hash]
   );

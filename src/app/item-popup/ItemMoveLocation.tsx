@@ -1,15 +1,16 @@
+import { t } from 'app/i18next-t';
+import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { t } from 'app/i18next-t';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import styles from './ItemMoveLocation.m.scss';
-import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
 
 interface Props {
   item: DimItem;
   itemOwnerStore: DimStore;
   store: DimStore;
+  vertical: boolean;
   moveItemTo(store: DimStore, equip?: boolean): void;
 }
 
@@ -17,7 +18,13 @@ interface Props {
  * Buttons for the ItemActions component. These show the applicable
  * actions for the given store to move/equip the given item.
  */
-export default function ItemMoveLocation({ item, itemOwnerStore, store, moveItemTo }: Props) {
+export default function ItemMoveLocation({
+  item,
+  itemOwnerStore,
+  store,
+  vertical,
+  moveItemTo,
+}: Props) {
   const moveItem = () => moveItemTo(store);
   const equipItem = () => moveItemTo(store, true);
 
@@ -85,20 +92,18 @@ export default function ItemMoveLocation({ item, itemOwnerStore, store, moveItem
   };
 
   return (
-    <ItemActionButtonGroup key={store.id}>
+    <ItemActionButtonGroup key={store.id} vertical={vertical}>
       {canShowVault(store) && (
         <ItemActionButton
           className={styles.moveVault}
-          title={t('MovePopup.Vault')}
-          aria-label={`${t('MovePopup.Equip')} ${store.name}`}
+          title={t('MovePopup.SendToVault')}
           onClick={moveItem}
           label={t('MovePopup.Vault')}
         />
       )}
       {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
         <ItemActionButton
-          title={store.name}
-          aria-label={`${t('MovePopup.Equip')} ${store.name}`}
+          title={t('MovePopup.EquipWithName', { character: store.name })}
           onClick={equipItem}
           icon={store.icon}
           label={t('MovePopup.Equip')}
@@ -106,8 +111,7 @@ export default function ItemMoveLocation({ item, itemOwnerStore, store, moveItem
       )}
       {canShowStore(store) && (
         <ItemActionButton
-          title={store.name}
-          aria-label={`${t('MovePopup.Store')} ${store.name}`}
+          title={t('MovePopup.StoreWithName', { character: store.name })}
           onClick={moveItem}
           icon={store.icon}
           label={t('MovePopup.Store')}

@@ -1,32 +1,12 @@
-import { Reducer } from 'redux';
-import { DestinyAccount } from './destiny-account';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { RootState, ThunkResult } from '../store/reducers';
-import { observeStore } from 'app/utils/redux-utils';
-import { set, get } from 'idb-keyval';
-import { dedupePromise } from 'app/utils/util';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { deepEqual } from 'fast-equals';
-import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
 import { API_KEY as BUNGIE_API_KEY } from 'app/bungie-api/bungie-api-utils';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { hasValidAuthTokens } from 'app/bungie-api/oauth-tokens';
-
-export const accountsSelector = (state: RootState) => state.accounts.accounts;
-
-export const currentAccountSelector = (state: RootState) =>
-  state.accounts.currentAccount === -1
-    ? undefined
-    : accountsSelector(state)[state.accounts.currentAccount];
-
-export const destinyVersionSelector = (state: RootState) => {
-  const currentAccount = currentAccountSelector(state);
-  return currentAccount?.destinyVersion || 2;
-};
-
-/** Are the accounts loaded enough to use? */
-export const accountsLoadedSelector = (state: RootState) =>
-  state.accounts.loaded || (state.accounts.loadedFromIDB && accountsSelector(state).length > 0);
+import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
+import { deepEqual } from 'fast-equals';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions';
+import { DestinyAccount } from './destiny-account';
 
 export interface AccountsState {
   readonly accounts: readonly DestinyAccount[];
@@ -114,25 +94,3 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
       return state;
   }
 };
-
-export function saveAccountsToIndexedDB() {
-  return observeStore(
-    (state) => state.accounts,
-    (currentState, nextState) => {
-      if (nextState.loaded && nextState.accounts !== currentState.accounts) {
-        set('accounts', nextState.accounts);
-      }
-    }
-  );
-}
-
-const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
-  console.log('Load accounts from IDB');
-  const accounts = await get<DestinyAccount[] | undefined>('accounts');
-
-  dispatch(actions.loadFromIDB(accounts || []));
-});
-
-export function loadAccountsFromIndexedDB(): ThunkResult {
-  return loadAccountsFromIndexedDBAction;
-}

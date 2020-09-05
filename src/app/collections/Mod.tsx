@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import '../progress/milestone.scss';
-import { D2Item } from 'app/inventory/item-types';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { D2Item } from 'app/inventory/item-types';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
+import '../progress/milestone.scss';
 
 interface ModProps {
   item: D2Item;
@@ -67,18 +66,17 @@ export function getModCostInfo(
     mod = defs.InventoryItem.get(mod);
   }
 
-  if (mod) {
+  if (mod?.plug) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
-  }
 
-  if (mod?.plug.energyCost?.energyTypeHash) {
-    modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
+    if (mod.plug.energyCost?.energyTypeHash) {
+      modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
+    }
+    if (modCostInfo.energyCostElement?.costStatHash) {
+      modCostInfo.energyCostElementOverlay = defs.Stat.get(
+        modCostInfo.energyCostElement.costStatHash
+      )?.displayProperties.icon;
+    }
   }
-  if (modCostInfo.energyCostElement?.costStatHash) {
-    modCostInfo.energyCostElementOverlay = defs.Stat.get(
-      modCostInfo.energyCostElement.costStatHash
-    )?.displayProperties.icon;
-  }
-
   return modCostInfo;
 }

@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { useSubscription } from 'app/utils/hooks';
-import { queueAction } from 'app/inventory/action-queue';
-import { refresh$ } from 'app/shell/refresh';
-import { storesSelector } from 'app/inventory/selectors';
-import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { destinyVersionSelector } from 'app/accounts/selectors';
+import Compare from 'app/compare/Compare';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import ItemTable from './ItemTable';
-import { DimStore } from 'app/inventory/store-types';
-import Compare from 'app/compare/Compare';
-import styles from './Organizer.m.scss';
-import { t } from 'app/i18next-t';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { destinyVersionSelector } from 'app/accounts/reducer';
+import { t } from 'app/i18next-t';
+import { queueAction } from 'app/inventory/action-queue';
 import { D1StoresService } from 'app/inventory/d1-stores';
+import { D2StoresService } from 'app/inventory/d2-stores';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { refresh$ } from 'app/shell/refresh';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import ItemTable from './ItemTable';
+import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
+import styles from './Organizer.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;

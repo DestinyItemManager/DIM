@@ -1,9 +1,9 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import { SelectableMod } from '../locked-armor/SelectableBungieImage';
-import styles from './PerksForBucket.m.scss';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { LockedModBase } from '../types';
-import { t } from 'app/i18next-t';
+import styles from './PerksForBucket.m.scss';
 
 /**
  * A list of seasonal mods for use in PerkPicker.
@@ -17,7 +17,7 @@ export default function SeasonalModPicker({
   defs: D2ManifestDefinitions;
   mods: readonly LockedModBase[];
   locked?: readonly LockedModBase[];
-  onSeasonalModSelected(mod: LockedModBase);
+  onSeasonalModSelected(mod: LockedModBase): void;
 }) {
   return (
     <div className={styles.bucket} id="seasonal">

@@ -1,0 +1,27 @@
+@import '../variables.scss';
+
+$xp-bar-height: 2px;
+
+.xpBar {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.levelBar {
+  position: absolute;
+  height: $xp-bar-height;
+  width: 100%;
+  left: 0;
+  bottom: -$xp-bar-height;
+  background: #666;
+}
+
+.levelBarProgress {
+  background-color: $xp;
+  height: 100%;
+
+  &.moteProgress {
+    background-color: rgb(40, 132, 179);
+  }
+}

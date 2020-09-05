@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './Loading.scss';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 export function Loading({ message }: { message?: string }) {
   const nodeRef = useRef<HTMLDivElement>(null);

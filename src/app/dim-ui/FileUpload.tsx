@@ -1,9 +1,9 @@
+import { t } from 'app/i18next-t';
+import { AppIcon, uploadIcon } from 'app/shell/icons';
+import clsx from 'clsx';
 import React from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
 import './FileUpload.scss';
-import { AppIcon, uploadIcon } from 'app/shell/icons';
 
 export default function FileUpload({
   accept,

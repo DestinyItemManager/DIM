@@ -1,20 +1,19 @@
-import { createAction } from 'typesafe-actions';
-import { DimStore, DimCharacterStat } from './store-types';
-import { DimItem } from './item-types';
-import { InventoryBuckets } from './inventory-buckets';
-import { TagValue } from './dim-item-info';
-import { DestinyProfileResponse, DestinyColor } from 'bungie-api-ts/destiny2';
-import { ThunkResult } from 'app/store/reducers';
-import { get } from 'idb-keyval';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { ThunkResult } from 'app/store/types';
+import { DestinyColor, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { get } from 'idb-keyval';
+import { createAction } from 'typesafe-actions';
+import { TagValue } from './dim-item-info';
+import { InventoryBuckets } from './inventory-buckets';
+import { DimItem } from './item-types';
+import { DimCharacterStat, DimStore } from './store-types';
 
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
-  buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
 }>();
 

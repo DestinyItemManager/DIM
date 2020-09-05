@@ -1,5 +1,11 @@
 @import '../variables.scss';
 
+$legendaryBg: #522f65;
+$exoticBg: #ceae33;
+$basicBg: #c3bcb4;
+$rareBg: #5076a3;
+$commonBg: #366f42;
+
 // Items hidden by search.
 .searchHidden {
   opacity: 0.2;
@@ -44,6 +50,22 @@
   &:global(.transparent) {
     border-color: transparent;
   }
+}
+
+.legendary :global(.item-img) {
+  background-color: $legendaryBg;
+}
+.exotic :global(.item-img) {
+  background-color: $exoticBg;
+}
+.basic :global(.item-img) {
+  background-color: $basicBg;
+}
+.rare :global(.item-img) {
+  background-color: $rareBg;
+}
+.common :global(.item-img) {
+  background-color: $commonBg;
 }
 
 // Masterwork item image
@@ -121,20 +143,20 @@
     top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
     background: #444;
   }
-  &.legendary::before {
-    background: #522f65;
+  .legendary &::before {
+    background: $legendaryBg;
   }
-  &.exotic::before {
-    background: #ceae33;
+  .exotic &::before {
+    background: $exoticBg;
   }
-  &.basic::before {
-    background: #c3bcb4;
+  .basic &::before {
+    background: $basicBg;
   }
-  &.rare::before {
-    background: #5076a3;
+  .rare &::before {
+    background: $rareBg;
   }
-  &.common::before {
-    background: #366f42;
+  .common &::before {
+    background: $commonBg;
   }
 }
 

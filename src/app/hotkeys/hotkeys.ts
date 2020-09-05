@@ -1,5 +1,9 @@
-import Mousetrap from 'mousetrap';
 import _ from 'lodash';
+import Mousetrap from 'mousetrap';
+
+// A unique ID generator
+let componentId = 0;
+export const getHotkeyId = () => componentId++;
 
 const map = {
   command: '\u2318', // ⌘
@@ -45,7 +49,7 @@ function format(hotkey: Hotkey) {
 export interface Hotkey {
   combo: string;
   description: string;
-  action?: string;
+  action?: 'keypress' | 'keydown' | 'keyup';
   allowIn?: string[];
   callback(event: KeyboardEvent): void;
 }
@@ -54,15 +58,19 @@ class HotkeyRegistry {
   private hotkeys: { [componentId: number]: Hotkey[] } = {};
 
   register(componentId: number, hotkeys: Hotkey[]) {
-    hotkeys.forEach(installHotkey);
-    this.hotkeys[componentId] = hotkeys;
+    if (hotkeys?.length) {
+      hotkeys.forEach(installHotkey);
+      this.hotkeys[componentId] = hotkeys;
+    }
   }
 
   unregister(componentId: number) {
-    for (const hotkey of this.hotkeys[componentId]) {
-      Mousetrap.unbind(hotkey.combo);
+    if (this.hotkeys[componentId]) {
+      for (const hotkey of this.hotkeys[componentId]) {
+        Mousetrap.unbind(hotkey.combo);
+      }
+      delete this.hotkeys[componentId];
     }
-    delete this.hotkeys[componentId];
   }
 
   getAllHotkeys() {

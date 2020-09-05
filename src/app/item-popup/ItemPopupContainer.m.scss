@@ -9,7 +9,8 @@
 .movePopupDialog {
   min-height: 77px;
   width: 375px;
-  z-index: 8;
+  // Mod drawer has z-index of 12 and needs to sit over this
+  z-index: 11;
 
   --backgroundColor: 0, 0%, 0%;
 

@@ -17,19 +17,14 @@ export function preventNaN<T extends number | string>(testValue: number, default
 }
 
 /**
- * given @key 'key', turns
+ * given the key 'key', turns
  * [           { key: '1' },      { key: '2' } ]
  * into { '1': { key: '1' }, '2': { key: '2' } }
  */
 export function objectifyArray<T>(
   array: T[],
-  key: string | ((obj: any) => number)
-): Record<number, T | undefined>;
-export function objectifyArray<T>(
-  array: T[],
-  key: string | ((obj: any) => string)
-): Record<string, T | undefined>;
-export function objectifyArray<T>(array: T[], key: string | ((obj: any) => string | number)) {
+  key: string | ((obj: any) => string) | ((obj: any) => number)
+): NodeJS.Dict<T> {
   return array.reduce((acc, val) => {
     if (typeof key === 'string') {
       const keyName =

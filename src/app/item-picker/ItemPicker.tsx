@@ -1,27 +1,20 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { DimItem } from '../inventory/item-types';
-import { ItemPickerState } from './item-picker';
+import { t } from 'app/i18next-t';
+import SearchBar from 'app/search/SearchBar';
+import { RootState } from 'app/store/types';
+import _ from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { connect, MapStateToProps } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { connect, MapStateToProps } from 'react-redux';
-import { RootState } from '../store/reducers';
-import { createSelector } from 'reselect';
+import { DimItem } from '../inventory/item-types';
 import { storesSelector } from '../inventory/selectors';
-import {
-  SearchConfig,
-  searchConfigSelector,
-  SearchFilters,
-  searchFiltersConfigSelector,
-} from '../search/search-filter';
-import SearchFilterInput, { SearchFilterRef } from '../search/SearchFilterInput';
-import { sortItems } from '../shell/filters';
-import { itemSortOrderSelector } from '../settings/item-sort';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import './ItemPicker.scss';
+import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
-import _ from 'lodash';
-import { settingsSelector } from 'app/settings/reducer';
+import { itemSortOrderSelector } from '../settings/item-sort';
+import { sortItems } from '../shell/filters';
+import { ItemPickerState } from './item-picker';
+import './ItemPicker.scss';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -29,11 +22,9 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  searchConfig: SearchConfig;
   filters: SearchFilters;
   itemSortOrder: string[];
   isPhonePortrait: boolean;
-  preferEquip: boolean;
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
@@ -46,11 +37,9 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
 
   return (state, ownProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
-    searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     itemSortOrder: itemSortOrderSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    preferEquip: settingsSelector(state).itemPickerEquip,
   });
 }
 
@@ -62,41 +51,25 @@ type DispatchProps = typeof mapDispatchToProps;
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function ItemPicker({
-  equip,
-  preferEquip,
   allItems,
   prompt,
-  searchConfig,
   filters,
   itemSortOrder,
-  hideStoreEquip,
   sortBy,
   isPhonePortrait,
   ignoreSelectedPerks,
   onItemSelected,
   onCancel,
   onSheetClosed,
-  setSetting,
 }: Props) {
   const [query, setQuery] = useState('');
-  const [equipToggled, setEquipToggled] = useState(equip ?? preferEquip);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-
-  const itemContainer = useRef<HTMLDivElement>(null);
-  const filterInput = useRef<SearchFilterRef>(null);
-
-  useEffect(() => {
-    if (itemContainer.current && !height) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [height]);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
-    onItemSelected({ item, equip: equipToggled });
+    onItemSelected({ item });
     onClose();
   };
 
@@ -105,36 +78,15 @@ function ItemPicker({
     onSheetClosed();
   };
 
-  const setEquip = () => {
-    setEquipToggled(true);
-    setSetting('itemPickerEquip', true);
-  };
-  const setStore = () => {
-    setEquipToggled(false);
-    setSetting('itemPickerEquip', false);
-  };
-
   const header = (
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        <SearchFilterInput
-          ref={filterInput}
-          searchConfig={searchConfig}
+        <SearchBar
           placeholder={t('ItemPicker.SearchPlaceholder')}
           autoFocus={autoFocus}
           onQueryChanged={setQuery}
         />
-        {!hideStoreEquip && (
-          <div className="split-buttons">
-            <button className={clsx('dim-button', { selected: equipToggled })} onClick={setEquip}>
-              {t('MovePopup.Equip')}
-            </button>
-            <button className={clsx('dim-button', { selected: !equipToggled })} onClick={setStore}>
-              {t('MovePopup.Store')}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -149,9 +101,14 @@ function ItemPicker({
   }, [allItems, filter, itemSortOrder, sortBy]);
 
   return (
-    <Sheet onClose={onSheetClosedFn} header={header} sheetClassName="item-picker">
+    <Sheet
+      onClose={onSheetClosedFn}
+      header={header}
+      sheetClassName="item-picker"
+      freezeInitialHeight={true}
+    >
       {({ onClose }) => (
-        <div className="sub-bucket" ref={itemContainer} style={{ height }}>
+        <div className="sub-bucket">
           {items.map((item) => (
             <ConnectedInventoryItem
               key={item.index}

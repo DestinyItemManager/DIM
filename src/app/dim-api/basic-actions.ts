@@ -1,11 +1,11 @@
-import { createAction } from 'typesafe-actions';
-import { DimApiState } from './reducer';
 import {
   GlobalSettings,
   ProfileResponse,
   ProfileUpdateResult,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createAction } from 'typesafe-actions';
+import { DimApiState } from './reducer';
 
 /**
  * These are all the "basic" actions for the API - stuff that gets reacted to in the reducer.
@@ -47,6 +47,9 @@ export const saveSearch = createAction('dim-api/SAVE_SEARCH')<{
   query: string;
   saved: boolean;
 }>();
+
+/** Delete a saved search */
+export const searchDeleted = createAction('dim-api/DELETE_SEARCH')<string>();
 
 /**
  * This signals that we are about to flush the update queue.

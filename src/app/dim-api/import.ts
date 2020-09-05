@@ -1,21 +1,21 @@
-import { DimData } from 'app/storage/sync.service';
-import { ThunkResult } from 'app/store/reducers';
-import { importData } from './dim-api';
-import { loadDimApiData } from './actions';
-import { DimApiState, makeProfileKey } from './reducer';
-import { profileLoadedFromIDB } from './basic-actions';
-import { initialSettingsState } from 'app/settings/initial-settings';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import {
-  Loadout,
   DestinyVersion,
-  ItemAnnotation,
   ExportResponse,
+  ItemAnnotation,
+  Loadout,
 } from '@destinyitemmanager/dim-api-types';
-import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
+import { showNotification } from 'app/notifications/notifications';
+import { initialSettingsState } from 'app/settings/initial-settings';
+import { DimData } from 'app/storage/sync.service';
+import { ThunkResult } from 'app/store/types';
 import { observeStore } from 'app/utils/redux-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import { loadDimApiData } from './actions';
+import { profileLoadedFromIDB } from './basic-actions';
+import { importData } from './dim-api';
+import { DimApiState, makeProfileKey } from './reducer';
 
 /**
  * Import data (either legacy-format from SyncService or the new DIM Sync export) into DIM Sync.

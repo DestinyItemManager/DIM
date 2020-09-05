@@ -1,14 +1,14 @@
-import React, { ReactElement, ReactNode } from 'react';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/reducers';
-import { useDispatch, useSelector } from 'react-redux';
-import styles from './CustomStatTotal.m.scss';
-import { armorStats } from 'app/inventory/store/stats';
-import { DestinyStatDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
-import { setSetting } from '../settings/actions';
-import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { armorStats } from 'app/inventory/store/stats';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React, { ReactElement, ReactNode } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSetting } from '../settings/actions';
+import styles from './CustomStatTotal.m.scss';
 
 export type StatHashListsKeyedByDestinyClass = Record<number, number[]>;
 
@@ -117,7 +117,6 @@ function toggleArrayElement<T>(element: T, arr: T[]) {
 /** places a divider between each element of arr */
 function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
   return arr
-    .map((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
-    .flat()
+    .flatMap((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
     .slice(0, -1);
 }

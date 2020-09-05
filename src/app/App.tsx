@@ -1,35 +1,36 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import Header from './shell/Header';
-import clsx from 'clsx';
-import ActivityTracker from './dim-ui/ActivityTracker';
-import { connect } from 'react-redux';
-import { RootState } from './store/reducers';
-import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
-import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
-import NotificationsContainer from './notifications/NotificationsContainer';
-import styles from './App.m.scss';
-import { settingsSelector } from './settings/reducer';
-import { Switch, Route, Redirect } from 'react-router';
-import DefaultAccount from './shell/DefaultAccount';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import Login from './login/Login';
-import ScrollToTop from './shell/ScrollToTop';
-import GATracker from './shell/GATracker';
-import SneakyUpdates from './shell/SneakyUpdates';
-import About from './shell/About';
-import Destiny from './shell/Destiny';
-import Privacy from './shell/Privacy';
+import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import { set } from 'idb-keyval';
+import React, { Suspense, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router';
+import styles from './App.m.scss';
+import IssueBanner from './banner/IssueBanner';
 import Developer from './developer/Developer';
+import ActivityTracker from './dim-ui/ActivityTracker';
+import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
+import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
-import { IssueBanner } from './banner/IssueBanner';
-import { set } from 'idb-keyval';
+import Login from './login/Login';
+import NotificationsContainer from './notifications/NotificationsContainer';
+import { settingsSelector } from './settings/reducer';
+import About from './shell/About';
+import AccountRedirectRoute from './shell/AccountRedirectRoute';
+import DefaultAccount from './shell/DefaultAccount';
+import Destiny from './shell/Destiny';
 import ErrorPanel from './shell/ErrorPanel';
+import GATracker from './shell/GATracker';
+import Header from './shell/Header';
+import Privacy from './shell/Privacy';
+import ScrollToTop from './shell/ScrollToTop';
+import SneakyUpdates from './shell/SneakyUpdates';
 
-const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
+const WhatsNew = React.lazy(
+  () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
 
 // These three are all from the same chunk
@@ -119,6 +120,7 @@ function App({
         'show-new-items': showNewItems,
         'ms-edge': /Edge/.test(navigator.userAgent),
         ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
+        gradientBackground: $featureFlags.gradientBackground,
       })}
     >
       <ScrollToTop />
@@ -182,6 +184,22 @@ function App({
                     <Developer />
                   </Route>
                 )}
+                <Route
+                  path={[
+                    '/inventory',
+                    '/progress',
+                    '/collections',
+                    '/optimizer',
+                    '/organizer',
+                    '/vendors/:vendorId',
+                    '/vendors',
+                    '/record-books',
+                    '/activities',
+                  ]}
+                  exact
+                >
+                  <AccountRedirectRoute />
+                </Route>
                 <Route>
                   <DefaultAccount />
                 </Route>

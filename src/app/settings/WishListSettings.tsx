@@ -1,22 +1,30 @@
-import React, { useEffect, useState } from 'react';
 import { t } from 'app/i18next-t';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
-import { clearWishLists } from '../wishlists/actions';
-import HelpLink from '../dim-ui/HelpLink';
+import { showNotification } from 'app/notifications/notifications';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
+import { toWishList } from 'app/wishlists/wishlist-file';
+import React, { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
+import { connect } from 'react-redux';
+import { isUri } from 'valid-url';
 import FileUpload from '../dim-ui/FileUpload';
+import HelpLink from '../dim-ui/HelpLink';
+import { clearWishLists } from '../wishlists/actions';
 import {
   wishListsEnabledSelector,
-  wishListsSelector,
   wishListsLastFetchedSelector,
+  wishListsSelector,
 } from '../wishlists/reducer';
-import _ from 'lodash';
-import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { isUri } from 'valid-url';
-import { toWishList } from 'app/wishlists/wishlist-file';
 import { settingsSelector } from './reducer';
-import { showNotification } from 'app/notifications/notifications';
+
+// config/content-security-policy.js must be edited alongside this list
+export const wishListAllowedPrefixes = [
+  'https://raw.githubusercontent.com/',
+  'https://gist.githubusercontent.com/',
+];
+export function isValidWishListUrlDomain(url: string) {
+  return isUri(url) && wishListAllowedPrefixes.some((p) => url.startsWith(p));
+}
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -62,14 +70,6 @@ function WishListSettings({
 
   const wishListUpdateEvent = async () => {
     const newWishListSource = liveWishListSource?.trim();
-    if (
-      newWishListSource &&
-      (!isUri(newWishListSource) ||
-        !newWishListSource.startsWith('https://raw.githubusercontent.com/'))
-    ) {
-      alert(t('WishListRoll.InvalidExternalSource'));
-      return;
-    }
 
     try {
       await dispatch(fetchWishList(newWishListSource));
@@ -153,31 +153,29 @@ function WishListSettings({
       </div>
 
       {wishListsEnabled && (
-        <>
-          <div className="setting">
-            <div className="horizontal">
-              <label>
-                {t('WishListRoll.Num', {
-                  num: numWishListRolls,
-                })}
-              </label>
-              <button className="dim-button" onClick={clearWishListEvent}>
-                {t('WishListRoll.Clear')}
-              </button>
-            </div>
-            {(title || description) && (
-              <div className="fineprint">
-                {title && (
-                  <div className="overflow-dots">
-                    <b>{title}</b>
-                    <br />
-                  </div>
-                )}
-                <div className="overflow-dots">{description}</div>
-              </div>
-            )}
+        <div className="setting">
+          <div className="horizontal">
+            <label>
+              {t('WishListRoll.Num', {
+                num: numWishListRolls,
+              })}
+            </label>
+            <button type="button" className="dim-button" onClick={clearWishListEvent}>
+              {t('WishListRoll.Clear')}
+            </button>
           </div>
-        </>
+          {(title || description) && (
+            <div className="fineprint">
+              {title && (
+                <div className="overflow-dots">
+                  <b>{title}</b>
+                  <br />
+                </div>
+              )}
+              <div className="overflow-dots">{description}</div>
+            </div>
+          )}
+        </div>
       )}
     </section>
   );

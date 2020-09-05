@@ -1,8 +1,8 @@
-import React from 'react';
 import clsx from 'clsx';
-import { DimStore } from '../inventory/store-types';
-import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
+import React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import CharacterTileButton from '../character-tile/CharacterTileButton';
+import { DimStore } from '../inventory/store-types';
 import styles from './CharacterSelect.m.scss';
 
 /**
@@ -38,7 +38,7 @@ export default function CharacterSelect({
                 .filter((s) => !s.isVault)
                 .map((store) => (
                   <View className={styles.tile} key={store.id}>
-                    <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+                    <CharacterTileButton character={store} onClick={onCharacterChanged} />
                   </View>
                 ))}
             </Track>
@@ -59,7 +59,7 @@ export default function CharacterSelect({
               [styles.unselected]: store.id !== selectedStore.id,
             })}
           >
-            <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+            <CharacterTileButton character={store} onClick={onCharacterChanged} />
           </div>
         ))}
     </div>

@@ -1,24 +1,23 @@
 import _ from 'lodash';
+import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
+import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportException } from '../utils/exceptions';
 import { getStores } from '../bungie-api/destiny1-api';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { getBuckets } from '../destiny1/d1-buckets';
-import { cleanInfos } from './dim-item-info';
-import { makeCharacter, makeVault } from './store/d1-store-factory';
-import { resetIdTracker, processItems } from './store/d1-item-factory';
-import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
-import { D1Item } from './item-types';
-import { InventoryBuckets } from './inventory-buckets';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
-import store from '../store/store';
-import { update, loadNewItems, error } from './actions';
-import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
-import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
-import { take, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { storesSelector } from './selectors';
+import { loadingTracker } from '../shell/loading-tracker';
+import store from '../store/store';
+import { reportException } from '../utils/exceptions';
+import { error, loadNewItems, update } from './actions';
+import { cleanInfos } from './dim-item-info';
+import { InventoryBuckets } from './inventory-buckets';
+import { D1Item } from './item-types';
+import { bucketsSelector, storesSelector } from './selectors';
+import { D1Store, D1StoreServiceType, D1Vault, DimVault } from './store-types';
+import { processItems, resetIdTracker } from './store/d1-item-factory';
+import { makeCharacter, makeVault } from './store/d1-store-factory';
 
 export const D1StoresService = StoreService();
 
@@ -92,13 +91,13 @@ function StoreService(): D1StoreServiceType {
     resetIdTracker();
 
     const reloadPromise = Promise.all([
-      getDefinitions(),
-      getBuckets(),
+      (store.dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
       store.dispatch(loadNewItems(account)),
       getStores(account),
     ])
-      .then(([defs, buckets, , rawStores]) => {
+      .then(([defs, , rawStores]) => {
         const lastPlayedDate = findLastPlayedDate(rawStores);
+        const buckets = bucketsSelector(store.getState())!;
 
         // Currencies object gets mutated by processStore
         const currencies: DimVault['currencies'] = [];
@@ -111,9 +110,9 @@ function StoreService(): D1StoreServiceType {
           )
         );
 
-        return Promise.all([buckets, processStorePromises]);
+        return processStorePromises;
       })
-      .then(([buckets, stores]) => {
+      .then((stores) => {
         if ($featureFlags.reviewsEnabled) {
           store.dispatch(fetchRatings(stores));
         }
@@ -125,7 +124,7 @@ function StoreService(): D1StoreServiceType {
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
 
-        store.dispatch(update({ stores, buckets }));
+        store.dispatch(update({ stores }));
 
         return stores;
       })
@@ -175,7 +174,7 @@ function StoreService(): D1StoreServiceType {
       items = result.items;
     }
 
-    return processItems(store, items).then((items) => {
+    return processItems(store, items, defs, buckets).then((items) => {
       store.items = items;
 
       // by type-bucket

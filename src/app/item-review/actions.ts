@@ -1,8 +1,8 @@
 import { createAction } from 'typesafe-actions';
-import { D2ItemReviewResponse, WorkingD2Rating } from './d2-dtr-api-types';
-import { D1ItemReviewResponse, WorkingD1Rating } from './d1-dtr-api-types';
-import { DtrRating } from './dtr-api-types';
 import { DimItem } from '../inventory/item-types';
+import { D1ItemReviewResponse, WorkingD1Rating } from './d1-dtr-api-types';
+import { D2ItemReviewResponse, WorkingD2Rating } from './d2-dtr-api-types';
+import { DtrRating } from './dtr-api-types';
 
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.

@@ -1,9 +1,9 @@
+import clsx from 'clsx';
 import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
-import clsx from 'clsx';
-import { VendorSaleItem, VendorCost } from './vendor.service';
 import styles from '../../vendors/VendorItem.m.scss';
 import { VendorItemDisplay } from '../../vendors/VendorItemComponent';
+import { VendorCost, VendorSaleItem } from './vendor.service';
 
 interface Props {
   saleItem: VendorSaleItem;

@@ -1,12 +1,11 @@
-import './FilterHelp.scss';
-
-import React from 'react';
-import { RootState } from '../store/reducers';
-import { connect } from 'react-redux';
-import { destinyVersionSelector } from '../accounts/reducer';
-import { t } from 'app/i18next-t';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import './FilterHelp.scss';
 
 function mapStateToProps(state: RootState) {
   return {
@@ -45,14 +44,6 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
               </td>
               <td>{t('Filter.Dupe')}</td>
             </tr>
-            {destinyVersion === 2 && (
-              <tr>
-                <td>
-                  <span>is:reacquirable</span>
-                </td>
-                <td>{t('Filter.Reacquirable')}</td>
-              </tr>
-            )}
             <tr>
               <td>
                 <span>is:equipped</span>

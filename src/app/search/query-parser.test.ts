@@ -1,4 +1,4 @@
-import { parseQuery, lexer, Token, canonicalizeQuery } from './query-parser';
+import { canonicalizeQuery, lexer, parseQuery, Token } from './query-parser';
 
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
@@ -88,6 +88,7 @@ const canonicalize = [
     'is:rocketlauncher (perk:"tracking module" or perk:cluster)',
   ],
   ['( power:>1000 and -modslot:arrival ) ', '-modslot:arrival power:>1000'],
+  ['food fight', 'fight food'],
 ];
 
 test.each(cases)('parse |%s|', (query) => {

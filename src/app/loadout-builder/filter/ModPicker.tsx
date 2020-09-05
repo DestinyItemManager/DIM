@@ -1,58 +1,52 @@
-import React, { Dispatch } from 'react';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { bucketsSelector, profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { escapeRegExp } from 'app/search/search-filter';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import copy from 'fast-copy';
+import _ from 'lodash';
+import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
+  isModPickerCategory,
   LockedArmor2Mod,
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
 } from '../types';
-import _ from 'lodash';
-import { isLoadoutBuilderItem } from '../utils';
-import copy from 'fast-copy';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/reducers';
-import { connect } from 'react-redux';
-import { escapeRegExp } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { settingsSelector } from 'app/settings/reducer';
-import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
-import ModPickerSection from './ModPickerSection';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import ModPickerHeader from './ModPickerHeader';
+import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { t } from 'app/i18next-t';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-
-const Armor2ModPlugCategoriesTitles = {
-  [ModPickerCategories.general]: t('LB.General'),
-  [ModPickerCategories.helmet]: t('LB.Helmet'),
-  [ModPickerCategories.gauntlets]: t('LB.Gauntlets'),
-  [ModPickerCategories.chest]: t('LB.Chest'),
-  [ModPickerCategories.leg]: t('LB.Legs'),
-  [ModPickerCategories.classitem]: t('LB.ClassItem'),
-  [ModPickerCategories.seasonal]: t('LB.Seasonal'),
-};
+import ModPickerHeader from './ModPickerHeader';
+import ModPickerSection from './ModPickerSection';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
-  compareBy((i) => i.plug.energyCost?.energyType),
-  compareBy((i) => i.plug.energyCost?.energyCost),
-  compareBy((i) => i.displayProperties.name)
+const sortMods = chainComparator<LockedArmor2Mod>(
+  compareBy((l) => (l.season ? -l.season : 0)),
+  compareBy((l) => l.mod.plug.energyCost?.energyType),
+  compareBy((l) => l.mod.plug.energyCost?.energyCost),
+  compareBy((l) => l.mod.displayProperties.name)
 );
 
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
+  initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -62,7 +56,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: DestinyInventoryItemDefinition[];
+  mods: LockedArmor2Mod[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -96,7 +90,7 @@ function mapStateToProps() {
             plugSets[item.bucket.hash] = new Set<number>();
           }
           // build the filtered unique perks item picker
-          item.sockets.sockets
+          item.sockets.allSockets
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {
@@ -110,7 +104,7 @@ function mapStateToProps() {
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods
-      const allMods = Object.values(plugSets).flatMap((sets) => {
+      const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
         const unlockedPlugs: number[] = [];
 
         for (const plugSetHash of sets) {
@@ -122,184 +116,201 @@ function mapStateToProps() {
           }
         }
 
-        return unlockedPlugs
-          .map((i) => defs.InventoryItem.get(i))
-          .filter((item) => isArmor2Mod(item) && item.plug.insertionMaterialRequirementHash !== 0)
-          .sort(sortMods);
+        const transformedMods: LockedArmor2Mod[] = [];
+
+        for (const plug of unlockedPlugs) {
+          const def = defs.InventoryItem.get(plug);
+
+          if (
+            isPluggableItem(def) &&
+            isArmor2Mod(def) &&
+            def.plug.insertionMaterialRequirementHash !== 0
+          ) {
+            const metadata = getSpecialtySocketMetadataByPlugCategoryHash(
+              def.plug.plugCategoryHash
+            );
+            const category =
+              (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
+              (metadata && ModPickerCategories.seasonal) ||
+              undefined;
+
+            if (category) {
+              transformedMods.push({ mod: def, category, season: metadata?.season });
+            }
+          }
+        }
+
+        return transformedMods.sort(sortMods);
       });
 
-      return _.uniqBy(allMods, (mod) => mod.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.mod.hash);
     }
   );
 
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
-    buckets: state.inventory.buckets!,
+    buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     mods: unlockedModsSelector(state, props),
     defs: state.manifest.d2Manifest!,
   });
 }
 
-interface State {
-  query: string;
-  height?: number;
-  lockedArmor2Mods: LockedArmor2ModMap;
-}
-
 /**
  * A sheet that allows picking a perk.
  */
-class ModPicker extends React.Component<Props, State> {
-  state: State = {
-    query: '',
-    lockedArmor2Mods: copy(this.props.lockedArmor2Mods),
-  };
-  private itemContainer = React.createRef<HTMLDivElement>();
-  private filterInput = React.createRef<SearchFilterRef>();
+function ModPicker({
+  defs,
+  mods,
+  language,
+  isPhonePortrait,
+  lockedArmor2Mods,
+  initialQuery,
+  lbDispatch,
+  onClose,
+}: Props) {
+  const [query, setQuery] = useState(initialQuery || '');
+  const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
+  const filterInput = useRef<SearchFilterRef | null>(null);
 
-  componentDidMount() {
-    if (this.itemContainer.current) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
+  useEffect(() => {
+    if (!isPhonePortrait && filterInput.current) {
+      filterInput.current.focusFilterInput();
     }
-    if (!this.props.isPhonePortrait && this.filterInput.current) {
-      this.filterInput.current.focusFilterInput();
-    }
-  }
+  }, [isPhonePortrait, filterInput]);
 
-  componentDidUpdate() {
-    if (this.itemContainer.current && !this.state.height) {
-      this.setState({ height: this.itemContainer.current.clientHeight });
-    }
-  }
+  const onModSelected = useCallback(
+    (item: LockedArmor2Mod) => {
+      setLockedArmor2ModsInternal((oldState) => ({
+        ...oldState,
+        [item.category]: [...oldState[item.category], { ...item, key: modKey++ }],
+      }));
+    },
+    [setLockedArmor2ModsInternal]
+  );
 
-  render() {
-    const { defs, mods, language, onClose, isPhonePortrait } = this.props;
-    const { query, height, lockedArmor2Mods } = this.state;
+  const onModRemoved = useCallback(
+    (item: LockedArmor2Mod) => {
+      setLockedArmor2ModsInternal((oldState) => {
+        const firstIndex = oldState[item.category].findIndex((li) => li.mod.hash === item.mod.hash);
 
-    const order = Object.values(ModPickerCategories).map((category) => ({
-      category,
-      translatedName: Armor2ModPlugCategoriesTitles[category],
-    }));
-
-    // Only some languages effectively use the \b regex word boundary
-    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
-      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
-      : new RegExp(escapeRegExp(query), 'i');
-
-    const queryFilteredMods = query.length
-      ? mods.filter(
-          (mod) =>
-            regexp.test(mod.displayProperties.name) ||
-            regexp.test(mod.displayProperties.description)
-        )
-      : mods;
-
-    const getByModCategoryType = (category: ModPickerCategory) =>
-      queryFilteredMods
-        .filter((mod) =>
-          category === ModPickerCategories.seasonal
-            ? getSpecialtySocketMetadataByPlugCategoryHash(mod.plug.plugCategoryHash)
-            : mod.plug.plugCategoryHash === category
-        )
-        .map((mod) => ({ key: modKey++, mod, category }));
-
-    const isGeneralOrSeasonal = (category: ModPickerCategory) =>
-      category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
-
-    const footer = Object.values(lockedArmor2Mods).some((f) => Boolean(f?.length))
-      ? ({ onClose }) => (
-          <ModPickerFooter
-            defs={defs}
-            categoryOrder={order}
-            lockedArmor2Mods={lockedArmor2Mods}
-            isPhonePortrait={isPhonePortrait}
-            onSubmit={(e) => this.onSubmit(e, onClose)}
-            onModSelected={this.onModRemoved}
-          />
-        )
-      : undefined;
-
-    return (
-      <Sheet
-        onClose={onClose}
-        header={
-          <ModPickerHeader
-            categoryOrder={order}
-            query={query}
-            scrollToBucket={this.scrollToBucket}
-            onSearchChange={(e) => this.setState({ query: e.currentTarget.value })}
-            isPhonePortrait={this.props.isPhonePortrait}
-          />
+        if (firstIndex >= 0) {
+          const newState = [...oldState[item.category]];
+          newState.splice(firstIndex, 1);
+          return {
+            ...oldState,
+            [item.category]: newState,
+          };
         }
-        footer={footer}
-        sheetClassName="item-picker"
-      >
-        <div ref={this.itemContainer} style={{ height }}>
-          {Object.values(ModPickerCategories).map((category) => (
-            <ModPickerSection
-              key={category}
-              mods={getByModCategoryType(category)}
-              defs={defs}
-              locked={lockedArmor2Mods[category]}
-              title={Armor2ModPlugCategoriesTitles[category]}
-              category={category}
-              maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
-              energyMustMatch={!isGeneralOrSeasonal(category)}
-              onModSelected={this.onModSelected}
-              onModRemoved={this.onModRemoved}
-            />
-          ))}
-        </div>
-      </Sheet>
-    );
-  }
 
-  private onModSelected = (item: LockedArmor2Mod) => {
-    const { lockedArmor2Mods } = this.state;
-
-    this.setState({
-      lockedArmor2Mods: {
-        ...lockedArmor2Mods,
-        [item.category]: [...lockedArmor2Mods[item.category], item],
-      },
-    });
-  };
-
-  private onModRemoved = (item: LockedArmor2Mod) => {
-    const { lockedArmor2Mods } = this.state;
-
-    const firstIndex = lockedArmor2Mods[item.category].findIndex(
-      (li) => li.mod.hash === item.mod.hash
-    );
-
-    if (firstIndex >= 0) {
-      const newState = [...lockedArmor2Mods[item.category]];
-      newState.splice(firstIndex, 1);
-
-      this.setState({
-        lockedArmor2Mods: {
-          ...lockedArmor2Mods,
-          [item.category]: newState,
-        },
+        return oldState;
       });
-    }
-  };
+    },
+    [setLockedArmor2ModsInternal]
+  );
 
-  private onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
+  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    this.props.lbDispatch({
+    lbDispatch({
       type: 'lockedArmor2ModsChanged',
-      lockedArmor2Mods: this.state.lockedArmor2Mods,
+      lockedArmor2Mods: lockedArmor2ModsInternal,
     });
     onClose();
   };
 
-  private scrollToBucket = (categoryOrSeasonal: number | string) => {
+  const scrollToBucket = (categoryOrSeasonal: number | string) => {
     const elementId = `mod-picker-section-${categoryOrSeasonal}`;
     const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };
+
+  const order = Object.values(ModPickerCategories).map((category) => ({
+    category,
+    translatedName: t(armor2ModPlugCategoriesTitles[category]),
+  }));
+
+  const queryFilteredMods = useMemo(() => {
+    // Only some languages effectively use the \b regex word boundary
+    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
+      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
+      : new RegExp(escapeRegExp(query), 'i');
+    return query.length
+      ? mods.filter(
+          (mod) =>
+            regexp.test(mod.mod.displayProperties.name) ||
+            regexp.test(mod.mod.displayProperties.description) ||
+            (mod.season && regexp.test(mod.season.toString())) ||
+            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
+        )
+      : mods;
+  }, [language, query, mods]);
+
+  const modsByCategory = useMemo(() => {
+    const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
+      [ModPickerCategories.general]: [],
+      [ModPickerCategories.helmet]: [],
+      [ModPickerCategories.gauntlets]: [],
+      [ModPickerCategories.chest]: [],
+      [ModPickerCategories.leg]: [],
+      [ModPickerCategories.classitem]: [],
+      [ModPickerCategories.seasonal]: [],
+    };
+
+    for (const mod of queryFilteredMods) {
+      rtn[mod.category].push(mod);
+    }
+
+    return rtn;
+  }, [queryFilteredMods]);
+
+  const isGeneralOrSeasonal = (category: ModPickerCategory) =>
+    category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
+
+  const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
+    ? ({ onClose }) => (
+        <ModPickerFooter
+          defs={defs}
+          categoryOrder={order}
+          lockedArmor2Mods={lockedArmor2ModsInternal}
+          isPhonePortrait={isPhonePortrait}
+          onSubmit={(e) => onSubmit(e, onClose)}
+          onModSelected={onModRemoved}
+        />
+      )
+    : undefined;
+
+  return (
+    <Sheet
+      onClose={onClose}
+      header={
+        <ModPickerHeader
+          categoryOrder={order}
+          query={query}
+          scrollToBucket={scrollToBucket}
+          onSearchChange={(e) => setQuery(e.currentTarget.value)}
+          isPhonePortrait={isPhonePortrait}
+        />
+      }
+      footer={footer}
+      sheetClassName="item-picker"
+      freezeInitialHeight={true}
+    >
+      {Object.values(ModPickerCategories).map((category) => (
+        <ModPickerSection
+          key={category}
+          mods={modsByCategory[category]}
+          defs={defs}
+          locked={lockedArmor2ModsInternal[category]}
+          title={t(armor2ModPlugCategoriesTitles[category])}
+          category={category}
+          maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
+          energyMustMatch={!isGeneralOrSeasonal(category)}
+          onModSelected={onModSelected}
+          onModRemoved={onModRemoved}
+        />
+      ))}
+    </Sheet>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ModPicker);

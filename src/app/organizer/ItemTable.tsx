@@ -1,55 +1,63 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef, useCallback, useEffect, ReactNode } from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import { AppIcon, faCaretUp, faCaretDown, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
-import styles from './ItemTable.m.scss';
-import { ItemCategoryTreeNode } from './ItemTypeSelector';
-import _ from 'lodash';
-import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { loadingTracker } from 'app/shell/loading-tracker';
-import { showNotification } from 'app/notifications/notifications';
-import { t } from 'app/i18next-t';
+import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import ItemActions from './ItemActions';
+import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { t, tl } from 'app/i18next-t';
+import { setItemNote } from 'app/inventory/actions';
+import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
+import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { itemInfosSelector, storesSelector } from 'app/inventory/selectors';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import EnabledColumnsSelector from './EnabledColumnsSelector';
-import { bulkTagItems } from 'app/inventory/tag-items';
+import { DtrRating } from 'app/item-review/dtr-api-types';
+import { ratingsSelector } from 'app/item-review/reducer';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { Loadout } from 'app/loadout/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
+import { loadoutsSelector } from 'app/loadout/reducer';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { setSetting } from 'app/settings/actions';
+import { settingsSelector } from 'app/settings/reducer';
+import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { useShiftHeld } from 'app/utils/hooks';
+import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import _ from 'lodash';
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
-import { storesSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { inventoryWishListsSelector } from 'app/wishlists/reducer';
-import { toggleSearchQueryComponent } from 'app/shell/actions';
-import clsx from 'clsx';
-import { useShiftHeld } from 'app/utils/hooks';
-import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
-import { applyLoadout } from 'app/loadout/loadout-apply';
 import { getColumns, getColumnSelectionId } from './Columns';
-import { ratingsSelector } from 'app/item-review/reducer';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { setItemLockState } from 'app/inventory/item-move-service';
-import { emptyObject, emptyArray } from 'app/utils/empty';
-import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
-import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { touch, setItemNote, touchItem } from 'app/inventory/actions';
-import { settingsSelector } from 'app/settings/reducer';
-import { setSetting } from 'app/settings/actions';
-import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
-import { Loadout } from 'app/loadout/loadout-types';
-import { loadoutsSelector } from 'app/loadout/reducer';
-import { StatInfo } from 'app/compare/Compare';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import Dropzone, { DropzoneOptions } from 'react-dropzone';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import EnabledColumnsSelector from './EnabledColumnsSelector';
+import ItemActions from './ItemActions';
+import styles from './ItemTable.m.scss';
+import { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
   22: DestinyClass.Titan,
   21: DestinyClass.Warlock,
 };
+
+const downloadButtonSettings = [
+  { categoryId: ['weapons'], csvType: 'Weapons' as const, label: tl('Bucket.Weapons') },
+  {
+    categoryId: ['hunter', 'titan', 'warlock'],
+    csvType: 'Armor' as const,
+    label: tl('Bucket.Armor'),
+  },
+  { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
+];
 
 interface ProvidedProps {
   categories: ItemCategoryTreeNode[];
@@ -252,37 +260,10 @@ function ItemTable({
     },
     [dispatch, columns, enabledColumns, itemType]
   );
-  // TODO: stolen from SearchFilter, should probably refactor into a shared thing
+
   const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
     const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-
-    const state = lock;
-    try {
-      for (const item of selectedItems) {
-        await setItemLockState(item, state);
-
-        // TODO: Gotta do this differently in react land
-        item.locked = lock;
-        dispatch(touchItem(item.id));
-      }
-      showNotification({
-        type: 'success',
-        title: state
-          ? t('Filter.LockAllSuccess', { num: selectedItems.length })
-          : t('Filter.UnlockAllSuccess', { num: selectedItems.length }),
-      });
-    } catch (e) {
-      showNotification({
-        type: 'error',
-        title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-        body: e.message,
-      });
-    } finally {
-      // Touch the stores service to update state
-      if (selectedItems.length) {
-        dispatch(touch());
-      }
-    }
+    dispatch(bulkLockItems(selectedItems, lock));
   });
 
   const onNote = (note?: string) => {
@@ -421,46 +402,29 @@ function ItemTable({
 
   // TODO: drive the CSV export off the same column definitions as this table!
   let downloadAction: ReactNode | null = null;
-  if (categories.length > 1) {
+  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
+    setting.categoryId.includes(categories[1]?.id)
+  );
+  if (downloadButtonSetting) {
     const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
       downloadCsvFiles(stores, itemInfos, type);
       ga('send', 'event', 'Download CSV', type);
     };
+    const downloadHandler = (e) => {
+      e.preventDefault();
+      downloadCsv(downloadButtonSetting.csvType);
+      return false;
+    };
 
-    if (categories[1].id === 'weapons') {
-      const downloadWeaponCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Weapons');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadWeaponCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}.csv</span>
-        </button>
-      );
-    } else if (categories[1].id === 'armor') {
-      const downloadArmorCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Armor');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadArmorCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}.csv</span>
-        </button>
-      );
-    } else {
-      const downloadGhostCsv = (e) => {
-        e.preventDefault();
-        downloadCsv('Ghost');
-        return false;
-      };
-      downloadAction = (
-        <button className={clsx(styles.importButton, 'dim-button')} onClick={downloadGhostCsv}>
-          <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}.csv</span>
-        </button>
-      );
-    }
+    downloadAction = (
+      <button
+        type="button"
+        className={clsx(styles.importButton, 'dim-button')}
+        onClick={downloadHandler}
+      >
+        <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
+      </button>
+    );
   }
 
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
@@ -671,6 +635,7 @@ function TableRow({
   return (
     <>
       {filteredColumns.map((column: ColumnDefinition) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={narrowQueryFunction(row, column)}

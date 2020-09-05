@@ -1,11 +1,11 @@
-import _ from 'lodash';
 import {
-  DestinyVendorSaleItemComponent,
   DestinyInventoryItemDefinition,
+  DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
-import { D2Item } from '../inventory/item-types';
-import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { D2Item } from '../inventory/item-types';
+import { D2ItemFetchRequest, DtrD2BasicItem } from '../item-review/d2-dtr-api-types';
 
 /**
  * Lookup keys for review data in the cache.
@@ -84,7 +84,7 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
 
   const allPlugs = _.compact(
     //     remove this ?? null when typescript is fixed
-    item.sockets.sockets.map((i) => i.plug).map((i) => i?.plugItem.hash ?? null)
+    item.sockets.allSockets.map((i) => i.plugged).map((i) => i?.plugDef.hash ?? null)
   );
 
   return _.difference(allPlugs, powerModHashes);
@@ -100,8 +100,8 @@ function getSelectedPerks(item: D2Item): number[] | undefined {
       return undefined;
     }
 
-    const randomPlugOptions = item.sockets.sockets.flatMap((s) =>
-      s.hasRandomizedPlugItems && s.plug ? s.plug.plugItem.hash : []
+    const randomPlugOptions = item.sockets.allSockets.flatMap((s) =>
+      s.hasRandomizedPlugItems && s.plugged ? s.plugged.plugDef.hash : []
     );
 
     return randomPlugOptions.length ? randomPlugOptions : undefined;
@@ -121,8 +121,8 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       return undefined;
     }
 
-    const randomPlugOptions = item.sockets.sockets.flatMap((s) =>
-      s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []
+    const randomPlugOptions = item.sockets.allSockets.flatMap((s) =>
+      s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugDef.hash) : []
     );
 
     return randomPlugOptions?.length ? randomPlugOptions : undefined;
@@ -139,8 +139,8 @@ function isVendorSaleItem(
 }
 
 function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
-  return item.sockets //             remove this ?? null when typescript is fixed
-    ? _.compact(item.sockets.sockets.map((p) => p.plug?.plugItem ?? null)).filter(
+  return item.sockets
+    ? _.compact(item.sockets.allSockets.map((p) => p.plugged?.plugDef)).filter(
         (plug) =>
           plug.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Mod) &&
           plug.investmentStats?.some((s) => s.statTypeHash === StatHashes.Power)

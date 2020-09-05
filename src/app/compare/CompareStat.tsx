@@ -1,33 +1,34 @@
+import { t } from 'app/i18next-t';
+import ElementIcon from 'app/inventory/ElementIcon';
+import RecoilStat from 'app/item-popup/RecoilStat';
+import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { StatInfo } from './Compare';
-import { DimItem, D1Stat } from '../inventory/item-types';
+import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import RecoilStat from 'app/item-popup/RecoilStat';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { PowerCapDisclaimer } from 'app/dim-ui/PowerCapDisclaimer';
-import { StatHashes } from 'data/d2/generated-enums';
+import { MinimalStat, StatInfo } from './Compare';
 
 export default function CompareStat({
   stat,
+  compareBaseStats,
   item,
   highlight,
   setHighlight,
 }: {
   stat: StatInfo;
+  compareBaseStats?: boolean;
   item: DimItem;
   highlight?: number | string | undefined;
   setHighlight?(value?: string | number): void;
 }) {
   const itemStat = stat.getStat(item);
-
+  compareBaseStats = Boolean(compareBaseStats && item.bucket.inArmor);
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight?.(stat.id)}
-      style={getColor(statRange(itemStat, stat), 'color')}
+      style={getColor(statRange(itemStat, stat, compareBaseStats), 'color')}
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
@@ -40,6 +41,8 @@ export default function CompareStat({
               <span>{itemStat.value}</span>
               <RecoilStat value={itemStat.value} />
             </span>
+          ) : compareBaseStats ? (
+            itemStat.base ?? itemStat.value
           ) : (
             itemStat.value
           )
@@ -51,7 +54,6 @@ export default function CompareStat({
           Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
             <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>
           )}
-        {stat.id === 'PowerCap' && <PowerCapDisclaimer item={item} />}
       </span>
     </div>
   );
@@ -59,8 +61,9 @@ export default function CompareStat({
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
-  stat: { value?: number; statHash: number; qualityPercentage?: { min: number } } | undefined,
-  statInfo: StatInfo
+  stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
+  statInfo: StatInfo,
+  compareBaseStats = false
 ) {
   if (!stat) {
     return -1;
@@ -74,7 +77,15 @@ function statRange(
   }
 
   if (statInfo.lowerBetter) {
-    return (100 * (statInfo.max - (stat.value || statInfo.max))) / (statInfo.max - statInfo.min);
+    return (
+      (100 *
+        (statInfo.max -
+          ((compareBaseStats ? stat.base ?? stat.value : stat.value) || statInfo.max))) /
+      (statInfo.max - statInfo.min)
+    );
   }
-  return (100 * ((stat.value || 0) - statInfo.min)) / (statInfo.max - statInfo.min);
+  return (
+    (100 * (((compareBaseStats ? stat.base ?? stat.value : stat.value) || 0) - statInfo.min)) /
+    (statInfo.max - statInfo.min)
+  );
 }

@@ -1,25 +1,25 @@
+import { t } from 'app/i18next-t';
+import { LockedItemType } from 'app/loadout-builder/types';
+import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { emptySet } from 'app/utils/empty';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { t } from 'app/i18next-t';
 import React, { useEffect, useState } from 'react';
-import './ItemSockets.scss';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimSocketCategory, DimPlug, DimSocket } from '../inventory/item-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { connect } from 'react-redux';
-import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
-import { getReviews } from '../item-review/reducer';
-import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
-import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
-import { getItemReviews } from '../item-review/destiny-tracker.service';
-import Plug from './Plug';
-import BestRatedIcon from './BestRatedIcon';
 import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
+import { D2Item, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { getItemReviews } from '../item-review/destiny-tracker.service';
+import { getReviews } from '../item-review/reducer';
+import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
+import BestRatedIcon from './BestRatedIcon';
+import './ItemSockets.scss';
+import Plug from './Plug';
 import SocketDetails from './SocketDetails';
-import { LockedItemType } from 'app/loadout-builder/types';
-import { emptySet } from 'app/utils/empty';
-import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
 
 interface ProvidedProps {
   item: D2Item;
@@ -211,7 +211,7 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
 function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<number>) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
-      (plugOption) => plugOption !== socket.plug && bestRated.has(plugOption.plugItem.hash)
+      (plugOption) => plugOption !== socket.plugged && bestRated.has(plugOption.plugDef.hash)
     )
   );
 }
@@ -223,8 +223,8 @@ function anyWishListRolls(
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) =>
-        plugOption !== socket.plug &&
-        inventoryWishListRoll.wishListPerks.has(plugOption.plugItem.hash)
+        plugOption !== socket.plugged &&
+        inventoryWishListRoll.wishListPerks.has(plugOption.plugDef.hash)
     )
   );
 }
@@ -263,7 +263,7 @@ function Socket({
     >
       {socket.plugOptions.map((plug) => (
         <Plug
-          key={plug.plugItem.hash}
+          key={plug.plugDef.hash}
           plug={plug}
           item={item}
           socketInfo={socket}
@@ -273,7 +273,7 @@ function Socket({
           bestPerks={bestPerks}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
-          className={classesByHash?.[plug.plugItem.hash]}
+          className={classesByHash?.[plug.plugDef.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}
         />

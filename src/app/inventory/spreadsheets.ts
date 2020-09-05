@@ -1,27 +1,26 @@
-import { DimGridNode, DimItem, DimSockets } from './item-types';
-import { ItemInfos, getNotes, getTag, tagConfig } from './dim-item-info';
-import { setItemNote, setItemTagsBulk } from './actions';
-
+import { t } from 'app/i18next-t';
+import { D1_StatHashes } from 'app/search/d1-known-values';
+import { dimArmorStatHashByName } from 'app/search/search-filter-values';
+import { ThunkResult } from 'app/store/types';
+import { getMasterworkStatNames, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { download } from 'app/utils/util';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import D2Sources from 'data/d2/source-info';
-import D2MissingSources from 'data/d2/missing-source-info';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { DimStore } from './store-types';
-import { DtrRating } from '../item-review/dtr-api-types';
-import Papa from 'papaparse';
-import { ThunkResult } from 'app/store/reducers';
-import _ from 'lodash';
-import { getActivePlatform } from '../accounts/platforms';
-import { getClass } from './store/character-utils';
-import { download } from 'app/utils/util';
-import { getRating } from '../item-review/reducer';
-import { getSpecialtySocketMetadata, getMasterworkStatNames } from 'app/utils/item-utils';
-import store from '../store/store';
-import { t } from 'app/i18next-t';
-import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { StatHashes } from 'data/d2/generated-enums';
-import { D1_StatHashes } from 'app/search/d1-known-values';
+import D2MissingSources from 'data/d2/missing-source-info';
+import D2Sources from 'data/d2/source-info';
+import _ from 'lodash';
+import Papa from 'papaparse';
+import { getActivePlatform } from '../accounts/get-active-platform';
+import { DtrRating } from '../item-review/dtr-api-types';
+import { getRating } from '../item-review/reducer';
+import store from '../store/store';
+import { setItemNote, setItemTagsBulk } from './actions';
+import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
+import { DimGridNode, DimItem, DimSockets } from './item-types';
+import { DimStore } from './store-types';
+import { getClass } from './store/character-utils';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -192,13 +191,13 @@ function downloadCsv(filename: string, csv: string) {
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {
-  const socketItems = sockets.sockets.map((s) =>
+  const socketItems = sockets.allSockets.map((s) =>
     s.plugOptions
-      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
+      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugDef.displayProperties.name))
       .map((p) =>
-        s.plug?.plugItem.hash === p.plugItem.hash
-          ? `${p.plugItem.displayProperties.name}*`
-          : p.plugItem.displayProperties.name
+        s.plugged?.plugDef.hash === p.plugDef.hash
+          ? `${p.plugDef.displayProperties.name}*`
+          : p.plugDef.displayProperties.name
       )
   );
 

@@ -1,10 +1,14 @@
-import _ from 'lodash';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { DimItem } from '../inventory/item-types';
-import { v4 as uuidv4 } from 'uuid';
-import { DimStore } from 'app/inventory/store-types';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { armorStats } from 'app/inventory/store/stats';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2Categories } from '../destiny2/d2-buckets';
+import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
+import { D2Categories } from '../destiny2/d2-bucket-categories';
+import { DimItem } from '../inventory/item-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -61,6 +65,30 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 
     return Math.floor(exactLight * 10) / 10;
   }
+}
+
+/** Returns a map of armor hashes to stats. There should be just one of each item */
+export function getArmorStats(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  items: DimItem[]
+): { [hash: number]: DimCharacterStat } {
+  const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
+
+  // Construct map of stat hash to DimCharacterStat
+  const statsByArmorHash: { [hash: number]: DimCharacterStat } = {};
+  statDefs.forEach(({ hash, displayProperties: { description, icon, name } }) => {
+    statsByArmorHash[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
+  });
+
+  // Sum the items stats into the statsByArmorHash
+  items.forEach((item) => {
+    const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
+    Object.entries(statsByArmorHash).forEach(([hash, stat]) => {
+      stat.value += itemStats[hash]?.[0].value ?? 0;
+    });
+  });
+
+  return statsByArmorHash;
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function

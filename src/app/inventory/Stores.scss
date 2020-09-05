@@ -68,6 +68,9 @@
     .phone-portrait & {
       background-color: transparent;
     }
+    .gradientBackground & {
+      background-color: transparent;
+    }
   }
 
   > div {
@@ -102,6 +105,29 @@
     }
   }
 
+  .item-drag-container.touch-active {
+    opacity: 0.5;
+    transition: opacity 150ms ease-in 50ms; // delay <= to delayTouchStart in Root.tsx
+  }
+
+  .item-type-Engrams.item-drag-container:hover {
+    // don't display the default outline when hovering over a draggable subclass item
+    outline: none;
+
+    // allow the pseudo-element to render outside the bounds of the item
+    contain: layout style;
+
+    // render a hexagon-shaped pseudo-element to act as the border
+    &::before {
+      content: '';
+      position: absolute;
+      width: var(--item-size);
+      height: var(--item-size);
+      box-sizing: border-box;
+      background: url(~images/engram_outline.svg);
+    }
+  }
+
   // Subclasses
   .bucket-3284755031 & {
     // hide normal "equipped" effects
@@ -124,7 +150,8 @@
         position: absolute;
         width: var(--item-size);
         height: var(--item-size);
-        transform: rotate(45deg) scale(0.78);
+        transform: rotate(45deg) scale(0.7);
+        outline-width: 2px;
         box-sizing: border-box;
       }
     }
@@ -157,6 +184,12 @@
   .store-cell {
     padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
     flex-direction: column;
+    &:focus {
+      outline: none;
+    }
+  }
+  &:focus {
+    outline: none;
   }
   @supports (position: sticky) {
     position: sticky;
@@ -173,17 +206,26 @@
     .store-cell {
       margin: 0;
       width: 100%;
-      padding: 8px 0 4px 0;
+      padding: 8px 0;
     }
     > div {
-      max-width: 250px;
+      max-width: calc(100% - 100px);
       margin: 0 auto;
       overflow: visible !important;
       .frame {
         overflow: visible !important;
         touch-action: none;
       }
+      .character {
+        margin: 0 5px;
+      }
     }
+  }
+  .gradientBackground & {
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
   }
 }
 
@@ -193,5 +235,32 @@
   background-color: black;
   &:hover {
     background-color: #666;
+  }
+}
+
+.category-options {
+  display: flex;
+  background-color: black;
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  top: inherit;
+  left: 0;
+  width: 94%;
+  padding: 0 3%;
+  justify-content: space-around;
+
+  > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    padding-bottom: 1px;
+  }
+  .selected {
+    font-weight: bold;
   }
 }

@@ -1,23 +1,22 @@
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useEffect } from 'react';
-import _ from 'lodash';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router';
+import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
-import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
-import Catalysts from './Catalysts';
-import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { RootState } from '../store/reducers';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector } from '../inventory/selectors';
+import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
 import { refresh$ } from '../shell/refresh';
+import Catalysts from './Catalysts';
+import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import { useSubscription } from 'app/utils/hooks';
-import { useParams } from 'react-router';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -46,7 +45,7 @@ function mapStateToProps() {
   });
 
   return (state: RootState): StoreProps => ({
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
     profileResponse: profileResponseSelector(state),
@@ -68,7 +67,7 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
 
   useSubscription(refreshStores);
 
-  const { presentationNodeHashStr } = useParams();
+  const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;

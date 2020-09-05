@@ -1,15 +1,15 @@
-import { DimItem, D2Item } from '../inventory/item-types';
-import _ from 'lodash';
-import { LockedArmor2ModMap, LockedArmor2Mod, ModPickerCategories } from './types';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import {
-  sortProcessModsOrProcessItems,
-  canTakeAllSeasonalMods,
-  canTakeAllGeneralMods,
-} from './processWorker/processUtils';
-import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { D2Item, DimItem } from '../inventory/item-types';
+import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
+import {
+  canTakeAllGeneralMods,
+  canTakeAllSeasonalMods,
+  sortProcessModsOrProcessItems,
+} from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
+import { LockedArmor2Mod, LockedArmor2ModMap } from './types';
 
 /**
  * Checks that:
@@ -19,8 +19,8 @@ import { ProcessItem } from './processWorker/types';
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.isDestiny2() &&
   item.energy &&
-  (mod.mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-    mod.mod.plug.energyCost.energyType === item.energy?.energyType);
+  (mod.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+    mod.mod.plug.energyCost!.energyType === item.energy?.energyType);
 
 /**
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones
@@ -113,18 +113,5 @@ export function assignModsToArmorSet(
   );
 
   const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
-  return _.mapValues(assignments, (modHashes) =>
-    modHashes
-      .map((modHash) => modsByHash[modHash])
-      .sort((a) => {
-        // Sort the mods so that they appear in the order general, slot specific, seasonal (mimic the game).
-        if (a.category === ModPickerCategories.general) {
-          return -1;
-        } else if (a.category === ModPickerCategories.seasonal) {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
-  );
+  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
 }

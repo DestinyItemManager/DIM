@@ -1,17 +1,16 @@
+import { loggedOut } from 'app/accounts/actions';
+import { t } from 'app/i18next-t';
+import store from 'app/store/store';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
 import {
-  Tokens,
-  removeToken,
-  setToken,
   getToken,
   hasTokenExpired,
   removeAccessToken,
+  removeToken,
+  setToken,
+  Tokens,
 } from './oauth-tokens';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { t } from 'app/i18next-t';
-import store from 'app/store/store';
-import { loggedOut } from 'app/accounts/actions';
-import _ from 'lodash';
 
 let cache: Promise<Tokens> | null = null;
 

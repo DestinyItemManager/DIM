@@ -1,22 +1,22 @@
-import {
-  DestinyVendorSaleItemComponent,
-  DestinyVendorItemDefinition,
-} from 'bungie-api-ts/destiny2';
-import { loadingTracker } from '../shell/loading-tracker';
-import { handleD2Errors } from './d2-trackerErrorHandler';
-import { D2Store } from '../inventory/store-types';
-import { dtrFetch, dtrTextReviewMultiplier, dtrD2ReviewsEndpoint } from './dtr-service-helper';
-import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
-import { getVendorItemList, getItemList } from './d2-itemListBuilder';
-import _ from 'lodash';
-import { updateRatings } from '../item-review/actions';
-import { DtrRating } from '../item-review/dtr-api-types';
-import { getD2Roll } from './d2-itemTransformer';
-import { ThunkResult, RootState } from '../store/reducers';
-import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
+import { RootState, ThunkResult } from 'app/store/types';
+import {
+  DestinyVendorItemDefinition,
+  DestinyVendorSaleItemComponent,
+} from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { D2Store } from '../inventory/store-types';
+import { updateRatings } from '../item-review/actions';
+import { D2ItemFetchRequest, D2ItemFetchResponse } from '../item-review/d2-dtr-api-types';
+import { DtrRating } from '../item-review/dtr-api-types';
+import { loadReviewsFromIndexedDB, ratingsSelector } from '../item-review/reducer';
+import { loadingTracker } from '../shell/loading-tracker';
+import { getItemList, getVendorItemList } from './d2-itemListBuilder';
+import { getD2Roll } from './d2-itemTransformer';
+import { handleD2Errors } from './d2-trackerErrorHandler';
+import { dtrD2ReviewsEndpoint, dtrFetch, dtrTextReviewMultiplier } from './dtr-service-helper';
 
 function getBulkFetchPromise(
   ratings: {

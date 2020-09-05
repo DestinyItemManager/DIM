@@ -8,8 +8,17 @@
   > .presentation-node {
     margin-left: 10px;
 
-    > .title.collapsed {
-      background-color: #111;
+    > .title {
+      &.collapsed {
+        background-color: #111;
+      }
+      .gradientBackground & {
+        background-color: rgba(0, 0, 0, 0.2);
+        &:hover,
+        &.collapsed {
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+      }
     }
 
     #triumphs & {
@@ -33,8 +42,17 @@
   /* unless they are top children of locked-open top nodes */
   &.always-expanded > .presentation-node {
     margin-left: 0;
-    > .title.collapsed {
-      background-color: #000;
+    > .title {
+      &.collapsed {
+        background-color: #000;
+      }
+      .gradientBackground & {
+        background-color: rgba(0, 0, 0, 0.2);
+        &:hover,
+        &.collapsed {
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+      }
     }
   }
   &.only-child {

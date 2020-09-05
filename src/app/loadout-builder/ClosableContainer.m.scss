@@ -17,3 +17,13 @@
     background-color: rgba(0, 0, 0, 1);
   }
 }
+
+.showCloseOnHover {
+  .close {
+    display: none;
+  }
+
+  &:hover .close {
+    display: inline-block;
+  }
+}

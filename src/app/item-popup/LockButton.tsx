@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
-import styles from './LockButton.m.scss';
-import clsx from 'clsx';
-import { lockIcon, unlockedIcon, AppIcon, trackedIcon, unTrackedIcon } from '../shell/icons';
-import { setItemLockState } from 'app/inventory/item-move-service';
 import { touchItem } from 'app/inventory/actions';
+import { setItemLockState } from 'app/inventory/item-move-service';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { DimItem } from '../inventory/item-types';
+import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
+import styles from './LockButton.m.scss';
 
 interface Props {
   item: DimItem;

@@ -1,21 +1,20 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
+import { queueAction } from 'app/inventory/action-queue';
+import { Loadout } from 'app/loadout/loadout-types';
+import { refresh$ } from 'app/shell/refresh';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import { Location } from 'history';
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores';
-import { DimStore } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
 import { sortedStoresSelector } from '../inventory/selectors';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { refresh$ } from 'app/shell/refresh';
-import { queueAction } from 'app/inventory/action-queue';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
-import { Loadout } from 'app/loadout/loadout-types';
-import { useSubscription } from 'app/utils/hooks';
+import { DimStore } from '../inventory/store-types';
 import LoadoutBuilder from './LoadoutBuilder';
-import { Location } from 'history';
 
 interface ProvidedProps {
   account: DestinyAccount;

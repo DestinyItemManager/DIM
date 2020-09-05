@@ -2,11 +2,13 @@
 
 // TODO: Move to common button library!
 .checkButton {
-  width: 230px;
+  width: 100%;
   margin-top: 8px;
   @include phone-portrait {
     display: block;
-    margin: 8px auto 0 auto;
+    width: auto;
+    margin: 8px calc(var(--inventory-column-padding) - var(--item-margin)) 0
+      var(--inventory-column-padding);
   }
 
   box-sizing: border-box;

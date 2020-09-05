@@ -1,10 +1,10 @@
-import _ from 'lodash';
-import { count } from '../utils/util';
-import { D2Item } from '../inventory/item-types';
-import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
-import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { UPGRADE_MASTERWORK } from 'app/search/d2-known-values';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { D2Item } from '../inventory/item-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { count } from '../utils/util';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -20,23 +20,23 @@ export interface RatingAndReview {
 export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<number> {
   const bestRated = new Set<number>();
 
-  if (!item.sockets || !item.sockets.sockets || !itemReviews || !itemReviews.length) {
+  if (!item.sockets || !item.sockets.allSockets || !itemReviews || !itemReviews.length) {
     return bestRated;
   }
 
   // TODO: just go through the reviews building up a count of positives per plug first!
 
-  item.sockets.sockets.forEach((socket) => {
+  item.sockets.allSockets.forEach((socket) => {
     if (socket.plugOptions.length > 1) {
-      const plugOptionHashes = socket.plugOptions.map((po) => po.plugItem.hash);
+      const plugOptionHashes = socket.plugOptions.map((po) => po.plugDef.hash);
 
       const anyOrnamentsOrCatalysts = socket.plugOptions.some(
         (po) =>
-          po.plugItem.itemCategoryHashes?.some(
+          po.plugDef.itemCategoryHashes?.some(
             (ich) =>
               ich === ItemCategoryHashes.WeaponModsOrnaments ||
               ich === ItemCategoryHashes.MasterworksMods
-          ) || po.plugItem.hash === UPGRADE_MASTERWORK
+          ) || po.plugDef.hash === UPGRADE_MASTERWORK
       );
 
       if (!anyOrnamentsOrCatalysts) {

@@ -1,7 +1,7 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { RootState } from '../store/reducers';
+import React from 'react';
 import { connect } from 'react-redux';
 
 interface Props {
@@ -14,7 +14,7 @@ interface State {
 
 function mapStateToProps(state: RootState) {
   return {
-    isDraggingStack: state.inventory.isDraggingStack,
+    isDraggingStack: state.inventory.isDraggingStack && !state.shell.isPhonePortrait,
   };
 }
 

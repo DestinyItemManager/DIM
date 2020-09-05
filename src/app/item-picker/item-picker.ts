@@ -1,13 +1,9 @@
-import { DimItem } from '../inventory/item-types';
 import { Subject } from 'rxjs';
+import { DimItem } from '../inventory/item-types';
 
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
   prompt?: string;
-  /** Override the default equip/store selector */
-  equip?: boolean;
-  /** Hide the store/equip buttons. */
-  hideStoreEquip?: boolean;
   /** Don't show information that relates to currently selected perks. */
   ignoreSelectedPerks?: boolean;
   /** Optionally restrict items to a particular subset. */
@@ -18,7 +14,6 @@ export interface ItemPickerOptions {
 
 interface ItemSelectResult {
   item: DimItem;
-  equip: boolean;
 }
 
 export type ItemPickerState = ItemPickerOptions & {

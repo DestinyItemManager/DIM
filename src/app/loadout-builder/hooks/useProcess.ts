@@ -1,27 +1,30 @@
-import { wrap, releaseProxy } from 'comlink';
+import { DimItem } from 'app/inventory/item-types';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  ItemsByBucket,
-  LockedMap,
-  LockedArmor2ModMap,
-  ArmorSet,
-  StatTypes,
-  MinMaxIgnored,
-  MinMax,
-  LockedModBase,
-  ModPickerCategories,
-  bucketsToCategories,
-} from '../types';
-import { D2Item } from 'app/inventory/item-types';
-import { ProcessItemsByBucket } from '../processWorker/types';
-import {
-  mapDimItemToProcessItem,
-  mapSeasonalModsToProcessMods,
   getTotalModStatChanges,
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
+  mapDimItemToProcessItem,
+  mapSeasonalModsToProcessMods,
 } from '../processWorker/mappers';
+import { ProcessItemsByBucket } from '../processWorker/types';
+import {
+  ArmorSet,
+  bucketsToCategories,
+  ItemsByBucket,
+  LockedArmor2ModMap,
+  LockedMap,
+  LockedModBase,
+  MinMax,
+  MinMaxIgnored,
+  ModPickerCategories,
+  statHashes,
+  StatTypes,
+} from '../types';
+import { someModHasEnergyRequirement } from '../utils';
 
 interface ProcessState {
   processing: boolean;
@@ -74,16 +77,24 @@ export function useProcess(
     setState({ processing: true, result, currentCleanup: cleanup });
 
     const processItems: ProcessItemsByBucket = {};
-    const itemsById: { [id: string]: D2Item } = {};
+    const itemsById: { [id: string]: DimItem[] } = {};
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      for (const item of items) {
-        if (item.isDestiny2()) {
+      const groupedItems = groupItems(
+        items,
+        lockedSeasonalMods,
+        lockedArmor2ModMap,
+        statOrder,
+        assumeMasterwork
+      );
+      for (const group of Object.values(groupedItems)) {
+        const item = group.length ? group[0] : null;
+        if (item?.isDestiny2()) {
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
           );
-          itemsById[item.id] = item;
+          itemsById[item.id] = group;
         }
       }
     }
@@ -92,13 +103,8 @@ export function useProcess(
     worker
       .process(
         processItems,
-        lockedItems,
         mapSeasonalModsToProcessMods(lockedSeasonalMods),
-        getTotalModStatChanges(
-          $featureFlags.armor2ModPicker
-            ? [...lockedArmor2ModMap[ModPickerCategories.general], ...lockedArmor2ModMap.seasonal]
-            : lockedSeasonalMods
-        ),
+        getTotalModStatChanges(lockedItems, lockedArmor2ModMap),
         _.mapValues(lockedArmor2ModMap, (mods) => mods.map((mod) => mapArmor2ModToProcessMod(mod))),
         assumeMasterwork,
         statOrder,
@@ -186,4 +192,50 @@ function createWorker() {
   };
 
   return { worker, cleanup };
+}
+
+/**
+ * This groups items for process depending on whether any general or seasonal mods are locked as follows
+ * - If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energyType).
+ * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
+ * - If no general or seasonal mods are locked it groups by (stats, masterworked).
+ *
+ * Note that assumedMasterwork effects this.
+ */
+function groupItems(
+  items: readonly DimItem[],
+  lockedSeasonalMods: readonly LockedModBase[],
+  lockedArmor2ModMap: LockedArmor2ModMap,
+  statOrder: StatTypes[],
+  assumeMasterwork: boolean
+) {
+  const groupingFn = (item: DimItem) => {
+    if (item.isDestiny2()) {
+      const statValues: number[] = [];
+      const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+      // Ensure ordering of stats
+      if (statsByHash) {
+        for (const statType of statOrder) {
+          statValues.push(statsByHash[statHashes[statType]].base);
+        }
+      }
+
+      let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+
+      if (lockedSeasonalMods.length || lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
+        groupId += `${getSpecialtySocketMetadata(item)?.season}`;
+      } else if (
+        someModHasEnergyRequirement(lockedSeasonalMods) ||
+        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
+        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+      ) {
+        groupId += `${item.energy?.energyType}`;
+      }
+      return groupId;
+    } else {
+      return 'throwAway';
+    }
+  };
+
+  return _.groupBy(items, groupingFn);
 }

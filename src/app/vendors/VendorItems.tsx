@@ -1,18 +1,19 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import { VENDORS } from 'app/search/d2-known-values';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import missingFactionTokenHashes from 'data/d2/missing-faction-tokens.json';
+import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import VendorItemComponent from './VendorItemComponent';
-import { VendorItem } from './vendor-item';
-import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
+import FactionIcon from '../progress/FactionIcon';
 import { D2Vendor } from './d2-vendors';
+import { VendorItem } from './vendor-item';
+import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import { Link } from 'react-router-dom';
-import spiderMats from 'data/d2/spider-mats.json';
-import { VENDORS } from 'app/search/d2-known-values';
 
 const itemSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.typeName),
@@ -54,6 +55,7 @@ export default function VendorItems({
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
+          .filter((tokenValues) => !missingFactionTokenHashes.includes(Number(tokenValues))) // TODO: remove when bad token hashes no longer exist
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
         ...currencies,

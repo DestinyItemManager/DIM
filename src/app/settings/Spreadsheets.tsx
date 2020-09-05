@@ -1,14 +1,14 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
 import FileUpload from 'app/dim-ui/FileUpload';
-import { AppIcon, spreadsheetIcon } from '../shell/icons';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import { DropzoneOptions } from 'react-dropzone';
-import { DimStore } from 'app/inventory/store-types';
+import { t } from 'app/i18next-t';
 import { ItemInfos } from 'app/inventory/dim-item-info';
+import { itemInfosSelector, storesLoadedSelector, storesSelector } from 'app/inventory/selectors';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { DimStore } from 'app/inventory/store-types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import React from 'react';
+import { DropzoneOptions } from 'react-dropzone';
 import { connect } from 'react-redux';
-import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
+import { AppIcon, spreadsheetIcon } from '../shell/icons';
 
 interface StoreProps {
   disabled?: boolean;
@@ -75,13 +75,28 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
           {t('Settings.ExportSS')}
         </label>
         <div>
-          <button className="dim-button" onClick={downloadWeaponCsv} disabled={disabled}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={downloadWeaponCsv}
+            disabled={disabled}
+          >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
           </button>{' '}
-          <button className="dim-button" onClick={downloadArmorCsv} disabled={disabled}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={downloadArmorCsv}
+            disabled={disabled}
+          >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
           </button>{' '}
-          <button className="dim-button" onClick={downloadGhostCsv} disabled={disabled}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={downloadGhostCsv}
+            disabled={disabled}
+          >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
           </button>
         </div>

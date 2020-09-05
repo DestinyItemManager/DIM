@@ -1,22 +1,22 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
+import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
+import { ThunkResult } from 'app/store/types';
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
-  PlatformErrorCodes,
   DestinyGameVersions,
   DestinyLinkedProfilesResponse,
   DestinyProfileUserInfoCard,
+  PlatformErrorCodes,
 } from 'bungie-api-ts/destiny2';
-import { t } from 'app/i18next-t';
+import { UserInfoCard } from 'bungie-api-ts/user';
 import _ from 'lodash';
 import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
-import { reportException } from '../utils/exceptions';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { showNotification } from '../notifications/notifications';
-import { stadiaIcon, battleNetIcon, faXbox, faPlaystation, faSteam } from 'app/shell/icons';
-import { UserInfoCard } from 'bungie-api-ts/user';
+import { reportException } from '../utils/exceptions';
 import { loggedOut } from './actions';
-import { ThunkResult } from 'app/store/reducers';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 

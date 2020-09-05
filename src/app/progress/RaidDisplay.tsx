@@ -1,17 +1,17 @@
 import {
+  ARMSMASTER_ACTIVITY_MODIFIER,
+  ENCOUNTERS_COMPLETED_OBJECTIVE,
+} from 'app/search/d2-known-values';
+import {
   DestinyDisplayPropertiesDefinition,
   DestinyMilestoneChallengeActivity,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
-import CompletionCheckbox from './CompletionCheckbox';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
+import CompletionCheckbox from './CompletionCheckbox';
 import LoadoutRequirementModifier from './LoadoutRequirementModifier';
-import {
-  ARMSMASTER_ACTIVITY_MODIFIER,
-  ENCOUNTERS_COMPLETED_OBJECTIVE,
-} from 'app/search/d2-known-values';
 
 interface Props {
   displayProperties: DestinyDisplayPropertiesDefinition;
@@ -75,7 +75,7 @@ export function RaidActivity({
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">
-          {activity.phases.map((phase) => (
+          {activity.phases?.map((phase) => (
             <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
           ))}
           <div className="objective-progress">

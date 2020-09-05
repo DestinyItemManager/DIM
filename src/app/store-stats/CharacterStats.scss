@@ -1,0 +1,130 @@
+/* INT/DIS/STR bars */
+.stat-bars {
+  width: 100%;
+  max-width: 230px;
+  opacity: 0.8;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 8px;
+
+  .phone-portrait & {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    .stat-row {
+      width: 100%;
+      justify-content: center;
+    }
+    &.destiny2 .stat {
+      font-size: 12px;
+    }
+  }
+
+  > div {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .stat {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 2px;
+    line-height: 16px;
+    white-space: nowrap;
+    &:last-child {
+      margin-right: 0;
+    }
+    .bar {
+      flex: 1;
+      height: 7px;
+      margin-left: 1px;
+      border-radius: 1px;
+      background-color: gray;
+      overflow: hidden;
+      .progress {
+        height: 100%;
+        background-color: white;
+        &.complete {
+          background-color: #fb9f28;
+        }
+      }
+    }
+    img {
+      height: 14px;
+      width: 14px;
+      margin-right: 2px;
+      opacity: 0.8;
+    }
+  }
+
+  &.destiny2 {
+    flex-direction: column;
+    .stat-row {
+      display: flex;
+      flex-direction: row;
+      justify-items: left;
+      align-items: center;
+      &.powerFormula {
+        margin-bottom: 3px;
+        img {
+          opacity: 0.6;
+          height: 17px;
+          width: 17px;
+        }
+        img[src^='data'] {
+          filter: invert(1);
+        }
+        .powerStat {
+          font-size: 125%;
+        }
+        > div:nth-child(2) {
+          display: flex;
+          flex-direction: row;
+          &::before,
+          &::after {
+            font-size: 13px;
+            color: #aaa;
+          }
+          &::before {
+            content: '=';
+            margin-left: 4px;
+            margin-right: 4px;
+          }
+          &::after {
+            content: '+';
+            margin-left: 4px;
+            margin-right: 4px;
+          }
+        }
+      }
+      &:nth-child(n + 2) {
+        justify-content: space-between;
+      }
+    }
+    .stat {
+      flex: 0;
+      font-size: 11px;
+      color: #aaa;
+      &.pointerCursor {
+        cursor: pointer;
+      }
+    }
+  }
+}
+.tooltipFootnote {
+  opacity: 50%;
+  width: 80%;
+  margin: 10px 0 0 auto;
+  text-align: right;
+}
+.richTooltipWrapper {
+  margin: 5px 10px 0;
+}
+.asterisk {
+  vertical-align: top;
+  margin-left: 2px;
+}

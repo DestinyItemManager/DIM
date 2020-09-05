@@ -1,16 +1,25 @@
+@import '../variables.scss';
+
 .button {
-  background-size: cover;
-  width: 44px;
-  height: 44px;
-  text-align: center;
-  line-height: 10px;
+  > div {
+    background-size: cover;
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    line-height: 10px;
+    // Auto-scale on mobile to fit screen width
+    @include phone-portrait {
+      width: calc((100vw - 20px - 9 * 4px) / 7);
+      height: calc((100vw - 20px - 9 * 4px) / 7);
+    }
+  }
   margin-right: 4px;
   cursor: pointer;
   user-select: none;
-
   &:last-child {
-    margin-right: 10px;
+    margin-right: 0;
   }
+
   &:focus {
     outline-width: 5px;
   }
@@ -33,4 +42,12 @@
 .locations {
   display: flex;
   flex-direction: row;
+}
+
+.locationsV {
+  display: flex;
+  flex-direction: column;
+  & > * {
+    margin: 4px 0;
+  }
 }

@@ -1,14 +1,14 @@
-import React from 'react';
-import { DimStore } from 'app/inventory/store-types';
-import { DestinyProfileResponse, DestinyMilestone } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import WellRestedPerkIcon from './WellRestedPerkIcon';
-import _ from 'lodash';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimStore } from 'app/inventory/store-types';
+import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import React from 'react';
 import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
+import WellRestedPerkIcon from './WellRestedPerkIcon';
 
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and

@@ -1,10 +1,10 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import styles from './ItemActions.m.scss';
-import { AppIcon, lockIcon, stickyNoteIcon, tagIcon, moveIcon } from 'app/shell/icons';
-import DropDown, { DropDownItem } from './DropDown';
 import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
+import { AppIcon, lockIcon, moveIcon, stickyNoteIcon, tagIcon } from 'app/shell/icons';
+import React from 'react';
+import DropDown, { DropDownItem } from './DropDown';
+import styles from './ItemActions.m.scss';
 
 const bulkItemTags = Array.from(itemTagList);
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -63,6 +63,7 @@ function ItemActions({
         <AppIcon icon={lockIcon} /> {t('Organizer.Lock')}
       </button>
       <button
+        type="button"
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="unlock"

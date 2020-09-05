@@ -1,42 +1,16 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { DimStore } from './store-types';
-import { InventoryBuckets } from './inventory-buckets';
-import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
-import { setCurrentAccount } from '../accounts/actions';
-import { RootState } from '../store/reducers';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { observeStore } from 'app/utils/redux-utils';
-import _ from 'lodash';
-import { set } from 'idb-keyval';
-import { DimItem } from './item-types';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import { setCurrentAccount } from '../accounts/actions';
+import { AccountsAction } from '../accounts/reducer';
+import * as actions from './actions';
+import { DimItem } from './item-types';
+import { DimStore } from './store-types';
 import { StoreProto as D1StoreProto } from './store/d1-store-factory';
-import { getItemAcrossStores, getStore } from './stores-helpers';
 import { ItemProto } from './store/d2-item-factory';
-/**
- * Set up an observer on the store that'll save item infos to sync service (google drive).
- * We specifically watch the legacy state, not the new one.
- */
-export const saveItemInfosOnStateChange = _.once(() => {
-  // Sneak in another observer for saving new-items to IDB
-  observeStore(
-    (state: RootState) => state.inventory.newItems,
-    _.debounce(async (_, newItems, rootState) => {
-      const account = currentAccountSelector(rootState);
-      if (account) {
-        const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;
-        try {
-          return await set(key, newItems);
-        } catch (e) {
-          console.error("Couldn't save new items", e);
-        }
-      }
-    }, 1000)
-  );
-});
+import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
+import { getItemAcrossStores, getStore } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -45,8 +19,6 @@ export interface InventoryState {
   // Updates to items need to deeply modify their store though.
   // TODO: ReadonlyArray<Readonly<DimStore>>
   readonly stores: DimStore[];
-
-  readonly buckets?: InventoryBuckets;
 
   readonly profileResponse?: DestinyProfileResponse;
 
@@ -153,11 +125,9 @@ function updateInventory(
   state: InventoryState,
   {
     stores,
-    buckets,
     profileResponse,
   }: {
     stores: DimStore[];
-    buckets?: InventoryBuckets | undefined;
     profileResponse?: DestinyProfileResponse | undefined;
   }
 ) {
@@ -169,9 +139,6 @@ function updateInventory(
     newItems: computeNewItems(state.stores, state.newItems, stores),
     profileError: undefined,
   };
-  if (buckets) {
-    newState.buckets = buckets;
-  }
   if (profileResponse) {
     newState.profileResponse = profileResponse;
   }

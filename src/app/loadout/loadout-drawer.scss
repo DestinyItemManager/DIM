@@ -18,6 +18,28 @@
   }
 }
 
+.loadout-drawer-header {
+  .stat-bars.destiny2 {
+    cursor: default;
+    max-width: 280px;
+    flex-direction: row;
+    opacity: 1;
+  }
+  .power {
+    color: $gold;
+    flex: inherit;
+    margin-right: 20px;
+    svg {
+      vertical-align: top;
+      margin-top: 4px;
+      font-size: 0.5em;
+    }
+  }
+  .stat-row {
+    justify-content: space-between;
+  }
+}
+
 .loadout-equip-help {
   border: 1px solid #333;
   background-color: #f00;
@@ -29,8 +51,6 @@
 
 .loadout-item {
   position: relative;
-  margin-right: var(--item-margin);
-  margin-bottom: var(--item-margin);
   .close {
     right: 2px;
   }

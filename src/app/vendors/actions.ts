@@ -1,10 +1,10 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { ThunkResult } from 'app/store/types';
+import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
-import { ThunkResult } from 'app/store/reducers';
-import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { fetchRatingsForVendors } from './vendor-ratings';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 
 export const loadedAll = createAction('vendors/LOADED_ALL')<{
   characterId: string;

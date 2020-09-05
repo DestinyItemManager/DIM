@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import './storage.scss';
-import LocalStorageInfo from './LocalStorageInfo';
-import { t } from 'app/i18next-t';
-import ImportExport from './ImportExport';
-import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/reducers';
-import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
-import _ from 'lodash';
+import { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
-import { AppIcon, deleteIcon } from 'app/shell/icons';
-import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
-import HelpLink from 'app/dim-ui/HelpLink';
+import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import { exportDimApiData } from 'app/dim-api/dim-api';
-import { exportBackupData } from './export-data';
-import ErrorPanel from 'app/shell/ErrorPanel';
-import { Link } from 'react-router-dom';
-import { ExportResponse, DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { parseProfileKey } from 'app/dim-api/reducer';
 import { importDataBackup } from 'app/dim-api/import';
+import { parseProfileKey } from 'app/dim-api/reducer';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import HelpLink from 'app/dim-ui/HelpLink';
+import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
+import ErrorPanel from 'app/shell/ErrorPanel';
+import { AppIcon, deleteIcon } from 'app/shell/icons';
+import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/types';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { exportBackupData } from './export-data';
+import ImportExport from './ImportExport';
+import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
+import LocalStorageInfo from './LocalStorageInfo';
+import './storage.scss';
 import { DimData } from './sync.service';
 
 interface StoreProps {
@@ -115,7 +114,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.DeleteAllDataLabel')}</label>
-          <button className="dim-button" onClick={deleteAllData}>
+          <button type="button" className="dim-button" onClick={deleteAllData}>
             <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
           </button>
         </div>

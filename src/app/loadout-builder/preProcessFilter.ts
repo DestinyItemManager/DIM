@@ -1,19 +1,19 @@
-import _ from 'lodash';
-import {
-  LockableBuckets,
-  LockedMap,
-  LockedArmor2ModMap,
-  ItemsByBucket,
-  LockedItemType,
-  statValues,
-  bucketsToCategories,
-} from './types';
-import { getItemDamageShortName } from 'app/utils/item-utils';
-import { doEnergiesMatch } from './mod-utils';
-import { canSlotMod } from './utils';
 import { DimItem } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { doEnergiesMatch } from './mod-utils';
+import {
+  bucketsToCategories,
+  ItemsByBucket,
+  LockableBuckets,
+  LockedArmor2ModMap,
+  LockedItemType,
+  LockedMap,
+  statValues,
+} from './types';
+import { canSlotMod } from './utils';
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -87,8 +87,8 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return (
         item.isDestiny2() &&
         item.sockets &&
-        item.sockets.sockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
+        item.sockets.allSockets.some((slot) =>
+          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
         )
       );
     case 'item':
@@ -123,13 +123,13 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
         DestinySocketCategoryStyle.EnergyMeter
       );
 
-      for (const socket of item.sockets.sockets) {
-        const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
+      for (const socket of item.sockets.allSockets) {
+        const plugHash = socket?.plugged?.plugDef?.hash ?? NaN;
 
-        if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
+        if (socket.plugged?.stats && !masterworkSocketHashes.includes(plugHash)) {
           for (const statHash of statValues) {
-            if (socket.plug.stats[statHash]) {
-              baseStats[statHash] += socket.plug.stats[statHash];
+            if (socket.plugged.stats[statHash]) {
+              baseStats[statHash] += socket.plugged.stats[statHash];
             }
           }
         }

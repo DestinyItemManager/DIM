@@ -1,28 +1,28 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
-  DestinyStat,
-  DestinyStatDefinition,
-  DestinyInventoryItemDefinition,
-  DestinySandboxPerkDefinition,
-  DestinyObjectiveProgress,
-  DestinySocketCategoryDefinition,
+  DestinyAmmunitionType,
+  DestinyBreakerTypeDefinition,
   DestinyClass,
   DestinyCollectibleState,
-  DestinyItemTierTypeInfusionBlock,
-  DestinyItemQualityBlockDefinition,
-  DestinyAmmunitionType,
-  DestinyItemQuantity,
-  DestinyDisplayPropertiesDefinition,
-  DestinyItemInstanceEnergy,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemPlugBase,
   DestinyDamageTypeDefinition,
+  DestinyDisplayPropertiesDefinition,
   DestinyEnergyTypeDefinition,
-  DestinyBreakerTypeDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemInstanceEnergy,
+  DestinyItemPlugBase,
+  DestinyItemQualityBlockDefinition,
+  DestinyItemQuantity,
+  DestinyItemSocketEntryDefinition,
+  DestinyItemTierTypeInfusionBlock,
+  DestinyObjectiveProgress,
+  DestinySandboxPerkDefinition,
+  DestinySocketCategoryDefinition,
+  DestinyStat,
+  DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
-import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
-import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { InventoryBucket } from './inventory-buckets';
+import { D1StoreServiceType, D2StoreServiceType, DimStore, StoreServiceType } from './store-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
@@ -394,13 +394,18 @@ export interface D1GridNode extends DimGridNode {
   dtrRoll: string;
 }
 
+/** an InventoryItem known to have a plug attribute, because this item is located in a socket */
+export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDefinition {
+  plug: NonNullable<DestinyInventoryItemDefinition['plug']>;
+}
+
 /**
  * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {
-  /** The item associated with this plug. */
-  plugItem: DestinyInventoryItemDefinition;
+  /** The InventoryItem definition associated with this plug. */
+  plugDef: PluggableInventoryItemDefinition;
   /** Perks associated with the use of this plug. TODO: load on demand? */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
@@ -419,7 +424,7 @@ export interface DimSocket {
   /** The index of this socket in the overall socket list, used for the AWA InsertPlug API. */
   socketIndex: number;
   /** The currently inserted plug item, if any. */
-  plug: DimPlug | null;
+  plugged: DimPlug | null;
   /**
    * The displayable/searchable list of potential plug choices for this socket.
    * For perks, this is all the potential perks in the perk column.
@@ -427,6 +432,8 @@ export interface DimSocket {
    * Look at TODO to figure out the full list of possible plugs for this socket.
    */
   plugOptions: DimPlug[];
+  /** Plug hashes in this item visible in the collections roll, if this is a perk */
+  curatedRoll: number[] | null;
   /** Reusable plug items from runtime info, for the plug viewer. */
   reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */
@@ -446,7 +453,7 @@ export interface DimSocketCategory {
 
 export interface DimSockets {
   /** A flat list of all sockes on the item. */
-  sockets: DimSocket[];
+  allSockets: DimSocket[];
   /** Sockets grouped by category. */
   categories: DimSocketCategory[];
 }

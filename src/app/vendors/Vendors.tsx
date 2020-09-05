@@ -1,49 +1,50 @@
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { searchFilterSelector } from 'app/search/search-filter';
+import ErrorPanel from 'app/shell/ErrorPanel';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { useSubscription } from 'app/utils/hooks';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import {
-  DestinyProfileResponse,
+  DestinyCollectibleComponent,
   DestinyCurrenciesComponent,
   DestinyItemPlug,
-  DestinyCollectibleComponent,
+  DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
-import React, { useState, useEffect, useMemo } from 'react';
+import _ from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
+import Hammer from 'react-hammerjs';
+import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { loadingTracker } from '../shell/loading-tracker';
-import { DimStore } from '../inventory/store-types';
-import Vendor from './Vendor';
+import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { t } from 'app/i18next-t';
-import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import CharacterSelect from '../dim-ui/CharacterSelect';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
 import {
+  bucketsSelector,
   ownedItemsSelector,
-  sortedStoresSelector,
   profileResponseSelector,
+  sortedStoresSelector,
 } from '../inventory/selectors';
-import { connect } from 'react-redux';
+import { DimStore } from '../inventory/store-types';
+import { loadingTracker } from '../shell/loading-tracker';
+import { refresh$ } from '../shell/refresh';
+import { loadAllVendors } from './actions';
 import {
   D2VendorGroup,
-  toVendorGroups,
-  filterVendorGroupsToUnacquired,
   filterVendorGroupsToSearch,
+  filterVendorGroupsToUnacquired,
+  toVendorGroups,
 } from './d2-vendors';
-import styles from './Vendors.m.scss';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { DimItem } from 'app/inventory/item-types';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import VendorsMenu from './VendorsMenu';
-import Hammer from 'react-hammerjs';
-import _ from 'lodash';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
-import { emptyArray, emptyObject } from 'app/utils/empty';
-import ErrorPanel from 'app/shell/ErrorPanel';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { loadAllVendors } from './actions';
-import { useSubscription } from 'app/utils/hooks';
 import { VendorsState } from './reducer';
+import Vendor from './Vendor';
+import styles from './Vendors.m.scss';
+import VendorsMenu from './VendorsMenu';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -67,7 +68,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
@@ -180,7 +181,7 @@ function Vendors({
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
   if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
   }
   if (vendorGroups && searchQuery.length) {
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);

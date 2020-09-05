@@ -1,22 +1,31 @@
 import _ from 'lodash';
-import { DimSocket, DimSockets, D2Item, DimItem } from '../../inventory/item-types';
-import { ProcessSocket, ProcessMod, ProcessSockets, ProcessItem, ProcessArmorSet } from './types';
-import { LockedModBase, ArmorSet, statHashToType, StatTypes, LockedArmor2Mod } from '../types';
+import { D2Item, DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
-  getSpecialtySocketMetadataByPlugCategoryHash,
   getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
 } from '../../utils/item-utils';
-import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
+import {
+  ArmorSet,
+  LockableBuckets,
+  LockedArmor2Mod,
+  LockedArmor2ModMap,
+  LockedMap,
+  LockedModBase,
+  ModPickerCategories,
+  statHashToType,
+  StatTypes,
+} from '../types';
+import { ProcessArmorSet, ProcessItem, ProcessMod, ProcessSocket, ProcessSockets } from './types';
 
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   return {
-    plug: dimSocket.plug && {
-      stats: dimSocket.plug.stats,
-      plugItemHash: dimSocket.plug.plugItem.hash,
+    plug: dimSocket.plugged && {
+      stats: dimSocket.plugged.stats,
+      plugItemHash: dimSocket.plugged.plugDef.hash,
     },
     plugOptions: dimSocket.plugOptions.map((dimPlug) => ({
       stats: dimPlug.stats,
-      plugItemHash: dimPlug.plugItem.hash,
+      plugItemHash: dimPlug.plugDef.hash,
     })),
   };
 }
@@ -41,8 +50,8 @@ export function mapSeasonalModsToProcessMods(
       season: entry.metadata?.season,
       tag: entry.metadata?.tag,
       energy: {
-        type: entry.mod.mod.plug.energyCost.energyType,
-        val: entry.mod.mod.plug.energyCost.energyCost,
+        type: entry.mod.mod.plug.energyCost!.energyType,
+        val: entry.mod.mod.plug.energyCost!.energyCost,
       },
       investmentStats: entry.mod.mod.investmentStats.map(({ statTypeHash, value }) => ({
         statTypeHash,
@@ -58,8 +67,8 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod = {
     hash: mod.mod.hash,
     energy: {
-      type: mod.mod.plug.energyCost.energyType,
-      val: mod.mod.plug.energyCost.energyCost,
+      type: mod.mod.plug.energyCost!.energyType,
+      val: mod.mod.plug.energyCost!.energyCost,
     },
     investmentStats: mod.mod.investmentStats,
   };
@@ -84,9 +93,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
  * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
  * just for the seasonal mods.
  */
-export function getTotalModStatChanges(
-  lockedSeasonalMods: readonly { mod: { investmentStats: DestinyItemInvestmentStatDefinition[] } }[]
-) {
+export function getTotalModStatChanges(lockedMap: LockedMap, lockedArmor2Mods: LockedArmor2ModMap) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -96,11 +103,30 @@ export function getTotalModStatChanges(
     Strength: 0,
   };
 
-  for (const mod of lockedSeasonalMods) {
-    for (const stat of mod.mod.investmentStats) {
-      const statType = statHashToType[stat.statTypeHash];
-      if (statType) {
-        totals[statType] += stat.value;
+  for (const category of Object.values(ModPickerCategories)) {
+    for (const mod of lockedArmor2Mods[category]) {
+      for (const stat of mod.mod.investmentStats) {
+        const statType = statHashToType[stat.statTypeHash];
+        if (statType) {
+          totals[statType] += stat.value;
+        }
+      }
+    }
+  }
+
+  // Handle old armour mods
+  for (const bucket of Object.values(LockableBuckets)) {
+    const lockedItemsByBucket = lockedMap[bucket];
+    if (lockedItemsByBucket) {
+      for (const lockedItem of lockedItemsByBucket) {
+        if (lockedItem.type === 'mod') {
+          for (const stat of lockedItem.mod.investmentStats) {
+            const statType = statHashToType[stat.statTypeHash];
+            if (statType) {
+              totals[statType] += stat.value;
+            }
+          }
+        }
       }
     }
   }
@@ -110,7 +136,7 @@ export function getTotalModStatChanges(
 
 function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   return {
-    sockets: dimSockets.sockets.map(mapDimSocketToProcessSocket),
+    sockets: dimSockets.allSockets.map(mapDimSocketToProcessSocket),
     categories: dimSockets.categories.map((category) => ({
       categoryStyle: category.category.categoryStyle,
       sockets: category.sockets.map(mapDimSocketToProcessSocket),
@@ -136,7 +162,7 @@ export function mapDimItemToProcessItem(
 
   const modMetadata = getSpecialtySocketMetadata(dimItem);
   const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug.energyCost.energyCost);
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug.energyCost!.energyCost);
   return {
     bucketHash: bucket.hash,
     id,
@@ -162,26 +188,17 @@ export function mapDimItemToProcessItem(
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: { [id: string]: DimItem }
+  itemsById: { [id: string]: DimItem[] }
 ): ArmorSet {
-  const sets: ArmorSet['sets'] = [];
+  const armor: DimItem[][] = [];
 
-  for (const processSet of processed.sets) {
-    const armor: DimItem[][] = [];
-
-    for (const itemIds of processSet.armor) {
-      armor.push(itemIds.map((id) => itemsById[id]));
-    }
-
-    sets.push({ armor, statChoices: processSet.statChoices });
+  for (const itemId of processed.armor) {
+    armor.push(itemsById[itemId]);
   }
 
-  const firstValidSet: DimItem[] = processed.firstValidSet.map((id) => itemsById[id]);
-
   return {
-    sets,
-    firstValidSet,
-    firstValidSetStatChoices: processed.firstValidSetStatChoices,
+    armor,
+    statChoices: processed.statChoices,
     stats: processed.stats,
     maxPower: processed.maxPower,
   };

@@ -11,6 +11,7 @@
   grid-template-columns: repeat(auto-fill, var(--item-size));
   gap: var(--item-margin);
   align-content: flex-start;
+  align-items: flex-start;
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
   position: relative;
 

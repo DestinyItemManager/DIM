@@ -1,12 +1,12 @@
-import React from 'react';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import Pursuit, { showPursuitAsExpired } from './Pursuit';
-import _ from 'lodash';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
 const defaultExpirationDate = new Date(8640000000000000);
 

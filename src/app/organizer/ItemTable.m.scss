@@ -1,5 +1,12 @@
 @import '../variables';
 
+// stacking rules
+
+$dropdown-menu: 10;
+$toolbar: 9;
+$header-cells: 7;
+$content-cells: 5;
+
 :root {
   --table-header-height: 30px;
 }
@@ -20,10 +27,12 @@
 .toolbar {
   grid-column: 1 / -1;
   position: sticky;
+  z-index: $toolbar;
+
   top: $header-height;
   padding: 8px 8px !important;
   height: 41px - 16px;
-  z-index: 1;
+
   border-bottom: none !important;
   > div {
     display: flex;
@@ -54,6 +63,8 @@ $toolbarHeight: 41px - 16px + 8px;
   border-bottom: 1px solid #ddd !important;
   background: #313233;
   position: sticky;
+  z-index: $header-cells;
+
   top: $header-height + $toolbarHeight;
   white-space: nowrap;
   padding-top: 4px !important;
@@ -71,6 +82,10 @@ $toolbarHeight: 41px - 16px + 8px;
 
 .sorter {
   margin-left: 2px;
+}
+
+[role='cell'] {
+  z-index: $content-cells;
 }
 
 .alternateRow {
@@ -113,7 +128,6 @@ $toolbarHeight: 41px - 16px + 8px;
 .wishList,
 .energy,
 .dmg,
-.reacquirable,
 .year,
 .season,
 .customstat {
@@ -232,6 +246,7 @@ $modslotSize: 30px;
 .modslotIcon {
   height: $modslotSize;
   width: $modslotSize;
+  margin: 0 1px;
 }
 
 .loadouts {

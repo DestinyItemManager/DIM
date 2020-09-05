@@ -1,10 +1,10 @@
+import { t } from 'app/i18next-t';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { energyNamesByEnum } from 'app/search/d2-known-values';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item } from '../inventory/item-types';
 import './EnergyMeter.scss';
-import { t } from 'app/i18next-t';
-import React from 'react';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { energyNamesByEnum } from 'app/search/d2-known-values';
 
 export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinitions; item: D2Item }) {
   if (!item.energy) {

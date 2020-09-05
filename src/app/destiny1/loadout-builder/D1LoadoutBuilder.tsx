@@ -1,48 +1,48 @@
-import React from 'react';
-import CharacterSelect from '../../dim-ui/CharacterSelect';
-import './loadout-builder.scss';
-import { D1Item, D1GridNode, DimItem } from '../../inventory/item-types';
-import {
-  ArmorTypes,
-  LockedPerkHash,
-  ClassTypes,
-  SetType,
-  PerkCombination,
-  D1ItemWithNormalStats,
-} from './types';
+import { currentAccountSelector } from 'app/accounts/selectors';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { RootState } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { produce } from 'immer';
 import _ from 'lodash';
+import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import { D1Store } from '../../inventory/store-types';
-import { RootState } from '../../store/reducers';
-import { storesSelector } from '../../inventory/selectors';
-import { currentAccountSelector } from '../../accounts/reducer';
-import { D1StoresService } from '../../inventory/d1-stores';
+import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { t } from 'app/i18next-t';
-import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { D1ManifestDefinitions } from '../d1-definitions';
+import ErrorBoundary from '../../dim-ui/ErrorBoundary';
+import { D1StoresService } from '../../inventory/d1-stores';
 import { InventoryBuckets } from '../../inventory/inventory-buckets';
+import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
+import { bucketsSelector, storesSelector } from '../../inventory/selectors';
+import { D1Store } from '../../inventory/store-types';
+import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { getColor } from '../../shell/filters';
+import { AppIcon, refreshIcon } from '../../shell/icons';
+import { D1ManifestDefinitions } from '../d1-definitions';
+import { dimVendorService, Vendor } from '../vendors/vendor.service';
+import { getSetBucketsStep } from './calculate';
+import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
+import GeneratedSet from './GeneratedSet';
+import './loadout-builder.scss';
+import LoadoutBuilderItem from './LoadoutBuilderItem';
+import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
 import {
-  loadBucket,
+  ArmorTypes,
+  ClassTypes,
+  D1ItemWithNormalStats,
+  LockedPerkHash,
+  PerkCombination,
+  SetType,
+} from './types';
+import {
   getActiveBuckets,
+  getActiveHighestSets,
+  loadBucket,
   loadVendorsBucket,
   mergeBuckets,
-  getActiveHighestSets,
 } from './utils';
-import LoadoutBuilderItem from './LoadoutBuilderItem';
-import { getSetBucketsStep } from './calculate';
-import { refreshIcon, AppIcon } from '../../shell/icons';
-import { produce } from 'immer';
-import GeneratedSet from './GeneratedSet';
-import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
-import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
-import { dimVendorService, Vendor } from '../vendors/vendor.service';
-import ErrorBoundary from '../../dim-ui/ErrorBoundary';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface StoreProps {
   account: DestinyAccount;
@@ -57,7 +57,7 @@ type Props = StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state)!,
-    buckets: state.inventory.buckets,
+    buckets: bucketsSelector(state),
     stores: storesSelector(state) as D1Store[],
     defs: state.manifest.d1Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,

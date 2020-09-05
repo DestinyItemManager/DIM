@@ -1,9 +1,9 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import React from 'react';
 import ClosableContainer from '../ClosableContainer';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { LockedArmor2Mod, LockedModBase } from '../types';
 import styles from './LockedItem.m.scss';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 interface Props {
   item: LockedArmor2Mod | LockedModBase;
@@ -13,7 +13,7 @@ interface Props {
 
 function LockedArmor2ModIcon({ item, defs, onModClicked }: Props) {
   return (
-    <ClosableContainer onClose={onModClicked} key={item.mod.hash}>
+    <ClosableContainer onClose={onModClicked} showCloseIconOnHover={true}>
       <div className={styles.emptyItem}>
         <SocketDetailsMod itemDef={item.mod} defs={defs} />
       </div>

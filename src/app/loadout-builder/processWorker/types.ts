@@ -1,5 +1,5 @@
-import { StatTypes, ModPickerCategory } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { ModPickerCategory, StatTypes } from '../types';
 
 export interface ProcessPlug {
   stats: {
@@ -47,30 +47,16 @@ export interface ProcessItem {
 }
 
 export type ProcessItemsByBucket = Readonly<{
-  [bucketHash: number]: readonly ProcessItem[];
+  [bucketHash: number]: ProcessItem[];
 }>;
 
 export interface ProcessArmorSet {
   /** The overall stats for the loadout as a whole. */
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
-
-  /**
-   * Potential stat mixes that can achieve the overall stats.
-   * Each mix is a particular set of stat choices (and options for each piece within that)
-   * to get to the overall stats.
-   */
-  readonly sets: {
-    /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    readonly armor: readonly string[][];
-    /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-    readonly statChoices: readonly number[][];
-    readonly maxPower: number;
-  }[];
-
-  /** The first (highest-power) valid set from this stat mix. */
-  readonly firstValidSet: readonly string[];
-  readonly firstValidSetStatChoices: readonly number[][];
-
+  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
+  readonly armor: readonly string[];
+  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
+  readonly statChoices: readonly number[][];
   /** The maximum power loadout possible in this stat mix. */
   readonly maxPower: number;
 }
@@ -78,24 +64,10 @@ export interface ProcessArmorSet {
 export interface IntermediateProcessArmorSet {
   /** The overall stats for the loadout as a whole. */
   stats: { [statType in StatTypes]: number };
-
-  /**
-   * Potential stat mixes that can achieve the overall stats.
-   * Each mix is a particular set of stat choices (and options for each piece within that)
-   * to get to the overall stats.
-   */
-  sets: {
-    /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-    armor: ProcessItem[][];
-    /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-    statChoices: number[][];
-    maxPower: number;
-  }[];
-
   /** The first (highest-power) valid set from this stat mix. */
-  firstValidSet: ProcessItem[];
-  firstValidSetStatChoices: number[][];
-
+  armor: ProcessItem[];
+  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
+  statChoices: number[][];
   /** The maximum power loadout possible in this stat mix. */
   maxPower: number;
 }

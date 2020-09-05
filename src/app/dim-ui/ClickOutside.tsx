@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useCallback } from 'react';
-import { Subject } from 'rxjs';
 import { useSubscription } from 'app/utils/hooks';
+import React, { useCallback, useContext, useRef } from 'react';
+import { Subject } from 'rxjs';
 
 export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
 

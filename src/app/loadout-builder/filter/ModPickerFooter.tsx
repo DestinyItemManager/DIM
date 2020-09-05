@@ -1,11 +1,10 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-
-import styles from './ModPickerFooter.m.scss';
-import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
-import { LockedArmor2ModMap, LockedArmor2Mod } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import React from 'react';
+import { LockedArmor2Mod, LockedArmor2ModMap } from '../types';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
+import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -19,10 +18,12 @@ interface Props {
 function ModPickerFooter(props: Props) {
   const { defs, isPhonePortrait, categoryOrder, lockedArmor2Mods, onSubmit, onModSelected } = props;
 
+  useHotkey('enter', t('LB.SelectMods'), onSubmit);
+
   return (
     <div className={styles.footer}>
       <div>
-        <button className={styles.submitButton} onClick={onSubmit}>
+        <button type="button" className={styles.submitButton} onClick={onSubmit}>
           {!isPhonePortrait && '⏎ '}
           {t('LB.SelectMods')}
         </button>
@@ -43,15 +44,6 @@ function ModPickerFooter(props: Props) {
               </React.Fragment>
             )
         )}
-        <GlobalHotkeys
-          hotkeys={[
-            {
-              combo: 'enter',
-              description: t('LB.SelectMods'),
-              callback: onSubmit,
-            },
-          ]}
-        />
       </div>
     </div>
   );

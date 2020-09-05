@@ -1,32 +1,32 @@
-import * as actions from './basic-actions';
-import * as settingsActions from '../settings/actions';
-import * as loadoutActions from '../loadout/actions';
-import * as inventoryActions from '../inventory/actions';
-import { clearWishLists } from 'app/wishlists/actions';
-import { ActionType, getType } from 'typesafe-actions';
-import _ from 'lodash';
-import { ProfileUpdateWithRollback, DeleteLoadoutUpdateWithRollback } from './api-types';
-import { initialSettingsState, Settings } from '../settings/initial-settings';
 import {
-  TagValue,
-  GlobalSettings,
   defaultGlobalSettings,
-  ProfileUpdateResult,
-  Loadout,
   DestinyVersion,
-  LoadoutItem,
+  GlobalSettings,
   ItemAnnotation,
-  Search,
   ItemHashTag,
+  Loadout,
+  LoadoutItem,
+  ProfileUpdateResult,
+  Search,
+  TagValue,
 } from '@destinyitemmanager/dim-api-types';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
-import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { emptyArray } from 'app/utils/empty';
-import { parseQuery, canonicalizeQuery } from 'app/search/query-parser';
+import { clearWishLists } from 'app/wishlists/actions';
+import produce, { Draft } from 'immer';
+import _ from 'lodash';
+import { ActionType, getType } from 'typesafe-actions';
+import * as inventoryActions from '../inventory/actions';
+import * as loadoutActions from '../loadout/actions';
+import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
+import * as settingsActions from '../settings/actions';
+import { initialSettingsState, Settings } from '../settings/initial-settings';
+import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
+import * as actions from './basic-actions';
 
 export interface DimApiState {
-  globalSettings: GlobalSettings & { showIssueBanner: boolean };
+  globalSettings: GlobalSettings;
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
@@ -111,7 +111,7 @@ export const initialState: DimApiState = {
     ...defaultGlobalSettings,
     // 2019-12-17 we've been asked to disable auto-refresh
     autoRefresh: false,
-    showIssueBanner: true,
+    showIssueBanner: false,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
@@ -175,8 +175,11 @@ export const dimApi = (
               ...action.payload.profiles,
             },
             updateQueue: newUpdateQueue,
-            itemHashTags: action.payload.itemHashTags,
-            searches: action.payload.searches,
+            itemHashTags: action.payload.itemHashTags || initialState.itemHashTags,
+            searches: {
+              ...state.searches,
+              ...action.payload.searches,
+            },
           }
         : {
             ...state,
@@ -344,6 +347,11 @@ export const dimApi = (
         saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
       });
 
+    case getType(actions.searchDeleted):
+      return produce(state, (draft) => {
+        deleteSearch(draft, account!.destinyVersion, action.payload);
+      });
+
     // *** Triumphs ***
 
     case getType(actions.trackTriumph):
@@ -480,6 +488,7 @@ function compactUpdate(
       key = `${update.action}-${update.payload.recordHash}`;
       break;
     case 'search':
+    case 'delete_search':
       // These don't combine (though maybe they should be extended to include an array of usage times?)
       key = `unique-${unique++}`;
       break;
@@ -959,7 +968,13 @@ function trackTriumph(
 function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
   // Canonicalize the query so we always save it the same way
   try {
-    query = canonicalizeQuery(parseQuery(query));
+    const ast = parseQuery(query);
+    if (ast.op === 'filter' && ast.type === 'keyword') {
+      // don't save "trivial" single-keyword filters
+      // TODO: somehow also reject invalid searches (that don't match real keywords)
+      return;
+    }
+    query = canonicalizeQuery(ast);
   } catch (e) {
     console.error('Query not parseable - not saving', query, e);
     return;
@@ -1028,6 +1043,20 @@ function saveSearch(
     // Hmm, may need to tweak this
     throw new Error("Unable to save a search that's not in your history");
   }
+
+  draft.updateQueue.push(updateAction);
+}
+
+function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+  const updateAction: ProfileUpdateWithRollback = {
+    action: 'delete_search',
+    payload: {
+      query,
+    },
+    destinyVersion,
+  };
+
+  draft.searches[destinyVersion] = draft.searches[destinyVersion].filter((s) => s.query !== query);
 
   draft.updateQueue.push(updateAction);
 }

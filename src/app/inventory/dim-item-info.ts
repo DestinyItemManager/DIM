@@ -1,50 +1,48 @@
-import _ from 'lodash';
-
-import { DimStore } from './store-types';
-import { DimItem } from './item-types';
-import { tagCleanup } from './actions';
-import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { ThunkResult } from 'app/store/reducers';
-import { itemInfosSelector } from './selectors';
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { tl } from 'app/i18next-t';
+import { ThunkResult } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
+import _ from 'lodash';
+import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
+import { tagCleanup } from './actions';
+import { DimItem } from './item-types';
+import { itemInfosSelector } from './selectors';
+import { DimStore } from './store-types';
 
 // sortOrder: orders items within a bucket, ascending
-// these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
-// doesn't delete the translations       t('Tags.Junk') t('Tags.Archive') t('Tags.TagItem')
 export const tagConfig = {
   favorite: {
     type: 'favorite' as const,
-    label: 'Tags.Favorite',
+    label: tl('Tags.Favorite'),
     sortOrder: 0,
     hotkey: 'shift+1',
     icon: heartIcon,
   },
   keep: {
     type: 'keep' as const,
-    label: 'Tags.Keep',
+    label: tl('Tags.Keep'),
     sortOrder: 1,
     hotkey: 'shift+2',
     icon: tagIcon,
   },
   infuse: {
     type: 'infuse' as const,
-    label: 'Tags.Infuse',
+    label: tl('Tags.Infuse'),
     sortOrder: 2,
     hotkey: 'shift+4',
     icon: boltIcon,
   },
   junk: {
     type: 'junk' as const,
-    label: 'Tags.Junk',
+    label: tl('Tags.Junk'),
     sortOrder: 3,
     hotkey: 'shift+3',
     icon: banIcon,
   },
   archive: {
     type: 'archive' as const,
-    label: 'Tags.Archive',
+    label: tl('Tags.Archive'),
     sortOrder: 4,
     hotkey: 'shift+5',
     icon: archiveIcon,
@@ -112,7 +110,7 @@ export interface TagInfo {
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 // t(Tags.TagItem) is the dropdown selector text hint for untagged things
 export const itemTagSelectorList: TagInfo[] = [
-  { label: 'Tags.TagItem' },
+  { label: tl('Tags.TagItem') },
   ...Object.values(tagConfig),
 ];
 

@@ -1,45 +1,45 @@
-import {
-  getGlobalSettings,
-  getDimApiProfile,
-  postUpdates,
-  deleteAllData,
-} from '../dim-api/dim-api';
-import { ThunkResult, RootState } from '../store/reducers';
-import { DimApiState } from './reducer';
+import { compareAccounts } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
+import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import { t } from 'app/i18next-t';
+import { showNotification } from 'app/notifications/notifications';
+import { initialSettingsState, Settings } from 'app/settings/initial-settings';
+import { readyResolve } from 'app/settings/settings';
+import { refresh$ } from 'app/shell/refresh';
+import { SyncService } from 'app/storage/sync.service';
+import { RootState, ThunkResult } from 'app/store/types';
+import { delay } from 'app/utils/util';
+import { deepEqual } from 'fast-equals';
 import { get, set } from 'idb-keyval';
-import { getPlatforms } from '../accounts/platforms';
-import { currentAccountSelector } from '../accounts/reducer';
-import { observeStore } from '../utils/redux-utils';
 import _ from 'lodash';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { getPlatforms } from '../accounts/platforms';
 import {
+  deleteAllData,
+  getDimApiProfile,
+  getGlobalSettings,
+  postUpdates,
+} from '../dim-api/dim-api';
+import { observeStore } from '../utils/redux-utils';
+import { promptForApiPermission } from './api-permission-prompt';
+import { ProfileUpdateWithRollback } from './api-types';
+import {
+  allDataDeleted,
+  finishedUpdates,
+  flushUpdatesFailed,
   globalSettingsLoaded,
+  prepareToFlushUpdates,
+  ProfileIndexedDBState,
   profileLoaded,
   profileLoadedFromIDB,
-  ProfileIndexedDBState,
-  finishedUpdates,
-  prepareToFlushUpdates,
-  flushUpdatesFailed,
-  allDataDeleted,
-  setApiPermissionGranted,
   profileLoadError,
+  setApiPermissionGranted,
 } from './basic-actions';
-import { deepEqual } from 'fast-equals';
-import { ProfileUpdateWithRollback } from './api-types';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
-import { readyResolve } from 'app/settings/settings';
-import { delay } from 'app/utils/util';
-import { apiPermissionGrantedSelector } from './selectors';
-import { promptForApiPermission } from './api-permission-prompt';
-import { initialSettingsState, Settings } from 'app/settings/initial-settings';
-import { showNotification } from 'app/notifications/notifications';
-import { t } from 'app/i18next-t';
-import { dimErrorToaster } from 'app/bungie-api/error-toaster';
-import { refresh$ } from 'app/shell/refresh';
-import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
-import { compareAccounts } from 'app/accounts/destiny-account';
-import { SyncService } from 'app/storage/sync.service';
 import { importDataBackup } from './import';
+import { DimApiState } from './reducer';
+import { apiPermissionGrantedSelector } from './selectors';
 
 const installApiPermissionObserver = _.once(() => {
   // Observe API permission and reflect it into local storage

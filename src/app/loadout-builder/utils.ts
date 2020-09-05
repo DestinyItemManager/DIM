@@ -1,15 +1,29 @@
-import _ from 'lodash';
-import { DimPlug, DimItem, D2Item, DimSocket } from 'app/inventory/item-types';
-import { statValues, LockedItemType, LockedMod, LockedArmor2Mod, StatTypes } from './types';
+import { tl } from 'app/i18next-t';
 import {
-  DestinyInventoryItemDefinition,
-  TierType,
-  DestinyItemSubType,
-  DestinyEnergyType,
-} from 'bungie-api-ts/destiny2';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+  D2Item,
+  DimItem,
+  DimPlug,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
 import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+  DestinyItemSubType,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import {
+  LockedArmor2Mod,
+  LockedItemType,
+  LockedMod,
+  ModPickerCategories,
+  StatTypes,
+  statValues,
+} from './types';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -33,17 +47,17 @@ const unwantedCategories = new Set([
  *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
-  if (!socket.plug) {
+  if (!socket.plugged) {
     return false;
   }
 
-  const plugItem = socket.plug.plugItem;
+  const plugItem = socket.plugged.plugDef;
   if (!plugItem || !plugItem.plug) {
     return false;
   }
 
   // Armor 2.0 mods
-  if (socket.plug.plugItem.collectibleHash) {
+  if (socket.plugged.plugDef.collectibleHash) {
     return false;
   }
 
@@ -65,7 +79,7 @@ export function filterPlugs(socket: DimSocket) {
   // Remove Archetype/Inherit perk
   if (
     plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-    plugItem.inventory.tierType !== TierType.Exotic // keep exotics
+    plugItem.inventory!.tierType !== TierType.Exotic // keep exotics
   ) {
     return false;
   }
@@ -73,7 +87,7 @@ export function filterPlugs(socket: DimSocket) {
   // Remove empty mod slots
   if (
     plugItem.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsUniversal &&
-    plugItem.inventory.tierType === TierType.Basic
+    plugItem.inventory!.tierType === TierType.Basic
   ) {
     return false;
   }
@@ -84,15 +98,15 @@ export function filterPlugs(socket: DimSocket) {
   }
 
   // Remove empty sockets, which are common tier
-  if (plugItem.inventory.tierType === TierType.Common) {
+  if (plugItem.inventory!.tierType === TierType.Common) {
     return false;
   }
 
   // Only real mods
   if (
     !socket.isPerk &&
-    (plugItem.inventory.bucketTypeHash !== MODIFICATIONS_BUCKET ||
-      !plugItem.inventory.recoveryBucketTypeHash)
+    (plugItem.inventory!.bucketTypeHash !== MODIFICATIONS_BUCKET ||
+      !plugItem.inventory!.recoveryBucketTypeHash)
   ) {
     return false;
   }
@@ -185,7 +199,7 @@ export function getFilteredPerksAndPlugSets(
     const itemPlugSets: number[] = [];
 
     if (item.isDestiny2() && item.sockets) {
-      for (const socket of item.sockets.sockets) {
+      for (const socket of item.sockets.allSockets) {
         // Populate mods
         if (!socket.isPerk) {
           if (socket.socketDefinition.reusablePlugSetHash) {
@@ -198,7 +212,7 @@ export function getFilteredPerksAndPlugSets(
         // Populate plugs
         if (filterPlugs(socket)) {
           socket.plugOptions.forEach((option) => {
-            itemPlugs.push(option.plugItem);
+            itemPlugs.push(option.plugDef);
           });
         }
       }
@@ -270,7 +284,7 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
       lockedItem.mod.plug.plugCategoryHash
     ) ||
       // or matches socket plugsets
-      item.sockets?.sockets.some(
+      item.sockets?.allSockets.some(
         (socket) =>
           (socket.socketDefinition.reusablePlugSetHash &&
             lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
@@ -311,16 +325,17 @@ export function generateMixesFromPerks(
   const altPerks: (DimPlug[] | null)[] = [null];
 
   if (stats && item.isDestiny2() && item.sockets && !item.energy) {
-    for (const socket of item.sockets.sockets) {
+    for (const socket of item.sockets.allSockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
-          if (plug !== socket.plug && plug.stats) {
+          if (plug !== socket.plugged && plug.stats) {
             // Stats without the currently selected plug, with the optional plug
             const mixNum = mixes.length;
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
               const existingMix = mixes[mixIndex];
               const optionStat = statValues.map((statHash, index) => {
-                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
+                const currentPlugValue =
+                  (socket.plugged?.stats && socket.plugged.stats[statHash]) ?? 0;
                 const optionPlugValue = plug.stats?.[statHash] || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
@@ -384,3 +399,23 @@ export function getLockedModStats(
 
   return lockedModStats;
 }
+
+/**
+ * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
+ * has an elemental (non-Any) energy requirement
+ */
+export function someModHasEnergyRequirement(
+  mods: readonly { mod: PluggableInventoryItemDefinition }[]
+) {
+  return mods.some((mod) => mod.mod.plug.energyCost!.energyType !== DestinyEnergyType.Any);
+}
+
+export const armor2ModPlugCategoriesTitles = {
+  [ModPickerCategories.general]: tl('LB.General'),
+  [ModPickerCategories.helmet]: tl('LB.Helmet'),
+  [ModPickerCategories.gauntlets]: tl('LB.Gauntlets'),
+  [ModPickerCategories.chest]: tl('LB.Chest'),
+  [ModPickerCategories.leg]: tl('LB.Legs'),
+  [ModPickerCategories.classitem]: tl('LB.ClassItem'),
+  [ModPickerCategories.seasonal]: tl('LB.Seasonal'),
+};

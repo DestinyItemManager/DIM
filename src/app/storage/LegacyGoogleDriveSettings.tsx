@@ -1,13 +1,12 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import './storage.scss';
-import { SyncService, DimData } from './sync.service';
-import _ from 'lodash';
+import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { AppIcon, restoreIcon, signInIcon, signOutIcon } from '../shell/icons';
 import { reportException } from '../utils/exceptions';
-import { AppIcon, signOutIcon, signInIcon, restoreIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { DriveAboutResource } from './google-drive-storage';
-import { RouteComponentProps, withRouter } from 'react-router';
+import './storage.scss';
+import { DimData, SyncService } from './sync.service';
 
 declare global {
   interface Window {
@@ -63,41 +62,39 @@ class LegacyGoogleDriveSettings extends React.Component<Props, State> {
     const adapter = SyncService.GoogleDriveStorage;
 
     return (
-      <>
-        <div className="storage-adapter">
-          <h3>{t('Storage.GDriveImport')}</h3>
-          <p>{t('Storage.GDriveImportExplain')}</p>
-          {googleApiBlocked ? (
-            <p>{t('Storage.GoogleApiBlocked')}</p>
-          ) : (
-            <div>
-              {adapter.enabled ? (
-                <>
-                  {driveInfo && (
-                    <div className="google-user">
-                      {driveInfo.user.emailAddress && (
-                        <div>
-                          {t('Storage.GDriveSignedIn', { email: driveInfo.user.emailAddress })}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <button className="dim-button" onClick={this.driveLogout}>
-                    <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
-                  </button>
-                </>
-              ) : (
-                <button className="dim-button" onClick={this.driveSync}>
-                  <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
+      <div className="storage-adapter">
+        <h3>{t('Storage.GDriveImport')}</h3>
+        <p>{t('Storage.GDriveImportExplain')}</p>
+        {googleApiBlocked ? (
+          <p>{t('Storage.GoogleApiBlocked')}</p>
+        ) : (
+          <div>
+            {adapter.enabled ? (
+              <>
+                {driveInfo && (
+                  <div className="google-user">
+                    {driveInfo.user.emailAddress && (
+                      <div>
+                        {t('Storage.GDriveSignedIn', { email: driveInfo.user.emailAddress })}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <button type="button" className="dim-button" onClick={this.driveLogout}>
+                  <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                 </button>
-              )}{' '}
-              <button className="dim-button" onClick={this.importFromLegacy}>
-                <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveImportButton')}</span>
+              </>
+            ) : (
+              <button type="button" className="dim-button" onClick={this.driveSync}>
+                <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
               </button>
-            </div>
-          )}
-        </div>
-      </>
+            )}{' '}
+            <button type="button" className="dim-button" onClick={this.importFromLegacy}>
+              <AppIcon icon={restoreIcon} /> <span>{t('Storage.GDriveImportButton')}</span>
+            </button>
+          </div>
+        )}
+      </div>
     );
   }
 

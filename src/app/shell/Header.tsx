@@ -1,34 +1,36 @@
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import React, { useState, useRef, useEffect } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './header.scss';
-import logo from 'images/logo-type-right-light.svg';
-import ClickOutside from '../dim-ui/ClickOutside';
-import Refresh from './refresh';
-import WhatsNewLink from '../whats-new/WhatsNewLink';
-import MenuBadge from './MenuBadge';
-import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
-import { default as SearchFilter } from '../search/SearchFilter';
-import { installPrompt$ } from './app-install';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/reducers';
-import { currentAccountSelector } from 'app/accounts/reducer';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
-import ReactDOM from 'react-dom';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import { Link, NavLink } from 'react-router-dom';
-import _ from 'lodash';
-import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
+import { Hotkey } from 'app/hotkeys/hotkeys';
+import { useHotkeys } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
-import { useLocation, useHistory } from 'react-router';
-import styles from './Header.m.scss';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
+import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import clsx from 'clsx';
+import logo from 'images/logo-type-right-light.svg';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import vendorEngramSvg from '../../images/engram.svg';
+import { DestinyAccount } from '../accounts/destiny-account';
+import ClickOutside from '../dim-ui/ClickOutside';
+import ExternalLink from '../dim-ui/ExternalLink';
+import { default as SearchFilter } from '../search/SearchFilter';
+import WhatsNewLink from '../whats-new/WhatsNewLink';
+import { setSearchQuery } from './actions';
+import { installPrompt$ } from './app-install';
+import styles from './Header.m.scss';
+import './header.scss';
+import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import MenuBadge from './MenuBadge';
+import Refresh from './refresh';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -54,10 +56,10 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLAnchorElement>(null);
-  const toggleDropdown = (e) => {
+  const toggleDropdown = useCallback((e) => {
     e.preventDefault();
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
-  };
+  }, []);
 
   const hideDropdown = (event) => {
     if (!dropdownToggler.current || !dropdownToggler.current.contains(event.target)) {
@@ -68,11 +70,11 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   // Mobile search bar
   const [showSearch, setShowSearch] = useState(false);
   const toggleSearch = () => setShowSearch((showSearch) => !showSearch);
-  const hideSearch = () => {
+  const hideSearch = useCallback(() => {
     if (showSearch) {
       setShowSearch(false);
     }
-  };
+  }, [showSearch]);
 
   // Install DIM as a PWA
   const [promptIosPwa, setPromptIosPwa] = useState(false);
@@ -98,10 +100,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     }
   };
 
+  const destinyVersion = account?.destinyVersion;
+
   // Poll for vendor engrams
   const engramRefreshTimer = useRef<number>();
   useEffect(() => {
-    if ($featureFlags.vendorEngrams && account?.destinyVersion == 2) {
+    if ($featureFlags.vendorEngrams && destinyVersion == 2) {
       setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
       return () => {
         if (engramRefreshTimer.current) {
@@ -112,7 +116,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     } else {
       return;
     }
-  }, [account?.destinyVersion, dispatch]);
+  }, [destinyVersion, dispatch]);
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);
@@ -121,14 +125,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   const { pathname } = useLocation();
   useEffect(() => {
     setDropdownOpen(false);
-    if (searchFilter.current) {
-      searchFilter.current.clearFilter();
-    }
-  }, [pathname]);
+    dispatch(setSearchQuery(''));
+  }, [dispatch, pathname]);
 
   // Focus search when shown
   useEffect(() => {
-    if (searchFilter.current) {
+    if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
   }, [showSearch]);
@@ -227,7 +229,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   const destinyLinks = <>{linkNodes}</>;
   const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
-  const hotkeys = [
+  const hotkeys: Hotkey[] = [
     {
       combo: 'm',
       description: t('Hotkey.Menu'),
@@ -243,7 +245,37 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
           }
       )
     ),
+    {
+      combo: 'f',
+      description: t('Hotkey.StartSearch'),
+      callback: (event) => {
+        if (searchFilter.current) {
+          searchFilter.current.focusFilterInput();
+          if (isPhonePortrait) {
+            setShowSearch(true);
+          }
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    },
+    {
+      combo: 'shift+f',
+      description: t('Hotkey.StartSearchClear'),
+      callback: (event) => {
+        if (searchFilter.current) {
+          searchFilter.current.clearFilter();
+          searchFilter.current.focusFilterInput();
+          if (isPhonePortrait) {
+            setShowSearch(true);
+          }
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    },
   ];
+  useHotkeys(hotkeys);
 
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
@@ -252,20 +284,18 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
 
   return (
     <header id="header" className={showSearch ? 'search-expanded' : ''}>
-      <GlobalHotkeys hotkeys={hotkeys}>
-        <a
-          className="menu link menuItem"
-          ref={dropdownToggler}
-          onClick={toggleDropdown}
-          role="button"
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
-        >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </a>
-      </GlobalHotkeys>
+      <a
+        className="menu link menuItem"
+        ref={dropdownToggler}
+        onClick={toggleDropdown}
+        role="button"
+        aria-haspopup="menu"
+        aria-label={t('Header.Menu')}
+        aria-expanded={dropdownOpen}
+      >
+        <AppIcon icon={menuIcon} />
+        <MenuBadge />
+      </a>
       <TransitionGroup component={null}>
         {dropdownOpen && (
           <CSSTransition
@@ -313,9 +343,9 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       </Link>
       <div className="header-links">{reverseDestinyLinks}</div>
       <div className="header-right">
-        {account && (
-          <span className={clsx('search-link menuItem', { show: showSearch })}>
-            <SearchFilter onClear={hideSearch} ref={searchFilter} mobile={showSearch} />
+        {account && (!isPhonePortrait || showSearch) && (
+          <span className={clsx('search-link menuItem')}>
+            <SearchFilter onClear={hideSearch} ref={searchFilter} />
           </span>
         )}
         <Refresh />

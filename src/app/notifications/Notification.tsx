@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Notify } from './notifications';
 import clsx from 'clsx';
-import './Notification.scss';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
+import './Notification.scss';
+import { Notify } from './notifications';
 
 interface Props {
   notification: Notify;

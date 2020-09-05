@@ -1,16 +1,15 @@
-import React from 'react';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { LockedItemType, BurnItem } from '../types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import React from 'react';
 import {
   SelectableBurn,
-  SelectablePerk,
   SelectableMod,
+  SelectablePerk,
 } from '../locked-armor/SelectableBungieImage';
-import styles from './PerksForBucket.m.scss';
-import { DimItem } from 'app/inventory/item-types';
+import { BurnItem, LockedItemType } from '../types';
 import { getFilteredPerksAndPlugSets } from '../utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import styles from './PerksForBucket.m.scss';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
@@ -27,9 +26,9 @@ export default function PerksForBucket({
 }: {
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
-  perks: readonly DestinyInventoryItemDefinition[];
+  perks: readonly PluggableInventoryItemDefinition[];
   mods: readonly {
-    item: DestinyInventoryItemDefinition;
+    item: PluggableInventoryItemDefinition;
     // plugSet this mod appears in
     plugSetHash: number;
   }[];

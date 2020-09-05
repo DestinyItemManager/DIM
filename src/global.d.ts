@@ -34,8 +34,18 @@ declare const $featureFlags: {
   armor2ModPicker: boolean;
   /** Show a banner for supporting a charitable cause */
   issueBanner: boolean;
-  // Show the triage tab in the item popup
+  /** Show the triage tab in the item popup */
   triage: boolean;
+  /** Enable detached stats from sticky header on mobile */
+  unstickyStats: boolean;
+  /** Enable new mobile inspect view when dragging an item */
+  mobileInspect: boolean;
+  /** Move subclass out of weapons */
+  newArrangement: boolean;
+  /** New background */
+  gradientBackground: boolean;
+  /** Use mobile category strip on inventory page */
+  mobileCategoryStrip: boolean;
 };
 
 declare namespace React {

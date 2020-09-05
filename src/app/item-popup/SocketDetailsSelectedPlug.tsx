@@ -1,15 +1,19 @@
-import React from 'react';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2Item, DimPlug, DimStat } from 'app/inventory/item-types';
-import _ from 'lodash';
-import { interpolateStatValue } from 'app/inventory/store/stats';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { StatValue } from './PlugTooltip';
-import ItemStats from './ItemStats';
-import styles from './SocketDetailsSelectedPlug.m.scss';
-import { SocketDetailsMod } from './SocketDetails';
+import {
+  D2Item,
+  DimPlug,
+  DimStat,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
+import { interpolateStatValue } from 'app/inventory/store/stats';
 import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import ItemStats from './ItemStats';
+import { StatValue } from './PlugTooltip';
+import { SocketDetailsMod } from './SocketDetails';
+import styles from './SocketDetailsSelectedPlug.m.scss';
 
 const costStatHashes = [
   StatHashes.AnyEnergyTypeCost,
@@ -24,7 +28,7 @@ export default function SocketDetailsSelectedPlug({
   item,
   currentPlug,
 }: {
-  plug: DestinyInventoryItemDefinition;
+  plug: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   item: D2Item;
   currentPlug: DimPlug | null;
@@ -50,7 +54,7 @@ export default function SocketDetailsSelectedPlug({
         return null;
       }
       const statGroupDef = defs.StatGroup.get(
-        defs.InventoryItem.get(item.hash).stats.statGroupHash!
+        defs.InventoryItem.get(item.hash).stats!.statGroupHash!
       );
 
       const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);

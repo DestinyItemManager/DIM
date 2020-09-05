@@ -1,8 +1,8 @@
-import { VendorDrop, VendorDropType, VendorDropXyz, toVendorDrop } from './vendorDrops';
 import { t } from 'app/i18next-t';
-import { ThunkResult } from 'app/store/reducers';
+import { ThunkResult } from 'app/store/types';
 import { loadVendorDrops } from './actions';
 import { VendorDropsState } from './reducer';
+import { toVendorDrop, VendorDrop, VendorDropType, VendorDropXyz } from './vendorDrops';
 
 export function isDroppingHigh(vendorDrop: VendorDrop): boolean {
   return vendorDrop.drop === VendorDropType.DroppingHigh && vendorDrop.display;

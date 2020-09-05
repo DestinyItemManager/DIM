@@ -1,33 +1,34 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { DimSocket, D2Item } from 'app/inventory/item-types';
-import Sheet from 'app/dim-ui/Sheet';
+import { getModCostInfo } from 'app/collections/Mod';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import Sheet from 'app/dim-ui/Sheet';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { D2Item, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptySet } from 'app/utils/empty';
 import {
-  SocketPlugSources,
-  TierType,
-  DestinyInventoryItemDefinition,
   DestinyEnergyType,
+  DestinyInventoryItemDefinition,
   DestinyItemPlug,
   DestinyItemPlugBase,
+  SocketPlugSources,
+  TierType,
 } from 'bungie-api-ts/destiny2';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/reducers';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { connect } from 'react-redux';
 import clsx from 'clsx';
-import styles from './SocketDetails.m.scss';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
+import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import _ from 'lodash';
+import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
-import { emptySet } from 'app/utils/empty';
-import { getModCostInfo } from 'app/collections/Mod';
 
 interface ProvidedProps {
   item: D2Item;
   socket: DimSocket;
+  initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;
 }
 
@@ -109,9 +110,19 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 
-function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
-  const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
-    socket.plug?.plugItem || null
+function SocketDetails({
+  defs,
+  item,
+  socket,
+  initialSelectedPlug,
+  unlockedPlugs,
+  inventoryPlugs,
+  onClose,
+}: Props) {
+  const initialPlug =
+    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plugged?.plugDef;
+  const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
+    initialPlug || null
   );
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -153,34 +164,36 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   const energyTypeHash = item.energy?.energyTypeHash;
   const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
 
-  let mods = Array.from(modHashes)
-    .map((h) => defs.InventoryItem.get(h))
+  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
-        i.inventory.tierType !== TierType.Common &&
+        i.inventory!.tierType !== TierType.Common &&
         (!i.plug ||
           !i.plug.energyCost ||
           (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
           i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
+    .filter(isPluggableItem)
     .sort(
       chainComparator(
         reverseComparator(
           compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
         ),
         compareBy((i) => i.plug?.energyCost?.energyCost),
-        compareBy((i) => -i.inventory.tierType),
+        compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
       )
     );
 
-  if (socket.plug?.plugItem) {
-    mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
-    mods.unshift(socket.plug.plugItem);
+  if (initialPlug) {
+    mods = mods.filter((m) => m.hash !== initialPlug.hash);
+    mods.unshift(initialPlug);
   }
 
   const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
-  const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+  const initialItem =
+    socket.socketDefinition.singleInitialItemHash &&
+    defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>
       {initialItem && (
@@ -207,12 +220,12 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     }
   }, []);
 
-  const footer = selectedPlug && (
+  const footer = selectedPlug && isPluggableItem(selectedPlug) && (
     <SocketDetailsSelectedPlug
       plug={selectedPlug}
       defs={defs}
       item={item}
-      currentPlug={socket.plug}
+      currentPlug={socket.plugged}
     />
   );
 
@@ -252,10 +265,10 @@ export const SocketDetailsMod = React.memo(
     className,
     onClick,
   }: {
-    itemDef: DestinyInventoryItemDefinition;
+    itemDef: PluggableInventoryItemDefinition;
     defs: D2ManifestDefinitions;
     className?: string;
-    onClick?(mod: DestinyInventoryItemDefinition): void;
+    onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
     const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
 
@@ -263,6 +276,7 @@ export const SocketDetailsMod = React.memo(
 
     return (
       <div
+        role="button"
         className={clsx('item', className)}
         title={itemDef.displayProperties.name}
         onClick={onClickFn}

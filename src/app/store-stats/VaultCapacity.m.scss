@@ -1,0 +1,21 @@
+.bucketTag {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  img {
+    height: 14px;
+    width: 14px;
+    filter: invert(1);
+    opacity: 0.5;
+  }
+}
+
+.full {
+  color: #e12929;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}

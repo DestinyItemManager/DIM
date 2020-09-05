@@ -1,15 +1,15 @@
-import { t } from 'app/i18next-t';
-import React from 'react';
-import './ItemSockets.scss';
-import Objective from '../progress/Objective';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimPlug } from '../inventory/item-types';
-import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { t } from 'app/i18next-t';
+import { statAllowList } from 'app/inventory/store/stats';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
-import { statAllowList } from 'app/inventory/store/stats';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { D2Item, DimPlug } from '../inventory/item-types';
+import Objective from '../progress/Objective';
+import BestRatedIcon from './BestRatedIcon';
+import './ItemSockets.scss';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -30,21 +30,21 @@ export default function PlugTooltip({
 
   const sourceString =
     defs &&
-    plug.plugItem.collectibleHash &&
-    defs.Collectible.get(plug.plugItem.collectibleHash).sourceString;
+    plug.plugDef.collectibleHash &&
+    defs.Collectible.get(plug.plugDef.collectibleHash).sourceString;
 
   return (
     <>
-      <h2>{plug.plugItem.displayProperties.name}</h2>
+      <h2>{plug.plugDef.displayProperties.name}</h2>
 
-      {plug.plugItem.displayProperties.description ? (
+      {plug.plugDef.displayProperties.description ? (
         <div>
-          <RichDestinyText text={plug.plugItem.displayProperties.description} defs={defs} />
+          <RichDestinyText text={plug.plugDef.displayProperties.description} defs={defs} />
         </div>
       ) : (
         plug.perks.map((perk) => (
           <div key={perk.hash}>
-            {plug.plugItem.displayProperties.name !== perk.displayProperties.name && (
+            {plug.plugDef.displayProperties.name !== perk.displayProperties.name && (
               <div>{perk.displayProperties.name}</div>
             )}
             <div>
@@ -54,7 +54,7 @@ export default function PlugTooltip({
         ))
       )}
       {sourceString && <div className="plug-source">{sourceString}</div>}
-      {defs && Boolean(plug?.plugItem?.investmentStats?.length) && (
+      {defs && Boolean(plug?.plugDef?.investmentStats?.length) && (
         <div className="plug-stats">
           {plug.stats &&
             _.sortBy(Object.keys(plug.stats), (h) =>
@@ -78,14 +78,14 @@ export default function PlugTooltip({
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
 
-      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks?.has(plug.plugItem.hash) && (
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks?.has(plug.plugDef.hash) && (
         <>
           <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('DtrReview.BestRatedTip')}
         </>
       )}
       {wishListsEnabled &&
         inventoryWishListRoll &&
-        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
+        inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
           <>
             <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('WishListRoll.BestRatedTip')}
           </>

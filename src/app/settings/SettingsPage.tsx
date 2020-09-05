@@ -1,46 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { t } from 'app/i18next-t';
-import i18next from 'i18next';
-import { setSetting, setCharacterOrder } from './actions';
-import { RootState, ThunkDispatchProp } from '../store/reducers';
-import InventoryItem from '../inventory/InventoryItem';
-import SortOrderEditor, { SortProperty } from './SortOrderEditor';
-import CharacterOrderEditor from './CharacterOrderEditor';
-import { connect } from 'react-redux';
-import exampleWeaponImage from 'images/example-weapon.jpg';
-import exampleArmorImage from 'images/example-armor.jpg';
-import './settings.scss';
-import { DimItem } from '../inventory/item-types';
-import _ from 'lodash';
-import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
-import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { D2StoresService } from '../inventory/d2-stores';
-import { D1StoresService } from '../inventory/d1-stores';
-import Checkbox from './Checkbox';
-import Select, { mapToOptions, listToOptions } from './Select';
-import { getPlatforms, getActivePlatform } from '../accounts/platforms';
-import { itemSortOrder } from './item-sort';
-import { Settings } from './initial-settings';
-import { settingsSelector } from './reducer';
-import { AppIcon, refreshIcon } from '../shell/icons';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import RatingsKey from '../item-review/RatingsKey';
-import { getDefinitions } from '../destiny2/d2-definitions';
-import { reviewModesSelector } from '../item-review/reducer';
-import WishListSettings from 'app/settings/WishListSettings';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
 import { itemTagList } from 'app/inventory/dim-item-info';
-import Spreadsheets from './Spreadsheets';
-import DimApiSettings from 'app/storage/DimApiSettings';
+import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { clearRatings } from 'app/item-review/actions';
 import { fetchRatings } from 'app/item-review/destiny-tracker.service';
+import WishListSettings from 'app/settings/WishListSettings';
+import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
+import DimApiSettings from 'app/storage/DimApiSettings';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { storesLoadedSelector, sortedStoresSelector } from 'app/inventory/selectors';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { dimHunterIcon, dimWarlockIcon, dimTitanIcon } from 'app/shell/icons/custom';
-import { DimStore } from 'app/inventory/store-types';
+import i18next from 'i18next';
+import exampleArmorImage from 'images/example-armor.jpg';
+import exampleWeaponImage from 'images/example-weapon.jpg';
+import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { getActivePlatform } from '../accounts/get-active-platform';
+import { getPlatforms } from '../accounts/platforms';
+import { getDefinitions } from '../destiny2/d2-definitions';
+import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
+import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { D1StoresService } from '../inventory/d1-stores';
+import { D2StoresService } from '../inventory/d2-stores';
+import InventoryItem from '../inventory/InventoryItem';
+import { DimItem } from '../inventory/item-types';
+import RatingsKey from '../item-review/RatingsKey';
+import { reviewModesSelector } from '../item-review/reducer';
+import { AppIcon, refreshIcon } from '../shell/icons';
+import { setCharacterOrder, setSetting } from './actions';
+import CharacterOrderEditor from './CharacterOrderEditor';
+import Checkbox from './Checkbox';
+import { Settings } from './initial-settings';
+import { itemSortOrder } from './item-sort';
+import { settingsSelector } from './reducer';
+import Select, { listToOptions, mapToOptions } from './Select';
+import './settings.scss';
+import SortOrderEditor, { SortProperty } from './SortOrderEditor';
+import Spreadsheets from './Spreadsheets';
 
 const classIcons = {
   [DestinyClass.Hunter]: dimHunterIcon,
@@ -162,7 +163,7 @@ function SettingsPage({
   dispatch,
 }: Props) {
   useEffect(() => {
-    getDefinitions();
+    dispatch(getDefinitions());
     dispatch(getPlatforms()).then(() => {
       const account = getActivePlatform();
       if (account) {
@@ -249,7 +250,7 @@ function SettingsPage({
     // archetype: 'Archetype'
   };
 
-  const charColOptions = _.range(3, 6).map((num) => ({
+  const charColOptions = _.range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
@@ -320,7 +321,7 @@ function SettingsPage({
               />
               {languageChanged && (
                 <div>
-                  <button className="dim-button" onClick={reloadDim}>
+                  <button type="button" className="dim-button" onClick={reloadDim}>
                     <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
                   </button>
                 </div>
@@ -360,7 +361,7 @@ function SettingsPage({
                     onChange={onChange}
                   />
                   {Math.max(48, settings.itemSize)}px
-                  <button className="dim-button" onClick={resetItemSize}>
+                  <button type="button" className="dim-button" onClick={resetItemSize}>
                     {t('Settings.ResetToDefault')}
                   </button>
                 </div>

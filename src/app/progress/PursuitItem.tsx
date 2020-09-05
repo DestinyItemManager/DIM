@@ -1,17 +1,17 @@
-import React, { forwardRef } from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import clsx from 'clsx';
-import { percent } from 'app/shell/filters';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import styles from './PursuitItem.m.scss';
+import { DimItem } from 'app/inventory/item-types';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { percent } from 'app/shell/filters';
+import { count } from 'app/utils/util';
+import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
+import React, { forwardRef } from 'react';
 import { showPursuitAsExpired } from './Pursuit';
-import { count } from 'app/utils/util';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import styles from './PursuitItem.m.scss';
 
 function PursuitItem(
   { item, isNew, defs }: { item: DimItem; isNew: boolean; defs: D2ManifestDefinitions },

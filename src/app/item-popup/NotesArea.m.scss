@@ -1,0 +1,36 @@
+@import '../variables.scss';
+
+.openNotesEditor {
+  // wraps all the content that clicks open the notes editor
+  cursor: pointer;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  &:hover {
+    color: $orange;
+  }
+  &.noNotesYet {
+    // if there's no existing notes, don't span the entire
+    // width of parent with an invisible "add notes" hitbox
+    display: inline-block;
+  }
+}
+.notesLabel,
+.addNotesLabel {
+  font-weight: bold;
+}
+.minimal {
+  // a notes-focused mode where we just show the notes, the pencil, and a prompt if there's no notes
+  .notesLabel {
+    display: none;
+  }
+  .addNotesLabel {
+    opacity: 0.4;
+  }
+  .editIcon {
+    opacity: 0.4;
+  }
+  textarea {
+    background-color: #eee1;
+    height: 55px;
+  }
+}

@@ -1,19 +1,19 @@
-import { DimStore } from './store-types';
-import { DimItem } from './item-types';
-import { queuedAction } from './action-queue';
-import { reportException } from '../utils/exceptions';
-import { dimItemService } from './item-move-service';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { loadingTracker } from '../shell/loading-tracker';
-import { showNotification } from '../notifications/notifications';
-import { Subject } from 'rxjs';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { moveItemNotification } from './MoveNotifications';
-import { getStore } from './stores-helpers';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { Subject } from 'rxjs';
+import { DimError } from '../bungie-api/bungie-service-helper';
+import { showNotification } from '../notifications/notifications';
+import { loadingTracker } from '../shell/loading-tracker';
 import rxStore from '../store/store';
+import { reportException } from '../utils/exceptions';
+import { queuedAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
+import { dimItemService } from './item-move-service';
+import { DimItem } from './item-types';
+import { moveItemNotification } from './MoveNotifications';
+import { DimStore } from './store-types';
+import { getStore } from './stores-helpers';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;

@@ -1,0 +1,104 @@
+@import '../variables.scss';
+
+$animationSpeed: 150ms;
+
+@keyframes zoom {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.sheetBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background-color: #333333;
+  z-index: 13;
+}
+
+.inspectActive {
+  opacity: 0.8;
+  transition: opacity $animationSpeed;
+}
+
+.mobileInspectSheet {
+  width: 100%;
+  position: fixed;
+  top: 25%;
+  backface-visibility: hidden;
+  z-index: 13;
+}
+
+.mobileInspectSheet {
+  animation: zoom $animationSpeed;
+}
+
+.container {
+  box-shadow: 0 0 3px 0px black;
+  margin: 20px;
+  padding: 20px;
+  background-color: black;
+  border-radius: 3px;
+  border-top: 5px solid rgba(255, 255, 255, 0.5);
+}
+
+.headerInfo,
+.inspectRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  :global(.item-socket-category) {
+    margin: 0;
+    margin-bottom: 10px;
+    margin-right: 4px;
+  }
+
+  :global(.item-socket-category-Reusable) {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  :global(.item-details) {
+    margin: 10px 0;
+  }
+
+  :global(.item-socket-category-Reusable .item-socket) {
+    margin-right: 0;
+    border: none;
+  }
+}
+
+.locations {
+  flex-direction: column;
+  padding: 10px;
+}
+
+.itemImg {
+  height: 30px;
+  min-width: 30px;
+  margin-right: 10px;
+}

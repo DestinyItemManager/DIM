@@ -1,7 +1,11 @@
-.inlineBreakerSvg {
+.inlineSvg {
   /* destiny-icons repo is a fickle thing */
-  height: 1.2em;
-  width: 1.2em;
+  height: 1.3em;
+  width: auto;
   vertical-align: middle;
   filter: invert(1);
+  margin: 0 0.25em;
+  &:first-child {
+    margin-left: 0;
+  }
 }

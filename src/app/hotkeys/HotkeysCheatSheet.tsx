@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-
-import './HotkeysCheatSheet.scss';
 import { t } from 'app/i18next-t';
-import hotkeys from './hotkeys';
 import _ from 'lodash';
+import React, { useState } from 'react';
 import GlobalHotkeys from './GlobalHotkeys';
+import hotkeys from './hotkeys';
+import './HotkeysCheatSheet.scss';
+import { useHotkey } from './useHotkey';
 
 export default function HotkeysCheatSheet() {
   const [visible, setVisible] = useState(false);
@@ -13,27 +13,16 @@ export default function HotkeysCheatSheet() {
 
   const hide = () => setVisible(false);
 
-  const global = (
-    <GlobalHotkeys
-      hotkeys={[
-        {
-          combo: '?',
-          description: t('Hotkey.ShowHotkeys'),
-          callback: toggle,
-        },
-      ]}
-    />
-  );
+  useHotkey('?', t('Hotkey.ShowHotkeys'), toggle);
 
   if (!visible) {
-    return global;
+    return null;
   }
 
   const appKeyMap = hotkeys.getAllHotkeys();
 
   return (
     <div className="cfp-hotkeys-container" onClick={hide}>
-      {global}
       <GlobalHotkeys
         hotkeys={[
           {
@@ -46,9 +35,8 @@ export default function HotkeysCheatSheet() {
       <div className="cfp-hotkeys">
         <h4 className="cfp-hotkeys-title">{t('Hotkey.CheatSheetTitle')}</h4>
         <div className="cfp-hotkeys-list">
-          {_.map(
-            appKeyMap,
-            (description, combo) =>
+          {_.sortBy(Object.entries(appKeyMap), ([combo]) => combo).map(
+            ([combo, description]) =>
               description.length > 0 && (
                 <React.Fragment key={combo}>
                   <div className="cfp-hotkeys-keys">

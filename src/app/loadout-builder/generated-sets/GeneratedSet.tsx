@@ -1,16 +1,14 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { Loadout } from 'app/loadout/loadout-types';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { assignModsToArmorSet } from '../mod-utils';
+import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
+import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import _ from 'lodash';
-import { getNumValidSets } from './utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './GeneratedSet.m.scss';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
-import { Loadout } from 'app/loadout/loadout-types';
-import { assignModsToArmorSet } from '../mod-utils';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import SetStats from './SetStats';
 
 interface Props {
@@ -47,38 +45,35 @@ function GeneratedSet({
     editLoadout(loadout, { showClass: false });
   };
 
-  const numSets = _.sumBy(set.sets, (setSlice) => getNumValidSets(setSlice.armor));
-  if (!numSets) {
+  if (set.armor.some((items) => !items.length)) {
     console.error('No valid sets!');
     return null;
   }
 
   const assignedMods = $featureFlags.armor2ModPicker
-    ? assignModsToArmorSet(set.firstValidSet, lockedArmor2Mods)
+    ? assignModsToArmorSet(
+        set.armor.map((items) => items[0]),
+        lockedArmor2Mods
+      )
     : {};
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <SetStats defs={defs} set={set} statOrder={statOrder} enabledStats={enabledStats} />
-        <GeneratedSetButtons
-          numSets={numSets}
-          set={set}
-          store={selectedStore!}
-          onLoadoutSet={setCreateLoadout}
-        />
+        <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
       </div>
       <div className={styles.items}>
-        {set.firstValidSet.map((item, index) => (
+        {set.armor.map((items, index) => (
           <GeneratedSetItem
-            key={item.index}
-            item={item}
+            key={items[0].index}
+            item={items[0]}
             defs={defs}
-            itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
-            locked={lockedMap[item.bucket.hash]}
+            itemOptions={items}
+            locked={lockedMap[items[0].bucket.hash]}
             lbDispatch={lbDispatch}
-            statValues={set.firstValidSetStatChoices[index]}
-            lockedMods={assignedMods[item.id]}
+            statValues={set.statChoices[index]}
+            lockedMods={assignedMods[items[0].id]}
             statOrder={statOrder}
           />
         ))}

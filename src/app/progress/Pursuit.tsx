@@ -1,18 +1,18 @@
-import React from 'react';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import ItemExpiration from 'app/item-popup/ItemExpiration';
-import PursuitItem from './PursuitItem';
-import { percent } from 'app/shell/filters';
-import { RootState } from 'app/store/reducers';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { connect } from 'react-redux';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
-import { ObjectiveValue } from './Objective';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
+import ItemExpiration from 'app/item-popup/ItemExpiration';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { settingsSelector } from 'app/settings/reducer';
+import { percent } from 'app/shell/filters';
+import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import { ObjectiveValue } from './Objective';
+import PursuitItem from './PursuitItem';
 
 // Props provided from parents
 interface ProvidedProps {

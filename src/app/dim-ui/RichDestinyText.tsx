@@ -1,54 +1,50 @@
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import React from 'react';
-import _ from 'lodash';
-import styles from './RichDestinyText.m.scss';
-
+import rT from 'data/d2/objective-richTexts.ts';
+import overload from 'destiny-icons/breakers/overload.svg';
+import pierce from 'destiny-icons/breakers/pierce.svg';
+import stagger from 'destiny-icons/breakers/stagger.svg';
+import questMarker from 'destiny-icons/explore/quest.svg';
+import lrgBlocker from 'destiny-icons/gambit/blocker_large.svg';
+import medBlocker from 'destiny-icons/gambit/blocker_medium.svg';
+import smlBlocker from 'destiny-icons/gambit/blocker_small.svg';
+import superAHunter from 'destiny-icons/supers/arc_hunter.svg';
+import superATitan from 'destiny-icons/supers/arc_titan.svg';
+import superSHunter from 'destiny-icons/supers/solar_hunter.svg';
+import superSTitan from 'destiny-icons/supers/solar_titan.svg';
+// import superAWarlock from 'destiny-icons/supers/arc_warlock.svg';
+import superSWarlock from 'destiny-icons/supers/solar_warlock.svg';
+import superVHunter from 'destiny-icons/supers/void_hunter.svg';
+import superVTitan from 'destiny-icons/supers/void_titan.svg';
+import superVWarlock from 'destiny-icons/supers/void_warlock.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
+import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgArc from 'destiny-icons/weapons/damage_arc.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import dmgSolar from 'destiny-icons/weapons/damage_solar.svg';
 import dmgVoid from 'destiny-icons/weapons/damage_void.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
-import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
-import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
 import grenade from 'destiny-icons/weapons/grenade.svg';
+import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
+import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
-import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
-import lrgBlocker from 'destiny-icons/gambit/blocker_large.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
-import medBlocker from 'destiny-icons/gambit/blocker_medium.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
-import overload from 'destiny-icons/breakers/overload.svg';
-import pierce from 'destiny-icons/breakers/pierce.svg';
 import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg';
-import questMarker from 'destiny-icons/explore/quest.svg';
 import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg';
-import rT from 'data/d2/objective-richTexts.ts';
-import scorchCannon from 'destiny-icons/weapons/spear_launcher.svg';
 import scoutRifle from 'destiny-icons/weapons/scout_rifle.svg';
 import shotgun from 'destiny-icons/weapons/shotgun.svg';
 import sidearm from 'destiny-icons/weapons/sidearm.svg';
 import smg from 'destiny-icons/weapons/smg.svg';
-import smlBlocker from 'destiny-icons/gambit/blocker_small.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
-import stagger from 'destiny-icons/breakers/stagger.svg';
+import scorchCannon from 'destiny-icons/weapons/spear_launcher.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
-import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
-
-import superVTitan from 'destiny-icons/supers/void_titan.svg';
-import superATitan from 'destiny-icons/supers/arc_titan.svg';
-import superSTitan from 'destiny-icons/supers/solar_titan.svg';
-
-import superVHunter from 'destiny-icons/supers/void_hunter.svg';
-import superAHunter from 'destiny-icons/supers/arc_hunter.svg';
-import superSHunter from 'destiny-icons/supers/solar_hunter.svg';
-
-import superVWarlock from 'destiny-icons/supers/void_warlock.svg';
-// import superAWarlock from 'destiny-icons/supers/arc_warlock.svg';
-import superSWarlock from 'destiny-icons/supers/solar_warlock.svg';
+import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
+import _ from 'lodash';
+import React from 'react';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import styles from './RichDestinyText.m.scss';
 
 // matches a bracketed thing in the string, or certain private unicode characters
 const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
@@ -152,7 +148,7 @@ const replaceWithIcon = (textSegment: string) => {
     (replacement && (
       <img
         src={replacement.icon}
-        className={replacement.objectiveHash?.[0] === 'SandboxPerk' ? styles.inlineBreakerSvg : ''}
+        className={styles.inlineSvg}
         title={textSegment}
         key={textSegment}
       />

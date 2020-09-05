@@ -1,22 +1,22 @@
-import React from 'react';
-import { DimStat, DimItem, D1Stat, D1Item, DimSocket } from 'app/inventory/item-types';
-import { statsMs, armorStats } from 'app/inventory/store/stats';
-import RecoilStat from './RecoilStat';
-import { percent, getColor } from 'app/shell/filters';
-import clsx from 'clsx';
 import BungieImage from 'app/dim-ui/BungieImage';
-import _ from 'lodash';
-import { t } from 'app/i18next-t';
-import styles from './ItemStat.m.scss';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getSocketsWithStyle } from '../utils/socket-utils';
-import PressTip from 'app/dim-ui/PressTip';
-import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import { TOTAL_STAT_HASH, CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
+import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
+import { armorStats, statsMs } from 'app/inventory/store/stats';
+import { CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { getColor, percent } from 'app/shell/filters';
+import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import { getSocketsWithStyle } from '../utils/socket-utils';
+import styles from './ItemStat.m.scss';
+import RecoilStat from './RecoilStat';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -50,7 +50,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  const baseBar = item ? Math.min(stat.base, stat.value) : stat.value;
+  const baseBar = item?.bucket.inArmor ? Math.min(stat.base, stat.value) : stat.value;
 
   const segments: [number, string?][] = [[baseBar]];
 
@@ -218,12 +218,10 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
   };
 
   return (
-    <>
-      <div className={clsx(styles.value, optionalClasses)}>
-        {stat.value}
-        {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
-      </div>
-    </>
+    <div className={clsx(styles.value, optionalClasses)}>
+      {stat.value}
+      {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
+    </div>
   );
 }
 
@@ -259,10 +257,11 @@ function getNonReuseableModSockets(item: DimItem) {
     return [];
   }
 
-  return item.sockets.sockets.filter(
+  return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
-      _.intersection(s?.plug?.plugItem?.itemCategoryHashes || [], modItemCategoryHashes).length > 0
+      _.intersection(s?.plugged?.plugDef?.itemCategoryHashes || [], modItemCategoryHashes).length >
+        0
   );
 }
 
@@ -272,10 +271,10 @@ function getNonReuseableModSockets(item: DimItem) {
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter(
-    (socket) => socket.plug!.stats && String(stat.statHash) in socket.plug!.stats
+    (socket) => socket.plugged!.stats && String(stat.statHash) in socket.plugged!.stats
   );
 
-  return _.sumBy(modSockets, (socket) => socket.plug!.stats![stat.statHash]);
+  return _.sumBy(modSockets, (socket) => socket.plugged!.stats![stat.statHash]);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
@@ -287,8 +286,8 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) =>
-    socket.plug?.stats
-      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plug!.stats![armorStatHash] || 0)
+    socket.plugged?.stats
+      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plugged!.stats![armorStatHash] || 0)
       : 0
   );
 }

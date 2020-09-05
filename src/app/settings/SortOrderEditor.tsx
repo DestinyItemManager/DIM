@@ -1,15 +1,15 @@
-import React from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import clsx from 'clsx';
-import './SortOrderEditor.scss';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
-  reorderIcon,
   AppIcon,
   enabledIcon,
-  moveUpIcon,
   moveDownIcon,
+  moveUpIcon,
+  reorderIcon,
   unselectedCheckIcon,
 } from '../shell/icons';
+import './SortOrderEditor.scss';
 
 export interface SortProperty {
   readonly id: string;
@@ -111,17 +111,13 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
   return result;
 }
 
-class SortEditorItemList extends React.Component<{ order: SortProperty[] }, never> {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.order !== this.props.order;
-  }
-
-  render() {
-    return this.props.order.map((item, index) => (
+const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => (
+  <>
+    {order.map((item, index) => (
       <SortEditorItem key={item.id} item={item} index={index} />
-    ));
-  }
-}
+    ))}
+  </>
+));
 
 function SortEditorItem(props: { index: number; item: SortProperty }) {
   const { index, item } = props;

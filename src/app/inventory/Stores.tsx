@@ -1,24 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { DimStore, DimVault } from './store-types';
-import { InventoryBuckets } from './inventory-buckets';
+import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import './Stores.scss';
-import StoreHeading from './StoreHeading';
-import { RootState } from '../store/reducers';
+import StoreStats from 'app/store-stats/StoreStats';
+import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import React, { useEffect, useRef, useState } from 'react';
+import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import StoreHeading from '../character-tile/StoreHeading';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
-import { StoreBuckets } from './StoreBuckets';
-import D1ReputationSection from './D1ReputationSection';
-import Hammer from 'react-hammerjs';
-import { sortedStoresSelector } from './selectors';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
+import D1ReputationSection from './D1ReputationSection';
+import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
-import clsx from 'clsx';
-import CharacterStats from './CharacterStats';
-import VaultStats from './VaultStats';
-import { getCurrentStore, getVault, getStore } from './stores-helpers';
+import { bucketsSelector, sortedStoresSelector } from './selectors';
+import { DimStore, DimVault } from './store-types';
+import { StoreBuckets } from './StoreBuckets';
+import { getCurrentStore, getStore, getVault } from './stores-helpers';
+import './Stores.scss';
 
 interface StoreProps {
   stores: DimStore[];
@@ -29,7 +29,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: sortedStoresSelector(state),
-    buckets: state.inventory.buckets!,
+    buckets: bucketsSelector(state)!,
     isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
@@ -44,6 +44,9 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   const currentStore = getCurrentStore(stores)!;
 
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(
+    $featureFlags.mobileCategoryStrip ? 'Weapons' : undefined
+  );
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,6 +84,15 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
     }
   };
 
+  const handleCategoryChange = (category: string) => {
+    if (category === selectedCategoryId) {
+      // If user selects the category they are already on, scroll to top
+      scrollToPosition({ top: 0 });
+      return;
+    }
+    setSelectedCategoryId(category);
+  };
+
   if (isPhonePortrait) {
     return (
       <div
@@ -110,15 +122,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
                       onTapped={setSelectedStoreId}
                       loadoutMenuRef={detachedLoadoutMenu}
                     />
-                    {isVault(store) ? (
-                      <VaultStats store={store} />
-                    ) : (
-                      <CharacterStats
-                        destinyVersion={store.destinyVersion}
-                        stats={store.stats}
-                        storeId={store.id}
-                      />
-                    )}
+                    {!$featureFlags.unstickyStats && <StoreStats store={store} />}
                   </View>
                 ))}
               </Track>
@@ -130,14 +134,37 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
 
         <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
           <div>
+            {$featureFlags.unstickyStats && (
+              <StoreStats
+                store={selectedStore}
+                style={{ ...storeBackgroundColor(selectedStore, 0, true), paddingBottom: 8 }}
+              />
+            )}
             <StoresInventory
               stores={[selectedStore]}
+              selectedCategoryId={selectedCategoryId}
               vault={vault}
               currentStore={currentStore}
               buckets={buckets}
             />
           </div>
         </Hammer>
+
+        {$featureFlags.mobileCategoryStrip && (
+          <div className="category-options">
+            {Object.keys(buckets.byCategory)
+              .filter((category) => category !== 'Postmaster')
+              .map((category) => (
+                <div
+                  key={category}
+                  onClick={() => handleCategoryChange(category)}
+                  className={clsx({ selected: category === selectedCategoryId })}
+                >
+                  {t(`Bucket.${category}`)}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -156,15 +183,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             style={storeBackgroundColor(store, index)}
           >
             <StoreHeading store={store} />
-            {isVault(store) ? (
-              <VaultStats store={store} />
-            ) : (
-              <CharacterStats
-                destinyVersion={store.destinyVersion}
-                stats={store.stats}
-                storeId={store.id}
-              />
-            )}
+            <StoreStats store={store} />
           </div>
         ))}
       </ScrollClassDiv>
@@ -194,51 +213,85 @@ function categoryHasItems(
 
 export default connect<StoreProps>(mapStateToProps)(Stores);
 
-function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}
-
-function StoresInventory({
-  buckets,
-  stores,
-  currentStore,
-  vault,
-}: {
+interface InventoryContainerProps {
+  selectedCategoryId?: string;
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimVault;
-}) {
+}
+
+function CollapsibleContainer({
+  buckets,
+  category,
+  stores,
+  currentStore,
+  inventoryBucket,
+  vault,
+}: { category: string; inventoryBucket: InventoryBucket[] } & InventoryContainerProps) {
+  if (!categoryHasItems(buckets, category, stores, currentStore)) {
+    return null;
+  }
+
+  return (
+    <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
+      {/*
+          t('Bucket.Inventory')
+          t('Bucket.Postmaster')
+          t('Bucket.General')
+          t('Bucket.Progress')
+          t('Bucket.Unknown')
+        */}
+      {inventoryBucket.map((bucket) => (
+        <StoreBuckets
+          key={bucket.hash}
+          bucket={bucket}
+          stores={stores}
+          vault={vault}
+          currentStore={currentStore}
+        />
+      ))}
+    </InventoryCollapsibleTitle>
+  );
+}
+
+function StoresInventory(props: InventoryContainerProps) {
+  const { selectedCategoryId, buckets, stores, currentStore, vault } = props;
+
+  if (selectedCategoryId) {
+    return (
+      <>
+        {selectedCategoryId === 'Inventory' && (
+          <CollapsibleContainer
+            {...props}
+            buckets={buckets}
+            category={'Postmaster'}
+            inventoryBucket={buckets.byCategory['Postmaster']}
+          />
+        )}
+        {buckets.byCategory[selectedCategoryId].map((bucket) => (
+          <StoreBuckets
+            key={bucket.hash}
+            bucket={bucket}
+            stores={stores}
+            vault={vault}
+            currentStore={currentStore}
+          />
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
-      {Object.keys(buckets.byCategory).map(
-        (category) =>
-          categoryHasItems(buckets, category, stores, currentStore) && (
-            <InventoryCollapsibleTitle
-              key={category}
-              title={t(`Bucket.${category}`)}
-              sectionId={category}
-              stores={stores}
-            >
-              {/*
-                  t('Bucket.Inventory')
-                  t('Bucket.Postmaster')
-                  t('Bucket.General')
-                  t('Bucket.Progress')
-                  t('Bucket.Unknown')
-                */}
-              {buckets.byCategory[category].map((bucket) => (
-                <StoreBuckets
-                  key={bucket.hash}
-                  bucket={bucket}
-                  stores={stores}
-                  vault={vault}
-                  currentStore={currentStore}
-                />
-              ))}
-            </InventoryCollapsibleTitle>
-          )
-      )}
+      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
+        <CollapsibleContainer
+          key={category}
+          {...props}
+          category={category}
+          inventoryBucket={inventoryBucket}
+        />
+      ))}
       {stores[0].isDestiny1() && <D1ReputationSection stores={stores} />}
     </>
   );

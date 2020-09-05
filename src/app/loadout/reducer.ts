@@ -1,18 +1,18 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { currentAccountSelector } from '../accounts/reducer';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { RootState } from '../store/reducers';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
 import {
+  DestinyVersion,
   Loadout as DimApiLoadout,
   LoadoutItem as DimApiLoadoutItem,
-  DestinyVersion,
 } from '@destinyitemmanager/dim-api-types';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import _ from 'lodash';
+import { Reducer } from 'redux';
+import { createSelector } from 'reselect';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions';
+import { Loadout, LoadoutItem } from './loadout-types';
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(

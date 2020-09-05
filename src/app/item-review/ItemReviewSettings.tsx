@@ -1,12 +1,12 @@
-import React from 'react';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { AppIcon, helpIcon } from '../shell/icons';
 import { t } from 'app/i18next-t';
+import { ThunkDispatchProp } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import ExternalLink from '../dim-ui/ExternalLink';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
+import { AppIcon, helpIcon } from '../shell/icons';
 import { getItemReviews } from './destiny-tracker.service';
-import { connect } from 'react-redux';
-import { ThunkDispatchProp } from 'app/store/reducers';
 
 interface ProvidedProps {
   item: DimItem;

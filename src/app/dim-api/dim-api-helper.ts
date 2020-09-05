@@ -1,12 +1,11 @@
-import { HttpClientConfig } from 'bungie-api-ts/http';
-import { stringify } from 'simple-query-string';
-import {
-  getActiveToken as getBungieToken,
-  FatalTokenError,
-} from 'app/bungie-api/authenticated-fetch';
-import { dedupePromise } from 'app/utils/util';
-import store from 'app/store/store';
 import { needsDeveloper } from 'app/accounts/actions';
+import {
+  FatalTokenError,
+  getActiveToken as getBungieToken,
+} from 'app/bungie-api/authenticated-fetch';
+import store from 'app/store/store';
+import { dedupePromise } from 'app/utils/util';
+import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =
@@ -29,7 +28,7 @@ export async function unauthenticatedApi<T>(
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
   const headers = {};
@@ -72,7 +71,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
   const headers = {

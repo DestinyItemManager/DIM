@@ -1,12 +1,12 @@
-import { DestinyProgression } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { t } from 'app/i18next-t';
+import { DestinyProgression } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
-import './faction.scss';
 import './CrucibleRank.scss';
-import _ from 'lodash';
+import './faction.scss';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;

@@ -1,7 +1,10 @@
+import { ThunkResult } from 'app/store/types';
+import { reportException } from 'app/utils/exceptions';
 import {
   DestinyActivityDefinition,
   DestinyActivityModeDefinition,
   DestinyActivityModifierDefinition,
+  DestinyBreakerTypeDefinition,
   DestinyClassDefinition,
   DestinyCollectibleDefinition,
   DestinyDamageTypeDefinition,
@@ -19,6 +22,7 @@ import {
   DestinyObjectiveDefinition,
   DestinyPlaceDefinition,
   DestinyPlugSetDefinition,
+  DestinyPowerCapDefinition,
   DestinyPresentationNodeDefinition,
   DestinyProgressionDefinition,
   DestinyRaceDefinition,
@@ -34,16 +38,10 @@ import {
   DestinyTraitDefinition,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
-  DestinyPowerCapDefinition,
-  DestinyBreakerTypeDefinition,
 } from 'bungie-api-ts/destiny2';
-
-import { D2ManifestService } from '../manifest/manifest-service-json';
-import { ManifestDefinitions } from './definitions';
-import _ from 'lodash';
 import { setD2Manifest } from '../manifest/actions';
-import store from '../store/store';
-import { reportException } from 'app/utils/exceptions';
+import { getManifest } from '../manifest/manifest-service-json';
+import { ManifestDefinitions } from './definitions';
 
 const lazyTables = [
   'InventoryItem',
@@ -145,50 +143,57 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
  * object that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export const getDefinitions = _.once(getDefinitionsUncached);
-
-/**
- * Manifest database definitions. This returns a promise for an
- * object that has a property named after each of the tables listed
- * above (defs.TalentGrid, etc.).
- */
-async function getDefinitionsUncached() {
-  const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
-  const defs = {
-    isDestiny1: () => false,
-    isDestiny2: () => true,
-  };
-  lazyTables.forEach((tableShort) => {
-    const table = `Destiny${tableShort}Definition`;
-    defs[tableShort] = {
-      get(id: number, requestor?: any) {
-        const dbTable = db[table];
-        if (!dbTable) {
-          throw new Error(`Table ${table} does not exist in the manifest`);
-        }
-        const dbEntry = dbTable[id];
-        if (!dbEntry) {
-          const requestingEntryInfo =
-            typeof requestor === 'object' ? requestor.hash : String(requestor);
-          reportException('hashLookupFailure', new Error('hash lookup failure'), {
-            requestingEntryInfo,
-            failedHash: id,
-            failedComponent: table,
-          });
-        }
-        return dbEntry;
-      },
-      getAll() {
-        return db[table];
-      },
+export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
+  return async (dispatch, getState) => {
+    let existingManifest = getState().manifest.d2Manifest;
+    if (existingManifest) {
+      return existingManifest;
+    }
+    const db = await dispatch(getManifest([...eagerTables, ...lazyTables]));
+    existingManifest = getState().manifest.d2Manifest;
+    if (existingManifest) {
+      return existingManifest;
+    }
+    const defs = {
+      isDestiny1: () => false,
+      isDestiny2: () => true,
     };
-  });
-  // Resources that need to be fully loaded (because they're iterated over)
-  eagerTables.forEach((tableShort) => {
-    const table = `Destiny${tableShort}Definition`;
-    defs[tableShort] = db[table];
-  });
+    lazyTables.forEach((tableShort) => {
+      const table = `Destiny${tableShort}Definition`;
+      defs[tableShort] = {
+        get(id: number, requestor?: any) {
+          const dbTable = db[table];
+          if (!dbTable) {
+            throw new Error(`Table ${table} does not exist in the manifest`);
+          }
+          const dbEntry = dbTable[id];
+          if (!dbEntry) {
+            const requestingEntryInfo =
+              typeof requestor === 'object' ? requestor.hash : String(requestor);
+            reportException(
+              `hashLookupFailure: ${table}[${id}]`,
+              new Error(`hashLookupFailure: ${table}[${id}]`),
+              {
+                requestingEntryInfo,
+                failedHash: id,
+                failedComponent: table,
+              }
+            );
+          }
+          return dbEntry;
+        },
+        getAll() {
+          return db[table];
+        },
+      };
+    });
+    // Resources that need to be fully loaded (because they're iterated over)
+    eagerTables.forEach((tableShort) => {
+      const table = `Destiny${tableShort}Definition`;
+      defs[tableShort] = db[table];
+    });
 
-  store.dispatch(setD2Manifest(defs as D2ManifestDefinitions));
-  return defs as D2ManifestDefinitions;
+    dispatch(setD2Manifest(defs as D2ManifestDefinitions));
+    return defs as D2ManifestDefinitions;
+  };
 }

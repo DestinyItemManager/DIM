@@ -1,4 +1,5 @@
 import { DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
+import { tl } from 'app/i18next-t';
 
 export interface DtrPlatformOption {
   platform: DtrReviewPlatform;
@@ -8,22 +9,22 @@ export interface DtrPlatformOption {
 export const reviewPlatformOptions: DtrPlatformOption[] = [
   {
     platform: DtrReviewPlatform.All,
-    description: 'DtrReview.Platforms.All', // t('DtrReview.Platforms.All')
+    description: tl('DtrReview.Platforms.All'),
   },
   {
     platform: DtrReviewPlatform.Xbox,
-    description: 'DtrReview.Platforms.Xbox', // t('DtrReview.Platforms.Xbox')
+    description: tl('DtrReview.Platforms.Xbox'),
   },
   {
     platform: DtrReviewPlatform.Playstation,
-    description: 'DtrReview.Platforms.Playstation', // t('DtrReview.Platforms.Playstation')
+    description: tl('DtrReview.Platforms.Playstation'),
   },
   {
     platform: DtrReviewPlatform.AllConsoles,
-    description: 'DtrReview.Platforms.AllConsoles', // t('DtrReview.Platforms.AllConsoles')
+    description: tl('DtrReview.Platforms.AllConsoles'),
   },
   {
     platform: DtrReviewPlatform.Pc,
-    description: 'DtrReview.Platforms.Pc', // t('DtrReview.Platforms.Pc')
+    description: tl('DtrReview.Platforms.Pc'),
   },
 ];

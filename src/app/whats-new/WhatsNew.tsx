@@ -1,11 +1,11 @@
-import React from 'react';
-import ChangeLog from './ChangeLog';
-import BungieAlerts from './BungieAlerts';
-import { Timeline } from 'react-twitter-widgets';
-import './WhatsNew.scss';
-import { connect } from 'react-redux';
 import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/reducers';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Timeline } from 'react-twitter-widgets';
+import BungieAlerts from './BungieAlerts';
+import ChangeLog from './ChangeLog';
+import './WhatsNew.scss';
 
 interface StoreProps {
   language: string;
@@ -39,6 +39,7 @@ function WhatsNew({ language }: Props) {
             via: 'ThisIsDIM',
             username: 'ThisIsDIM',
             height: '100%',
+            theme: 'dark',
           }}
         />
       </div>

@@ -1,12 +1,11 @@
-import React from 'react';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import BungieImage from '../dim-ui/BungieImage';
-import _ from 'lodash';
-import styles from './MetricBanner.m.scss';
-import masterworkOverlay from 'images/masterwork-metric.png';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import clsx from 'clsx';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
+import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import masterworkOverlay from 'images/masterwork-metric.png';
+import React from 'react';
+import BungieImage from '../dim-ui/BungieImage';
+import styles from './MetricBanner.m.scss';
 
 interface Props {
   metricHash: number;

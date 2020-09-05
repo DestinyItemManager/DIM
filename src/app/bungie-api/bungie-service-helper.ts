@@ -1,18 +1,16 @@
+import { needsDeveloper } from 'app/accounts/actions';
+import { t } from 'app/i18next-t';
+import { showNotification } from 'app/notifications/notifications';
+import store from 'app/store/store';
+import { delay } from 'app/utils/util';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
-import { t } from 'app/i18next-t';
-import { API_KEY } from './bungie-api-utils';
-import { getActivePlatform } from '../accounts/platforms';
-import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
-import { rateLimitedFetch } from './rate-limiter';
-import { stringify } from 'simple-query-string';
+import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { delay } from 'app/utils/util';
-import store from 'app/store/store';
-import { needsDeveloper } from 'app/accounts/actions';
-import { showNotification } from 'app/notifications/notifications';
-import _ from 'lodash';
+import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
+import { API_KEY } from './bungie-api-utils';
+import { rateLimitedFetch } from './rate-limiter';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -96,7 +94,11 @@ export async function httpAdapter(
 export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Request {
   let url = config.url;
   if (config.params) {
-    url = `${url}?${stringify(config.params)}`;
+    // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
+    for (const key in config.params) {
+      typeof config.params[key] === 'undefined' && delete config.params[key];
+    }
+    url = `${url}?${new URLSearchParams(config.params).toString()}`;
   }
 
   return new Request(url, {
@@ -200,13 +202,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
     case PlatformErrorCodes.DestinyAccountNotFound:
       if (response.url.indexOf('/Account/') >= 0 && response.url.indexOf('/Character/') < 0) {
-        const account = getActivePlatform();
-        throw error(
-          t('BungieService.NoAccount', {
-            platform: account ? t(`Accounts.${account.platformLabel}`) : 'Unknown',
-          }),
-          errorCode
-        );
+        throw error(t('BungieService.NoAccount'), errorCode);
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);
       }

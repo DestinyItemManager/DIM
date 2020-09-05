@@ -1,34 +1,32 @@
-import styles from './ItemPopupContainer.m.scss';
-
-import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
-import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
-
-import ClickOutside from '../dim-ui/ClickOutside';
-import { DimItem } from '../inventory/item-types';
+import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
+import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import { Instance, Options, Padding, popperGenerator } from '@popperjs/core/lib/popper-lite';
+import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import clsx from 'clsx';
+import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
+import ClickOutside from '../dim-ui/ClickOutside';
+import Sheet from '../dim-ui/Sheet';
+import { DimItem } from '../inventory/item-types';
+import { setSetting } from '../settings/actions';
+import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
 import ItemActions from './ItemActions';
+import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
+import styles from './ItemPopupContainer.m.scss';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
-import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
-import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
-import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
-import offset from '@popperjs/core/lib/modifiers/offset';
-import arrow from '@popperjs/core/lib/modifiers/arrow';
-import React, { useState, useRef, useEffect } from 'react';
-import { RootState } from '../store/reducers';
-import Sheet from '../dim-ui/Sheet';
-import { connect } from 'react-redux';
-import { setSetting } from '../settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
-import { storesSelector } from 'app/inventory/selectors';
-import { t } from 'app/i18next-t';
-import clsx from 'clsx';
-import { useLocation } from 'react-router';
-import { useSubscription } from 'app/utils/hooks';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -210,6 +208,8 @@ function ItemPopupContainer({
     reposition();
   });
 
+  useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
+
   if (!currentItem?.item) {
     return null;
   }
@@ -257,24 +257,12 @@ function ItemPopupContainer({
       aria-modal="false"
     >
       <ClickOutside onClickOutside={onClose}>
-        <ItemTagHotkeys item={item}>
-          {header}
-          {body}
-          <div className="item-details">{footer}</div>
-        </ItemTagHotkeys>
+        <ItemTagHotkeys item={item} />
+        {header}
+        {body}
+        <div className="item-details">{footer}</div>
       </ClickOutside>
       <div className={clsx(styles.arrow, tierClasses[item.tier])} />
-      <GlobalHotkeys
-        hotkeys={[
-          {
-            combo: 'esc',
-            description: t('Hotkey.ClearDialog'),
-            callback: () => {
-              onClose();
-            },
-          },
-        ]}
-      />
     </div>
   );
 }

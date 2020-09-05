@@ -1,17 +1,17 @@
-import React from 'react';
-import './loadout-builder.scss';
-import { D1Item } from '../../inventory/item-types';
-import { SetType, ArmorSet } from './types';
-import _ from 'lodash';
-import { DimStore } from '../../inventory/store-types';
 import { t } from 'app/i18next-t';
-import LoadoutBuilderItem from './LoadoutBuilderItem';
-import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
-import CharacterStats from '../../inventory/CharacterStats';
-import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
-import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { applyLoadout } from 'app/loadout/loadout-apply';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import D1CharacterStats from 'app/store-stats/D1CharacterStats';
+import _ from 'lodash';
+import React from 'react';
+import { D1Item } from '../../inventory/item-types';
+import { DimStore } from '../../inventory/store-types';
+import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
+import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
+import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
+import './loadout-builder.scss';
+import LoadoutBuilderItem from './LoadoutBuilderItem';
+import { ArmorSet, SetType } from './types';
 
 interface Props {
   store: DimStore;
@@ -49,7 +49,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
             </>
           )}{' '}
           <div className="dim-stats">
-            <CharacterStats destinyVersion={1} stats={setType.tiers[activesets].stats} />
+            <D1CharacterStats stats={setType.tiers[activesets].stats} />
           </div>
         </div>
         <div className="loadout-builder-section">

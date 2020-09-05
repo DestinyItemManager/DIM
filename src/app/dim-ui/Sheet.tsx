@@ -1,17 +1,19 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
-import './Sheet.scss';
-import { AppIcon, disabledIcon } from '../shell/icons';
-import { config, animated, useSpring } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import clsx from 'clsx';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import clsx from 'clsx';
 import _ from 'lodash';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { animated, config, useSpring } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
+import { AppIcon, disabledIcon } from '../shell/icons';
+import './Sheet.scss';
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   sheetClassName?: string;
+  /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
+  freezeInitialHeight?: boolean;
   onClose(): void;
 }
 
@@ -37,6 +39,7 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  freezeInitialHeight,
   onClose: onCloseCallback,
 }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
@@ -45,6 +48,7 @@ export default function Sheet({
   const closing = useRef(false);
   // Should we be dragging?
   const dragging = useRef(false);
+  const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
 
   const windowHeight = window.innerHeight;
   const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
@@ -52,6 +56,12 @@ export default function Sheet({
 
   const sheetContents = useRef<HTMLDivElement | null>(null);
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
+
+  useEffect(() => {
+    if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
+      setFrozenHeight(sheetContents.current.clientHeight);
+    }
+  }, [freezeInitialHeight, frozenHeight]);
 
   const sheet = useRef<HTMLDivElement>(null);
   const height = () => sheet.current?.clientHeight || 0;
@@ -165,6 +175,7 @@ export default function Sheet({
 
         <div
           className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
+          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContentsRefFn}
         >
           {_.isFunction(children) ? children({ onClose }) : children}

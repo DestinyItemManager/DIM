@@ -1,17 +1,17 @@
-import {
-  LockedMap,
-  LockedModBase,
-  LockedArmor2ModMap,
-  StatTypes,
-  MinMaxIgnored,
-  LockedItemType,
-  ModPickerCategories,
-} from './types';
 import { DimStore } from 'app/inventory/store-types';
-import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
-import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './utils';
+import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
+import {
+  LockedArmor2ModMap,
+  LockedItemType,
+  LockedMap,
+  LockedModBase,
+  MinMaxIgnored,
+  ModPickerCategories,
+  StatTypes,
+} from './types';
+import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
@@ -20,7 +20,14 @@ export interface LoadoutBuilderState {
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
-  query: string;
+  modPicker: {
+    open: boolean;
+    initialQuery?: string;
+  };
+  perkPicker: {
+    open: boolean;
+    initialQuery?: string;
+  };
 }
 
 const lbStateInit = ({
@@ -73,8 +80,13 @@ const lbStateInit = ({
       [ModPickerCategories.seasonal]: [],
     },
     minimumPower: 750,
-    query: '',
     selectedStoreId: selectedStoreId,
+    modPicker: {
+      open: false,
+    },
+    perkPicker: {
+      open: false,
+    },
   };
 };
 
@@ -82,7 +94,6 @@ export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'minimumPowerChanged'; minimumPower: number }
-  | { type: 'queryChanged'; query: string }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -92,7 +103,11 @@ export type LoadoutBuilderAction =
       lockedMap: LockedMap;
       lockedSeasonalMods: LockedModBase[];
     }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap };
+  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
+  | { type: 'openModPicker'; initialQuery?: string }
+  | { type: 'closeModPicker' }
+  | { type: 'openPerkPicker'; initialQuery?: string }
+  | { type: 'closePerkPicker' };
 
 // TODO: Move more logic inside the reducer
 function lbStateReducer(
@@ -119,8 +134,6 @@ function lbStateReducer(
       return { ...state, statFilters: action.statFilters };
     case 'minimumPowerChanged':
       return { ...state, minimumPower: action.minimumPower };
-    case 'queryChanged':
-      return { ...state, query: action.query };
     case 'lockedMapChanged':
       return { ...state, lockedMap: action.lockedMap };
     case 'addItemToLockedMap': {
@@ -155,6 +168,17 @@ function lbStateReducer(
       };
     case 'lockedArmor2ModsChanged':
       return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
+    case 'openModPicker':
+      return {
+        ...state,
+        modPicker: { open: true, initialQuery: action.initialQuery },
+      };
+    case 'closeModPicker':
+      return { ...state, modPicker: { open: false } };
+    case 'openPerkPicker':
+      return { ...state, perkPicker: { open: true, initialQuery: action.initialQuery } };
+    case 'closePerkPicker':
+      return { ...state, perkPicker: { open: false } };
   }
 }
 

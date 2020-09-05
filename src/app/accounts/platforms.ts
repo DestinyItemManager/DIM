@@ -1,25 +1,26 @@
+import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { ThunkResult } from 'app/store/types';
+import { dedupePromise } from 'app/utils/util';
+import { del, get } from 'idb-keyval';
 import _ from 'lodash';
+import { goToLoginPage } from '../bungie-api/authenticated-fetch';
+import { removeToken } from '../bungie-api/oauth-tokens';
+import { loadingTracker } from '../shell/loading-tracker';
+import * as actions from './actions';
+import { getBungieAccount } from './bungie-account';
 import {
   compareAccounts,
   DestinyAccount,
   getDestinyAccountsForBungieAccount,
 } from './destiny-account';
-import { getBungieAccount } from './bungie-account';
-import * as actions from './actions';
-import store from '../store/store';
-import { loadingTracker } from '../shell/loading-tracker';
-import { goToLoginPage } from '../bungie-api/authenticated-fetch';
-import {
-  accountsSelector,
-  currentAccountSelector,
-  loadAccountsFromIndexedDB,
-  accountsLoadedSelector,
-} from './reducer';
-import { ThunkResult } from 'app/store/reducers';
-import { dedupePromise } from 'app/utils/util';
-import { removeToken } from '../bungie-api/oauth-tokens';
-import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
-import { del } from 'idb-keyval';
+import { accountsLoadedSelector, accountsSelector, currentAccountSelector } from './selectors';
+
+const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
+  console.log('Load accounts from IDB');
+  const accounts = await get<DestinyAccount[] | undefined>('accounts');
+
+  dispatch(actions.loadFromIDB(accounts || []));
+});
 
 const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch, getState) => {
@@ -31,7 +32,7 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
 
     if (!getState().accounts.loadedFromIDB) {
       try {
-        await dispatch(loadAccountsFromIndexedDB());
+        await dispatch(loadAccountsFromIndexedDBAction);
       } catch (e) {
         console.error('Unable to load accounts from IDB', e);
       }
@@ -75,11 +76,6 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
 
 function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
   return loadAccountsFromBungieNetAction;
-}
-
-// TODO: get rid of this
-export function getActivePlatform(): DestinyAccount | undefined {
-  return currentAccountSelector(store.getState());
 }
 
 export function setActivePlatform(

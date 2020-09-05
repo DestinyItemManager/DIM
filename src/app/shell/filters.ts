@@ -1,17 +1,17 @@
-import _ from 'lodash';
-import { compareBy, reverseComparator, chainComparator, Comparator } from '../utils/comparators';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import { characterSortSelector } from '../settings/character-sort';
-import store from '../store/store';
-import { getTag, tagConfig } from '../inventory/dim-item-info';
-import { getRating } from '../item-review/reducer';
-import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import {
   CONSUMABLES_BUCKET,
   MATERIALS_BUCKET,
   MODIFICATIONS_BUCKET,
 } from 'app/search/d2-known-values';
+import _ from 'lodash';
+import { getTag, tagConfig } from '../inventory/dim-item-info';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { getRating } from '../item-review/reducer';
+import { characterSortSelector } from '../settings/character-sort';
+import store from '../store/store';
+import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -264,7 +264,7 @@ export function dtrRatingColor(value: number, property = 'color') {
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
-  if (!store.isDestiny2() || !store.color) {
+  if ($featureFlags.gradientBackground || !store.isDestiny2() || !store.color) {
     return undefined;
   }
 

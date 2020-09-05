@@ -1,16 +1,16 @@
-import React from 'react';
-import { DimGridNode, D1GridNode, DimItem } from '../inventory/item-types';
-import _ from 'lodash';
+import { RootState } from 'app/store/types';
+import { emptyArray, emptySet } from 'app/utils/empty';
 import clsx from 'clsx';
-import PressTip from '../dim-ui/PressTip';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import './ItemTalentGrid.scss';
-import { ratePerks } from '../destinyTrackerApi/perkRater';
+import _ from 'lodash';
+import React from 'react';
 import { connect } from 'react-redux';
-import { RootState } from '../store/reducers';
-import { getReviews } from '../item-review/reducer';
+import { ratePerks } from '../destinyTrackerApi/perkRater';
+import { bungieNetPath } from '../dim-ui/BungieImage';
+import PressTip from '../dim-ui/PressTip';
+import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
-import { emptySet, emptyArray } from 'app/utils/empty';
+import { getReviews } from '../item-review/reducer';
+import './ItemTalentGrid.scss';
 
 interface ProvidedProps {
   item: DimItem;

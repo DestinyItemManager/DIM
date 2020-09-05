@@ -17,16 +17,6 @@
       display: flex;
       justify-content: center;
     }
-
-    .character-box {
-      flex: 1;
-      cursor: default;
-      border-bottom: none;
-    }
-
-    &:last-child .character-box {
-      margin-right: 0;
-    }
   }
 
   .small-icon {

@@ -1,17 +1,18 @@
 import React from 'react';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
+import ItemSockets from '../item-popup/ItemSockets';
 import ItemTagSelector from '../item-popup/ItemTagSelector';
+import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import LockButton from '../item-popup/LockButton';
 import { AppIcon, searchIcon } from '../shell/icons';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import ItemSockets from '../item-popup/ItemSockets';
 import { StatInfo } from './Compare';
 import CompareStat from './CompareStat';
-import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 
 export default function CompareItem({
   item,
   stats,
+  compareBaseStats,
   itemClick,
   remove,
   highlight,
@@ -19,6 +20,7 @@ export default function CompareItem({
 }: {
   item: DimItem;
   stats: StatInfo[];
+  compareBaseStats?: boolean;
   highlight: number | string | undefined;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
@@ -45,6 +47,7 @@ export default function CompareItem({
           stat={stat}
           setHighlight={setHighlight}
           highlight={highlight}
+          compareBaseStats={compareBaseStats}
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}

@@ -1,14 +1,15 @@
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import NotesArea from './NotesArea';
+import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
-import ishtarLogo from '../../images/ishtar-collective.svg';
-import styles from './ItemDescription.m.scss';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { DimItem } from 'app/inventory/item-types';
+import { RootState } from 'app/store/types';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import React from 'react';
+import { connect } from 'react-redux';
+import ishtarLogo from '../../images/ishtar-collective.svg';
+import styles from './ItemDescription.m.scss';
+import NotesArea from './NotesArea';
 
 interface ProvidedProps {
   item: DimItem;
@@ -59,14 +60,14 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
           <div className={styles.officialDescription}>{item.displaySource}</div>
         )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
-        <div tabIndex={-1} className={styles.wishListNotes}>
+        <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>
             {t('WishListRoll.WishListNotes', { notes: '' })}
           </span>
           <span className={styles.wishListTextContent}>{inventoryWishListRoll.notes}</span>
-        </div>
+        </ExpandableTextBlock>
       )}
-      <NotesArea item={item} />
+      <NotesArea item={item} className={styles.description} />
     </>
   );
 }

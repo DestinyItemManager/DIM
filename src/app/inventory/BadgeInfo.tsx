@@ -1,18 +1,18 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import { DimItem } from './item-types';
-import { getColor } from '../shell/filters';
-import ghostPerks from 'data/d2/ghost-perks.json';
-import _ from 'lodash';
-import { weakMemoize } from 'app/utils/util';
-import RatingIcon from './RatingIcon';
-import clsx from 'clsx';
-import styles from './BadgeInfo.m.scss';
 import iconStyles from 'app/inventory/ElementIcon.m.scss';
-import ElementIcon from './ElementIcon';
+import { weakMemoize } from 'app/utils/util';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import ghostPerks from 'data/d2/ghost-perks.json';
+import _ from 'lodash';
+import React from 'react';
+import { getColor } from '../shell/filters';
+import styles from './BadgeInfo.m.scss';
+import ElementIcon from './ElementIcon';
+import { DimItem } from './item-types';
+import RatingIcon from './RatingIcon';
 
 interface Props {
   item: DimItem;
@@ -25,8 +25,8 @@ interface Props {
 const getGhostInfos = weakMemoize((item: DimItem) =>
   item.isDestiny2?.() && item.sockets && item.itemCategoryHashes.includes(ItemCategoryHashes.Ghost)
     ? _.compact(
-        item.sockets.sockets.map((s) => {
-          const hash = s.plug?.plugItem?.hash;
+        item.sockets.allSockets.map((s) => {
+          const hash = s.plugged?.plugDef?.hash;
           return hash && ghostPerks[hash];
         })
       )

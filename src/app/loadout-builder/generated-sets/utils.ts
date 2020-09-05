@@ -1,9 +1,7 @@
+import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import { DimItem } from '../../inventory/item-types';
-import { ArmorSet, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
-import { statKeys } from '../types';
+import { ArmorSet, LockedMap, statKeys, StatTypes } from '../types';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
@@ -62,15 +60,17 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
     sortedSets = _.sortBy(
       sortedSets,
       (set) =>
-        -_.sumBy(set.firstValidSet, (firstItem) => {
-          if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
+        -_.sumBy(set.armor, (items) => {
+          const item = items?.[0];
+          if (!item || !item.isDestiny2() || !item.sockets) {
             return 0;
           }
-          return count(firstItem.sockets.sockets, (slot) =>
+
+          return count(item.sockets.allSockets, (slot) =>
             slot.plugOptions.some((perk) =>
               lockedPerks.some(
                 (lockedPerk) =>
-                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugItem.hash
+                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugDef.hash
               )
             )
           );
@@ -79,36 +79,6 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
   });
 
   return sortedSets;
-}
-
-/**
- * Calculate the number of valid permutations of a stat mix, without enumerating them.
- */
-export function getNumValidSets(armors: readonly DimItem[][]) {
-  const exotics = new Array(armors.length).fill(0);
-  const nonExotics = new Array(armors.length).fill(0);
-  let index = 0;
-  for (const armor of armors) {
-    for (const item of armor) {
-      if (item.equippingLabel) {
-        exotics[index]++;
-      } else {
-        nonExotics[index]++;
-      }
-    }
-    index++;
-  }
-
-  // Sets that are all legendary
-  let total = nonExotics.reduce((memo, num) => num * memo, 1);
-  // Sets that include one exotic
-  for (index = 0; index < armors.length; index++) {
-    total += exotics[index]
-      ? nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1)
-      : 0;
-  }
-
-  return total;
 }
 
 /**

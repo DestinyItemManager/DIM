@@ -107,7 +107,6 @@
     var(--character-column-width) -
     var(--item-margin)
   );
-  max-width: 230px;
   box-sizing: border-box;
   max-height: 60vh;
   overflow: auto;
@@ -132,6 +131,10 @@
     max-height: calc(100vh - #{120px + $header-height});
     max-height: calc(100vh - #{120px + $header-height} - constant(safe-area-inset-top));
     max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
-    left: calc((100% - 230px) / 2);
+
+    max-width: calc(100% - 100px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 5px;
   }
 }

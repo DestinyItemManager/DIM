@@ -1,17 +1,17 @@
-import React from 'react';
-import { RootState } from '../store/reducers';
-import { connect } from 'react-redux';
-import { toggleCollapsedSection } from '../settings/actions';
-import { Dispatch } from 'redux';
-import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
+import { t } from 'app/i18next-t';
+import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
 import clsx from 'clsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import '../dim-ui/CollapsibleTitle.scss';
+import { toggleCollapsedSection } from '../settings/actions';
+import { storeBackgroundColor } from '../shell/filters';
+import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
-import { storeBackgroundColor } from '../shell/filters';
-import { t } from 'app/i18next-t';
-import { postmasterAlmostFull, POSTMASTER_SIZE, postmasterSpaceUsed } from 'app/loadout/postmaster';
-import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   sectionId: string;

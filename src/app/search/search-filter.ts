@@ -1,84 +1,70 @@
-import { D1Item, D2Item, DimItem } from '../inventory/item-types';
-import {
-  DestinyAmmunitionType,
-  DestinyClass,
-  DestinyCollectibleState,
-  DestinyItemSubType,
-} from 'bungie-api-ts/destiny2';
-import { ItemInfos, getNotes, getTag, itemTagSelectorList } from '../inventory/dim-item-info';
-import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { getStore } from 'app/inventory/stores-helpers';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
 import {
   getItemDamageShortName,
-  getSpecialtySocketMetadata,
-  modSlotTags,
   getItemPowerCapFinalSeason,
+  getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import {
-  itemInfosSelector,
-  sortedStoresSelector,
-  currentStoreSelector,
-  itemHashTagsSelector,
-} from '../inventory/selectors';
-import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
-
-import { D1Categories } from '../destiny1/d1-buckets';
-import { D2Categories } from '../destiny2/d2-buckets';
+import { DestinyAmmunitionType, DestinyClass, DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import D2Sources from 'data/d2/source-info';
-import { DimStore } from '../inventory/store-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { Loadout } from '../loadout/loadout-types';
-import { RootState } from '../store/reducers';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
-import { destinyVersionSelector } from '../accounts/reducer';
-import { inventoryWishListsSelector } from '../wishlists/reducer';
-import latinise from 'voca/latinise';
-import { loadoutsSelector } from '../loadout/reducer';
-import memoizeOne from 'memoize-one';
-import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
-import { settingsSelector } from 'app/settings/reducer';
+import D2Sources from 'data/d2/source-info';
+import _ from 'lodash';
+import memoizeOne from 'memoize-one';
+import { createSelector } from 'reselect';
+import latinise from 'voca/latinise';
+import { getNotes, getTag, ItemInfos } from '../inventory/dim-item-info';
+import { D1Item, D2Item, DimItem } from '../inventory/item-types';
+import {
+  currentStoreSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+  sortedStoresSelector,
+} from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
+import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
+import { Loadout } from '../loadout/loadout-types';
+import { loadoutsSelector } from '../loadout/reducer';
+import { querySelector } from '../shell/reducer';
 import store from '../store/store';
-import { getStore } from 'app/inventory/stores-helpers';
-import { DestinyVersion, ItemHashTag } from '@destinyitemmanager/dim-api-types';
-import { parseQuery, QueryAST } from './query-parser';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { inventoryWishListsSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import {
   boosts,
   D1ActivityHashes,
-  D1ItemCategoryHashes,
   sublimeEngrams,
   supplies,
   vendorHashes,
 } from './d1-known-values';
 import {
   breakerTypes,
-  curatedPlugsAllowList,
-  D2ItemCategoryHashesByName,
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
   emptySocketHashes,
-  energyCapacityTypeNames,
   energyNamesByEnum,
   powerfulSources,
   SEASONAL_ARTIFACT_BUCKET,
   SHADERS_BUCKET,
 } from './d2-known-values';
+import { parseQuery, QueryAST } from './query-parser';
+import { SearchConfig, searchConfigSelector } from './search-config';
 import {
   allStatNames,
   armorAnyStatHashes,
   armorStatHashes,
   cosmeticTypes,
-  damageTypeNames,
   lightStats,
   searchableStatNames,
   statHashByName,
 } from './search-filter-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -118,14 +104,18 @@ const replaceSeasonTagWithNumber = (s: string) => s.replace(/[a-z]+$/i, (tag) =>
 
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
-  (item.classified && String(item.hash)) ||
+  (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
+
+export const makeSeasonalDupeID = (item: DimItem) =>
+  (item.classified && `${item.hash}`) ||
+  `${item.name}${item.classType}${item.tier}${
+    item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}` : ''
+  }${item.itemCategoryHashes.join('.')}`;
 
 //
 // Selectors
 //
-
-export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
 /** A selector for the search config for a particular destiny version. */
 export const searchFiltersConfigSelector = createSelector(
@@ -148,292 +138,6 @@ export const searchFilterSelector = createSelector(
   (query, filters) => filters.filterFunction(query)
 );
 
-//
-// SearchConfig
-//
-
-export interface SearchConfig {
-  destinyVersion: DestinyVersion;
-  keywords: string[];
-  categoryHashFilters: { [key: string]: number };
-  keywordToFilter: { [key: string]: string };
-}
-
-/** Builds an object that describes the available search keywords and category mappings. */
-export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
-  const isD1 = destinyVersion === 1;
-  const isD2 = destinyVersion === 2;
-  const categories = isD1 ? D1Categories : D2Categories;
-  const itemTypes = Object.values(categories).flatMap((l: string[]) =>
-    l.map((v) => v.toLowerCase())
-  );
-
-  // Add new ItemCategoryHash hashes to this, to add new category searches
-  const categoryHashFilters: { [key: string]: number } = {
-    ...D1ItemCategoryHashes,
-    ...(isD2 ? D2ItemCategoryHashesByName : {}),
-  };
-
-  const stats = [
-    'charge',
-    'impact',
-    'range',
-    'stability',
-    'reload',
-    'magazine',
-    'aimassist',
-    'equipspeed',
-    'handling',
-    'blastradius',
-    'recoildirection',
-    'velocity',
-    'zoom',
-    'discipline',
-    'intellect',
-    'strength',
-    ...(isD1 ? ['rof'] : []),
-    ...(isD2
-      ? [
-          'rpm',
-          'mobility',
-          'recovery',
-          'resilience',
-          'drawtime',
-          'inventorysize',
-          'total',
-          'custom',
-          'any',
-        ]
-      : []),
-  ];
-
-  /**
-   * sets of single key -> multiple values
-   *
-   * keys: the filter to run
-   *
-   * values: the strings that trigger this filter, and the value to feed into that filter
-   *
-   */
-  // i.e. { dmg: ['arc', 'solar', 'void'] }
-  // so search string 'arc' runs dmg('arc'), search string 'solar' runs dmg('solar') etc
-  const singleTermFilters: {
-    [key: string]: string[];
-  } = {
-    dmg: damageTypeNames,
-    type: itemTypes,
-    tier: [
-      'common',
-      'uncommon',
-      'rare',
-      'legendary',
-      'exotic',
-      'white',
-      'green',
-      'blue',
-      'purple',
-      'yellow',
-    ],
-    classType: ['titan', 'hunter', 'warlock'],
-    dupe: ['dupe', 'duplicate'],
-    dupelower: ['dupelower'],
-    locked: ['locked'],
-    unlocked: ['unlocked'],
-    stackable: ['stackable'],
-    weapon: ['weapon'],
-    armor: ['armor'],
-    categoryHash: Object.keys(categoryHashFilters),
-    inloadout: ['inloadout'],
-    maxpower: ['maxpower'],
-    new: ['new'],
-    tagged: ['tagged'],
-    level: ['level'],
-    equipment: ['equipment', 'equippable'],
-    postmaster: ['postmaster', 'inpostmaster'],
-    equipped: ['equipped'],
-    transferable: ['transferable', 'movable'],
-    infusable: ['infusable', 'infuse'],
-    owner: ['invault', 'incurrentchar'],
-    location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
-    onwrongclass: ['onwrongclass'],
-    hasnotes: ['hasnotes'],
-    cosmetic: ['cosmetic'],
-    tracked: ['tracked'],
-    untracked: ['untracked'],
-    ...(isD1
-      ? {
-          hasLight: ['light', 'haslight'],
-          sublime: ['sublime'],
-          incomplete: ['incomplete'],
-          complete: ['complete'],
-          xpcomplete: ['xpcomplete'],
-          xpincomplete: ['xpincomplete', 'needsxp'],
-          upgraded: ['upgraded'],
-          unascended: ['unascended', 'unassended', 'unasscended'],
-          ascended: ['ascended', 'assended', 'asscended'],
-          reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-          ornament: ['ornamentable', 'ornamentmissing', 'ornamentunlocked'],
-          engram: ['engram'],
-          stattype: ['intellect', 'discipline', 'strength'],
-          glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-          vendor: [
-            'fwc',
-            'do',
-            'nm',
-            'speaker',
-            'variks',
-            'shipwright',
-            'vanguard',
-            'osiris',
-            'xur',
-            'shaxx',
-            'cq',
-            'eris',
-            'ev',
-            'gunsmith',
-          ],
-          activity: [
-            'vanilla',
-            'trials',
-            'ib',
-            'qw',
-            'cd',
-            'srl',
-            'vog',
-            'ce',
-            'ttk',
-            'kf',
-            'roi',
-            'wotm',
-            'poe',
-            'coe',
-            'af',
-            'dawning',
-            'aot',
-          ],
-        }
-      : {}),
-    ...(isD2
-      ? {
-          ammoType: ['special', 'primary', 'heavy'],
-          hascapacity: ['hascapacity', 'armor2.0'],
-          complete: ['goldborder', 'yellowborder', 'complete'],
-          curated: ['curated'],
-          hasLight: ['light', 'haslight', 'haspower'],
-          hasMod: ['hasmod'],
-          modded: ['modded'],
-          hasShader: ['shaded', 'hasshader'],
-          hasOrnament: ['ornamented', 'hasornament'],
-          masterworked: ['masterwork', 'masterworks'],
-          powerfulreward: ['powerfulreward'],
-          randomroll: ['randomroll'],
-          reacquirable: ['reacquirable'],
-          trashlist: ['trashlist'],
-          wishlist: ['wishlist'],
-          wishlistdupe: ['wishlistdupe'],
-        }
-      : {}),
-    ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {}),
-  };
-
-  // Filters that operate on numeric ranges with comparison operators
-  const ranges = [
-    'light',
-    'power',
-    'stack',
-    'count',
-    'year',
-    ...(isD1 ? ['level', 'quality', 'percentage'] : []),
-    ...(isD2 ? ['masterwork', 'season', 'powerlimit', 'sunsetsafter', 'powerlimitseason'] : []),
-    ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : []),
-  ];
-
-  // build search suggestions for single-term filters, or freeform text, or the above ranges
-  const keywords: string[] = [
-    // an "is:" and a "not:" for every filter and its synonyms
-    ...Object.values(singleTermFilters)
-      .flat()
-      .flatMap((word) => [`is:${word}`, `not:${word}`]),
-    ...itemTagSelectorList.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
-    // a keyword for every combination of an item stat name and mathmatical operator
-    ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
-    // additional basestat searches for armor stats
-    ...searchableStatNames.flatMap((stat) =>
-      operators.map((comparison) => `basestat:${stat}:${comparison}`)
-    ),
-    // keywords for checking which stat is masterworked
-    ...(isD2 ? stats.map((stat) => `masterwork:${stat}`) : []),
-    // keywords for named seasons. reverse so newest seasons are first
-    ...(isD2
-      ? Object.keys(seasonTags)
-          .reverse()
-          .map((tag) => `season:${tag}`)
-      : []),
-    // keywords for seasonal mod slots
-    ...(isD2
-      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `modslot:${modSlotName}`)
-      : []),
-    ...(isD2
-      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `holdsmod:${modSlotName}`)
-      : []),
-    // a keyword for every combination of a DIM-processed stat and mathmatical operator
-    ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
-    // energy capacity elements and ranges
-    ...(isD2 ? energyCapacityTypeNames.map((element) => `energycapacity:${element}`) : []),
-    ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
-    // keywords for checking when an item hits power limit. s11 is the first valid season for this
-    ...(isD2
-      ? Object.entries(seasonTags)
-          .filter(([, seasonNumber]) => seasonNumber > 10)
-          .reverse()
-          .map(([tag]) => `sunsetsafter:${tag}`)
-      : []),
-    ...(isD2 ? Object.keys(breakerTypes).map((breakerType) => `breaker:${breakerType}`) : []),
-    // "source:" keyword plus one for each source
-    ...(isD2
-      ? [
-          'source:',
-          'wishlistnotes:',
-          ...Object.keys(D2Sources).map((word) => `source:${word}`),
-          ...Object.keys(D2EventPredicateLookup).map((word) => `source:${word}`),
-          // maximum stat finders
-          ...searchableStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
-          ...searchableStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
-          ...searchableStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
-        ]
-      : []),
-    // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
-  ];
-
-  // create suggestion stubs for filter names
-  const keywordStubs = keywords.flatMap((keyword) => {
-    const keywordSegments = keyword //   'basestat:mobility:<='
-      .split(':') //                   [ 'basestat' , 'mobility' , '<=']
-      .slice(0, -1); //                [ 'basestat' , 'mobility' ]
-    const stubs: string[] = [];
-    for (let i = 1; i <= keywordSegments.length; i++) {
-      stubs.push(keywordSegments.slice(0, i).join(':') + ':');
-    }
-    return stubs; //                   [ 'basestat:' , 'basestat:mobility:' ]
-  });
-  keywords.push(...new Set(keywordStubs));
-
-  // Build an inverse mapping of keyword to function name
-  const keywordToFilter: { [key: string]: string } = {};
-  _.forIn(singleTermFilters, (keywords, functionName) => {
-    for (const keyword of keywords) {
-      keywordToFilter[keyword] = functionName;
-    }
-  });
-
-  return {
-    keywordToFilter,
-    keywords: [...new Set(keywords)], // de-dupe kinetic (dmg) & kinetic (slot)
-    destinyVersion,
-    categoryHashFilters,
-  };
-}
 /**
  * compares a number to a parsed string which contains a math operator and a number.
  * compare is safe to be a non-number value, just something can be ==='d or <'d
@@ -498,6 +202,7 @@ function searchFilters(
 ): SearchFilters {
   // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  let _duplicates_seasonal: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
   let _maxStatValues: {
@@ -524,17 +229,39 @@ function searchFilters(
 
     if (_duplicates === null) {
       _duplicates = {};
+      _duplicates_seasonal = {};
       for (const store of stores) {
         for (const i of store.items) {
           const dupeID = makeDupeID(i);
+          const seasonalDupeID = makeSeasonalDupeID(i);
           if (!_duplicates[dupeID]) {
             _duplicates[dupeID] = [];
           }
+          if (!_duplicates_seasonal[seasonalDupeID]) {
+            _duplicates_seasonal[seasonalDupeID] = [];
+          }
           _duplicates[dupeID].push(i);
+          _duplicates_seasonal[seasonalDupeID].push(i);
         }
       }
 
       _.forIn(_duplicates, (dupes: DimItem[]) => {
+        if (dupes.length > 1) {
+          dupes.sort(dupeComparator);
+          const bestDupe = dupes[0];
+          for (const dupe of dupes) {
+            if (
+              dupe.bucket &&
+              (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') &&
+              !dupe.notransfer
+            ) {
+              _lowerDupes[dupe.id] = dupe !== bestDupe;
+            }
+          }
+        }
+      });
+
+      _.forIn(_duplicates_seasonal, (dupes: DimItem[]) => {
         if (dupes.length > 1) {
           dupes.sort(dupeComparator);
           const bestDupe = dupes[0];
@@ -854,18 +581,6 @@ function searchFilters(
         initDupes();
         return _lowerDupes[item.id];
       },
-      reacquirable(item: DimItem) {
-        if (
-          item.isDestiny2() &&
-          item.collectibleState !== null &&
-          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
-          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
-        ) {
-          return true;
-        }
-
-        return false;
-      },
       dupe(item: DimItem) {
         initDupes();
         const dupeId = makeDupeID(item);
@@ -877,6 +592,19 @@ function searchFilters(
           item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
+        );
+      },
+      seasonaldupe(item: DimItem) {
+        initDupes();
+        const dupeId = makeSeasonalDupeID(item);
+        // We filter out the InventoryItem "Default Shader" because everybody has one per character
+        return (
+          _duplicates_seasonal &&
+          !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
+          item.hash !== DEFAULT_SHADER &&
+          item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET &&
+          _duplicates_seasonal[dupeId] &&
+          _duplicates_seasonal[dupeId].length > 1
         );
       },
       count(item: DimItem, filterValue: string) {
@@ -1020,11 +748,11 @@ function searchFilters(
           ) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
-                  regex.test(plug.plugItem.displayProperties.description) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.description) ||
                   plug.perks.some((perk) =>
                     Boolean(
                       (perk.displayProperties.name && regex.test(perk.displayProperties.name)) ||
@@ -1042,16 +770,22 @@ function searchFilters(
           item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.some((socket) =>
+            item.sockets.allSockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  regex.test(plug.plugItem.displayProperties.name) ||
+                  regex.test(plug.plugDef.displayProperties.name) ||
                   plug.perks.some((perk) =>
                     Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
               )
             ))
         );
+      },
+      mod(item: DimItem, filterValue: string) {
+        return this.perk(item, filterValue);
+      },
+      modname(item: DimItem, filterValue: string) {
+        return this.perkname(item, filterValue);
       },
       modslot(item: DimItem, filterValue: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);
@@ -1142,7 +876,9 @@ function searchFilters(
         }
       },
       randomroll(item: D2Item) {
-        return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
+        return (
+          Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems)
+        );
       },
       rating(item: DimItem, filterValue: string) {
         if ($featureFlags.reviewsEnabled) {
@@ -1241,24 +977,25 @@ function searchFilters(
           return false;
         }
 
-        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
-        // const masterWork = item.masterworkInfo?.statValue === 10;
-        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
-
         const legendaryWeapon =
           item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        const oneSocketPerPlug = item.sockets?.sockets
-          .filter((socket) =>
-            curatedPlugsAllowList.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash || 0)
-          )
-          .every((socket) => socket?.plugOptions.length === 1);
+        if (!legendaryWeapon) {
+          return false;
+        }
 
-        return (
-          legendaryWeapon &&
-          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
-          oneSocketPerPlug
-        );
+        const matchesCollectionsRoll = item.sockets?.allSockets
+          // curatedRoll is only set for perk-style sockets
+          .filter((socket) => socket?.plugOptions.length && socket.curatedRoll)
+          .every(
+            (socket) =>
+              socket.curatedRoll!.length === socket.plugOptions.length &&
+              socket.plugOptions.every(function (e, i) {
+                return e.plugDef.hash === socket.curatedRoll![i];
+              })
+          );
+
+        return matchesCollectionsRoll;
       },
       weapon(item: DimItem) {
         return (
@@ -1286,40 +1023,40 @@ function searchFilters(
         return !item.notransfer;
       },
       hasShader(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug?.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === SHADERS_BUCKET &&
-              socket.plug.plugItem.hash !== DEFAULT_SHADER
+            socket.plugged?.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryHash === SHADERS_BUCKET &&
+              socket.plugged.plugDef.hash !== DEFAULT_SHADER
           )
         );
       },
       hasOrnament(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-              socket.plug.plugItem.hash !== DEFAULT_GLOW &&
-              !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
-              !socket.plug.plugItem.itemCategoryHashes?.includes(
+            socket.plugged &&
+              socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament &&
+              socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+              !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+              !socket.plugged.plugDef.itemCategoryHashes?.includes(
                 ItemCategoryHashes.ArmorModsGlowEffects
               )
           )
         );
       },
       hasMod(item: D2Item) {
-        return item.sockets?.sockets.some((socket) =>
+        return item.sockets?.allSockets.some((socket) =>
           Boolean(
-            socket.plug &&
-              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-              socket.plug.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+            socket.plugged &&
+              !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+              socket.plugged.plugDef.plug &&
+              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               ) &&
               // enforce that this provides a perk (excludes empty slots)
-              socket.plug.plugItem.perks.length &&
+              socket.plugged.plugDef.perks.length &&
               // enforce that this doesn't have an energy cost (y3 reusables)
-              !socket.plug.plugItem.plug.energyCost
+              !socket.plugged.plugDef.plug.energyCost
           )
         );
       },
@@ -1327,16 +1064,16 @@ function searchFilters(
         return (
           Boolean(item.energy) &&
           item.sockets &&
-          item.sockets.sockets.some((socket) =>
+          item.sockets.allSockets.some((socket) =>
             Boolean(
-              socket.plug &&
-                !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+              socket.plugged &&
+                !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+                socket.plugged.plugDef.plug &&
+                socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
                   /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
                 ) &&
                 // enforce that this provides a perk (excludes empty slots)
-                socket.plug.plugItem.perks.length
+                socket.plugged.plugDef.perks.length
             )
           )
         );

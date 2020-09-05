@@ -1,5 +1,5 @@
-import { observeStore } from './utils/redux-utils';
 import { settingsSelector } from './settings/reducer';
+import { observeStore } from './utils/redux-utils';
 
 function setCSSVariable(property: string, value: any) {
   if (value) {

@@ -1,15 +1,15 @@
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
+import {
+  DestinyCollectibleDefinition,
+  DestinyCollectibleState,
+  DestinyProfileResponse,
+  DestinyScope,
+} from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { makeFakeItem } from '../inventory/store/d2-item-factory';
-import {
-  DestinyProfileResponse,
-  DestinyScope,
-  DestinyCollectibleState,
-  DestinyCollectibleDefinition,
-} from 'bungie-api-ts/destiny2';
-import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
-import _ from 'lodash';
 
 interface Props {
   collectibleHash: number;
@@ -50,7 +50,7 @@ export default function Collectible({
       item={item}
       owned={owned}
       unavailable={!acquired}
-      extraData={{ collectible: collectibleDef, owned, acquired }}
+      extraData={{ owned, acquired }}
     />
   );
 }

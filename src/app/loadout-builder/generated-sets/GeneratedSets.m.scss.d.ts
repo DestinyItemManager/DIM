@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'altPerkKey': string;
+  'emptyListReason': string;
   'key': string;
   'newLoadout': string;
   'numSets': string;

@@ -1,17 +1,17 @@
-import { handleErrors } from './trackerErrorHandler';
-import { loadingTracker } from '../shell/loading-tracker';
-import { dtrFetch } from './dtr-service-helper';
-import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
-import { D1Store } from '../inventory/store-types';
-import { Vendor } from '../destiny1/vendors/vendor.service';
-import { getWeaponList } from './itemListBuilder';
-import { updateRatings } from '../item-review/actions';
-import { DtrRating } from '../item-review/dtr-api-types';
-import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
-import { ThunkResult, RootState } from '../store/reducers';
-import { ThunkDispatch } from 'redux-thunk';
+import { RootState, ThunkResult } from 'app/store/types';
 import { AnyAction } from 'redux';
-import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
+import { ThunkDispatch } from 'redux-thunk';
+import { Vendor } from '../destiny1/vendors/vendor.service';
+import { D1Store } from '../inventory/store-types';
+import { updateRatings } from '../item-review/actions';
+import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
+import { DtrRating } from '../item-review/dtr-api-types';
+import { loadReviewsFromIndexedDB, ratingsSelector } from '../item-review/reducer';
+import { loadingTracker } from '../shell/loading-tracker';
+import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
+import { dtrFetch } from './dtr-service-helper';
+import { getWeaponList } from './itemListBuilder';
+import { handleErrors } from './trackerErrorHandler';
 
 function getBulkFetchPromise(
   stores: (D1Store | Vendor)[],
