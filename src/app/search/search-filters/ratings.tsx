@@ -11,7 +11,6 @@ const ratingsFilters: FilterDefinition[] = [
     keywords: ['rating'],
     description: [tl('Filter.Rating')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
       if (!$featureFlags.reviewsEnabled) {
@@ -30,7 +29,6 @@ const ratingsFilters: FilterDefinition[] = [
     keywords: ['ratingcount'],
     description: [tl('Filter.RatingCount')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
       if (!$featureFlags.reviewsEnabled) {
@@ -44,7 +42,6 @@ const ratingsFilters: FilterDefinition[] = [
     keywords: ['rated', 'hasrating'],
     description: [tl('Filter.HasRating')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem) => {
       if (!$featureFlags.reviewsEnabled) {
         return false;

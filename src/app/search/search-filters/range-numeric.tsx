@@ -36,7 +36,6 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: ['stack'],
     description: [tl('Filter.StackLevel')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       filterValue(item.amount),
@@ -45,7 +44,6 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: ['light'],
     description: [tl('Filter.LightLevel')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       item.primStat && filterValue(item.primStat.value),
@@ -54,7 +52,6 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: ['year'],
     description: [tl('Filter.Year')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
       if (item.isDestiny1()) {
@@ -68,7 +65,6 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: ['level'],
     description: [tl('Filter.RequiredLevel')],
     format: 'range',
-    destinyVersion: 0,
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       filterValue(item.equipRequiredLevel),

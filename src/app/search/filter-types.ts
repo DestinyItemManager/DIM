@@ -41,17 +41,21 @@ type PreprocessorFilterPair<T extends preprocessedValues> =
       // filterValuePreprocessor doesn't exist
       filterValuePreprocessor?: undefined;
       // and filterFunction is provided filterValue and run once per item
-      filterFunction: (item: DimItem, filterValue?: string) => ValidFilterOutput;
+      filterFunction: (
+        item: DimItem,
+        filterValue: string | undefined,
+        context: FilterContext
+      ) => ValidFilterOutput;
     }
   | {
       // filterValuePreprocessor returns type T once per *search*,
       filterValuePreprocessor: (filterValue: string) => T;
       // then type T is used (as arg 2) inside filterFunction once per item
-      filterFunction: (item: DimItem, filterTester: T) => ValidFilterOutput;
+      filterFunction: (item: DimItem, filterTester: T, context: FilterContext) => ValidFilterOutput;
     }
   | {
       // filterValuePreprocessor returns a function that accepts an item,
-      filterValuePreprocessor: (filterValue: string) => ItemFilter;
+      filterValuePreprocessor: (filterValue: string, context: FilterContext) => ItemFilter;
       // and that function is used AS the filterFunction once per item
       filterFunction?: undefined;
     };
@@ -65,7 +69,7 @@ export type FilterDefinition = PreprocessorFilterPairs & {
   hint?: I18nInput;
 
   /** a t()-compatible arg tuple pointing to a full description of the filter, to show in filter help */
-  description: I18nInput;
+  description: string | I18nInput;
 
   /**
    * not sure if we want this. it would be used to generically make suggestions if suggestionsGenerator is missing.
@@ -82,20 +86,21 @@ export type FilterDefinition = PreprocessorFilterPairs & {
    */
   format: 'simple' | 'query' | 'freeform' | 'range' | 'rangeoverload';
 
-  /** destinyVersion - 1 or 2, or if a filter applies to both, 0 */
-  destinyVersion: 0 | 1 | 2;
+  /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
+  destinyVersion?: 1 | 2;
 
   /** a rich element to show in fancy search bar, instead of just letters */
   // TODO: do this later
   // breadcrumb?: (filterValue?: string) => JSX.Element;
 
   /** given the manifest, prep a set of suggestion based on, idk, perk names for instance? */
-  // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing
+  // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing that's called on demand as we are autocompleting
+  // TODO rename to suggestions
   suggestionsGenerator?: string[]; // | string[][] | ((defs: D2ManifestDefinitions) => string[]);
 
   /** is provided a list of all items. calculates some kind of global information before running the search */
   // TODO: move context into the filter functions themselves?
-  contextGenerator?: (context: FilterContext, filterValue?: string) => void;
+  //contextGenerator?: (context: FilterContext, filterValue?: string) => Context;
 };
 
 /*

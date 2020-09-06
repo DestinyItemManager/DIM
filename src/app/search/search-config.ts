@@ -28,12 +28,12 @@ const allFilters = [
   ...loadoutFilters,
   ...simpleRangeFilters,
   ...overloadedRangeFilters,
-  ...ratingsFilters,
+  ...($featureFlags.reviewsEnabled ? ratingsFilters : []),
   ...simpleFilters,
   ...socketFilters,
   ...statFilters,
   ...locationFilters,
-  ...wishlistFilters,
+  ...($featureFlags.wishLists ? wishlistFilters : []),
 ];
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);

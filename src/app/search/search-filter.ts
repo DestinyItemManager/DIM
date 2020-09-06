@@ -2,6 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
+import { emptyObject } from 'app/utils/empty';
 import {
   getItemDamageShortName,
   getItemPowerCapFinalSeason,
@@ -54,7 +55,7 @@ import {
   SEASONAL_ARTIFACT_BUCKET,
   SHADERS_BUCKET,
 } from './d2-known-values';
-import { FilterContext, FilterDefinition, ItemFilter, ValidFilterOutput } from './filter-types';
+import { FilterContext, FilterDefinition, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
 import {
@@ -129,7 +130,7 @@ export const searchFiltersConfigSelector = createSelector(
   currentStoreSelector,
   loadoutsSelector,
   inventoryWishListsSelector,
-  ratingsSelector,
+  $featureFlags.reviewsEnabled ? ratingsSelector : emptyObject,
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
@@ -180,7 +181,7 @@ function makeSearchFilterFactory(
 
     // Transform our query syntax tree into a filter function by recursion.
     // TODO: break these out into standalone, tested functions!
-    const transformAST = (ast: QueryAST): ((item: DimItem) => ValidFilterOutput) => {
+    const transformAST = (ast: QueryAST): ItemFilter => {
       switch (ast.op) {
         case 'and': {
           const fns = ast.operands.map(transformAST);
@@ -214,9 +215,7 @@ function makeSearchFilterFactory(
 
           const filterDef = filters[filterName];
           if (filterDef) {
-            // run the contextGenerator against all items if it exists. this prepares things like "maxpower" or "dupe"
-            filterDef.contextGenerator?.(filterContext, filterValue);
-            return prepareFilter(filterDef, filterValue);
+            return prepareFilter(filterDef, filterValue, filterContext);
           }
 
           // TODO: mark invalid!
@@ -236,21 +235,22 @@ function makeSearchFilterFactory(
  */
 export function prepareFilter(
   filter: FilterDefinition,
-  filterValue: string
-): (item: DimItem) => ValidFilterOutput {
+  filterValue: string,
+  context: FilterContext
+): ItemFilter {
   if (filter.filterValuePreprocessor) {
     if (filter.filterFunction) {
       // if there is a filterValuePreprocessor, there will be a filterValue
       const preprocessedfilterValue = filter.filterValuePreprocessor(filterValue);
       // feed that into filterFunction
-      return (item: DimItem) => filter.filterFunction(item, preprocessedfilterValue);
+      return (item: DimItem) => filter.filterFunction(item, preprocessedfilterValue, context);
     } else {
       // if there is just a filterValuePreprocessor, it returns the filter function directly
-      return filter.filterValuePreprocessor(filterValue);
+      return filter.filterValuePreprocessor(filterValue, context);
     }
   }
   // if there was no preprocessor, the raw filterValue string goes into the filter function alongside each item
-  return (item: DimItem) => filter.filterFunction(item, filterValue);
+  return (item: DimItem) => filter.filterFunction(item, filterValue, context);
 }
 
 /**

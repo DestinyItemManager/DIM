@@ -2,7 +2,7 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
 import { D2Item, DimItem } from 'app/inventory/item-types';
 import { getItemDamageShortName } from 'app/utils/item-utils';
-import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -47,7 +47,6 @@ const knownValuesFilters: FilterDefinition[] = [
     ],
     description: [tl('Filter.RarityTier')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
       item.tier.toLowerCase() === (filterValue || tierMap[filterValue]),
   },
@@ -63,35 +62,19 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: ['titan', 'hunter', 'warlock'],
     description: [tl('Filter.Class')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
       !item.classified && item.classType === classes.indexOf(filterValue),
-  },
-  {
-    keywords: ['reacquirable'],
-    description: [tl('Filter.Reacquirable')],
-    format: 'simple',
-    destinyVersion: 0,
-    filterFunction: (item: DimItem) =>
-      Boolean(
-        item.isDestiny2() &&
-          item.collectibleState !== null &&
-          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
-          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
-      ),
   },
   {
     keywords: ['cosmetic'],
     description: [tl('Filter.Categories')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem) => cosmeticTypes.includes(item.type),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
     description: [tl('Filter.ContributeLight')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
@@ -107,7 +90,6 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: damageTypeNames,
     description: [tl('Filter.DamageType')],
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
       getItemDamageShortName(item) === filterValue,
   },
@@ -117,7 +99,6 @@ const knownValuesFilters: FilterDefinition[] = [
       .map((v) => v.toLowerCase()),
     description: [tl('Filter.ArmorCategory')], // or 'Filter.WeaponClass'
     format: 'simple',
-    destinyVersion: 0,
     filterFunction: (item: DimItem, filterValue: string) =>
       item.type?.toLowerCase() === filterValue,
   },

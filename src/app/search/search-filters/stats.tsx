@@ -1,7 +1,9 @@
 import { tl } from 'app/i18next-t';
 import { D2Item, DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { FilterContext, FilterDefinition } from '../filter-types';
 import {
   armorAnyStatHashes,
@@ -11,12 +13,76 @@ import {
 } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 
-let _maxStatValues: {
-  [key: string]: { [key: string]: { value: number; base: number } };
-} | null = null;
-const _maxStatLoadoutItems: { [key: string]: string[] } = {};
+const findMaxStatLoadout = memoizeOne((stores: DimStore[]) =>
+  // Double memoize! Each time stores changes we make a new memoized function
+  // that can find the ids of the loadout that maximizes the given stat
+  _.memoize((statName: string) => {
+    const maxStatHash = statHashByName[statName];
+    return stores.flatMap((store) =>
+      maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
+    );
+  })
+);
 
-let _maxPowerLoadoutItems: string[] = [];
+function checkIfHasMaxStatValue(
+  maxStatValues: {
+    [key: string]: { [key: string]: { value: number; base: number } };
+  },
+  item: D2Item,
+  statName: string,
+  byBaseValue = false
+) {
+  // filterValue stat must exist, and this must be armor
+  if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
+    return false;
+  }
+  const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
+  const byWhichValue = byBaseValue ? 'base' : 'value';
+  const itemSlot = `${item.classType}${item.type}`;
+  const matchingStats = item.stats?.filter(
+    (s) =>
+      statHashes.includes(s.statHash) &&
+      s[byWhichValue] === maxStatValues[itemSlot][s.statHash][byWhichValue]
+  );
+  return matchingStats && Boolean(matchingStats.length);
+}
+
+const gatherHighestStatsPerSlot = memoizeOne((stores: DimStore[]) => {
+  const maxStatValues: {
+    [key: string]: { [key: string]: { value: number; base: number } };
+  } | null = {};
+  for (const store of stores) {
+    for (const i of store.items) {
+      if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
+        continue;
+      }
+      const itemSlot = `${i.classType}${i.type}`;
+      if (!(itemSlot in maxStatValues)) {
+        maxStatValues[itemSlot] = {};
+      }
+      if (i.stats) {
+        for (const stat of i.stats) {
+          if (armorStatHashes.includes(stat.statHash)) {
+            maxStatValues[itemSlot][stat.statHash] =
+              // just assign if this is the first
+              !(stat.statHash in maxStatValues[itemSlot])
+                ? { value: stat.value, base: stat.base }
+                : // else we are looking for the biggest stat
+                  {
+                    value: Math.max(maxStatValues[itemSlot][stat.statHash].value, stat.value),
+                    base: Math.max(maxStatValues[itemSlot][stat.statHash].base, stat.base),
+                  };
+          }
+        }
+      }
+    }
+  }
+  return maxStatValues;
+});
+
+const calculateMaxPowerLoadoutItems = memoizeOne((stores: DimStore[]) =>
+  stores.flatMap((store) => maxLightItemSet(stores, store).equippable.map((i) => i.id))
+);
 
 // filters that operate on stats, several of which calculate values from all items beforehand
 const statFilters: FilterDefinition[] = [
@@ -25,7 +91,6 @@ const statFilters: FilterDefinition[] = [
     description: [tl('Filter.Stats')],
     format: 'range',
     suggestionsGenerator: searchableStatNames,
-    destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue),
   },
   {
@@ -33,7 +98,6 @@ const statFilters: FilterDefinition[] = [
     description: [tl('Filter.StatsBase')],
     format: 'range',
     suggestionsGenerator: searchableStatNames,
-    destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue, true),
   },
   {
@@ -43,13 +107,12 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
-    contextGenerator: findMaxStatLoadout,
-    filterFunction: (item: D2Item, filterValue: string) => {
+    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) => {
       // filterValue stat must exist, and this must be armor
       if (!item.bucket.inArmor || !statHashByName[filterValue]) {
         return false;
       }
-      return _maxStatLoadoutItems[filterValue]?.includes(item.id);
+      return findMaxStatLoadout(stores)(filterValue).includes(item.id);
     },
   },
   {
@@ -58,9 +121,8 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
-    contextGenerator: gatherHighestStatsPerSlot,
-    filterFunction: (item: D2Item, filterValue: string) =>
-      checkIfHasMaxStatValue(item, filterValue),
+    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) =>
+      checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue),
   },
   {
     keywords: ['maxbasestatvalue'],
@@ -68,17 +130,16 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
-    contextGenerator: gatherHighestStatsPerSlot,
-    filterFunction: (item: D2Item, filterValue: string) =>
-      checkIfHasMaxStatValue(item, filterValue, true),
+    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) =>
+      checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue, true),
   },
   {
     keywords: ['maxpower'],
     description: [tl('Filter.MaxPower')],
     format: 'simple',
     destinyVersion: 2,
-    contextGenerator: calculateMaxPowerLoadoutItems,
-    filterFunction: (item: DimItem) => _maxPowerLoadoutItems.includes(item.id),
+    filterFunction: (item: DimItem, _, { stores }: FilterContext) =>
+      calculateMaxPowerLoadoutItems(stores).includes(item.id),
   },
 ];
 
@@ -105,73 +166,4 @@ function statFilterFromString(filterValue: string, byBaseValue = false) {
     );
     return Boolean(matchingStats?.length);
   };
-}
-
-function findMaxStatLoadout({ stores }: FilterContext, statName: string) {
-  const maxStatHash = statHashByName[statName];
-  if (!_maxStatLoadoutItems[statName]) {
-    _maxStatLoadoutItems[statName] = [];
-  }
-  if (!_maxStatLoadoutItems[statName].length) {
-    stores.forEach((store) => {
-      _maxStatLoadoutItems[statName].push(
-        ...maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
-      );
-    });
-  }
-}
-
-function checkIfHasMaxStatValue(item: D2Item, statName: string, byBaseValue = false) {
-  // filterValue stat must exist, and this must be armor
-  if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats || !_maxStatValues) {
-    return false;
-  }
-  const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
-  const byWhichValue = byBaseValue ? 'base' : 'value';
-  const itemSlot = `${item.classType}${item.type}`;
-  const matchingStats = item.stats?.filter(
-    (s) =>
-      statHashes.includes(s.statHash) &&
-      s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
-  );
-  return matchingStats && Boolean(matchingStats.length);
-}
-
-function gatherHighestStatsPerSlot({ stores }: FilterContext) {
-  if (_maxStatValues === null) {
-    _maxStatValues = {};
-    for (const store of stores) {
-      for (const i of store.items) {
-        if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
-          continue;
-        }
-        const itemSlot = `${i.classType}${i.type}`;
-        if (!(itemSlot in _maxStatValues)) {
-          _maxStatValues[itemSlot] = {};
-        }
-        if (i.stats) {
-          for (const stat of i.stats) {
-            if (armorStatHashes.includes(stat.statHash)) {
-              _maxStatValues[itemSlot][stat.statHash] =
-                // just assign if this is the first
-                !(stat.statHash in _maxStatValues[itemSlot])
-                  ? { value: stat.value, base: stat.base }
-                  : // else we are looking for the biggest stat
-                    {
-                      value: Math.max(_maxStatValues[itemSlot][stat.statHash].value, stat.value),
-                      base: Math.max(_maxStatValues[itemSlot][stat.statHash].base, stat.base),
-                    };
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-function calculateMaxPowerLoadoutItems({ stores }: FilterContext) {
-  _maxPowerLoadoutItems = [];
-  stores.forEach((store) => {
-    _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).equippable.map((i) => i.id));
-  });
 }

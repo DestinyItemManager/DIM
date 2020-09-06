@@ -1,10 +1,10 @@
 import { tl } from 'app/i18next-t';
-import { getNotes, ItemInfos } from 'app/inventory/dim-item-info';
+import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { settingsSelector } from 'app/settings/reducer';
 import latinise from 'voca/latinise';
 import store from '../../store/store';
-import { FilterDefinition } from '../filter-types';
+import { FilterContext, FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
 const isLatinBased = (() =>
@@ -26,25 +26,25 @@ function startWordRegexp(s: string) {
 /** returns input string toLower, and stripped of accents if it's a latin language */
 const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLowerCase();
 
-const itemInfos: ItemInfos = {};
-
 const freeformFilters: FilterDefinition[] = [
   {
     keywords: ['notes'],
     description: [tl('Filter.Notes')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: plainString,
-    filterFunction: (item: DimItem, filterValue: string) => {
-      const notes = getNotes(item, itemInfos) ?? '';
-      return plainString(notes).includes(filterValue);
+    filterFunction: (
+      item: DimItem,
+      filterValue: string,
+      { itemInfos, itemHashTags }: FilterContext
+    ) => {
+      const notes = getNotes(item, itemInfos, itemHashTags);
+      return Boolean(notes && plainString(notes).includes(filterValue));
     },
   },
   {
     keywords: ['name'],
     description: [tl('Filter.PartialMatch')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: plainString,
     filterFunction: (item: DimItem, filterValue: string) =>
       plainString(item.name).includes(filterValue),
@@ -53,7 +53,6 @@ const freeformFilters: FilterDefinition[] = [
     keywords: ['description'],
     description: [tl('Filter.PartialMatch')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: plainString,
     filterFunction: (item: DimItem, filterValue: string) =>
       plainString(item.description).includes(filterValue),
@@ -62,9 +61,9 @@ const freeformFilters: FilterDefinition[] = [
     keywords: ['perk'],
     description: [tl('Filter.PartialMatch')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
     filterFunction: (item: DimItem, filterValue: RegExp) => {
+      // TODO: this may do too many array allocations to be performant.
       const strings = [
         ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
         ...getStringsFromAllSockets(item),
@@ -76,9 +75,9 @@ const freeformFilters: FilterDefinition[] = [
     keywords: ['perkname'],
     description: [tl('Filter.PartialMatch')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
     filterFunction: (item: DimItem, filterValue: RegExp) => {
+      // TODO: this may do too many array allocations to be performant.
       const strings = [
         ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, false),
         ...getStringsFromAllSockets(item, false),
@@ -90,12 +89,15 @@ const freeformFilters: FilterDefinition[] = [
     keywords: ['keyword'],
     description: [tl('Filter.PartialMatch')],
     format: 'freeform',
-    destinyVersion: 0,
     filterValuePreprocessor: plainString,
-    filterFunction: (item: DimItem, filterValue: string) => {
-      const notes = getNotes(item, itemInfos) ?? '';
+    filterFunction: (
+      item: DimItem,
+      filterValue: string,
+      { itemInfos, itemHashTags }: FilterContext
+    ) => {
+      const notes = getNotes(item, itemInfos, itemHashTags);
       if (
-        plainString(notes).includes(filterValue) ||
+        (notes && plainString(notes).includes(filterValue)) ||
         plainString(item.name).includes(filterValue) ||
         plainString(item.description).includes(filterValue) ||
         plainString(item.typeName).includes(filterValue)
@@ -151,9 +153,9 @@ export function getStringsFromAllSockets(item: DimItem, includeDescription = tru
   return (
     (item.isDestiny2() &&
       item.sockets &&
-      item.sockets.sockets.flatMap((socket) => {
+      item.sockets.allSockets.flatMap((socket) => {
         const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
-          plug.plugItem.displayProperties,
+          plug.plugDef.displayProperties,
           plug.perks.map((perk) => perk.displayProperties),
         ]);
         return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);

@@ -1,12 +1,8 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { FilterDefinition } from '../filter-types';
-
-const stores: DimStore[] = [];
-const currentStore: DimStore = {} as DimStore;
+import { FilterContext, FilterDefinition } from '../filter-types';
 
 // filters that check stores
 const locationFilters: FilterDefinition[] = [
@@ -14,8 +10,7 @@ const locationFilters: FilterDefinition[] = [
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     description: [tl('Filter.Location')],
     format: 'simple',
-    destinyVersion: 0,
-    filterFunction: (item: DimItem, filterValue: string) => {
+    filterFunction: (item: DimItem, filterValue: string, { stores }: FilterContext) => {
       let storeIndex = 0;
 
       switch (filterValue) {
@@ -45,8 +40,7 @@ const locationFilters: FilterDefinition[] = [
     keywords: ['onwrongclass'],
     description: [tl('Filter.Class')],
     format: 'simple',
-    destinyVersion: 0,
-    filterFunction: (item: DimItem) => {
+    filterFunction: (item: DimItem, _, { stores }: FilterContext) => {
       const ownerStore = getStore(stores, item.owner);
 
       return (
@@ -61,26 +55,17 @@ const locationFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['invault', 'incurrentchar'],
+    keywords: ['invault'],
     description: [tl('Filter.Location')],
-    format: 'query',
-    destinyVersion: 0,
-    filterFunction: (item: DimItem, filterValue: string) => {
-      let desiredStore = '';
-      switch (filterValue) {
-        case 'invault':
-          desiredStore = 'vault';
-          break;
-        case 'incurrentchar': {
-          if (currentStore) {
-            desiredStore = currentStore.id;
-          } else {
-            return false;
-          }
-        }
-      }
-      return item.owner === desiredStore;
-    },
+    format: 'simple',
+    filterFunction: (item: DimItem) => item.owner === 'vault',
+  },
+  {
+    keywords: ['incurrentchar'],
+    description: [tl('Filter.Location')],
+    format: 'simple',
+    filterFunction: (item: DimItem, _, { currentStore }: FilterContext) =>
+      currentStore ? item.owner === currentStore.id : false,
   },
 ];
 
