@@ -18,9 +18,8 @@ const collectItemsInLoadouts = memoizeOne((loadouts: Loadout[]) => {
 
 const loadoutFilters: FilterDefinition[] = [
   {
-    keywords: ['inloadout'],
-    description: [tl('Filter.InLoadout')],
-    format: 'simple',
+    keywords: 'inloadout',
+    description: tl('Filter.InLoadout'),
     filterFunction: (item: DimItem, _, { loadouts }: FilterContext) =>
       collectItemsInLoadouts(loadouts).has(item.id),
   },

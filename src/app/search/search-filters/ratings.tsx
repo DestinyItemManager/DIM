@@ -8,8 +8,8 @@ const ratings = {} as ReviewsState['ratings'];
 
 const ratingsFilters: FilterDefinition[] = [
   {
-    keywords: ['rating'],
-    description: [tl('Filter.Rating')],
+    keywords: 'rating',
+    description: tl('Filter.Rating'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
@@ -26,8 +26,8 @@ const ratingsFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['ratingcount'],
-    description: [tl('Filter.RatingCount')],
+    keywords: 'ratingcount',
+    description: tl('Filter.RatingCount'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
@@ -40,8 +40,7 @@ const ratingsFilters: FilterDefinition[] = [
   },
   {
     keywords: ['rated', 'hasrating'],
-    description: [tl('Filter.HasRating')],
-    format: 'simple',
+    description: tl('Filter.HasRating'),
     filterFunction: (item: DimItem) => {
       if (!$featureFlags.reviewsEnabled) {
         return false;

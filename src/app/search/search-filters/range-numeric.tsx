@@ -33,24 +33,24 @@ export function rangeStringToComparator(rangeString: string) {
 
 const simpleRangeFilters: FilterDefinition[] = [
   {
-    keywords: ['stack'],
-    description: [tl('Filter.StackLevel')],
+    keywords: 'stack',
+    description: tl('Filter.StackLevel'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       filterValue(item.amount),
   },
   {
-    keywords: ['light'],
-    description: [tl('Filter.LightLevel')],
+    keywords: 'light',
+    description: tl('Filter.LightLevel'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       item.primStat && filterValue(item.primStat.value),
   },
   {
-    keywords: ['year'],
-    description: [tl('Filter.Year')],
+    keywords: 'year',
+    description: tl('Filter.Year'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) => {
@@ -62,16 +62,16 @@ const simpleRangeFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['level'],
-    description: [tl('Filter.RequiredLevel')],
+    keywords: 'level',
+    description: tl('Filter.RequiredLevel'),
     format: 'range',
     filterValuePreprocessor: rangeStringToComparator,
     filterFunction: (item: DimItem, filterValue: (compare: number) => boolean) =>
       filterValue(item.equipRequiredLevel),
   },
   {
-    keywords: ['powerlimit'],
-    description: [tl('Filter.PowerLimit')],
+    keywords: 'powerlimit',
+    description: tl('Filter.PowerLimit'),
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: rangeStringToComparator,

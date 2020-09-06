@@ -8,8 +8,7 @@ import { FilterContext, FilterDefinition } from '../filter-types';
 const locationFilters: FilterDefinition[] = [
   {
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
-    description: [tl('Filter.Location')],
-    format: 'simple',
+    description: tl('Filter.Location'),
     filterFunction: (item: DimItem, filterValue: string, { stores }: FilterContext) => {
       let storeIndex = 0;
 
@@ -37,9 +36,8 @@ const locationFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['onwrongclass'],
-    description: [tl('Filter.Class')],
-    format: 'simple',
+    keywords: 'onwrongclass',
+    description: tl('Filter.Class'),
     filterFunction: (item: DimItem, _, { stores }: FilterContext) => {
       const ownerStore = getStore(stores, item.owner);
 
@@ -55,16 +53,14 @@ const locationFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['invault'],
-    description: [tl('Filter.Location')],
-    format: 'simple',
+    keywords: 'invault',
+    description: tl('Filter.Location'),
     filterFunction: (item: DimItem) => item.owner === 'vault',
   },
   {
-    keywords: ['incurrentchar'],
-    description: [tl('Filter.Location')],
-    format: 'simple',
-    filterFunction: (item: DimItem, _, { currentStore }: FilterContext) =>
+    keywords: 'incurrentchar',
+    description: tl('Filter.Location'),
+    filterFunction: ({ currentStore }) => (item: DimItem) =>
       currentStore ? item.owner === currentStore.id : false,
   },
 ];

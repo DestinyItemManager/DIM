@@ -87,23 +87,23 @@ const calculateMaxPowerLoadoutItems = memoizeOne((stores: DimStore[]) =>
 // filters that operate on stats, several of which calculate values from all items beforehand
 const statFilters: FilterDefinition[] = [
   {
-    keywords: ['stat'],
-    description: [tl('Filter.Stats')],
+    keywords: 'stat',
+    description: tl('Filter.Stats'),
     format: 'range',
     suggestionsGenerator: searchableStatNames,
     filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue),
   },
   {
-    keywords: ['basestat'],
-    description: [tl('Filter.StatsBase')],
+    keywords: 'basestat',
+    description: tl('Filter.StatsBase'),
     format: 'range',
     suggestionsGenerator: searchableStatNames,
     filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue, true),
   },
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
-    keywords: ['maxstatloadout'],
-    description: [tl('Filter.StatsLoadout')],
+    keywords: 'maxstatloadout',
+    description: tl('Filter.StatsLoadout'),
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -116,8 +116,8 @@ const statFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['maxstatvalue'],
-    description: [tl('Filter.StatsMax')],
+    keywords: 'maxstatvalue',
+    description: tl('Filter.StatsMax'),
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -125,8 +125,8 @@ const statFilters: FilterDefinition[] = [
       checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue),
   },
   {
-    keywords: ['maxbasestatvalue'],
-    description: [tl('Filter.StatsMax')],
+    keywords: 'maxbasestatvalue',
+    description: tl('Filter.StatsMax'),
     format: 'query',
     suggestionsGenerator: searchableStatNames,
     destinyVersion: 2,
@@ -134,9 +134,8 @@ const statFilters: FilterDefinition[] = [
       checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue, true),
   },
   {
-    keywords: ['maxpower'],
-    description: [tl('Filter.MaxPower')],
-    format: 'simple',
+    keywords: 'maxpower',
+    description: tl('Filter.MaxPower'),
     destinyVersion: 2,
     filterFunction: (item: DimItem, _, { stores }: FilterContext) =>
       calculateMaxPowerLoadoutItems(stores).includes(item.id),

@@ -55,7 +55,7 @@ import {
   SEASONAL_ARTIFACT_BUCKET,
   SHADERS_BUCKET,
 } from './d2-known-values';
-import { FilterContext, FilterDefinition, ItemFilter } from './filter-types';
+import { FilterContext, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
 import {
@@ -215,10 +215,11 @@ function makeSearchFilterFactory(
 
           const filterDef = filters[filterName];
           if (filterDef) {
-            return prepareFilter(filterDef, filterValue, filterContext);
+            // Each filter knows how to generate a standalone item filter function
+            return filterDef.filterFunction({ filterValue, ...filterContext });
           }
 
-          // TODO: mark invalid!
+          // TODO: mark invalid - fill out what didn't make sense and where it was in the string
           return () => true;
         }
       }
@@ -228,29 +229,6 @@ function makeSearchFilterFactory(
 
     return transformAST(parsedQuery);
   };
-}
-
-/**
- * Generate a filter function from a filter definition.
- */
-export function prepareFilter(
-  filter: FilterDefinition,
-  filterValue: string,
-  context: FilterContext
-): ItemFilter {
-  if (filter.filterValuePreprocessor) {
-    if (filter.filterFunction) {
-      // if there is a filterValuePreprocessor, there will be a filterValue
-      const preprocessedfilterValue = filter.filterValuePreprocessor(filterValue);
-      // feed that into filterFunction
-      return (item: DimItem) => filter.filterFunction(item, preprocessedfilterValue, context);
-    } else {
-      // if there is just a filterValuePreprocessor, it returns the filter function directly
-      return filter.filterValuePreprocessor(filterValue, context);
-    }
-  }
-  // if there was no preprocessor, the raw filterValue string goes into the filter function alongside each item
-  return (item: DimItem) => filter.filterFunction(item, filterValue, context);
 }
 
 /**

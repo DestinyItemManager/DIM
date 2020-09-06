@@ -1,10 +1,9 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
 import { settingsSelector } from 'app/settings/reducer';
 import latinise from 'voca/latinise';
 import store from '../../store/store';
-import { FilterContext, FilterDefinition } from '../filter-types';
+import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
 const isLatinBased = (() =>
@@ -28,87 +27,89 @@ const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLo
 
 const freeformFilters: FilterDefinition[] = [
   {
-    keywords: ['notes'],
-    description: [tl('Filter.Notes')],
+    keywords: 'notes',
+    description: tl('Filter.Notes'),
     format: 'freeform',
-    filterValuePreprocessor: plainString,
-    filterFunction: (
-      item: DimItem,
-      filterValue: string,
-      { itemInfos, itemHashTags }: FilterContext
-    ) => {
-      const notes = getNotes(item, itemInfos, itemHashTags);
-      return Boolean(notes && plainString(notes).includes(filterValue));
+    filterFunction: ({ filterValue, itemInfos, itemHashTags }) => {
+      filterValue = plainString(filterValue);
+      return (item) => {
+        const notes = getNotes(item, itemInfos, itemHashTags);
+        return Boolean(notes && plainString(notes).includes(filterValue));
+      };
     },
   },
   {
-    keywords: ['name'],
-    description: [tl('Filter.PartialMatch')],
+    keywords: 'name',
+    description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterValuePreprocessor: plainString,
-    filterFunction: (item: DimItem, filterValue: string) =>
-      plainString(item.name).includes(filterValue),
-  },
-  {
-    keywords: ['description'],
-    description: [tl('Filter.PartialMatch')],
-    format: 'freeform',
-    filterValuePreprocessor: plainString,
-    filterFunction: (item: DimItem, filterValue: string) =>
-      plainString(item.description).includes(filterValue),
-  },
-  {
-    keywords: ['perk'],
-    description: [tl('Filter.PartialMatch')],
-    format: 'freeform',
-    filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
-    filterFunction: (item: DimItem, filterValue: RegExp) => {
-      // TODO: this may do too many array allocations to be performant.
-      const strings = [
-        ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-        ...getStringsFromAllSockets(item),
-      ];
-      return strings.some((s) => filterValue.test(s));
+    filterFunction: ({ filterValue }) => {
+      filterValue = plainString(filterValue);
+      return (item) => plainString(item.name).includes(filterValue);
     },
   },
   {
-    keywords: ['perkname'],
-    description: [tl('Filter.PartialMatch')],
+    keywords: 'description',
+    description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterValuePreprocessor: (filterValue: string) => startWordRegexp(filterValue),
-    filterFunction: (item: DimItem, filterValue: RegExp) => {
-      // TODO: this may do too many array allocations to be performant.
-      const strings = [
-        ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, false),
-        ...getStringsFromAllSockets(item, false),
-      ];
-      return strings.some((s) => filterValue.test(s));
+    filterFunction: ({ filterValue }) => {
+      filterValue = plainString(filterValue);
+      return (item) => plainString(item.description).includes(filterValue);
     },
   },
   {
-    keywords: ['keyword'],
-    description: [tl('Filter.PartialMatch')],
+    keywords: 'perk',
+    description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterValuePreprocessor: plainString,
-    filterFunction: (
-      item: DimItem,
-      filterValue: string,
-      { itemInfos, itemHashTags }: FilterContext
-    ) => {
-      const notes = getNotes(item, itemInfos, itemHashTags);
-      if (
-        (notes && plainString(notes).includes(filterValue)) ||
-        plainString(item.name).includes(filterValue) ||
-        plainString(item.description).includes(filterValue) ||
-        plainString(item.typeName).includes(filterValue)
-      ) {
-        return true;
-      }
-      const perkStrings = [
-        ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-        ...getStringsFromAllSockets(item),
-      ];
-      return perkStrings.some((s) => s.includes(filterValue));
+    filterFunction: ({ filterValue }) => {
+      const startWord = startWordRegexp(filterValue);
+      return (item) => {
+        // TODO: this may do too many array allocations to be performant.
+        const strings = [
+          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
+          ...getStringsFromAllSockets(item),
+        ];
+        return strings.some((s) => startWord.test(s));
+      };
+    },
+  },
+  {
+    keywords: 'perkname',
+    description: tl('Filter.PartialMatch'),
+    format: 'freeform',
+    filterFunction: ({ filterValue }) => {
+      const startWord = startWordRegexp(filterValue);
+      return (item) => {
+        // TODO: this may do too many array allocations to be performant.
+        const strings = [
+          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, false),
+          ...getStringsFromAllSockets(item, false),
+        ];
+        return strings.some((s) => startWord.test(s));
+      };
+    },
+  },
+  {
+    keywords: 'keyword',
+    description: tl('Filter.PartialMatch'),
+    format: 'freeform',
+    filterFunction: ({ filterValue, itemInfos, itemHashTags }) => {
+      filterValue = plainString(filterValue);
+      return (item) => {
+        const notes = getNotes(item, itemInfos, itemHashTags);
+        if (
+          (notes && plainString(notes).includes(filterValue)) ||
+          plainString(item.name).includes(filterValue) ||
+          plainString(item.description).includes(filterValue) ||
+          plainString(item.typeName).includes(filterValue)
+        ) {
+          return true;
+        }
+        const perkStrings = [
+          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
+          ...getStringsFromAllSockets(item),
+        ];
+        return perkStrings.some((s) => s.includes(filterValue));
+      };
     },
   },
 ];
@@ -149,7 +150,7 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 }
 
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
+export function getStringsFromAllSockets(item, includeDescription = true) {
   return (
     (item.isDestiny2() &&
       item.sockets &&
@@ -164,6 +165,6 @@ export function getStringsFromAllSockets(item: DimItem, includeDescription = tru
   );
 }
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromTalentGrid(item: DimItem, includeDescription = true) {
+export function getStringsFromTalentGrid(item, includeDescription = true) {
   return getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, includeDescription);
 }

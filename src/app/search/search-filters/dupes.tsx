@@ -4,10 +4,11 @@ import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER, SEASONAL_ARTIFACT_BUCKET } from '../d2-known-values';
-import { FilterContext, FilterDefinition } from '../filter-types';
+import { FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
 const notableTags = ['favorite', 'keep'];
@@ -25,14 +26,17 @@ export const makeSeasonalDupeID = (item: DimItem) =>
     item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}` : ''
   }${item.itemCategoryHashes.join('.')}`;
 
-const makeDupeComparator = (
+const sortDupes = (
+  dupes: {
+    [dupeID: string]: DimItem[];
+  },
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
   }
-) =>
+) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-  reverseComparator(
+  const dupeComparator = reverseComparator(
     chainComparator<DimItem>(
       // primary stat
       compareBy((item) => item.primStat?.value),
@@ -45,6 +49,15 @@ const makeDupeComparator = (
       compareBy((i) => i.id) // tiebreak by ID
     )
   );
+
+  _.forIn(dupes, (dupes) => {
+    if (dupes.length > 1) {
+      dupes.sort(dupeComparator);
+    }
+  });
+
+  return dupes;
+};
 
 const computeDupesByIdFn = (stores: DimStore[], makeDupeIdFn: (item: DimItem) => string) => {
   // Holds a map from item hash to count of occurrances of that hash
@@ -81,68 +94,65 @@ export const computeSeasonalDupes = memoizeOne((stores: DimStore[]) =>
 
 const dupeFilters: FilterDefinition[] = [
   {
-    keywords: ['dupe'],
-    description: [tl('Filter.Dupe')],
-    format: 'simple',
-    filterFunction: (item: DimItem, _, { stores }: FilterContext) => {
+    keywords: 'dupe',
+    description: tl('Filter.Dupe'),
+    filterFunction: ({ stores }) => {
       const duplicates = computeDupes(stores);
-      const dupeId = makeDupeID(item);
-      return checkIfIsDupe(duplicates, dupeId, item);
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        return checkIfIsDupe(duplicates, dupeId, item);
+      };
     },
   },
   {
-    keywords: ['seasonaldupe'],
-    description: [tl('Filter.SeasonalDupe')],
-    format: 'simple',
-    filterFunction: (item: DimItem, _, { stores }: FilterContext) => {
+    keywords: 'seasonaldupe',
+    description: tl('Filter.SeasonalDupe'),
+    filterFunction: ({ stores }) => {
       const duplicates = computeSeasonalDupes(stores);
-      const dupeId = makeSeasonalDupeID(item);
-      return checkIfIsDupe(duplicates, dupeId, item);
+      return (item) => {
+        const dupeId = makeSeasonalDupeID(item);
+        return checkIfIsDupe(duplicates, dupeId, item);
+      };
     },
   },
   {
-    keywords: ['dupelower'],
-    description: [tl('Filter.Dupe')],
-    format: 'simple',
-    filterFunction: (item: DimItem, _, { stores, itemInfos, itemHashTags }: FilterContext) => {
-      if (
-        !(
-          item.bucket &&
-          (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') &&
-          !item.notransfer
-        )
-      ) {
+    keywords: 'dupelower',
+    description: tl('Filter.Dupe'),
+    filterFunction: ({ stores, itemInfos, itemHashTags }) => {
+      const duplicates = sortDupes(computeDupes(stores), itemInfos, itemHashTags);
+      return (item) => {
+        if (
+          !(
+            item.bucket &&
+            (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') &&
+            !item.notransfer
+          )
+        ) {
+          return false;
+        }
+
+        const dupeId = makeDupeID(item);
+        const dupes = duplicates[dupeId];
+        if (dupes?.length > 1) {
+          const bestDupe = dupes[0];
+          return item !== bestDupe;
+        }
+
         return false;
-      }
-
-      const duplicates = computeDupes(stores);
-      const dupeId = makeDupeID(item);
-      const dupes = duplicates[dupeId];
-      if (dupes?.length > 1) {
-        // TODO: this re-sorts on every duplicate item, but that might be faster overall!
-        // This isn't worth it!
-        const dupeComparator = makeDupeComparator(itemInfos, itemHashTags);
-        dupes.sort(dupeComparator);
-        const bestDupe = dupes[0];
-        return item !== bestDupe;
-      }
-
-      return false;
+      };
     },
   },
   {
-    keywords: ['count'],
-    description: [tl('Filter.Dupe')],
+    keywords: 'count',
+    description: tl('Filter.Dupe'),
     format: 'range',
-    filterValuePreprocessor: rangeStringToComparator,
-    filterFunction: (
-      item: DimItem,
-      filterValue: (compare: number) => boolean,
-      { stores }: FilterContext
-    ) => {
+    filterFunction: ({ stores, filterValue }) => {
+      const compare = rangeStringToComparator(filterValue);
       const duplicates = computeDupes(stores);
-      const dupeId = makeDupeID(item);
-      return filterValue(duplicates[dupeId]?.length ?? 0);
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        return compare(duplicates[dupeId]?.length ?? 0);
+      };
     },
   },
 ];

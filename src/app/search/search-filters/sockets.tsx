@@ -14,17 +14,15 @@ import { FilterDefinition } from '../filter-types';
 
 const socketFilters: FilterDefinition[] = [
   {
-    keywords: ['randomroll'],
-    description: [tl('Filter.RandomRoll')],
-    format: 'simple',
+    keywords: 'randomroll',
+    description: tl('Filter.RandomRoll'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
   },
   {
-    keywords: ['curated'],
-    description: [tl('Filter.Curated')],
-    format: 'simple',
+    keywords: 'curated',
+    description: tl('Filter.Curated'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) => {
       if (!item) {
@@ -54,8 +52,7 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: ['shaded', 'hasshader'],
-    description: [tl('Filter.HasShader')],
-    format: 'simple',
+    description: tl('Filter.HasShader'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       item.sockets?.allSockets.some((socket) =>
@@ -68,8 +65,7 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: ['ornamented', 'hasornament'],
-    description: [tl('Filter.HasOrnament')],
-    format: 'simple',
+    description: tl('Filter.HasOrnament'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       item.sockets?.allSockets.some((socket) =>
@@ -85,9 +81,8 @@ const socketFilters: FilterDefinition[] = [
       ),
   },
   {
-    keywords: ['hasmod'],
-    description: [tl('Filter.Mods.Y2')],
-    format: 'simple',
+    keywords: 'hasmod',
+    description: tl('Filter.Mods.Y2'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       item.sockets?.allSockets.some((socket) =>
@@ -106,9 +101,8 @@ const socketFilters: FilterDefinition[] = [
       ),
   },
   {
-    keywords: ['modded'],
-    description: [tl('Filter.Mods.Y3')],
-    format: 'simple',
+    keywords: 'modded',
+    description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
     filterFunction: (item: D2Item) =>
       Boolean(item.energy) &&
@@ -127,8 +121,8 @@ const socketFilters: FilterDefinition[] = [
       ),
   },
   {
-    keywords: ['modslot'],
-    description: [tl('Filter.ModSlot')],
+    keywords: 'modslot',
+    description: tl('Filter.ModSlot'),
     format: 'query',
     suggestionsGenerator: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,
@@ -141,8 +135,8 @@ const socketFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['holdsmod'],
-    description: [tl('Filter.HoldsMod')],
+    keywords: 'holdsmod',
+    description: tl('Filter.HoldsMod'),
     format: 'query',
     suggestionsGenerator: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,

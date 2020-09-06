@@ -19,8 +19,8 @@ const mathCheck = /^[\d<>=]/;
 // masterwork:handling is a completely different test from masterwork:>7
 const overloadedRangeFilters: FilterDefinition[] = [
   {
-    keywords: ['masterwork'],
-    description: [tl('Filter.Masterwork')],
+    keywords: 'masterwork',
+    description: tl('Filter.Masterwork'),
     format: 'rangeoverload',
     destinyVersion: 2,
     filterValuePreprocessor: (filterValue: string) => {
@@ -41,8 +41,8 @@ const overloadedRangeFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['energycapacity'],
-    description: [tl('Filter.Energy')],
+    keywords: 'energycapacity',
+    description: tl('Filter.Energy'),
     format: 'rangeoverload',
     destinyVersion: 2,
     filterValuePreprocessor: (filterValue: string) => {
@@ -56,8 +56,8 @@ const overloadedRangeFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['season'],
-    description: [tl('Filter.Season')],
+    keywords: 'season',
+    description: tl('Filter.Season'),
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: seasonRangeStringToComparator,
@@ -65,8 +65,8 @@ const overloadedRangeFilters: FilterDefinition[] = [
       filterValue(item.season),
   },
   {
-    keywords: ['sunsetsafter'],
-    description: [tl('Filter.SunsetAfter')],
+    keywords: 'sunsetsafter',
+    description: tl('Filter.SunsetAfter'),
     format: 'range',
     destinyVersion: 2,
     filterValuePreprocessor: seasonRangeStringToComparator,

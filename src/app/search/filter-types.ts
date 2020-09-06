@@ -13,9 +13,6 @@ type ValidFilterOutput = boolean | null | undefined;
 
 export type ItemFilter = (item: DimItem) => ValidFilterOutput;
 
-type preprocessedValues = string | RegExp | number | ((a: number) => boolean);
-type PreprocessorFilterPairs = PreprocessorFilterPair<preprocessedValues>;
-
 /**
  * A slice of data that could be used by contextGenerator functions to
  * initialize some data required by particular filters. If a new filter needs
@@ -35,40 +32,13 @@ export interface FilterContext {
   };
 }
 
-// TODO: boil down to filterFunction vs. filterFunctionFunction
-
-// there are three valid combinations of filterValuePreprocessor and filterFunction:
-type PreprocessorFilterPair<T extends preprocessedValues> =
-  | {
-      // filterValuePreprocessor doesn't exist
-      filterValuePreprocessor?: undefined;
-      // and filterFunction is provided filterValue and run once per item
-      filterFunction: (item: DimItem, filterValue: string | undefined) => ValidFilterOutput;
-    }
-  | {
-      // filterValuePreprocessor returns type T once per *search*, which will
-      // be available to filterFunction
-      // TODO: maybe we don't need it?
-      filterValuePreprocessor: (filterValue: string) => T;
-      // then type T is used (as arg 2) inside filterFunction once per item
-      filterFunction: (item: DimItem, filterTester: T) => ValidFilterOutput;
-    }
-  | {
-      // filterValuePreprocessor returns a whole item filter function. This is
-      // a good way to handle pre-processing data (like dupes) once before running
-      // all the filters.
-      filterValuePreprocessor: (filterValue: string, context: FilterContext) => ItemFilter;
-      // and that function is used AS the filterFunction once per item
-      filterFunction?: undefined;
-    };
-
 // the main event
-export type FilterDefinition = PreprocessorFilterPairs & {
+export type FilterDefinition = {
   /** one or more keywords which trigger the filter when typed into search bar */
-  keywords: string[];
+  keywords: string | string[];
 
   /** optinally, a t()-compatible arg tuple pointing to a more brief filter description to show alongside filter suggestions */
-  hint?: I18nInput;
+  //hint?: string | I18nInput;
 
   /** a t()-compatible arg tuple pointing to a full description of the filter, to show in filter help */
   description: string | I18nInput;
@@ -76,7 +46,7 @@ export type FilterDefinition = PreprocessorFilterPairs & {
   /**
    * not sure if we want this. it would be used to generically make suggestions if suggestionsGenerator is missing.
    *
-   * simple - an 'is/not' filter. the filter itself knows everything it's looking for
+   * undefined - a simple 'is/not' filter. the filter itself knows everything it's looking for
    *
    * query - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
    *
@@ -86,10 +56,18 @@ export type FilterDefinition = PreprocessorFilterPairs & {
    *
    * rangeoverload - a starting stem like "masterwork" and then either a mathlike string or a word
    */
-  format: 'simple' | 'query' | 'freeform' | 'range' | 'rangeoverload';
+  format?: 'query' | 'freeform' | 'range' | 'rangeoverload';
 
   /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
   destinyVersion?: 1 | 2;
+
+  /**
+   * The filter that will be run to determine whether an item matches or not. Or, a function
+   * that, given a value from a more complex filter expression and the context about the world
+   * around it, can generate a filter function. In that case, the filter function will be generated
+   * once, at the point where the overall query is parsed.
+   */
+  filterFunction: (args: { filterValue: string } & FilterContext) => ItemFilter;
 
   /** a rich element to show in fancy search bar, instead of just letters */
   // TODO: do this later
@@ -97,7 +75,7 @@ export type FilterDefinition = PreprocessorFilterPairs & {
 
   /** given the manifest, prep a set of suggestion based on, idk, perk names for instance? */
   // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing that's called on demand as we are autocompleting
-  // TODO rename to suggestions
+  // TODO rename to suggestions or known values or something
   suggestionsGenerator?: string[]; // | string[][] | ((defs: D2ManifestDefinitions) => string[]);
 
   /** is provided a list of all items. calculates some kind of global information before running the search */

@@ -14,16 +14,14 @@ const checkIfIsWishlist = (
 
 const wishlistFilters: FilterDefinition[] = [
   {
-    keywords: ['wishlist'],
-    description: [tl('Filter.Wishlist')],
-    format: 'simple',
+    keywords: 'wishlist',
+    description: tl('Filter.Wishlist'),
     filterFunction: (item: DimItem, _, { inventoryWishListRolls }: FilterContext) =>
       checkIfIsWishlist(item, inventoryWishListRolls),
   },
   {
-    keywords: ['wishlistdupe'],
-    description: [tl('Filter.WishlistDupe')],
-    format: 'simple',
+    keywords: 'wishlistdupe',
+    description: tl('Filter.WishlistDupe'),
     filterFunction: (item: DimItem, _, { stores, inventoryWishListRolls }: FilterContext) => {
       const duplicates = computeDupes(stores);
       const dupeId = makeDupeID(item);
@@ -35,8 +33,8 @@ const wishlistFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['wishlistnotes'],
-    description: [tl('Filter.WishlistNotes')],
+    keywords: 'wishlistnotes',
+    description: tl('Filter.WishlistNotes'),
     format: 'freeform',
     filterFunction: (
       item: DimItem,
@@ -45,9 +43,8 @@ const wishlistFilters: FilterDefinition[] = [
     ) => inventoryWishListRolls[item.id]?.notes?.toLocaleLowerCase().includes(filterValue),
   },
   {
-    keywords: ['trashlist'],
-    description: [tl('Filter.Trashlist')],
-    format: 'simple',
+    keywords: 'trashlist',
+    description: tl('Filter.Trashlist'),
     filterFunction: (item: DimItem, _, { inventoryWishListRolls }: FilterContext) =>
       inventoryWishListRolls[item.id]?.isUndesirable,
   },

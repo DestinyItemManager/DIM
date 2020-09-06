@@ -4,17 +4,19 @@ import { FilterDefinition } from '../filter-types';
 
 const advancedFilters: FilterDefinition[] = [
   {
-    keywords: ['id'],
-    description: [tl('Filters.ItemId')],
+    keywords: 'id',
+    description: tl('Filters.ItemId'),
     format: 'freeform',
-    filterFunction: (item: DimItem, filterValue: string) => item.id === filterValue,
+    filterFunction: ({ filterValue }) => (item) => item.id === filterValue,
   },
   {
-    keywords: ['hash'],
-    description: [tl('Filters.ItemHash')],
+    keywords: 'hash',
+    description: tl('Filters.ItemHash'),
     format: 'freeform',
-    filterValuePreprocessor: (filterValue: string) => parseInt(filterValue, 10),
-    filterFunction: (item: DimItem, itemHash: number) => item.hash === itemHash,
+    filterFunction: ({ filterValue }) => {
+      const itemHash = parseInt(filterValue, 10);
+      return (item: DimItem) => item.hash === itemHash;
+    },
   },
 ];
 

@@ -89,14 +89,14 @@ const operators = ['<', '>', '<=', '>=', '='];
  */
 export function generateSuggestionsForFilter(filterDefinition: FilterDefinition) {
   const suggestions = filterDefinition.suggestionsGenerator;
-  const thisFilterKeywords = filterDefinition.keywords;
+  const thisFilterKeywords = Array.isArray(filterDefinition.keywords)
+    ? filterDefinition.keywords
+    : [filterDefinition.keywords];
 
   // normalize string[] into string[][] so we can reliably spread it a few lines down from here
   const nestedSuggestions = suggestions === undefined ? [] : [suggestions];
 
   switch (filterDefinition.format) {
-    case 'simple':
-      return expandStringCombinations([['is', 'not'], thisFilterKeywords]);
     case 'query':
       return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]);
     case 'freeform':
@@ -105,6 +105,6 @@ export function generateSuggestionsForFilter(filterDefinition: FilterDefinition)
     case 'rangeoverload':
       return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions, operators]);
     default:
-      return [];
+      return expandStringCombinations([['is', 'not'], thisFilterKeywords]);
   }
 }
