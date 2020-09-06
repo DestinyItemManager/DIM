@@ -1,12 +1,16 @@
 ## Next
 
-* Use the dark theme for Twitter widget ➡️
+* Triumphs, Collections, and Stat Trackers are now all together in the new Records page.
+* You can track triumphs in DIM - tracked triumphs are stored and synced with DIM Sync. These show up on both the Progress and Records pages.
+* Everything on the Records page responds to search - search through your Collections, Triumphs, and Stat Trackers all at once!
+* Unredeemed triumphs show their rewards
 * Compare sheet now offers a Base Stat option for armor, so you can directly compare your stat rolls
 * Mod costs now shown in Loadout Optimizer results
 * Vendors can now track some "pluggable" items like emotes & ghost projections, to filter by whether you already own them
 * Clearing the search input no longer re-opens the search dropdown
 * Mod slot column in the Organizer now shows all supported mod types (i.e. season 10 armor will show seasons 9,10,11)
 * Support for `mod:` and `modname:` filters to parallel the `perk:` and `perkname:` ones
+* Use the dark theme for Twitter widget
 
 ## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
 
