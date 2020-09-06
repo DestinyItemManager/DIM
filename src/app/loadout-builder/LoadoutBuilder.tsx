@@ -23,14 +23,14 @@ import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
 import PerkPicker from './filter/PerkPicker';
-import CompareDrawer from './compare-loadout/CompareDrawer';
+import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import styles from './LoadoutBuilder.m.scss';
-import { ItemsByBucket, statHashToType, statKeys, StatTypes } from './types';
-import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { useProcess } from './hooks/useProcess';
+import styles from './LoadoutBuilder.m.scss';
+import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
+import { ItemsByBucket, statHashToType, statKeys, StatTypes } from './types';
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {

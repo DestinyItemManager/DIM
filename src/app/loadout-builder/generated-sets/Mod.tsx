@@ -3,8 +3,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import clsx from 'clsx';
-import styles from './Mod.m.scss';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import React from 'react';
+import styles from './Mod.m.scss';
 
 interface Props {
   plugDef: PluggableInventoryItemDefinition;

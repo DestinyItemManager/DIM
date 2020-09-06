@@ -1,33 +1,34 @@
-import React, { useMemo, useState } from 'react';
-import _ from 'lodash';
-import Sheet from 'app/dim-ui/Sheet';
-import {
-  ArmorSet,
-  LockedArmor2ModMap,
-  LockableBucketHashes,
-  StatTypes,
-  LockedMap,
-  statKeys,
-  statHashes,
-} from '../types';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import styles from './CompareDrawer.m.scss';
-import Sockets from '../Sockets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { assignModsToArmorSet } from '../mod-utils';
-import { Loadout } from 'app/loadout/loadout-types';
+import Sheet from 'app/dim-ui/Sheet';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { DimItem } from 'app/inventory/item-types';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { updateLoadout } from 'app/loadout/actions';
+import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { connect } from 'react-redux';
-import { DimStore } from 'app/inventory/store-types';
-import { storesSelector } from 'app/inventory/selectors';
-import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
 import { DestinyClass, DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import produce from 'immer';
+import _ from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { connect } from 'react-redux';
+import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
 import SetStats from '../generated-sets/SetStats';
+import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../processWorker/mappers';
-import { DimItem } from 'app/inventory/item-types';
-import Mod from '../Mod';
-import { updateLoadout } from 'app/loadout/actions';
+import {
+  ArmorSet,
+  LockableBucketHashes,
+  LockedArmor2ModMap,
+  LockedMap,
+  statHashes,
+  statKeys,
+  StatTypes,
+} from '../types';
+import styles from './CompareDrawer.m.scss';
+import Mod from './Mod';
+import Sockets from './Sockets';
 
 function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
   const baseStats = _.mapValues(
@@ -121,9 +122,12 @@ function CompareDrawer({
     useableLoadouts.length ? useableLoadouts[0] : undefined
   );
 
+  const setItems = set.armor.map((items) => items[0]);
+
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {
-    const [items] = getItemsFromLoadoutItems(selectedLoadout?.items, defs, stores);
+    const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
+    const [items] = getItemsFromLoadoutItems(equippedItems, defs, stores);
     return _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
@@ -162,7 +166,27 @@ function CompareDrawer({
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const loadoutToSave = selectedLoadout;
+    const loadoutToSave = produce(selectedLoadout, (draftLoadout) => {
+      if (draftLoadout) {
+        const newItems: LoadoutItem[] = [];
+        for (const item of draftLoadout.items) {
+          const dimItem = loadoutItems.find((i) => i.id === item.id);
+          const replacementItem =
+            dimItem && setItems.find((i) => i.bucket.hash === dimItem.bucket.hash);
+          if (replacementItem) {
+            newItems.push({
+              id: replacementItem.id,
+              hash: replacementItem.hash,
+              amount: 1,
+              equipped: true,
+            });
+          } else {
+            newItems.push(item);
+          }
+        }
+        draftLoadout.items = newItems;
+      }
+    });
 
     if (!loadoutToSave) {
       return;
@@ -185,17 +209,17 @@ function CompareDrawer({
         </div>
         <SetStats
           defs={defs}
-          items={set.armor.map((items) => items[0])}
+          items={setItems}
           stats={set.stats}
           maxPower={set.maxPower}
           statOrder={statOrder}
           enabledStats={enabledStats}
         />
         <div className={styles.set}>
-          {set.armor.map((items) => (
-            <div key={items[0].bucket.hash} className={styles.item}>
-              <ConnectedInventoryItem item={items[0]} />
-              <Sockets item={items[0]} lockedMods={assignedMods[items[0].id]} defs={defs} />
+          {setItems.map((item) => (
+            <div key={item.bucket.hash} className={styles.item}>
+              <ConnectedInventoryItem item={item} />
+              <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
             </div>
           ))}
         </div>

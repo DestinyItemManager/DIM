@@ -18,7 +18,7 @@ import {
 } from '../types';
 import { armor2ModPlugCategoriesTitles, generateMixesFromPerks, lockedItemsEqual } from '../utils';
 import styles from './GeneratedSetItem.m.scss';
-import Sockets from '../Sockets';
+import Sockets from './Sockets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting

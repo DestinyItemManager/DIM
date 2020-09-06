@@ -10,7 +10,7 @@ import {
   LockedArmor2Mod,
   ModPickerCategories,
   ModPickerCategory,
-} from './types';
+} from '../types';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
