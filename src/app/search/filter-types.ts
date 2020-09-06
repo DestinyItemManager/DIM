@@ -35,26 +35,28 @@ export interface FilterContext {
   };
 }
 
+// TODO: boil down to filterFunction vs. filterFunctionFunction
+
 // there are three valid combinations of filterValuePreprocessor and filterFunction:
 type PreprocessorFilterPair<T extends preprocessedValues> =
   | {
       // filterValuePreprocessor doesn't exist
       filterValuePreprocessor?: undefined;
       // and filterFunction is provided filterValue and run once per item
-      filterFunction: (
-        item: DimItem,
-        filterValue: string | undefined,
-        context: FilterContext
-      ) => ValidFilterOutput;
+      filterFunction: (item: DimItem, filterValue: string | undefined) => ValidFilterOutput;
     }
   | {
-      // filterValuePreprocessor returns type T once per *search*,
+      // filterValuePreprocessor returns type T once per *search*, which will
+      // be available to filterFunction
+      // TODO: maybe we don't need it?
       filterValuePreprocessor: (filterValue: string) => T;
       // then type T is used (as arg 2) inside filterFunction once per item
-      filterFunction: (item: DimItem, filterTester: T, context: FilterContext) => ValidFilterOutput;
+      filterFunction: (item: DimItem, filterTester: T) => ValidFilterOutput;
     }
   | {
-      // filterValuePreprocessor returns a function that accepts an item,
+      // filterValuePreprocessor returns a whole item filter function. This is
+      // a good way to handle pre-processing data (like dupes) once before running
+      // all the filters.
       filterValuePreprocessor: (filterValue: string, context: FilterContext) => ItemFilter;
       // and that function is used AS the filterFunction once per item
       filterFunction?: undefined;

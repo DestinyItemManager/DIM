@@ -120,6 +120,7 @@ const dupeFilters: FilterDefinition[] = [
       const dupes = duplicates[dupeId];
       if (dupes?.length > 1) {
         // TODO: this re-sorts on every duplicate item, but that might be faster overall!
+        // This isn't worth it!
         const dupeComparator = makeDupeComparator(itemInfos, itemHashTags);
         dupes.sort(dupeComparator);
         const bestDupe = dupes[0];
