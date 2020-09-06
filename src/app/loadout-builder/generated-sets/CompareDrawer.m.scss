@@ -9,7 +9,7 @@
   margin: 16px;
   display: inline-block;
 
-  > div {
+  :global(.fill-row) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

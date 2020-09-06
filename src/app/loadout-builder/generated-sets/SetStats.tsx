@@ -6,6 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { statHashes, StatTypes } from '../types';
@@ -20,9 +21,10 @@ interface Props {
   maxPower: number;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
+  className?: string;
 }
 
-function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats }: Props) {
+function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats, className }: Props) {
   const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
@@ -32,7 +34,7 @@ function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats }: Pro
   const displayStats = { ...stats };
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, className)}>
       <span>
         {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
           <PressTip

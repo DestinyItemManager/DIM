@@ -38,7 +38,7 @@ export default function GeneratedSetButtons({
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={onCompareSet}>
-        Compare Loadout
+        {t('LoadoutBuilder.CompareLoadout')}
       </button>
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}

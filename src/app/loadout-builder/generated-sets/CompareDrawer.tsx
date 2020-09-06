@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -9,6 +10,7 @@ import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass, DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -196,35 +198,39 @@ function CompareDrawer({
     onClose();
   };
 
-  const header = <div className={styles.header}>Compare Loadout</div>;
-
+  const header = <div className={styles.header}>{t('LoadoutBuilder.CompareLoadout')}</div>;
   return (
     <Sheet onClose={onClose} header={header}>
       <div className={styles.content}>
-        <div className={styles.setHeader}>
-          <div className={styles.setTitle}>Optimiser Set</div>
-          <button className="dim-button" type="button" onClick={onSaveLoadout}>
-            {`Save as ${selectedLoadout?.name}`}
-          </button>
-        </div>
-        <SetStats
-          defs={defs}
-          items={setItems}
-          stats={set.stats}
-          maxPower={set.maxPower}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-        />
-        <div className={styles.set}>
-          {setItems.map((item) => (
-            <div key={item.bucket.hash} className={styles.item}>
-              <ConnectedInventoryItem item={item} />
-              <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
+        {selectedLoadout && (
+          <>
+            <div className={clsx('fill-row', styles.setHeader)}>
+              <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
+              <button className="dim-button" type="button" onClick={onSaveLoadout}>
+                {t('LoadoutBuilder.SaveAsLoadout', { loadout: selectedLoadout.name })}
+              </button>
             </div>
-          ))}
-        </div>
-        <div className={styles.setHeader}>
-          <div className={styles.setTitle}>Loadout</div>
+            <SetStats
+              defs={defs}
+              items={setItems}
+              stats={set.stats}
+              maxPower={set.maxPower}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              className={'fill-row'}
+            />
+            <div className={clsx('fill-row', styles.set)}>
+              {setItems.map((item) => (
+                <div key={item.bucket.hash} className={styles.item}>
+                  <ConnectedInventoryItem item={item} />
+                  <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        <div className={clsx('fill-row', styles.setHeader)}>
+          <div className={styles.setTitle}>{t('LoadoutBuilder.Loadout')}</div>
           <select
             className={styles.loadoutSelect}
             onChange={(event) => {
@@ -246,8 +252,9 @@ function CompareDrawer({
           maxPower={loadoutMaxPower}
           statOrder={statOrder}
           enabledStats={enabledStats}
+          className={'fill-row'}
         />
-        <div className={styles.set}>
+        <div className={clsx('fill-row', styles.set)}>
           {loadoutItems.map((item) => (
             <div key={item.bucket.hash} className={styles.item}>
               <ConnectedInventoryItem item={item} />
@@ -256,7 +263,7 @@ function CompareDrawer({
           ))}
         </div>
         {Boolean(loadoutUnassignedMods.length) && (
-          <div className={styles.unassigned}>These mods could not be assigned to the loadout.</div>
+          <div className={styles.unassigned}>{t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}</div>
         )}
         <div className={styles.unassignedMods}>
           {loadoutUnassignedMods.map((unassigned) => (
