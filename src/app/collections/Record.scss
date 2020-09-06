@@ -56,7 +56,6 @@
     border-color: #c4b578;
     color: #c4b578;
     background: transparent;
-    //opacity: 0.7;
     .record-value {
       display: none;
     }
@@ -75,7 +74,7 @@
   &.trackedInDim {
     position: relative;
     border-color: $orange;
-    border-width: 2px;
+    outline: 1px solid $orange;
     background: linear-gradient(
       scale-color($orange, $alpha: -100%) 0%,
       scale-color($orange, $alpha: -80%) 100%
@@ -85,7 +84,7 @@
   &.tracked {
     position: relative;
     border-color: #bdfc7f;
-    border-width: 2px;
+    outline: 1px solid #bdfc7f;
     background: linear-gradient(
       scale-color(#bdfc7f, $alpha: -100%) 0%,
       scale-color(#bdfc7f, $alpha: -90%) 100%
