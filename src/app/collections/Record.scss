@@ -73,8 +73,8 @@
 
   &.trackedInDim {
     position: relative;
-    border-color: $orange;
-    outline: 1px solid $orange;
+    border-color: #f37423;
+    outline: 1px solid #f37423;
     background: linear-gradient(
       scale-color($orange, $alpha: -100%) 0%,
       scale-color($orange, $alpha: -80%) 100%
