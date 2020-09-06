@@ -1,8 +1,8 @@
+import { ITEM_RATING_EXPIRATION } from 'app/destinyTrackerApi/d2-itemListBuilder';
 import { observeStore } from 'app/utils/redux-utils';
+import { set } from 'idb-keyval';
 import _ from 'lodash';
 import { ReviewsState } from './reducer';
-import { ITEM_RATING_EXPIRATION } from 'app/destinyTrackerApi/d2-itemListBuilder';
-import { set } from 'idb-keyval';
 
 export function saveReviewsToIndexedDB() {
   return observeStore(

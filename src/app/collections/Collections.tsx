@@ -1,23 +1,25 @@
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { querySelector } from 'app/shell/reducer';
+import { RootState } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useEffect } from 'react';
-import _ from 'lodash';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router';
+import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
-import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
-import Catalysts from './Catalysts';
-import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { RootState } from 'app/store/types';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector, bucketsSelector } from '../inventory/selectors';
+import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
 import { refresh$ } from '../shell/refresh';
+import Catalysts from './Catalysts';
+import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import { useSubscription } from 'app/utils/hooks';
-import { useParams } from 'react-router';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -28,6 +30,8 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
+  searchQuery?: string;
+  searchFilter?(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -50,6 +54,8 @@ function mapStateToProps() {
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
     profileResponse: profileResponseSelector(state),
+    searchQuery: querySelector(state),
+    searchFilter: searchFilterSelector(state),
   });
 }
 
@@ -61,7 +67,15 @@ const refreshStores = () =>
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-function Collections({ account, buckets, ownedItemHashes, defs, profileResponse }: Props) {
+function Collections({
+  account,
+  buckets,
+  ownedItemHashes,
+  defs,
+  profileResponse,
+  searchQuery,
+  searchFilter,
+}: Props) {
   useEffect(() => {
     D2StoresService.getStoresStream(account);
   }, [account]);
@@ -80,22 +94,30 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
   const badgesRootNodeHash =
     profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
+  const collectionsRootHash =
+    profileResponse.profileCollectibles.data?.collectionCategoriesRootNodeHash;
 
   return (
     <div className="collections-page d2-vendors dim-page">
-      <ErrorBoundary name="Catalysts">
-        <Catalysts defs={defs} profileResponse={profileResponse} />
-      </ErrorBoundary>
+      {!searchQuery && (
+        <ErrorBoundary name="Catalysts">
+          <Catalysts defs={defs} profileResponse={profileResponse} />
+        </ErrorBoundary>
+      )}
       <ErrorBoundary name="Collections">
-        <PresentationNodeRoot
-          presentationNodeHash={3790247699}
-          defs={defs}
-          profileResponse={profileResponse}
-          buckets={buckets}
-          ownedItemHashes={ownedItemHashes}
-          openedPresentationHash={presentationNodeHash}
-          showPlugSets={true}
-        />
+        {collectionsRootHash && (
+          <PresentationNodeRoot
+            presentationNodeHash={collectionsRootHash}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+            showPlugSets={true}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
+          />
+        )}
         {badgesRootNodeHash && (
           <PresentationNodeRoot
             presentationNodeHash={badgesRootNodeHash}
@@ -104,6 +126,8 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             openedPresentationHash={presentationNodeHash}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
           />
         )}
         {metricsRootNodeHash && (
@@ -114,6 +138,9 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             openedPresentationHash={presentationNodeHash}
+            searchQuery={searchQuery}
+            searchFilter={searchFilter}
+            overrideName={t('Progress.StatTrackers')}
           />
         )}
       </ErrorBoundary>

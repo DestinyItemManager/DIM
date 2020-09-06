@@ -1,10 +1,9 @@
-import React from 'react';
-import _ from 'lodash';
-import DropDown, { DropDownItem } from './DropDown';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { ColumnDefinition } from './table-types';
+import React from 'react';
 import { getColumnSelectionId } from './Columns';
+import DropDown, { DropDownItem } from './DropDown';
+import { ColumnDefinition } from './table-types';
 
 /**
  * Component for selection of which columns are displayed in the organizer table.

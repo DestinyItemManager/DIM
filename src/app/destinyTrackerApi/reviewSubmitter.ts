@@ -1,17 +1,17 @@
-import { DestinyAccount } from '../accounts/destiny-account';
-import { loadingTracker } from '../shell/loading-tracker';
-import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
-import { DimItem } from '../inventory/item-types';
-import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
-import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
-import { getRollAndPerks as getRollAndPerksD2 } from './d2-itemTransformer';
-import { getItemReviewsKey } from '../item-review/reducer';
-import { markReviewSubmitted, purgeCachedReview } from '../item-review/actions';
 import { ThunkResult } from 'app/store/types';
-import { handleSubmitErrors } from './trackerErrorHandler';
-import { WorkingD1Rating } from '../item-review/d1-dtr-api-types';
-import { getRollAndPerks as getRollAndPerksD1 } from './itemTransformer';
 import { delay } from 'app/utils/util';
+import { DestinyAccount } from '../accounts/destiny-account';
+import { DimItem } from '../inventory/item-types';
+import { markReviewSubmitted, purgeCachedReview } from '../item-review/actions';
+import { WorkingD1Rating } from '../item-review/d1-dtr-api-types';
+import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
+import { getItemReviewsKey } from '../item-review/reducer';
+import { loadingTracker } from '../shell/loading-tracker';
+import { getRollAndPerks as getRollAndPerksD2 } from './d2-itemTransformer';
+import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { dtrD2ReviewsEndpoint, dtrFetch } from './dtr-service-helper';
+import { getRollAndPerks as getRollAndPerksD1 } from './itemTransformer';
+import { handleSubmitErrors } from './trackerErrorHandler';
 
 /** Submit a user review for an item. This should be dispatched as a Redux action. */
 export function submitReview(

@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
-import ItemPopupContainer from '../item-popup/ItemPopupContainer';
-import ItemPickerContainer from '../item-picker/ItemPickerContainer';
-import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
-import { t } from 'app/i18next-t';
-import { itemTagList } from '../inventory/dim-item-info';
-import { Hotkey } from '../hotkeys/hotkeys';
-import { connect } from 'react-redux';
-import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
-import ErrorPanel from './ErrorPanel';
-import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { accountsSelector, accountsLoadedSelector } from 'app/accounts/selectors';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { Switch, Route, Redirect, useRouteMatch } from 'react-router';
-import { setActivePlatform, getPlatforms } from 'app/accounts/platforms';
+import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
+import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
+import { fetchWishList } from 'app/wishlists/wishlist-fetch';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
+import { Hotkey } from '../hotkeys/hotkeys';
+import { itemTagList } from '../inventory/dim-item-info';
+import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
+import ItemPickerContainer from '../item-picker/ItemPickerContainer';
+import ItemPopupContainer from '../item-popup/ItemPopupContainer';
+import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(

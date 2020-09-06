@@ -1,15 +1,15 @@
-import _ from 'lodash';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { DimItem } from '../inventory/item-types';
-import { v4 as uuidv4 } from 'uuid';
-import { DimStore, DimCharacterStat } from 'app/inventory/store-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { armorStats } from 'app/inventory/store/stats';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { armorStats } from 'app/inventory/store/stats';
 import { emptyArray } from 'app/utils/empty';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
+import { D2Categories } from '../destiny2/d2-bucket-categories';
+import { DimItem } from '../inventory/item-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots

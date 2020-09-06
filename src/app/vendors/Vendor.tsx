@@ -1,17 +1,17 @@
+import { t } from 'app/i18next-t';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import clsx from 'clsx';
+import _ from 'lodash';
+import React from 'react';
+import vendorEngramSvg from '../../images/engram.svg';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import Countdown from '../dim-ui/Countdown';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Vendor } from './d2-vendors';
-import React from 'react';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
-import VendorItems from './VendorItems';
-import _ from 'lodash';
-import clsx from 'clsx';
-import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import styles from './Vendor.m.scss';
-import { t } from 'app/i18next-t';
-import vendorEngramSvg from '../../images/engram.svg';
+import VendorItems from './VendorItems';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.

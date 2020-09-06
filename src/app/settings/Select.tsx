@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import React from 'react';
 import { Settings } from './initial-settings';
-import _ from 'lodash';
 
 export default function Select({
   label,

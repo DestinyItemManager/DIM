@@ -1,12 +1,12 @@
 import { t } from 'app/i18next-t';
+import { DestinyManifest, PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import { error, httpAdapter, handleUniquenessViolation } from './bungie-service-helper';
-import { getActivePlatform } from '../accounts/get-active-platform';
-import { DestinyManifest, ServerResponse, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { D1Store, DimStore } from '../inventory/store-types';
 import { DestinyAccount } from '../accounts/destiny-account';
+import { getActivePlatform } from '../accounts/get-active-platform';
 import { D1Item, DimItem } from '../inventory/item-types';
+import { D1Store, DimStore } from '../inventory/store-types';
+import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
+import { error, handleUniquenessViolation, httpAdapter } from './bungie-service-helper';
 
 /**
  * APIs for interacting with Destiny 1 game data.

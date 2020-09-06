@@ -1,10 +1,10 @@
-import React from 'react';
-import { Raid } from './Raid';
-import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
 import { raidOrder, RAID_ACTIVITY_TYPE } from 'app/search/d2-known-values';
+import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import React from 'react';
+import { Raid } from './Raid';
 
 /**
  * Displays all of the raids available to a user as milestones

@@ -1,13 +1,12 @@
-import _ from 'lodash';
+import { dimNeedsUpdate, reloadDIM } from 'app/register-service-worker';
+import { RootState } from 'app/store/types';
 import React from 'react';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
-import { isDragging } from '../inventory/DraggableInventoryItem';
+import { connect } from 'react-redux';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { dimNeedsUpdate, reloadDIM } from 'app/register-service-worker';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
+import { isDragging } from '../inventory/DraggableInventoryItem';
+import { loadingTracker } from '../shell/loading-tracker';
+import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 
 interface StoreProps {
   /** Don't allow refresh more often than this many seconds. */

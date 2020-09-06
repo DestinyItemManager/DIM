@@ -1,6 +1,6 @@
 import React from 'react';
-import { Settings } from './initial-settings';
 import HelpLink from '../dim-ui/HelpLink';
+import { Settings } from './initial-settings';
 
 export default function Checkbox({
   label,

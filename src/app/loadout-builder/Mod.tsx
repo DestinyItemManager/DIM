@@ -1,11 +1,10 @@
-import React from 'react';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getModCostInfo } from 'app/collections/Mod';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import styles from './Mod.m.scss';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 
 interface Props {
   plugDef: PluggableInventoryItemDefinition;

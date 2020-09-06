@@ -1,16 +1,16 @@
-import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists, touchWishLists } from './actions';
-import { ThunkResult } from 'app/store/types';
-import { WishListAndInfo } from './types';
-import { wishListsSelector, WishListsState } from './reducer';
-import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
-import { get } from 'idb-keyval';
+import { settingsSelector } from 'app/settings/reducer';
 import { settingsReady } from 'app/settings/settings';
 import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
+import { ThunkResult } from 'app/store/types';
+import { get } from 'idb-keyval';
+import _ from 'lodash';
+import { loadWishLists, touchWishLists } from './actions';
+import { wishListsSelector, WishListsState } from './reducer';
+import { WishListAndInfo } from './types';
+import { toWishList } from './wishlist-file';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {

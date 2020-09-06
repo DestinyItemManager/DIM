@@ -1,9 +1,8 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
 import { ThunkResult } from 'app/store/types';
-import _ from 'lodash';
 import { get } from 'idb-keyval';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions';
 import { VendorDrop } from './vendorDrops';
 import { dropsNeedRefresh } from './vendorEngramsXyzService';
 

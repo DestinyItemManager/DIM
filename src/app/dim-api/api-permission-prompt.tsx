@@ -1,8 +1,8 @@
-import React from 'react';
-import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
+import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheck } from 'app/shell/icons';
+import React from 'react';
 import styles from './api-permission-prompt.m.scss';
 
 /**

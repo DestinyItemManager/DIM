@@ -1,4 +1,4 @@
-import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
+import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage } from 'app/i18n';
 
 export interface Settings extends DimApiSettings {

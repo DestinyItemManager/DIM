@@ -1,22 +1,21 @@
-import React, { useEffect } from 'react';
-import { t } from 'app/i18next-t';
-import ExternalLink from '../dim-ui/ExternalLink';
-import logo from '../../images/logo-light.svg';
-import './page.scss';
-import _ from 'lodash';
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import { t } from 'app/i18next-t';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../../images/logo-light.svg';
+import ExternalLink from '../dim-ui/ExternalLink';
 import {
   AppIcon,
-  twitterIcon,
-  faYoutube,
   faDiscord,
   faGithub,
   faReddit,
   faTshirt,
+  faYoutube,
   heartIcon,
   helpIcon,
+  twitterIcon,
 } from './icons';
-import { Link } from 'react-router-dom';
+import './page.scss';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =

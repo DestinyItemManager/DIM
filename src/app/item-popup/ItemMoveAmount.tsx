@@ -1,8 +1,8 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import './ItemMoveAmount.scss';
 import _ from 'lodash';
+import React from 'react';
 import { preventNaN } from '../utils/util';
+import './ItemMoveAmount.scss';
 
 interface Props {
   amount: number;

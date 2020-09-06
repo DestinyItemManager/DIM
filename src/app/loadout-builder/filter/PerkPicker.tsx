@@ -1,48 +1,48 @@
-import React, { Dispatch, useRef, useState, useEffect } from 'react';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
+import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
+import { t } from 'app/i18next-t';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { bucketsSelector, profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import { plugIsInsertable, SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { escapeRegExp } from 'app/search/search-filter';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { settingsSelector } from 'app/settings/reducer';
+import { AppIcon, searchIcon } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import copy from 'fast-copy';
+import _ from 'lodash';
+import React, { Dispatch, useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
+import ArmorBucketIcon from '../ArmorBucketIcon';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
+  BurnItem,
+  ItemsByBucket,
   LockableBuckets,
   LockedItemType,
-  BurnItem,
   LockedMap,
-  ItemsByBucket,
   LockedModBase,
 } from '../types';
-import _ from 'lodash';
-import { t } from 'app/i18next-t';
-import PerksForBucket from './PerksForBucket';
 import {
-  removeLockedItem,
-  lockedItemsEqual,
   addLockedItem,
-  isLoadoutBuilderItem,
   filterPlugs,
+  isLoadoutBuilderItem,
+  lockedItemsEqual,
+  removeLockedItem,
 } from '../utils';
-import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
-import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
-import { AppIcon, searchIcon } from 'app/shell/icons';
-import copy from 'fast-copy';
-import ArmorBucketIcon from '../ArmorBucketIcon';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { escapeRegExp } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { settingsSelector } from 'app/settings/reducer';
-import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import PerksForBucket from './PerksForBucket';
 import SeasonalModPicker from './SeasonalModPicker';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import { SearchFilterRef } from 'app/search/SearchBar';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(

@@ -1,5 +1,5 @@
-import React from 'react';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemPowerSet.m.scss';
 

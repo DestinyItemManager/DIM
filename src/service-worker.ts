@@ -1,13 +1,13 @@
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { clientsClaim } from 'workbox-core';
+import { ExpirationPlugin } from 'workbox-expiration';
 import {
+  cleanupOutdatedCaches,
   createHandlerBoundToURL,
   precacheAndRoute,
-  cleanupOutdatedCaches,
 } from 'workbox-precaching';
-import { clientsClaim } from 'workbox-core';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { CacheFirst } from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 self.__precacheManifest = self.__WB_MANIFEST.concat(self.__precacheManifest || []);
 

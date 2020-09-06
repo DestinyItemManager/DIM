@@ -1,9 +1,9 @@
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import { t } from 'app/i18next-t';
 import Countdown from 'app/dim-ui/Countdown';
+import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';
 import clsx from 'clsx';
+import React from 'react';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
   if (!item.isDestiny2()) {

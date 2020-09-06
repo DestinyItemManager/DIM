@@ -1,5 +1,5 @@
-import { DimWorkingUserReview, DimUserReview } from './dtr-api-types';
 import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
+import { DimUserReview, DimWorkingUserReview } from './dtr-api-types';
 
 /**
  * A "basic" item.

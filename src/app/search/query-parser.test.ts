@@ -1,4 +1,4 @@
-import { parseQuery, lexer, Token, canonicalizeQuery } from './query-parser';
+import { canonicalizeQuery, lexer, parseQuery, Token } from './query-parser';
 
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts

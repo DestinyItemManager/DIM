@@ -1,18 +1,18 @@
-import {
-  LockedMap,
-  LockedModBase,
-  LockedArmor2ModMap,
-  StatTypes,
-  MinMaxIgnored,
-  LockedItemType,
-  ModPickerCategories,
-  ArmorSet,
-} from './types';
 import { DimStore } from 'app/inventory/store-types';
-import { getItemAcrossStores, getCurrentStore } from 'app/inventory/stores-helpers';
-import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './utils';
+import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
+import {
+  LockedArmor2ModMap,
+  LockedItemType,
+  LockedMap,
+  LockedModBase,
+  MinMaxIgnored,
+  ModPickerCategories,
+  ArmorSet,
+  StatTypes,
+} from './types';
+import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;

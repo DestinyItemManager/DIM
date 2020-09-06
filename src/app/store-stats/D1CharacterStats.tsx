@@ -1,11 +1,10 @@
-import React from 'react';
-import clsx from 'clsx';
-import _ from 'lodash';
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import type { DimStore } from 'app/inventory/store-types';
-import PressTip from 'app/dim-ui/PressTip';
-import { percent } from 'app/shell/filters';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
+import { percent } from 'app/shell/filters';
+import clsx from 'clsx';
+import React from 'react';
 import './CharacterStats.scss';
 
 interface Props {

@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
 import { t } from 'app/i18next-t';
-import { connect } from 'react-redux';
+import { showNotification } from 'app/notifications/notifications';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { clearWishLists } from '../wishlists/actions';
-import HelpLink from '../dim-ui/HelpLink';
+import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
+import { toWishList } from 'app/wishlists/wishlist-file';
+import React, { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
+import { connect } from 'react-redux';
+import { isUri } from 'valid-url';
 import FileUpload from '../dim-ui/FileUpload';
+import HelpLink from '../dim-ui/HelpLink';
+import { clearWishLists } from '../wishlists/actions';
 import {
   wishListsEnabledSelector,
-  wishListsSelector,
   wishListsLastFetchedSelector,
+  wishListsSelector,
 } from '../wishlists/reducer';
-import _ from 'lodash';
-import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { isUri } from 'valid-url';
-import { toWishList } from 'app/wishlists/wishlist-file';
 import { settingsSelector } from './reducer';
-import { showNotification } from 'app/notifications/notifications';
 
 // config/content-security-policy.js must be edited alongside this list
 export const wishListAllowedPrefixes = [

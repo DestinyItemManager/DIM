@@ -1,5 +1,5 @@
-import React from 'react';
 import { registerApp } from 'app/dim-api/register-app';
+import React from 'react';
 
 interface State {
   apiKey?: string;

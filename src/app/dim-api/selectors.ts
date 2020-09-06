@@ -1,7 +1,7 @@
+import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { makeProfileKeyFromAccount } from './reducer';
-import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;
@@ -23,3 +23,8 @@ export const currentProfileSelector = createSelector(
  */
 export const recentSearchesSelector = (state: RootState) =>
   state.dimApi.searches[destinyVersionSelector(state)];
+
+export const trackedTriumphsSelector = createSelector(
+  currentProfileSelector,
+  (profile) => profile?.triumphs || []
+);

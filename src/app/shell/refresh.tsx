@@ -1,12 +1,12 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { AppIcon, refreshIcon } from './icons';
-import { loadingTracker } from './loading-tracker';
-import { Subject } from 'rxjs';
+import { isDragging, isDragging$ } from 'app/inventory/DraggableInventoryItem';
 import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
-import { isDragging$, isDragging } from 'app/inventory/DraggableInventoryItem';
-import { useHotkey } from 'app/hotkeys/useHotkey';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Subject } from 'rxjs';
+import { AppIcon, refreshIcon } from './icons';
+import { loadingTracker } from './loading-tracker';
 
 export const refresh$ = new Subject();
 

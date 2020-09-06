@@ -1,24 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { DimStore, DimVault } from './store-types';
-import { InventoryBuckets, InventoryBucket } from './inventory-buckets';
-import { t } from 'app/i18next-t';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import './Stores.scss';
-import StoreHeading from '../character-tile/StoreHeading';
+import { t } from 'app/i18next-t';
+import StoreStats from 'app/store-stats/StoreStats';
 import { RootState } from 'app/store/types';
+import clsx from 'clsx';
+import React, { useEffect, useRef, useState } from 'react';
+import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import StoreHeading from '../character-tile/StoreHeading';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
-import { StoreBuckets } from './StoreBuckets';
-import D1ReputationSection from './D1ReputationSection';
-import Hammer from 'react-hammerjs';
-import { sortedStoresSelector, bucketsSelector } from './selectors';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
+import D1ReputationSection from './D1ReputationSection';
+import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
-import clsx from 'clsx';
-import { getCurrentStore, getVault, getStore } from './stores-helpers';
-import StoreStats from 'app/store-stats/StoreStats';
+import { bucketsSelector, sortedStoresSelector } from './selectors';
+import { DimStore, DimVault } from './store-types';
+import { StoreBuckets } from './StoreBuckets';
+import { getCurrentStore, getStore, getVault } from './stores-helpers';
+import './Stores.scss';
 
 interface StoreProps {
   stores: DimStore[];

@@ -1,13 +1,13 @@
+import { t } from 'app/i18next-t';
+import ElementIcon from 'app/inventory/ElementIcon';
+import RecoilStat from 'app/item-popup/RecoilStat';
+import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { StatInfo, MinimalStat } from './Compare';
-import { DimItem, D1Stat } from '../inventory/item-types';
+import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import RecoilStat from 'app/item-popup/RecoilStat';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { StatHashes } from 'data/d2/generated-enums';
+import { MinimalStat, StatInfo } from './Compare';
 
 export default function CompareStat({
   stat,

@@ -1,21 +1,21 @@
 import _ from 'lodash';
-import { DimSocket, DimSockets, D2Item, DimItem } from '../../inventory/item-types';
-import { ProcessSocket, ProcessMod, ProcessSockets, ProcessItem, ProcessArmorSet } from './types';
+import { D2Item, DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
-  LockedModBase,
+  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadataByPlugCategoryHash,
+} from '../../utils/item-utils';
+import {
   ArmorSet,
+  LockableBuckets,
+  LockedArmor2Mod,
+  LockedArmor2ModMap,
+  LockedMap,
+  LockedModBase,
+  ModPickerCategories,
   statHashToType,
   StatTypes,
-  LockedArmor2Mod,
-  LockedMap,
-  LockedArmor2ModMap,
-  LockableBuckets,
-  ModPickerCategories,
 } from '../types';
-import {
-  getSpecialtySocketMetadataByPlugCategoryHash,
-  getSpecialtySocketMetadata,
-} from '../../utils/item-utils';
+import { ProcessArmorSet, ProcessItem, ProcessMod, ProcessSocket, ProcessSockets } from './types';
 
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   return {

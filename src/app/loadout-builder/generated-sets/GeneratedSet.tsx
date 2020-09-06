@@ -1,15 +1,14 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { Loadout } from 'app/loadout/loadout-types';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, StatTypes, LockedMap, LockedArmor2ModMap } from '../types';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { assignModsToArmorSet } from '../mod-utils';
+import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
+import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import _ from 'lodash';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './GeneratedSet.m.scss';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
-import { Loadout } from 'app/loadout/loadout-types';
-import { assignModsToArmorSet } from '../mod-utils';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import SetStats from './SetStats';
 
 interface Props {

@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { t } from 'app/i18next-t';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { getNotes } from 'app/inventory/dim-item-info';
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { DimItem } from 'app/inventory/item-types';
-import { itemIsInstanced } from 'app/utils/item-utils';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
+import { getNotes } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
-import styles from './NotesArea.m.scss';
+import { RootState } from 'app/store/types';
+import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styles from './NotesArea.m.scss';
 
 const maxLength = 120;
 

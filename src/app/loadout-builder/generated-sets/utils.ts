@@ -1,8 +1,7 @@
+import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import { ArmorSet, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
-import { statKeys } from '../types';
+import { ArmorSet, LockedMap, statKeys, StatTypes } from '../types';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {

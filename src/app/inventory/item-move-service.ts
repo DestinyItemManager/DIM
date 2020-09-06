@@ -1,41 +1,41 @@
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
+import { count } from 'app/utils/util';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
   equipItems as d1EquipItems,
-  transfer as d1Transfer,
   setItemState as d1SetItemState,
+  transfer as d1Transfer,
 } from '../bungie-api/destiny1-api';
 import {
   equip as d2equip,
   equipItems as d2EquipItems,
-  transfer as d2Transfer,
   setLockState as d2SetLockState,
   setTrackedState as d2SetTrackedState,
+  transfer as d2Transfer,
 } from '../bungie-api/destiny2-api';
+import reduxStore from '../store/store';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
-import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
-import { DimItem } from './item-types';
-import { DimStore } from './store-types';
+import { touch } from './actions';
 import { D1StoresService } from './d1-stores';
 import { D2StoresService } from './d2-stores';
-import { t } from 'app/i18next-t';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import {
-  getTag,
-  vaultDisplacePriority,
   characterDisplacePriority,
+  getTag,
   ItemInfos,
+  vaultDisplacePriority,
 } from './dim-item-info';
-import reduxStore from '../store/store';
-import { count } from 'app/utils/util';
-import { itemInfosSelector, itemHashTagsSelector } from './selectors';
-import { getStore, getItemAcrossStores, getCurrentStore, getVault } from './stores-helpers';
-import { touch } from './actions';
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { DimItem } from './item-types';
+import { itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { DimStore } from './store-types';
+import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
+import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
+import { getCurrentStore, getItemAcrossStores, getStore, getVault } from './stores-helpers';
 
 /**
  * You can reserve a number of each type of item in each store.

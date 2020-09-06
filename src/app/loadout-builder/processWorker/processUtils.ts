@@ -1,6 +1,6 @@
-import { ProcessMod } from './types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
+import { ProcessMod } from './types';
 
 interface SortParam {
   energy: {

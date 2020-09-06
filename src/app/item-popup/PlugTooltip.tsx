@@ -1,15 +1,15 @@
-import { t } from 'app/i18next-t';
-import React from 'react';
-import './ItemSockets.scss';
-import Objective from '../progress/Objective';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimPlug } from '../inventory/item-types';
-import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { t } from 'app/i18next-t';
+import { statAllowList } from 'app/inventory/store/stats';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
-import { statAllowList } from 'app/inventory/store/stats';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { D2Item, DimPlug } from '../inventory/item-types';
+import Objective from '../progress/Objective';
+import BestRatedIcon from './BestRatedIcon';
+import './ItemSockets.scss';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({

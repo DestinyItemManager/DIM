@@ -1,12 +1,10 @@
-import React from 'react';
-import clsx from 'clsx';
 import { t } from 'app/i18next-t';
-
-import { D1Store } from '../inventory/store-types';
-import PressTip from '../dim-ui/PressTip';
-import { percent } from '../shell/filters';
 import { D1ProgressionHashes } from 'app/search/d1-known-values';
-
+import clsx from 'clsx';
+import React from 'react';
+import PressTip from '../dim-ui/PressTip';
+import { D1Store } from '../inventory/store-types';
+import { percent } from '../shell/filters';
 import styles from './CharacterHeaderXP.m.scss';
 
 function getLevelBar(store: D1Store) {

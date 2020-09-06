@@ -1,10 +1,10 @@
 import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
-import Countdown from '../../dim-ui/Countdown';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { Vendor } from './vendor.service';
-import D1VendorItems from './D1VendorItems';
+import Countdown from '../../dim-ui/Countdown';
 import styles from '../../vendors/Vendor.m.scss';
+import D1VendorItems from './D1VendorItems';
+import { Vendor } from './vendor.service';
 
 interface Props {
   vendor: Vendor;

@@ -1,22 +1,22 @@
-import React from 'react';
-import { DimStat, DimItem, D1Stat, D1Item, DimSocket } from 'app/inventory/item-types';
-import { statsMs, armorStats } from 'app/inventory/store/stats';
-import RecoilStat from './RecoilStat';
-import { percent, getColor } from 'app/shell/filters';
-import clsx from 'clsx';
 import BungieImage from 'app/dim-ui/BungieImage';
-import _ from 'lodash';
-import { t } from 'app/i18next-t';
-import styles from './ItemStat.m.scss';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getSocketsWithStyle } from '../utils/socket-utils';
-import PressTip from 'app/dim-ui/PressTip';
-import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import { TOTAL_STAT_HASH, CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
+import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
+import { armorStats, statsMs } from 'app/inventory/store/stats';
+import { CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { getColor, percent } from 'app/shell/filters';
+import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import { getSocketsWithStyle } from '../utils/socket-utils';
+import styles from './ItemStat.m.scss';
+import RecoilStat from './RecoilStat';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [

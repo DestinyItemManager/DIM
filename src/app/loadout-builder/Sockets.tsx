@@ -1,18 +1,18 @@
-import React from 'react';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import {
-  LockedArmor2Mod,
-  ModPickerCategory,
-  ModPickerCategories,
-  isModPickerCategory,
-} from './types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import Mod from './Mod';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import styles from './Sockets.m.scss';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import React from 'react';
+import {
+  isModPickerCategory,
+  LockedArmor2Mod,
+  ModPickerCategories,
+  ModPickerCategory,
+} from './types';
+import Mod from './Mod';
+import styles from './Sockets.m.scss';
 
 const undesireablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,

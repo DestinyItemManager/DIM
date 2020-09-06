@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
-    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "原型",
     "Armor2": "防具 2.0",
     "ButtonHelp": "對比物品",
+    "CompareBaseStats": "Show Base Stats",
     "Error": {
       "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
       "Class": "無法與此物品進行對比，因為它並不適用於{{class}}."
@@ -414,6 +413,7 @@
     "ToggleDetails": "切換顯示物品完整詳情頁"
   },
   "Infusion": {
+    "Filter": "Filter items",
     "InfuseSource": "選擇要灌注入{{name}} 的物品",
     "InfuseTarget": "選擇需要灌注至{{name}} 的物品：",
     "Infusion": "灌注選擇器",
@@ -594,6 +594,7 @@
     "AppliedError": "沒有物品可用於配裝.",
     "AppliedWarn": "已為您完成部分配裝，但{{total}} 個中有{{failed}} 個物品發生錯誤。",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
+    "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "撤銷 '{{name}}'",
     "ChooseItem": "添加 {{name}}",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
@@ -711,6 +712,7 @@
     "ReadLoreLink": "Read lore",
     "ReviewsTab": "評測",
     "Rewards": "獎勵：",
+    "SendToVault": "Send to Vault",
     "Split": "拆分",
     "Store": "寄存",
     "StoreWithName": "Store on {{character}}",
@@ -873,7 +875,6 @@
     "OfMaxRoll": "最大下拉範圍{{range}}",
     "PercentHelp": "點擊獲取更多關於品質屬性的資訊.",
     "PowerCap": "Power Limit",
-    "PowerCapDisclaimer": "Power Limit information may be incorrect for armor from any raid, or weapons from the raids \"Last Wish\" and \"Garden of Salvation.\"",
     "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "季節神器提升光等",
     "Prestige": "威望等級: {{level}}\n{{exp}}xp 于5明亮之塵之前.",

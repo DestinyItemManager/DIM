@@ -1,68 +1,67 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-import './loadout-popup.scss';
-import { DimStore } from '../inventory/store-types';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { previousLoadoutSelector, loadoutsSelector } from './reducer';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { getAllItems, getArtifactBonus } from 'app/inventory/stores-helpers';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import xpIcon from 'images/xpIcon.svg';
 import _ from 'lodash';
+import React from 'react';
 import { connect } from 'react-redux';
-import {
-  maxLightLoadout,
-  itemLevelingLoadout,
-  gatherEngramsLoadout,
-  searchLoadout,
-  randomLoadout,
-  maxLightItemSet,
-} from './auto-loadouts';
-import { querySelector } from '../shell/reducer';
-import { newLoadout, getLight, convertToLoadoutItem } from './loadout-utils';
-import { D1FarmingService } from '../farming/farming.service';
+import { createSelector } from 'reselect';
+import PressTip from '../dim-ui/PressTip';
 import { D2FarmingService } from '../farming/d2farming.service';
-import {
-  makeRoomForPostmaster,
-  pullFromPostmaster,
-  pullablePostmasterItems,
-  totalPostmasterItems,
-} from './postmaster';
+import { D1FarmingService } from '../farming/farming.service';
 import { queueAction } from '../inventory/action-queue';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { showNotification } from '../notifications/notifications';
+import { searchFilterSelector } from '../search/search-filter';
 import {
-  AppIcon,
   addIcon,
-  searchIcon,
-  levellingIcon,
-  sendIcon,
+  AppIcon,
   banIcon,
-  undoIcon,
   deleteIcon,
   editIcon,
   engramIcon,
+  faRandom,
+  globeIcon,
+  hunterIcon,
+  levellingIcon,
   powerActionIcon,
   powerIndicatorIcon,
-  globeIcon,
-  faRandom,
-  hunterIcon,
-  warlockIcon,
+  searchIcon,
+  sendIcon,
   titanIcon,
+  undoIcon,
+  warlockIcon,
 } from '../shell/icons';
-import { DimItem } from '../inventory/item-types';
-import { searchFilterSelector } from '../search/search-filter';
-import PressTip from '../dim-ui/PressTip';
-import { showNotification } from '../notifications/notifications';
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { createSelector } from 'reselect';
-import { getArtifactBonus } from 'app/inventory/stores-helpers';
-import { Loadout } from './loadout-types';
-import { editLoadout } from './LoadoutDrawer';
-import { applyLoadout } from './loadout-apply';
-import { fromEquippedTypes } from './LoadoutDrawerContents';
-import { storesSelector, bucketsSelector } from 'app/inventory/selectors';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { getAllItems } from 'app/inventory/stores-helpers';
+import { querySelector } from '../shell/reducer';
 import { deleteLoadout } from './actions';
-import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import xpIcon from 'images/xpIcon.svg';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import {
+  gatherEngramsLoadout,
+  itemLevelingLoadout,
+  maxLightItemSet,
+  maxLightLoadout,
+  randomLoadout,
+  searchLoadout,
+} from './auto-loadouts';
+import { applyLoadout } from './loadout-apply';
+import './loadout-popup.scss';
+import { Loadout } from './loadout-types';
+import { convertToLoadoutItem, getLight, newLoadout } from './loadout-utils';
+import { editLoadout } from './LoadoutDrawer';
+import { fromEquippedTypes } from './LoadoutDrawerContents';
+import {
+  makeRoomForPostmaster,
+  pullablePostmasterItems,
+  pullFromPostmaster,
+  totalPostmasterItems,
+} from './postmaster';
+import { loadoutsSelector, previousLoadoutSelector } from './reducer';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,

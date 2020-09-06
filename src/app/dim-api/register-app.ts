@@ -1,5 +1,5 @@
-import { unauthenticatedApi } from './dim-api-helper';
 import { ApiApp, ErrorResponse } from '@destinyitemmanager/dim-api-types';
+import { unauthenticatedApi } from './dim-api-helper';
 
 export async function registerApp(dimAppName: string, bungieApiKey: string) {
   const appResponse = await unauthenticatedApi<{ app: ApiApp }>(

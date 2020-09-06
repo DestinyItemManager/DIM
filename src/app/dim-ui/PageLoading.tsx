@@ -1,11 +1,11 @@
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Loading } from './Loading';
-import _ from 'lodash';
 import styles from './PageLoading.m.scss';
-import clsx from 'clsx';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
   message?: string;

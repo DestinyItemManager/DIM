@@ -1,6 +1,6 @@
+import clsx from 'clsx';
 import React from 'react';
 import styles from './PageWithMenu.m.scss';
-import clsx from 'clsx';
 import { scrollToHref } from './scroll';
 
 const PageWithMenu = ({
