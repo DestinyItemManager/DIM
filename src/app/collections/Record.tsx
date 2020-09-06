@@ -1,6 +1,7 @@
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
+import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
 import {
@@ -188,6 +189,12 @@ export default function Record({
             <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
           </div>
         )}
+        {recordDef.rewardItems?.length > 0 &&
+          !acquired &&
+          !obscured &&
+          recordDef.rewardItems.map((reward) => (
+            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
         {trackedInGame && <img className="trackedIcon" src={trackedIcon} />}
         {(!acquired || trackedInDim) && (
           <div role="button" onClick={toggleTracked} className="dimTrackedIcon">
