@@ -207,6 +207,7 @@ function Collections({
                   isTriumphs={true}
                   searchQuery={searchQuery}
                   searchFilter={searchFilter}
+                  completedRecordsHidden={completedRecordsHidden}
                 />
               </ErrorBoundary>
             </CollapsibleTitle>
@@ -223,6 +224,7 @@ function Collections({
                   profileResponse={profileResponse}
                   searchQuery={searchQuery}
                   searchFilter={searchFilter}
+                  completedRecordsHidden={completedRecordsHidden}
                 />
               </ErrorBoundary>
             </CollapsibleTitle>
