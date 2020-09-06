@@ -123,7 +123,12 @@
       width: calc(var(--item-size) / 3.1) !important;
       height: auto !important;
     }
+    @include phone-portrait {
+      display: block;
+      opacity: 0.7;
+    }
   }
+
   &:hover .dimTrackedIcon {
     display: block;
     opacity: 0.7;
