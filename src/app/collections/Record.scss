@@ -2,11 +2,12 @@
 
 .triumph-record {
   position: relative;
-  background: #282828;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid #666;
   padding: 12px;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   box-sizing: border-box;
 
   @include phone-portrait {
@@ -52,16 +53,23 @@
   }
 
   &.redeemed {
-    border-color: $gold;
-    background-color: scale-color($gold, $alpha: -90%);
-    opacity: 0.7;
+    border-color: #c4b578;
+    color: #c4b578;
+    background: transparent;
+    //opacity: 0.7;
     .record-value {
       display: none;
+    }
+    p {
+      color: scale-color(#c4b578, $lightness: -40%);
+    }
+    .record-interval-container {
+      background-color: scale-color(#c4b578, $lightness: -20%) !important;
     }
   }
 
   &.unlocked {
-    border-color: $blue;
+    border-color: #56ecff;
   }
 
   &.trackedInDim {
@@ -70,7 +78,7 @@
     border-width: 2px;
     background: linear-gradient(
       scale-color($orange, $alpha: -100%) 0%,
-      scale-color($orange, $alpha: -90%) 100%
+      scale-color($orange, $alpha: -80%) 100%
     );
   }
 
@@ -100,7 +108,7 @@
   .dimTrackedIcon {
     position: absolute;
     display: none;
-    right: calc(58px + var(--item-size) / 3.1);
+    right: calc(50px + var(--item-size) / 3.1);
     top: -9px;
     cursor: pointer;
     width: fit-content;
@@ -134,7 +142,7 @@
 
   .record-icon {
     width: 40px;
-    height: 40px;
+    height: auto;
     flex-shrink: 0;
     margin-right: 8px;
   }
