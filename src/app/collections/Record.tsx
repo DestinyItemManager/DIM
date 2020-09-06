@@ -48,7 +48,6 @@ export default function Record({
   redactedRecordsRevealed,
 }: Props) {
   const { recordDef, trackedInGame, recordComponent } = record;
-  console.log(`Render ${recordDef.displayProperties.name}`);
   const state = recordComponent.state;
   const recordHash = recordDef.hash;
   const dispatch = useDispatch();
