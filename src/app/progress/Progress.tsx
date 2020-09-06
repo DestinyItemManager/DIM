@@ -23,7 +23,7 @@ import React, { useEffect, useState } from 'react';
 import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import PresentationNodeRoot from '../collections/PresentationNodeRoot';
+import '../collections/PresentationNode.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -78,7 +78,6 @@ function Progress({
   buckets,
   profileInfo,
   searchQuery,
-  searchFilter,
   trackedTriumphs,
 }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
@@ -128,12 +127,6 @@ function Progress({
     return null;
   }
 
-  const recordsRootHash = profileInfo.profileRecords.data?.recordCategoriesRootNodeHash;
-  const sealsRootHash = profileInfo.profileRecords.data?.recordSealsRootNodeHash;
-  const triumphTitle =
-    recordsRootHash && defs.PresentationNode.get(recordsRootHash).displayProperties.name;
-  const sealTitle =
-    sealsRootHash && defs.PresentationNode.get(sealsRootHash).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
 
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
@@ -148,8 +141,6 @@ function Progress({
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    { id: 'triumphs', title: triumphTitle },
-    { id: 'seals', title: sealTitle },
   ];
   const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
 
@@ -236,35 +227,6 @@ function Progress({
                   </div>
                 </CollapsibleTitle>
               </section>
-
-              {recordsRootHash && (
-                <section id="triumphs">
-                  <ErrorBoundary name="Triumphs">
-                    <PresentationNodeRoot
-                      presentationNodeHash={recordsRootHash}
-                      defs={defs}
-                      profileResponse={profileInfo}
-                      isTriumphs={true}
-                      searchQuery={searchQuery}
-                      searchFilter={searchFilter}
-                    />
-                  </ErrorBoundary>
-                </section>
-              )}
-
-              {sealsRootHash && (
-                <section id="seals">
-                  <ErrorBoundary name="Seals">
-                    <PresentationNodeRoot
-                      presentationNodeHash={sealsRootHash}
-                      defs={defs}
-                      profileResponse={profileInfo}
-                      searchQuery={searchQuery}
-                      searchFilter={searchFilter}
-                    />
-                  </ErrorBoundary>
-                </section>
-              )}
             </div>
           </Hammer>
         </PageWithMenu.Contents>

@@ -1,5 +1,9 @@
 @import '../variables.scss';
 
+.presentation-node-root {
+  margin-bottom: 16px;
+}
+
 .presentation-node {
   .collapse-icon {
     margin-right: 8px;
@@ -109,28 +113,6 @@
     .node-progress-bar-amount {
       background: #ccc;
       height: 2px;
-    }
-  }
-
-  .presentationNodeOptions {
-    display: flex;
-    justify-content: flex-end;
-    background-color: #292a2b;
-    margin-left: 5px;
-
-    .setting {
-      display: flex;
-      align-items: center;
-      margin: 2px;
-      border-radius: 2px;
-      cursor: pointer;
-      label {
-        padding: 4px;
-      }
-      padding: 4px;
-      &:hover {
-        background-color: #252627;
-      }
     }
   }
 }

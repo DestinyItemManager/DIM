@@ -87,7 +87,7 @@ export default function PresentationNodeRoot({
   ];
 
   return (
-    <>
+    <div className="presentation-node-root">
       <PresentationNode
         node={nodeTree}
         defs={defs}
@@ -95,7 +95,7 @@ export default function PresentationNodeRoot({
         path={fullNodePath}
         onNodePathSelected={setNodePath}
         parents={[]}
-        isTriumphsRootNode={isTriumphs}
+        isRootNode={true}
         isInTriumphs={isTriumphs}
         overrideName={overrideName}
       />
@@ -113,6 +113,6 @@ export default function PresentationNodeRoot({
             onNodePathSelected={setNodePath}
           />
         ))}
-    </>
+    </div>
   );
 }

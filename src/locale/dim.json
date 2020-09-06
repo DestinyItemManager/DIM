@@ -376,6 +376,7 @@
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
@@ -818,6 +819,9 @@
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
   },
+  "Records": {
+    "Title": "Records"
+  },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
@@ -962,8 +966,8 @@
     "UnlockAll": "Unlock Items"
   },
   "Triumphs": {
-    "HideCompleted": "Hide Completed",
-    "RevealRedacted": "Reveal Redacted"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",

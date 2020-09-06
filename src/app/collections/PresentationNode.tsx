@@ -1,5 +1,4 @@
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import { t } from 'app/i18next-t';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
@@ -10,15 +9,11 @@ import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { setSetting } from '../settings/actions';
-import Checkbox from '../settings/Checkbox';
 import { percent } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { DimPresentationNode } from './presentation-nodes';
 import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
-
-/** root PresentationNodes to lock in expanded state */
-const rootNodes = [3790247699];
 
 interface StoreProps {
   completedRecordsHidden: boolean;
@@ -31,9 +26,9 @@ interface ProvidedProps {
   ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
-  isTriumphsRootNode?: boolean;
   isInTriumphs?: boolean;
   overrideName?: string;
+  isRootNode?: boolean;
   onNodePathSelected(nodePath: number[]): void;
 }
 
@@ -50,9 +45,6 @@ const mapDispatchToProps = {
 
 type DispatchProps = typeof mapDispatchToProps;
 type Props = StoreProps & ProvidedProps & DispatchProps;
-function isInputElement(element: HTMLElement): element is HTMLInputElement {
-  return element.nodeName === 'INPUT';
-}
 
 function PresentationNode({
   node,
@@ -60,12 +52,11 @@ function PresentationNode({
   ownedItemHashes,
   path,
   parents,
-  setSetting,
   completedRecordsHidden,
   redactedRecordsRevealed,
   onNodePathSelected,
-  isTriumphsRootNode,
   isInTriumphs,
+  isRootNode,
   overrideName,
 }: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -88,15 +79,8 @@ function PresentationNode({
     lastPath.current = path;
   }, [path, presentationNodeHash]);
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      setSetting(e.target.name as any, e.target.checked);
-    }
-  };
-
   const expandChildren = () => {
-    const childrenExpanded =
-      path.includes(presentationNodeHash) || rootNodes.includes(presentationNodeHash);
+    const childrenExpanded = path.includes(presentationNodeHash);
     onNodePathSelected(childrenExpanded ? parents : [...parents, presentationNodeHash]);
     return false;
   };
@@ -120,11 +104,9 @@ function PresentationNode({
   // todo: export this hash/depth and clean up the boolean string
   const alwaysExpanded =
     // if we're not in triumphs
-    (!isInTriumphs &&
-      // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
-      thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
-    // or this is manually selected to be forced expanded
-    rootNodes.includes(presentationNodeHash);
+    !isInTriumphs &&
+    // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
+    thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4);
 
   const onlyChild =
     // if this is a child of a child
@@ -133,7 +115,8 @@ function PresentationNode({
     defs.PresentationNode.get(parent).children.presentationNodes.length === 1;
 
   /** whether this node's children are currently shown */
-  const childrenExpanded = onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
+  const childrenExpanded =
+    isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
 
   // TODO: need more info on what iconSequences are
 
@@ -158,7 +141,7 @@ function PresentationNode({
         'always-expanded': alwaysExpanded,
       })}
     >
-      {!onlyChild && (
+      {!onlyChild && !isRootNode && (
         <div
           className={clsx('title', {
             collapsed: !childrenExpanded,
@@ -190,22 +173,6 @@ function PresentationNode({
               />
             </div>
           </div>
-        </div>
-      )}
-      {childrenExpanded && isTriumphsRootNode && (
-        <div className="presentationNodeOptions">
-          <Checkbox
-            label={t('Triumphs.HideCompleted')}
-            name="completedRecordsHidden"
-            value={completedRecordsHidden}
-            onChange={onChange}
-          />
-          <Checkbox
-            label={t('Triumphs.RevealRedacted')}
-            name="redactedRecordsRevealed"
-            value={redactedRecordsRevealed}
-            onChange={onChange}
-          />
         </div>
       )}
       {childrenExpanded &&
