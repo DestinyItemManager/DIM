@@ -1,6 +1,6 @@
-import React from 'react';
-import _ from 'lodash';
 import BungieImage from 'app/dim-ui/BungieImage';
+import _ from 'lodash';
+import React from 'react';
 import type { DimVault } from '../inventory/store-types';
 import styles from './AccountCurrencies.m.scss';
 

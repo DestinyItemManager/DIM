@@ -1,15 +1,14 @@
-import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { D2Store } from '../inventory/store-types';
+import { bucketsSelector } from 'app/inventory/selectors';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import { from, Subscription } from 'rxjs';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores';
+import { D2Store } from '../inventory/store-types';
 import { refresh } from '../shell/refresh';
-import { Subscription, from } from 'rxjs';
 import rxStore from '../store/store';
 import * as actions from './actions';
 import { makeRoomForItemsInBuckets } from './farming.service';
-import { filter, map, tap, exhaustMap } from 'rxjs/operators';
-import { bucketsSelector } from 'app/inventory/selectors';
 
 /**
  * A service for "farming" items by moving them continuously off a character,

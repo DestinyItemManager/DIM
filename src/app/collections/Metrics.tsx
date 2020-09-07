@@ -1,33 +1,22 @@
-import React from 'react';
-import Metric from './Metric';
-import _ from 'lodash';
-import {
-  DestinyPresentationNodeMetricChildEntry,
-  DestinyProfileResponse,
-} from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import styles from './Metrics.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
+import _ from 'lodash';
+import React from 'react';
+import Metric from './Metric';
+import styles from './Metrics.m.scss';
+import { DimMetric } from './presentation-nodes';
 
 export default function Metrics({
   metrics,
   defs,
-  profileResponse,
 }: {
-  metrics: DestinyPresentationNodeMetricChildEntry[];
+  metrics: DimMetric[];
   defs: D2ManifestDefinitions;
-  profileResponse: DestinyProfileResponse;
 }) {
   const groupedMetrics = _.groupBy(
-    metrics.map((m) => m.metricHash),
-    (metricHash) => {
-      const metricDef = defs.Metric.get(metricHash);
-      if (!metricDef) {
-        return null;
-      }
-      return metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0];
-    }
+    metrics,
+    (metric) => metric.metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0]
   );
 
   const traits = _.keyBy(
@@ -37,19 +26,14 @@ export default function Metrics({
 
   return (
     <div className={styles.metrics}>
-      {_.map(groupedMetrics, (metricHashes, traitHash) => (
-        <div>
+      {_.map(groupedMetrics, (metrics, traitHash) => (
+        <div key={traitHash}>
           <div className={styles.title}>
             <BungieImage src={traits[traitHash].displayProperties.icon} />
             {traits[traitHash].displayProperties.name}
           </div>
-          {metricHashes.map((metricHash) => (
-            <Metric
-              key={metricHash}
-              metricHash={metricHash}
-              defs={defs}
-              profileResponse={profileResponse}
-            />
+          {metrics.map((metric) => (
+            <Metric key={metric.metricDef.hash} metric={metric} defs={defs} />
           ))}
         </div>
       ))}

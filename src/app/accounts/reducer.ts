@@ -1,12 +1,12 @@
-import { Reducer } from 'redux';
-import { DestinyAccount } from './destiny-account';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { deepEqual } from 'fast-equals';
-import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
 import { API_KEY as BUNGIE_API_KEY } from 'app/bungie-api/bungie-api-utils';
+import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { hasValidAuthTokens } from 'app/bungie-api/oauth-tokens';
+import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
+import { deepEqual } from 'fast-equals';
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions';
+import { DestinyAccount } from './destiny-account';
 
 export interface AccountsState {
   readonly accounts: readonly DestinyAccount[];

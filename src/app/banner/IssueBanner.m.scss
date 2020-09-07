@@ -40,12 +40,3 @@
 .container {
   margin: 1rem;
 }
-
-:global(#content) {
-  margin-bottom: 100px;
-}
-
-:global(.android #content),
-:global(.ios #content) {
-  margin-bottom: 0;
-}

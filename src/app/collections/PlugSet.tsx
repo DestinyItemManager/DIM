@@ -1,17 +1,16 @@
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import React from 'react';
-import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
+import BungieImage from '../dim-ui/BungieImage';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { percent } from '../shell/filters';
+import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
+import { count } from '../utils/util';
 import { VendorItem } from '../vendors/vendor-item';
 import VendorItemComponent from '../vendors/VendorItemComponent';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { count } from '../utils/util';
-import BungieImage from '../dim-ui/BungieImage';
-import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
-import { percent } from '../shell/filters';
-import clsx from 'clsx';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import './collections.scss';
 
 const plugSetOrder = chainComparator<VendorItem>(
   compareBy((i) => i.item?.tier),

@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { DimItem } from './item-types';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { AppIcon, refreshIcon, faExclamationCircle, faCheckCircle } from 'app/shell/icons';
-import styles from './MoveNotifications.m.scss';
-import clsx from 'clsx';
-import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
-import { NotifyInput } from 'app/notifications/notifications';
-import _ from 'lodash';
 import { Loadout } from 'app/loadout/loadout-types';
+import { NotifyInput } from 'app/notifications/notifications';
+import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import ConnectedInventoryItem from './ConnectedInventoryItem';
+import { DimItem } from './item-types';
+import styles from './MoveNotifications.m.scss';
+import { DimStore } from './store-types';
 
 /** How long to leave the notification up after it's done. */
 const lingerMs = 2000;

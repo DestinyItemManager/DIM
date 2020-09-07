@@ -1,21 +1,21 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
-import AppIcon from 'app/shell/icons/AppIcon';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
-import type { DimItem } from '../inventory/item-types';
-import type { InventoryBuckets } from '../inventory/inventory-buckets';
-import type { DimStore } from '../inventory/store-types';
-import type { Loadout } from './loadout-types';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
-import { getArmorStats, getLight } from './loadout-utils';
-import { powerActionIcon } from 'app/shell/icons';
+import { t } from 'app/i18next-t';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
+import { powerActionIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import _ from 'lodash';
+import React from 'react';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import type { InventoryBuckets } from '../inventory/inventory-buckets';
+import type { DimItem } from '../inventory/item-types';
+import type { DimStore } from '../inventory/store-types';
 import { maxLightItemSet } from './auto-loadouts';
+import type { Loadout } from './loadout-types';
+import { getArmorStats, getLight } from './loadout-utils';
 
 function getItemsInListByCategory({
   buckets,

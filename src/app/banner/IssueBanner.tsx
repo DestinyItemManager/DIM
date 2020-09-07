@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import Sheet from 'app/dim-ui/Sheet';
-import styles from './IssueBanner.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
+import React, { useState } from 'react';
+import styles from './IssueBanner.m.scss';
 
 const blmResourcesLink = 'https://blacklivesmatters.carrd.co/';
 
 /**
  * A popup we can enable to get the word out about important issues for the DIM community. Edit the body directly.
  */
-const IssueBanner = () => {
+export default function IssueBanner() {
   const [isMinimized, setIsMinimized] = useState(true);
 
   const openCampaign = () => {
@@ -62,6 +62,4 @@ const IssueBanner = () => {
       )}
     </div>
   );
-};
-
-export { IssueBanner };
+}

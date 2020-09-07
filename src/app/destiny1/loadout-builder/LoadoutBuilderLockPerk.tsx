@@ -1,13 +1,12 @@
-import React from 'react';
-import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
-import { D1GridNode, DimItem } from '../../inventory/item-types';
-import BungieImage from '../../dim-ui/BungieImage';
-import { AppIcon, plusIcon } from '../../shell/icons';
-import LoadoutBuilderItem from './LoadoutBuilderItem';
-import _ from 'lodash';
-import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { t } from 'app/i18next-t';
+import React from 'react';
+import BungieImage from '../../dim-ui/BungieImage';
+import { D1GridNode, DimItem } from '../../inventory/item-types';
+import { AppIcon, plusIcon } from '../../shell/icons';
 import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
+import LoadoutBuilderItem from './LoadoutBuilderItem';
+import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
+import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
 
 interface Props {
   type: ArmorTypes;

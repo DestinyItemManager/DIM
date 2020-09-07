@@ -1,42 +1,41 @@
-import { D1Item, D2Item, DimItem } from '../inventory/item-types';
-import { DestinyAmmunitionType, DestinyClass, DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemInfos, getNotes, getTag } from '../inventory/dim-item-info';
-import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { getStore } from 'app/inventory/stores-helpers';
+import { settingsSelector } from 'app/settings/reducer';
+import { RootState } from 'app/store/types';
 import {
   getItemDamageShortName,
-  getSpecialtySocketMetadata,
   getItemPowerCapFinalSeason,
+  getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import {
-  itemInfosSelector,
-  sortedStoresSelector,
-  currentStoreSelector,
-  itemHashTagsSelector,
-} from '../inventory/selectors';
-import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
-
+import { DestinyAmmunitionType, DestinyClass, DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import D2Sources from 'data/d2/source-info';
-import { DimStore } from '../inventory/store-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { Loadout } from '../loadout/loadout-types';
-import { RootState } from 'app/store/types';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
-import { inventoryWishListsSelector } from '../wishlists/reducer';
-import latinise from 'voca/latinise';
-import { loadoutsSelector } from '../loadout/reducer';
-import memoizeOne from 'memoize-one';
-import { querySelector } from '../shell/reducer';
 import seasonTags from 'data/d2/season-tags.json';
-import { settingsSelector } from 'app/settings/reducer';
+import D2Sources from 'data/d2/source-info';
+import _ from 'lodash';
+import memoizeOne from 'memoize-one';
+import { createSelector } from 'reselect';
+import latinise from 'voca/latinise';
+import { getNotes, getTag, ItemInfos } from '../inventory/dim-item-info';
+import { D1Item, D2Item, DimItem } from '../inventory/item-types';
+import {
+  currentStoreSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+  sortedStoresSelector,
+} from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
+import { maxLightItemSet, maxStatLoadout } from '../loadout/auto-loadouts';
+import { Loadout } from '../loadout/loadout-types';
+import { loadoutsSelector } from '../loadout/reducer';
+import { querySelector } from '../shell/reducer';
 import store from '../store/store';
-import { getStore } from 'app/inventory/stores-helpers';
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
-import { parseQuery, QueryAST } from './query-parser';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { inventoryWishListsSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import {
   boosts,
   D1ActivityHashes,
@@ -55,6 +54,8 @@ import {
   SEASONAL_ARTIFACT_BUCKET,
   SHADERS_BUCKET,
 } from './d2-known-values';
+import { parseQuery, QueryAST } from './query-parser';
+import { SearchConfig, searchConfigSelector } from './search-config';
 import {
   allStatNames,
   armorAnyStatHashes,
@@ -64,8 +65,6 @@ import {
   searchableStatNames,
   statHashByName,
 } from './search-filter-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { SearchConfig, searchConfigSelector } from './search-config';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -781,6 +780,12 @@ function searchFilters(
               )
             ))
         );
+      },
+      mod(item: DimItem, filterValue: string) {
+        return this.perk(item, filterValue);
+      },
+      modname(item: DimItem, filterValue: string) {
+        return this.perkname(item, filterValue);
       },
       modslot(item: DimItem, filterValue: string) {
         const modSocketTypeHash = getSpecialtySocketMetadata(item);

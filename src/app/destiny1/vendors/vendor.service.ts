@@ -1,21 +1,21 @@
-import _ from 'lodash';
+import { bucketsSelector } from 'app/inventory/selectors';
+import { getVault } from 'app/inventory/stores-helpers';
+import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
+import _ from 'lodash';
+import { BehaviorSubject, ConnectableObservable, Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map, publishReplay, switchMap, tap } from 'rxjs/operators';
 import { compareAccounts, DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
-import { getDefinitions, D1ManifestDefinitions } from '../d1-definitions';
-import { processItems } from '../../inventory/store/d1-item-factory';
-import copy from 'fast-copy';
-import { D1Store } from '../../inventory/store-types';
-import { D1Item } from '../../inventory/item-types';
-import { updateVendorRankings } from '../../item-review/destiny-tracker.service';
 import { D1StoresService } from '../../inventory/d1-stores';
+import { D1Item } from '../../inventory/item-types';
+import { D1Store } from '../../inventory/store-types';
+import { processItems } from '../../inventory/store/d1-item-factory';
+import { updateVendorRankings } from '../../item-review/destiny-tracker.service';
 import { loadingTracker } from '../../shell/loading-tracker';
-import store from '../../store/store';
-import { BehaviorSubject, ConnectableObservable, Observable } from 'rxjs';
-import { distinctUntilChanged, switchMap, publishReplay, tap, filter, map } from 'rxjs/operators';
-import { getVault } from 'app/inventory/stores-helpers';
-import rxStore from '../../store/store';
-import { bucketsSelector } from 'app/inventory/selectors';
+import { default as rxStore, default as store } from '../../store/store';
+import { D1ManifestDefinitions, getDefinitions } from '../d1-definitions';
+import { factionAligned } from '../d1-factions';
 
 /*
 const allVendors = [
@@ -337,20 +337,6 @@ function VendorService(): VendorServiceType {
   function factionLevel(store: D1Store, factionHash: number) {
     const rep = store.progression?.progressions.find((rep) => rep.faction?.hash === factionHash);
     return rep?.level || 0;
-  }
-
-  /**
-   * Whether or not this character is aligned with the given faction.
-   */
-  function factionAligned(store: D1Store, factionHash: number) {
-    const factionsByHash = {
-      489342053: 'Future War Cult',
-      2397602219: 'Dead Orbit',
-      3197190122: 'New Monarchy',
-    };
-    const factionAlignment = store.factionAlignment();
-
-    return factionAlignment === factionsByHash[factionHash];
   }
 
   /**

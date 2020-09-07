@@ -1,19 +1,19 @@
-import React from 'react';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
 import {
   D2Item,
   DimPlug,
   DimStat,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import _ from 'lodash';
 import { interpolateStatValue } from 'app/inventory/store/stats';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { StatValue } from './PlugTooltip';
-import ItemStats from './ItemStats';
-import styles from './SocketDetailsSelectedPlug.m.scss';
-import { SocketDetailsMod } from './SocketDetails';
 import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import ItemStats from './ItemStats';
+import { StatValue } from './PlugTooltip';
+import { SocketDetailsMod } from './SocketDetails';
+import styles from './SocketDetailsSelectedPlug.m.scss';
 
 const costStatHashes = [
   StatHashes.AnyEnergyTypeCost,

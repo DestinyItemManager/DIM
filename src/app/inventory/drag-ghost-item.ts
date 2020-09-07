@@ -1,5 +1,5 @@
-import { Subject } from 'rxjs';
 import { DimItem } from 'app/inventory/item-types';
+import { Subject } from 'rxjs';
 
 export interface DragGhostProps {
   item?: DimItem;

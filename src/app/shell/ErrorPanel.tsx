@@ -1,8 +1,8 @@
-import React from 'react';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
-import { AppIcon, twitterIcon, refreshIcon, helpIcon } from '../shell/icons';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import React from 'react';
+import { AppIcon, helpIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';

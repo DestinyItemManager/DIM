@@ -1,10 +1,10 @@
-import React from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import clsx from 'clsx';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
-import './CharacterOrderEditor.scss';
 import { AppIcon, refreshIcon } from '../shell/icons';
+import './CharacterOrderEditor.scss';
 
 /**
  * An editor for character orders, with drag and drop.

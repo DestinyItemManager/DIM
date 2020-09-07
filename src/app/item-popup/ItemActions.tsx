@@ -1,19 +1,19 @@
-import React, { useState, useMemo } from 'react';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
+import { getStore } from 'app/inventory/stores-helpers';
+import { showItemPopup } from 'app/item-popup/item-popup';
 import clsx from 'clsx';
-import styles from './ItemActions.m.scss';
-import { hideItemPopup } from './item-popup';
-import { moveItemTo, consolidate, distribute } from '../inventory/move-item';
-import { sortedStoresSelector } from '../inventory/selectors';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { showInfuse } from '../infuse/infuse';
+import { DimItem } from '../inventory/item-types';
+import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
+import { sortedStoresSelector } from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import { hideItemPopup } from './item-popup';
+import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
+import styles from './ItemActions.m.scss';
 import ItemMoveAmount from './ItemMoveAmount';
 import ItemMoveLocation from './ItemMoveLocation';
-import { showInfuse } from '../infuse/infuse';
-import { showItemPopup } from 'app/item-popup/item-popup';
-import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
-import { getStore } from 'app/inventory/stores-helpers';
 
 export default function ItemActions({
   item,
@@ -81,13 +81,14 @@ export default function ItemActions({
           onAmountChanged={onAmountChanged}
         />
       )}
-      <div className={mobileInspect ? styles.interactionV : styles.interaction}>
+      <div className={styles.interaction}>
         {stores.map((buttonStore) => (
           <ItemMoveLocation
             key={buttonStore.id}
             item={item}
             store={buttonStore}
             itemOwnerStore={store}
+            vertical={Boolean(mobileInspect)}
             moveItemTo={onMoveItemTo}
           />
         ))}
@@ -109,14 +110,7 @@ export default function ItemActions({
           />
         )}
         {item.infusionFuel && (
-          <ItemActionButtonGroup>
-            {mobileInspect && (
-              <ItemActionButton
-                onClick={() => showItemPopup(item)}
-                title={t('MovePopup.ItemDetailSheet')}
-                label={t('MovePopup.Details')}
-              />
-            )}
+          <ItemActionButtonGroup vertical={Boolean(mobileInspect)}>
             <ItemActionButton
               className={clsx(styles.infusePerk, {
                 [styles.destiny2]: item.isDestiny2(),
@@ -127,6 +121,13 @@ export default function ItemActions({
               title={t('Infusion.Infusion')}
               label={t('MovePopup.Infuse')}
             />
+            {mobileInspect && (
+              <ItemActionButton
+                onClick={() => showItemPopup(item)}
+                title={t('MovePopup.ItemDetailSheet')}
+                label={t('MovePopup.Details')}
+              />
+            )}
           </ItemActionButtonGroup>
         )}
       </div>

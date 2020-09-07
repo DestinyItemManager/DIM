@@ -1,19 +1,19 @@
-import _ from 'lodash';
-import {
-  LockableBuckets,
-  LockedMap,
-  LockedArmor2ModMap,
-  ItemsByBucket,
-  LockedItemType,
-  statValues,
-  bucketsToCategories,
-} from './types';
-import { getItemDamageShortName } from 'app/utils/item-utils';
-import { doEnergiesMatch } from './mod-utils';
-import { canSlotMod } from './utils';
 import { DimItem } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { doEnergiesMatch } from './mod-utils';
+import {
+  bucketsToCategories,
+  ItemsByBucket,
+  LockableBuckets,
+  LockedArmor2ModMap,
+  LockedItemType,
+  LockedMap,
+  statValues,
+} from './types';
+import { canSlotMod } from './utils';
 
 /**
  * Filter the items map down given the locking and filtering configs.

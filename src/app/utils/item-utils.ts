@@ -1,17 +1,16 @@
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimMasterwork, DimSocket } from 'app/inventory/item-types';
-import _ from 'lodash';
-import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
-import powerCapToSeason from 'data/d2/lightcap-to-season.json';
-import { objectifyArray } from './util';
 import {
   armor2PlugCategoryHashes,
+  CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   TOTAL_STAT_HASH,
-  CUSTOM_TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import powerCapToSeason from 'data/d2/lightcap-to-season.json';
+import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
+import { objectifyArray } from './util';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType or EnergyType into a known english name
@@ -30,6 +29,8 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHash');
 
 const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
+
+export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.tag);

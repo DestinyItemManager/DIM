@@ -1,15 +1,15 @@
-import React from 'react';
-import { DimItem } from './item-types';
-import { TagValue, getTag, getNotes } from './dim-item-info';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import InventoryItem from './InventoryItem';
-import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
-import { searchFilterSelector } from '../search/search-filter';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { settingsSelector } from 'app/settings/reducer';
-import { itemInfosSelector, itemHashTagsSelector } from './selectors';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
+import { searchFilterSelector } from '../search/search-filter';
+import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { getNotes, getTag, TagValue } from './dim-item-info';
+import InventoryItem from './InventoryItem';
+import { DimItem } from './item-types';
+import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -18,7 +18,6 @@ interface ProvidedProps {
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e: React.MouseEvent): void;
-  onTouch?(e: React.TouchEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
 }
@@ -69,7 +68,6 @@ function ConnectedInventoryItem({
   notes,
   rating,
   onClick,
-  onTouch,
   onShiftClick,
   onDoubleClick,
   searchHidden,
@@ -86,7 +84,6 @@ function ConnectedInventoryItem({
       notes={notes}
       rating={rating}
       onClick={onClick}
-      onTouch={onTouch}
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}

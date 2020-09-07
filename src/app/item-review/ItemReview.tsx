@@ -1,24 +1,24 @@
-import React from 'react';
-import { DimItem } from '../inventory/item-types';
-import { D2ItemUserReview } from './d2-dtr-api-types';
-import { D1ItemUserReview } from './d1-dtr-api-types';
-import {
-  AppIcon,
-  thumbsUpIcon,
-  thumbsDownIcon,
-  faFlag,
-  faPenSquare,
-  faExclamationTriangle,
-  banIcon,
-} from '../shell/icons';
+import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
+import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
-import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { translateReviewMode } from './reviewModeTranslator';
+import React from 'react';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
-import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
-import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
+import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
+import { DimItem } from '../inventory/item-types';
+import {
+  AppIcon,
+  banIcon,
+  faExclamationTriangle,
+  faFlag,
+  faPenSquare,
+  thumbsDownIcon,
+  thumbsUpIcon,
+} from '../shell/icons';
+import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
+import { D1ItemUserReview } from './d1-dtr-api-types';
+import { D2ItemUserReview } from './d2-dtr-api-types';
+import { translateReviewMode } from './reviewModeTranslator';
 
 interface Props {
   item: DimItem;

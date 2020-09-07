@@ -1,18 +1,18 @@
+import { t } from 'app/i18next-t';
+import { hideItemPopup } from 'app/item-popup/item-popup';
+import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
+import { showNotification } from '../notifications/notifications';
+import { loadingTracker } from '../shell/loading-tracker';
+import rxStore from '../store/store';
 import { reportException } from '../utils/exceptions';
 import { queuedAction } from './action-queue';
-import { DimStore } from './store-types';
-import { DimItem } from './item-types';
-import { dimItemService } from './item-move-service';
-import { t } from 'app/i18next-t';
-import { loadingTracker } from '../shell/loading-tracker';
-import { showNotification } from '../notifications/notifications';
-import { hideItemPopup } from 'app/item-popup/item-popup';
-import { moveItemNotification } from './MoveNotifications';
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
-import { getVault } from './stores-helpers';
 import { updateCharacters } from './d2-stores';
-import rxStore from '../store/store';
+import { dimItemService } from './item-move-service';
+import { DimItem } from './item-types';
+import { moveItemNotification } from './MoveNotifications';
+import { DimStore } from './store-types';
+import { getVault } from './stores-helpers';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.

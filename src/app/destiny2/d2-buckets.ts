@@ -1,9 +1,9 @@
+import { VENDORS } from 'app/search/d2-known-values';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from './d2-definitions';
-import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
-import { VENDORS } from 'app/search/d2-known-values';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2Categories } from './d2-bucket-categories';
+import { D2ManifestDefinitions } from './d2-definitions';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType: { [hash: number]: string | undefined } = {

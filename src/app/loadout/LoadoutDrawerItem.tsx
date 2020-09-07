@@ -1,8 +1,8 @@
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { classIcons } from 'app/inventory/StoreBucket';
+import AppIcon from 'app/shell/icons/AppIcon';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { classIcons } from 'app/inventory/StoreBucket';
 
 export default function LoadoutDrawerItem({
   item,

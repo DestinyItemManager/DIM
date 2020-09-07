@@ -1,8 +1,8 @@
-import { SearchConfig } from './search-config';
-import _ from 'lodash';
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
+import { SearchConfig } from './search-config';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -46,6 +46,8 @@ const filterNames = [
   'source',
   'perk',
   'perkname',
+  'mod',
+  'modname',
   'name',
   'description',
 ];

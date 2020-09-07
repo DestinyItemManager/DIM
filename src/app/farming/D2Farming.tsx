@@ -1,13 +1,12 @@
-import React, { useRef } from 'react';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from 'app/store/types';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { farmingStoreSelector } from './reducer';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { DimStore } from '../inventory/store-types';
 import { D2FarmingService } from './d2farming.service';
 import './farming.scss';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { farmingStoreSelector } from './reducer';
 
 interface StoreProps {
   store?: DimStore;

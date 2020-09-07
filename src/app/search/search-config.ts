@@ -1,13 +1,14 @@
-import { itemTagSelectorList } from '../inventory/dim-item-info';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { modSlotTags } from 'app/utils/item-utils';
-
-import { D1Categories } from '../destiny1/d1-bucket-categories';
-import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import seasonTags from 'data/d2/season-tags.json';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
-import seasonTags from 'data/d2/season-tags.json';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { createSelector } from 'reselect';
+import { D1Categories } from '../destiny1/d1-bucket-categories';
+import { D2Categories } from '../destiny2/d2-bucket-categories';
+import { itemTagSelectorList } from '../inventory/dim-item-info';
 import { D1ItemCategoryHashes } from './d1-known-values';
 import {
   breakerTypes,
@@ -15,8 +16,6 @@ import {
   energyCapacityTypeNames,
 } from './d2-known-values';
 import { damageTypeNames, searchableStatNames } from './search-filter-values';
-import { createSelector } from 'reselect';
-import { destinyVersionSelector } from 'app/accounts/selectors';
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
@@ -277,7 +276,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
+    ...['notes:', 'perk:', 'perkname:', 'mod:', 'modname:', 'name:', 'description:'],
   ];
 
   // create suggestion stubs for filter names

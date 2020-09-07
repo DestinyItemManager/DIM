@@ -1,0 +1,19 @@
+.path {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0px 0px;
+
+  > li {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    &::after {
+      content: '>';
+      margin: 0 4px;
+    }
+    &:last-child::after {
+      content: '';
+    }
+  }
+}

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { D2Store } from './store-types';
-import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
-import { queueAction } from './action-queue';
 import { t } from 'app/i18next-t';
+import React, { useState } from 'react';
+import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
+import { queueAction } from './action-queue';
+import { D2Store } from './store-types';
 
 export function PullFromPostmaster({ store }: { store: D2Store }) {
   const [working, setWorking] = useState(false);

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useSubscription } from 'app/utils/hooks';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
-import { useLocation } from 'react-router';
-import { useSubscription } from 'app/utils/hooks';
 
 // TODO: nest components to make redux happier?
 

@@ -1,5 +1,5 @@
-import { set } from 'idb-keyval';
 import { observeStore } from 'app/utils/redux-utils';
+import { set } from 'idb-keyval';
 
 export function saveAccountsToIndexedDB() {
   return observeStore(

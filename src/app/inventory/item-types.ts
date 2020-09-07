@@ -1,28 +1,28 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
-  DestinyStat,
-  DestinyStatDefinition,
-  DestinyInventoryItemDefinition,
-  DestinySandboxPerkDefinition,
-  DestinyObjectiveProgress,
-  DestinySocketCategoryDefinition,
+  DestinyAmmunitionType,
+  DestinyBreakerTypeDefinition,
   DestinyClass,
   DestinyCollectibleState,
-  DestinyItemTierTypeInfusionBlock,
-  DestinyItemQualityBlockDefinition,
-  DestinyAmmunitionType,
-  DestinyItemQuantity,
-  DestinyDisplayPropertiesDefinition,
-  DestinyItemInstanceEnergy,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemPlugBase,
   DestinyDamageTypeDefinition,
+  DestinyDisplayPropertiesDefinition,
   DestinyEnergyTypeDefinition,
-  DestinyBreakerTypeDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemInstanceEnergy,
+  DestinyItemPlugBase,
+  DestinyItemQualityBlockDefinition,
+  DestinyItemQuantity,
+  DestinyItemSocketEntryDefinition,
+  DestinyItemTierTypeInfusionBlock,
+  DestinyObjectiveProgress,
+  DestinySandboxPerkDefinition,
+  DestinySocketCategoryDefinition,
+  DestinyStat,
+  DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
-import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
-import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { InventoryBucket } from './inventory-buckets';
+import { D1StoreServiceType, D2StoreServiceType, DimStore, StoreServiceType } from './store-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';

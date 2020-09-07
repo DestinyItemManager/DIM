@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Sheet from '../dim-ui/Sheet';
-import './MoveAmountPopupContainer.scss';
-import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
 import { t } from 'app/i18next-t';
-import ItemMoveAmount from '../item-popup/ItemMoveAmount';
-import BungieImage from '../dim-ui/BungieImage';
 import { useSubscription } from 'app/utils/hooks';
+import React, { useState } from 'react';
+import BungieImage from '../dim-ui/BungieImage';
+import Sheet from '../dim-ui/Sheet';
+import ItemMoveAmount from '../item-popup/ItemMoveAmount';
+import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
+import './MoveAmountPopupContainer.scss';
 
 /**
  * A container that can show a single move amount popup. This is a

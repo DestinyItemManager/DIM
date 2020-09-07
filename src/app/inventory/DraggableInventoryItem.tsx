@@ -1,14 +1,20 @@
-import React from 'react';
-import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } from 'react-dnd';
-import { DimItem } from './item-types';
-import { stackableDrag } from './actions';
-import store from '../store/store';
-import { BehaviorSubject } from 'rxjs';
+import { CompareService } from 'app/compare/compare.service';
+import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
+import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import { settingsSelector } from 'app/settings/reducer';
 import clsx from 'clsx';
+import React, { useRef, useState } from 'react';
+import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
+import { BehaviorSubject } from 'rxjs';
+import store from '../store/store';
+import { stackableDrag } from './actions';
+import { showDragGhost } from './drag-ghost-item';
+import { DimItem } from './item-types';
 
 interface ExternalProps {
   item: DimItem;
+  inspect?: Inspect;
   isPhonePortrait?: boolean;
   children?: React.ReactNode;
 }
@@ -35,6 +41,8 @@ export interface DragObject {
 
 export const isDragging$ = new BehaviorSubject(false);
 export let isDragging = false;
+
+const LONGPRESS_TIMEOUT = 200;
 
 let dragTimeout: number | null = null;
 
@@ -90,9 +98,74 @@ function collect(connect: DragSourceConnector): InternalProps {
   };
 }
 
-function DraggableInventoryItem({ connectDragSource, children, item }: Props) {
+function DraggableInventoryItem({
+  connectDragSource,
+  inspect,
+  isPhonePortrait,
+  children,
+  item,
+}: Props) {
+  const [touchActive, setTouchActive] = useState(false);
+  const longPressed = useRef<boolean>(false);
+  const timer = useRef<number>(0);
+
+  const resetTouch = () => {
+    setTouchActive(false);
+    showMobileInspect(undefined);
+    showDragGhost(undefined);
+    window.clearTimeout(timer.current);
+    longPressed.current = false;
+  };
+
+  const onTouch = (e: React.TouchEvent) => {
+    setTouchActive(e.type === 'touchstart');
+
+    if (!inspect || loadoutDialogOpen || CompareService.dialogOpen) {
+      return;
+    }
+
+    // It a longpress happend and the touch move event files, do nothing.
+    if (longPressed.current && e.type === 'touchmove') {
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
+        return;
+      }
+      showDragGhost({
+        item,
+        transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
+      });
+      return;
+    }
+
+    // Always reset the touch event before any other event fires.
+    // Useful because if the start event happens twice before another type (it happens.)
+    resetTouch();
+
+    if (e.type !== 'touchstart') {
+      // Abort longpress timer if touch moved, ended, or cancelled.
+      return;
+    }
+
+    // Start a timer for the longpress action
+    timer.current = window.setTimeout(() => {
+      longPressed.current = true;
+      if ($featureFlags.mobileInspect && isPhonePortrait) {
+        showMobileInspect(item, inspect);
+      }
+    }, LONGPRESS_TIMEOUT);
+  };
+
   return connectDragSource(
-    <div className={clsx('item-drag-container', `item-type-${item.type}`)}>{children}</div>
+    <div
+      onTouchStart={onTouch}
+      onTouchMove={onTouch}
+      onTouchEnd={onTouch}
+      onTouchCancel={onTouch}
+      className={clsx('item-drag-container', `item-type-${item.type}`, {
+        'touch-active': touchActive,
+      })}
+    >
+      {children}
+    </div>
   );
 }
 

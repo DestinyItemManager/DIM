@@ -1,5 +1,5 @@
-import React from 'react';
 import { AppIcon, banIcon, tagIcon } from 'app/shell/icons';
+import React from 'react';
 import styles from './ValueDial.m.scss';
 
 /** expects a value from 1-100 but caps both ends */

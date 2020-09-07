@@ -1,18 +1,18 @@
-import { unauthenticatedApi, authenticatedApi } from './dim-api-helper';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import {
+  AuditLogResponse,
+  DeleteAllResponse,
+  DestinyVersion,
+  ExportResponse,
+  ImportResponse,
+  PlatformInfoResponse,
   ProfileResponse,
   ProfileUpdate,
   ProfileUpdateRequest,
-  DestinyVersion,
-  ExportResponse,
-  PlatformInfoResponse,
-  ImportResponse,
   ProfileUpdateResponse,
-  AuditLogResponse,
-  DeleteAllResponse,
 } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { DimData } from 'app/storage/sync.service';
+import { authenticatedApi, unauthenticatedApi } from './dim-api-helper';
 
 export async function getGlobalSettings() {
   const response = await unauthenticatedApi<PlatformInfoResponse>(
@@ -33,8 +33,7 @@ export async function getDimApiProfile(account?: DestinyAccount) {
       ? {
           platformMembershipId: account.membershipId,
           destinyVersion: account.destinyVersion,
-          // TODO: triumphs
-          components: 'settings,loadouts,tags,hashtags,searches',
+          components: 'settings,loadouts,tags,hashtags,searches,triumphs',
         }
       : {
           components: 'settings',

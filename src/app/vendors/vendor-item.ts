@@ -1,19 +1,18 @@
+import { VENDORS } from 'app/search/d2-known-values';
 import {
+  DestinyCollectibleComponent,
+  DestinyDisplayPropertiesDefinition,
+  DestinyItemComponentSetOfint32,
+  DestinyItemQuantity,
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyVendorDefinition,
   DestinyVendorItemDefinition,
   DestinyVendorSaleItemComponent,
-  DestinyItemComponentSetOfint32,
-  DestinyVendorDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
-  DestinyDisplayPropertiesDefinition,
-  DestinyItemQuantity,
-  DestinyCollectibleComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { makeFakeItem } from '../inventory/store/d2-item-factory';
-import { DimItem } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import _ from 'lodash';
-import { VENDORS } from 'app/search/d2-known-values';
+import { DimItem } from '../inventory/item-types';
+import { makeFakeItem } from '../inventory/store/d2-item-factory';
 
 /**
  * A displayable vendor item.

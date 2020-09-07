@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { t } from 'app/i18next-t';
-import { oauthClientId } from '../bungie-api/bungie-api-utils';
-import { v4 as uuidv4 } from 'uuid';
-import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
+import { t } from 'app/i18next-t';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router';
+import { v4 as uuidv4 } from 'uuid';
+import { oauthClientId } from '../bungie-api/bungie-api-utils';
+import './login.scss';
 
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';

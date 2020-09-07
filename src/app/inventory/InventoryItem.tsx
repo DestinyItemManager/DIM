@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 import clsx from 'clsx';
-import { DimItem } from './item-types';
-import { TagValue } from './dim-item-info';
-import BadgeInfo from './BadgeInfo';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import React from 'react';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
+import BadgeInfo from './BadgeInfo';
+import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
+import { DimItem } from './item-types';
 import NewItemIndicator from './NewItemIndicator';
-import TagIcon from './TagIcon';
 import { selectedSubclassPath } from './subclass';
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import TagIcon from './TagIcon';
 
 const itemTierStyles = {
   Legendary: styles.legendary,
@@ -41,7 +41,6 @@ interface Props {
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e);
-  onTouch?(e);
   onShiftClick?(e): void;
   onDoubleClick?(e);
 }
@@ -57,12 +56,10 @@ export default function InventoryItem({
   inventoryWishListRoll,
   ignoreSelectedPerks,
   onClick,
-  onTouch,
   onShiftClick,
   onDoubleClick,
   innerRef,
 }: Props) {
-  const [touchActive, setTouchActive] = useState(false);
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
 
   const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
@@ -87,7 +84,6 @@ export default function InventoryItem({
     null;
   const noBorder = borderless(item);
   const itemStyles = {
-    [styles.touchActive]: touchActive,
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
@@ -100,25 +96,11 @@ export default function InventoryItem({
     [styles.masterwork]: item.masterwork,
   });
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchActive(true);
-    onTouch?.(e);
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    setTouchActive(false);
-    onTouch?.(e);
-  };
-
   return (
     <div
       id={item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchEnd}
-      onTouchEnd={onTouchEnd}
-      onTouchCancel={onTouchEnd}
       title={`${item.name}\n${item.typeName}`}
       className={clsx('item', itemStyles)}
       ref={innerRef}

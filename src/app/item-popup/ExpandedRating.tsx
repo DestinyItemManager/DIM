@@ -1,11 +1,11 @@
-import React from 'react';
-import RatingIcon from '../inventory/RatingIcon';
-import { DimItem } from '../inventory/item-types';
-import { connect } from 'react-redux';
-import { getRating, shouldShowRating } from '../item-review/reducer';
-import { RootState } from 'app/store/types';
 import { t } from 'app/i18next-t';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { DimItem } from '../inventory/item-types';
+import RatingIcon from '../inventory/RatingIcon';
 import { DtrRating } from '../item-review/dtr-api-types';
+import { getRating, shouldShowRating } from '../item-review/reducer';
 
 interface ProvidedProps {
   item: DimItem;

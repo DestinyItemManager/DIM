@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { t } from 'app/i18next-t';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * Render a countdown to a specific date.

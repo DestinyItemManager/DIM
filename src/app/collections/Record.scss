@@ -2,11 +2,12 @@
 
 .triumph-record {
   position: relative;
-  background: #282828;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid #666;
   padding: 12px;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   box-sizing: border-box;
 
   @include phone-portrait {
@@ -52,22 +53,38 @@
   }
 
   &.redeemed {
-    border-color: $gold;
-    background-color: scale-color($gold, $alpha: -90%);
-    opacity: 0.7;
+    border-color: #c4b578;
+    color: #c4b578;
+    background: transparent;
     .record-value {
       display: none;
+    }
+    p {
+      color: scale-color(#c4b578, $lightness: -40%);
+    }
+    .record-interval-container {
+      background-color: scale-color(#c4b578, $lightness: -20%) !important;
     }
   }
 
   &.unlocked {
-    border-color: $blue;
+    border-color: #56ecff;
+  }
+
+  &.trackedInDim {
+    position: relative;
+    border-color: #f37423;
+    outline: 1px solid #f37423;
+    background: linear-gradient(
+      scale-color($orange, $alpha: -100%) 0%,
+      scale-color($orange, $alpha: -80%) 100%
+    );
   }
 
   &.tracked {
     position: relative;
     border-color: #bdfc7f;
-    border-width: 2px;
+    outline: 1px solid #bdfc7f;
     background: linear-gradient(
       scale-color(#bdfc7f, $alpha: -100%) 0%,
       scale-color(#bdfc7f, $alpha: -90%) 100%
@@ -87,6 +104,41 @@
     top: -2px;
   }
 
+  .dimTrackedIcon {
+    position: absolute;
+    display: none;
+    right: calc(50px + var(--item-size) / 3.1);
+    top: -9px;
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    padding: 8px;
+    transition: transform 300ms ease-in-out;
+    transform-origin: center 8px;
+    opacity: 0.7;
+    &:hover {
+      transform: scale(1.5);
+    }
+    img {
+      width: calc(var(--item-size) / 3.1) !important;
+      height: auto !important;
+    }
+    @include phone-portrait {
+      display: block;
+      opacity: 0.7;
+    }
+  }
+
+  &:hover .dimTrackedIcon {
+    display: block;
+    opacity: 0.7;
+  }
+  &.trackedInDim .dimTrackedIcon {
+    display: block;
+    opacity: 1;
+    top: -10px;
+  }
+
   .record-lore img {
     margin-right: 4px;
     vertical-align: bottom;
@@ -94,7 +146,7 @@
 
   .record-icon {
     width: 40px;
-    height: 40px;
+    height: auto;
     flex-shrink: 0;
     margin-right: 8px;
   }

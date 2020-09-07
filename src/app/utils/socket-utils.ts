@@ -1,6 +1,6 @@
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { DimSocketCategory } from 'app/inventory/item-types';
-import { DimSockets, DimSocket } from '../inventory/item-types';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
 
 export function getMasterworkSocketHashes(

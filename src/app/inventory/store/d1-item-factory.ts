@@ -1,21 +1,22 @@
-import _ from 'lodash';
-import missingSources from 'data/d1/missing_sources.json';
-import { getBonus } from './character-utils';
-import { getQualityRating } from './armor-quality';
-import { reportException } from '../../utils/exceptions';
-import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { vaultTypes } from '../../destiny1/d1-buckets';
+import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { t } from 'app/i18next-t';
-import { D1Store } from '../store-types';
-import { D1Item, D1TalentGrid, D1GridNode, D1Stat } from '../item-types';
-import { InventoryBuckets } from '../inventory-buckets';
-import { D1StoresService } from '../d1-stores';
 import {
-  DestinyClass,
-  DestinyDisplayPropertiesDefinition,
-  DestinyDamageTypeDefinition,
   DestinyAmmunitionType,
+  DestinyClass,
+  DestinyDamageTypeDefinition,
+  DestinyDisplayPropertiesDefinition,
 } from 'bungie-api-ts/destiny2';
+import missingSources from 'data/d1/missing_sources.json';
+import _ from 'lodash';
+import { vaultTypes } from '../../destiny1/d1-buckets';
+import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
+import { reportException } from '../../utils/exceptions';
+import { D1StoresService } from '../d1-stores';
+import { InventoryBuckets } from '../inventory-buckets';
+import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
+import { D1Store } from '../store-types';
+import { getQualityRating } from './armor-quality';
+import { getBonus } from './character-utils';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -30,31 +31,6 @@ const tiers = ['Unused 0', 'Unused 1', 'Common', 'Uncommon', 'Rare', 'Legendary'
 let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
-
-// Nodes that require matching faction alignment
-const factionNodes = {
-  652505621: 'New Monarchy',
-  2669659850: 'Future War Cult',
-  2794386410: 'Dead Orbit',
-};
-
-/**
- * Check to see if this item has a node that restricts it to a
- * certain faction, and if the character is aligned with that
- * faction.
- */
-function factionItemAligns(store: D1Store, item: D1Item) {
-  if (!item.talentGrid) {
-    return true;
-  }
-
-  const factionNode = item.talentGrid.nodes.find((n) => factionNodes[n.hash]);
-  if (!factionNode) {
-    return true;
-  }
-
-  return factionNodes[factionNode.hash] === store.factionAlignment();
-}
 
 // Prototype for Item objects - add methods to this to add them to all
 // items.

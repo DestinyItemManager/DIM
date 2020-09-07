@@ -1,15 +1,15 @@
-import React from 'react';
-import { Loadout } from './loadout-types';
-import _ from 'lodash';
-import { AppIcon, addIcon } from '../shell/icons';
-import LoadoutDrawerBucket from './LoadoutDrawerBucket';
-import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
-import { DimItem } from '../inventory/item-types';
-import { showItemPicker } from '../item-picker/item-picker';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
-import { DimStore } from '../inventory/store-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import React from 'react';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import { showItemPicker } from '../item-picker/item-picker';
+import { addIcon, AppIcon } from '../shell/icons';
+import { Loadout } from './loadout-types';
+import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 
 const loadoutTypes = [
   'Class',

@@ -404,6 +404,8 @@ module.exports = (env) => {
         '$featureFlags.newArrangement': JSON.stringify(!env.release),
         // New background design
         '$featureFlags.gradientBackground': JSON.stringify(env.dev),
+        // Use a category strip on mobile inventory instead of collapsable headers
+        '$featureFlags.mobileCategoryStrip': JSON.stringify(env.dev),
       }),
 
       new WorkerPlugin({

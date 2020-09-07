@@ -1,10 +1,10 @@
 import { DestinyAccount } from '../accounts/destiny-account';
-import { handleSubmitErrors } from './trackerErrorHandler';
+import { DimUserReview, DtrReviewer } from '../item-review/dtr-api-types';
 import { loadingTracker } from '../shell/loading-tracker';
-import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
-import { DtrReviewer, DimUserReview } from '../item-review/dtr-api-types';
-import { ignoreUser } from './userFilter';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { dtrD2ReviewsEndpoint, dtrFetch } from './dtr-service-helper';
+import { handleSubmitErrors } from './trackerErrorHandler';
+import { ignoreUser } from './userFilter';
 
 function getReporter(membershipInfo: DestinyAccount): DtrReviewer {
   return {

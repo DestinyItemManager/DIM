@@ -1,20 +1,20 @@
+import Countdown from 'app/dim-ui/Countdown';
+import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
+import { percent } from 'app/shell/filters';
+import {
+  DestinyCharacterProgressionComponent,
+  DestinyClass,
+  DestinyProfileResponse,
+  DestinySeasonDefinition,
+  DestinySeasonPassDefinition,
+} from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import brightEngrams from 'data/d2/bright-engrams.json';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import {
-  DestinyCharacterProgressionComponent,
-  DestinySeasonDefinition,
-  DestinySeasonPassDefinition,
-  DestinyProfileResponse,
-  DestinyClass,
-} from 'bungie-api-ts/destiny2';
-import Countdown from 'app/dim-ui/Countdown';
-import { t } from 'app/i18next-t';
 import styles from './PursuitItem.m.scss';
-import { percent } from 'app/shell/filters';
-import clsx from 'clsx';
-import { DimStore } from 'app/inventory/store-types';
-import brightEngrams from 'data/d2/bright-engrams.json';
 
 export default function SeasonalRank({
   store,

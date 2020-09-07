@@ -1,3 +1,32 @@
+import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
+import { StatInfo } from 'app/compare/Compare';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import PressTip from 'app/dim-ui/PressTip';
+import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import { t } from 'app/i18next-t';
+import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
+import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { D1Item, DimItem } from 'app/inventory/item-types';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import RatingIcon from 'app/inventory/RatingIcon';
+import { source } from 'app/inventory/spreadsheets';
+import { statAllowList } from 'app/inventory/store/stats';
+import TagIcon from 'app/inventory/TagIcon';
+import { ItemStatValue } from 'app/item-popup/ItemStat';
+import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
+import NotesArea from 'app/item-popup/NotesArea';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { DtrRating } from 'app/item-review/dtr-api-types';
+import { getRating } from 'app/item-review/reducer';
+import { Loadout } from 'app/loadout/loadout-types';
+import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { statHashByName } from 'app/search/search-filter-values';
+import { getColor, percent } from 'app/shell/filters';
 import {
   AppIcon,
   lockIcon,
@@ -5,56 +34,26 @@ import {
   thumbsDownIcon,
   thumbsUpIcon,
 } from 'app/shell/icons';
-import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
+import { compareBy } from 'app/utils/comparators';
 import {
   getItemDamageShortName,
-  getItemSpecialtyModSlotDisplayName,
-  getSpecialtySocketMetadata,
   getItemPowerCapFinalSeason,
   getMasterworkStatNames,
+  getSpecialtySocketMetadata,
+  modMetadataByTag,
 } from 'app/utils/item-utils';
-
-import BungieImage from 'app/dim-ui/BungieImage';
-import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import { DimItem, D1Item } from 'app/inventory/item-types';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import ElementIcon from 'app/inventory/ElementIcon';
+import { isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { ItemStatValue } from 'app/item-popup/ItemStat';
-import { Loadout } from 'app/loadout/loadout-types';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
-import PressTip from 'app/dim-ui/PressTip';
-import RatingIcon from 'app/inventory/RatingIcon';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
-import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
-import { StatInfo } from 'app/compare/Compare';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-import TagIcon from 'app/inventory/TagIcon';
-import { TagValue, DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import _ from 'lodash';
-import clsx from 'clsx';
-import { compareBy } from 'app/utils/comparators';
-import { getRating } from 'app/item-review/reducer';
-import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
-import { source } from 'app/inventory/spreadsheets';
-import { statHashByName } from 'app/search/search-filter-values';
-import { statAllowList } from 'app/inventory/store/stats';
 import styles from './ItemTable.m.scss';
-import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
-import { t } from 'app/i18next-t';
-import { percent, getColor } from 'app/shell/filters';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import { isUsedModSocket } from 'app/utils/socket-utils';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import NotesArea from 'app/item-popup/NotesArea';
+import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -371,9 +370,18 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getItemSpecialtyModSlotDisplayName(item, defs),
+        value: (item) => getSpecialtySocketMetadata(item)?.tag,
         cell: (value, item) =>
-          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
+          value && (
+            <SpecialtyModSlotIcon
+              className={styles.modslotIcon}
+              item={item}
+              showAllSupportedSeasons={true}
+            />
+          ),
+        sort: compareBy((tag) =>
+          typeof tag === 'string' ? modMetadataByTag[tag]?.season ?? 99 : 99
+        ),
         filter: (_, item) => {
           const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
           return `modslot:${modSocketTypeHash?.tag || 'none'}`;

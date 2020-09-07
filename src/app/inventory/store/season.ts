@@ -1,6 +1,6 @@
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/season-to-source.json';
+import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
 import { D2Item } from '../item-types';
 

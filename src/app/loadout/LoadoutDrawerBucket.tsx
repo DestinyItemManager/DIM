@@ -1,10 +1,10 @@
 import React from 'react';
-import { DimItem } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { AppIcon, addIcon } from '../shell/icons';
-import LoadoutDrawerItem from './LoadoutDrawerItem';
-import { LoadoutItem } from './loadout-types';
+import { DimItem } from '../inventory/item-types';
 import { sortItems } from '../shell/filters';
+import { addIcon, AppIcon } from '../shell/icons';
+import { LoadoutItem } from './loadout-types';
+import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function LoadoutDrawerBucket({
   bucket,

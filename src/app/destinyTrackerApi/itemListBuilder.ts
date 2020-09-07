@@ -1,13 +1,12 @@
-import _ from 'lodash';
-import { D1Item } from '../inventory/item-types';
-import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
-import { translateToDtrWeapon } from './itemTransformer';
-import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../destiny1/vendors/vendor.service';
-import store from '../store/store';
+import { D1Item } from '../inventory/item-types';
+import { D1Store } from '../inventory/store-types';
+import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
 import { DtrRating } from '../item-review/dtr-api-types';
-import { ITEM_RATING_EXPIRATION } from './d2-itemListBuilder';
 import { getItemStoreKey } from '../item-review/reducer';
+import store from '../store/store';
+import { ITEM_RATING_EXPIRATION } from './d2-itemListBuilder';
+import { translateToDtrWeapon } from './itemTransformer';
 
 /**
  * Translate the universe of weapons that the user has in their stores into a collection of data that we can send the DTR API.

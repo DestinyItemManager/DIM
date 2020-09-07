@@ -1,11 +1,11 @@
-import { createAction } from 'typesafe-actions';
-import { DimApiState } from './reducer';
 import {
   GlobalSettings,
   ProfileResponse,
   ProfileUpdateResult,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createAction } from 'typesafe-actions';
+import { DimApiState } from './reducer';
 
 /**
  * These are all the "basic" actions for the API - stuff that gets reacted to in the reducer.

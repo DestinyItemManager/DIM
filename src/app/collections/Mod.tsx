@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import '../progress/milestone.scss';
-import { D2Item } from 'app/inventory/item-types';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { D2Item } from 'app/inventory/item-types';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
+import React from 'react';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
+import '../progress/milestone.scss';
 
 interface ModProps {
   item: D2Item;

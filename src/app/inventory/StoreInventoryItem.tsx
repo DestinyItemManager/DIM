@@ -1,13 +1,12 @@
-import React, { useRef } from 'react';
-import { DimItem } from './item-types';
-import DraggableInventoryItem from './DraggableInventoryItem';
-import ItemPopupTrigger from './ItemPopupTrigger';
-import { CompareService } from '../compare/compare.service';
-import { moveItemTo } from './move-item';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
-import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
-import { showDragGhost } from 'app/inventory/drag-ghost-item';
+import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import React from 'react';
+import { CompareService } from '../compare/compare.service';
+import ConnectedInventoryItem from './ConnectedInventoryItem';
+import DraggableInventoryItem from './DraggableInventoryItem';
+import { DimItem } from './item-types';
+import ItemPopupTrigger from './ItemPopupTrigger';
+import { moveItemTo } from './move-item';
 import { getCurrentStore } from './stores-helpers';
 
 interface Props {
@@ -15,57 +14,10 @@ interface Props {
   isPhonePortrait?: boolean;
 }
 
-const LONGPRESS_TIMEOUT = 200;
-
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
 export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
-  const longPressed = useRef<boolean>(false);
-  const timer = useRef<number>(0);
-
-  const resetTouch = () => {
-    showMobileInspect(undefined);
-    showDragGhost(undefined);
-    window.clearTimeout(timer.current);
-    longPressed.current = false;
-  };
-
-  const onTouch = (e: React.TouchEvent) => {
-    if (loadoutDialogOpen || CompareService.dialogOpen) {
-      return;
-    }
-
-    // It a longpress happend and the touch move event files, do nothing.
-    if (longPressed.current && e.type === 'touchmove') {
-      if ($featureFlags.mobileInspect && isPhonePortrait) {
-        return;
-      }
-      showDragGhost({
-        item,
-        transform: `translate(${e.touches[0].clientX}px, ${e.touches[0].clientY}px)`,
-      });
-      return;
-    }
-
-    // Always reset the touch event before any other event fires.
-    // Useful because if the start event happens twice before another type (it happens.)
-    resetTouch();
-
-    if (e.type !== 'touchstart') {
-      // Abort longpress timer if touch moved, ended, or cancelled.
-      return;
-    }
-
-    // Start a timer for the longpress action
-    timer.current = window.setTimeout(() => {
-      longPressed.current = true;
-      if ($featureFlags.mobileInspect && isPhonePortrait) {
-        showMobileInspect(item);
-      }
-    }, LONGPRESS_TIMEOUT);
-  };
-
   const doubleClicked = (e: React.MouseEvent) => {
     if (!loadoutDialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
@@ -79,7 +31,11 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   };
 
   return (
-    <DraggableInventoryItem item={item} isPhonePortrait={isPhonePortrait}>
+    <DraggableInventoryItem
+      item={item}
+      isPhonePortrait={isPhonePortrait}
+      inspect={Inspect.showMoveLocations}
+    >
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
           <ConnectedInventoryItem
@@ -88,7 +44,6 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
             innerRef={ref}
             onClick={onClick}
             onDoubleClick={doubleClicked}
-            onTouch={onTouch}
           />
         )}
       </ItemPopupTrigger>
