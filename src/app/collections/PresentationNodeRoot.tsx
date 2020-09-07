@@ -19,6 +19,7 @@ interface Props {
   searchQuery?: string;
   isTriumphs?: boolean;
   overrideName?: string;
+  completedRecordsHidden?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -40,6 +41,7 @@ export default function PresentationNodeRoot({
   searchFilter,
   isTriumphs,
   overrideName,
+  completedRecordsHidden,
 }: Props) {
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -66,7 +68,7 @@ export default function PresentationNodeRoot({
       nodeTree,
       searchQuery.toLowerCase(),
       searchFilter,
-      []
+      Boolean(completedRecordsHidden)
     );
 
     return (
@@ -87,7 +89,7 @@ export default function PresentationNodeRoot({
   ];
 
   return (
-    <>
+    <div className="presentation-node-root">
       <PresentationNode
         node={nodeTree}
         defs={defs}
@@ -95,7 +97,7 @@ export default function PresentationNodeRoot({
         path={fullNodePath}
         onNodePathSelected={setNodePath}
         parents={[]}
-        isTriumphsRootNode={isTriumphs}
+        isRootNode={true}
         isInTriumphs={isTriumphs}
         overrideName={overrideName}
       />
@@ -113,6 +115,6 @@ export default function PresentationNodeRoot({
             onNodePathSelected={setNodePath}
           />
         ))}
-    </>
+    </div>
   );
 }
