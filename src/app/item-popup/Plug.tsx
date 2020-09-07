@@ -118,7 +118,7 @@ export default function Plug({
       key={plug.plugDef.hash}
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
-        notChosen: plug.plugDef.hash !== socketInfo.plugged?.plugDef.hash,
+        notChosen: plug !== socketInfo.plugged,
         compareChosen: plug.plugDef.hash === adjustedPlug?.plugDef.hash,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}

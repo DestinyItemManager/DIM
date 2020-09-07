@@ -94,10 +94,12 @@ function ItemSockets({
     item: DimItem,
     categoryHash: number,
     socket: DimSocket,
-    plug: DimPlug
+    plug: DimPlug,
+    hasMenu: boolean
   ) => {
-    // TODO: setSocketInMenu?
-    if (updateSocketComparePlug) {
+    if (hasMenu) {
+      setSocketInMenu(socket);
+    } else if (updateSocketComparePlug) {
       updateSocketComparePlug({ item, categoryHash, socket, plug });
     }
   };
@@ -276,7 +278,13 @@ function Socket({
   classesByHash?: { [plugHash: number]: string };
   bestPerks: Set<number>;
   isPhonePortrait: boolean;
-  onClick(item: DimItem, categoryHash: number, socket: DimSocket, plug: DimPlug): void;
+  onClick(
+    item: DimItem,
+    categoryHash: number,
+    socket: DimSocket,
+    plug: DimPlug,
+    hasMenu: boolean
+  ): void;
   onShiftClick?(lockedItem: LockedItemType): void;
   adjustedPlug?: DimPlug | undefined;
 }) {
@@ -302,7 +310,7 @@ function Socket({
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}
           onClick={() => {
-            onClick(item, categoryHash, socket, plug);
+            onClick(item, categoryHash, socket, plug, hasMenu);
           }}
           onShiftClick={onShiftClick}
           adjustedPlug={adjustedPlug}

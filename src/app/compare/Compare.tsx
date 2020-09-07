@@ -219,6 +219,12 @@ class Compare extends React.Component<Props, State> {
       // socketIndex is correct for allSockets, but not categories[].sockets
       // TODO: Confirm socket is always off by 1, otherwise this should use hashes to find plugs
       socketIndex -= 1;
+
+      // Exit early if the socket index doesn't exist (kill tracker sockets)
+      if (!item.sockets.categories[categoryIndex].sockets[socketIndex]) {
+        return null;
+      }
+
       if (
         (adjustedPlugs?.[item.id]?.[socketIndex] === undefined &&
           clickedPlug.plugDef.hash !==
