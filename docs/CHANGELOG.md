@@ -1,5 +1,7 @@
 ## Next
 
+* Actually release the Records page
+
 ## 6.28.0 <span className="changelog-date">(2020-09-06)</span>
 
 * Triumphs, Collections, and Stat Trackers are now all together in the new Records page.
