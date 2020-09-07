@@ -1,5 +1,7 @@
 ## Next
 
+## 6.28.0 <span className="changelog-date">(2020-09-06)</span>
+
 * Triumphs, Collections, and Stat Trackers are now all together in the new Records page.
 * You can track triumphs in DIM - tracked triumphs are stored and synced with DIM Sync. These show up on both the Progress and Records pages.
 * Everything on the Records page responds to search - search through your Collections, Triumphs, and Stat Trackers all at once!
