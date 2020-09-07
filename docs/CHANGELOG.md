@@ -1,5 +1,7 @@
 ## Next
 
+## 6.28.1 <span className="changelog-date">(2020-09-06)</span>
+
 * Actually release the Records page
 
 ## 6.28.0 <span className="changelog-date">(2020-09-06)</span>
