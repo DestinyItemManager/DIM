@@ -25,7 +25,7 @@ import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimStat, DimSocket, DimPlug } from '../inventory/item-types';
-import _ from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -191,7 +191,6 @@ class Compare extends React.Component<Props, State> {
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     // TODO: Should this go into its own module?
-    // TODO: Mobile view?
     const updateSocketComparePlug = ({
       item,
       categoryHash,
@@ -213,7 +212,7 @@ class Compare extends React.Component<Props, State> {
         (category) => category.category.hash === categoryHash
       );
       // Create deep copies of arrays to prevent directly mutating state
-      // (_.cloneDeep is resulting in object mutation)
+      // (cloneDeep is resulting in object mutation)
       const itemStatsClone: DimStat[] = JSON.parse(JSON.stringify(item.stats));
 
       // socketIndex is correct for allSockets, but not categories[].sockets
@@ -233,13 +232,17 @@ class Compare extends React.Component<Props, State> {
       ) {
         // Clone stats so state isn't directly mutated by math
         const updateAdjustedPlugs =
-          _.isEmpty(adjustedPlugs) || adjustedPlugs === undefined
+          isEmpty(adjustedPlugs) || adjustedPlugs === undefined
             ? { [item.id]: {} }
-            : _.cloneDeep(adjustedPlugs);
+            : adjustedPlugs[item.id]
+            ? cloneDeep(adjustedPlugs)
+            : Object.assign({}, cloneDeep(adjustedPlugs), { [item.id]: {} });
         const updateAdjustedStats =
-          _.isEmpty(adjustedStats) || adjustedStats === undefined
+          isEmpty(adjustedStats) || adjustedStats === undefined
             ? { [item.id]: {} }
-            : _.cloneDeep(adjustedStats);
+            : adjustedStats[item.id]
+            ? cloneDeep(adjustedStats)
+            : Object.assign({}, cloneDeep(adjustedStats), { [item.id]: {} });
 
         const prevAdjustedPlug =
           updateAdjustedPlugs[item.id][socketIndex] ??
@@ -290,7 +293,7 @@ class Compare extends React.Component<Props, State> {
           updateAdjustedPlugs[item.id][socketIndex] = clickedPlug;
         }
 
-        if (_.isEmpty(updateAdjustedPlugs[item.id])) {
+        if (isEmpty(updateAdjustedPlugs[item.id])) {
           delete updateAdjustedPlugs[item.id];
           delete updateAdjustedStats[item.id];
         }
