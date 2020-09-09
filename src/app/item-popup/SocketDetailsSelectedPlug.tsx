@@ -7,6 +7,7 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -103,7 +104,10 @@ export default function SocketDetailsSelectedPlug({
         })}
       </div>
       <div className={styles.modDescription}>
-        <h3>{plug.displayProperties.name}</h3>
+        <h3>
+          {plug.displayProperties.name}
+          {emptySpecialtySocketHashes.includes(plug.hash) && ` -- ${plug.itemTypeDisplayName}`}
+        </h3>
         {selectedPlugPerk ? (
           <div>{selectedPlugPerk.displayProperties.description}</div>
         ) : (
