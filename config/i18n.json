@@ -580,6 +580,7 @@
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
+    "SeasonNum": "Season {{season}}",
     "SelectedPerkKey": "Selected perk",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",

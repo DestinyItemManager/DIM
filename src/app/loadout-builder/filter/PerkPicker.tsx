@@ -41,8 +41,8 @@ import {
   removeLockedItem,
 } from '../utils';
 import styles from './PerkPicker.m.scss';
-import PerksForBucket from './PerksForBucket';
-import SeasonalModPicker from './SeasonalModPicker';
+import PickerSectionPerks from './PickerSectionPerks';
+import SeasonalModPicker from './PickerSectionSeasonalMods';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
@@ -454,7 +454,7 @@ function PerkPicker({
         (bucketId) =>
           ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
             (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
-            <PerksForBucket
+            <PickerSectionPerks
               key={bucketId}
               defs={defs}
               bucket={buckets.byHash[bucketId]}

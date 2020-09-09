@@ -1,11 +1,12 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import { LockedArmor2Mod, ModPickerCategories, ModPickerCategory } from '../types';
-import styles from './PerksForBucket.m.scss';
+import styles from './PickerSection.m.scss';
 
 export default function ModPickerSection({
   defs,
@@ -15,6 +16,7 @@ export default function ModPickerSection({
   category,
   maximumSelectable,
   energyMustMatch,
+  splitBySeason,
   onModSelected,
   onModRemoved,
 }: {
@@ -25,6 +27,7 @@ export default function ModPickerSection({
   category: ModPickerCategory;
   maximumSelectable: number;
   energyMustMatch?: boolean;
+  splitBySeason: boolean;
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
@@ -67,22 +70,34 @@ export default function ModPickerSection({
     return false;
   };
 
+  const modGroups = splitBySeason
+    ? _.groupBy(mods, (mod) => t('LoadoutBuilder.SeasonNum', { season: mod.season }))
+    : { nogroup: mods };
+
   return (
     <div className={styles.bucket} id={`mod-picker-section-${category}`}>
-      <h3>{title}</h3>
-      <div className={styles.perks}>
-        {mods.map((item) => (
-          <SelectableArmor2Mod
-            key={item.mod.hash}
-            defs={defs}
-            selected={Boolean(locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash))}
-            mod={item}
-            unselectable={isModUnSelectable(item)}
-            onModSelected={onModSelected}
-            onModRemoved={onModRemoved}
-          />
-        ))}
-      </div>
+      <div className={styles.header}>{title}</div>
+      {Object.entries(modGroups).map(([subTitle, mods]) => (
+        <>
+          {subTitle !== 'nogroup' && <div className={styles.subheader}>{subTitle}</div>}
+          <div className={styles.items}>
+            {console.log(mods)}
+            {mods.map((item) => (
+              <SelectableArmor2Mod
+                key={item.mod.hash}
+                defs={defs}
+                selected={Boolean(
+                  locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash)
+                )}
+                mod={item}
+                unselectable={isModUnSelectable(item)}
+                onModSelected={onModSelected}
+                onModRemoved={onModRemoved}
+              />
+            ))}
+          </div>
+        </>
+      ))}
     </div>
   );
 }
