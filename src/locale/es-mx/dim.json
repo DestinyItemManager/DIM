@@ -376,6 +376,7 @@
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
+    "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
     "Filters": "Filtros",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "SHIFT+CLICK en un perk para seleccionarlo. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos bloqueados",
+    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
+    "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% para el reinicio",
     "Progress": "Progreso",
+    "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos seguidos coincidió con la búsqueda",
     "QuestExpired": "Caducado",
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
-    "SecretTriumph": "Triunfo Secreto"
+    "SecretTriumph": "Triunfo Secreto",
+    "StatTrackers": "Rastreadores de estadísticas",
+    "TrackedTriumphs": "Triunfos seguidos"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar registros completados",
     "RecordBooks": "Libros de Hazañas"
+  },
+  "Records": {
+    "Title": "Hazañas"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar reseña detallada de armas y permitir calificación de armas",
@@ -958,8 +967,8 @@
     "UnlockAll": "Desbloquear objetos"
   },
   "Triumphs": {
-    "HideCompleted": "Esconder Completados",
-    "RevealRedacted": "Revelar Clasificados"
+    "HideCompleted": "Ocultar triunfos completados",
+    "RevealRedacted": "Revelar triunfos clasificados"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",

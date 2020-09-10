@@ -376,6 +376,7 @@
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpMenuItem": "过滤器帮助...",
+    "FilterHelpRecords": "搜索成就和收藏品",
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
     "Filters": "过滤器",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
     "ProcessingSets": "正在处理 {{character}} 的配装",
     "ResetLocked": "重置锁定物品",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectMinStatTotal": "最小护甲属性总和",
@@ -800,19 +802,26 @@
     "CrucibleRank": "排名",
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
+    "NoTrackedTriumph": "你没有正在跟踪的成就。在游戏中跟踪一个，或在 DIM 中跟踪任意数目。",
     "PercentPrestige": "重置百分比{{pct}}%",
     "Progress": "进度",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "已过期",
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
-    "SecretTriumph": "秘密胜利"
+    "SecretTriumph": "秘密胜利",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "跟踪的成就"
   },
   "RecordBooks": {
     "HideCompleted": "隐藏完成事件",
     "RecordBooks": "记事本"
+  },
+  "Records": {
+    "Title": "记录"
   },
   "Settings": {
     "AllowIdPostToDtr": "显示详细的武器评论并允许评测武器.",
@@ -958,8 +967,8 @@
     "UnlockAll": "解锁物品"
   },
   "Triumphs": {
-    "HideCompleted": "隐藏已完成",
-    "RevealRedacted": "显示隐藏项目"
+    "HideCompleted": "隐藏已完成的成就",
+    "RevealRedacted": "显示隐藏的成就"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz 提示这位商贩掉落高光等物品。",

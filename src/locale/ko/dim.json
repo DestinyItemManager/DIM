@@ -376,6 +376,7 @@
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
     "FilterHelpMenuItem": "필터 도움말...",
+    "FilterHelpRecords": "업적과 수집품 검색",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "잠긴 아이템 초기화",
+    "SeasonNum": "시즌 {{season}}",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "SelectMinStatTotal": "방어구 총 능력치 최솟값",
@@ -800,19 +802,26 @@
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
+    "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
     "Progress": "진척도",
+    "QueryFilteredTrackedTriumphs": "검색된 추적 중인 업적이 없습니다.",
     "QuestExpired": "만료됨",
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
-    "SecretTriumph": "비밀 업적"
+    "SecretTriumph": "비밀 업적",
+    "StatTrackers": "통계 추적기",
+    "TrackedTriumphs": "추적 중인 업적"
   },
   "RecordBooks": {
     "HideCompleted": "완료한 기록 숨기기",
     "RecordBooks": "기록 모음집"
+  },
+  "Records": {
+    "Title": "기록"
   },
   "Settings": {
     "AllowIdPostToDtr": "자세한 무기 리뷰 표시 및 무기 평가 허용",
@@ -958,8 +967,8 @@
     "UnlockAll": "아이템 잠금 해제"
   },
   "Triumphs": {
-    "HideCompleted": "완료 항목 숨기기",
-    "RevealRedacted": "숨긴 항목 표시"
+    "HideCompleted": "완료한 업적 숨기기",
+    "RevealRedacted": "삭제된 업적 표시"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz에서 이 상인이 높은 전투력의 아이템을 판매하는 것을 보고하였습니다.",

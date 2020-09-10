@@ -376,6 +376,7 @@
     "FilterHelp": "Szukaj przedmiotu/perk, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterHelpMenuItem": "Pomoc z filtrami...",
+    "FilterHelpRecords": "Szukaj triumfy i kolekcje",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj zablokowane przedmioty",
+    "SeasonNum": "Sezon {{season}}",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
     "SelectMinStatTotal": "Minimalna suma statystyk pancerzu",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Rangi",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
+    "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
     "Progress": "Postęp",
+    "QueryFilteredTrackedTriumphs": "Żaden z Twoich śledzonych triumfów nie pasował do wyszukiwania",
     "QuestExpired": "Wygasło",
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
-    "SecretTriumph": "Sekretny Triumf"
+    "SecretTriumph": "Sekretny Triumf",
+    "StatTrackers": "Śledzenie statystyk",
+    "TrackedTriumphs": "Śledzone triumfy"
   },
   "RecordBooks": {
     "HideCompleted": "Ukryj ukończone zapisy",
     "RecordBooks": "Księga Rekordów"
+  },
+  "Records": {
+    "Title": "Rekordy"
   },
   "Settings": {
     "AllowIdPostToDtr": "Pokaż szczegółowe recenzje broni i pozwól na ocenę broni",
@@ -958,8 +967,8 @@
     "UnlockAll": "Odblokuj Przedmioty"
   },
   "Triumphs": {
-    "HideCompleted": "Ukryj zakończone",
-    "RevealRedacted": "Odsłoń ukryte"
+    "HideCompleted": "Ukryj ukończone triumfy",
+    "RevealRedacted": "Ujawnij zredagowane triumfy"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",

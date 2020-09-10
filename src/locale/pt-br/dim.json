@@ -376,6 +376,7 @@
     "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
     "FilterHelpMenuItem": "Ajuda sobre filtros...",
+    "FilterHelpRecords": "Pesquisar em triunfos e coleções",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-clique um perk para selecionar. Shift-clique em um item para ignorá-lo. Mova os itens para a barra lateral para ignorá-los ou travá-los.",
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens travados",
+    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "SelectMinStatTotal": "Mínimo do Atributo Total de Armadura",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Ranque",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
+    "NoTrackedTriumph": "Você não está rastreando nenhum triunfo. Selecione um através do jogo ou quantos você quiser aqui no DIM.",
     "PercentPrestige": "{{pct}}% para resetar",
     "Progress": "Progresso",
+    "QueryFilteredTrackedTriumphs": "Nenhum dos triunfos que você está rastreando coincidiram com a pesquisa",
     "QuestExpired": "Expirado",
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Triunfo Secreto"
+    "SecretTriumph": "Triunfo Secreto",
+    "StatTrackers": "Estatísticas",
+    "TrackedTriumphs": "Triunfos Rastreados"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",
     "RecordBooks": "Livro de Recordes"
+  },
+  "Records": {
+    "Title": "Registros"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
@@ -958,8 +967,8 @@
     "UnlockAll": "Destravar itens"
   },
   "Triumphs": {
-    "HideCompleted": "Ocultar Concluído",
-    "RevealRedacted": "Revelar Confidencial"
+    "HideCompleted": "Ocultar triunfos concluídos",
+    "RevealRedacted": "Exibir triunfos editados"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz relata que este vendedor está retornando items de poder alto.",
@@ -970,7 +979,7 @@
     "Catalysts": "Catalisadores",
     "Collections": "Coleções",
     "Engram": "Engrama de Recompensa",
-    "FilterToUnacquired": "Exibir somente itens não coletados",
+    "FilterToUnacquired": "Exibir apenas não coletados",
     "Vendors": "Vendedores"
   },
   "Views": {
