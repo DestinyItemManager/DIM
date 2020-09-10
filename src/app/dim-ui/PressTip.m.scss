@@ -15,11 +15,15 @@
   box-sizing: border-box;
   user-select: none;
 
-  h2 {
+  h2,
+  h3 {
     background-color: #444;
     margin: 0 0 4px 0;
     font-size: 14px;
     @include destiny-header;
+  }
+  h3 {
+    font-size: 12px;
   }
 
   hr {
