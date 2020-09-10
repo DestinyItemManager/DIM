@@ -7,9 +7,10 @@ import { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
+import { ItemProto as D1ItemProto } from './store/d1-item-factory';
 import { StoreProto as D1StoreProto } from './store/d1-store-factory';
-import { ItemProto } from './store/d2-item-factory';
-import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
+import { ItemProto as D2ItemProto } from './store/d2-item-factory';
+import { StoreProto as D2StoreProto } from './store/d2-store-factory';
 import { getItemAcrossStores, getStore } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
@@ -277,8 +278,11 @@ function touchItem(state: InventoryState, itemId: string) {
     return state;
   }
   let store = getStore(state.stores, item.owner)!;
-  item = Object.assign(Object.create(ItemProto), item) as DimItem;
-  store = Object.assign(Object.create(StoreProto), {
+  item = Object.assign(
+    Object.create(store.isDestiny2() ? D2ItemProto : D1ItemProto),
+    item
+  ) as DimItem;
+  store = Object.assign(Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto), {
     ...store,
     items: store.items.map((i) => (i.id === item.id ? item : i)),
     buckets: {

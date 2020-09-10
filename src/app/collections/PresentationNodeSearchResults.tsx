@@ -1,14 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DimPresentationNodeSearchResult } from './presentation-nodes';
-import styles from './PresentationNodeSearchResults.m.scss';
-import _ from 'lodash';
-import PresentationNodeRoot from './PresentationNodeRoot';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
+import PresentationNodeRoot from './PresentationNodeRoot';
+import styles from './PresentationNodeSearchResults.m.scss';
 
 export default function PresentationNodeSearchResults({
   searchResults,
@@ -35,9 +34,10 @@ export default function PresentationNodeSearchResults({
       {searchResults.map((sr) => (
         <div key={sr.path.map((p) => p.nodeDef.hash).join('.')}>
           <ul className={styles.path}>
-            {sr.path.map((p) => (
-              <li key={p.nodeDef.hash}>{p.nodeDef.displayProperties.name}</li>
-            ))}
+            {sr.path.map(
+              (p, index) =>
+                index > 0 && <li key={p.nodeDef.hash}>{p.nodeDef.displayProperties.name}</li>
+            )}
           </ul>
           <div>
             {!sr.collectibles &&

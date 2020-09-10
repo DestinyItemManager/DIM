@@ -21,7 +21,7 @@ export function TrackedTriumphs({
   searchQuery?: string;
 }) {
   const recordHashes = trackedRecordHash
-    ? [trackedRecordHash, ...trackedTriumphs]
+    ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;
   let records = _.compact(recordHashes.map((h) => toRecord(defs, profileResponse, h)));
 

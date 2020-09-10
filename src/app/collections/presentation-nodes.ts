@@ -1,25 +1,25 @@
-import {
-  DestinyPresentationNodeDefinition,
-  DestinyRecordDefinition,
-  DestinyRecordComponent,
-  DestinyMetricDefinition,
-  DestinyMetricComponent,
-  DestinyCollectibleState,
-  DestinyCollectibleDefinition,
-  DestinyProfileResponse,
-  DestinyScope,
-  DestinyPresentationNodeCollectibleChildEntry,
-  DestinyPresentationNodeRecordChildEntry,
-  DestinyRecordState,
-  DestinyPresentationNodeMetricChildEntry,
-  DestinyDisplayPropertiesDefinition,
-} from 'bungie-api-ts/destiny2';
-import { DimItem } from 'app/inventory/item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
-import _ from 'lodash';
 import { count } from 'app/utils/util';
+import {
+  DestinyCollectibleDefinition,
+  DestinyCollectibleState,
+  DestinyDisplayPropertiesDefinition,
+  DestinyMetricComponent,
+  DestinyMetricDefinition,
+  DestinyPresentationNodeCollectibleChildEntry,
+  DestinyPresentationNodeDefinition,
+  DestinyPresentationNodeMetricChildEntry,
+  DestinyPresentationNodeRecordChildEntry,
+  DestinyProfileResponse,
+  DestinyRecordComponent,
+  DestinyRecordDefinition,
+  DestinyRecordState,
+  DestinyScope,
+} from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 
 export interface DimPresentationNodeLeaf {
   records?: DimRecord[];
@@ -143,7 +143,8 @@ export function filterPresentationNodesToSearch(
   node: DimPresentationNode,
   searchQuery: string,
   filterItems: (item: DimItem) => boolean,
-  path: DimPresentationNode[]
+  completedRecordsHidden: boolean,
+  path: DimPresentationNode[] = []
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
   if (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) {
@@ -158,7 +159,10 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(c, searchQuery, filterItems, [...path, node])
+      filterPresentationNodesToSearch(c, searchQuery, filterItems, completedRecordsHidden, [
+        ...path,
+        node,
+      ])
     );
   }
 
@@ -176,8 +180,12 @@ export function filterPresentationNodesToSearch(
   }
 
   if (node.records) {
-    const records = node.records.filter((r) =>
-      searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
+    const records = node.records.filter(
+      (r) =>
+        !(
+          completedRecordsHidden &&
+          Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
+        ) && searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
     );
 
     return records.length

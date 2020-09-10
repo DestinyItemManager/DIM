@@ -376,6 +376,7 @@
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
     "FilterHelpMenuItem": "Aiuto per Filtri...",
+    "FilterHelpRecords": "Cerca trionfi e collezioni",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
+    "SeasonNum": "Stagione {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
+    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure quanti ne vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "Progress": "Avanzamento",
+    "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
     "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Trionfo Segreto"
+    "SecretTriumph": "Trionfo Segreto",
+    "StatTrackers": "Contatori Statistiche",
+    "TrackedTriumphs": "Trionfi Seguiti"
   },
   "RecordBooks": {
     "HideCompleted": "Nascondi completati",
     "RecordBooks": "Registri"
+  },
+  "Records": {
+    "Title": "Record"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
@@ -958,8 +967,8 @@
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triumphs": {
-    "HideCompleted": "Nascondi Completati",
-    "RevealRedacted": "Rivela Segreti"
+    "HideCompleted": "Nascondi trionfi completati",
+    "RevealRedacted": "Mostra trionfi segreti"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",

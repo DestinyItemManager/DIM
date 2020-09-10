@@ -376,6 +376,7 @@
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Ранги",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
     "Progress": "Чек-Лист",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Просрочен",
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
-    "SecretTriumph": "Скрытый Триумф"
+    "SecretTriumph": "Скрытый Триумф",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
     "RecordBooks": "Таблица Рекордов"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
@@ -958,8 +967,8 @@
     "UnlockAll": "Разблокировать всё"
   },
   "Triumphs": {
-    "HideCompleted": "Скрыть выполненное",
-    "RevealRedacted": "Показать скрытое"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz сообщает, что этот вендор даёт предметы мощных энграмм.",

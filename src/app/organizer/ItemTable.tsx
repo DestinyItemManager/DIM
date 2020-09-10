@@ -482,18 +482,21 @@ function ItemTable({
         </div>
       </div>
       <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-        <input
-          name="selectAll"
-          title={t('Organizer.SelectAll')}
-          type="checkbox"
-          checked={selectedItemIds.length === rows.length}
-          ref={(el) =>
-            el &&
-            (el.indeterminate =
-              selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
-          }
-          onChange={selectAllItems}
-        />
+        <div>
+          <input
+            name="selectAll"
+            title={t('Organizer.SelectAll')}
+            type="checkbox"
+            checked={selectedItemIds.length === rows.length}
+            ref={(el) =>
+              el &&
+              (el.indeterminate =
+                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+            }
+            onChange={selectAllItems}
+          />
+          {selectedItemIds.length}
+        </div>
       </div>
       {filteredColumns.map((column: ColumnDefinition) => (
         <div

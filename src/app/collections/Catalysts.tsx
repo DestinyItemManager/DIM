@@ -1,9 +1,7 @@
-import { t } from 'app/i18next-t';
 import { CATALYSTS_ROOT_NODE } from 'app/search/d2-known-values';
 import { DestinyProfileResponse, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import './collections.scss';
 import { toPresentationNodeTree } from './presentation-nodes';
 import Record from './Record';
@@ -35,18 +33,16 @@ export default function Catalysts({
     );
 
   return (
-    <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
-      <div className="records catalysts">
-        {records.map((record) => (
-          <Record
-            key={record.recordDef.hash}
-            record={record}
-            defs={defs}
-            completedRecordsHidden={true}
-            redactedRecordsRevealed={true}
-          />
-        ))}
-      </div>
-    </CollapsibleTitle>
+    <div className="records catalysts">
+      {records.map((record) => (
+        <Record
+          key={record.recordDef.hash}
+          record={record}
+          defs={defs}
+          completedRecordsHidden={true}
+          redactedRecordsRevealed={true}
+        />
+      ))}
+    </div>
   );
 }

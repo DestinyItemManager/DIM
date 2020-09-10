@@ -376,6 +376,7 @@
     "FilterHelp": "Rechercher objet/compétence, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
     "Filters": "Filtres",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Maj+clique sur une compétence pour la sélectionner. Maj+clique sur un objet pour l'exclure. Glissez des objets sur la barre latérale pour les verrouiller ou les exclure.",
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
     "ResetLocked": "Réinitialiser les objets verouillés",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum des Statistiques Totales D'Armure",
@@ -800,19 +802,26 @@
     "CrucibleRank": "Rangs",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% pour réinitialiser",
     "Progress": "Progression",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expiré",
     "QuestExpires": "Expire dans ",
     "Quests": "Quêtes",
     "RecordValue": "{{value}}pts",
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
-    "SecretTriumph": "Triomphe Secret"
+    "SecretTriumph": "Triomphe Secret",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
     "RecordBooks": "Carnet d'exploits"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Afficher les évaluations détaillés de l'arme et autoriser l'évaluation des armes",
@@ -958,8 +967,8 @@
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triumphs": {
-    "HideCompleted": "Cache complété",
-    "RevealRedacted": "Révéler édité"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz signale que ce vendeur vend des objets de haut niveau.",

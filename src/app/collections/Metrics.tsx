@@ -27,7 +27,7 @@ export default function Metrics({
   return (
     <div className={styles.metrics}>
       {_.map(groupedMetrics, (metrics, traitHash) => (
-        <div>
+        <div key={traitHash}>
           <div className={styles.title}>
             <BungieImage src={traits[traitHash].displayProperties.icon} />
             {traits[traitHash].displayProperties.name}
