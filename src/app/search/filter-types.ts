@@ -14,7 +14,7 @@ type ValidFilterOutput = boolean | null | undefined;
 export type ItemFilter = (item: DimItem) => ValidFilterOutput;
 
 /**
- * A slice of data that could be used by contextGenerator functions to
+ * A slice of data that could be used by filter functions to
  * initialize some data required by particular filters. If a new filter needs
  * context that isn't here, add it to this interface and makeSearchFilterFactory
  * in search-filter.ts.

@@ -1,8 +1,8 @@
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -59,7 +59,7 @@ interface StoreProps {
   profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
-  filterItems(item: DimItem): boolean;
+  filterItems: ItemFilter;
 }
 
 function mapStateToProps() {

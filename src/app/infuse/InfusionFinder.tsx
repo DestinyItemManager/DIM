@@ -2,6 +2,7 @@ import { DestinyVersion, InfuseDirection } from '@destinyitemmanager/dim-api-typ
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
+import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
@@ -18,7 +19,7 @@ import { currentStoreSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
-import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
+import { searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -41,9 +42,9 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   currentStore: DimStore;
-  filters: SearchFilters;
   lastInfusionDirection: InfuseDirection;
   isPhonePortrait: boolean;
+  filters(query: string): ItemFilter;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -192,7 +193,7 @@ function InfusionFinder({
     return null;
   }
 
-  const filterFn = filters.filter(filter);
+  const filterFn = filters(filter);
 
   let items = stores.flatMap((store) =>
     store.items.filter(

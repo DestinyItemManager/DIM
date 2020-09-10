@@ -12,7 +12,7 @@ const isLatinBased = (() =>
   ))();
 
 /** escape special characters for a regex */
-function escapeRegExp(s: string) {
+export function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 

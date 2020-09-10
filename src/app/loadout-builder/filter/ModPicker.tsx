@@ -5,7 +5,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, profileResponseSelector, storesSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { escapeRegExp } from 'app/search/search-filter';
+import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';

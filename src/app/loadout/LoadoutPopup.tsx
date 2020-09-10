@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getAllItems, getArtifactBonus } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -16,7 +17,6 @@ import PressTip from '../dim-ui/PressTip';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { D1FarmingService } from '../farming/farming.service';
 import { queueAction } from '../inventory/action-queue';
-import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
 import { searchFilterSelector } from '../search/search-filter';
@@ -84,7 +84,7 @@ interface StoreProps {
   stores: DimStore[];
   hasClassified: boolean;
   buckets: InventoryBuckets;
-  searchFilter(item: DimItem): boolean;
+  searchFilter: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;

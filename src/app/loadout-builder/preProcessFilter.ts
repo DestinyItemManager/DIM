@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { ItemFilter } from 'app/search/filter-types';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -24,7 +25,7 @@ export function filterItems(
   lockedArmor2ModMap: LockedArmor2ModMap,
   minimumStatTotal: number,
   assumeMasterwork: boolean,
-  filter: (item: DimItem) => boolean
+  filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
