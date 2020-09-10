@@ -32,7 +32,6 @@ export default function CompareStat({
     <div
       className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight?.(stat.id)}
-      // style={getColor(statRange(itemStat, stat, adjustedStatValue), 'color')}
       style={getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color')}
     >
       <span>

@@ -98,6 +98,7 @@ class Compare extends React.Component<Props, State> {
     (state: State) => state.comparisonItems,
     (_state: State, props: Props) => props.ratings,
     (_state: State, props: Props) => props.compareBaseStats,
+    (state: State) => state.adjustedStats,
     getAllStats
   );
 
@@ -692,7 +693,8 @@ class Compare extends React.Component<Props, State> {
 function getAllStats(
   comparisonItems: DimItem[],
   ratings: ReviewsState['ratings'],
-  compareBaseStats: boolean
+  compareBaseStats: boolean,
+  adjustedStats?: { [itemId: string]: { [statHash: number]: number } } | undefined
 ) {
   const firstComparison = comparisonItems[0];
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
@@ -778,14 +780,19 @@ function getAllStats(
   for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
+      const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.enabled = stat.min !== stat.max;
         stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
