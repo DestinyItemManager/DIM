@@ -88,7 +88,7 @@ const operators = ['<', '>', '<=', '>=', '='];
  * Generates all the possible suggested keywords for the given filter
  */
 export function generateSuggestionsForFilter(filterDefinition: FilterDefinition) {
-  const suggestions = filterDefinition.suggestionsGenerator;
+  const suggestions = filterDefinition.suggestions;
   const thisFilterKeywords = Array.isArray(filterDefinition.keywords)
     ? filterDefinition.keywords
     : [filterDefinition.keywords];

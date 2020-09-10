@@ -192,7 +192,7 @@ function InfusionFinder({
     return null;
   }
 
-  const filterFn = filters.filterFunction(filter);
+  const filterFn = filters.filter(filter);
 
   let items = stores.flatMap((store) =>
     store.items.filter(

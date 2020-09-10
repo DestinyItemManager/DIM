@@ -90,7 +90,7 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupe',
     description: tl('Filter.Dupe'),
-    filterFunction: ({ stores }) => {
+    filter: ({ stores }) => {
       const duplicates = computeDupes(stores);
       return (item) => {
         const dupeId = makeDupeID(item);
@@ -101,7 +101,7 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'seasonaldupe',
     description: tl('Filter.SeasonalDupe'),
-    filterFunction: ({ stores }) => {
+    filter: ({ stores }) => {
       const duplicates = computeSeasonalDupes(stores);
       return (item) => {
         const dupeId = makeSeasonalDupeID(item);
@@ -112,7 +112,7 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupelower',
     description: tl('Filter.Dupe'),
-    filterFunction: ({ stores, itemInfos, itemHashTags }) => {
+    filter: ({ stores, itemInfos, itemHashTags }) => {
       const duplicates = sortDupes(computeDupes(stores), itemInfos, itemHashTags);
       return (item) => {
         if (
@@ -140,7 +140,7 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'count',
     description: tl('Filter.Dupe'),
     format: 'range',
-    filterFunction: ({ stores, filterValue }) => {
+    filter: ({ stores, filterValue }) => {
       const compare = rangeStringToComparator(filterValue);
       const duplicates = computeDupes(stores);
       return (item) => {

@@ -91,7 +91,7 @@ function ItemPicker({
     </div>
   );
 
-  const filter = useMemo(() => filters.filterFunction(query), [filters, query]);
+  const filter = useMemo(() => filters.filter(query), [filters, query]);
   const items = useMemo(() => {
     let items = sortItems(allItems.filter(filter), itemSortOrder);
     if (sortBy) {

@@ -217,7 +217,7 @@ function makeSearchFilterFactory(
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
             // TODO: allow the filter generator to throw an error
-            return filterDef.filterFunction({ filterValue, ...filterContext });
+            return filterDef.filter({ filterValue, ...filterContext });
           }
 
           // TODO: mark invalid - fill out what didn't make sense and where it was in the string
@@ -277,7 +277,7 @@ export interface SearchFilters {
       filterValue?: string
     ) => boolean | '' | null | undefined | false | number;
   };
-  filterFunction(query: string): (item: DimItem) => boolean;
+  filter(query: string): (item: DimItem) => boolean;
 }
 
 /** This builds an object that can be used to generate filter functions from search queried. */
@@ -421,12 +421,12 @@ function searchFilters(
     };
   };
 
-  // reset, filterFunction, and filters
+  // reset, filter, and filters
   return {
     /**
      * Build a complex filter function from a full query string.
      */
-    filterFunction: memoizeOne(function (query: string): (item: DimItem) => boolean {
+    filter: memoizeOne(function (query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
         // By default, show anything that doesn't have the archive tag
@@ -473,11 +473,8 @@ function searchFilters(
             // Generate a filter function from the filters table
             const filterByTable = (filterName: string, filterValue: string) => {
               if (filterTable[filterName]) {
-                const filterFunction = filterTable[filterName] as (
-                  item: DimItem,
-                  val: string
-                ) => boolean;
-                return (item: DimItem) => filterFunction.call(filterTable, item, filterValue);
+                const filter = filterTable[filterName] as (item: DimItem, val: string) => boolean;
+                return (item: DimItem) => filter.call(filterTable, item, filterValue);
               }
               return () => true;
             };
@@ -485,7 +482,7 @@ function searchFilters(
             switch (filterName) {
               case 'is': {
                 // do a lookup by filterValue (i.e. arc)
-                // to find the appropriate filterFunction (i.e. dmg)
+                // to find the appropriate filter (i.e. dmg)
                 const filterName = searchConfig.keywordToFilter[filterValue];
                 return filterByTable(filterName, filterValue);
               }

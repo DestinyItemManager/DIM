@@ -8,7 +8,7 @@ const ratingsFilters: FilterDefinition[] = [
     keywords: 'rating',
     description: tl('Filter.Rating'),
     format: 'range',
-    filterFunction: ({ filterValue, ratings }) => {
+    filter: ({ filterValue, ratings }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => {
         const dtrRating = getRating(item, ratings);
@@ -25,7 +25,7 @@ const ratingsFilters: FilterDefinition[] = [
     keywords: 'ratingcount',
     description: tl('Filter.RatingCount'),
     format: 'range',
-    filterFunction: ({ filterValue, ratings }) => {
+    filter: ({ filterValue, ratings }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => {
         const dtrRating = getRating(item, ratings);
@@ -36,7 +36,7 @@ const ratingsFilters: FilterDefinition[] = [
   {
     keywords: ['rated', 'hasrating'],
     description: tl('Filter.HasRating'),
-    filterFunction: ({ ratings }) => (item) => {
+    filter: ({ ratings }) => (item) => {
       const dtrRating = getRating(item, ratings);
       return dtrRating?.overallScore !== undefined;
     },

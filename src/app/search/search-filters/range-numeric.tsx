@@ -36,7 +36,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: 'stack',
     description: tl('Filter.StackLevel'),
     format: 'range',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => compareTo(item.amount);
     },
@@ -45,7 +45,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: 'light',
     description: tl('Filter.LightLevel'),
     format: 'range',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => item.primStat && compareTo(item.primStat.value);
     },
@@ -54,7 +54,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: 'year',
     description: tl('Filter.Year'),
     format: 'range',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => {
         if (item.isDestiny1()) {
@@ -69,7 +69,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     keywords: 'level',
     description: tl('Filter.RequiredLevel'),
     format: 'range',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => compareTo(item.equipRequiredLevel);
     },
@@ -79,7 +79,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     description: tl('Filter.PowerLimit'),
     format: 'range',
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
       return (item: D2Item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999

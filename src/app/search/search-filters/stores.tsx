@@ -9,7 +9,7 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     description: tl('Filter.Location'),
-    filterFunction: ({ filterValue, stores }) => {
+    filter: ({ filterValue, stores }) => {
       let storeIndex = 0;
 
       switch (filterValue) {
@@ -41,7 +41,7 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: 'onwrongclass',
     description: tl('Filter.Class'),
-    filterFunction: ({ stores }) => (item) => {
+    filter: ({ stores }) => (item) => {
       const ownerStore = getStore(stores, item.owner);
 
       return (
@@ -58,13 +58,12 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: 'invault',
     description: tl('Filter.Location'),
-    filterFunction: () => (item) => item.owner === 'vault',
+    filter: () => (item) => item.owner === 'vault',
   },
   {
     keywords: 'incurrentchar',
     description: tl('Filter.Location'),
-    filterFunction: ({ currentStore }) => (item) =>
-      currentStore ? item.owner === currentStore.id : false,
+    filter: ({ currentStore }) => (item) => (currentStore ? item.owner === currentStore.id : false),
   },
 ];
 

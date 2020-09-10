@@ -18,24 +18,24 @@ const statFilters: FilterDefinition[] = [
     keywords: 'stat',
     description: tl('Filter.Stats'),
     format: 'range',
-    suggestionsGenerator: searchableStatNames,
-    filterFunction: ({ filterValue }) => statFilterFromString(filterValue),
+    suggestions: searchableStatNames,
+    filter: ({ filterValue }) => statFilterFromString(filterValue),
   },
   {
     keywords: 'basestat',
     description: tl('Filter.StatsBase'),
     format: 'range',
-    suggestionsGenerator: searchableStatNames,
-    filterFunction: ({ filterValue }) => statFilterFromString(filterValue, true),
+    suggestions: searchableStatNames,
+    filter: ({ filterValue }) => statFilterFromString(filterValue, true),
   },
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
     keywords: 'maxstatloadout',
     description: tl('Filter.StatsLoadout'),
     format: 'query',
-    suggestionsGenerator: searchableStatNames,
+    suggestions: searchableStatNames,
     destinyVersion: 2,
-    filterFunction: ({ filterValue, stores }) => {
+    filter: ({ filterValue, stores }) => {
       const maxStatLoadout = findMaxStatLoadout(stores, filterValue);
       return (item) => {
         // filterValue stat must exist, and this must be armor
@@ -50,9 +50,9 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxstatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestionsGenerator: searchableStatNames,
+    suggestions: searchableStatNames,
     destinyVersion: 2,
-    filterFunction: ({ filterValue, stores }) => {
+    filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
       return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
     },
@@ -61,9 +61,9 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxbasestatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestionsGenerator: searchableStatNames,
+    suggestions: searchableStatNames,
     destinyVersion: 2,
-    filterFunction: ({ filterValue, stores }) => {
+    filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
       return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
     },
@@ -72,7 +72,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxpower',
     description: tl('Filter.MaxPower'),
     destinyVersion: 2,
-    filterFunction: ({ stores }) => {
+    filter: ({ stores }) => {
       const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores);
       return (item: D2Item) => maxPowerLoadoutItems.includes(item.id);
     },

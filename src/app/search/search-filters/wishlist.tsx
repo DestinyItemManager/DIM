@@ -15,13 +15,13 @@ const wishlistFilters: FilterDefinition[] = [
   {
     keywords: 'wishlist',
     description: tl('Filter.Wishlist'),
-    filterFunction: ({ inventoryWishListRolls }) => (item) =>
+    filter: ({ inventoryWishListRolls }) => (item) =>
       checkIfIsWishlist(item, inventoryWishListRolls),
   },
   {
     keywords: 'wishlistdupe',
     description: tl('Filter.WishlistDupe'),
-    filterFunction: ({ inventoryWishListRolls, stores }) => {
+    filter: ({ inventoryWishListRolls, stores }) => {
       const duplicates = computeDupes(stores);
       return (item) => {
         const dupeId = makeDupeID(item);
@@ -37,13 +37,13 @@ const wishlistFilters: FilterDefinition[] = [
     keywords: 'wishlistnotes',
     description: tl('Filter.WishlistNotes'),
     format: 'freeform',
-    filterFunction: ({ inventoryWishListRolls, filterValue }) => (item) =>
+    filter: ({ inventoryWishListRolls, filterValue }) => (item) =>
       inventoryWishListRolls[item.id]?.notes?.toLocaleLowerCase().includes(filterValue),
   },
   {
     keywords: 'trashlist',
     description: tl('Filter.Trashlist'),
-    filterFunction: ({ inventoryWishListRolls }) => (item) =>
+    filter: ({ inventoryWishListRolls }) => (item) =>
       inventoryWishListRolls[item.id]?.isUndesirable,
   },
 ];

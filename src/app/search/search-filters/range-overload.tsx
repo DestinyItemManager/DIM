@@ -23,7 +23,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Masterwork'),
     format: 'rangeoverload',
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: D2Item) =>
@@ -45,7 +45,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Energy'),
     format: 'rangeoverload',
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: D2Item) =>
@@ -60,7 +60,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Season'),
     format: 'range',
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = seasonRangeStringToComparator(filterValue);
       return (item: D2Item) => compareTo(item.season);
     },
@@ -70,7 +70,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.SunsetAfter'),
     format: 'range',
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const compareTo = seasonRangeStringToComparator(filterValue);
       return (item: D2Item) => {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);

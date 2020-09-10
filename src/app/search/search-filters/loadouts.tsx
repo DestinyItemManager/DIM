@@ -6,7 +6,7 @@ const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
     description: tl('Filter.InLoadout'),
-    filterFunction: ({ loadouts }) => {
+    filter: ({ loadouts }) => {
       const loadoutItemIds = collectItemsInLoadouts(loadouts);
       return (item) => loadoutItemIds.has(item.id);
     },

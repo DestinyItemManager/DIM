@@ -7,13 +7,13 @@ const advancedFilters: FilterDefinition[] = [
     keywords: 'id',
     description: tl('Filters.ItemId'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => (item) => item.id === filterValue,
+    filter: ({ filterValue }) => (item) => item.id === filterValue,
   },
   {
     keywords: 'hash',
     description: tl('Filters.ItemHash'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const itemHash = parseInt(filterValue, 10);
       return (item: DimItem) => item.hash === itemHash;
     },

@@ -30,7 +30,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    filterFunction: ({ filterValue, itemInfos, itemHashTags }) => {
+    filter: ({ filterValue, itemInfos, itemHashTags }) => {
       filterValue = plainString(filterValue);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);
@@ -42,7 +42,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'name',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       filterValue = plainString(filterValue);
       return (item) => plainString(item.name).includes(filterValue);
     },
@@ -51,7 +51,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'description',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       filterValue = plainString(filterValue);
       return (item) => plainString(item.description).includes(filterValue);
     },
@@ -60,7 +60,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perk',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const startWord = startWordRegexp(filterValue);
       return (item) => {
         // TODO: this may do too many array allocations to be performant.
@@ -76,7 +76,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perkname',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const startWord = startWordRegexp(filterValue);
       return (item) => {
         // TODO: this may do too many array allocations to be performant.
@@ -92,7 +92,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'keyword',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filterFunction: ({ filterValue, itemInfos, itemHashTags }) => {
+    filter: ({ filterValue, itemInfos, itemHashTags }) => {
       filterValue = plainString(filterValue);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);

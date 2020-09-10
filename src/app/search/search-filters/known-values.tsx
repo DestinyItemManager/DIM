@@ -47,7 +47,7 @@ const knownValuesFilters: FilterDefinition[] = [
       'yellow',
     ],
     description: tl('Filter.RarityTier'),
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       filterValue = tierMap[filterValue] || filterValue;
       return (item) => item.tier.toLowerCase() === filterValue;
     },
@@ -56,7 +56,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: ['special', 'primary', 'heavy'],
     description: tl('Filter.AmmoType'),
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const ammoType = d2AmmoTypes[filterValue];
       return (item: D2Item) => item.ammoType === ammoType;
     },
@@ -64,7 +64,7 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: ['titan', 'hunter', 'warlock'],
     description: tl('Filter.Class'),
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const classType = classes.indexOf(filterValue);
       return (item) => !item.classified && item.classType === classType;
     },
@@ -72,20 +72,20 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: 'cosmetic',
     description: tl('Filter.Categories'),
-    filterFunction: () => (item) => cosmeticTypes.includes(item.type),
+    filter: () => (item) => cosmeticTypes.includes(item.type),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
     description: tl('Filter.ContributeLight'),
-    filterFunction: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
+    filter: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
     keywords: 'breaker',
     description: tl('Filter.Breaker'),
     format: 'query',
-    suggestionsGenerator: Object.keys(breakerTypes),
+    suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue];
       if (!breakerType) {
         // TODO: throw an error!
@@ -97,20 +97,20 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: damageTypeNames,
     description: tl('Filter.DamageType'),
-    filterFunction: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
+    filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
   },
   {
     keywords: Object.values(D2Categories)
       .flat()
       .map((v) => v.toLowerCase()),
     description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
-    filterFunction: ({ filterValue }) => (item) => item.type?.toLowerCase() === filterValue,
+    filter: ({ filterValue }) => (item) => item.type?.toLowerCase() === filterValue,
   },
   {
     keywords: Object.keys(itemCategoryHashesByName),
     description: tl('Filter.WeaponType'),
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
       if (!categoryHash) {
         // TODO: throw an error!
@@ -123,16 +123,16 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
-    filterFunction: () => (item: D2Item) =>
+    filter: () => (item: D2Item) =>
       item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
   {
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'
     format: 'query',
-    suggestionsGenerator: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
+    suggestions: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,
-    filterFunction: ({ filterValue }) => {
+    filter: ({ filterValue }) => {
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
