@@ -1,5 +1,8 @@
 ## Next
 
+* Mods in the Loadout Optimizer mod picker are now split up by season.
+* The number of selected items is now shown on the Organizer page.
+
 ## 6.28.1 <span className="changelog-date">(2020-09-06)</span>
 
 * Actually release the Records page
