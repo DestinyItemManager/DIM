@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   armorBuckets,
+  armorStats,
   ARMOR_STAT_CAP,
   CUSTOM_TOTAL_STAT_HASH,
   TOTAL_STAT_HASH,
@@ -43,16 +44,6 @@ import { D2Item, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
  *  if (is armor) stats.push(total)
  * }
  */
-
-/** Stats that all armor should have. */
-export const armorStats = [
-  StatHashes.Mobility,
-  StatHashes.Resilience,
-  StatHashes.Recovery,
-  StatHashes.Discipline,
-  StatHashes.Intellect,
-  StatHashes.Strength,
-];
 
 /**
  * Which stats to display, and in which order.

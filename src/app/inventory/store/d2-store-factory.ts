@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { armorStats } from 'app/search/d2-known-values';
 import {
   DestinyCharacterComponent,
   DestinyClass,
@@ -15,7 +16,6 @@ import { D2StoresService } from '../d2-stores';
 import { D2Item } from '../item-types';
 import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
 import { getCurrentStore } from '../stores-helpers';
-import { armorStats } from './stats';
 
 /**
  * A factory service for producing "stores" (characters or the vault).

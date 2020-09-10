@@ -77,7 +77,9 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
 function expandStringCombinations(stringGroups: string[][]) {
   let results = [''];
   for (const stringGroup of stringGroups) {
-    results = results.flatMap((stem) => stringGroup.map((suffix) => `${stem}:${suffix}`));
+    results = results.flatMap((stem) =>
+      stringGroup.map((suffix) => (stem ? `${stem}:${suffix}` : suffix))
+    );
   }
   return results;
 }

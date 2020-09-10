@@ -90,6 +90,9 @@ export const D2ArmorStatHashByName = {
   strength: StatHashes.Strength,
 };
 
+/** Stats that all (D2) armor should have. */
+export const armorStats = Object.values(D2ArmorStatHashByName);
+
 export const D2WeaponStatHashByName = {
   rpm: StatHashes.RoundsPerMinute,
   rof: StatHashes.RoundsPerMinute,

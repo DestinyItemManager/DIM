@@ -1,15 +1,13 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
-import { settingsSelector } from 'app/settings/reducer';
+import memoizeOne from 'memoize-one';
 import latinise from 'voca/latinise';
-import store from '../../store/store';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = (() =>
-  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
-    settingsSelector(store.getState()).language
-  ))();
+const isLatinBased = memoizeOne((language: string) =>
+  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
+);
 
 /** escape special characters for a regex */
 export function escapeRegExp(s: string) {
@@ -17,24 +15,25 @@ export function escapeRegExp(s: string) {
 }
 
 /** Make a Regexp that searches starting at a word boundary */
-function startWordRegexp(s: string) {
+function startWordRegexp(s: string, language: string) {
   // Only some languages effectively use the \b regex word boundary
-  return new RegExp(`${isLatinBased ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
+  return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
 }
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLowerCase();
+const plainString = (s: string, language: string): string =>
+  (isLatinBased(language) ? latinise(s) : s).toLowerCase();
 
 const freeformFilters: FilterDefinition[] = [
   {
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    filter: ({ filterValue, itemInfos, itemHashTags }) => {
-      filterValue = plainString(filterValue);
+    filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
+      filterValue = plainString(filterValue, language);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);
-        return Boolean(notes && plainString(notes).includes(filterValue));
+        return Boolean(notes && plainString(notes, language).includes(filterValue));
       };
     },
   },
@@ -42,26 +41,26 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'name',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue }) => {
-      filterValue = plainString(filterValue);
-      return (item) => plainString(item.name).includes(filterValue);
+    filter: ({ filterValue, language }) => {
+      filterValue = plainString(filterValue, language);
+      return (item) => plainString(item.name, language).includes(filterValue);
     },
   },
   {
     keywords: 'description',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue }) => {
-      filterValue = plainString(filterValue);
-      return (item) => plainString(item.description).includes(filterValue);
+    filter: ({ filterValue, language }) => {
+      filterValue = plainString(filterValue, language);
+      return (item) => plainString(item.description, language).includes(filterValue);
     },
   },
   {
     keywords: 'perk',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue }) => {
-      const startWord = startWordRegexp(filterValue);
+    filter: ({ filterValue, language }) => {
+      const startWord = startWordRegexp(filterValue, language);
       return (item) => {
         // TODO: this may do too many array allocations to be performant.
         const strings = [
@@ -76,8 +75,8 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perkname',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue }) => {
-      const startWord = startWordRegexp(filterValue);
+    filter: ({ filterValue, language }) => {
+      const startWord = startWordRegexp(filterValue, language);
       return (item) => {
         // TODO: this may do too many array allocations to be performant.
         const strings = [
@@ -92,15 +91,15 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'keyword',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue, itemInfos, itemHashTags }) => {
-      filterValue = plainString(filterValue);
+    filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
+      filterValue = plainString(filterValue, language);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);
         if (
-          (notes && plainString(notes).includes(filterValue)) ||
-          plainString(item.name).includes(filterValue) ||
-          plainString(item.description).includes(filterValue) ||
-          plainString(item.typeName).includes(filterValue)
+          (notes && plainString(notes, language).includes(filterValue)) ||
+          plainString(item.name, language).includes(filterValue) ||
+          plainString(item.description, language).includes(filterValue) ||
+          plainString(item.typeName, language).includes(filterValue)
         ) {
           return true;
         }

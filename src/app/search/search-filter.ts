@@ -1,4 +1,5 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
 import { createSelector } from 'reselect';
@@ -40,6 +41,7 @@ export const searchFiltersConfigSelector = createSelector(
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
+  (state: RootState) => settingsSelector(state).language,
   makeSearchFilterFactory
 );
 
@@ -61,7 +63,8 @@ function makeSearchFilterFactory(
   itemInfos: ItemInfos,
   itemHashTags: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
+  language: string
 ) {
   const filterContext: FilterContext = {
     stores,
@@ -72,6 +75,7 @@ function makeSearchFilterFactory(
     newItems,
     itemInfos,
     itemHashTags,
+    language,
   };
 
   return (query: string): ItemFilter => {

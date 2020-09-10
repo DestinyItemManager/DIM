@@ -30,6 +30,7 @@ export interface FilterContext {
   itemHashTags: {
     [itemHash: string]: ItemHashTag;
   };
+  language: string;
 }
 
 /**
