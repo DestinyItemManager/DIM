@@ -106,7 +106,9 @@ export default function SocketDetailsSelectedPlug({
       <div className={styles.modDescription}>
         <h3>
           {plug.displayProperties.name}
-          {emptySpecialtySocketHashes.includes(plug.hash) && ` -- ${plug.itemTypeDisplayName}`}
+          {emptySpecialtySocketHashes.includes(plug.hash) && (
+            <> &mdash; {plug.itemTypeDisplayName}</>
+          )}
         </h3>
         {selectedPlugPerk ? (
           <div>{selectedPlugPerk.displayProperties.description}</div>
