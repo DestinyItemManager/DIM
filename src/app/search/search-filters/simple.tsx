@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D2Item, DimItem } from 'app/inventory/item-types';
+import { D2Item } from 'app/inventory/item-types';
 import { FilterDefinition } from '../filter-types';
 
 const newItems: Set<string> = new Set();
@@ -10,12 +10,12 @@ const simpleFilters: FilterDefinition[] = [
     keywords: ['hascapacity', 'armor2.0'],
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filterFunction: (item: D2Item) => Boolean(item.energy),
+    filterFunction: () => (item: D2Item) => Boolean(item.energy),
   },
   {
     keywords: 'weapon',
     description: tl('Filter.Categories'),
-    filterFunction: (item: DimItem) =>
+    filterFunction: () => (item) =>
       item.bucket?.sort === 'Weapons' &&
       item.bucket.type !== 'SeasonalArtifacts' &&
       item.bucket.type !== 'Class',
@@ -23,57 +23,57 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'armor',
     description: tl('Filter.Categories'),
-    filterFunction: (item: DimItem) => item.bucket?.sort === 'Armor',
+    filterFunction: () => (item) => item.bucket?.sort === 'Armor',
   },
   {
     keywords: ['equipment', 'equippable'],
     description: tl('Filter.Equipment'),
-    filterFunction: (item: DimItem) => item.equipment,
+    filterFunction: () => (item) => item.equipment,
   },
   {
     keywords: ['postmaster', 'inpostmaster'],
     description: tl('Filter.Postmaster'),
-    filterFunction: (item: DimItem) => item.location?.inPostmaster,
+    filterFunction: () => (item) => item.location?.inPostmaster,
   },
   {
     keywords: 'equipped',
     description: tl('Filter.Equipped'),
-    filterFunction: (item: DimItem) => item.equipped,
+    filterFunction: () => (item) => item.equipped,
   },
   {
     keywords: ['transferable', 'movable'],
     description: tl('Filter.Transferable'),
-    filterFunction: (item: DimItem) => !item.notransfer,
+    filterFunction: () => (item) => !item.notransfer,
   },
   {
     keywords: 'stackable',
     description: tl('Filter.Stackable'),
-    filterFunction: (item: DimItem) => item.maxStackSize > 1,
+    filterFunction: () => (item) => item.maxStackSize > 1,
   },
   {
     keywords: ['infusable', 'infuse'],
     description: tl('Filter.Infusable'),
-    filterFunction: (item: DimItem) => item.infusable,
+    filterFunction: () => (item) => item.infusable,
   },
   {
     keywords: 'locked',
     description: tl('Filter.Locked'),
-    filterFunction: (item: DimItem) => item.locked,
+    filterFunction: () => (item) => item.locked,
   },
   {
     keywords: 'unlocked',
     description: tl('Filter.Locked'),
-    filterFunction: (item: DimItem) => !item.locked,
+    filterFunction: () => (item) => !item.locked,
   },
   {
     keywords: ['masterwork', 'masterworks'],
     description: tl('Filter.RarityTier'),
-    filterFunction: (item: DimItem) => item.masterwork,
+    filterFunction: () => (item) => item.masterwork,
   },
   {
     keywords: 'new',
     description: tl('Filter.NewItems'),
-    filterFunction: (item: DimItem) => newItems.has(item.id),
+    filterFunction: () => (item) => newItems.has(item.id),
   },
 ];
 

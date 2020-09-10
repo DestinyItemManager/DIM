@@ -1,10 +1,9 @@
 import { tl } from 'app/i18next-t';
-import { D2Item, DimItem } from 'app/inventory/item-types';
+import { D2Item } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
-import { FilterContext, FilterDefinition } from '../filter-types';
+import { FilterDefinition } from '../filter-types';
 import {
   armorAnyStatHashes,
   armorStatHashes,
@@ -13,16 +12,104 @@ import {
 } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 
-const findMaxStatLoadout = memoizeOne((stores: DimStore[]) =>
-  // Double memoize! Each time stores changes we make a new memoized function
-  // that can find the ids of the loadout that maximizes the given stat
-  _.memoize((statName: string) => {
-    const maxStatHash = statHashByName[statName];
-    return stores.flatMap((store) =>
-      maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
+// filters that operate on stats, several of which calculate values from all items beforehand
+const statFilters: FilterDefinition[] = [
+  {
+    keywords: 'stat',
+    description: tl('Filter.Stats'),
+    format: 'range',
+    suggestionsGenerator: searchableStatNames,
+    filterFunction: ({ filterValue }) => statFilterFromString(filterValue),
+  },
+  {
+    keywords: 'basestat',
+    description: tl('Filter.StatsBase'),
+    format: 'range',
+    suggestionsGenerator: searchableStatNames,
+    filterFunction: ({ filterValue }) => statFilterFromString(filterValue, true),
+  },
+  {
+    // looks for a loadout (simultaneously equippable) maximized for this stat
+    keywords: 'maxstatloadout',
+    description: tl('Filter.StatsLoadout'),
+    format: 'query',
+    suggestionsGenerator: searchableStatNames,
+    destinyVersion: 2,
+    filterFunction: ({ filterValue, stores }) => {
+      const maxStatLoadout = findMaxStatLoadout(stores, filterValue);
+      return (item) => {
+        // filterValue stat must exist, and this must be armor
+        if (!item.bucket.inArmor || !statHashByName[filterValue]) {
+          return false;
+        }
+        return maxStatLoadout.includes(item.id);
+      };
+    },
+  },
+  {
+    keywords: 'maxstatvalue',
+    description: tl('Filter.StatsMax'),
+    format: 'query',
+    suggestionsGenerator: searchableStatNames,
+    destinyVersion: 2,
+    filterFunction: ({ filterValue, stores }) => {
+      const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
+      return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
+    },
+  },
+  {
+    keywords: 'maxbasestatvalue',
+    description: tl('Filter.StatsMax'),
+    format: 'query',
+    suggestionsGenerator: searchableStatNames,
+    destinyVersion: 2,
+    filterFunction: ({ filterValue, stores }) => {
+      const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
+      return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
+    },
+  },
+  {
+    keywords: 'maxpower',
+    description: tl('Filter.MaxPower'),
+    destinyVersion: 2,
+    filterFunction: ({ stores }) => {
+      const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores);
+      return (item: D2Item) => maxPowerLoadoutItems.includes(item.id);
+    },
+  },
+];
+
+export default statFilters;
+
+/**
+ * given a stat name, this returns a FilterDefinition for comparing that stat
+ */
+function statFilterFromString(filterValue: string, byBaseValue = false) {
+  const [statName, statValue, shouldntExist] = filterValue.split(':');
+
+  // we are looking for, at most, 3 colons in the overall filter text,
+  // and one was already removed, so bail if a 3rd element was found by split()
+  if (shouldntExist) {
+    return _.stubFalse;
+  }
+  const numberComparisonFunction = rangeStringToComparator(statValue);
+  const byWhichValue = byBaseValue ? 'base' : 'value';
+  const statHashes: number[] = statName === 'any' ? armorAnyStatHashes : [statHashByName[statName]];
+
+  return (item) => {
+    const matchingStats = item.stats?.filter(
+      (s) => statHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
     );
-  })
-);
+    return Boolean(matchingStats?.length);
+  };
+}
+
+function findMaxStatLoadout(stores: DimStore[], statName: string) {
+  const maxStatHash = statHashByName[statName];
+  return stores.flatMap((store) =>
+    maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
+  );
+}
 
 function checkIfHasMaxStatValue(
   maxStatValues: {
@@ -47,7 +134,7 @@ function checkIfHasMaxStatValue(
   return matchingStats && Boolean(matchingStats.length);
 }
 
-const gatherHighestStatsPerSlot = memoizeOne((stores: DimStore[]) => {
+function gatherHighestStatsPerSlot(stores: DimStore[]) {
   const maxStatValues: {
     [key: string]: { [key: string]: { value: number; base: number } };
   } | null = {};
@@ -78,91 +165,8 @@ const gatherHighestStatsPerSlot = memoizeOne((stores: DimStore[]) => {
     }
   }
   return maxStatValues;
-});
+}
 
-const calculateMaxPowerLoadoutItems = memoizeOne((stores: DimStore[]) =>
-  stores.flatMap((store) => maxLightItemSet(stores, store).equippable.map((i) => i.id))
-);
-
-// filters that operate on stats, several of which calculate values from all items beforehand
-const statFilters: FilterDefinition[] = [
-  {
-    keywords: 'stat',
-    description: tl('Filter.Stats'),
-    format: 'range',
-    suggestionsGenerator: searchableStatNames,
-    filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue),
-  },
-  {
-    keywords: 'basestat',
-    description: tl('Filter.StatsBase'),
-    format: 'range',
-    suggestionsGenerator: searchableStatNames,
-    filterValuePreprocessor: (filterValue: string) => statFilterFromString(filterValue, true),
-  },
-  {
-    // looks for a loadout (simultaneously equippable) maximized for this stat
-    keywords: 'maxstatloadout',
-    description: tl('Filter.StatsLoadout'),
-    format: 'query',
-    suggestionsGenerator: searchableStatNames,
-    destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) => {
-      // filterValue stat must exist, and this must be armor
-      if (!item.bucket.inArmor || !statHashByName[filterValue]) {
-        return false;
-      }
-      return findMaxStatLoadout(stores)(filterValue).includes(item.id);
-    },
-  },
-  {
-    keywords: 'maxstatvalue',
-    description: tl('Filter.StatsMax'),
-    format: 'query',
-    suggestionsGenerator: searchableStatNames,
-    destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) =>
-      checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue),
-  },
-  {
-    keywords: 'maxbasestatvalue',
-    description: tl('Filter.StatsMax'),
-    format: 'query',
-    suggestionsGenerator: searchableStatNames,
-    destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string, { stores }: FilterContext) =>
-      checkIfHasMaxStatValue(gatherHighestStatsPerSlot(stores), item, filterValue, true),
-  },
-  {
-    keywords: 'maxpower',
-    description: tl('Filter.MaxPower'),
-    destinyVersion: 2,
-    filterFunction: (item: DimItem, _, { stores }: FilterContext) =>
-      calculateMaxPowerLoadoutItems(stores).includes(item.id),
-  },
-];
-
-export default statFilters;
-
-/**
- * given a stat name, this returns a FilterDefinition for comparing that stat
- */
-function statFilterFromString(filterValue: string, byBaseValue = false) {
-  const [statName, statValue, shouldntExist] = filterValue.split(':');
-
-  // we are looking for, at most, 3 colons in the overall filter text,
-  // and one was already removed, so bail if a 3rd element was found by split()
-  if (shouldntExist) {
-    return _.stubFalse;
-  }
-  const numberComparisonFunction = rangeStringToComparator(statValue);
-  const byWhichValue = byBaseValue ? 'base' : 'value';
-  const statHashes: number[] = statName === 'any' ? armorAnyStatHashes : [statHashByName[statName]];
-
-  return (item: DimItem) => {
-    const matchingStats = item.stats?.filter(
-      (s) => statHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
-    );
-    return Boolean(matchingStats?.length);
-  };
+function calculateMaxPowerLoadoutItems(stores: DimStore[]) {
+  return stores.flatMap((store) => maxLightItemSet(stores, store).equippable.map((i) => i.id));
 }

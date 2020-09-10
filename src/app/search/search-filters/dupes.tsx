@@ -5,7 +5,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER, SEASONAL_ARTIFACT_BUCKET } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
@@ -79,18 +78,13 @@ const computeDupesByIdFn = (stores: DimStore[], makeDupeIdFn: (item: DimItem) =>
 /**
  * A memoized function to find a map of duplicate items using the makeDupeID function.
  */
-// TODO: this is a memory leak that keeps all stores around
-export const computeDupes = memoizeOne((stores: DimStore[]) =>
-  computeDupesByIdFn(stores, makeDupeID)
-);
+export const computeDupes = (stores: DimStore[]) => computeDupesByIdFn(stores, makeDupeID);
 
 /**
  * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
  */
-// TODO: this is a memory leak that keeps all stores around
-export const computeSeasonalDupes = memoizeOne((stores: DimStore[]) =>
-  computeDupesByIdFn(stores, makeSeasonalDupeID)
-);
+export const computeSeasonalDupes = (stores: DimStore[]) =>
+  computeDupesByIdFn(stores, makeSeasonalDupeID);
 
 const dupeFilters: FilterDefinition[] = [
   {

@@ -216,6 +216,7 @@ function makeSearchFilterFactory(
           const filterDef = filters[filterName];
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
+            // TODO: allow the filter generator to throw an error
             return filterDef.filterFunction({ filterValue, ...filterContext });
           }
 

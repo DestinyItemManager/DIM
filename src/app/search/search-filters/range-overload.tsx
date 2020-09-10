@@ -23,7 +23,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Masterwork'),
     format: 'rangeoverload',
     destinyVersion: 2,
-    filterValuePreprocessor: (filterValue: string) => {
+    filterFunction: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: D2Item) =>
@@ -45,7 +45,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Energy'),
     format: 'rangeoverload',
     destinyVersion: 2,
-    filterValuePreprocessor: (filterValue: string) => {
+    filterFunction: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: D2Item) =>
@@ -60,19 +60,22 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Season'),
     format: 'range',
     destinyVersion: 2,
-    filterValuePreprocessor: seasonRangeStringToComparator,
-    filterFunction: (item: D2Item, filterValue: (compare: number) => boolean) =>
-      filterValue(item.season),
+    filterFunction: ({ filterValue }) => {
+      const compareTo = seasonRangeStringToComparator(filterValue);
+      return (item: D2Item) => compareTo(item.season);
+    },
   },
   {
     keywords: 'sunsetsafter',
     description: tl('Filter.SunsetAfter'),
     format: 'range',
     destinyVersion: 2,
-    filterValuePreprocessor: seasonRangeStringToComparator,
-    filterFunction: (item: D2Item, filterValue: (compare: number) => boolean) => {
-      const itemFinalSeason = getItemPowerCapFinalSeason(item);
-      return filterValue(itemFinalSeason ?? 0);
+    filterFunction: ({ filterValue }) => {
+      const compareTo = seasonRangeStringToComparator(filterValue);
+      return (item: D2Item) => {
+        const itemFinalSeason = getItemPowerCapFinalSeason(item);
+        return compareTo(itemFinalSeason ?? 0);
+      };
     },
   },
 ];

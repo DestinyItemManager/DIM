@@ -1,15 +1,15 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { FilterContext, FilterDefinition } from '../filter-types';
+import _ from 'lodash';
+import { FilterDefinition } from '../filter-types';
 
 // filters that check stores
 const locationFilters: FilterDefinition[] = [
   {
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     description: tl('Filter.Location'),
-    filterFunction: (item: DimItem, filterValue: string, { stores }: FilterContext) => {
+    filterFunction: ({ filterValue, stores }) => {
       let storeIndex = 0;
 
       switch (filterValue) {
@@ -27,18 +27,21 @@ const locationFilters: FilterDefinition[] = [
           }
           break;
         default:
-          return false;
+          return _.stubFalse;
       }
 
-      return item.bucket.accountWide && !item.location.inPostmaster
-        ? item.owner !== 'vault'
-        : item.owner === stores[storeIndex].id;
+      const storeId = stores[storeIndex].id;
+
+      return (item) =>
+        item.bucket.accountWide && !item.location.inPostmaster
+          ? item.owner !== 'vault'
+          : item.owner === storeId;
     },
   },
   {
     keywords: 'onwrongclass',
     description: tl('Filter.Class'),
-    filterFunction: (item: DimItem, _, { stores }: FilterContext) => {
+    filterFunction: ({ stores }) => (item) => {
       const ownerStore = getStore(stores, item.owner);
 
       return (
@@ -55,12 +58,12 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: 'invault',
     description: tl('Filter.Location'),
-    filterFunction: (item: DimItem) => item.owner === 'vault',
+    filterFunction: () => (item) => item.owner === 'vault',
   },
   {
     keywords: 'incurrentchar',
     description: tl('Filter.Location'),
-    filterFunction: ({ currentStore }) => (item: DimItem) =>
+    filterFunction: ({ currentStore }) => (item) =>
       currentStore ? item.owner === currentStore.id : false,
   },
 ];

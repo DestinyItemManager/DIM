@@ -1,11 +1,12 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
-import { D2Item, DimItem } from 'app/inventory/item-types';
+import { D2Item } from 'app/inventory/item-types';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
+import _ from 'lodash';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import { breakerTypes, D2ItemCategoryHashesByName, powerfulSources } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
@@ -46,31 +47,37 @@ const knownValuesFilters: FilterDefinition[] = [
       'yellow',
     ],
     description: tl('Filter.RarityTier'),
-    filterFunction: (item: DimItem, filterValue: string) =>
-      item.tier.toLowerCase() === (filterValue || tierMap[filterValue]),
+    filterFunction: ({ filterValue }) => {
+      filterValue = tierMap[filterValue] || filterValue;
+      return (item) => item.tier.toLowerCase() === filterValue;
+    },
   },
   {
     keywords: ['special', 'primary', 'heavy'],
     description: tl('Filter.AmmoType'),
     destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string) =>
-      item.ammoType === d2AmmoTypes[filterValue],
+    filterFunction: ({ filterValue }) => {
+      const ammoType = d2AmmoTypes[filterValue];
+      return (item: D2Item) => item.ammoType === ammoType;
+    },
   },
   {
     keywords: ['titan', 'hunter', 'warlock'],
     description: tl('Filter.Class'),
-    filterFunction: (item: DimItem, filterValue: string) =>
-      !item.classified && item.classType === classes.indexOf(filterValue),
+    filterFunction: ({ filterValue }) => {
+      const classType = classes.indexOf(filterValue);
+      return (item) => !item.classified && item.classType === classType;
+    },
   },
   {
     keywords: 'cosmetic',
     description: tl('Filter.Categories'),
-    filterFunction: (item: DimItem) => cosmeticTypes.includes(item.type),
+    filterFunction: () => (item) => cosmeticTypes.includes(item.type),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
     description: tl('Filter.ContributeLight'),
-    filterFunction: (item: DimItem) => item.primStat && lightStats.includes(item.primStat.statHash),
+    filterFunction: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
     keywords: 'breaker',
@@ -78,41 +85,45 @@ const knownValuesFilters: FilterDefinition[] = [
     format: 'query',
     suggestionsGenerator: Object.keys(breakerTypes),
     destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string) =>
-      item.breakerType && breakerTypes[filterValue] === item.breakerType.hash,
+    filterFunction: ({ filterValue }) => {
+      const breakerType = breakerTypes[filterValue];
+      if (!breakerType) {
+        // TODO: throw an error!
+        return _.stubFalse;
+      }
+      return (item: D2Item) => item.breakerType && item.breakerType.hash === breakerType;
+    },
   },
   {
     keywords: damageTypeNames,
     description: tl('Filter.DamageType'),
-    filterFunction: (item: DimItem, filterValue: string) =>
-      getItemDamageShortName(item) === filterValue,
+    filterFunction: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
   },
   {
     keywords: Object.values(D2Categories)
       .flat()
       .map((v) => v.toLowerCase()),
     description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
-    filterFunction: (item: DimItem, filterValue: string) =>
-      item.type?.toLowerCase() === filterValue,
+    filterFunction: ({ filterValue }) => (item) => item.type?.toLowerCase() === filterValue,
   },
   {
     keywords: Object.keys(itemCategoryHashesByName),
     description: tl('Filter.WeaponType'),
     destinyVersion: 2,
-    filterValuePreprocessor: (filterValue) => filterValue.replace(/\s/g, ''),
-    filterFunction: (item: D2Item, filterValue: string) => {
-      const categoryHash = itemCategoryHashesByName[filterValue];
+    filterFunction: ({ filterValue }) => {
+      const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
       if (!categoryHash) {
-        return false;
+        // TODO: throw an error!
+        return _.stubFalse;
       }
-      return item.itemCategoryHashes.includes(categoryHash);
+      return (item) => item.itemCategoryHashes.includes(categoryHash);
     },
   },
   {
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
-    filterFunction: (item: D2Item) =>
+    filterFunction: () => (item: D2Item) =>
       item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
   {
@@ -121,20 +132,21 @@ const knownValuesFilters: FilterDefinition[] = [
     format: 'query',
     suggestionsGenerator: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,
-    filterFunction: (item: D2Item, filterValue: string) => {
-      if (!item && (!D2Sources[filterValue] || !D2EventPredicateLookup[filterValue])) {
-        return false;
-      }
+    filterFunction: ({ filterValue }) => {
       if (D2Sources[filterValue]) {
-        return (
-          (item.source && D2Sources[filterValue].sourceHashes.includes(item.source)) ||
-          D2Sources[filterValue].itemHashes.includes(item.hash) ||
-          missingSources[filterValue]?.includes(item.hash)
-        );
+        const sourceInfo = D2Sources[filterValue];
+        const missingSource = missingSources[filterValue];
+        return (item: D2Item) =>
+          (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
+          sourceInfo.itemHashes.includes(item.hash) ||
+          missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
-        return D2EventPredicateLookup[filterValue] === item?.event;
+        const predicate = D2EventPredicateLookup[filterValue];
+        return (item: D2Item) => item.event === predicate;
+      } else {
+        // TODO: throw an error!
+        return _.stubFalse;
       }
-      return false;
     },
   },
 ];
