@@ -1,5 +1,7 @@
 ## Next
 
+## 6.29.0 <span className="changelog-date">(2020-09-10)</span>
+
 * Legacy Triumphs are now indicated on the Records page and have their own checklist section. Legacy Triumphs are triumphs that will not be possible to complete after Beyond Light releases. The list of which Triumphs are Legacy Triumphs was provided by Bungie.
 * Mods in the Loadout Optimizer mod picker are now split up by season.
 * The number of selected items is now shown on the Organizer page.
