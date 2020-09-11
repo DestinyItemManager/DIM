@@ -56,7 +56,7 @@ export default function LegacyTriumphs({
   }
 
   return (
-    <>
+    <div className="presentation-node-root">
       <PresentationNode
         node={nodeTree}
         defs={defs}
@@ -67,6 +67,6 @@ export default function LegacyTriumphs({
         isInTriumphs={true}
         isRootNode={true}
       />
-    </>
+    </div>
   );
 }
