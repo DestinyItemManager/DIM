@@ -25,7 +25,9 @@
       }
     }
 
-    #triumphs & {
+    #triumphs &,
+    #legacyTriumphs &,
+    #collections & {
       /* styling for completed triumph categories */
       > .title.completed {
         color: #f5dc56;
