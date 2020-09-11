@@ -66,7 +66,8 @@ const overloadedRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
-      const compareTo = seasonRangeStringToComparator(filterValue);
+      filterValue = replaceSeasonTagWithNumber(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
       return (item: D2Item) => compareTo(item.season);
     },
   },
@@ -77,7 +78,8 @@ const overloadedRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
-      const compareTo = seasonRangeStringToComparator(filterValue);
+      filterValue = replaceSeasonTagWithNumber(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
       return (item: D2Item) => {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return compareTo(itemFinalSeason ?? 0);
@@ -97,11 +99,4 @@ export default overloadedRangeFilters;
  */
 function replaceSeasonTagWithNumber(s: string) {
   return s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
-}
-
-/**
- * replaces a possible season keyword with its number, then returns usual math comparator
- */
-function seasonRangeStringToComparator(rangeString: string) {
-  return rangeStringToComparator(replaceSeasonTagWithNumber(rangeString));
 }
