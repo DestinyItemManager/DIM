@@ -5,13 +5,13 @@ import { FilterDefinition } from '../filter-types';
 const advancedFilters: FilterDefinition[] = [
   {
     keywords: 'id',
-    description: tl('Filters.ItemId'),
+    description: tl('Filter.ItemId'),
     format: 'freeform',
     filter: ({ filterValue }) => (item) => item.id === filterValue,
   },
   {
     keywords: 'hash',
-    description: tl('Filters.ItemHash'),
+    description: tl('Filter.ItemHash'),
     format: 'freeform',
     filter: ({ filterValue }) => {
       const itemHash = parseInt(filterValue, 10);
