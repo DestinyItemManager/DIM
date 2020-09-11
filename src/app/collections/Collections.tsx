@@ -4,8 +4,8 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
@@ -48,7 +48,7 @@ interface StoreProps {
   trackedTriumphs: number[];
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
-  searchFilter?(item: DimItem): boolean;
+  searchFilter?: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
