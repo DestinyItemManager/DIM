@@ -1,5 +1,13 @@
 ## Next
 
+* Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.
+* Fixed a couple of the legacy triumphs that indicated the wrong triumph was being retired.
+* Completed legacy triumph categories, and collections categories, now show the "completed" yellow background.
+* is:seasonaldupe now correctly pays attention to the season of the item.
+* Fixed a bug where notes wouldn't be saved if you clicked another item before dismissing the item popup.
+* Tweaks to the display of legacy triumphs.
+* Reduce the number of situations in which we autoscroll the triumph category you clicked into view.
+
 ## 6.29.0 <span className="changelog-date">(2020-09-10)</span>
 
 * Legacy Triumphs are now indicated on the Records page and have their own checklist section. Legacy Triumphs are triumphs that will not be possible to complete after Beyond Light releases. The list of which Triumphs are Legacy Triumphs was provided by Bungie.
