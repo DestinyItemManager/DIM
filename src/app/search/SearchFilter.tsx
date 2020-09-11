@@ -3,6 +3,7 @@ import { querySelector, searchQueryVersionSelector } from 'app/shell/reducer';
 import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
+import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
 import './search-filter.scss';
@@ -43,12 +44,20 @@ export function SearchFilter(
     onClear?.();
   }, [onClear]);
 
+  const location = useLocation();
+
+  // We don't have access to the selected store so we'd match multiple characters' worth.
+  // Just suppress the count for now
+  const onRecords = location.pathname.endsWith('records');
+
   const placeholder = useMemo(
     () =>
-      isPhonePortrait
+      onRecords
+        ? t('Header.FilterHelpRecords')
+        : isPhonePortrait
         ? t('Header.FilterHelpBrief')
         : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait]
+    [isPhonePortrait, onRecords]
   );
 
   const extras = useMemo(() => <MainSearchBarActions />, []);

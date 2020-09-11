@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "No se pudieron cargar tus personajes de Destiny y tu inventario",
+    "ErrorLoadInventory": "No se pudieron cargar tu inventario y personajes de Destiny {{version}}",
     "ErrorLoadManifest": "No se pudo cargar información de la base de datos de Destiny desde Bungie",
     "ErrorLoading": "No se pudieron cargr cuentas de Destiny desde Bungie.net",
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Vincular tu cuenta de Twitch a Bungie.net causará que tus cuentas de Destiny 1 dejen de funcionar.",
-    "UnlinkTwitchButton": "Desvincular Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Arquetipo",
     "Armor2": "Armadura 2.0",
     "ButtonHelp": "Comparar objetos",
+    "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
       "Class": "No se puede comparar este objeto ya que no es para {{class}}."
@@ -377,6 +376,7 @@
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
+    "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
     "Filters": "Filtros",
@@ -414,6 +414,7 @@
     "ToggleDetails": "Mostrar detalles completos de objeto"
   },
   "Infusion": {
+    "Filter": "Filtrar objetos",
     "InfuseSource": "Selecciona objeto para infundir {{name}} en",
     "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
     "Infusion": "Buscador de Combustible de Infusión",
@@ -430,7 +431,7 @@
     "MovingItem_female": "Transferir a {{target}}",
     "MovingItem_male": "Transferir a {{target}}",
     "ToStore": "Todos los {{name}} ahora están en tu {{store}}.",
-    "ToVault": "Todos los {{name}} ahora están en tu Depósito."
+    "ToVault": "Todos los {{name}} ahora están en tu depósito."
   },
   "ItemPicker": {
     "ChooseItem": "Elige un objeto:",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "SHIFT+CLICK en una ventaja para seleccionarla. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos bloqueados",
+    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
@@ -594,6 +596,7 @@
     "AppliedError": "Ninguno de los objetos en tu equipo pudo ser transferido.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
+    "AssumeMaxWeapons": "Asumiendo armas al nivel máximo de poder",
     "Before": "Antes '{{name}}'",
     "ChooseItem": "Añadir {{name}}",
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "Leer historia",
     "ReviewsTab": "Calificaciones",
     "Rewards": "Recompensas:",
+    "SendToVault": "Enviar al depósito",
     "Split": "Partir",
     "Store": "Meter",
     "StoreWithName": "Almacenar en {{character}}",
@@ -798,19 +802,26 @@
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
+    "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% para el reinicio",
     "Progress": "Progreso",
+    "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos seguidos coincidió con la búsqueda",
     "QuestExpired": "Caducado",
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
-    "SecretTriumph": "Triunfo Secreto"
+    "SecretTriumph": "Triunfo Secreto",
+    "StatTrackers": "Rastreadores de estadísticas",
+    "TrackedTriumphs": "Triunfos seguidos"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar hazañas completadas",
     "RecordBooks": "Libros de hazañas"
+  },
+  "Records": {
+    "Title": "Hazañas"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análisis detallado de armas y permitir calificación de armas",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
     "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
     "PowerCap": "Límiter de Poder",
-    "PowerCapDisclaimer": "La información sobre el Límite de Poder puede ser incorrecta para la armadura de cualquier incursión, o para las armas de las incursiones \"Último Deseo\" y \"Jardín de la Salvación.\"",
     "PowerCapWithSeason": "{{powerCap}} (Temporada {{finalSeason}} máximo)",
     "PowerModifier": "Poder otorgado por la progresión de experiencia de temporada",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
@@ -957,8 +967,8 @@
     "UnlockAll": "Desbloquear objetos"
   },
   "Triumphs": {
-    "HideCompleted": "Esconder Completados",
-    "RevealRedacted": "Revelar Clasificados"
+    "HideCompleted": "Ocultar triunfos completados",
+    "RevealRedacted": "Revelar triunfos clasificados"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",

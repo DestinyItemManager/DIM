@@ -220,6 +220,7 @@ function ItemPopupContainer({
   const header = (
     <ItemPopupHeader
       item={item}
+      key={`header${item.index}`}
       language={language}
       expanded={isPhonePortrait || itemDetails}
       showToggle={!isPhonePortrait}
@@ -230,6 +231,7 @@ function ItemPopupContainer({
   const body = (
     <ItemPopupBody
       item={item}
+      key={`body${item.index}`}
       extraInfo={currentItem.extraInfo}
       tab={tab}
       expanded={isPhonePortrait || itemDetails}

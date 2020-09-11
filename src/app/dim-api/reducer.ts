@@ -208,7 +208,7 @@ export const dimApi = (
               [makeProfileKeyFromAccount(account)]: {
                 loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
                 tags: _.keyBy(profileResponse.tags || [], (t) => t.id),
-                triumphs: profileResponse.triumphs || [],
+                triumphs: (profileResponse.triumphs || []).map((t) => parseInt(t.toString(), 10)),
               },
             }
           : state.profiles,

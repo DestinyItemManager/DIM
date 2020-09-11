@@ -30,7 +30,7 @@ import {
 import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
-import ModPickerSection from './ModPickerSection';
+import PickerSectionMods from './PickerSectionMods';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
@@ -296,13 +296,14 @@ function ModPicker({
       freezeInitialHeight={true}
     >
       {Object.values(ModPickerCategories).map((category) => (
-        <ModPickerSection
+        <PickerSectionMods
           key={category}
           mods={modsByCategory[category]}
           defs={defs}
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
+          splitBySeason={category === ModPickerCategories.seasonal}
           maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
           energyMustMatch={!isGeneralOrSeasonal(category)}
           onModSelected={onModSelected}

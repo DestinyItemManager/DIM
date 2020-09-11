@@ -34,7 +34,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 // Prototype for Item objects - add methods to this to add them to all
 // items.
-const ItemProto = {
+export const ItemProto = {
   // Can this item be equipped by the given store?
   canBeEquippedBy(this: D1Item, store: D1Store) {
     if (store.isVault) {

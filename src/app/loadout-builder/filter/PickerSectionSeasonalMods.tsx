@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import { SelectableMod } from '../locked-armor/SelectableBungieImage';
 import { LockedModBase } from '../types';
-import styles from './PerksForBucket.m.scss';
+import styles from './PickerSection.m.scss';
 
 /**
  * A list of seasonal mods for use in PerkPicker.
@@ -21,8 +21,8 @@ export default function SeasonalModPicker({
 }) {
   return (
     <div className={styles.bucket} id="seasonal">
-      <h3>{t('LB.Season')}</h3>
-      <div className={styles.perks}>
+      <div className={styles.header}>{t('LB.Season')}</div>
+      <div className={styles.items}>
         {mods.map((item) => (
           <SelectableMod
             key={item.mod.hash}
