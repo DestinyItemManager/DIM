@@ -62,7 +62,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: 'season',
     description: tl('Filter.Season'),
-    format: 'range',
+    format: 'rangeoverload',
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
