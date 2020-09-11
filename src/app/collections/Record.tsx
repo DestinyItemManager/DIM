@@ -27,7 +27,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
 import { DimRecord } from './presentation-nodes';
-import './Record.scss';
+import styles from './Record.m.scss';
 
 interface Props {
   record: DimRecord;
@@ -91,8 +91,8 @@ export default function Record({
   const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
   const intervalProgressBar = !obscured && intervals.length > 0 && (
     <div
-      className={clsx('record-interval-container', {
-        complete: allIntervalsCompleted,
+      className={clsx(styles.intervalContainer, {
+        [styles.complete]: allIntervalsCompleted,
       })}
     >
       {!allIntervalsCompleted &&
@@ -102,15 +102,15 @@ export default function Record({
           return (
             <div
               key={i.objective.objectiveHash}
-              className={clsx('record-interval', {
-                redeemed,
-                unlocked: unlocked && !redeemed,
+              className={clsx(styles.interval, {
+                [styles.intervalRedeemed]: redeemed,
+                [styles.intervalRedeemed]: unlocked && !redeemed,
               })}
               style={intervalBarStyle}
             >
               {!(redeemed || unlocked) && (
                 <div
-                  className="record-interval unlocked"
+                  className={clsx(styles.interval, styles.intervalUnlocked)}
                   style={{ width: percent(i.percentCompleted) }}
                 />
               )}
@@ -129,7 +129,7 @@ export default function Record({
     const totalScore = _.sumBy(intervals, (i) => i.score);
     scoreValue = (
       <>
-        <span className="current">{currentScore}</span> /{' '}
+        <span className={styles.currentScore}>{currentScore}</span> /{' '}
         {t('Progress.RecordValue', { value: totalScore })}
       </>
     );
@@ -165,29 +165,29 @@ export default function Record({
 
   return (
     <div
-      className={clsx('triumph-record', {
-        redeemed: acquired,
-        unlocked,
-        obscured,
-        tracked: trackedInGame,
-        trackedInDim,
-        multistep: intervals.length > 0,
+      className={clsx(styles.triumphRecord, {
+        [styles.redeemed]: acquired,
+        [styles.unlocked]: unlocked,
+        [styles.obscured]: obscured,
+        [styles.tracked]: trackedInGame,
+        [styles.trackedInDim]: trackedInDim,
+        [styles.multistep]: intervals.length > 0,
       })}
     >
-      {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
-      <div className="record-info">
-        {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
+      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      <div className={styles.info}>
+        {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
         {description && <p>{description}</p>}
         {showObjectives && (
-          <div className="record-objectives">
+          <div className={styles.objectives}>
             {objectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
             ))}
           </div>
         )}
         {loreLink && (
-          <div className="record-lore">
+          <div className={styles.recordLore}>
             <ExternalLink href={loreLink}>
               <img src={ishtarIcon} height="16" width="16" />
             </ExternalLink>
@@ -200,16 +200,16 @@ export default function Record({
           recordDef.rewardItems.map((reward) => (
             <Reward key={reward.itemHash} reward={reward} defs={defs} />
           ))}
-        {trackedInGame && <img className="trackedIcon" src={trackedIcon} />}
+        {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
         {(!acquired || trackedInDim) && (
-          <div role="button" onClick={toggleTracked} className="dimTrackedIcon">
+          <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
             <img src={dimTrackedIcon} />
           </div>
         )}
       </div>
       {intervalProgressBar}
       {legacy && (
-        <PressTip tooltip={t('Progress.LegacyRecord')} className="legacyRecord">
+        <PressTip tooltip={t('Progress.LegacyRecord')} className={styles.legacyRecord}>
           <img src={pursuitExpired} />
         </PressTip>
       )}
