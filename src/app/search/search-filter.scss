@@ -43,7 +43,14 @@
     outline: none;
   }
 
-  input[type='text'] {
+  form {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+
+  input[type='text'],
+  input[type='search'] {
     border: none;
     color: white;
     background: transparent;
