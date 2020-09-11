@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
 import {
   DestinyCollectibleDefinition,
@@ -192,7 +193,7 @@ export function filterToLegacyTriumphs(
 export function filterPresentationNodesToSearch(
   node: DimPresentationNode,
   searchQuery: string,
-  filterItems: (item: DimItem) => boolean,
+  filterItems: ItemFilter,
   completedRecordsHidden: boolean,
   path: DimPresentationNode[] = []
 ): DimPresentationNodeSearchResult[] {
