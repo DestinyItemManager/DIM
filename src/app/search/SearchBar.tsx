@@ -292,29 +292,27 @@ function SearchBar(
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
+      enterkeyhint="search"
       {...getComboboxProps()}
     >
       <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
-      <form action=".">
-        <input
-          {...getInputProps({
-            onBlur,
-            onFocus,
-            onKeyDown,
-            ref: inputElement,
-            className: 'filter-input',
-            autoComplete: 'off',
-            autoCorrect: 'off',
-            autoCapitalize: 'off',
-            spellCheck: false,
-            autoFocus,
-            placeholder,
-            type: 'search',
-            name: 'filter',
-          })}
-          enterkeyhint="search"
-        />
-      </form>
+      <input
+        {...getInputProps({
+          onBlur,
+          onFocus,
+          onKeyDown,
+          ref: inputElement,
+          className: 'filter-input',
+          autoComplete: 'off',
+          autoCorrect: 'off',
+          autoCapitalize: 'off',
+          spellCheck: false,
+          autoFocus,
+          placeholder,
+          type: 'text',
+          name: 'filter',
+        })}
+      />
 
       {liveQuery.length > 0 && children}
 
