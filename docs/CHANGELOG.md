@@ -1,5 +1,7 @@
 ## Next
 
+## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
+
 * Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.
 * Fixed a couple of the legacy triumphs that indicated the wrong triumph was being retired.
 * Completed legacy triumph categories, and collections categories, now show the "completed" yellow background.
