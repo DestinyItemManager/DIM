@@ -221,19 +221,29 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     // TODO: sort this first?? it depends on term in one place
     words = words.sort(
       chainComparator(
+        // above all else, push "not" and "<=" and ">=" and "=" to the bottom.
+        // we discourage not, <= and >= are highly discoverable, and = is redundant
+        compareBy(
+          (word) =>
+            word.startsWith('not:') ||
+            word.endsWith('<=') ||
+            word.endsWith('>=') ||
+            word.endsWith('=')
+        ),
         // tags are UGC and therefore important
         compareBy((word) => !word.startsWith('tag:')),
-        // prioritize is: & not: because a pair takes up only 2 slots at the top,
-        // vs filters that end in like 8 statnames
-        compareBy((word) => !(word.startsWith('is:') || word.startsWith('not:'))),
         // sort incomplete terms (ending with ':') to the front
         compareBy((word) => !word.endsWith(':')),
         // sort more-basic incomplete terms (fewer colons) to the front
         compareBy((word) => word.split(':').length),
         // prioritize strings we are typing the beginning of
         compareBy((word) => word.indexOf(term.toLowerCase()) !== 0),
+
         // prioritize words with less left to type
-        compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
+        // this needs additional conditions like looking forward for another colon.
+        // otherwise it prioritizes "dawn" over "redwar" which is silly.
+        // compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
+
         // push math operators to the front for things like "masterwork:"
         compareBy((word) => !mathCheck.test(word))
       )
