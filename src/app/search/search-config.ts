@@ -54,7 +54,8 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
       keywords.push(...generateSuggestionsForFilter(filter));
-      for (const keyword of filter.keywords) {
+      const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
+      for (const keyword of filterKeywords) {
         allFiltersByKeyword[keyword] = filter;
       }
     }

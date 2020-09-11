@@ -117,7 +117,13 @@ function makeSearchFilterFactory(
           return (item) => !fn(item);
         }
         case 'filter': {
-          const { type: filterName, args: filterValue } = ast;
+          let filterName = ast.type;
+          const filterValue = ast.args;
+
+          // "is:" filters are slightly special cased
+          if (filterName == 'is') {
+            filterName = filterValue;
+          }
 
           const filterDef = filters[filterName];
           if (filterDef) {

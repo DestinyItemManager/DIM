@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { energyCapacityTypeNames } from './d2-known-values';
 import { FilterDefinition } from './filter-types';
-import { generateSuggestionsForFilter } from './search-config';
+import { buildSearchConfig, generateSuggestionsForFilter } from './search-config';
 import { allStatNames, searchableArmorStatNames } from './search-filter-values';
 
 describe('generateSuggestionsForFilter', () => {
@@ -35,4 +35,9 @@ describe('generateSuggestionsForFilter', () => {
       expect(candidates).toMatchSnapshot();
     }
   );
+});
+
+test('buildSearchConfig generates a reasonable filter map', () => {
+  const searchConfig = buildSearchConfig(2);
+  expect(Object.keys(searchConfig.filters)).toMatchSnapshot();
 });

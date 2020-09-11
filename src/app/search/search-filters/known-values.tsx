@@ -13,11 +13,16 @@ import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
 
 const tierMap = {
-  white: 'common',
-  green: 'uncommon',
-  blue: 'rare',
-  purple: 'legendary',
-  yellow: 'exotic',
+  white: 'Common',
+  green: 'Uncommon',
+  blue: 'Rare',
+  purple: 'Legendary',
+  yellow: 'Exotic',
+  common: 'Common',
+  uncommon: 'Uncommon',
+  rare: 'Rare',
+  legendary: 'Legendary',
+  exotic: 'Exotic',
 };
 const d2AmmoTypes = {
   primary: DestinyAmmunitionType.Primary,
@@ -48,8 +53,12 @@ const knownValuesFilters: FilterDefinition[] = [
     ],
     description: tl('Filter.RarityTier'),
     filter: ({ filterValue }) => {
-      filterValue = tierMap[filterValue] || filterValue;
-      return (item) => item.tier.toLowerCase() === filterValue;
+      filterValue = tierMap[filterValue];
+      if (!filterValue) {
+        // TODO: throw an error!
+        return _.stubFalse;
+      }
+      return (item) => item.tier === filterValue;
     },
   },
   {

@@ -4,9 +4,12 @@ import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
-const rangeStringRegex = /^[<=>]{0,2}$/;
+const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
 export function rangeStringToComparator(rangeString: string) {
+  if (!rangeString) {
+    return _.stubFalse;
+  }
   const matchedRangeString = rangeString.match(rangeStringRegex);
   if (!matchedRangeString) {
     return _.stubFalse;
