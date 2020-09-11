@@ -5,9 +5,10 @@ import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
+  allStatNames,
   armorAnyStatHashes,
   armorStatHashes,
-  searchableStatNames,
+  searchableArmorStatNames,
   statHashByName,
 } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
@@ -18,14 +19,14 @@ const statFilters: FilterDefinition[] = [
     keywords: 'stat',
     description: tl('Filter.Stats'),
     format: 'range',
-    suggestions: searchableStatNames,
+    suggestions: allStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue),
   },
   {
     keywords: 'basestat',
     description: tl('Filter.StatsBase'),
     format: 'range',
-    suggestions: searchableStatNames,
+    suggestions: searchableArmorStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue, true),
   },
   {
@@ -33,7 +34,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxstatloadout',
     description: tl('Filter.StatsLoadout'),
     format: 'query',
-    suggestions: searchableStatNames,
+    suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, stores }) => {
       const maxStatLoadout = findMaxStatLoadout(stores, filterValue);
@@ -50,7 +51,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxstatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestions: searchableStatNames,
+    suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
@@ -61,7 +62,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxbasestatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestions: searchableStatNames,
+    suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);

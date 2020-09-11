@@ -49,7 +49,7 @@ export interface SearchConfig {
 
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
-  const keywords: string[] = [];
+  let keywords: string[] = [];
   const allFiltersByKeyword: Record<string, FilterDefinition> = {};
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
@@ -59,6 +59,8 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
       }
     }
   }
+  keywords = Array.from(new Set(keywords));
+
   return {
     keywords,
     filters: allFiltersByKeyword,
@@ -72,40 +74,49 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
  * `[ [a], [b,c], [d,e] ]`
  * as an input, this generates
  *
- * `[ a:b:d, a:b:e, a:c:d, a:c:e ]`
+ * `[ a:, a:b:, a:c:, a:b:d, a:b:e, a:c:d, a:c:e ]`
  */
 function expandStringCombinations(stringGroups: string[][]) {
-  let results = [''];
-  for (const stringGroup of stringGroups) {
-    results = results.flatMap((stem) =>
-      stringGroup.map((suffix) => (stem ? `${stem}:${suffix}` : suffix))
+  const results: string[][] = [];
+  for (let i = 0; i < stringGroups.length; i++) {
+    const stringGroup = stringGroups[i];
+    const stems = results.length ? results[results.length - 1] : undefined;
+    const newResults = stringGroup.flatMap((suffix) =>
+      stems
+        ? stems.map(
+            (stem) =>
+              (stem ? `${stem}${suffix}` : suffix) + (i === stringGroups.length - 1 ? '' : ':')
+          )
+        : [`${suffix}:`]
     );
+    results.push(newResults);
   }
-  return results;
+  return results.flat();
 }
 
-const operators = ['<', '>', '<=', '>=', '='];
+const operators = ['<', '>', '<=', '>=', '=']; // TODO: add "none"? remove >=, <=?
 
 /**
  * Generates all the possible suggested keywords for the given filter
  */
 export function generateSuggestionsForFilter(filterDefinition: FilterDefinition) {
-  const suggestions = filterDefinition.suggestions;
-  const thisFilterKeywords = Array.isArray(filterDefinition.keywords)
-    ? filterDefinition.keywords
-    : [filterDefinition.keywords];
+  const { suggestions, keywords } = filterDefinition;
+  const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
-  // normalize string[] into string[][] so we can reliably spread it a few lines down from here
   const nestedSuggestions = suggestions === undefined ? [] : [suggestions];
 
   switch (filterDefinition.format) {
     case 'query':
       return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]);
     case 'freeform':
-      return expandStringCombinations([thisFilterKeywords, ['']]);
+      return expandStringCombinations([thisFilterKeywords, []]);
     case 'range':
-    case 'rangeoverload':
       return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions, operators]);
+    case 'rangeoverload':
+      return expandStringCombinations([
+        thisFilterKeywords,
+        [...nestedSuggestions[0], ...operators],
+      ]);
     default:
       return expandStringCombinations([['is', 'not'], thisFilterKeywords]);
   }

@@ -2,13 +2,15 @@ import { tl } from 'app/i18next-t';
 import { D2Item } from 'app/inventory/item-types';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
-import * as D2Values from '../d2-known-values';
+import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import * as hashes from '../search-filter-values';
+import { allStatNames, statHashByName } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 
 /** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
+
+const seasonTagNames = Object.keys(seasonTags);
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word
 
@@ -23,6 +25,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Masterwork'),
     format: 'rangeoverload',
     destinyVersion: 2,
+    suggestions: allStatNames,
     filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
@@ -32,7 +35,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
               numberComparisonFunction(Math.min(item.masterworkInfo.tier, 10))
           );
       }
-      const searchedMasterworkStatHash = hashes.statHashByName[filterValue];
+      const searchedMasterworkStatHash = statHashByName[filterValue];
       return (item: D2Item) =>
         Boolean(
           searchedMasterworkStatHash &&
@@ -45,6 +48,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Energy'),
     format: 'rangeoverload',
     destinyVersion: 2,
+    suggestions: energyCapacityTypeNames,
     filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
@@ -52,7 +56,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
           item.energy && numberComparisonFunction(item.energy.energyCapacity);
       }
       return (item: D2Item) =>
-        item.energy && filterValue === D2Values.energyNamesByEnum[item.energy.energyType];
+        item.energy && filterValue === energyNamesByEnum[item.energy.energyType];
     },
   },
   {
@@ -60,6 +64,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Season'),
     format: 'range',
     destinyVersion: 2,
+    suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
       const compareTo = seasonRangeStringToComparator(filterValue);
       return (item: D2Item) => compareTo(item.season);
@@ -70,6 +75,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.SunsetAfter'),
     format: 'range',
     destinyVersion: 2,
+    suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
       const compareTo = seasonRangeStringToComparator(filterValue);
       return (item: D2Item) => {
