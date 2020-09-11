@@ -22,7 +22,7 @@ export const makeDupeID = (item: DimItem) =>
 export const makeSeasonalDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}${
-    item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}` : ''
+    item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}${item.season}` : ''
   }${item.itemCategoryHashes.join('.')}`;
 
 const sortDupes = (
