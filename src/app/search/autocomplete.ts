@@ -205,24 +205,26 @@ export function autocompleteTermSuggestions(
 export function makeFilterComplete(searchConfig: SearchConfig) {
   // TODO: also search filter descriptions
   // TODO: also search individual items from the manifest???
-  return (term: string): string[] => {
-    if (!term) {
+  return (typed: string): string[] => {
+    if (!typed) {
       return [];
     }
 
-    const lowerTerm = term.toLowerCase();
+    const typedToLower = typed.toLowerCase();
 
-    let words = term.includes(':') // with a colon, only match from beginning
+    // if there's already a colon typed, we are on a path, not wildly guessing,
+    // so only match from beginning of the strin
+    let words = typedToLower.includes(':')
       ? // ("stat:" matches "stat:" but not "basestat:")
-        searchConfig.keywords.filter((word) => word.startsWith(lowerTerm))
+        searchConfig.keywords.filter((word) => word.startsWith(typedToLower))
       : // ("stat" matches "stat:" and "basestat:")
-        searchConfig.keywords.filter((word) => word.includes(lowerTerm));
+        searchConfig.keywords.filter((word) => word.includes(typedToLower));
 
     // TODO: sort this first?? it depends on term in one place
     words = words.sort(
       chainComparator(
-        // above all else, push "not" and "<=" and ">=" and "=" to the bottom.
-        // we discourage not, <= and >= are highly discoverable, and = is redundant
+        // above all else, push "not" and "<=" and ">=" and "=" to the bottom. we discourage not,
+        // <= and >= are highly discoverable from < and >, and = is redundant
         compareBy(
           (word) =>
             word.startsWith('not:') ||
@@ -230,29 +232,34 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
             word.endsWith('>=') ||
             word.endsWith('=')
         ),
-        // tags are UGC and therefore important
-        compareBy((word) => !word.startsWith('tag:')),
         // sort incomplete terms (ending with ':') to the front
         compareBy((word) => !word.endsWith(':')),
+        // tags are UGC and therefore important
+        compareBy((word) => !word.startsWith('tag:')),
         // sort more-basic incomplete terms (fewer colons) to the front
+        // i.e. suggest "stat:" before "stat:magazine:"
         compareBy((word) => word.split(':').length),
-        // prioritize strings we are typing the beginning of
-        compareBy((word) => word.indexOf(term.toLowerCase()) !== 0),
+        // prioritize strings we are typing the beginning of (guessing at user intention)
+        compareBy((word) => word.indexOf(typedToLower) !== 0),
 
         // prioritize words with less left to type
         // this needs additional conditions like looking forward for another colon.
         // otherwise it prioritizes "dawn" over "redwar" which is silly.
         // compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
 
+        // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
         compareBy((word) => !mathCheck.test(word))
       )
     );
-    if (filterNames.includes(term.split(':')[0])) {
+    if (filterNames.includes(typedToLower.split(':')[0])) {
       return words;
     } else if (words.length) {
-      const deDuped = new Set([term, ...words]);
-      deDuped.delete(term);
+      // we will always add in (later) a suggestion of "what you've already typed so far"
+      // so prevent "what's been typed" from appearing in the returned suggestions form this function
+      const deDuped = new Set([typed, typedToLower, ...words]);
+      deDuped.delete(typed);
+      deDuped.delete(typedToLower);
       return [...deDuped];
     }
     return [];
