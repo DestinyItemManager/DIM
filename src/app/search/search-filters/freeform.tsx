@@ -107,7 +107,7 @@ const freeformFilters: FilterDefinition[] = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
           ...getStringsFromAllSockets(item),
         ];
-        return perkStrings.some((s) => s.includes(filterValue));
+        return perkStrings.some((s) => plainString(s, language).includes(filterValue));
       };
     },
   },
