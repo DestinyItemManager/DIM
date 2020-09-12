@@ -95,7 +95,7 @@ function expandStringCombinations(stringGroups: string[][]) {
   return results.flat();
 }
 
-const operators = ['<', '>', '<=', '>=', '=']; // TODO: add "none"? remove >=, <=?
+const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 
 /**
  * Generates all the possible suggested keywords for the given filter

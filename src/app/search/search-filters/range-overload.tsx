@@ -10,7 +10,8 @@ import { rangeStringToComparator } from './range-numeric';
 /** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
-const seasonTagNames = Object.keys(seasonTags);
+// prioritize newer seasons. nobody is looking for "redwar" at this point
+const seasonTagNames = Object.keys(seasonTags).reverse();
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word
 
