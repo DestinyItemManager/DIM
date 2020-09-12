@@ -41,7 +41,7 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
         showImportSuccessNotification(result, true);
 
         // Reload from the server
-        return dispatch(loadDimApiData(true));
+        return await dispatch(loadDimApiData(true));
       } catch (e) {
         if (!silent) {
           console.error('[importLegacyData] Error importing legacy data into DIM API', e);
