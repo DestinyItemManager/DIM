@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { Loadout } from 'app/loadout/loadout-types';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import _ from 'lodash';
@@ -36,6 +37,7 @@ interface Props {
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
   lockedSeasonalMods: LockedModBase[];
+  loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -108,6 +110,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       enabledStats,
       lockedArmor2Mods,
       lockedSeasonalMods,
+      loadouts,
       lbDispatch,
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
@@ -184,6 +187,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
+            loadouts={loadouts}
           />
         ) : sets.length > 0 ? (
           <WindowScroller ref={this.windowScroller}>
@@ -209,6 +213,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     statOrder={statOrder}
                     enabledStats={enabledStats}
                     lockedArmor2Mods={lockedArmor2Mods}
+                    loadouts={loadouts}
                   />
                 )}
                 scrollTop={scrollTop}

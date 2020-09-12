@@ -16,11 +16,15 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  canCompareLoadouts,
   onLoadoutSet,
+  onCompareSet,
 }: {
   store: DimStore;
   set: ArmorSet;
+  canCompareLoadouts: boolean;
   onLoadoutSet(loadout: Loadout): void;
+  onCompareSet(): void;
 }) {
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
@@ -35,6 +39,11 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
+      {canCompareLoadouts && (
+        <button type="button" className="dim-button" onClick={onCompareSet}>
+          {t('LoadoutBuilder.CompareLoadout')}
+        </button>
+      )}
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>

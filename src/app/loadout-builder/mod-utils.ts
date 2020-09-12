@@ -1,7 +1,7 @@
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2Item, DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
 import {
   canTakeAllGeneralMods,
@@ -9,7 +9,12 @@ import {
   sortProcessModsOrProcessItems,
 } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
-import { LockedArmor2Mod, LockedArmor2ModMap } from './types';
+import {
+  bucketsToCategories,
+  LockableBucketHashes,
+  LockedArmor2Mod,
+  LockedArmor2ModMap,
+} from './types';
 
 /**
  * Checks that:
@@ -70,39 +75,33 @@ function assignAllSeasonalMods(
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
 
+const emptyResult: [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] = [{}, []];
+
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
-): Record<string, LockedArmor2Mod[]> {
+): [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] {
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
     if (!item.isDestiny2()) {
-      return {};
+      return emptyResult;
     } else {
       assignments[item.id] = [];
     }
   }
 
-  const [helmet, arms, chest, legs, classItem] = setToMatch as D2Item[];
+  const processItems: ProcessItem[] = [];
 
-  assignModsForSlot(helmet, lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet], assignments);
-  assignModsForSlot(arms, lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets], assignments);
-  assignModsForSlot(chest, lockedArmor2Mods[armor2PlugCategoryHashesByName.chest], assignments);
-  assignModsForSlot(legs, lockedArmor2Mods[armor2PlugCategoryHashesByName.leg], assignments);
-  assignModsForSlot(
-    classItem,
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem],
-    assignments
-  );
+  for (const hash of LockableBucketHashes) {
+    const item = setToMatch.find((i) => i.bucket.hash === hash);
 
-  const processItems = [
-    mapDimItemToProcessItem(helmet, lockedArmor2Mods[armor2PlugCategoryHashesByName.helmet]),
-    mapDimItemToProcessItem(arms, lockedArmor2Mods[armor2PlugCategoryHashesByName.gauntlets]),
-    mapDimItemToProcessItem(chest, lockedArmor2Mods[armor2PlugCategoryHashesByName.chest]),
-    mapDimItemToProcessItem(legs, lockedArmor2Mods[armor2PlugCategoryHashesByName.leg]),
-    mapDimItemToProcessItem(classItem, lockedArmor2Mods[armor2PlugCategoryHashesByName.classitem]),
-  ];
+    if (item?.isDestiny2()) {
+      const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
+      assignModsForSlot(item, lockedMods, assignments);
+      processItems.push(mapDimItemToProcessItem(item, lockedMods));
+    }
+  }
 
   assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
 
@@ -113,5 +112,13 @@ export function assignModsToArmorSet(
   );
 
   const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
-  return _.mapValues(assignments, (modHashes) => modHashes.map((modHash) => modsByHash[modHash]));
+  const assignedMods = _.mapValues(assignments, (modHashes) =>
+    modHashes.map((modHash) => modsByHash[modHash])
+  );
+  const assigned = Object.values(assignedMods).flat();
+  const unassignedMods = Object.values(lockedArmor2Mods)
+    .flat()
+    .filter((unassign) => !assigned.some((assign) => assign.key === unassign.key));
+
+  return [assignedMods, unassignedMods];
 }

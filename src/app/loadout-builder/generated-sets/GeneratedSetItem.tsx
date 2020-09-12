@@ -5,14 +5,20 @@ import ItemSockets from 'app/item-popup/ItemSockets';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import React, { Dispatch, useMemo } from 'react';
-import { DimItem } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { matchLockedItem } from '../preProcessFilter';
-import { LockedArmor2Mod, LockedItemType, StatTypes } from '../types';
-import { generateMixesFromPerks, lockedItemsEqual } from '../utils';
+import {
+  LockedArmor2Mod,
+  LockedItemType,
+  ModPickerCategories,
+  ModPickerCategory,
+  StatTypes,
+} from '../types';
+import { armor2ModPlugCategoriesTitles, generateMixesFromPerks, lockedItemsEqual } from '../utils';
 import styles from './GeneratedSetItem.m.scss';
-import GeneratedSetSockets from './GeneratedSetSockets';
+import Sockets from './Sockets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -93,6 +99,22 @@ export default function GeneratedSetItem({
     }
   }
 
+  const onSocketClick = (
+    plugDef: PluggableInventoryItemDefinition,
+    category?: ModPickerCategory,
+    season?: number
+  ) => {
+    if (category) {
+      const initialQuery =
+        category === ModPickerCategories.seasonal
+          ? season?.toString()
+          : t(armor2ModPlugCategoriesTitles[category]);
+      lbDispatch({ type: 'openModPicker', initialQuery });
+    } else {
+      lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
+    }
+  };
+
   return (
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
@@ -128,12 +150,7 @@ export default function GeneratedSetItem({
       )}
       {$featureFlags.armor2ModPicker && (
         <div className={styles.lockedSockets}>
-          <GeneratedSetSockets
-            item={item}
-            lockedMods={lockedMods}
-            defs={defs}
-            lbDispatch={lbDispatch}
-          />
+          <Sockets item={item} lockedMods={lockedMods} defs={defs} onSocketClick={onSocketClick} />
         </div>
       )}
     </div>

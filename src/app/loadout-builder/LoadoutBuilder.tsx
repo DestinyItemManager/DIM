@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { loadoutsSelector } from 'app/loadout/reducer';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { settingsSelector } from 'app/settings/reducer';
@@ -24,6 +25,7 @@ import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
 import PerkPicker from './filter/PerkPicker';
+import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { useProcess } from './hooks/useProcess';
@@ -49,6 +51,7 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
+  loadouts: Loadout[];
   filter: ItemFilter;
 }
 
@@ -102,6 +105,7 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
+      loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
     };
   };
@@ -119,6 +123,7 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
+  loadouts,
   filter,
   preloadedLoadout,
 }: Props) {
@@ -131,6 +136,7 @@ function LoadoutBuilder({
       statFilters,
       modPicker,
       perkPicker,
+      compareSet,
     },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
@@ -265,6 +271,7 @@ function LoadoutBuilder({
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
             lockedSeasonalMods={lockedSeasonalMods}
+            loadouts={loadouts}
           />
         )}
         {modPicker.open &&
@@ -288,6 +295,22 @@ function LoadoutBuilder({
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
+            />,
+            document.body
+          )}
+        {compareSet &&
+          ReactDOM.createPortal(
+            <CompareDrawer
+              set={compareSet}
+              loadouts={loadouts}
+              lockedMap={lockedMap}
+              lockedArmor2Mods={lockedArmor2Mods}
+              defs={defs}
+              classType={selectedStore.classType}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              assumeMasterwork={assumeMasterwork}
+              onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
           )}

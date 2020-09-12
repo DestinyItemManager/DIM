@@ -136,6 +136,8 @@ export const LockableBuckets = {
   classitem: armorBuckets.classitem,
 };
 
+export const LockableBucketHashes = Object.values(LockableBuckets);
+
 export const bucketsToCategories = {
   [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
   [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,

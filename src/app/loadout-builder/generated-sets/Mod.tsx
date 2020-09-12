@@ -5,28 +5,31 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import styles from './GeneratedSetMod.m.scss';
+import styles from './Mod.m.scss';
 
 interface Props {
   plugDef: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
-  gridColumn: number;
+  gridColumn?: number;
+  large?: boolean;
   onClick?(): void;
 }
 
-function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
+function Mod({ plugDef, defs, gridColumn, large, onClick }: Props) {
   const { energyCost, energyCostElementOverlay } = getModCostInfo(plugDef, defs);
 
   const classes = {
     [styles.item]: true,
     [styles.perk]: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
+    [styles.clickable]: Boolean(onClick),
+    [styles.largeItem]: large,
   };
 
   return (
     <div
       role="button"
       className={clsx(classes)}
-      style={{ gridColumn }}
+      style={gridColumn ? { gridColumn } : undefined}
       title={plugDef.displayProperties.name}
       tabIndex={0}
       onClick={onClick}
@@ -36,13 +39,15 @@ function GeneratedSetMod({ plugDef, defs, gridColumn, onClick }: Props) {
         <>
           <div
             style={bungieBackgroundStyle(energyCostElementOverlay)}
-            className={styles.energyCostOverlay}
+            className={clsx(styles.energyCostOverlay, { [styles.largeEnergyCostOverlay]: large })}
           />
-          <div className={styles.energyCost}>{energyCost}</div>
+          <div className={clsx(styles.energyCost, { [styles.largeEnergyCost]: large })}>
+            {energyCost}
+          </div>
         </>
       )}
     </div>
   );
 }
 
-export default GeneratedSetMod;
+export default Mod;
