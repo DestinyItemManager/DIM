@@ -69,6 +69,16 @@ export const armor2PlugCategoryHashesByName = {
 
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
+export const killTrackerTypesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
+  38912240: 'pvp',
+  2285636663: 'pvp',
+  3244015567: 'pvp',
+  905869860: 'pve',
+  2240097604: 'pve',
+  2302094943: 'pve',
+};
+export const killTrackerSocketTypeHash = 1282012138;
+
 //
 // STATS KNOWN VALUES
 //

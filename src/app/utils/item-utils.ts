@@ -1,11 +1,19 @@
 import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimMasterwork, DimSocket } from 'app/inventory/item-types';
+import {
+  D2Item,
+  DimItem,
+  DimMasterwork,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import {
   armor2PlugCategoryHashes,
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
+  killTrackerSocketTypeHash,
+  killTrackerTypesByHash,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -163,3 +171,36 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
     item.type === 'Material'
   );
 }
+
+/** verifies an item has kill tracker mod slot, which is returned */
+const getKillTrackerSocket = (item: D2Item): DimSocket | undefined => {
+  if (item.bucket.inWeapons) {
+    return item.sockets?.allSockets.find(
+      (socket) => socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash
+    );
+  }
+};
+
+export type KillTracker = {
+  type: 'pve' | 'pvp';
+  count: number;
+  trackerDef: PluggableInventoryItemDefinition;
+};
+
+/** returns a socket's kill tracker info */
+const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
+  const installedKillTracker = socket?.plugged;
+  const type = installedKillTracker && killTrackerTypesByHash[installedKillTracker.plugDef.hash];
+  const count = installedKillTracker?.plugObjectives[0]?.progress;
+  if (type && count !== undefined) {
+    return {
+      type,
+      count,
+      trackerDef: installedKillTracker!.plugDef,
+    };
+  }
+};
+
+/** returns an item's kill tracker info */
+export const getItemKillTrackerInfo = (item: D2Item): KillTracker | undefined =>
+  getSocketKillTrackerInfo(getKillTrackerSocket(item));
