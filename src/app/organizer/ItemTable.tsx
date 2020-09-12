@@ -407,7 +407,7 @@ function ItemTable({
   );
   if (downloadButtonSetting) {
     const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-      downloadCsvFiles(stores, itemInfos, type);
+      downloadCsvFiles(stores, itemInfos, ratings, type);
       ga('send', 'event', 'Download CSV', type);
     };
     const downloadHandler = (e) => {
