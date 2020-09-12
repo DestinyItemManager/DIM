@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { characterOrderSelector } from 'app/settings/character-sort';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -9,7 +9,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { showItemPicker } from '../item-picker/item-picker';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
@@ -72,6 +72,8 @@ function StoreBucket({
   characterOrder,
   isPhonePortrait,
 }: Props) {
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+
   const pickEquipItem = useCallback(async () => {
     try {
       const { item } = await showItemPicker({
@@ -83,9 +85,9 @@ function StoreBucket({
         }),
       });
 
-      moveItemTo(item, store);
+      dispatch(moveItemTo(item, store));
     } catch (e) {}
-  }, [bucket.hash, bucket.name, store]);
+  }, [bucket.hash, bucket.name, dispatch, store]);
 
   // The vault divides armor by class
   if (store.isVault && bucket.inArmor) {
@@ -97,7 +99,7 @@ function StoreBucket({
     });
 
     return (
-      <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
+      <StoreBucketDropTarget equip={false} bucket={bucket} store={store} dispatch={dispatch}>
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
             <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
@@ -119,7 +121,7 @@ function StoreBucket({
   return (
     <>
       {equippedItem && (
-        <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
+        <StoreBucketDropTarget equip={true} bucket={bucket} store={store} dispatch={dispatch}>
           <div className="equipped-item">
             <StoreInventoryItem
               key={equippedItem.index}
@@ -146,6 +148,7 @@ function StoreBucket({
         bucket={bucket}
         store={store}
         className={clsx({ 'not-equippable': !store.isVault && !equippedItem })}
+        dispatch={dispatch}
       >
         {unequippedItems.map((item) => (
           <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
