@@ -208,8 +208,6 @@ Array [
   "a:c:<=",
   "a:b:>=",
   "a:c:>=",
-  "a:b:=",
-  "a:c:=",
 ]
 `;
 
@@ -220,7 +218,6 @@ Array [
   "a:>",
   "a:<=",
   "a:>=",
-  "a:=",
 ]
 `;
 
@@ -371,32 +368,6 @@ Array [
   "stat:total:>=",
   "stat:custom:>=",
   "stat:any:>=",
-  "stat:rpm:=",
-  "stat:rof:=",
-  "stat:charge:=",
-  "stat:impact:=",
-  "stat:handling:=",
-  "stat:range:=",
-  "stat:stability:=",
-  "stat:reload:=",
-  "stat:magazine:=",
-  "stat:aimassist:=",
-  "stat:equipspeed:=",
-  "stat:velocity:=",
-  "stat:blastradius:=",
-  "stat:recoildirection:=",
-  "stat:drawtime:=",
-  "stat:zoom:=",
-  "stat:inventorysize:=",
-  "stat:mobility:=",
-  "stat:resilience:=",
-  "stat:recovery:=",
-  "stat:discipline:=",
-  "stat:intellect:=",
-  "stat:strength:=",
-  "stat:total:=",
-  "stat:custom:=",
-  "stat:any:=",
 ]
 `;
 
@@ -409,7 +380,6 @@ Array [
   "a:>",
   "a:<=",
   "a:>=",
-  "a:=",
 ]
 `;
 
@@ -424,7 +394,6 @@ Array [
   "energycapacity:>",
   "energycapacity:<=",
   "energycapacity:>=",
-  "energycapacity:=",
 ]
 `;
 
