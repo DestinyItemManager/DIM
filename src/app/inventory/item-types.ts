@@ -247,15 +247,6 @@ export interface D2Item extends DimItem {
 }
 
 export interface DimMasterwork {
-  // /** How much has the masterwork objective been progressed? This is usually kill counting. */
-  // // TODO: break this out and load it on demand when the item popup is opened
-  // progress?: number;
-  // /** Which type of masterwork is it? */
-  // typeName: 'Vanguard' | 'Crucible' | null;
-  // /** The icon associated with the type. */
-  // typeIcon: string;
-  // /** The localized description associated with the type. */
-  // typeDesc: string | null;
   /** The tier of the masterwork (not the same as the stat!). */
   tier?: number;
   /** The stats that are enhanced by this masterwork. */
