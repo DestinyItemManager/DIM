@@ -2,6 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { statAllowList } from 'app/inventory/store/stats';
+import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
@@ -36,6 +37,9 @@ export default function PlugTooltip({
   return (
     <>
       <h2>{plug.plugDef.displayProperties.name}</h2>
+      {emptySpecialtySocketHashes.includes(plug.plugDef.hash) && (
+        <h3>{plug.plugDef.itemTypeDisplayName}</h3>
+      )}
 
       {plug.plugDef.displayProperties.description ? (
         <div>

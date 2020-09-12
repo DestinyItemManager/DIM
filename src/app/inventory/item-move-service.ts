@@ -478,20 +478,23 @@ function ItemService(): ItemServiceType {
     item = newItem.owner !== 'vault' && equip ? await equipItem(newItem) : newItem;
 
     if (overrideLockState !== undefined) {
-      console.log(
-        'Resetting lock status of',
-        item.name,
-        'to',
-        overrideLockState,
-        'when moving to',
-        store.name,
-        'to work around Bungie.net lock state bug'
-      );
-      try {
-        await setItemLockState(item, overrideLockState);
-      } catch (e) {
-        console.error('Lock state override failed', e);
-      }
+      // Run this async, without waiting for the result
+      (async () => {
+        console.log(
+          'Resetting lock status of',
+          item.name,
+          'to',
+          overrideLockState,
+          'when moving to',
+          store.name,
+          'to work around Bungie.net lock state bug'
+        );
+        try {
+          await setItemLockState(item, overrideLockState);
+        } catch (e) {
+          console.error('Lock state override failed', e);
+        }
+      })();
     }
 
     return item;

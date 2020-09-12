@@ -102,7 +102,7 @@ export default queuedAction(
 
         const reload = item.equipped || equip;
         if (reload) {
-          await (rxStore.dispatch(updateCharacters()) as any);
+          rxStore.dispatch(updateCharacters());
         }
 
         item.updateManualMoveTimestamp();

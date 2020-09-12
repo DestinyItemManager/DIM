@@ -1,8 +1,9 @@
+import CheckButton from 'app/dim-ui/CheckButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -43,7 +44,6 @@ import {
 } from './d2-vendors';
 import { VendorsState } from './reducer';
 import Vendor from './Vendor';
-import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
 
 interface ProvidedProps {
@@ -59,7 +59,7 @@ interface StoreProps {
   profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
-  filterItems(item: DimItem): boolean;
+  filterItems: ItemFilter;
 }
 
 function mapStateToProps() {
@@ -119,9 +119,6 @@ function Vendors({
   );
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
-
-  const onSetFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFilterToUnacquired(e.currentTarget.checked);
 
   const handleSwipe: HammerListener = (e) => {
     const characters = stores.filter((s) => !s.isVault);
@@ -202,10 +199,9 @@ function Vendors({
           />
         )}
         {selectedStore && (
-          <label className={styles.checkButton}>
-            {t('Vendors.FilterToUnacquired')}{' '}
-            <input type="checkbox" onChange={onSetFilterToUnacquired} />
-          </label>
+          <CheckButton checked={filterToUnacquired} onChange={setFilterToUnacquired}>
+            {t('Vendors.FilterToUnacquired')}
+          </CheckButton>
         )}
         {!isPhonePortrait && vendorGroups && (
           <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />

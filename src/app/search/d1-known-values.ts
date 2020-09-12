@@ -23,7 +23,7 @@ export const enum D1ProgressionHashes {
 }
 
 //
-// ITEMS / ITEMCATERGORY KNOWN VALUES
+// ITEMS / ITEM CATEGORY KNOWN VALUES
 //
 
 /** these weapons exist in D1&2 */

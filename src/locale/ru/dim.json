@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "ПК",
-    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Google Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
-    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "Xbox One"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Архетип",
     "Armor2": "Броня 2.0",
     "ButtonHelp": "Сравнить предметы",
+    "CompareBaseStats": "Show Base Stats",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
       "Class": "Невозможно сравнить этот предмет, т.к. он не для {{class}}."
@@ -377,6 +376,7 @@
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
@@ -414,6 +414,7 @@
     "ToggleDetails": "Показывать полное описание предметов"
   },
   "Infusion": {
+    "Filter": "Filter items",
     "InfuseSource": "Улучшить синтезом. Выберите во что синтезировать {{name}}.",
     "InfuseTarget": "Улучшить {{name}} синтезом. Выберите источник.",
     "Infusion": "Доступные варианты Синтеза",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -594,6 +596,7 @@
     "AppliedError": "Ни один предмет набора не может быть передан.",
     "AppliedWarn": "Набор передан частично, по {{failed}} предметам из {{total}} возникли ошибки.",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
+    "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "Перед '{{name}}'",
     "ChooseItem": "Добавить {{name}}",
     "Classified": "Некоторые ваши предметы секретны, и не могут быть включены в расчет максимально возможной силы.",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "Read lore",
     "ReviewsTab": "Отзывы",
     "Rewards": "Награды:",
+    "SendToVault": "Send to Vault",
     "Split": "Делить",
     "Store": "Дать",
     "StoreWithName": "Store on {{character}}",
@@ -798,19 +802,26 @@
     "CrucibleRank": "Ранги",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
     "Progress": "Чек-Лист",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Просрочен",
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
-    "SecretTriumph": "Скрытый Триумф"
+    "SecretTriumph": "Скрытый Триумф",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
     "RecordBooks": "Таблица Рекордов"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "{{range}} от максимального",
     "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
     "PowerCap": "Power Limit",
-    "PowerCapDisclaimer": "Power Limit information may be incorrect for armor from any raid, or weapons from the raids \"Last Wish\" and \"Garden of Salvation.\"",
     "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "Уровень Силы, получаемый путём прогресса по сюжетному контенту",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
@@ -957,8 +967,8 @@
     "UnlockAll": "Разблокировать всё"
   },
   "Triumphs": {
-    "HideCompleted": "Скрыть выполненное",
-    "RevealRedacted": "Показать скрытое"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz сообщает, что этот вендор даёт предметы мощных энграмм.",

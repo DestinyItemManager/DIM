@@ -192,7 +192,7 @@
     "Activity": "Available from activity <i>{{activity}}</i>",
     "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
-    "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
+    "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Removed tag from 1 item.",
     "BulkClear_plural": "Removed tags from {{count}} items.",
@@ -205,6 +205,7 @@
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
+    "Curated": "Shows items that are a curated roll.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "Show items that have notes applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
+    "HasRating": " Shows items that have a community rating.",
     "HasShader": "Shows items that have a shader applied.",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
+    "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
       "Complete": "{{term}} - shows items that are totally complete - every upgrade unlocked.",
       "Incomplete": "{{term}} - shows items that are not complete - there's still at least one upgrade to unlock.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "Failed to lock items",
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
+    "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
+    "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "Shows items based on their required level.",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
+    "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
@@ -319,11 +326,14 @@
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",
       "Keep": "Shows keep items.",
-      "NoTag": "Shows items without a tag."
+      "NoTag": "Shows items without a tag.",
+      "Tag": "Shows items that have a specific tag.",
+      "Tagged": "Shows items that have any tag."
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
     "Trashlist": "Shows items that match your wish list's trash list.",
+    "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Undo": "Undo",
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
@@ -376,6 +386,7 @@
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -799,20 +811,29 @@
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
+    "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
+    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "Milestones & Challenges",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
     "Progress": "Progress",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Secret Triumph"
+    "SecretTriumph": "Secret Triumph",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
@@ -958,8 +979,8 @@
     "UnlockAll": "Unlock Items"
   },
   "Triumphs": {
-    "HideCompleted": "Hide Completed",
-    "RevealRedacted": "Reveal Redacted"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",

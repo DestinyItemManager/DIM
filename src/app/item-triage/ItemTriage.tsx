@@ -177,9 +177,9 @@ export function ItemTriage({ item }: { item: D2Item }) {
           factorCombosLabels.map((comboDisplay, i) => (
             <React.Fragment key={i}>
               {comboDisplay}
-              <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
+              <div className={styles.comboCount}>{itemFactors?.[i]?.count}</div>
               <div className={styles.keepMeter}>
-                {itemFactors && <KeepJunkDial value={itemFactors[i].quality} />}
+                {itemFactors && <KeepJunkDial value={itemFactors[i]?.quality} />}
               </div>
             </React.Fragment>
           ))}

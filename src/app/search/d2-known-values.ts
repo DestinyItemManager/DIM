@@ -90,6 +90,9 @@ export const D2ArmorStatHashByName = {
   strength: StatHashes.Strength,
 };
 
+/** Stats that all (D2) armor should have. */
+export const armorStats = Object.values(D2ArmorStatHashByName);
+
 export const D2WeaponStatHashByName = {
   rpm: StatHashes.RoundsPerMinute,
   rof: StatHashes.RoundsPerMinute,
@@ -188,8 +191,6 @@ export const armorBuckets = {
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const TRIUMPHS_ROOT_NODE = 1024788583;
-export const SEALS_ROOT_NODE = 1652422747;
 export const CATALYSTS_ROOT_NODE = 1111248994;
 export const RAID_NODE = 2975760062;
 

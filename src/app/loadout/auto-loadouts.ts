@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -211,7 +212,7 @@ export function gatherEngramsLoadout(
 export function searchLoadout(
   stores: DimStore[],
   store: DimStore,
-  searchFilter: (item: DimItem) => boolean
+  searchFilter: ItemFilter
 ): Loadout {
   let items = getAllItems(
     stores,
@@ -285,7 +286,7 @@ const randomLoadoutTypes = new Set([
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
-export function randomLoadout(stores: DimStore[], filter: (i: DimItem) => boolean) {
+export function randomLoadout(stores: DimStore[], filter: ItemFilter) {
   const currentCharacter = getCurrentStore(stores);
   if (!currentCharacter) {
     return null;

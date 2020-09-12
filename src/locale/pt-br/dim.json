@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Não foi possível carregar seus personagens e inventário de Destiny",
+    "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Vincular sua conta Twitch na Bungie.net fará com que suas contas de D1 não funcionem mais.",
-    "UnlinkTwitchButton": "Desvincular Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Arquétipo",
     "Armor2": "Armadura 2.0",
     "ButtonHelp": "Comparar itens",
+    "CompareBaseStats": "Exibir atributos base",
     "Error": {
       "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
       "Class": "Incapaz de comparar o item, pois ele não é para {{class}}."
@@ -377,6 +376,7 @@
     "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
     "FilterHelpMenuItem": "Ajuda sobre filtros...",
+    "FilterHelpRecords": "Pesquisar em triunfos e coleções",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
@@ -414,6 +414,7 @@
     "ToggleDetails": "Mostrar todos os detalhes do item"
   },
   "Infusion": {
+    "Filter": "Filtrar itens",
     "InfuseSource": "Selecione o item para infundir {{name}} em",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
     "Infusion": "Buscador de Item para Infusão",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-clique um perk para selecionar. Shift-clique em um item para ignorá-lo. Mova os itens para a barra lateral para ignorá-los ou travá-los.",
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens travados",
+    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "SelectMinStatTotal": "Mínimo do Atributo Total de Armadura",
@@ -594,6 +596,7 @@
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
+    "AssumeMaxWeapons": "Assumindo o nível máximo de poder das armas",
     "Before": "Antes de '{{name}}'",
     "ChooseItem": "Adicionar {{name}}",
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "Leia a história",
     "ReviewsTab": "Análises",
     "Rewards": "Recompensas:",
+    "SendToVault": "Enviar para o Cofre",
     "Split": "Dividir",
     "Store": "Mover",
     "StoreWithName": "Armazenar em {{character}}",
@@ -798,19 +802,26 @@
     "CrucibleRank": "Ranque",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
+    "NoTrackedTriumph": "Você não está rastreando nenhum triunfo. Selecione um através do jogo ou quantos você quiser aqui no DIM.",
     "PercentPrestige": "{{pct}}% para resetar",
     "Progress": "Progresso",
+    "QueryFilteredTrackedTriumphs": "Nenhum dos triunfos que você está rastreando coincidiram com a pesquisa",
     "QuestExpired": "Expirado",
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Triunfo Secreto"
+    "SecretTriumph": "Triunfo Secreto",
+    "StatTrackers": "Estatísticas",
+    "TrackedTriumphs": "Triunfos Rastreados"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",
     "RecordBooks": "Livro de Recordes"
+  },
+  "Records": {
+    "Title": "Registros"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "{{range}} do valor máximo",
     "PercentHelp": "Clique para mais informações sobre Níveis de Qualidade.",
     "PowerCap": "Limite de Poder",
-    "PowerCapDisclaimer": "Informações sobre o Limite de Poder podem estar incorretas para armaduras de incursões ou armas da \"Último Desejo\" e \"Jardim da Salvação\".",
     "PowerCapWithSeason": "{{powerCap}} (máx. na temporada {{finalSeason}})",
     "PowerModifier": "Poder concedido pela progressão de experiência sazonal",
     "Prestige": "Nível de prestígio: {{level}}\n{{exp}}xp para 5 fragmentos de luz.",
@@ -957,8 +967,8 @@
     "UnlockAll": "Destravar itens"
   },
   "Triumphs": {
-    "HideCompleted": "Ocultar Concluído",
-    "RevealRedacted": "Revelar Confidencial"
+    "HideCompleted": "Ocultar triunfos concluídos",
+    "RevealRedacted": "Exibir triunfos editados"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz relata que este vendedor está retornando items de poder alto.",
@@ -969,7 +979,7 @@
     "Catalysts": "Catalisadores",
     "Collections": "Coleções",
     "Engram": "Engrama de Recompensa",
-    "FilterToUnacquired": "Exibir somente itens não coletados",
+    "FilterToUnacquired": "Exibir apenas não coletados",
     "Vendors": "Vendedores"
   },
   "Views": {

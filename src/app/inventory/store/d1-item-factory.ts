@@ -33,7 +33,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 // Prototype for Item objects - add methods to this to add them to all
 // items.
-const ItemProto = {
+export const ItemProto = {
   // Mark that this item has been moved manually
   updateManualMoveTimestamp(this: D1Item) {
     this.lastManuallyMoved = Date.now();

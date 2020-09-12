@@ -2,7 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'bucket': string;
-  'perks': string;
+  'header': string;
+  'items': string;
+  'subheader': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

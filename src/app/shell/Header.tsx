@@ -193,8 +193,8 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
         ),
       },
       account.destinyVersion === 2 && {
-        to: `${path}/collections`,
-        text: t('Vendors.Collections'),
+        to: `${path}/records`,
+        text: t('Records.Title'),
         hotkey: 'c',
       },
       {

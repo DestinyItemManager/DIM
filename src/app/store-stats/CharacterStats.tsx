@@ -3,7 +3,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
-import { armorStats } from 'app/inventory/store/stats';
+import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';

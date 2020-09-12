@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Impossibile caricare i tuoi personaggi di Destiny e l'inventario",
+    "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
     "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
     "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
     "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Collegando il tuo account Twitch a Bungie.net, i tuoi account di Destiny 1 smetteranno di funzionare.",
-    "UnlinkTwitchButton": "Scollega Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Archetipo",
     "Armor2": "Armatura 2.0",
     "ButtonHelp": "Confronta Oggetti",
+    "CompareBaseStats": "Mostra statistiche di base",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
       "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
@@ -377,6 +376,7 @@
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
     "FilterHelpMenuItem": "Aiuto per Filtri...",
+    "FilterHelpRecords": "Cerca trionfi e collezioni",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
@@ -414,6 +414,7 @@
     "ToggleDetails": "Bottone per mostrare o meno tutti i dettagli dell'oggetto"
   },
   "Infusion": {
+    "Filter": "Filtra oggetti",
     "InfuseSource": "Selezionare oggetto in cui infondere {{name}}",
     "InfuseTarget": "Selezionare oggetto da infondere in {{name}}",
     "Infusion": "Trova oggetti per infusione",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
+    "SeasonNum": "Stagione {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
@@ -594,6 +596,7 @@
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
+    "AssumeMaxWeapons": "Presupponendo armi al massimo livello di Potere",
     "Before": "Prima '{{name}}'",
     "ChooseItem": "Aggiungi {{name}}",
     "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "Leggi storia",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",
+    "SendToVault": "Invia al Deposito",
     "Split": "Dividi",
     "Store": "Muovi",
     "StoreWithName": "Sposta su {{character}}",
@@ -798,19 +802,26 @@
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
+    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure quanti ne vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "Progress": "Avanzamento",
+    "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
     "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Trionfo Segreto"
+    "SecretTriumph": "Trionfo Segreto",
+    "StatTrackers": "Contatori Statistiche",
+    "TrackedTriumphs": "Trionfi Seguiti"
   },
   "RecordBooks": {
     "HideCompleted": "Nascondi completati",
     "RecordBooks": "Registri"
+  },
+  "Records": {
+    "Title": "Record"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
     "PowerCap": "Limite di Potere",
-    "PowerCapDisclaimer": "Le informazioni sul limite di Potere per le armature di ogni raid, o le armi di \"Ultimo Desiderio\" e \"Giardino della Salvezza\" potrebbero non essere corrette.",
     "PowerCapWithSeason": "{{powerCap}} (Max stagione {{finalSeason}})",
     "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
@@ -957,8 +967,8 @@
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triumphs": {
-    "HideCompleted": "Nascondi Completati",
-    "RevealRedacted": "Rivela Segreti"
+    "HideCompleted": "Nascondi trionfi completati",
+    "RevealRedacted": "Mostra trionfi segreti"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",

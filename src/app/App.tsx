@@ -188,7 +188,7 @@ function App({
                   path={[
                     '/inventory',
                     '/progress',
-                    '/collections',
+                    '/records',
                     '/optimizer',
                     '/organizer',
                     '/vendors/:vendorId',

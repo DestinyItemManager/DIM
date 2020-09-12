@@ -9,7 +9,7 @@ import {
 } from '../locked-armor/SelectableBungieImage';
 import { BurnItem, LockedItemType } from '../types';
 import { getFilteredPerksAndPlugSets } from '../utils';
-import styles from './PerksForBucket.m.scss';
+import styles from './PickerSection.m.scss';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
@@ -41,8 +41,8 @@ export default function PerksForBucket({
 
   return (
     <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
-      <h3>{bucket.name}</h3>
-      <div className={styles.perks}>
+      <div className={styles.header}>{bucket.name}</div>
+      <div className={styles.items}>
         {mods.map((mod) => (
           <SelectableMod
             key={mod.item.hash}

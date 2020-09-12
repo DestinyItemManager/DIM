@@ -1,12 +1,40 @@
 ## Next
 
-* Use the dark theme for Twitter widget ➡️
+## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
+
+* Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.
+* Fixed a couple of the legacy triumphs that indicated the wrong triumph was being retired.
+* Completed legacy triumph categories, and collections categories, now show the "completed" yellow background.
+* is:seasonaldupe now correctly pays attention to the season of the item.
+* Fixed a bug where notes wouldn't be saved if you clicked another item before dismissing the item popup.
+* Tweaks to the display of legacy triumphs.
+* Reduce the number of situations in which we autoscroll the triumph category you clicked into view.
+
+## 6.29.0 <span className="changelog-date">(2020-09-10)</span>
+
+* Legacy Triumphs are now indicated on the Records page and have their own checklist section. Legacy Triumphs are triumphs that will not be possible to complete after Beyond Light releases. The list of which Triumphs are Legacy Triumphs was provided by Bungie.
+* Mods in the Loadout Optimizer mod picker are now split up by season.
+* The number of selected items is now shown on the Organizer page.
+* Empty mod slot tooltips spell out which season they're from.
+* Locking/unlocking items in D1 works again.
+
+## 6.28.1 <span className="changelog-date">(2020-09-06)</span>
+
+* Actually release the Records page
+
+## 6.28.0 <span className="changelog-date">(2020-09-06)</span>
+
+* Triumphs, Collections, and Stat Trackers are now all together in the new Records page.
+* You can track triumphs in DIM - tracked triumphs are stored and synced with DIM Sync. These show up on both the Progress and Records pages.
+* Everything on the Records page responds to search - search through your Collections, Triumphs, and Stat Trackers all at once!
+* Unredeemed triumphs show their rewards
 * Compare sheet now offers a Base Stat option for armor, so you can directly compare your stat rolls
 * Mod costs now shown in Loadout Optimizer results
 * Vendors can now track some "pluggable" items like emotes & ghost projections, to filter by whether you already own them
 * Clearing the search input no longer re-opens the search dropdown
 * Mod slot column in the Organizer now shows all supported mod types (i.e. season 10 armor will show seasons 9,10,11)
 * Support for `mod:` and `modname:` filters to parallel the `perk:` and `perkname:` ones
+* Use the dark theme for Twitter widget
 
 ## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
 
