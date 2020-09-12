@@ -1,6 +1,7 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { ThunkDispatchProp } from 'app/store/types';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
@@ -43,6 +44,9 @@ function showMoveAmountPopup(
     });
   });
 }
+
+// TODO: get rid of this
+const dispatch = rxStore.dispatch as ThunkDispatchProp['dispatch'];
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -104,7 +108,7 @@ export const moveItemTo = queuedAction(
           );
         }
 
-        const movePromise = moveTo(item, store, equip, moveAmount);
+        const movePromise = dispatch(moveTo(item, store, equip, moveAmount));
         showNotification(moveItemNotification(item, store, movePromise));
 
         item = await movePromise;

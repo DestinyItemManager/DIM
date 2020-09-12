@@ -13,6 +13,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getStore, getVault } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
+import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import copy from 'fast-copy';
 import _ from 'lodash';
@@ -20,6 +21,9 @@ import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { loadoutFromAllItems } from './loadout-utils';
+
+// TODO: get rid of this
+const dispatch = reduxStore.dispatch as ThunkDispatchProp['dispatch'];
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -178,10 +182,8 @@ async function doApplyLoadout(
         const itemsToEquip = _.compact(
           dequipItems.map((i) => getSimilarItem(storeService.getStores(), i, loadoutItemIds))
         );
-        return equipItems(
-          () => storeService.getStores(),
-          getStore(storeService.getStores(), owner)!,
-          itemsToEquip
+        return reduxStore.dispatch(
+          equipItems(getStore(storeService.getStores(), owner)!, itemsToEquip)
         );
       }
     );
@@ -195,7 +197,7 @@ async function doApplyLoadout(
     // Use the bulk equipAll API to equip all at once.
     itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
     const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
-    equippedItems = await equipItems(() => storeService.getStores(), store, realItemsToEquip);
+    equippedItems = await dispatch(equipItems(store, realItemsToEquip));
   } else {
     equippedItems = itemsToEquip;
   }
