@@ -116,7 +116,7 @@ export const moveItemTo = queuedAction(
         if (reload) {
           // TODO: only reload the character that changed?
           // Refresh light levels and such
-          rxStore.dispatch(updateCharacters());
+          dispatch(updateCharacters());
         }
 
         item.updateManualMoveTimestamp();
