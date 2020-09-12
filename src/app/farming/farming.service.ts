@@ -128,7 +128,7 @@ async function farmItems(store: D1Store) {
     return;
   }
 
-  return moveItemsToVault(store.getStoresService().getStores(), store, toMove, []);
+  return moveItemsToVault(store, toMove, []);
 }
 
 // Ensure that there's one open space in each category that could
@@ -173,11 +173,10 @@ export async function makeRoomForItemsInBuckets(
     return;
   }
 
-  return moveItemsToVault(stores, store, itemsToMove, makeRoomBuckets);
+  return moveItemsToVault(store, itemsToMove, makeRoomBuckets);
 }
 
 async function moveItemsToVault(
-  stores: DimStore[],
   store: DimStore,
   items: DimItem[],
   makeRoomBuckets: InventoryBucket[]
@@ -189,5 +188,5 @@ async function moveItemsToVault(
     reservations[store.id][bucket.type!] = 1;
   });
 
-  return clearItemsOffCharacter(stores, store, items, reservations);
+  return rxStore.dispatch(clearItemsOffCharacter(store, items, reservations));
 }

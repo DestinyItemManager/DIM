@@ -317,7 +317,7 @@ function ItemTable({
         selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
-      applyLoadout(store, loadout, true);
+      dispatch(applyLoadout(store, loadout, true));
     }
   };
 
