@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { loadoutsSelector } from 'app/loadout/reducer';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { settingsSelector } from 'app/settings/reducer';
@@ -50,6 +51,7 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
+  loadouts: Loadout[];
   filter: ItemFilter;
 }
 
@@ -103,6 +105,7 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
+      loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
     };
   };
@@ -120,6 +123,7 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
+  loadouts,
   filter,
   preloadedLoadout,
 }: Props) {
@@ -267,6 +271,7 @@ function LoadoutBuilder({
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
             lockedSeasonalMods={lockedSeasonalMods}
+            loadouts={loadouts}
           />
         )}
         {modPicker.open &&
@@ -297,6 +302,7 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <CompareDrawer
               set={compareSet}
+              loadouts={loadouts}
               lockedMap={lockedMap}
               lockedArmor2Mods={lockedArmor2Mods}
               defs={defs}

@@ -21,6 +21,7 @@ interface Props {
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
+  loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -38,6 +39,7 @@ function GeneratedSet({
   enabledStats,
   forwardedRef,
   lockedArmor2Mods,
+  loadouts,
   lbDispatch,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
@@ -57,6 +59,10 @@ function GeneratedSet({
       )
     : [{}];
 
+  const canCompareLoadouts =
+    set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
+    loadouts.some((l) => l.classType === selectedStore?.classType);
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
@@ -71,6 +77,7 @@ function GeneratedSet({
         <GeneratedSetButtons
           set={set}
           store={selectedStore!}
+          canCompareLoadouts={canCompareLoadouts}
           onLoadoutSet={setCreateLoadout}
           onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
         />

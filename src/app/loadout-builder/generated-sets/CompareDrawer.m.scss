@@ -8,12 +8,12 @@
 .content {
   margin: 16px;
   display: inline-block;
+}
 
-  :global(.fill-row) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+.fillRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .setHeader {
@@ -32,8 +32,15 @@
 }
 
 .set {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(5, 123px);
+  justify-content: space-between;
+}
+
+.loadoutItems {
+  display: grid;
+  grid-template-columns: repeat(5, 123px);
+  justify-content: space-between;
 }
 
 .item {
@@ -45,7 +52,7 @@
   width: min-content;
   align-items: start;
   justify-content: start;
-  margin: 7px 14px 14px 0;
+  margin: 7px 0 14px 0;
 
   @include phone-portrait {
     grid-template-columns: min-content min-content 1fr;
@@ -57,7 +64,7 @@
     grid-area: item;
   }
 
-  &:last-child {
+  > :last-child {
     margin-right: 0;
   }
 }
@@ -69,4 +76,13 @@
 .unassignedMods {
   display: flex;
   flex-direction: row;
+}
+
+.noLoadouts {
+  margin: 16px;
+  font-size: 14px;
+}
+
+.loadoutName {
+  font-weight: 600;
 }

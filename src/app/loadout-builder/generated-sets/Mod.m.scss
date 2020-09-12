@@ -14,7 +14,7 @@
     height: var(--item-size);
   }
 
-  &:last-child {
+  &:nth-child(even) {
     margin-right: 0;
   }
 

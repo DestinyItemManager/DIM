@@ -2,9 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'content': string;
+  'fillRow': string;
   'header': string;
   'item': string;
+  'loadoutItems': string;
+  'loadoutName': string;
   'loadoutSelect': string;
+  'noLoadouts': string;
   'set': string;
   'setHeader': string;
   'setTitle': string;

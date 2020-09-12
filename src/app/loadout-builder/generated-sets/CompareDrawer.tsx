@@ -7,7 +7,6 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
-import { loadoutsSelector } from 'app/loadout/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass, DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -80,6 +79,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 
 interface ProvidedProps {
   set: ArmorSet;
+  loadouts: Loadout[];
   lockedMap: LockedMap;
   lockedArmor2Mods: LockedArmor2ModMap;
   defs: D2ManifestDefinitions;
@@ -92,7 +92,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
-  loadouts: Loadout[];
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -100,7 +99,6 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: storesSelector(state),
-    loadouts: loadoutsSelector(state),
   });
 }
 
@@ -170,19 +168,17 @@ function CompareDrawer({
 
     const loadoutToSave = produce(selectedLoadout, (draftLoadout) => {
       if (draftLoadout) {
-        const newItems: LoadoutItem[] = [];
+        const newItems: LoadoutItem[] = setItems.map(({ id, hash }) => ({
+          id,
+          hash,
+          amount: 1,
+          equipped: true,
+        }));
         for (const item of draftLoadout.items) {
           const dimItem = loadoutItems.find((i) => i.id === item.id);
-          const replacementItem =
-            dimItem && setItems.find((i) => i.bucket.hash === dimItem.bucket.hash);
-          if (replacementItem) {
-            newItems.push({
-              id: replacementItem.id,
-              hash: replacementItem.hash,
-              amount: 1,
-              equipped: true,
-            });
-          } else {
+          const hasBeenReplaced =
+            dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash);
+          if (!hasBeenReplaced) {
             newItems.push(item);
           }
         }
@@ -199,37 +195,44 @@ function CompareDrawer({
   };
 
   const header = <div className={styles.header}>{t('LoadoutBuilder.CompareLoadout')}</div>;
+
+  // This is likely never to happen but since it is disconnected to the button its here for safety.
+  if (!selectedLoadout) {
+    return (
+      <Sheet onClose={onClose} header={header}>
+        <div className={styles.noLoadouts}>{t('LoadoutBuilder.NoLoadoutsToCompare')}</div>
+      </Sheet>
+    );
+  }
+
   return (
     <Sheet onClose={onClose} header={header}>
       <div className={styles.content}>
-        {selectedLoadout && (
-          <>
-            <div className={clsx('fill-row', styles.setHeader)}>
-              <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
-              <button className="dim-button" type="button" onClick={onSaveLoadout}>
-                {t('LoadoutBuilder.SaveAsLoadout', { loadout: selectedLoadout.name })}
-              </button>
+        <div className={clsx(styles.fillRow, styles.setHeader)}>
+          <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
+          <button className="dim-button" type="button" onClick={onSaveLoadout}>
+            {t('LoadoutBuilder.SaveAs')}{' '}
+            <span className={styles.loadoutName}>{selectedLoadout.name}</span>
+          </button>
+        </div>
+        <SetStats
+          defs={defs}
+          items={setItems}
+          stats={set.stats}
+          maxPower={set.maxPower}
+          statOrder={statOrder}
+          enabledStats={enabledStats}
+          className={styles.fillRow}
+        />
+        <div className={clsx(styles.fillRow, styles.set)}>
+          {setItems.map((item) => (
+            <div key={item.bucket.hash} className={styles.item}>
+              <ConnectedInventoryItem item={item} />
+              <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
             </div>
-            <SetStats
-              defs={defs}
-              items={setItems}
-              stats={set.stats}
-              maxPower={set.maxPower}
-              statOrder={statOrder}
-              enabledStats={enabledStats}
-              className={'fill-row'}
-            />
-            <div className={clsx('fill-row', styles.set)}>
-              {setItems.map((item) => (
-                <div key={item.bucket.hash} className={styles.item}>
-                  <ConnectedInventoryItem item={item} />
-                  <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-        <div className={clsx('fill-row', styles.setHeader)}>
+          ))}
+        </div>
+        <div className={clsx(styles.fillRow, styles.setHeader)}>
           <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
           <select
             className={styles.loadoutSelect}
@@ -245,31 +248,43 @@ function CompareDrawer({
             ))}
           </select>
         </div>
-        <SetStats
-          defs={defs}
-          items={loadoutItems}
-          stats={loadoutStats}
-          maxPower={loadoutMaxPower}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-          className={'fill-row'}
-        />
-        <div className={clsx('fill-row', styles.set)}>
-          {loadoutItems.map((item) => (
-            <div key={item.bucket.hash} className={styles.item}>
-              <ConnectedInventoryItem item={item} />
-              <Sockets item={item} lockedMods={loadoutAssignedMods[item.id]} defs={defs} />
+        {loadoutItems.length ? (
+          <>
+            <SetStats
+              defs={defs}
+              items={loadoutItems}
+              stats={loadoutStats}
+              maxPower={loadoutMaxPower}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              className={styles.fillRow}
+            />
+            <div className={styles.loadoutItems}>
+              {loadoutItems.map((item) => (
+                <div
+                  key={item.bucket.hash}
+                  className={styles.item}
+                  style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
+                >
+                  <ConnectedInventoryItem item={item} />
+                  <Sockets item={item} lockedMods={loadoutAssignedMods[item.id]} defs={defs} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {Boolean(loadoutUnassignedMods.length) && (
-          <div className={styles.unassigned}>{t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}</div>
+            {Boolean(loadoutUnassignedMods.length) && (
+              <div className={styles.unassigned}>
+                {t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}
+              </div>
+            )}
+            <div className={styles.unassignedMods}>
+              {loadoutUnassignedMods.map((unassigned) => (
+                <Mod key={unassigned.key} plugDef={unassigned.mod} defs={defs} large={true} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className={styles.noLoadouts}>{t('LoadoutBuilder.NoComparableItems')}</div>
         )}
-        <div className={styles.unassignedMods}>
-          {loadoutUnassignedMods.map((unassigned) => (
-            <Mod key={unassigned.key} plugDef={unassigned.mod} defs={defs} large={true} />
-          ))}
-        </div>
       </div>
     </Sheet>
   );
