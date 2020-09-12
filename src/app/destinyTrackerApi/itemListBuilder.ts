@@ -4,7 +4,6 @@ import { D1Store } from '../inventory/store-types';
 import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getItemStoreKey } from '../item-review/reducer';
-import store from '../store/store';
 import { ITEM_RATING_EXPIRATION } from './d2-itemListBuilder';
 import { translateToDtrWeapon } from './itemTransformer';
 
@@ -26,9 +25,13 @@ export function getWeaponList(
   return Array.from(list);
 }
 
-function getNewItems(allItems: D1Item[]): D1ItemFetchRequest[] {
+function getNewItems(
+  allItems: D1Item[],
+  ratings: {
+    [key: string]: DtrRating;
+  }
+): D1ItemFetchRequest[] {
   const allDtrItems = allItems.map(translateToDtrWeapon);
-  const ratings = store.getState().reviews.ratings;
 
   const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
   const unmatched = allDtrItems.filter((di) => {
@@ -60,7 +63,7 @@ function getDtrWeapons(
 
   const allWeapons = allItems.filter((item) => item.reviewable);
 
-  const newGuns = getNewItems(allWeapons);
+  const newGuns = getNewItems(allWeapons, ratings);
 
   if (Object.keys(ratings).length > 0) {
     return newGuns;
