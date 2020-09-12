@@ -432,13 +432,13 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private makeRoomForPostmaster = () => {
-    const { dimStore, buckets, stores } = this.props;
-    return queueAction(() => makeRoomForPostmaster(stores, dimStore, buckets));
+    const { dimStore, buckets, dispatch } = this.props;
+    return queueAction(() => dispatch(makeRoomForPostmaster(dimStore, buckets)));
   };
 
   private pullFromPostmaster = () => {
-    const { dimStore } = this.props;
-    return queueAction(() => pullFromPostmaster(dimStore));
+    const { dimStore, dispatch } = this.props;
+    return queueAction(() => dispatch(pullFromPostmaster(dimStore)));
   };
 
   private startFarming = () => {
