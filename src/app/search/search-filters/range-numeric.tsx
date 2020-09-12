@@ -46,7 +46,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: 'light',
+    keywords: ['light', 'power'],
     description: tl('Filter.LightLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
