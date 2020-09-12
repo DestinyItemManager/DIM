@@ -22,29 +22,28 @@ function Mod({ plugDef, defs, gridColumn, large, onClick }: Props) {
     [styles.item]: true,
     [styles.perk]: plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics,
     [styles.clickable]: Boolean(onClick),
-  };
-
-  const largeSize = {
-    ['make-item-size']: large,
+    [styles.largeItem]: large,
   };
 
   return (
     <div
       role="button"
-      className={clsx(classes, largeSize)}
+      className={clsx(classes)}
       style={gridColumn ? { gridColumn } : undefined}
       title={plugDef.displayProperties.name}
       tabIndex={0}
       onClick={onClick}
     >
-      <BungieImage className={clsx('item-img', largeSize)} src={plugDef.displayProperties.icon} />
+      <BungieImage className={'item-img'} src={plugDef.displayProperties.icon} />
       {energyCostElementOverlay && (
         <>
           <div
             style={bungieBackgroundStyle(energyCostElementOverlay)}
-            className={clsx(styles.energyCostOverlay, largeSize)}
+            className={clsx(styles.energyCostOverlay, { [styles.largeEnergyCostOverlay]: large })}
           />
-          <div className={clsx(styles.energyCost, largeSize)}>{energyCost}</div>
+          <div className={clsx(styles.energyCost, { [styles.largeEnergyCost]: large })}>
+            {energyCost}
+          </div>
         </>
       )}
     </div>

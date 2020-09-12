@@ -9,11 +9,6 @@
   width: calc(0.59 * var(--item-size));
   height: calc(0.59 * var(--item-size));
 
-  &:global(.make-item-size) {
-    width: var(--item-size);
-    height: var(--item-size);
-  }
-
   &:nth-child(even) {
     margin-right: 0;
   }
@@ -23,11 +18,15 @@
     width: calc(0.59 * var(--item-size));
     height: calc(0.59 * var(--item-size));
     display: block;
+  }
+}
 
-    &:global(.make-item-size) {
-      width: var(--item-size);
-      height: var(--item-size);
-    }
+.largeItem {
+  width: var(--item-size);
+  height: var(--item-size);
+  img {
+    width: var(--item-size);
+    height: var(--item-size);
   }
 }
 
@@ -40,12 +39,12 @@
   height: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
   width: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
   background-size: calc(0.59 * var(--item-size));
+}
 
-  &:global(.make-item-size) {
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    background-size: calc(var(--item-size));
-  }
+.largeEnergyCostOverlay {
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
+  background-size: calc(var(--item-size));
 }
 
 .energyCost {
@@ -53,12 +52,12 @@
   top: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 13));
   right: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 10.5));
   font-size: calc((0.59 * var(--item-size)) / 5.5);
+}
 
-  &:global(.make-item-size) {
-    top: calc(#{$item-border-width} + ((var(--item-size)) / 13));
-    right: calc(#{$item-border-width} + ((var(--item-size)) / 10.5));
-    font-size: calc((var(--item-size)) / 5.5);
-  }
+.largeEnergyCost {
+  top: calc(#{$item-border-width} + ((var(--item-size)) / 13));
+  right: calc(#{$item-border-width} + ((var(--item-size)) / 10.5));
+  font-size: calc((var(--item-size)) / 5.5);
 }
 
 .perk {

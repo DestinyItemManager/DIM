@@ -5,6 +5,9 @@ interface CssExports {
   'energyCost': string;
   'energyCostOverlay': string;
   'item': string;
+  'largeEnergyCost': string;
+  'largeEnergyCostOverlay': string;
+  'largeItem': string;
   'perk': string;
 }
 export const cssExports: CssExports;
