@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import Sheet from '../dim-ui/Sheet';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
-import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
+import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-item';
 import './MoveAmountPopupContainer.scss';
 
 /**

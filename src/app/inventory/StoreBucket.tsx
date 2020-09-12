@@ -83,7 +83,7 @@ function StoreBucket({
         }),
       });
 
-      moveItemTo(item, store, false, item.amount);
+      moveItemTo(item, store);
     } catch (e) {}
   }, [bucket.hash, bucket.name, store]);
 

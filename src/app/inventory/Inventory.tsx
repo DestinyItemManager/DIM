@@ -49,7 +49,7 @@ function getStoresService(account: DestinyAccount) {
 function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
   useSubscription(() => {
     const storesService = getStoresService(account);
-    return refresh$.subscribe(() => queueAction(() => storesService.reloadStores()));
+    return refresh$.subscribe(() => queueAction<any>(() => storesService.reloadStores()));
   });
 
   useEffect(() => {
