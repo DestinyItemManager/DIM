@@ -97,7 +97,7 @@ export default function ItemActions({
 
         {canConsolidate && (
           <ItemActionButton
-            className={styles.moveDistribute}
+            className={styles.moveConsolidate}
             title={t('MovePopup.Consolidate')}
             onClick={onConsolidate}
             label={t('MovePopup.Take')}
