@@ -27,7 +27,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false, item.amount);
+      moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false);
     }
   };
 
