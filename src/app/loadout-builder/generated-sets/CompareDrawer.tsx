@@ -230,7 +230,7 @@ function CompareDrawer({
           </>
         )}
         <div className={clsx('fill-row', styles.setHeader)}>
-          <div className={styles.setTitle}>{t('LoadoutBuilder.Loadout')}</div>
+          <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
           <select
             className={styles.loadoutSelect}
             onChange={(event) => {
