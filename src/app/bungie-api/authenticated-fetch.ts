@@ -121,7 +121,7 @@ export async function getActiveToken(): Promise<Tokens> {
     console.log('Successfully updated auth token from refresh token.');
     return token;
   } catch (e) {
-    return handleRefreshTokenError(e);
+    return await handleRefreshTokenError(e);
   } finally {
     cache = null;
   }
