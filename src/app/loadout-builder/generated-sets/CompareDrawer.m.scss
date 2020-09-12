@@ -37,12 +37,6 @@
   justify-content: space-between;
 }
 
-.loadoutItems {
-  display: grid;
-  grid-template-columns: repeat(5, 123px);
-  justify-content: space-between;
-}
-
 .item {
   display: grid;
   grid-template-areas:

@@ -54,7 +54,7 @@ function assignModsForSlot(
   mods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
-  if ((item && !mods?.length) || mods.every((mod) => doEnergiesMatch(mod, item))) {
+  if (!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.mod.hash)];
   }
 }
@@ -95,10 +95,9 @@ export function assignModsToArmorSet(
 
   for (const hash of LockableBucketHashes) {
     const item = setToMatch.find((i) => i.bucket.hash === hash);
-    const category = bucketsToCategories[hash];
-    const lockedMods = category && lockedArmor2Mods[category];
 
-    if (item?.isDestiny2() && lockedMods) {
+    if (item?.isDestiny2()) {
+      const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
       assignModsForSlot(item, lockedMods, assignments);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));
     }

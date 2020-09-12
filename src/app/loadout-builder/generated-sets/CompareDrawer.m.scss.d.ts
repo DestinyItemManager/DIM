@@ -5,7 +5,6 @@ interface CssExports {
   'fillRow': string;
   'header': string;
   'item': string;
-  'loadoutItems': string;
   'loadoutName': string;
   'loadoutSelect': string;
   'noLoadouts': string;

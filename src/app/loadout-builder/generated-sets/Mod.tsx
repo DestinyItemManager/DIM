@@ -34,7 +34,7 @@ function Mod({ plugDef, defs, gridColumn, large, onClick }: Props) {
       tabIndex={0}
       onClick={onClick}
     >
-      <BungieImage className={'item-img'} src={plugDef.displayProperties.icon} />
+      <BungieImage className="item-img" src={plugDef.displayProperties.icon} />
       {energyCostElementOverlay && (
         <>
           <div

@@ -259,7 +259,7 @@ function CompareDrawer({
               enabledStats={enabledStats}
               className={styles.fillRow}
             />
-            <div className={styles.loadoutItems}>
+            <div className={styles.set}>
               {loadoutItems.map((item) => (
                 <div
                   key={item.bucket.hash}

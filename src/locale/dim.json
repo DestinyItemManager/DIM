@@ -599,7 +599,7 @@
     "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
-    "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing version of the loadout.",
+    "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"
