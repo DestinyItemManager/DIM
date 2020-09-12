@@ -50,9 +50,10 @@ export interface MoveReservations {
 export async function setItemLockState(
   item: DimItem,
   state: boolean,
-  type: 'lock' | 'track' = 'lock'
+  type: 'lock' | 'track' = 'lock',
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ) {
-  const stores = item.getStoresService().getStores();
+  const stores = getStores();
   const store = item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
   if (item.isDestiny2()) {
@@ -113,11 +114,11 @@ function updateItemModel(
   source: DimStore,
   target: DimStore,
   equip: boolean,
-  amount: number = item.amount
+  amount: number = item.amount,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ) {
   // Refresh all the items - they may have been reloaded!
-  const storeService = item.getStoresService();
-  const stores = storeService.getStores();
+  const stores = getStores();
   source = getStore(stores, source.id)!;
   target = getStore(stores, target.id)!;
   // We really shouldn't do this!
@@ -227,9 +228,10 @@ function updateItemModel(
 export function getSimilarItem(
   item: DimItem,
   exclusions?: Pick<DimItem, 'id' | 'hash'>[],
-  excludeExotic = false
+  excludeExotic = false,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ): DimItem | null {
-  const stores = item.getStoresService().getStores();
+  const stores = getStores();
   const target = getStore(stores, item.owner)!;
   const sortedStores = _.sortBy(stores, (store) => {
     if (target.id === store.id) {
@@ -322,7 +324,11 @@ function searchForSimilarItem(
 /**
  * Bulk equip items. Only use for multiple equips at once.
  */
-export async function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
+export async function equipItems(
+  store: DimStore,
+  items: DimItem[],
+  getStores: () => DimStore[] = () => items[0].getStoresService().getStores()
+): Promise<DimItem[]> {
   // Check for (and move aside) exotics
   const extraItemsToEquip: Promise<DimItem>[] = _.compact(
     items.map((i) => {
@@ -336,7 +342,7 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
               new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
             );
           }
-          const target = getStore(similarItem.getStoresService().getStores(), similarItem.owner)!;
+          const target = getStore(getStores(), similarItem.owner)!;
 
           if (store.id === target.id) {
             return Promise.resolve(similarItem);
@@ -364,8 +370,11 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
   return equippedItems.map((i) => updateItemModel(i, store, store, true));
 }
 
-async function equipItem(item: DimItem) {
-  const store = getStore(item.getStoresService().getStores(), item.owner)!;
+async function equipItem(
+  item: DimItem,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+) {
+  const store = getStore(getStores(), item.owner)!;
   if ($featureFlags.debugMoves) {
     console.log('Equip', item.name, item.type, 'to', store.name);
   }
@@ -374,28 +383,37 @@ async function equipItem(item: DimItem) {
 }
 
 /** De-equip an item, which really means find another item to equip in its place. */
-async function dequipItem(item: DimItem, excludeExotic = false): Promise<DimItem> {
+async function dequipItem(
+  item: DimItem,
+  excludeExotic = false,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+): Promise<DimItem> {
   const similarItem = getSimilarItem(item, [], excludeExotic);
   if (!similarItem) {
     throw new Error(t('ItemService.Deequip', { itemname: item.name }));
   }
 
-  const ownerStore = getStore(item.getStoresService().getStores(), item.owner)!;
+  const ownerStore = getStore(getStores(), item.owner)!;
   await moveItemTo(similarItem, ownerStore, true);
   return item;
 }
 
-function moveToVault(item: DimItem, amount: number = item.amount) {
-  return moveToStore(item, getVault(item.getStoresService().getStores())!, false, amount);
+function moveToVault(
+  item: DimItem,
+  amount: number = item.amount,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+) {
+  return moveToStore(item, getVault(getStores())!, false, amount);
 }
 
 async function moveToStore(
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount
+  amount: number = item.amount,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ) {
-  const ownerStore = getStore(item.getStoresService().getStores(), item.owner)!;
+  const ownerStore = getStore(getStores(), item.owner)!;
 
   if ($featureFlags.debugMoves) {
     item.location.inPostmaster
@@ -526,7 +544,8 @@ interface MoveContext {
 function chooseMoveAsideItem(
   store: DimStore,
   item: DimItem,
-  moveContext: MoveContext
+  moveContext: MoveContext,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ): {
   item: DimItem;
   target: DimStore;
@@ -539,7 +558,7 @@ function chooseMoveAsideItem(
     );
   }
 
-  const stores = item.getStoresService().getStores();
+  const stores = getStores();
   const otherStores = stores.filter((s) => s.id !== store.id);
 
   // Start with candidates of the same type (or vault bucket if it's vault)
@@ -629,7 +648,7 @@ function chooseMoveAsideItem(
       }
     | undefined;
 
-  const vault = getVault(item.getStoresService().getStores())!;
+  const vault = getVault(getStores())!;
 
   // Iterate through other stores from least recently played to most recently played.
   // The concept is that we prefer filling up the least-recently-played character before even
@@ -724,7 +743,8 @@ async function canMoveToStore(
     excludes?: Pick<DimItem, 'id' | 'hash'>[];
     reservations?: MoveReservations;
     numRetries?: number;
-  } = {}
+  } = {},
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ): Promise<boolean> {
   const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
 
@@ -752,8 +772,7 @@ async function canMoveToStore(
     throw error;
   }
 
-  const storeService = item.getStoresService();
-  const stores = storeService.getStores();
+  const stores = getStores();
 
   // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
   const storeReservations: { [storeId: string]: number } = {};
@@ -849,7 +868,7 @@ async function canMoveToStore(
     // Refresh the stores to see if anything has changed
     const reloadedStores =
       (await (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores())) ||
-      storeService.getStores();
+      getStores();
     const storeId = store.id;
     options.triedFallback = true;
     const reloadedStore = reloadedStores.find((s) => s.id === storeId);
@@ -920,19 +939,19 @@ export async function moveItemTo(
   equip = false,
   amount: number = item.amount || 1,
   excludes?: Pick<DimItem, 'id' | 'hash'>[],
-  reservations?: MoveReservations
+  reservations?: MoveReservations,
+  getStores: () => DimStore[] = () => item.getStoresService().getStores()
 ): Promise<DimItem> {
-  const storeService = item.getStoresService();
   // Reassign the target store to the active store if we're moving the item to an account-wide bucket
   if (!target.isVault && item.bucket.accountWide) {
-    target = getCurrentStore(storeService.getStores())!;
+    target = getCurrentStore(getStores())!;
   }
 
   await isValidTransfer(equip, target, item, amount, excludes, reservations);
 
   // Replace the target store - isValidTransfer may have reloaded it
-  target = getStore(storeService.getStores(), target.id)!;
-  let source = getStore(storeService.getStores(), item.owner)!;
+  target = getStore(getStores(), target.id)!;
+  let source = getStore(getStores(), item.owner)!;
 
   // Get from postmaster first
   if (item.location.inPostmaster) {
@@ -940,8 +959,8 @@ export async function moveItemTo(
       item = await moveToStore(item, target, equip, amount);
     } else {
       item = await moveItemTo(item, source, equip, amount, excludes, reservations);
-      target = getStore(storeService.getStores(), target.id)!;
-      source = getStore(storeService.getStores(), item.owner)!;
+      target = getStore(getStores(), target.id)!;
+      source = getStore(getStores(), item.owner)!;
     }
   }
 
