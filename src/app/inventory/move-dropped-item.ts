@@ -9,7 +9,7 @@ import rxStore from '../store/store';
 import { reportException } from '../utils/exceptions';
 import { queuedAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
-import { dimItemService } from './item-move-service';
+import { moveItemTo } from './item-move-service';
 import { DimItem } from './item-types';
 import { moveItemNotification } from './MoveNotifications';
 import { DimStore } from './store-types';
@@ -94,7 +94,7 @@ export default queuedAction(
         }
 
         hideItemPopup();
-        const movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
+        const movePromise = moveItemTo(item, target, equip, moveAmount);
 
         showNotification(moveItemNotification(item, target, movePromise));
 

@@ -1,7 +1,12 @@
 import { t } from 'app/i18next-t';
 import { queuedAction } from 'app/inventory/action-queue';
 import { updateCharacters } from 'app/inventory/d2-stores';
-import { dimItemService, MoveReservations } from 'app/inventory/item-move-service';
+import {
+  equipItems,
+  getSimilarItem,
+  moveItemTo,
+  MoveReservations,
+} from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { DimStore } from 'app/inventory/store-types';
@@ -170,10 +175,8 @@ async function doApplyLoadout(
     const dequips = _.map(
       _.groupBy(realItemsToDequip, (i) => i.owner),
       (dequipItems, owner) => {
-        const equipItems = _.compact(
-          dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
-        );
-        return dimItemService.equipItems(getStore(storeService.getStores(), owner)!, equipItems);
+        const itemsToEquip = _.compact(dequipItems.map((i) => getSimilarItem(i, loadoutItemIds)));
+        return equipItems(getStore(storeService.getStores(), owner)!, itemsToEquip);
       }
     );
     await Promise.all(dequips);
@@ -186,7 +189,7 @@ async function doApplyLoadout(
     // Use the bulk equipAll API to equip all at once.
     itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
     const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
-    equippedItems = await dimItemService.equipItems(store, realItemsToEquip);
+    equippedItems = await equipItems(store, realItemsToEquip);
   } else {
     equippedItems = itemsToEquip;
   }
@@ -291,12 +294,12 @@ async function applyLoadoutItems(
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            await dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds);
+            await moveItemTo(sourceItem, store, false, amountToMove, loadoutItemIds);
           }
         }
       } else {
         // Pass in the list of items that shouldn't be moved away
-        await dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
+        await moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       }
     }
 
@@ -419,14 +422,7 @@ export async function clearItemsOffCharacter(
               getStore(stores, item.owner)!.name
             );
           }
-          await dimItemService.moveTo(
-            item,
-            otherStoresWithSpace[0],
-            false,
-            item.amount,
-            items,
-            reservations
-          );
+          await moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
           continue;
         } else if (vaultSpaceLeft === 0) {
           outOfSpaceWarning(store);
@@ -445,7 +441,7 @@ export async function clearItemsOffCharacter(
           getStore(stores, item.owner)!.name
         );
       }
-      await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+      await moveItemTo(item, vault, false, item.amount, items, reservations);
     } catch (e) {
       if (e.code === 'no-space') {
         outOfSpaceWarning(store);

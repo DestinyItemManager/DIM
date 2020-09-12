@@ -3,7 +3,7 @@ import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { getVault } from 'app/inventory/stores-helpers';
 import _ from 'lodash';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { dimItemService, ItemServiceType, MoveReservations } from '../inventory/item-move-service';
+import { moveItemTo, MoveReservations } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -49,7 +49,7 @@ export async function makeRoomForPostmaster(
   });
   // TODO: it'd be nice if this were a loadout option
   try {
-    await moveItemsToVault(stores, store, itemsToMove, dimItemService);
+    await moveItemsToVault(stores, store, itemsToMove);
     showNotification({
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
@@ -145,7 +145,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
       }
 
       try {
-        await dimItemService.moveTo(item, store, false, amount);
+        await moveItemTo(item, store, false, amount);
         succeeded++;
       } catch (e) {
         // TODO: collect errors
@@ -169,8 +169,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
 async function moveItemsToVault(
   stores: DimStore[],
   store: DimStore,
-  items: DimItem[],
-  dimItemService: ItemServiceType
+  items: DimItem[]
 ): Promise<void> {
   const reservations: MoveReservations = {};
   // reserve space for all move-asides
@@ -186,17 +185,10 @@ async function moveItemsToVault(
       const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
       if (otherStoresWithSpace.length) {
-        await dimItemService.moveTo(
-          item,
-          otherStoresWithSpace[0],
-          false,
-          item.amount,
-          items,
-          reservations
-        );
+        await moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
         continue;
       }
     }
-    await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+    await moveItemTo(item, vault, false, item.amount, items, reservations);
   }
 }

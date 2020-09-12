@@ -8,7 +8,7 @@ import rxStore from '../store/store';
 import { reportException } from '../utils/exceptions';
 import { queuedAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
-import { dimItemService } from './item-move-service';
+import { moveItemTo as moveTo } from './item-move-service';
 import { DimItem } from './item-types';
 import { moveItemNotification } from './MoveNotifications';
 import { DimStore } from './store-types';
@@ -23,7 +23,7 @@ export const moveItemTo = queuedAction(
       hideItemPopup();
       const reload = item.equipped || equip;
       try {
-        const movePromise = dimItemService.moveTo(item, store, equip, amount);
+        const movePromise = moveTo(item, store, equip, amount);
         showNotification(moveItemNotification(item, store, movePromise));
 
         item = await movePromise;
@@ -68,7 +68,7 @@ export const consolidate = queuedAction(
         );
         if (item) {
           const amount = s.amountOfItem(actionableItem);
-          await dimItemService.moveTo(item, vault, false, amount);
+          await moveTo(item, vault, false, amount);
         }
       }
 
@@ -80,7 +80,7 @@ export const consolidate = queuedAction(
         );
         if (item) {
           const amount = vault.amountOfItem(actionableItem);
-          await dimItemService.moveTo(item, store, false, amount);
+          await moveTo(item, store, false, amount);
         }
       }
       const data = { name: actionableItem.name, store: store.name };
@@ -153,7 +153,7 @@ export const distribute = queuedAction(
     async function applyMoves(moves: Move[]) {
       for (const move of moves) {
         const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
-        await dimItemService.moveTo(item, move.target, false, move.amount);
+        await moveTo(item, move.target, false, move.amount);
       }
     }
 
