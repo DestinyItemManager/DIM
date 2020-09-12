@@ -9,6 +9,7 @@ import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
 
 export async function makeRoomForPostmaster(
+  stores: DimStore[],
   store: DimStore,
   buckets: InventoryBuckets
 ): Promise<void> {
@@ -48,12 +49,7 @@ export async function makeRoomForPostmaster(
   });
   // TODO: it'd be nice if this were a loadout option
   try {
-    await moveItemsToVault(
-      store.getStoresService().getStores(),
-      store,
-      itemsToMove,
-      dimItemService
-    );
+    await moveItemsToVault(stores, store, itemsToMove, dimItemService);
     showNotification({
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
