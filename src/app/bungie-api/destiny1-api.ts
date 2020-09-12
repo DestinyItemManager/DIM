@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getActivePlatform } from '../accounts/get-active-platform';
 import { D1Item, DimItem } from '../inventory/item-types';
-import { D1Store, DimStore } from '../inventory/store-types';
+import { D1Store } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, handleUniquenessViolation, httpAdapter } from './bungie-service-helper';
 
@@ -188,8 +188,9 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
 }
 
 export function setItemState(
+  account: DestinyAccount,
   item: DimItem,
-  store: DimStore,
+  storeId: string,
   lockState: boolean,
   type: 'lock' | 'track'
 ) {
@@ -203,11 +204,10 @@ export function setItemState(
       break;
   }
 
-  const platform = getActivePlatform();
   return httpAdapter(
     bungieApiUpdate(`/D1/Platform/Destiny/${method}/`, {
-      characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform!.originalPlatformType,
+      characterId: storeId,
+      membershipType: account.originalPlatformType,
       itemId: item.id,
       state: lockState,
     })
