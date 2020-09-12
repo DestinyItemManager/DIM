@@ -124,12 +124,12 @@ function createItemIndex(item: DimItem): string {
  * @return the new or updated item (it may create a new item!)
  */
 function updateItemModel(
+  getStores: () => DimStore[],
   item: DimItem,
   source: DimStore,
   target: DimStore,
   equip: boolean,
-  amount: number = item.amount,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  amount: number = item.amount
 ) {
   // Refresh all the items - they may have been reloaded!
   const stores = getStores();
@@ -240,12 +240,11 @@ function updateItemModel(
 }
 
 export function getSimilarItem(
+  stores: DimStore[],
   item: DimItem,
   exclusions?: Pick<DimItem, 'id' | 'hash'>[],
-  excludeExotic = false,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  excludeExotic = false
 ): DimItem | null {
-  const stores = getStores();
   const target = getStore(stores, item.owner)!;
   const sortedStores = _.sortBy(stores, (store) => {
     if (target.id === store.id) {
@@ -339,9 +338,9 @@ function searchForSimilarItem(
  * Bulk equip items. Only use for multiple equips at once.
  */
 export async function equipItems(
+  getStores: () => DimStore[],
   store: DimStore,
-  items: DimItem[],
-  getStores: () => DimStore[] = () => items[0].getStoresService().getStores()
+  items: DimItem[]
 ): Promise<DimItem[]> {
   // Check for (and move aside) exotics
   const extraItemsToEquip: Promise<DimItem>[] = _.compact(
@@ -350,7 +349,7 @@ export async function equipItems(
         const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
         // If we aren't already equipping into that slot...
         if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
-          const similarItem = getSimilarItem(otherExotic);
+          const similarItem = getSimilarItem(getStores(), otherExotic);
           if (!similarItem) {
             return Promise.reject(
               new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
@@ -376,33 +375,30 @@ export async function equipItems(
     return [];
   }
   if (items.length === 1) {
-    const equippedItem = await equipItem(items[0]);
+    const equippedItem = await equipItem(getStores, items[0]);
     return [equippedItem];
   }
 
   const equippedItems = await equipItemsApi(items[0])(store, items);
-  return equippedItems.map((i) => updateItemModel(i, store, store, true));
+  return equippedItems.map((i) => updateItemModel(getStores, i, store, store, true));
 }
 
-async function equipItem(
-  item: DimItem,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
-) {
+async function equipItem(getStores: () => DimStore[], item: DimItem) {
   const store = getStore(getStores(), item.owner)!;
   if ($featureFlags.debugMoves) {
     console.log('Equip', item.name, item.type, 'to', store.name);
   }
   await equipApi(item)(item);
-  return updateItemModel(item, store, store, true);
+  return updateItemModel(getStores, item, store, store, true);
 }
 
 /** De-equip an item, which really means find another item to equip in its place. */
 async function dequipItem(
+  getStores: () => DimStore[],
   item: DimItem,
-  excludeExotic = false,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  excludeExotic = false
 ): Promise<DimItem> {
-  const similarItem = getSimilarItem(item, [], excludeExotic);
+  const similarItem = getSimilarItem(getStores(), item, [], excludeExotic);
   if (!similarItem) {
     throw new Error(t('ItemService.Deequip', { itemname: item.name }));
   }
@@ -412,20 +408,16 @@ async function dequipItem(
   return item;
 }
 
-function moveToVault(
-  item: DimItem,
-  amount: number = item.amount,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
-) {
-  return moveToStore(item, getVault(getStores())!, false, amount);
+function moveToVault(getStores: () => DimStore[], item: DimItem, amount: number = item.amount) {
+  return moveToStore(getStores, item, getVault(getStores())!, false, amount);
 }
 
 async function moveToStore(
+  getStores: () => DimStore[],
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  amount: number = item.amount
 ) {
   const ownerStore = getStore(getStores(), item.owner)!;
 
@@ -457,15 +449,15 @@ async function moveToStore(
   } catch (e) {
     // Not sure why this happens - maybe out of sync game state?
     if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
-      await dequipItem(item);
+      await dequipItem(getStores, item);
       await transferApi(item)(item, store, amount);
     } else {
       throw e;
     }
   }
-  const source = getStore(item.getStoresService().getStores(), item.owner)!;
-  const newItem = updateItemModel(item, source, store, false, amount);
-  item = newItem.owner !== 'vault' && equip ? await equipItem(newItem) : newItem;
+  const source = getStore(getStores(), item.owner)!;
+  const newItem = updateItemModel(getStores, item, source, store, false, amount);
+  item = newItem.owner !== 'vault' && equip ? await equipItem(getStores, newItem) : newItem;
 
   if (overrideLockState !== undefined) {
     // Run this async, without waiting for the result
@@ -496,11 +488,15 @@ async function moveToStore(
  * that would conflict. If it could not move aside, this
  * rejects. It never returns false.
  */
-async function canEquipExotic(item: DimItem, store: DimStore): Promise<boolean> {
+async function canEquipExotic(
+  getStores: () => DimStore[],
+  item: DimItem,
+  store: DimStore
+): Promise<boolean> {
   const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
   if (otherExotic) {
     try {
-      await dequipItem(otherExotic, true);
+      await dequipItem(getStores, otherExotic, true);
       return true;
     } catch (e) {
       throw new Error(
@@ -539,7 +535,7 @@ interface MoveContext {
 }
 
 /**
- * Choose another item that we can move out of "store" in order to
+ * Choose another item that we can move out of "target" in order to
  * make room for "item". We already know when this function is
  * called that store has no room for item.
  *
@@ -556,10 +552,10 @@ interface MoveContext {
  * @throws {Error} An error if no move aside item could be chosen.
  */
 function chooseMoveAsideItem(
-  store: DimStore,
+  stores: DimStore[],
+  target: DimStore,
   item: DimItem,
-  moveContext: MoveContext,
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  moveContext: MoveContext
 ): {
   item: DimItem;
   target: DimStore;
@@ -572,32 +568,31 @@ function chooseMoveAsideItem(
     );
   }
 
-  const stores = getStores();
-  const otherStores = stores.filter((s) => s.id !== store.id);
+  const otherStores = stores.filter((s) => s.id !== target.id);
 
   // Start with candidates of the same type (or vault bucket if it's vault)
   // TODO: This try/catch is to help debug https://sentry.io/destiny-item-manager/dim/issues/484361056/
   let allItems: DimItem[];
   try {
-    allItems = store.isVault
-      ? store.items.filter(
+    allItems = target.isVault
+      ? target.items.filter(
           (i) =>
             i.bucket.vaultBucket &&
             item.bucket.vaultBucket &&
             i.bucket.vaultBucket.hash === item.bucket.vaultBucket.hash
         )
-      : store.buckets[item.bucket.hash];
+      : target.buckets[item.bucket.hash];
   } catch (e) {
-    if (store.isVault && !item.bucket.vaultBucket) {
+    if (target.isVault && !item.bucket.vaultBucket) {
       console.error(
         'Item',
         item.name,
         "has no vault bucket, but we're trying to move aside room in the vault for it"
       );
-    } else if (store.items.some((i) => !i.bucket.vaultBucket)) {
+    } else if (target.items.some((i) => !i.bucket.vaultBucket)) {
       console.error(
         'The vault has items with no vault bucket: ',
-        store.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name)
+        target.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name)
       );
     }
     throw e;
@@ -607,7 +602,7 @@ function chooseMoveAsideItem(
   // if there are no candidates at all, fail
   if (moveAsideCandidates.length === 0) {
     const e: DimError = new Error(
-      t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name })
+      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
     e.code = 'no-space';
     throw e;
@@ -662,7 +657,7 @@ function chooseMoveAsideItem(
       }
     | undefined;
 
-  const vault = getVault(getStores())!;
+  const vault = getVault(stores)!;
 
   // Iterate through other stores from least recently played to most recently played.
   // The concept is that we prefer filling up the least-recently-played character before even
@@ -673,7 +668,7 @@ function chooseMoveAsideItem(
   ).find((targetStore) =>
     sortMoveAsideCandidatesForStore(
       moveAsideCandidates,
-      store,
+      target,
       targetStore,
       itemInfos,
       itemHashTags,
@@ -681,7 +676,7 @@ function chooseMoveAsideItem(
     ).find((candidate) => {
       const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
-      if (store.isVault) {
+      if (target.isVault) {
         // If we're moving from the vault
         // If the target character has any space, put it there
         if (candidate.amount <= spaceLeft) {
@@ -718,7 +713,7 @@ function chooseMoveAsideItem(
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
   // just try to shove it in the vault, and we'll recursively squeeze something else out of the vault.
-  if (!moveAsideCandidate && !store.isVault) {
+  if (!moveAsideCandidate && !target.isVault) {
     moveAsideCandidate = {
       item: moveAsideCandidates[0],
       target: vault,
@@ -727,7 +722,7 @@ function chooseMoveAsideItem(
 
   if (!moveAsideCandidate) {
     const e: DimError = new Error(
-      t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name })
+      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
     e.code = 'no-space';
     throw e;
@@ -749,6 +744,7 @@ function chooseMoveAsideItem(
  * @return a promise that's either resolved if the move can proceed or rejected with an error.
  */
 async function canMoveToStore(
+  getStores: () => DimStore[],
   item: DimItem,
   store: DimStore,
   amount: number,
@@ -757,8 +753,7 @@ async function canMoveToStore(
     excludes?: Pick<DimItem, 'id' | 'hash'>[];
     reservations?: MoveReservations;
     numRetries?: number;
-  } = {},
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
+  } = {}
 ): Promise<boolean> {
   const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
 
@@ -827,6 +822,7 @@ async function canMoveToStore(
       .find(([_, moveAmount]) => moveAmount > 0)!;
     const moveAsideSource = getStore(stores, moves[0])!;
     const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
+      stores,
       moveAsideSource,
       item,
       moveContext
@@ -861,7 +857,7 @@ async function canMoveToStore(
       // Make one move and start over!
       try {
         await moveItemTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes);
-        return canMoveToStore(item, store, amount, options);
+        return canMoveToStore(getStores, item, store, amount, options);
       } catch (e) {
         if (numRetries < 3) {
           // Exclude this item and try again so we pick another
@@ -872,7 +868,7 @@ async function canMoveToStore(
             `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
             e
           );
-          return canMoveToStore(item, store, amount, options);
+          return canMoveToStore(getStores, item, store, amount, options);
         } else {
           throw e;
         }
@@ -889,7 +885,7 @@ async function canMoveToStore(
     if (!reloadedStore) {
       throw new Error("Can't find the store to move to.");
     }
-    return canMoveToStore(item, reloadedStore, amount, options);
+    return canMoveToStore(getStores, item, reloadedStore, amount, options);
   }
 }
 
@@ -921,6 +917,7 @@ function canEquip(item: DimItem, store: DimStore): void {
  * in order to make the primary transfer possible, such as making room or dequipping exotics.
  */
 async function isValidTransfer(
+  getStores: () => DimStore[],
   equip: boolean,
   store: DimStore,
   item: DimItem,
@@ -931,10 +928,10 @@ async function isValidTransfer(
   if (equip) {
     canEquip(item, store); // throws
     if (item.equippingLabel) {
-      await canEquipExotic(item, store); // throws
+      await canEquipExotic(getStores, item, store); // throws
     }
   }
-  return canMoveToStore(item, store, amount, { excludes, reservations });
+  return canMoveToStore(getStores, item, store, amount, { excludes, reservations });
 }
 
 /**
@@ -961,7 +958,7 @@ export async function moveItemTo(
     target = getCurrentStore(getStores())!;
   }
 
-  await isValidTransfer(equip, target, item, amount, excludes, reservations);
+  await isValidTransfer(getStores, equip, target, item, amount, excludes, reservations);
 
   // Replace the target store - isValidTransfer may have reloaded it
   target = getStore(getStores(), target.id)!;
@@ -970,7 +967,7 @@ export async function moveItemTo(
   // Get from postmaster first
   if (item.location.inPostmaster) {
     if (source.id === target.id || item.bucket.accountWide) {
-      item = await moveToStore(item, target, equip, amount);
+      item = await moveToStore(getStores, item, target, equip, amount);
     } else {
       item = await moveItemTo(item, source, equip, amount, excludes, reservations);
       target = getStore(getStores(), target.id)!;
@@ -983,15 +980,15 @@ export async function moveItemTo(
     if (source.id !== target.id && !item.bucket.accountWide) {
       // Different Guardian
       if (item.equipped) {
-        item = await dequipItem(item);
+        item = await dequipItem(getStores, item);
       }
-      item = await moveToVault(item, amount);
-      item = await moveToStore(item, target, equip, amount);
+      item = await moveToVault(getStores, item, amount);
+      item = await moveToStore(getStores, item, target, equip, amount);
     }
     if (equip && !item.equipped) {
-      item = await equipItem(item);
+      item = await equipItem(getStores, item);
     } else if (!equip && item.equipped) {
-      item = await dequipItem(item);
+      item = await dequipItem(getStores, item);
     }
   } else if (source.isVault && target.isVault) {
     // Vault to Vault
@@ -999,9 +996,9 @@ export async function moveItemTo(
   } else if (source.isVault || target.isVault) {
     // Guardian to Vault
     if (item.equipped) {
-      item = await dequipItem(item);
+      item = await dequipItem(getStores, item);
     }
-    item = await moveToStore(item, target, equip, amount);
+    item = await moveToStore(getStores, item, target, equip, amount);
   }
   return item;
 }

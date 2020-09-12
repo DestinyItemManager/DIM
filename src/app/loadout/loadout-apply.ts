@@ -175,8 +175,14 @@ async function doApplyLoadout(
     const dequips = _.map(
       _.groupBy(realItemsToDequip, (i) => i.owner),
       (dequipItems, owner) => {
-        const itemsToEquip = _.compact(dequipItems.map((i) => getSimilarItem(i, loadoutItemIds)));
-        return equipItems(getStore(storeService.getStores(), owner)!, itemsToEquip);
+        const itemsToEquip = _.compact(
+          dequipItems.map((i) => getSimilarItem(storeService.getStores(), i, loadoutItemIds))
+        );
+        return equipItems(
+          () => storeService.getStores(),
+          getStore(storeService.getStores(), owner)!,
+          itemsToEquip
+        );
       }
     );
     await Promise.all(dequips);
@@ -189,7 +195,7 @@ async function doApplyLoadout(
     // Use the bulk equipAll API to equip all at once.
     itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
     const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
-    equippedItems = await equipItems(store, realItemsToEquip);
+    equippedItems = await equipItems(() => storeService.getStores(), store, realItemsToEquip);
   } else {
     equippedItems = itemsToEquip;
   }
