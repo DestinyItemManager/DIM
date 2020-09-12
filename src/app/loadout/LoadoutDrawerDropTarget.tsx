@@ -1,3 +1,4 @@
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import {
@@ -40,7 +41,7 @@ const dropSpec: DropTargetSpec<Props> = {
   canDrop(_, monitor) {
     // But equipping has requirements
     const item = monitor.getItem().item as DimItem;
-    return item.canBeInLoadout();
+    return itemCanBeInLoadout(item);
   },
 };
 

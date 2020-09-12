@@ -6,6 +6,7 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getAllItems, getArtifactBonus } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
@@ -328,7 +329,7 @@ class LoadoutPopup extends React.Component<Props> {
     const { dimStore, classTypeId } = this.props;
 
     const items = dimStore.items.filter(
-      (item) => item.canBeInLoadout() && item.equipped && fromEquippedTypes.includes(item.type)
+      (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
     );
     const loadout = newLoadout(
       '',

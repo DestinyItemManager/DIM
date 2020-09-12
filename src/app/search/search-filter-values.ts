@@ -5,6 +5,7 @@ import {
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
+  swordStatsByName,
   TOTAL_STAT_HASH,
 } from './d2-known-values';
 
@@ -49,6 +50,7 @@ export const armorStatHashes = Object.values(dimArmorStatHashByName);
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName = {
   ...D2WeaponStatHashByName,
+  ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
 

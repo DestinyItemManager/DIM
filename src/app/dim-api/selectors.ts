@@ -23,3 +23,8 @@ export const currentProfileSelector = createSelector(
  */
 export const recentSearchesSelector = (state: RootState) =>
   state.dimApi.searches[destinyVersionSelector(state)];
+
+export const trackedTriumphsSelector = createSelector(
+  currentProfileSelector,
+  (profile) => profile?.triumphs || []
+);

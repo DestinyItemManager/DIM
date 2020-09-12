@@ -1,5 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
@@ -308,7 +309,7 @@ function ItemService(): ItemServiceType {
 
     let candidates = store.items.filter(
       (i) =>
-        i.canBeEquippedBy(target) &&
+        itemCanBeEquippedBy(i, target) &&
         i.location.hash === item.location.hash &&
         !i.equipped &&
         // Not the same item
@@ -477,20 +478,23 @@ function ItemService(): ItemServiceType {
     item = newItem.owner !== 'vault' && equip ? await equipItem(newItem) : newItem;
 
     if (overrideLockState !== undefined) {
-      console.log(
-        'Resetting lock status of',
-        item.name,
-        'to',
-        overrideLockState,
-        'when moving to',
-        store.name,
-        'to work around Bungie.net lock state bug'
-      );
-      try {
-        await setItemLockState(item, overrideLockState);
-      } catch (e) {
-        console.error('Lock state override failed', e);
-      }
+      // Run this async, without waiting for the result
+      (async () => {
+        console.log(
+          'Resetting lock status of',
+          item.name,
+          'to',
+          overrideLockState,
+          'when moving to',
+          store.name,
+          'to work around Bungie.net lock state bug'
+        );
+        try {
+          await setItemLockState(item, overrideLockState);
+        } catch (e) {
+          console.error('Lock state override failed', e);
+        }
+      })();
     }
 
     return item;
@@ -905,7 +909,7 @@ function ItemService(): ItemServiceType {
    * Returns if possible, or throws an exception if the item can't be equipped.
    */
   function canEquip(item: DimItem, store: DimStore): void {
-    if (item.canBeEquippedBy(store)) {
+    if (itemCanBeEquippedBy(item, store)) {
       return;
     } else if (item.classified) {
       throw new Error(t('ItemService.Classified'));
@@ -1055,9 +1059,9 @@ export function sortMoveAsideCandidatesForStore(
       // Engrams prefer to be in the vault, so not-engram is larger than engram
       compareBy((i) => (fromStore.isVault ? !i.isEngram : i.isEngram)),
       // Prefer moving things the target store can use
-      compareBy((i) => !targetStore.isVault && i.canBeEquippedBy(targetStore)),
+      compareBy((i) => !targetStore.isVault && itemCanBeEquippedBy(i, targetStore)),
       // Prefer moving things this character can't use
-      compareBy((i) => !fromStore.isVault && !i.canBeEquippedBy(fromStore)),
+      compareBy((i) => !fromStore.isVault && !itemCanBeEquippedBy(i, fromStore)),
       // Tagged items sort by orders defined in dim-item-info
       compareBy((i) => {
         const tag = getTag(i, itemInfos, itemHashTags);

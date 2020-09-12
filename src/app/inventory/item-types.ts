@@ -22,7 +22,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import { InventoryBucket } from './inventory-buckets';
-import { D1StoreServiceType, D2StoreServiceType, DimStore, StoreServiceType } from './store-types';
+import { D1StoreServiceType, D2StoreServiceType, StoreServiceType } from './store-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
@@ -165,10 +165,6 @@ export interface DimItem {
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
 
-  /** Can this item be equipped by the given store? */
-  canBeEquippedBy(store: DimStore): boolean;
-  /** Could this be added to a loadout? */
-  canBeInLoadout(): boolean;
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
   /** The Stores service associated with this item. */

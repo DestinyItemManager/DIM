@@ -386,6 +386,7 @@
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
@@ -580,6 +581,7 @@
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset locked items",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -809,20 +811,29 @@
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
+    "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
+    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "Milestones & Challenges",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
     "Progress": "Progress",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Secret Triumph"
+    "SecretTriumph": "Secret Triumph",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
@@ -968,8 +979,8 @@
     "UnlockAll": "Unlock Items"
   },
   "Triumphs": {
-    "HideCompleted": "Hide Completed",
-    "RevealRedacted": "Reveal Redacted"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",

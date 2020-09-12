@@ -67,7 +67,7 @@ const freeformFilters: FilterDefinition[] = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
           ...getStringsFromAllSockets(item),
         ];
-        return strings.some((s) => startWord.test(s));
+        return strings.some((s) => startWord.test(plainString(s, language)));
       };
     },
   },
@@ -83,7 +83,7 @@ const freeformFilters: FilterDefinition[] = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, false),
           ...getStringsFromAllSockets(item, false),
         ];
-        return strings.some((s) => startWord.test(s));
+        return strings.some((s) => startWord.test(plainString(s, language)));
       };
     },
   },

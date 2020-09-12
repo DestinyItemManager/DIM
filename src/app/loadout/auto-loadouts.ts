@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
@@ -17,7 +18,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
   const applicableItems = getAllItems(
     stores,
     (i) =>
-      i.canBeEquippedBy(store) &&
+      itemCanBeEquippedBy(i, store) &&
       i.talentGrid &&
       !(i.talentGrid as any).xpComplete && // Still need XP
       i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
@@ -90,7 +91,7 @@ export function maxLightItemSet(
   for (const s of stores) {
     for (const i of s.items) {
       if (
-        (i.canBeEquippedBy(store) ||
+        (itemCanBeEquippedBy(i, store) ||
           (i.location.inPostmaster &&
             (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
             // nothing we are too low-level to equip
@@ -134,7 +135,7 @@ export function maxStatLoadout(statHash: number, stores: DimStore[], store: DimS
   const applicableItems = getAllItems(
     stores,
     (i) =>
-      (i.canBeEquippedBy(store) ||
+      (itemCanBeEquippedBy(i, store) ||
         (i.location.inPostmaster &&
           (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
           // nothing we are too low-level to equip
@@ -294,7 +295,7 @@ export function randomLoadout(stores: DimStore[], filter: ItemFilter) {
   // Any item equippable by this character in the given types
   const applicableItems = getAllItems(
     stores,
-    (i) => randomLoadoutTypes.has(i.type) && i.canBeEquippedBy(currentCharacter) && filter(i)
+    (i) => randomLoadoutTypes.has(i.type) && itemCanBeEquippedBy(i, currentCharacter) && filter(i)
   );
 
   // Use "random" as the value function

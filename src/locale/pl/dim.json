@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny oraz ekwipunku",
+    "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
     "ErrorLoadManifest": "Nie można załadować bazy danych informacji Destiny od Bungie",
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
     "MissingDescription": "Konto, które próbujesz zobaczyć, nie jest kontem połączonym z Twoim profilem Bungie.net.",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "Łączenie konta Twitch z Bungie.net spowoduje, że Twoje konta D1 przestaną działać.",
-    "UnlinkTwitchButton": "Odłącz Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "Archetyp",
     "Armor2": "Pancerz 2.0",
     "ButtonHelp": "Porównaj Przedmioty",
+    "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
       "Class": "Nie można porównać tego przedmiotu, jako że nie jest dla klasy {{class}}."
@@ -377,6 +376,7 @@
     "FilterHelp": "Szukaj przedmiotu/perk, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterHelpMenuItem": "Pomoc z filtrami...",
+    "FilterHelpRecords": "Szukaj triumfy i kolekcje",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
@@ -414,6 +414,7 @@
     "ToggleDetails": "Przełącz pokazywanie pełnych szczegółów przedmiotu"
   },
   "Infusion": {
+    "Filter": "Filtruj przedmioty",
     "InfuseSource": "Wybierz przedmiot do nasycenia używając {{name}}",
     "InfuseTarget": "Wybierz przedmiot do nasycenia {{name}}",
     "Infusion": "Poszukiwacz Paliwa do Nasycenia",
@@ -561,7 +562,7 @@
     "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
     "NoBuildsFoundExoticsAndMods": "Masz zablokowany egzotyk i pięć sezonowych modyfikacji.",
     "NoBuildsFoundModsAreTooExpensive": "Zapotrzebowanie na energię wybranych modyfikacji jest zbyt wysokie.",
-    "NoBuildsFoundSeasonalModNotSatisfied": "Brakuje Ci przedmiotu do trzymania jednego z wybranych modyfikacji sezonowych.",
+    "NoBuildsFoundSeasonalModNotSatisfied": "Brakuje Ci przedmiotu do trzymania jednej z wybranych modyfikacji sezonowych.",
     "NoBuildsFoundWithReasons": "Nie znaleziono kompilacji. Powszechne przyczyny tego obejmują:",
     "NumCombinations": "{{count, number}} kombinacja",
     "NumCombinations_plural": "{{count, number}} kombinacji",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj zablokowane przedmioty",
+    "SeasonNum": "Sezon {{season}}",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
     "SelectMinStatTotal": "Minimalna suma statystyk pancerzu",
@@ -594,6 +596,7 @@
     "AppliedError": "Nie można było przenieść żadnego przedmiotu z twojego uzbrojenia.",
     "AppliedWarn": "Twoje uzbrojenie zostało częściowo przeniesione, ale {{failed}} z {{total}} przedmiotów miało błędy.",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
+    "AssumeMaxWeapons": "Zakładając, że bronie mają maksymalny poziom mocy",
     "Before": "Przed '{{name}}'",
     "ChooseItem": "Dodaj {{name}}",
     "Classified": "Niektóre z twoich przedmiotów są sklasyfikowane i nie mogą być uwzględnione przy kalkulacji maksymalnej mocy.",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "Czytaj fabułę",
     "ReviewsTab": "Recenzje",
     "Rewards": "Nagrody:",
+    "SendToVault": "Wyślij do schowka",
     "Split": "Podziel",
     "Store": "Sklep",
     "StoreWithName": "Umieść na {{character}}",
@@ -798,19 +802,26 @@
     "CrucibleRank": "Rangi",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
+    "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
     "Progress": "Postęp",
+    "QueryFilteredTrackedTriumphs": "Żaden z Twoich śledzonych triumfów nie pasował do wyszukiwania",
     "QuestExpired": "Wygasło",
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
-    "SecretTriumph": "Sekretny Triumf"
+    "SecretTriumph": "Sekretny Triumf",
+    "StatTrackers": "Śledzenie statystyk",
+    "TrackedTriumphs": "Śledzone triumfy"
   },
   "RecordBooks": {
     "HideCompleted": "Ukryj ukończone zapisy",
     "RecordBooks": "Księga Rekordów"
+  },
+  "Records": {
+    "Title": "Rekordy"
   },
   "Settings": {
     "AllowIdPostToDtr": "Pokaż szczegółowe recenzje broni i pozwól na ocenę broni",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
     "PowerCap": "Limit mocy",
-    "PowerCapDisclaimer": "Informacje dotyczące limitu mocy mogą być nieprawidłowe w przypadku pancerza z dowolnego najazdu lub broni z najazdu \"Ostatnie Życzenie\" i \"Ogród Zbawienia\"",
     "PowerCapWithSeason": "{{powerCap}} (maks. sezon {{finalSeason}})",
     "PowerModifier": "Moc przyznana przez postęp sezonowego doświadczenia",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
@@ -957,8 +967,8 @@
     "UnlockAll": "Odblokuj Przedmioty"
   },
   "Triumphs": {
-    "HideCompleted": "Ukryj zakończone",
-    "RevealRedacted": "Odsłoń ukryte"
+    "HideCompleted": "Ukryj ukończone triumfy",
+    "RevealRedacted": "Ujawnij zredagowane triumfy"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",

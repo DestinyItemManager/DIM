@@ -3,6 +3,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { RootState } from 'app/store/types';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import _ from 'lodash';
@@ -739,7 +740,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     const items = _.groupBy(
       store.items.filter(
         (item) =>
-          item.canBeInLoadout() &&
+          itemCanBeInLoadout(item) &&
           item.equipped &&
           lockEquippedTypes.includes(item.type.toLowerCase())
       ),

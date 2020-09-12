@@ -1,3 +1,4 @@
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import {
@@ -50,7 +51,7 @@ const dropSpec: DropTargetSpec<Props> = {
     }
     // But equipping has requirements
     const item = monitor.getItem().item as DimItem;
-    return item.canBeEquippedBy(props.store);
+    return itemCanBeEquippedBy(item, props.store);
   },
 };
 

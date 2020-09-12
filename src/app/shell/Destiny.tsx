@@ -182,7 +182,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
             </Route>
           )}
           {account.destinyVersion === 2 && (
-            <Route path={`${path}/collections`} exact>
+            <Route path={`${path}/records`} exact>
               <Collections account={account} />
             </Route>
           )}

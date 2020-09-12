@@ -59,26 +59,6 @@ const collectiblesByItemHash = _.once(
  * items. Items use classic JS prototype inheritance.
  */
 export const ItemProto = {
-  // Can this item be equipped by the given store?
-  canBeEquippedBy(this: D2Item, store: D2Store) {
-    if (store.isVault) {
-      return false;
-    }
-
-    return (
-      this.equipment &&
-      // For the right class
-      (this.classType === DestinyClass.Unknown || this.classType === store.classType) &&
-      // nothing we are too low-level to equip
-      this.equipRequiredLevel <= store.level &&
-      // can be moved or is already here
-      (!this.notransfer || this.owner === store.id) &&
-      !this.location.inPostmaster
-    );
-  },
-  canBeInLoadout(this: D2Item) {
-    return this.equipment || this.type === 'Consumables';
-  },
   // Mark that this item has been moved manually
   updateManualMoveTimestamp(this: D2Item) {
     this.lastManuallyMoved = Date.now();

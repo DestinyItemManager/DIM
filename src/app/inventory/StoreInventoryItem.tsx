@@ -1,5 +1,6 @@
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import React from 'react';
 import { CompareService } from '../compare/compare.service';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
@@ -26,7 +27,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      moveItemTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
+      moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false, item.amount);
     }
   };
 

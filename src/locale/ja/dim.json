@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Destinyのキャラクターとインベントリをロードできません",
+    "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
@@ -14,8 +14,6 @@
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "UnlinkTwitch": "TwitchのアカウントをBungie.netにリンクすると、D1のアカウントが使えなくなります。",
-    "UnlinkTwitchButton": "Twitchのリンクを解除",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -87,6 +85,7 @@
     "Archetype": "原型",
     "Armor2": "アーマー2.0",
     "ButtonHelp": "アイテムを比較する",
+    "CompareBaseStats": "基本Statsを表示",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
       "Class": "このアイテム {{class}} 用のため、比較できません。"
@@ -377,6 +376,7 @@
     "FilterHelp": "検索　アイテム/パーク, {{example}},",
     "FilterHelpBrief": "商品の検索",
     "FilterHelpMenuItem": "フィルターヘルプ",
+    "FilterHelpRecords": "勝利の道のりとコレクションを検索する",
     "FilterMatchCount": "1つのアイテム",
     "FilterMatchCount_plural": "{{count}} アイテム",
     "Filters": "フィルター",
@@ -414,6 +414,7 @@
     "ToggleDetails": "完全なアイテムの詳細を表示する"
   },
   "Infusion": {
+    "Filter": "アイテムをフィルタする",
     "InfuseSource": "{{name}} を融合するアイテムを選択してください",
     "InfuseTarget": "{{name}} に融合するアイテムを選択してください",
     "Infusion": "融合対象物発掘機能",
@@ -570,6 +571,7 @@
     "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックして除外します。アイテムをサイドバーにドラッグして、除外またはロックします。",
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ロックされたアイテムをリセットする",
+    "SeasonNum": "シーズン {{season}}",
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "SelectMinStatTotal": "最小アーマースタット合計",
@@ -594,6 +596,7 @@
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}} の{{failed}} アイテムにエラーがありました。",
     "ApplySearch": "検索 {{query}} を転送",
+    "AssumeMaxWeapons": "最大パワーレベルの武器を仮定する",
     "Before": "前 '{{name}}'",
     "ChooseItem": "{{name}} を追加します。",
     "Classified": "一部のアイテムは分類されており、最大出力の計算に含めることはできません。",
@@ -689,7 +692,7 @@
     "AddNote": "メモを追加",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
-    "Details": "ポップアップを表示",
+    "Details": "ポップアップ",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "EquipWithName": "{{character}} に装備させる",
@@ -711,6 +714,7 @@
     "ReadLoreLink": "伝承を読む",
     "ReviewsTab": "レビュー",
     "Rewards": "報酬:",
+    "SendToVault": "保管庫に送る",
     "Split": "分割",
     "Store": "保管する",
     "StoreWithName": "{{character}} が装備しています",
@@ -798,19 +802,26 @@
     "CrucibleRank": "ランク",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
+    "NoTrackedTriumph": "追跡中の勝利の道のりはありませんでした。ゲーム内で1つを追跡するか、DIMで好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
     "Progress": "進行状況",
+    "QueryFilteredTrackedTriumphs": "検索結果に、追跡中の勝利の道のりはありませんでした。",
     "QuestExpired": "期限切れ",
     "QuestExpires": "有効期限 ",
     "Quests": "クエスト",
     "RecordValue": "{{value}}pts",
     "Resets": "1 リセット",
     "Resets_plural": "{{count}} リセット",
-    "SecretTriumph": "秘密の勝利の道のり"
+    "SecretTriumph": "秘密の勝利の道のり",
+    "StatTrackers": "追跡中ステータス",
+    "TrackedTriumphs": "追跡中の勝利の道のり"
   },
   "RecordBooks": {
     "HideCompleted": "完了した記録を非表示にする",
     "RecordBooks": "記録ブック"
+  },
+  "Records": {
+    "Title": "レコード"
   },
   "Settings": {
     "AllowIdPostToDtr": "武器のレビュー詳細を表示、評価を許可する",
@@ -873,7 +884,6 @@
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、ここをクリックしてください。",
     "PowerCap": "パワー上限",
-    "PowerCapDisclaimer": "何らからのレイド防具や、“最後の望み”と”救済の庭園”のレイド武器におけるパワー上限の情報は誤っているかもしれません。",
     "PowerCapWithSeason": "{{powerCap}} (シーズン {{finalSeason}} 最大)",
     "PowerModifier": "シーズンごとの経験の進歩によって与えられる力",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
@@ -957,8 +967,8 @@
     "UnlockAll": "アイテムのロックを解除"
   },
   "Triumphs": {
-    "HideCompleted": "達成済みを非表示",
-    "RevealRedacted": "編集された物を表示"
+    "HideCompleted": "完了した勝利の道のりを隠す",
+    "RevealRedacted": "改定された勝利の道のりを表示する"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyzは、このベンダーが高レベルのアイテムをドロップしていることを報告します。",
