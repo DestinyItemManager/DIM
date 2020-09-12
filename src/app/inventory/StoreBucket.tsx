@@ -3,6 +3,7 @@ import { ENGRAMS_BUCKET } from 'app/search/d2-known-values';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
@@ -75,7 +76,7 @@ function StoreBucket({
     try {
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
-          item.bucket.hash === bucket.hash && item.canBeEquippedBy(store),
+          item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
         prompt: t('MovePopup.PullItem', {
           bucket: bucket.name,
           store: store.name,

@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { useSubscription } from 'app/utils/hooks';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import produce from 'immer';
@@ -151,7 +152,7 @@ function stateReducer(state: State, action: Action): State {
       const { loadout } = state;
       const { item, shift, items } = action;
 
-      if (!item.canBeInLoadout()) {
+      if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
@@ -479,7 +480,7 @@ function LoadoutDrawer({
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
           item.hash === warnItem.hash &&
-          item.canBeInLoadout() &&
+          itemCanBeInLoadout(item) &&
           (!loadout ||
             loadout.classType === DestinyClass.Unknown ||
             item.classType === loadoutClassType ||
