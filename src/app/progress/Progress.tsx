@@ -5,7 +5,6 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { queueAction } from 'app/inventory/action-queue';
 import { D2StoresService } from 'app/inventory/d2-stores';
-import { DimItem } from 'app/inventory/item-types';
 import {
   bucketsSelector,
   profileResponseSelector,
@@ -14,6 +13,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { RAID_NODE } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/reducer';
 import { RootState } from 'app/store/types';
@@ -49,7 +49,7 @@ interface StoreProps {
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
   trackedTriumphs: number[];
-  searchFilter?(item: DimItem): boolean;
+  searchFilter?: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps;

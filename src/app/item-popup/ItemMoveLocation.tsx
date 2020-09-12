@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -101,7 +102,7 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Vault')}
         />
       )}
-      {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
+      {!(item.owner === store.id && item.equipped) && itemCanBeEquippedBy(item, store) && (
         <ItemActionButton
           title={t('MovePopup.EquipWithName', { character: store.name })}
           onClick={equipItem}

@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
@@ -9,7 +10,7 @@ import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { storesSelector } from '../inventory/selectors';
-import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
+import { searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
@@ -22,9 +23,9 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  filters: SearchFilters;
   itemSortOrder: string[];
   isPhonePortrait: boolean;
+  filters(query: string): ItemFilter;
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
@@ -91,7 +92,7 @@ function ItemPicker({
     </div>
   );
 
-  const filter = useMemo(() => filters.filterFunction(query), [filters, query]);
+  const filter = useMemo(() => filters(query), [filters, query]);
   const items = useMemo(() => {
     let items = sortItems(allItems.filter(filter), itemSortOrder);
     if (sortBy) {

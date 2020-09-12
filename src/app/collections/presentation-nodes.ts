@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
 import {
   DestinyCollectibleDefinition,
@@ -19,6 +20,7 @@ import {
   DestinyRecordState,
   DestinyScope,
 } from 'bungie-api-ts/destiny2';
+import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import _ from 'lodash';
 
 export interface DimPresentationNodeLeaf {
@@ -137,12 +139,61 @@ export function toPresentationNodeTree(
   }
 }
 
+const legacyTriumphHashesSet = new Set(legacyTriumphHashes);
+export function filterToLegacyTriumphs(
+  node: DimPresentationNode | null
+): DimPresentationNode | null {
+  if (!node) {
+    return null;
+  }
+  if (node.records) {
+    const records = node.records.filter((r) => legacyTriumphHashesSet.has(r.recordDef.hash));
+    if (records.length) {
+      const visible = records.length;
+      const acquired = count(records, (r) =>
+        Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
+      );
+      return {
+        nodeDef: node.nodeDef,
+        records,
+        visible,
+        acquired,
+      };
+    }
+  }
+
+  if (node.childPresentationNodes) {
+    // call for all children, then add 'em up
+    const children: DimPresentationNode[] = [];
+    let acquired = 0;
+    let visible = 0;
+    for (const child of node.childPresentationNodes) {
+      const subnode = filterToLegacyTriumphs(child);
+      if (subnode) {
+        acquired += subnode.acquired;
+        visible += subnode.visible;
+        children.push(subnode);
+      }
+    }
+    return children.length > 0
+      ? {
+          nodeDef: node.nodeDef,
+          visible,
+          acquired,
+          childPresentationNodes: children,
+        }
+      : null;
+  }
+
+  return null;
+}
+
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
 export function filterPresentationNodesToSearch(
   node: DimPresentationNode,
   searchQuery: string,
-  filterItems: (item: DimItem) => boolean,
+  filterItems: ItemFilter,
   completedRecordsHidden: boolean,
   path: DimPresentationNode[] = []
 ): DimPresentationNodeSearchResult[] {

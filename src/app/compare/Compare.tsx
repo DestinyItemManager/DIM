@@ -6,7 +6,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
-import { makeDupeID } from 'app/search/search-filter';
+import { makeDupeID } from 'app/search/search-filters/dupes';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { settingsSelector } from 'app/settings/reducer';

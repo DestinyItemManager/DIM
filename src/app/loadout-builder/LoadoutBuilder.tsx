@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { settingsSelector } from 'app/settings/reducer';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -49,7 +50,7 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  filter(item: DimItem): boolean;
+  filter: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps;

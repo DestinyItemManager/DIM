@@ -21,6 +21,13 @@ export default function setupRateLimiter() {
     )
   );
   RateLimiterConfig.addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/PullFromPostmaster/,
+      1,
+      100
+    )
+  );
+  RateLimiterConfig.addLimiter(
     new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 100)
   );
 }

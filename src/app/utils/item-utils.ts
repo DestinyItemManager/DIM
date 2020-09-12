@@ -1,5 +1,7 @@
+import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimMasterwork, DimSocket } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import {
   armor2PlugCategoryHashes,
   CUSTOM_TOTAL_STAT_HASH,
@@ -7,7 +9,7 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import { objectifyArray } from './util';
@@ -132,4 +134,32 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
  */
 export function itemIsInstanced(item: DimItem): boolean {
   return item.id !== '0';
+}
+
+/** Can this item be equipped by the given store? */
+export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
+  if (store.isVault) {
+    return false;
+  }
+
+  return (
+    item.equipment &&
+    // For the right class
+    (item.classType === DestinyClass.Unknown || item.classType === store.classType) &&
+    // nothing we are too low-level to equip
+    item.equipRequiredLevel <= store.level &&
+    // can be moved or is already here
+    (!item.notransfer || item.owner === store.id) &&
+    !item.location.inPostmaster &&
+    (item.isDestiny1() ? factionItemAligns(store, item) : true)
+  );
+}
+/** Could this be added to a loadout? */
+export function itemCanBeInLoadout(item: DimItem): boolean {
+  return (
+    item.equipment ||
+    item.type === 'Consumables' ||
+    // D1 had a "Material" type
+    item.type === 'Material'
+  );
 }

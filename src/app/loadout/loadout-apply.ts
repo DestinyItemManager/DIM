@@ -8,6 +8,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { getItemAcrossStores, getStore, getVault } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import { default as reduxStore } from '../store/store';
@@ -114,7 +115,7 @@ async function doApplyLoadout(
 
     // only try to equip items that are equippable - otherwise ignore them
     const applicableSubclass =
-      item.type !== 'Class' || (pseudoItem.equipped && item.canBeEquippedBy(store));
+      item.type !== 'Class' || (pseudoItem.equipped && itemCanBeEquippedBy(item, store));
     if (!applicableSubclass) {
       totalItems--;
       return false;
@@ -209,7 +210,7 @@ async function doApplyLoadout(
   // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
   // is fixed on Bungie's end. When that happens, just remove this call.
   if (scope.successfulItems.length > 0) {
-    await (reduxStore.dispatch(updateCharacters()) as any);
+    reduxStore.dispatch(updateCharacters());
   }
 
   if (loadout.clearSpace) {

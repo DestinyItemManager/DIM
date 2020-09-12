@@ -25,7 +25,9 @@
       }
     }
 
-    #triumphs & {
+    #triumphs &,
+    #legacyTriumphs &,
+    #collections & {
       /* styling for completed triumph categories */
       > .title.completed {
         color: #f5dc56;
@@ -144,8 +146,4 @@
   > div {
     margin-right: 0;
   }
-}
-
-.mods {
-  margin-left: 10px;
 }

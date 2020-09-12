@@ -70,11 +70,13 @@ function PresentationNode({
       !deepEqual(lastPath.current, path)
     ) {
       const clientRect = headerRef.current.getBoundingClientRect();
-      scrollToPosition({
-        top: window.scrollY + clientRect.top - 50,
-        left: 0,
-        behavior: 'smooth',
-      });
+      if (clientRect.top < 50) {
+        scrollToPosition({
+          top: window.scrollY + clientRect.top - 50,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
     }
     lastPath.current = path;
   }, [path, presentationNodeHash]);
