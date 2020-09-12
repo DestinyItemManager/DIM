@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getAllItems, getArtifactBonus } from 'app/inventory/stores-helpers';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -43,18 +44,15 @@ import {
 import { querySelector } from '../shell/reducer';
 import { deleteLoadout } from './actions';
 import {
-  gatherEngramsLoadout,
   itemLevelingLoadout,
   maxLightItemSet,
   maxLightLoadout,
   randomLoadout,
   searchLoadout,
 } from './auto-loadouts';
-import { applyLoadout } from './loadout-apply';
 import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, getLight, newLoadout } from './loadout-utils';
-import { editLoadout } from './LoadoutDrawer';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import {
   makeRoomForPostmaster,
@@ -132,202 +130,32 @@ function mapStateToProps() {
   };
 }
 
-class LoadoutPopup extends React.Component<Props> {
-  render() {
-    const {
-      dimStore,
-      stores,
-      previousLoadout,
-      loadouts,
-      query,
-      onClick,
-      hasClassified,
-    } = this.props;
+function LoadoutPopup({
+  dimStore,
+  stores,
+  previousLoadout,
+  loadouts,
+  query,
+  onClick,
+  hasClassified,
+  classTypeId,
+  searchFilter,
+  account,
+  buckets,
+  dispatch,
+}: Props) {
+  // For the most part we don't need to memoize this - this menu is destroyed when closed
+  const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
+  const artifactLight = getArtifactBonus(dimStore);
 
-    // For the most part we don't need to memoize this - this menu is destroyed when closed
-    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
-    const artifactLight = getArtifactBonus(dimStore);
+  const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
+  const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
-    const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
-    const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
-
-    return (
-      <div className="loadout-popup-content" onClick={onClick} role="menu">
-        <ul className="loadout-list">
-          <li className="loadout-set">
-            <span onClick={this.newLoadout}>
-              <AppIcon icon={addIcon} />
-              <span>{t('Loadouts.Create')}</span>
-            </span>
-            <span onClick={this.newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
-          </li>
-
-          {query.length > 0 && (
-            <li className="loadout-set">
-              <span onClick={this.searchLoadout}>
-                <AppIcon icon={searchIcon} />
-                <span>{t('Loadouts.ApplySearch', { query })}</span>
-              </span>
-            </li>
-          )}
-
-          {!dimStore.isVault && (
-            <>
-              <li className="loadout-set">
-                <span onClick={this.maxLightLoadout}>
-                  <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
-                    <span className="light">
-                      {dimStore.destinyVersion === 1 ? (
-                        <>
-                          <AppIcon icon={powerIndicatorIcon} />
-                          {Math.floor(maxLight * 10) / 10}
-                        </>
-                      ) : (
-                        <>
-                          <img className="yellowInlineSvg" src={helmetIcon} />
-                          {Math.floor(maxLight)}
-                          {' + '}
-                          <img className="yellowInlineSvg" src={xpIcon} />
-                          {artifactLight}
-                        </>
-                      )}
-
-                      {hasClassified && <sup>*</sup>}
-                    </span>
-                  </PressTip>
-                  <AppIcon icon={powerActionIcon} />
-                  <span>
-                    {dimStore.destinyVersion === 2
-                      ? t('Loadouts.MaximizePower')
-                      : t('Loadouts.MaximizeLight')}
-                  </span>
-                </span>
-              </li>
-
-              {dimStore.isDestiny1() && (
-                <>
-                  <li className="loadout-set">
-                    <span onClick={this.itemLevelingLoadout}>
-                      <AppIcon icon={levellingIcon} />
-                      <span>{t('Loadouts.ItemLeveling')}</span>
-                    </span>
-                  </li>
-
-                  {numPostmasterItemsTotal > 0 && (
-                    <li className="loadout-set">
-                      <span onClick={this.makeRoomForPostmaster}>
-                        <AppIcon icon={sendIcon} />
-                        <span>{t('Loadouts.MakeRoom')}</span>
-                      </span>
-                    </li>
-                  )}
-                </>
-              )}
-
-              {dimStore.isDestiny2() && numPostmasterItems > 0 && (
-                <li className="loadout-set">
-                  <span onClick={this.pullFromPostmaster}>
-                    <AppIcon icon={sendIcon} />
-                    <span className="badge">{numPostmasterItems}</span>{' '}
-                    <span>{t('Loadouts.PullFromPostmaster')}</span>
-                  </span>
-                  <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
-                </li>
-              )}
-              {dimStore.isDestiny2() && numPostmasterItems === 0 && numPostmasterItemsTotal > 0 && (
-                <li className="loadout-set">
-                  <span onClick={this.makeRoomForPostmaster}>
-                    <AppIcon icon={sendIcon} />
-                    <span>{t('Loadouts.MakeRoom')}</span>
-                  </span>
-                </li>
-              )}
-            </>
-          )}
-
-          {dimStore.isDestiny1() && (
-            <li className="loadout-set">
-              <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: true })}>
-                <AppIcon icon={engramIcon} />
-                <span>{t('Loadouts.GatherEngrams')}</span>
-              </span>
-              <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: false })}>
-                <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
-              </span>
-            </li>
-          )}
-
-          <li className="loadout-set">
-            <span onClick={this.randomLoadout}>
-              <AppIcon icon={faRandom} />
-              <span>
-                {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
-              </span>
-            </span>
-            {query.length === 0 && (
-              <span onClick={(e) => this.randomLoadout(e, true)}>
-                <span>{t('Loadouts.WeaponsOnly')}</span>
-              </span>
-            )}
-          </li>
-
-          {!dimStore.isVault && (
-            <li className="loadout-set">
-              <span onClick={this.startFarming}>
-                <AppIcon icon={engramIcon} />
-                <span>{t('FarmingMode.FarmingMode')}</span>
-              </span>
-            </li>
-          )}
-
-          {previousLoadout && (
-            <li className="loadout-set">
-              <span
-                title={previousLoadout.name}
-                onClick={(e) => this.applyLoadout(previousLoadout, e, true)}
-              >
-                <AppIcon icon={undoIcon} />
-                {previousLoadout.name}
-              </span>
-              <span onClick={(e) => this.applyLoadout(previousLoadout, e)}>
-                <span>{t('Loadouts.RestoreAllItems')}</span>
-              </span>
-            </li>
-          )}
-
-          {loadouts.map((loadout) => (
-            <li key={loadout.id} className="loadout-set">
-              <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
-                <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
-                {loadout.name}
-              </span>
-              <span
-                className="delete"
-                title={t('Loadouts.Delete')}
-                onClick={() => this.deleteLoadout(loadout)}
-              >
-                <AppIcon icon={deleteIcon} />
-              </span>
-              <span
-                title={t('Loadouts.Edit')}
-                onClick={() => this.editLoadout(loadout, { isNew: false })}
-              >
-                <AppIcon icon={editIcon} />
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
-  private newLoadout = () => {
-    this.editLoadout(newLoadout('', []));
+  const makeNewLoadout = () => {
+    editLoadout(newLoadout('', []), { isNew: true });
   };
 
-  private newLoadoutFromEquipped = () => {
-    const { dimStore, classTypeId } = this.props;
-
+  const newLoadoutFromEquipped = () => {
     const items = dimStore.items.filter(
       (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
     );
@@ -336,24 +164,18 @@ class LoadoutPopup extends React.Component<Props> {
       items.map((i) => convertToLoadoutItem(i, true))
     );
     loadout.classType = classTypeId;
-    this.editLoadout(loadout);
+    editLoadout(loadout, { isNew: true });
   };
 
-  private deleteLoadout = async (loadout: Loadout) => {
-    const { dispatch } = this.props;
+  const deleteExistingLoadout = async (loadout: Loadout) => {
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dispatch(deleteLoadout(loadout.id));
     }
   };
 
-  private editLoadout = (loadout: Loadout, { isNew = true } = {}) => {
-    editLoadout(loadout, { showClass: true, isNew });
-  };
-
   // TODO: move all these fancy loadouts to a new service
 
-  private applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
-    const { dimStore } = this.props;
+  const applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
     e.preventDefault();
 
     if (filterToEquipped) {
@@ -370,22 +192,19 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   // A dynamic loadout set up to level weapons and armor
-  private itemLevelingLoadout = (e) => {
-    const { dimStore, stores } = this.props;
+  const makeItemLevelingLoadout = (e) => {
     const loadout = itemLevelingLoadout(stores, dimStore);
-    this.applyLoadout(loadout, e);
+    applyLoadout(loadout, e);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
-  private maxLightLoadout = (e) => {
-    const { dimStore, stores } = this.props;
+  const makeMaxLightLoadout = (e) => {
     const loadout = maxLightLoadout(stores, dimStore);
-    this.applyLoadout(loadout, e);
+    applyLoadout(loadout, e);
   };
 
   // A dynamic loadout set up to level weapons and armor
-  private gatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
-    const { stores } = this.props;
+  const gatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
     let loadout;
     try {
       loadout = gatherEngramsLoadout(stores, options);
@@ -393,11 +212,10 @@ class LoadoutPopup extends React.Component<Props> {
       showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
       return;
     }
-    this.applyLoadout(loadout, e);
+    applyLoadout(loadout, e);
   };
 
-  private randomLoadout = (e, weaponsOnly = false) => {
-    const { stores, searchFilter, query } = this.props;
+  const applyRandomLoadout = (e, weaponsOnly = false) => {
     if (
       !window.confirm(
         weaponsOnly
@@ -416,7 +234,7 @@ class LoadoutPopup extends React.Component<Props> {
         weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
       );
       if (loadout) {
-        this.applyLoadout(loadout, e);
+        applyLoadout(loadout, e);
       }
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
@@ -425,26 +243,185 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   // Move items matching the current search. Max 9 per type.
-  private searchLoadout = (e) => {
-    const { stores, dimStore, searchFilter } = this.props;
+  const applySearchLoadout = (e) => {
     const loadout = searchLoadout(stores, dimStore, searchFilter);
-    this.applyLoadout(loadout, e);
+    applyLoadout(loadout, e);
   };
 
-  private makeRoomForPostmaster = () => {
-    const { dimStore, buckets, dispatch } = this.props;
-    return queueAction(() => dispatch(makeRoomForPostmaster(dimStore, buckets)));
-  };
+  const doMakeRoomForPostmaster = () =>
+    queueAction(() => dispatch(makeRoomForPostmaster(dimStore, buckets)));
 
-  private pullFromPostmaster = () => {
-    const { dimStore, dispatch } = this.props;
-    return queueAction(() => dispatch(pullFromPostmaster(dimStore)));
-  };
+  const doPullFromPostmaster = () => queueAction(() => dispatch(pullFromPostmaster(dimStore)));
 
-  private startFarming = () => {
-    const { account, dimStore } = this.props;
+  const startFarming = () => {
     (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(account, dimStore.id);
   };
+
+  return (
+    <div className="loadout-popup-content" onClick={onClick} role="menu">
+      <ul className="loadout-list">
+        <li className="loadout-set">
+          <span onClick={makeNewLoadout}>
+            <AppIcon icon={addIcon} />
+            <span>{t('Loadouts.Create')}</span>
+          </span>
+          <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+        </li>
+
+        {query.length > 0 && (
+          <li className="loadout-set">
+            <span onClick={applySearchLoadout}>
+              <AppIcon icon={searchIcon} />
+              <span>{t('Loadouts.ApplySearch', { query })}</span>
+            </span>
+          </li>
+        )}
+
+        {!dimStore.isVault && (
+          <>
+            <li className="loadout-set">
+              <span onClick={makeMaxLightLoadout}>
+                <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
+                  <span className="light">
+                    {dimStore.destinyVersion === 1 ? (
+                      <>
+                        <AppIcon icon={powerIndicatorIcon} />
+                        {Math.floor(maxLight * 10) / 10}
+                      </>
+                    ) : (
+                      <>
+                        <img className="yellowInlineSvg" src={helmetIcon} />
+                        {Math.floor(maxLight)}
+                        {' + '}
+                        <img className="yellowInlineSvg" src={xpIcon} />
+                        {artifactLight}
+                      </>
+                    )}
+
+                    {hasClassified && <sup>*</sup>}
+                  </span>
+                </PressTip>
+                <AppIcon icon={powerActionIcon} />
+                <span>
+                  {dimStore.destinyVersion === 2
+                    ? t('Loadouts.MaximizePower')
+                    : t('Loadouts.MaximizeLight')}
+                </span>
+              </span>
+            </li>
+
+            {dimStore.isDestiny1() && (
+              <>
+                <li className="loadout-set">
+                  <span onClick={makeItemLevelingLoadout}>
+                    <AppIcon icon={levellingIcon} />
+                    <span>{t('Loadouts.ItemLeveling')}</span>
+                  </span>
+                </li>
+
+                {numPostmasterItemsTotal > 0 && (
+                  <li className="loadout-set">
+                    <span onClick={doMakeRoomForPostmaster}>
+                      <AppIcon icon={sendIcon} />
+                      <span>{t('Loadouts.MakeRoom')}</span>
+                    </span>
+                  </li>
+                )}
+              </>
+            )}
+
+            {dimStore.isDestiny2() && numPostmasterItems > 0 && (
+              <li className="loadout-set">
+                <span onClick={doPullFromPostmaster}>
+                  <AppIcon icon={sendIcon} />
+                  <span className="badge">{numPostmasterItems}</span>{' '}
+                  <span>{t('Loadouts.PullFromPostmaster')}</span>
+                </span>
+                <span onClick={doMakeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
+              </li>
+            )}
+            {dimStore.isDestiny2() && numPostmasterItems === 0 && numPostmasterItemsTotal > 0 && (
+              <li className="loadout-set">
+                <span onClick={doMakeRoomForPostmaster}>
+                  <AppIcon icon={sendIcon} />
+                  <span>{t('Loadouts.MakeRoom')}</span>
+                </span>
+              </li>
+            )}
+          </>
+        )}
+
+        {dimStore.isDestiny1() && (
+          <li className="loadout-set">
+            <span onClick={(e) => gatherEngramsLoadout(e, { exotics: true })}>
+              <AppIcon icon={engramIcon} />
+              <span>{t('Loadouts.GatherEngrams')}</span>
+            </span>
+            <span onClick={(e) => gatherEngramsLoadout(e, { exotics: false })}>
+              <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
+            </span>
+          </li>
+        )}
+
+        <li className="loadout-set">
+          <span onClick={applyRandomLoadout}>
+            <AppIcon icon={faRandom} />
+            <span>
+              {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
+            </span>
+          </span>
+          {query.length === 0 && (
+            <span onClick={(e) => applyRandomLoadout(e, true)}>
+              <span>{t('Loadouts.WeaponsOnly')}</span>
+            </span>
+          )}
+        </li>
+
+        {!dimStore.isVault && (
+          <li className="loadout-set">
+            <span onClick={startFarming}>
+              <AppIcon icon={engramIcon} />
+              <span>{t('FarmingMode.FarmingMode')}</span>
+            </span>
+          </li>
+        )}
+
+        {previousLoadout && (
+          <li className="loadout-set">
+            <span
+              title={previousLoadout.name}
+              onClick={(e) => applyLoadout(previousLoadout, e, true)}
+            >
+              <AppIcon icon={undoIcon} />
+              {previousLoadout.name}
+            </span>
+            <span onClick={(e) => applyLoadout(previousLoadout, e)}>
+              <span>{t('Loadouts.RestoreAllItems')}</span>
+            </span>
+          </li>
+        )}
+
+        {loadouts.map((loadout) => (
+          <li key={loadout.id} className="loadout-set">
+            <span title={loadout.name} onClick={(e) => applyLoadout(loadout, e)}>
+              <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
+              {loadout.name}
+            </span>
+            <span
+              className="delete"
+              title={t('Loadouts.Delete')}
+              onClick={() => deleteExistingLoadout(loadout)}
+            >
+              <AppIcon icon={deleteIcon} />
+            </span>
+            <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>
+              <AppIcon icon={editIcon} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
