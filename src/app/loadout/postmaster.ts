@@ -1,12 +1,17 @@
 import { t } from 'app/i18next-t';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { getVault } from 'app/inventory/stores-helpers';
+import { ThunkDispatchProp } from 'app/store/types';
 import _ from 'lodash';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { moveItemTo, MoveReservations } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
+import { default as reduxStore } from '../store/store';
+
+// TODO: get rid of this
+const dispatch = reduxStore.dispatch as ThunkDispatchProp['dispatch'];
 
 export async function makeRoomForPostmaster(
   stores: DimStore[],
@@ -145,7 +150,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
       }
 
       try {
-        await moveItemTo(item, store, false, amount);
+        await dispatch(moveItemTo(item, store, false, amount));
         succeeded++;
       } catch (e) {
         // TODO: collect errors
@@ -185,10 +190,12 @@ async function moveItemsToVault(
       const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
       if (otherStoresWithSpace.length) {
-        await moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+        await dispatch(
+          moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+        );
         continue;
       }
     }
-    await moveItemTo(item, vault, false, item.amount, items, reservations);
+    await dispatch(moveItemTo(item, vault, false, item.amount, items, reservations));
   }
 }

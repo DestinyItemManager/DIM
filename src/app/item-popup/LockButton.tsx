@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -14,7 +15,7 @@ interface Props {
 
 export default function LockButton({ type, item }: Props) {
   const [locking, setLocking] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   const lockUnlock = async () => {
     if (locking) {

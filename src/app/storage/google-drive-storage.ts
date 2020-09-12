@@ -285,7 +285,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       } else {
         this.fileId = null;
         localStorage.removeItem('gdrive-fileid');
-        return this.getFileId().then(() => this._get(true));
+        return await this.getFileId().then(() => this._get(true));
       }
     }
   }
@@ -305,7 +305,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       } else {
         this.fileId = null;
         localStorage.removeItem('gdrive-fileid');
-        return this.getFileId().then(() => this._get(true));
+        return await this.getFileId().then(() => this._get(true));
       }
     }
   }

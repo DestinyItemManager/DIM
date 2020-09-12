@@ -477,7 +477,7 @@ function moveToStore(
           'to work around Bungie.net lock state bug'
         );
         try {
-          await setItemLockState(item, overrideLockState);
+          await dispatch(setItemLockState(item, overrideLockState));
         } catch (e) {
           console.error('Lock state override failed', e);
         }
@@ -864,7 +864,9 @@ function canMoveToStore(
       } else {
         // Make one move and start over!
         try {
-          await moveItemTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes);
+          await dispatch(
+            moveItemTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+          );
           return dispatch(canMoveToStore(item, store, amount, options));
         } catch (e) {
           if (numRetries < 3) {

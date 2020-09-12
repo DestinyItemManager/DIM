@@ -234,7 +234,7 @@ export async function transfer(
     ? pullFromPostmaster(httpAdapter, request)
     : transferItem(httpAdapter, request);
   try {
-    return response;
+    return await response;
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
   }

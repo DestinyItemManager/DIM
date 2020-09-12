@@ -302,12 +302,12 @@ async function applyLoadoutItems(
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            await moveItemTo(sourceItem, store, false, amountToMove, loadoutItemIds);
+            await dispatch(moveItemTo(sourceItem, store, false, amountToMove, loadoutItemIds));
           }
         }
       } else {
         // Pass in the list of items that shouldn't be moved away
-        await moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
+        await dispatch(moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds));
       }
     }
 
@@ -430,7 +430,9 @@ export async function clearItemsOffCharacter(
               getStore(stores, item.owner)!.name
             );
           }
-          await moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+          await dispatch(
+            moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+          );
           continue;
         } else if (vaultSpaceLeft === 0) {
           outOfSpaceWarning(store);
@@ -449,7 +451,7 @@ export async function clearItemsOffCharacter(
           getStore(stores, item.owner)!.name
         );
       }
-      await moveItemTo(item, vault, false, item.amount, items, reservations);
+      await dispatch(moveItemTo(item, vault, false, item.amount, items, reservations));
     } catch (e) {
       if (e.code === 'no-space') {
         outOfSpaceWarning(store);

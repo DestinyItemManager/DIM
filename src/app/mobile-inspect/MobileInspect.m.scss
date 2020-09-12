@@ -36,9 +36,6 @@ $animationSpeed: 150ms;
   top: 25%;
   backface-visibility: hidden;
   z-index: 13;
-}
-
-.mobileInspectSheet {
   animation: zoom $animationSpeed;
 }
 
