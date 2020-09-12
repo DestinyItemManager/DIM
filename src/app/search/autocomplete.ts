@@ -212,26 +212,29 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
 
     const typedToLower = typed.toLowerCase();
 
+    // because we are fighting against other elements for space in the suggestion dropdown,
+    // we will entirely skip "not" and "<=" and ">=" suggestions,
+    // unless the user seems to explicity be working toward them
+    const hasNotModifier = typedToLower.startsWith('not');
+    const includesAdvancedMath = typedToLower.endsWith('>') || typedToLower.endsWith('<');
+    const filterLowPrioritySuggestions = (s: string) =>
+      (hasNotModifier || !s.startsWith('not')) && (includesAdvancedMath || !s.endsWith('<'));
+
     // if there's already a colon typed, we are on a path, not wildly guessing,
-    // so only match from beginning of the strin
-    let words = typedToLower.includes(':')
+    // so only match from beginning of the typed string
+    let suggestions = (typedToLower.includes(':')
       ? // ("stat:" matches "stat:" but not "basestat:")
         searchConfig.keywords.filter((word) => word.startsWith(typedToLower))
       : // ("stat" matches "stat:" and "basestat:")
-        searchConfig.keywords.filter((word) => word.includes(typedToLower));
+        searchConfig.keywords.filter((word) => word.includes(typedToLower))
+    ).filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
-    words = words.sort(
+    suggestions = suggestions.sort(
       chainComparator(
-        // above all else, push "not" and "<=" and ">=" and "=" to the bottom. we discourage not,
-        // <= and >= are highly discoverable from < and >, and = is redundant
-        compareBy(
-          (word) =>
-            word.startsWith('not:') ||
-            word.endsWith('<=') ||
-            word.endsWith('>=') ||
-            word.endsWith('=')
-        ),
+        // above all else, push "not" and "<=" and ">=" and "=" to the bottom if they are present
+        // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
+        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
         // sort incomplete terms (ending with ':') to the front
         compareBy((word) => !word.endsWith(':')),
         // tags are UGC and therefore important
@@ -253,11 +256,11 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
       )
     );
     if (filterNames.includes(typedToLower.split(':')[0])) {
-      return words;
-    } else if (words.length) {
+      return suggestions;
+    } else if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
       // so prevent "what's been typed" from appearing in the returned suggestions form this function
-      const deDuped = new Set([typed, typedToLower, ...words]);
+      const deDuped = new Set([typed, typedToLower, ...suggestions]);
       deDuped.delete(typed);
       deDuped.delete(typedToLower);
       return [...deDuped];
