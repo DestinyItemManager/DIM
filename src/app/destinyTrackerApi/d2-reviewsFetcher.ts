@@ -1,6 +1,7 @@
 import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { ThunkResult } from 'app/store/types';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { D2Item } from '../inventory/item-types';
 import { reviewsLoaded } from '../item-review/actions';
 import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
@@ -34,7 +35,7 @@ export function getItemReviewsD2(
 
     const returnedReviewsData = await getItemReviewsPromise(item, platformSelection, mode);
     const reviewData = translateReviewResponse(returnedReviewsData);
-    markUserReview(reviewData);
+    markUserReview(currentAccountSelector(getState()), reviewData);
     await sortAndIgnoreReviews(reviewData);
     reviewData.lastUpdated = new Date();
 
@@ -118,14 +119,12 @@ async function sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
   }
 }
 
-function markUserReview(reviewData: D2ItemReviewResponse) {
-  const membershipInfo = getActivePlatform();
-
-  if (!membershipInfo) {
+function markUserReview(account: DestinyAccount | undefined, reviewData: D2ItemReviewResponse) {
+  if (!account) {
     return;
   }
 
-  const membershipId = membershipInfo.membershipId;
+  const membershipId = account.membershipId;
 
   reviewData.reviews.forEach((review) => {
     if (review.reviewer.membershipId === membershipId) {

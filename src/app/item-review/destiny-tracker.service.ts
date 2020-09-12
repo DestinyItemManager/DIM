@@ -1,3 +1,4 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { storesSelector } from 'app/inventory/selectors';
 import { settingsSelector } from 'app/settings/reducer';
 import { ThunkResult } from 'app/store/types';
@@ -5,7 +6,6 @@ import {
   DestinyVendorItemDefinition,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { Vendor } from '../destiny1/vendors/vendor.service';
 import {
   bulkFetch as bulkFetchD1,
@@ -48,7 +48,7 @@ export function submitReview(
 ): ThunkResult<any> {
   return async (dispatch, getState) => {
     if (settingsSelector(getState()).allowIdPostToDtr) {
-      const membershipInfo = getActivePlatform();
+      const membershipInfo = currentAccountSelector(getState());
 
       return dispatch(doSubmitReview(item, membershipInfo, userReview));
     }
@@ -118,7 +118,7 @@ export function fetchRatings(stores?: DimStore[]): ThunkResult<DtrRating[]> {
 export function reportReview(review: DimUserReview): ThunkResult<any> {
   return async (_dispatch, getState) => {
     if (settingsSelector(getState()).allowIdPostToDtr) {
-      const membershipInfo = getActivePlatform();
+      const membershipInfo = currentAccountSelector(getState());
 
       if (membershipInfo) {
         // TODO: dispatch actions to update state in reaction to report

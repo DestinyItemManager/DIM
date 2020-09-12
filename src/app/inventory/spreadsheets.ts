@@ -1,3 +1,4 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
@@ -12,7 +13,6 @@ import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getRating } from '../item-review/reducer';
 import { setItemNote, setItemTagsBulk } from './actions';
@@ -111,8 +111,8 @@ interface CSVRow {
 }
 
 export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
-  return async (dispatch) => {
-    const account = getActivePlatform();
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState());
     if (!account) {
       return;
     }

@@ -1,3 +1,5 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -19,7 +21,6 @@ import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { getPlatforms } from '../accounts/platforms';
 import { getDefinitions } from '../destiny2/d2-definitions';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
@@ -50,6 +51,7 @@ const classIcons = {
 };
 
 interface StoreProps {
+  currentAccount?: DestinyAccount;
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
@@ -64,6 +66,7 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
+    currentAccount: currentAccountSelector(state),
   };
 }
 
@@ -160,19 +163,21 @@ function SettingsPage({
   reviewModeOptions,
   storesLoaded,
   stores,
+  currentAccount,
   dispatch,
 }: Props) {
   useEffect(() => {
     dispatch(getDefinitions());
-    dispatch(getPlatforms()).then(() => {
-      const account = getActivePlatform();
-      if (account) {
-        account.destinyVersion === 2
-          ? D2StoresService.getStoresStream(account)
-          : D1StoresService.getStoresStream(account);
-      }
-    });
+    dispatch(getPlatforms());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentAccount) {
+      currentAccount.destinyVersion === 2
+        ? D2StoresService.getStoresStream(currentAccount)
+        : D1StoresService.getStoresStream(currentAccount);
+    }
+  }, [currentAccount]);
 
   const [languageChanged, setLanguageChanged] = useState(false);
 

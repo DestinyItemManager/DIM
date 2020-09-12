@@ -1,4 +1,5 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -58,6 +59,7 @@ export function setItemLockState(
   type: 'lock' | 'track' = 'lock'
 ): ThunkResult {
   return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
     // The state APIs require either the ID of the character that owns the item, or
     // the current character ID if the item is in the vault.
     const storeId =
@@ -65,12 +67,12 @@ export function setItemLockState(
 
     if (item.isDestiny2()) {
       if (type === 'lock') {
-        await d2SetLockState(storeId, item, state);
+        await d2SetLockState(account, storeId, item, state);
       } else {
-        await d2SetTrackedState(storeId, item, state);
+        await d2SetTrackedState(account, storeId, item, state);
       }
     } else if (item.isDestiny1()) {
-      await d1SetItemState(item, storeId, state, type);
+      await d1SetItemState(account, item, storeId, state, type);
     }
 
     if (type === 'lock') {
@@ -96,17 +98,15 @@ const throttledD2ReloadStores = _.throttle(() => D2StoresService.reloadStores(),
   trailing: false,
 });
 
-function equipApi(item: DimItem): (item: DimItem) => Promise<any> {
+function equipApi(item: DimItem): typeof d2equip {
   return item.destinyVersion === 2 ? d2equip : d1equip;
 }
 
-function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => Promise<DimItem[]> {
+function equipItemsApi(item: DimItem): typeof d2EquipItems {
   return item.destinyVersion === 2 ? d2EquipItems : d1EquipItems;
 }
 
-function transferApi(
-  item: DimItem
-): (item: DimItem, store: DimStore, amount: number) => Promise<any> {
+function transferApi(item: DimItem): typeof d2Transfer {
   return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
 }
 
@@ -380,7 +380,11 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
       return [equippedItem];
     }
 
-    const equippedItems = await equipItemsApi(items[0])(store, items);
+    const equippedItems = await equipItemsApi(items[0])(
+      currentAccountSelector(getState())!,
+      store,
+      items
+    );
     return equippedItems.map((i) => dispatch(updateItemModel(i, store, store, true)));
   };
 }
@@ -391,7 +395,7 @@ function equipItem(item: DimItem): ThunkResult<DimItem> {
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', store.name);
     }
-    await equipApi(item)(item);
+    await equipApi(item)(currentAccountSelector(getState())!, item);
     return dispatch(updateItemModel(item, store, store, true));
   };
 }
@@ -450,12 +454,12 @@ function moveToStore(
         : undefined;
 
     try {
-      await transferApi(item)(item, store, amount);
+      await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
       // Not sure why this happens - maybe out of sync game state?
       if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
         await dispatch(dequipItem(item));
-        await transferApi(item)(item, store, amount);
+        await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
       } else {
         throw e;
       }
