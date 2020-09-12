@@ -20,7 +20,6 @@ export function rangeStringToComparator(rangeString: string) {
 
   switch (operator) {
     case 'none':
-    case '=':
     case '':
       return (compare: number) => compare === comparisonValue;
     case '<':

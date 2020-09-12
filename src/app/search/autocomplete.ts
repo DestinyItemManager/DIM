@@ -213,12 +213,13 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     const typedToLower = typed.toLowerCase();
 
     // because we are fighting against other elements for space in the suggestion dropdown,
-    // we will entirely skip "not" and "<=" and ">=" suggestions,
+    // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
     // unless the user seems to explicity be working toward them
     const hasNotModifier = typedToLower.startsWith('not');
-    const includesAdvancedMath = typedToLower.endsWith('>') || typedToLower.endsWith('<');
+    const includesAdvancedMath =
+      typedToLower.endsWith(':') || typedToLower.endsWith('<') || typedToLower.endsWith('<');
     const filterLowPrioritySuggestions = (s: string) =>
-      (hasNotModifier || !s.startsWith('not')) && (includesAdvancedMath || !s.endsWith('<'));
+      (hasNotModifier || !s.startsWith('not')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
 
     // if there's already a colon typed, we are on a path, not wildly guessing,
     // so only match from beginning of the typed string
@@ -232,9 +233,11 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     // TODO: sort this first?? it depends on term in one place
     suggestions = suggestions.sort(
       chainComparator(
-        // above all else, push "not" and "<=" and ">=" and "=" to the bottom if they are present
+        // above all else, push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
         compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
+        // bring "is" filters to the front above multiple-ending stuff like "season"
+        compareBy((word) => !word.startsWith('is:')),
         // sort incomplete terms (ending with ':') to the front
         compareBy((word) => !word.endsWith(':')),
         // tags are UGC and therefore important
