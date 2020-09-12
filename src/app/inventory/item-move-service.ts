@@ -1,5 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -22,7 +23,7 @@ import {
 } from '../bungie-api/destiny2-api';
 import reduxStore from '../store/store';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { touch } from './actions';
+import { touch, touchItem } from './actions';
 import { D1StoresService } from './d1-stores';
 import { D2StoresService } from './d2-stores';
 import {
@@ -32,7 +33,7 @@ import {
   vaultDisplacePriority,
 } from './dim-item-info';
 import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { itemHashTagsSelector, itemInfosSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
@@ -47,26 +48,39 @@ export interface MoveReservations {
   };
 }
 
-export async function setItemLockState(
+/**
+ * Lock/unlock or track/untrack an item.
+ */
+export function setItemLockState(
   item: DimItem,
   state: boolean,
-  type: 'lock' | 'track' = 'lock',
-  getStores: () => DimStore[] = () => item.getStoresService().getStores()
-) {
-  const stores = getStores();
-  const store = item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
+  type: 'lock' | 'track' = 'lock'
+): ThunkResult {
+  return async (dispatch, getState) => {
+    // The state APIs require either the ID of the character that owns the item, or
+    // the current character ID if the item is in the vault.
+    const storeId =
+      item.owner === 'vault' ? getCurrentStore(storesSelector(getState()))!.id : item.owner;
 
-  if (item.isDestiny2()) {
-    if (type === 'lock') {
-      await d2SetLockState(store, item, state);
-    } else {
-      await d2SetTrackedState(store, item, state);
+    if (item.isDestiny2()) {
+      if (type === 'lock') {
+        await d2SetLockState(storeId, item, state);
+      } else {
+        await d2SetTrackedState(storeId, item, state);
+      }
+    } else if (item.isDestiny1()) {
+      await d1SetItemState(item, storeId, state, type);
     }
-  } else if (item.isDestiny1()) {
-    await d1SetItemState(item, store, state, type);
-  }
 
-  // TODO: dispatch an action to mutate the item!
+    if (type === 'lock') {
+      item.locked = state;
+    } else if (type === 'track') {
+      item.tracked = state;
+    }
+
+    // TODO: dispatch a better action to mutate the item!
+    dispatch(touchItem(item.id));
+  };
 }
 
 // We'll reload the stores to check if things have been

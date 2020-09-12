@@ -283,14 +283,14 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
  * Set the lock state of an item.
  */
 export function setLockState(
-  store: DimStore,
+  storeId: string,
   item: DimItem,
   lockState: boolean
 ): Promise<ServerResponse<number>> {
   const account = getActivePlatform();
 
   return setItemLockState(httpAdapter, {
-    characterId: store.isVault ? item.owner : store.id,
+    characterId: storeId,
     membershipType: account!.originalPlatformType,
     itemId: item.id,
     state: lockState,
@@ -301,7 +301,7 @@ export function setLockState(
  * Set the tracked state of an item.
  */
 export function setTrackedState(
-  store: DimStore,
+  storeId: string,
   item: DimItem,
   trackedState: boolean
 ): Promise<ServerResponse<number>> {
@@ -312,7 +312,7 @@ export function setTrackedState(
   }
 
   return setQuestTrackedState(httpAdapter, {
-    characterId: store.isVault ? item.owner : store.id,
+    characterId: storeId,
     membershipType: account!.originalPlatformType,
     itemId: item.id,
     state: trackedState,
