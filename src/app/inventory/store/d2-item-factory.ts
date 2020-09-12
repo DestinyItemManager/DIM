@@ -1,10 +1,5 @@
 import { t } from 'app/i18next-t';
-import {
-  ENGRAMS_BUCKET,
-  MODIFICATIONS_BUCKET,
-  SHADERS_BUCKET,
-  THE_FORBIDDEN_BUCKET,
-} from 'app/search/d2-known-values';
+import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -22,7 +17,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Events from 'data/d2/events.json';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
@@ -243,7 +238,7 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/687
   if (itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET) {
-    normalBucket = buckets.byHash[MODIFICATIONS_BUCKET];
+    normalBucket = buckets.byHash[BucketHashes.Modifications];
   }
 
   // item.bucket is where it IS right now
@@ -265,7 +260,7 @@ export function makeItem(
   // 34 = category hash for engrams
   const isEngram =
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
-    normalBucket.hash === ENGRAMS_BUCKET ||
+    normalBucket.hash === BucketHashes.Engrams ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
@@ -424,7 +419,7 @@ export function makeItem(
     createdItem.lockable ||
       createdItem.classified ||
       // Shaders
-      createdItem.bucket.hash === SHADERS_BUCKET
+      createdItem.bucket.hash === BucketHashes.Shaders_Equippable
   );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean(

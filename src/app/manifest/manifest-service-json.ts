@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 import { settingsSelector } from 'app/settings/reducer';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { dedupePromise } from 'app/utils/util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { del, get, set } from 'idb-keyval';
 import _ from 'lodash';
@@ -43,7 +43,7 @@ const tableTrimmers = {
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory!.bucketTypeHash !== SUBCLASS_BUCKET) {
+      if (def.inventory!.bucketTypeHash !== BucketHashes.Subclass) {
         def.talentGrid! = emptyObject();
       }
 

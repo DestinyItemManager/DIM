@@ -3,10 +3,10 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { DEFAULT_SHADER, SEASONAL_ARTIFACT_BUCKET } from '../d2-known-values';
+import { DEFAULT_SHADER } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
@@ -164,6 +164,6 @@ export function checkIfIsDupe(
     duplicates[dupeId]?.length > 1 &&
     !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
     item.hash !== DEFAULT_SHADER &&
-    item.bucket.hash !== SEASONAL_ARTIFACT_BUCKET
+    item.bucket.hash !== BucketHashes.SeasonalArtifact
   );
 }

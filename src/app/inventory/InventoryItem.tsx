@@ -1,6 +1,5 @@
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
@@ -151,7 +150,7 @@ export default function InventoryItem({
 export function borderless(item: DimItem) {
   return (
     (item.isDestiny2?.() &&
-      (item.bucket.hash === SUBCLASS_BUCKET ||
+      (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes?.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram
   );

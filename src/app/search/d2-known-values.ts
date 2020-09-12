@@ -1,5 +1,11 @@
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BreakerTypeHashes,
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 
 // ✨ magic values ✨
 // this file has non-programatically decided information
@@ -170,21 +176,12 @@ export const powerfulSources = [
 /** a weird bucket for holding dummies, which items show up in only temporarily */
 export const THE_FORBIDDEN_BUCKET = 2422292810;
 
-export const SHADERS_BUCKET = 2973005342;
-export const SUBCLASS_BUCKET = 3284755031;
-export const ENGRAMS_BUCKET = 375726501;
-export const MODIFICATIONS_BUCKET = 3313201758;
-export const CONSUMABLES_BUCKET = 1469714392;
-export const MATERIALS_BUCKET = 3865314626;
-export const SEASONAL_ARTIFACT_BUCKET = 1506418338;
-export const FINISHERS_BUCKET = 3683254069;
-
 export const armorBuckets = {
-  helmet: 3448274439,
-  gauntlets: 3551918588,
-  chest: 14239492,
-  leg: 20886954,
-  classitem: 1585787867,
+  helmet: BucketHashes.Helmet,
+  gauntlets: BucketHashes.Gauntlets,
+  chest: BucketHashes.ChestArmor,
+  leg: BucketHashes.LegArmor,
+  classitem: BucketHashes.ClassArmor,
 };
 
 //
@@ -254,13 +251,13 @@ export const damageNamesByEnum: Record<DamageType, string | null> = {
 };
 
 export const breakerTypes = {
-  barrier: 485622768,
-  antibarrier: 485622768,
-  shieldpiercing: 485622768,
-  overload: 2611060930,
-  disruption: 2611060930,
-  unstoppable: 3178805705,
-  stagger: 3178805705,
+  barrier: BreakerTypeHashes.ShieldPiercing,
+  antibarrier: BreakerTypeHashes.ShieldPiercing,
+  shieldpiercing: BreakerTypeHashes.ShieldPiercing,
+  overload: BreakerTypeHashes.Disruption,
+  disruption: BreakerTypeHashes.Disruption,
+  unstoppable: BreakerTypeHashes.Stagger,
+  stagger: BreakerTypeHashes.Stagger,
 };
 
 export const powerCapPlugSetHash = 573;

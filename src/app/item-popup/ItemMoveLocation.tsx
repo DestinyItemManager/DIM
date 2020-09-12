@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
-import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -66,8 +66,8 @@ export default function ItemMoveLocation({
     // Don't show "Store" for finishers, seasonal artifacts, or clan banners
     if (
       item.location.capacity === 1 ||
-      item.location.hash === SEASONAL_ARTIFACT_BUCKET ||
-      item.location.hash === FINISHERS_BUCKET
+      item.location.hash === BucketHashes.SeasonalArtifact ||
+      item.location.hash === BucketHashes.Finishers
     ) {
       return false;
     }
