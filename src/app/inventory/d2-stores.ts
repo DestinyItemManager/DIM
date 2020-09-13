@@ -2,7 +2,7 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
+import { ThunkResult } from 'app/store/types';
 import {
   DestinyCharacterComponent,
   DestinyCollectibleComponent,
@@ -15,11 +15,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
-import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -29,20 +26,17 @@ import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { getLight } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import store from '../store/store';
 import { reportException } from '../utils/exceptions';
 import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
-import { D2Store, D2StoreServiceType, D2Vault } from './store-types';
+import { D2Store, D2Vault } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems, resetIdTracker } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { getArtifactBonus } from './stores-helpers';
-
-const badDispatch = store.dispatch as ThunkDispatchProp['dispatch'];
 
 /**
  * Update the high level character information for all the stores
@@ -116,76 +110,6 @@ export function mergeCollectibles(
   });
 
   return allCollectibles;
-}
-
-export const D2StoresService = makeD2StoresService();
-
-/**
- * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
- * consolidate them, or at least organize them better.
- */
-function makeD2StoresService(): D2StoreServiceType {
-  // A subject that keeps track of the current account. Because it's a
-  // behavior subject, any new subscriber will always see its last
-  // value.
-  const accountStream = new BehaviorSubject<DestinyAccount | null>(null);
-
-  // The triggering observable for force-reloading stores.
-  const forceReloadTrigger = new Subject();
-
-  // A stream of stores that switches on account changes and supports reloading.
-  // This is a ConnectableObservable that must be connected to start.
-  const storesStream = accountStream.pipe(
-    // But also re-emit the current value of the account stream
-    // whenever the force reload triggers
-    merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
-    // Whenever either trigger happens, load stores
-    switchMap(() => badDispatch(loadStores())),
-    // Keep track of the last value for new subscribers
-    publishReplay(1)
-  ) as ConnectableObservable<D2Store[] | undefined>;
-
-  // TODO: If we can make the store structures immutable, we could use
-  //       distinctUntilChanged to avoid emitting store updates when
-  //       nothing changed!
-
-  const service = {
-    getStoresStream,
-    reloadStores,
-  };
-
-  return service;
-
-  /**
-   * Set the current account, and get a stream of stores updates.
-   * This will keep returning stores even if something else changes
-   * the account by also calling "storesStream". This won't force the
-   * stores to reload unless they haven't been loaded at all.
-   *
-   * @return a stream of store updates
-   */
-  function getStoresStream(account: DestinyAccount) {
-    accountStream.next(account);
-    // Start the stream the first time it's asked for. Repeated calls
-    // won't do anything.
-    storesStream.connect();
-    return storesStream;
-  }
-
-  /**
-   * Force the inventory and characters to reload.
-   * @return the new stores
-   */
-  function reloadStores() {
-    // adhere to the old contract by returning the next value as a
-    // promise We take 2 from the stream because the publishReplay
-    // will always return the latest value instantly, and we want the
-    // next value (the refreshed value). toPromise returns the last
-    // value in the sequence.
-    const promise = storesStream.pipe(take(2)).toPromise();
-    forceReloadTrigger.next(); // signal the force reload
-    return promise;
-  }
 }
 
 /**

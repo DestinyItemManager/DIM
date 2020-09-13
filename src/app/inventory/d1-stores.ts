@@ -1,10 +1,7 @@
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
+import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
-import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
-import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
@@ -18,76 +15,9 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { D1Item } from './item-types';
 import { bucketsSelector, storesSelector } from './selectors';
-import { D1Store, D1StoreServiceType, D1Vault, DimVault } from './store-types';
+import { D1Store, D1Vault, DimVault } from './store-types';
 import { processItems, resetIdTracker } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
-
-const badDispatch = store.dispatch as ThunkDispatchProp['dispatch'];
-
-export const D1StoresService = StoreService();
-
-function StoreService(): D1StoreServiceType {
-  // A subject that keeps track of the current account. Because it's a
-  // behavior subject, any new subscriber will always see its last
-  // value.
-  const accountStream = new BehaviorSubject<DestinyAccount | null>(null);
-
-  // The triggering observable for force-reloading stores.
-  const forceReloadTrigger = new Subject();
-
-  // A stream of stores that switches on account changes and supports reloading.
-  // This is a ConnectableObservable that must be connected to start.
-  const storesStream = accountStream.pipe(
-    // But also re-emit the current value of the account stream
-    // whenever the force reload triggers
-    merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
-    // Whenever either trigger happens, load stores
-    switchMap(() => loadingTracker.addPromise(badDispatch(loadStores()))),
-    // Keep track of the last value for new subscribers
-    publishReplay(1)
-  ) as ConnectableObservable<D1Store[] | undefined>;
-  // TODO: If we can make the store structures immutable, we could use
-  //       distinctUntilChanged to avoid emitting store updates when
-  //       nothing changed!
-
-  const service = {
-    getStoresStream,
-    reloadStores,
-  };
-
-  return service;
-
-  /**
-   * Set the current account, and get a stream of stores updates.
-   * This will keep returning stores even if something else changes
-   * the account by also calling "storesStream". This won't force the
-   * stores to reload unless they haven't been loaded at all.
-   *
-   * @return a stream of store updates
-   */
-  function getStoresStream(account: DestinyAccount) {
-    accountStream.next(account);
-    // Start the stream the first time it's asked for. Repeated calls
-    // won't do anything.
-    storesStream.connect();
-    return storesStream;
-  }
-
-  /**
-   * Force the inventory and characters to reload.
-   * @return the new stores
-   */
-  function reloadStores() {
-    // adhere to the old contract by returning the next value as a
-    // promise We take 2 from the stream because the publishReplay
-    // will always return the latest value instantly, and we want the
-    // next value (the refreshed value). toPromise returns the last
-    // value in the sequence.
-    const promise = storesStream.pipe(take(2)).toPromise();
-    forceReloadTrigger.next(); // signal the force reload
-    return promise;
-  }
-}
 
 /**
  * Returns a promise for a fresh view of the stores and their items.

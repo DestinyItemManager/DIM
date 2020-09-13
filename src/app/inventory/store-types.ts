@@ -6,31 +6,8 @@ import {
   DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import { ConnectableObservable } from 'rxjs';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { D1Item, D2Item, DimItem } from './item-types';
-
-/**
- * A generic store service that produces stores and items that are the same across D1 and D2. Use this
- * if you don't care about the differences between the two.
- */
-export interface StoreServiceType<StoreType = DimStore> {
-  /** A stream of store updates for a particular account. */
-  getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Reload inventory completely. */
-  reloadStores(): Promise<StoreType[] | undefined>;
-}
-
-/**
- * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
- */
-export type D2StoreServiceType = StoreServiceType<D2Store>;
-
-/**
- * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
- */
-export type D1StoreServiceType = StoreServiceType<D1Store>;
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,

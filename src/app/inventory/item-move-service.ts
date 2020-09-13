@@ -1,7 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { RootState, ThunkResult } from 'app/store/types';
+import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -26,8 +26,8 @@ import {
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { touch, touchItem } from './actions';
-import { D1StoresService } from './d1-stores';
-import { D2StoresService } from './d2-stores';
+import { loadStores as d1LoadStores } from './d1-stores';
+import { loadStores as d2LoadStores } from './d2-stores';
 import {
   characterDisplacePriority,
   getTag,
@@ -97,13 +97,21 @@ export function setItemLockState(
 // thrown away or moved and we just don't have up to date info. But let's
 // throttle these calls so we don't just keep refreshing over and over.
 // This needs to be up here because of how we return the service object.
-const throttledReloadStores = _.throttle(() => D1StoresService.reloadStores(), 10000, {
-  trailing: false,
-});
+const throttledReloadStores = _.throttle(
+  (dispatch: ThunkDispatchProp['dispatch']) => dispatch(d1LoadStores()),
+  10000,
+  {
+    trailing: false,
+  }
+);
 
-const throttledD2ReloadStores = _.throttle(() => D2StoresService.reloadStores(), 10000, {
-  trailing: false,
-});
+const throttledD2ReloadStores = _.throttle(
+  (dispatch: ThunkDispatchProp['dispatch']) => dispatch(d2LoadStores()),
+  10000,
+  {
+    trailing: false,
+  }
+);
 
 function equipApi(item: DimItem): typeof d2equip {
   return item.destinyVersion === 2 ? d2equip : d1equip;
@@ -898,8 +906,9 @@ function canMoveToStore(
     } else {
       // Refresh the stores to see if anything has changed
       const reloadedStores =
-        (await (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores())) ||
-        storesSelector(getState());
+        (await (item.destinyVersion === 2
+          ? throttledD2ReloadStores(dispatch)
+          : throttledReloadStores(dispatch))) || storesSelector(getState());
       const storeId = store.id;
       options.triedFallback = true;
       const reloadedStore = reloadedStores.find((s) => s.id === storeId);

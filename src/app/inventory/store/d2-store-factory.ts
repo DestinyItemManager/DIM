@@ -10,7 +10,6 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { D2StoresService } from '../d2-stores';
 import { D2Item } from '../item-types';
 import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
 
@@ -71,10 +70,6 @@ export const StoreProto = {
 
   isDestiny2(this: D2Store) {
     return true;
-  },
-
-  getStoresService() {
-    return D2StoresService;
   },
 };
 

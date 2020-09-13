@@ -4,7 +4,6 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { D1StoresService } from '../d1-stores';
 import { D1Item } from '../item-types';
 import { D1Store, D1Vault, DimVault } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
@@ -63,10 +62,6 @@ export const StoreProto = {
 
   isDestiny2(this: D1Store) {
     return false;
-  },
-
-  getStoresService() {
-    return D1StoresService;
   },
 };
 
