@@ -1,3 +1,5 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { BehaviorSubject, ConnectableObservable, Subject } from 'rxjs';
 import { merge, publishReplay, switchMap, take } from 'rxjs/operators';
@@ -19,6 +21,8 @@ import { D1Store, D1StoreServiceType, D1Vault, DimVault } from './store-types';
 import { processItems, resetIdTracker } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 
+const badDispatch = store.dispatch as ThunkDispatchProp['dispatch'];
+
 export const D1StoresService = StoreService();
 
 function StoreService(): D1StoreServiceType {
@@ -37,10 +41,10 @@ function StoreService(): D1StoreServiceType {
     // whenever the force reload triggers
     merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
     // Whenever either trigger happens, load stores
-    switchMap(loadingTracker.trackPromise(loadStores)),
+    switchMap(() => loadingTracker.addPromise(badDispatch(loadStores()))),
     // Keep track of the last value for new subscribers
     publishReplay(1)
-  ) as ConnectableObservable<D1Store[] | undefined>;
+  ) as ConnectableObservable<void>;
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
   //       nothing changed!
@@ -73,7 +77,7 @@ function StoreService(): D1StoreServiceType {
    * Force the inventory and characters to reload.
    * @return the new stores
    */
-  function reloadStores(): Promise<D1Store[] | undefined> {
+  function reloadStores() {
     // adhere to the old contract by returning the next value as a
     // promise We take 2 from the stream because the publishReplay
     // will always return the latest value instantly, and we want the
@@ -87,65 +91,71 @@ function StoreService(): D1StoreServiceType {
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account: DestinyAccount): Promise<D1Store[] | undefined> {
-    resetIdTracker();
+  function loadStores(): ThunkResult<D1Store[] | undefined> {
+    return async (dispatch, getState) => {
+      const account = currentAccountSelector(getState());
+      if (!account) {
+        return;
+      }
+      resetIdTracker();
 
-    const reloadPromise = Promise.all([
-      (store.dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
-      store.dispatch(loadNewItems(account)),
-      getStores(account),
-    ])
-      .then(([defs, , rawStores]) => {
-        const lastPlayedDate = findLastPlayedDate(rawStores);
-        const buckets = bucketsSelector(store.getState())!;
+      const reloadPromise = Promise.all([
+        (dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
+        dispatch(loadNewItems(account)),
+        getStores(account),
+      ])
+        .then(([defs, , rawStores]) => {
+          const lastPlayedDate = findLastPlayedDate(rawStores);
+          const buckets = bucketsSelector(store.getState())!;
 
-        // Currencies object gets mutated by processStore
-        const currencies: DimVault['currencies'] = [];
+          // Currencies object gets mutated by processStore
+          const currencies: DimVault['currencies'] = [];
 
-        const processStorePromises = Promise.all(
-          _.compact(
-            (rawStores as any[]).map((raw) =>
-              processStore(raw, defs, buckets, currencies, lastPlayedDate)
+          const processStorePromises = Promise.all(
+            _.compact(
+              (rawStores as any[]).map((raw) =>
+                processStore(raw, defs, buckets, currencies, lastPlayedDate)
+              )
             )
-          )
-        );
+          );
 
-        return processStorePromises;
-      })
-      .then((stores) => {
-        if ($featureFlags.reviewsEnabled) {
-          store.dispatch(fetchRatings(stores));
-        }
+          return processStorePromises;
+        })
+        .then((stores) => {
+          if ($featureFlags.reviewsEnabled) {
+            dispatch(fetchRatings(stores));
+          }
 
-        store.dispatch(cleanInfos(stores));
+          dispatch(cleanInfos(stores));
 
-        // Let our styling know how many characters there are
-        document
-          .querySelector('html')!
-          .style.setProperty('--num-characters', String(stores.length - 1));
+          // Let our styling know how many characters there are
+          document
+            .querySelector('html')!
+            .style.setProperty('--num-characters', String(stores.length - 1));
 
-        store.dispatch(update({ stores }));
+          dispatch(update({ stores }));
 
-        return stores;
-      })
-      .catch((e) => {
-        console.error('Error loading stores', e);
-        reportException('D1StoresService', e);
-        if (storesSelector(store.getState()).length > 0) {
-          // don't replace their inventory with the error, just notify
-          showNotification(bungieErrorToaster(e));
-        } else {
-          store.dispatch(error(e));
-        }
-        // It's important that we swallow all errors here - otherwise
-        // our observable will fail on the first error. We could work
-        // around that with some rxjs operators, but it's easier to
-        // just make this never fail.
-        return undefined;
-      });
+          return stores;
+        })
+        .catch((e) => {
+          console.error('Error loading stores', e);
+          reportException('D1StoresService', e);
+          if (storesSelector(store.getState()).length > 0) {
+            // don't replace their inventory with the error, just notify
+            showNotification(bungieErrorToaster(e));
+          } else {
+            dispatch(error(e));
+          }
+          // It's important that we swallow all errors here - otherwise
+          // our observable will fail on the first error. We could work
+          // around that with some rxjs operators, but it's easier to
+          // just make this never fail.
+          return undefined;
+        });
 
-    loadingTracker.addPromise(reloadPromise);
-    return reloadPromise;
+      loadingTracker.addPromise(reloadPromise);
+      return reloadPromise;
+    };
   }
 
   /**

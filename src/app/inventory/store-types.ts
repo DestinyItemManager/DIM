@@ -19,9 +19,9 @@ export interface StoreServiceType<StoreType = DimStore> {
   /** Get a list of all characters plus the vault. */
   getStores(): StoreType[];
   /** A stream of store updates for a particular account. */
-  getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
+  getStoresStream(account: DestinyAccount): ConnectableObservable<void>;
   /** Reload inventory completely. */
-  reloadStores(): Promise<StoreType[] | undefined>;
+  reloadStores(): Promise<void>;
 }
 
 /**

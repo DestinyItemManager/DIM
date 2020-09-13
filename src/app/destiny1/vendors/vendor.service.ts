@@ -1,5 +1,8 @@
-import { bucketsSelector } from 'app/inventory/selectors';
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getVault } from 'app/inventory/stores-helpers';
+import { DtrRating } from 'app/item-review/dtr-api-types';
+import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
 import _ from 'lodash';
@@ -13,9 +16,11 @@ import { D1Store } from '../../inventory/store-types';
 import { processItems } from '../../inventory/store/d1-item-factory';
 import { updateVendorRankings } from '../../item-review/destiny-tracker.service';
 import { loadingTracker } from '../../shell/loading-tracker';
-import { default as rxStore, default as store } from '../../store/store';
+import { default as rxStore } from '../../store/store';
 import { D1ManifestDefinitions, getDefinitions } from '../d1-definitions';
 import { factionAligned } from '../d1-factions';
+
+const badDispatch = rxStore.dispatch as ThunkDispatchProp['dispatch'];
 
 /*
 const allVendors = [
@@ -127,7 +132,7 @@ export interface VendorServiceType {
   getVendorsStream(account: DestinyAccount): Observable<[D1Store[], this['vendors']]>;
   reloadVendors(): void;
   getVendors(): this['vendors'];
-  requestRatings(): Promise<void>;
+  requestRatings(): Promise<DtrRating[]>;
   countCurrencies(
     stores: D1Store[],
     vendors: this['vendors']
@@ -175,7 +180,7 @@ function VendorService(): VendorServiceType {
       D1StoresService.getStoresStream(account).pipe(map((stores) => [account, stores]))
     ),
     filter(([_, stores]) => Boolean(stores)),
-    switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores)),
+    switchMap(() => badDispatch(loadVendors())),
     // Keep track of the last value for new subscribers
     publishReplay(1)
   ) as ConnectableObservable<
@@ -212,64 +217,62 @@ function VendorService(): VendorServiceType {
   /**
    * Returns a promise for a fresh view of the vendors and their items.
    */
-  function loadVendors(
-    account: DestinyAccount,
-    stores: D1Store[]
-  ): Promise<[D1Store[], { [vendorHash: number]: Vendor }]> {
-    const characters = stores.filter((s) => !s.isVault);
+  function loadVendors(): ThunkResult<[D1Store[], { [vendorHash: number]: Vendor }]> {
+    return async (dispatch, getState) => {
+      const account = currentAccountSelector(getState())!;
+      const stores = storesSelector(getState()) as D1Store[];
+      const characters = stores.filter((s) => !s.isVault);
+      const reloadPromise = dispatch(getDefinitions())
+        .then((defs) => {
+          // Narrow down to only visible vendors (not packages and such)
+          const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
 
-    const reloadPromise = ((store.dispatch(getDefinitions()) as any) as Promise<
-      D1ManifestDefinitions
-    >)
-      .then((defs) => {
-        // Narrow down to only visible vendors (not packages and such)
-        const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
+          service.totalVendors = characters.length * (vendorList.length - vendorDenyList.length);
+          service.loadedVendors = 0;
 
-        service.totalVendors = characters.length * (vendorList.length - vendorDenyList.length);
-        service.loadedVendors = 0;
+          return Promise.all(
+            vendorList.flatMap(async (vendorDef) => {
+              if (vendorDenyList.includes(vendorDef.hash)) {
+                return null;
+              }
 
-        return Promise.all(
-          vendorList.flatMap(async (vendorDef) => {
-            if (vendorDenyList.includes(vendorDef.hash)) {
-              return null;
-            }
-
-            if (
-              service.vendors[vendorDef.hash] &&
-              stores.every((store) =>
-                cachedVendorUpToDate(
-                  service.vendors[vendorDef.hash].cacheKeys[store.id],
-                  store,
-                  vendorDef
+              if (
+                service.vendors[vendorDef.hash] &&
+                stores.every((store) =>
+                  cachedVendorUpToDate(
+                    service.vendors[vendorDef.hash].cacheKeys[store.id],
+                    store,
+                    vendorDef
+                  )
                 )
-              )
-            ) {
-              service.loadedVendors++;
-              return service.vendors[vendorDef.hash];
-            } else {
-              return Promise.all(
-                characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
-              ).then((vendors) => {
-                const nonNullVendors = _.compact(vendors);
-                if (nonNullVendors.length) {
-                  const mergedVendor = mergeVendors(_.compact(vendors));
-                  service.vendors[mergedVendor.hash] = mergedVendor;
-                } else {
-                  delete service.vendors[vendorDef.hash];
-                }
-              });
-            }
-          })
-        );
-      })
-      .then(() => {
-        service.vendorsLoaded = true;
-        fulfillRatingsRequest();
-        return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];
-      });
+              ) {
+                service.loadedVendors++;
+                return service.vendors[vendorDef.hash];
+              } else {
+                return Promise.all(
+                  characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
+                ).then((vendors) => {
+                  const nonNullVendors = _.compact(vendors);
+                  if (nonNullVendors.length) {
+                    const mergedVendor = mergeVendors(_.compact(vendors));
+                    service.vendors[mergedVendor.hash] = mergedVendor;
+                  } else {
+                    delete service.vendors[vendorDef.hash];
+                  }
+                });
+              }
+            })
+          );
+        })
+        .then(() => {
+          service.vendorsLoaded = true;
+          dispatch(fulfillRatingsRequest());
+          return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];
+        });
 
-    loadingTracker.addPromise(reloadPromise);
-    return reloadPromise;
+      loadingTracker.addPromise(reloadPromise);
+      return reloadPromise;
+    };
   }
 
   function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
@@ -540,15 +543,18 @@ function VendorService(): VendorServiceType {
   // TODO: do this with another observable!
   function requestRatings() {
     _ratingsRequested = true;
-    return fulfillRatingsRequest();
+    return badDispatch(fulfillRatingsRequest());
   }
 
-  async function fulfillRatingsRequest() {
-    if ($featureFlags.reviewsEnabled && service.vendorsLoaded && _ratingsRequested) {
-      // TODO: Throttle this. Right now we reload this on every page
-      // view and refresh of the vendors page.
-      store.dispatch(updateVendorRankings(service.vendors));
-    }
+  function fulfillRatingsRequest(): ThunkResult<DtrRating[]> {
+    return async (dispatch) => {
+      if ($featureFlags.reviewsEnabled && service.vendorsLoaded && _ratingsRequested) {
+        // TODO: Throttle this. Right now we reload this on every page
+        // view and refresh of the vendors page.
+        return dispatch(updateVendorRankings(service.vendors));
+      }
+      return [];
+    };
   }
 
   /**

@@ -7,7 +7,7 @@ import { refresh$ } from 'app/shell/refresh';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { Location } from 'history';
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -45,24 +45,16 @@ function mapStateToProps() {
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
-  useSubscription(
-    useCallback(
-      () =>
-        D2StoresService.getStoresStream(account).subscribe((stores) => {
-          if (!stores || !stores.length) {
-            return;
-          }
-        }),
-      [account]
-    )
+  useSubscription(() =>
+    refresh$.subscribe(() => queueAction<any>(() => D2StoresService.reloadStores()))
   );
 
-  useSubscription(
-    useCallback(
-      () => refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
-      []
-    )
-  );
+  useEffect(() => {
+    if (!stores.length) {
+      // TODO: Dispatch an action to load stores instead
+      D2StoresService.getStoresStream(account);
+    }
+  }, [account, stores]);
 
   if (!stores || !stores.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
