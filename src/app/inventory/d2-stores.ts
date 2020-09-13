@@ -1,7 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import { ThunkResult } from 'app/store/types';
+import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import {
   DestinyCharacterComponent,
   DestinyCollectibleComponent,
@@ -40,6 +40,8 @@ import { getCharacterStatsData as getD1CharacterStatsData } from './store/charac
 import { processItems, resetIdTracker } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { getArtifactBonus } from './stores-helpers';
+
+const badDispatch = store.dispatch as ThunkDispatchProp['dispatch'];
 
 /**
  * Update the high level character information for all the stores
@@ -137,7 +139,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // whenever the force reload triggers
     merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
     // Whenever either trigger happens, load stores
-    switchMap(loadingTracker.trackPromise(loadStores)),
+    switchMap(() => loadingTracker.addPromise(badDispatch(loadStores()))),
     // Keep track of the last value for new subscribers
     publishReplay(1)
   ) as ConnectableObservable<D2Store[] | undefined>;
@@ -188,93 +190,99 @@ function makeD2StoresService(): D2StoreServiceType {
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
-    resetIdTracker();
+  function loadStores(): ThunkResult<D2Store[] | undefined> {
+    return async (dispatch, getState) => {
+      const account = currentAccountSelector(getState());
+      if (!account) {
+        return;
+      }
+      resetIdTracker();
 
-    try {
-      const [defs, , profileInfo] = await Promise.all([
-        (store.dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
-        store.dispatch(loadNewItems(account)),
-        getStores(account),
-      ]);
-      const buckets = bucketsSelector(store.getState())!;
-      console.time('Process inventory');
+      try {
+        const [defs, , profileInfo] = await Promise.all([
+          (dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
+          dispatch(loadNewItems(account)),
+          getStores(account),
+        ]);
+        const buckets = bucketsSelector(getState())!;
+        console.time('Process inventory');
 
-      // TODO: components may be hidden (privacy)
+        // TODO: components may be hidden (privacy)
 
-      if (
-        !profileInfo.profileInventory.data ||
-        !profileInfo.characterInventories.data ||
-        !profileInfo.characters.data
-      ) {
-        console.error(
-          'Vault or character inventory was missing - bailing in order to avoid corruption'
+        if (
+          !profileInfo.profileInventory.data ||
+          !profileInfo.characterInventories.data ||
+          !profileInfo.characters.data
+        ) {
+          console.error(
+            'Vault or character inventory was missing - bailing in order to avoid corruption'
+          );
+          throw new Error(t('BungieService.Difficulties'));
+        }
+
+        const lastPlayedDate = findLastPlayedDate(profileInfo);
+
+        const mergedCollectibles = mergeCollectibles(
+          profileInfo.profileCollectibles,
+          profileInfo.characterCollectibles
         );
-        throw new Error(t('BungieService.Difficulties'));
+
+        const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
+
+        const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
+          processCharacter(
+            defs,
+            buckets,
+            characterId,
+            profileInfo,
+            mergedCollectibles,
+            lastPlayedDate
+          )
+        );
+
+        const stores = [...characters, vault];
+
+        updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
+
+        if ($featureFlags.reviewsEnabled) {
+          dispatch(fetchRatings(stores));
+        }
+
+        dispatch(cleanInfos(stores));
+
+        for (const s of stores) {
+          updateBasePower(stores, s, defs);
+        }
+
+        // Let our styling know how many characters there are
+        // TODO: this should be an effect on the stores component, except it's also
+        // used on D1 activities page
+        document
+          .querySelector('html')!
+          .style.setProperty('--num-characters', String(stores.length - 1));
+        console.timeEnd('Process inventory');
+
+        console.time('Inventory state update');
+        dispatch(update({ stores, profileResponse: profileInfo }));
+        console.timeEnd('Inventory state update');
+
+        return stores;
+      } catch (e) {
+        console.error('Error loading stores', e);
+        reportException('d2stores', e);
+        if (storesSelector(getState()).length > 0) {
+          // don't replace their inventory with the error, just notify
+          showNotification(bungieErrorToaster(e));
+        } else {
+          dispatch(error(e));
+        }
+        // It's important that we swallow all errors here - otherwise
+        // our observable will fail on the first error. We could work
+        // around that with some rxjs operators, but it's easier to
+        // just make this never fail.
+        return undefined;
       }
-
-      const lastPlayedDate = findLastPlayedDate(profileInfo);
-
-      const mergedCollectibles = mergeCollectibles(
-        profileInfo.profileCollectibles,
-        profileInfo.characterCollectibles
-      );
-
-      const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
-
-      const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-        processCharacter(
-          defs,
-          buckets,
-          characterId,
-          profileInfo,
-          mergedCollectibles,
-          lastPlayedDate
-        )
-      );
-
-      const stores = [...characters, vault];
-
-      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
-
-      if ($featureFlags.reviewsEnabled) {
-        store.dispatch(fetchRatings(stores));
-      }
-
-      store.dispatch(cleanInfos(stores));
-
-      for (const s of stores) {
-        updateBasePower(stores, s, defs);
-      }
-
-      // Let our styling know how many characters there are
-      // TODO: this should be an effect on the stores component, except it's also
-      // used on D1 activities page
-      document
-        .querySelector('html')!
-        .style.setProperty('--num-characters', String(stores.length - 1));
-      console.timeEnd('Process inventory');
-
-      console.time('Inventory state update');
-      store.dispatch(update({ stores, profileResponse: profileInfo }));
-      console.timeEnd('Inventory state update');
-
-      return stores;
-    } catch (e) {
-      console.error('Error loading stores', e);
-      reportException('d2stores', e);
-      if (storesSelector(store.getState()).length > 0) {
-        // don't replace their inventory with the error, just notify
-        showNotification(bungieErrorToaster(e));
-      } else {
-        store.dispatch(error(e));
-      }
-      // It's important that we swallow all errors here - otherwise
-      // our observable will fail on the first error. We could work
-      // around that with some rxjs operators, but it's easier to
-      // just make this never fail.
-      return undefined;
-    }
+    };
   }
 
   /**
