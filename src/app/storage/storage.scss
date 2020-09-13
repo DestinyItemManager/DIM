@@ -36,23 +36,6 @@
     padding-left: 2em;
   }
 
-  .google-user {
-    margin: 8px 0;
-    overflow: hidden;
-    img {
-      border-radius: 50%;
-      float: left;
-      margin-right: 8px;
-      height: 32px;
-      width: 32px;
-    }
-    div {
-      &:nth-child(2) {
-        font-weight: bold;
-      }
-    }
-  }
-
   .storage-guage {
     flex: 1;
     background-color: rgba(0, 0, 0, 0.6);

@@ -22,7 +22,6 @@
     "$DIM_FLAVOR": "readonly",
     "$DIM_VERSION": "readonly",
     "$DIM_BUILD_DATE": "readonly",
-    "$GOOGLE_DRIVE_CLIENT_ID": "readonly",
     "$DIM_WEB_API_KEY": "readonly",
     "$DIM_WEB_CLIENT_ID": "readonly",
     "$DIM_WEB_CLIENT_SECRET": "readonly",

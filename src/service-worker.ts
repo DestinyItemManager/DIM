@@ -33,7 +33,7 @@ registerRoute(
 // Since we're a single page app, route all navigations to /index.html
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
-  // These have their own pages (return.html and gdrive-return.html)
+  // These have their own pages (return.html)
   // This regex matches on query string too, so no anchors!
   denylist: [/return\.html/, /\.well-known/, /\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$/],
 });

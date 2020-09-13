@@ -16,10 +16,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { exportBackupData } from './export-data';
 import ImportExport from './ImportExport';
-import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import LocalStorageInfo from './LocalStorageInfo';
 import './storage.scss';
-import { DimData } from './sync.service';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -66,7 +64,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     }
   };
 
-  const onImportData = async (data: DimData | ExportResponse) => {
+  const onImportData = async (data: ExportResponse) => {
     if (confirm(t('Storage.ImportConfirmDimApi'))) {
       await dispatch(importDataBackup(data));
     }
@@ -121,7 +119,6 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       )}
       <LocalStorageInfo showDetails={!apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      <LegacyGoogleDriveSettings onImportData={onImportData} />
     </section>
   );
 }
