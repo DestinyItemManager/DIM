@@ -196,7 +196,6 @@ function mapStateToProps() {
             plugSetHash,
           }))
           .filter(
-            // I think this should return armour 1.5 mods (i.e. forsaken mods)
             (i) =>
               i.item.inventory!.tierType !== TierType.Common &&
               !i.item.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
