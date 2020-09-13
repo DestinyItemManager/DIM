@@ -1,3 +1,4 @@
+import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
@@ -139,7 +140,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // whenever the force reload triggers
     merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
     // Whenever either trigger happens, load stores
-    switchMap(() => loadingTracker.addPromise(badDispatch(loadStores()))),
+    switchMap(() => badDispatch(loadStores())),
     // Keep track of the last value for new subscribers
     publishReplay(1)
   ) as ConnectableObservable<D2Store[] | undefined>;
@@ -185,17 +186,26 @@ function makeD2StoresService(): D2StoreServiceType {
     forceReloadTrigger.next(); // signal the force reload
     return promise;
   }
+}
 
-  /**
-   * Returns a promise for a fresh view of the stores and their items.
-   */
-  function loadStores(): ThunkResult<D2Store[] | undefined> {
-    return async (dispatch, getState) => {
-      const account = currentAccountSelector(getState());
+/**
+ * Returns a promise for a fresh view of the stores and their items.
+ */
+export function loadStores(): ThunkResult<D2Store[] | undefined> {
+  return async (dispatch, getState) => {
+    const promise = (async () => {
+      let account = currentAccountSelector(getState());
       if (!account) {
-        return;
+        // TODO: throw here?
+        await dispatch(getPlatforms());
+        account = currentAccountSelector(getState());
+        if (!account) {
+          return;
+        }
       }
       resetIdTracker();
+
+      // TODO: if we've already loaded profile recently, don't load it again
 
       try {
         const [defs, , profileInfo] = await Promise.all([
@@ -203,6 +213,9 @@ function makeD2StoresService(): D2StoreServiceType {
           dispatch(loadNewItems(account)),
           getStores(account),
         ]);
+        if (!defs || !profileInfo) {
+          return;
+        }
         const buckets = bucketsSelector(getState())!;
         console.time('Process inventory');
 
@@ -281,210 +294,211 @@ function makeD2StoresService(): D2StoreServiceType {
         // just make this never fail.
         return undefined;
       }
-    };
+    })();
+    loadingTracker.addPromise(promise);
+    return promise;
+  };
+}
+
+/**
+ * Process a single character from its raw form to a DIM store, with all the items.
+ */
+function processCharacter(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  characterId: string,
+  profileInfo: DestinyProfileResponse,
+  mergedCollectibles: {
+    [hash: number]: DestinyCollectibleComponent;
+  },
+  lastPlayedDate: Date
+): D2Store {
+  const character = profileInfo.characters.data![characterId];
+  const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
+  const profileInventory = profileInfo.profileInventory.data?.items || [];
+  const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
+  const itemComponents = profileInfo.itemComponents;
+  const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
+  const uninstancedItemObjectives =
+    profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
+
+  const store = makeCharacter(defs, character, lastPlayedDate);
+
+  // This is pretty much just needed for the xp bar under the character header
+  store.progression = progressions ? { progressions: Object.values(progressions) } : null;
+
+  // We work around the weird account-wide buckets by assigning them to the current character
+  const items = characterInventory.slice();
+  for (const k in characterEquipment) {
+    items.push(characterEquipment[k]);
   }
 
-  /**
-   * Process a single character from its raw form to a DIM store, with all the items.
-   */
-  function processCharacter(
-    defs: D2ManifestDefinitions,
-    buckets: InventoryBuckets,
-    characterId: string,
-    profileInfo: DestinyProfileResponse,
-    mergedCollectibles: {
-      [hash: number]: DestinyCollectibleComponent;
-    },
-    lastPlayedDate: Date
-  ): D2Store {
-    const character = profileInfo.characters.data![characterId];
-    const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
-    const profileInventory = profileInfo.profileInventory.data?.items || [];
-    const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
-    const itemComponents = profileInfo.itemComponents;
-    const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
-    const uninstancedItemObjectives =
-      profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
-
-    const store = makeCharacter(defs, character, lastPlayedDate);
-
-    // This is pretty much just needed for the xp bar under the character header
-    store.progression = progressions ? { progressions: Object.values(progressions) } : null;
-
-    // We work around the weird account-wide buckets by assigning them to the current character
-    const items = characterInventory.slice();
-    for (const k in characterEquipment) {
-      items.push(characterEquipment[k]);
-    }
-
-    if (store.current) {
-      for (const i of profileInventory) {
-        const bucket = buckets.byHash[i.bucketHash];
-        // items that can be stored in a vault
-        if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
-          items.push(i);
-        }
-      }
-    }
-
-    const processedItems = processItems(
-      defs,
-      buckets,
-      store,
-      items,
-      itemComponents,
-      mergedCollectibles,
-      uninstancedItemObjectives
-    );
-    store.items = processedItems;
-    // by type-bucket
-    store.buckets = _.groupBy(store.items, (i) => i.location.hash);
-    // Fill in any missing buckets
-    Object.values(buckets.byType).forEach((bucket) => {
-      if (!store.buckets[bucket.hash]) {
-        store.buckets[bucket.hash] = [];
-      }
-    });
-    return store;
-  }
-
-  function processVault(
-    defs: D2ManifestDefinitions,
-    buckets: InventoryBuckets,
-    profileInfo: DestinyProfileResponse,
-    mergedCollectibles: {
-      [hash: number]: DestinyCollectibleComponent;
-    }
-  ): D2Vault {
-    const profileInventory = profileInfo.profileInventory.data
-      ? profileInfo.profileInventory.data.items
-      : [];
-    const profileCurrencies = profileInfo.profileCurrencies.data
-      ? profileInfo.profileCurrencies.data.items
-      : [];
-    const itemComponents = profileInfo.itemComponents;
-
-    const store = makeVault(defs, profileCurrencies);
-
-    const items: DestinyItemComponent[] = [];
+  if (store.current) {
     for (const i of profileInventory) {
       const bucket = buckets.byHash[i.bucketHash];
-      // items that cannot be stored in the vault, and are therefore *in* a vault
-      if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+      // items that can be stored in a vault
+      if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
         items.push(i);
       }
     }
-
-    const processedItems = processItems(
-      defs,
-      buckets,
-      store,
-      items,
-      itemComponents,
-      mergedCollectibles
-    );
-    store.items = processedItems;
-    // by type-bucket
-    store.buckets = _.groupBy(store.items, (i) => i.location.hash);
-    store.vaultCounts = {};
-    // Fill in any missing buckets
-    Object.values(buckets.byType).forEach((bucket) => {
-      if (!store.buckets[bucket.hash]) {
-        store.buckets[bucket.hash] = [];
-      }
-      if (bucket.vaultBucket) {
-        const vaultBucketId = bucket.vaultBucket.hash;
-        store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
-          count: 0,
-          bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
-        };
-        store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
-      }
-    });
-    return store;
   }
 
-  /**
-   * Find the date of the most recently played character.
-   */
-  function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-    return Object.values(profileInfo.characters.data!).reduce(
-      (memo: Date, character: DestinyCharacterComponent) => {
-        const d1 = new Date(character.dateLastPlayed);
-        return memo ? (d1 >= memo ? d1 : memo) : d1;
-      },
-      new Date(0)
-    );
+  const processedItems = processItems(
+    defs,
+    buckets,
+    store,
+    items,
+    itemComponents,
+    mergedCollectibles,
+    uninstancedItemObjectives
+  );
+  store.items = processedItems;
+  // by type-bucket
+  store.buckets = _.groupBy(store.items, (i) => i.location.hash);
+  // Fill in any missing buckets
+  Object.values(buckets.byType).forEach((bucket) => {
+    if (!store.buckets[bucket.hash]) {
+      store.buckets[bucket.hash] = [];
+    }
+  });
+  return store;
+}
+
+function processVault(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  profileInfo: DestinyProfileResponse,
+  mergedCollectibles: {
+    [hash: number]: DestinyCollectibleComponent;
   }
+): D2Vault {
+  const profileInventory = profileInfo.profileInventory.data
+    ? profileInfo.profileInventory.data.items
+    : [];
+  const profileCurrencies = profileInfo.profileCurrencies.data
+    ? profileInfo.profileCurrencies.data.items
+    : [];
+  const itemComponents = profileInfo.itemComponents;
 
-  // Add a fake stat for "max base power"
-  function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
-    if (!store.isVault) {
-      const def = defs.Stat.get(StatHashes.Power);
-      const { equippable, unrestricted } = maxLightItemSet(stores, store);
-      const unrestrictedMaxGearPower = getLight(store, unrestricted);
-      const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
-      const equippableMaxGearPower = getLight(store, equippable);
+  const store = makeVault(defs, profileCurrencies);
 
-      const hasClassified = stores.some((s) =>
-        s.items.some(
-          (i) =>
-            i.classified &&
-            (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-        )
-      );
-
-      const differentEquippableMaxGearPower =
-        (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) ||
-        undefined;
-
-      store.stats.maxGearPower = {
-        hash: -3,
-        name: t('Stats.MaxGearPowerAll'),
-        // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
-        hasClassified,
-        description: '',
-        differentEquippableMaxGearPower,
-        richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
-        value: unrestrictedMaxGearPower,
-        icon: helmetIcon,
-      };
-
-      const artifactPower = getArtifactBonus(store);
-      store.stats.powerModifier = {
-        hash: -2,
-        name: t('Stats.PowerModifier'),
-        hasClassified: false,
-        description: '',
-        value: artifactPower,
-        icon: xpIcon,
-      };
-
-      store.stats.maxTotalPower = {
-        hash: -1,
-        name: t('Stats.MaxTotalPower'),
-        hasClassified,
-        description: '',
-        value: unrestrictedMaxGearPower + artifactPower,
-        icon: bungieNetPath(def.displayProperties.icon),
-      };
+  const items: DestinyItemComponent[] = [];
+  for (const i of profileInventory) {
+    const bucket = buckets.byHash[i.bucketHash];
+    // items that cannot be stored in the vault, and are therefore *in* a vault
+    if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+      items.push(i);
     }
   }
 
-  // TODO: vault counts are silly and convoluted. We really need an
-  // object to represent a Profile.
-  function updateVaultCounts(buckets: InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
-    // Fill in any missing buckets
-    Object.values(buckets.byType).forEach((bucket) => {
-      if (bucket.accountWide && bucket.vaultBucket) {
-        const vaultBucketId = bucket.hash;
-        vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
-          count: 0,
-          bucket,
-        };
-        vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.hash].length;
-      }
-    });
-    activeStore.vault = vault; // god help me
+  const processedItems = processItems(
+    defs,
+    buckets,
+    store,
+    items,
+    itemComponents,
+    mergedCollectibles
+  );
+  store.items = processedItems;
+  // by type-bucket
+  store.buckets = _.groupBy(store.items, (i) => i.location.hash);
+  store.vaultCounts = {};
+  // Fill in any missing buckets
+  Object.values(buckets.byType).forEach((bucket) => {
+    if (!store.buckets[bucket.hash]) {
+      store.buckets[bucket.hash] = [];
+    }
+    if (bucket.vaultBucket) {
+      const vaultBucketId = bucket.vaultBucket.hash;
+      store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
+        count: 0,
+        bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
+      };
+      store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
+    }
+  });
+  return store;
+}
+
+/**
+ * Find the date of the most recently played character.
+ */
+function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
+  return Object.values(profileInfo.characters.data!).reduce(
+    (memo: Date, character: DestinyCharacterComponent) => {
+      const d1 = new Date(character.dateLastPlayed);
+      return memo ? (d1 >= memo ? d1 : memo) : d1;
+    },
+    new Date(0)
+  );
+}
+
+// Add a fake stat for "max base power"
+function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
+  if (!store.isVault) {
+    const def = defs.Stat.get(StatHashes.Power);
+    const { equippable, unrestricted } = maxLightItemSet(stores, store);
+    const unrestrictedMaxGearPower = getLight(store, unrestricted);
+    const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
+    const equippableMaxGearPower = getLight(store, equippable);
+
+    const hasClassified = stores.some((s) =>
+      s.items.some(
+        (i) =>
+          i.classified &&
+          (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+      )
+    );
+
+    const differentEquippableMaxGearPower =
+      (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) || undefined;
+
+    store.stats.maxGearPower = {
+      hash: -3,
+      name: t('Stats.MaxGearPowerAll'),
+      // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
+      hasClassified,
+      description: '',
+      differentEquippableMaxGearPower,
+      richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
+      value: unrestrictedMaxGearPower,
+      icon: helmetIcon,
+    };
+
+    const artifactPower = getArtifactBonus(store);
+    store.stats.powerModifier = {
+      hash: -2,
+      name: t('Stats.PowerModifier'),
+      hasClassified: false,
+      description: '',
+      value: artifactPower,
+      icon: xpIcon,
+    };
+
+    store.stats.maxTotalPower = {
+      hash: -1,
+      name: t('Stats.MaxTotalPower'),
+      hasClassified,
+      description: '',
+      value: unrestrictedMaxGearPower + artifactPower,
+      icon: bungieNetPath(def.displayProperties.icon),
+    };
   }
+}
+
+// TODO: vault counts are silly and convoluted. We really need an
+// object to represent a Profile.
+function updateVaultCounts(buckets: InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
+  // Fill in any missing buckets
+  Object.values(buckets.byType).forEach((bucket) => {
+    if (bucket.accountWide && bucket.vaultBucket) {
+      const vaultBucketId = bucket.hash;
+      vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
+        count: 0,
+        bucket,
+      };
+      vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.hash].length;
+    }
+  });
+  activeStore.vault = vault; // god help me
 }

@@ -88,39 +88,41 @@ interface State {
 
 const allClassTypes: ClassTypes[] = [DestinyClass.Titan, DestinyClass.Warlock, DestinyClass.Hunter];
 
+const initialState: State = {
+  activesets: '5/5/2',
+  type: 'Helmet',
+  scaleType: 'scaled',
+  progress: 0,
+  fullMode: false,
+  includeVendors: false,
+  showAdvanced: false,
+  showHelp: false,
+  loadingVendors: false,
+  allSetTiers: [],
+  highestsets: {},
+  excludeditems: [],
+  lockeditems: {
+    Helmet: null,
+    Gauntlets: null,
+    Chest: null,
+    Leg: null,
+    ClassItem: null,
+    Artifact: null,
+    Ghost: null,
+  },
+  lockedperks: {
+    Helmet: {},
+    Gauntlets: {},
+    Chest: {},
+    Leg: {},
+    ClassItem: {},
+    Artifact: {},
+    Ghost: {},
+  },
+};
+
 class D1LoadoutBuilder extends React.Component<Props, State> {
-  state: State = {
-    activesets: '5/5/2',
-    type: 'Helmet',
-    scaleType: 'scaled',
-    progress: 0,
-    fullMode: false,
-    includeVendors: false,
-    showAdvanced: false,
-    showHelp: false,
-    loadingVendors: false,
-    allSetTiers: [],
-    highestsets: {},
-    excludeditems: [],
-    lockeditems: {
-      Helmet: null,
-      Gauntlets: null,
-      Chest: null,
-      Leg: null,
-      ClassItem: null,
-      Artifact: null,
-      Ghost: null,
-    },
-    lockedperks: {
-      Helmet: {},
-      Gauntlets: {},
-      Chest: {},
-      Leg: {},
-      ClassItem: {},
-      Artifact: {},
-      Ghost: {},
-    },
-  };
+  state: State = initialState;
 
   private cancelToken: { cancelled: boolean } = {
     cancelled: false,

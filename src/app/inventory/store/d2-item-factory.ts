@@ -22,7 +22,6 @@ import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
-import { D2StoresService } from '../d2-stores';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
@@ -66,9 +65,6 @@ export const ItemProto = {
   },
   isDestiny2(this: D2Item) {
     return true;
-  },
-  getStoresService() {
-    return D2StoresService;
   },
 };
 

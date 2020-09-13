@@ -1,17 +1,14 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { queueAction } from 'app/inventory/action-queue';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout/loadout-types';
-import { refresh$ } from 'app/shell/refresh';
 import { RootState } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
 import { Location } from 'history';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2StoresService } from '../inventory/d2-stores';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import LoadoutBuilder from './LoadoutBuilder';
@@ -45,16 +42,7 @@ function mapStateToProps() {
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
-  useSubscription(() =>
-    refresh$.subscribe(() => queueAction<any>(() => D2StoresService.reloadStores()))
-  );
-
-  useEffect(() => {
-    if (!stores.length) {
-      // TODO: Dispatch an action to load stores instead
-      D2StoresService.getStoresStream(account);
-    }
-  }, [account, stores]);
+  useLoadStores(account, stores.length > 0);
 
   if (!stores || !stores.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

@@ -22,7 +22,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import { InventoryBucket } from './inventory-buckets';
-import { D1StoreServiceType, D2StoreServiceType, StoreServiceType } from './store-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
@@ -167,8 +166,6 @@ export interface DimItem {
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
-  /** The Stores service associated with this item. */
-  getStoresService(): StoreServiceType;
 
   /** Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item. */
   isDestiny1(): this is D1Item;
@@ -195,8 +192,6 @@ export interface D1Item extends DimItem {
   year: number;
   /** Hashes that allow us to figure out where this item can be found (what activities, locations, etc.) */
   sourceHashes: number[];
-
-  getStoresService(): D1StoreServiceType;
 }
 
 /**
@@ -242,8 +237,6 @@ export interface D2Item extends DimItem {
     energyCost: number;
     costElementIcon: string;
   };
-
-  getStoresService(): D2StoreServiceType;
 }
 
 export interface DimMasterwork {
