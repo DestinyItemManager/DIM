@@ -1,3 +1,5 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -5,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { clearRatings } from 'app/item-review/actions';
 import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import WishListSettings from 'app/settings/WishListSettings';
@@ -19,14 +22,11 @@ import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { getPlatforms } from '../accounts/platforms';
 import { getDefinitions } from '../destiny2/d2-definitions';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D1StoresService } from '../inventory/d1-stores';
-import { D2StoresService } from '../inventory/d2-stores';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
 import RatingsKey from '../item-review/RatingsKey';
@@ -50,6 +50,7 @@ const classIcons = {
 };
 
 interface StoreProps {
+  currentAccount?: DestinyAccount;
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
@@ -64,6 +65,7 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
+    currentAccount: currentAccountSelector(state),
   };
 }
 
@@ -160,19 +162,15 @@ function SettingsPage({
   reviewModeOptions,
   storesLoaded,
   stores,
+  currentAccount,
   dispatch,
 }: Props) {
   useEffect(() => {
     dispatch(getDefinitions());
-    dispatch(getPlatforms()).then(() => {
-      const account = getActivePlatform();
-      if (account) {
-        account.destinyVersion === 2
-          ? D2StoresService.getStoresStream(account)
-          : D1StoresService.getStoresStream(account);
-      }
-    });
+    dispatch(getPlatforms());
   }, [dispatch]);
+
+  useLoadStores(currentAccount, storesLoaded);
 
   const [languageChanged, setLanguageChanged] = useState(false);
 

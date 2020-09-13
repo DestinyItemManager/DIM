@@ -4,6 +4,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -11,16 +12,14 @@ import { setSetting } from 'app/settings/actions';
 import { settingsSelector } from 'app/settings/reducer';
 import { querySelector } from 'app/shell/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
@@ -28,7 +27,6 @@ import {
   profileResponseSelector,
   storesSelector,
 } from '../inventory/selectors';
-import { refresh$ } from '../shell/refresh';
 import Catalysts from './Catalysts';
 import './collections.scss';
 import LegacyTriumphs from './LegacyTriumphs';
@@ -83,11 +81,6 @@ function mapStateToProps() {
   };
 }
 
-const refreshStores = () =>
-  refresh$.subscribe(() => {
-    D2StoresService.reloadStores();
-  });
-
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
@@ -105,11 +98,7 @@ function Collections({
   redactedRecordsRevealed,
   dispatch,
 }: Props) {
-  useEffect(() => {
-    D2StoresService.getStoresStream(account);
-  }, [account]);
-
-  useSubscription(refreshStores);
+  useLoadStores(account, Boolean(profileResponse));
 
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr

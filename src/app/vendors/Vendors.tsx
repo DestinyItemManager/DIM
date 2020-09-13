@@ -2,6 +2,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -24,7 +25,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
+import { mergeCollectibles } from '../inventory/d2-stores';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
@@ -103,8 +104,9 @@ function Vendors({
 
   const selectedStoreId = characterId || getCurrentStore(stores)?.id;
 
+  useLoadStores(account, stores.length > 0);
+
   useEffect(() => {
-    D2StoresService.getStoresStream(account);
     if (selectedStoreId) {
       dispatch(loadAllVendors(account, selectedStoreId));
     }
