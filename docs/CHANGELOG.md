@@ -3,6 +3,7 @@
 * Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.
 * Improvements to search performance, and search autocomplete suggestions.
 * Fix cases where some odd stats would show up as kill trackers.
+* Sword-sepcific stats now show up in `stat:` filters.
 
 ## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
 
