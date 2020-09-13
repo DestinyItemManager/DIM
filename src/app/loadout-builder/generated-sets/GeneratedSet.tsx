@@ -52,12 +52,10 @@ function GeneratedSet({
     return null;
   }
 
-  const [assignedMods] = $featureFlags.armor2ModPicker
-    ? assignModsToArmorSet(
-        set.armor.map((items) => items[0]),
-        lockedArmor2Mods
-      )
-    : [{}];
+  const [assignedMods] = assignModsToArmorSet(
+    set.armor.map((items) => items[0]),
+    lockedArmor2Mods
+  );
 
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&

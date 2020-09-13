@@ -9,14 +9,7 @@ import React, { Dispatch } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import {
-  ArmorSet,
-  LockedArmor2ModMap,
-  LockedMap,
-  LockedModBase,
-  ModPickerCategories,
-  StatTypes,
-} from '../types';
+import { ArmorSet, LockedArmor2ModMap, LockedMap, ModPickerCategories, StatTypes } from '../types';
 import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
@@ -36,7 +29,6 @@ interface Props {
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedArmor2Mods: LockedArmor2ModMap;
-  lockedSeasonalMods: LockedModBase[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
@@ -109,7 +101,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
       combosWithoutCaps,
       enabledStats,
       lockedArmor2Mods,
-      lockedSeasonalMods,
       loadouts,
       lbDispatch,
     } = this.props;
@@ -123,13 +114,12 @@ export default class GeneratedSets extends React.Component<Props, State> {
     let groupingDescription;
 
     if (
-      someModHasEnergyRequirement(lockedSeasonalMods) ||
       someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.seasonal]) ||
       (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general]) &&
-        (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length))
+        lockedArmor2Mods[ModPickerCategories.seasonal].length)
     ) {
       groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
-    } else if (lockedSeasonalMods.length || lockedArmor2Mods[ModPickerCategories.seasonal].length) {
+    } else if (lockedArmor2Mods[ModPickerCategories.seasonal].length) {
       groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
     } else if (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general])) {
       groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
@@ -220,7 +210,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
               />
             )}
           </WindowScroller>
-        ) : $featureFlags.armor2ModPicker ? (
+        ) : (
           <>
             <h3>{t('LoadoutBuilder.NoBuildsFoundWithReasons')}</h3>
             <ul>
@@ -235,8 +225,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
               </li>
             </ul>
           </>
-        ) : (
-          <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
         )}
       </div>
     );

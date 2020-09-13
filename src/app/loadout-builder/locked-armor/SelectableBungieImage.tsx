@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import React from 'react';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import ClosableContainer from '../ClosableContainer';
-import { BurnItem, LockedArmor2Mod, LockedItemType, LockedModBase } from '../types';
+import { BurnItem, LockedArmor2Mod, LockedItemType } from '../types';
 import styles from './SelectableBungieImage.m.scss';
 
 const badPerk = new Set([
@@ -40,7 +40,6 @@ export function SelectableMod({
   selected,
   unselectable,
   onLockedPerk,
-  onLockedModBase,
 }: {
   mod: PluggableInventoryItemDefinition;
   // plugSet this mod appears in
@@ -49,15 +48,12 @@ export function SelectableMod({
   bucket?: InventoryBucket;
   selected: boolean;
   unselectable?: boolean;
-  onLockedPerk?(perk: LockedItemType): void;
-  onLockedModBase?(mod: LockedModBase): void;
+  onLockedPerk(perk: LockedItemType): void;
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    if (bucket && onLockedPerk) {
+    if (bucket) {
       onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
-    } else if (onLockedModBase) {
-      onLockedModBase({ mod, plugSetHash });
     }
   };
 
