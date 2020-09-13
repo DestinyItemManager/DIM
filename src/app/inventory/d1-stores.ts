@@ -50,7 +50,6 @@ function StoreService(): D1StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
     reloadStores,
   };

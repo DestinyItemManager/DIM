@@ -16,8 +16,6 @@ import { D1Item, D2Item, DimItem } from './item-types';
  * if you don't care about the differences between the two.
  */
 export interface StoreServiceType<StoreType = DimStore> {
-  /** Get a list of all characters plus the vault. */
-  getStores(): StoreType[];
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
   /** Reload inventory completely. */

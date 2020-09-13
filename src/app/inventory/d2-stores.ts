@@ -149,7 +149,6 @@ function makeD2StoresService(): D2StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getStores: () => storesSelector(store.getState()) as D2Store[],
     getStoresStream,
     reloadStores,
   };
