@@ -1,6 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem, getVault } from 'app/inventory/stores-helpers';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import copy from 'fast-copy';
@@ -585,7 +585,7 @@ function VendorService(): VendorServiceType {
           break;
         default:
           totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-            store.amountOfItem({ hash: currencyHash } as any)
+            amountOfItem(store, { hash: currencyHash })
           );
           break;
       }

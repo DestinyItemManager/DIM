@@ -4,7 +4,7 @@ import {
   itemInfosSelector,
   storesSelector,
 } from 'app/inventory/selectors';
-import { getVault } from 'app/inventory/stores-helpers';
+import { capacityForItem, getVault } from 'app/inventory/stores-helpers';
 import { settingsSelector } from 'app/settings/reducer';
 import { from, Subscription } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
@@ -157,7 +157,7 @@ export async function makeRoomForItemsInBuckets(
   const itemHashTags = itemHashTagsSelector(rxStore.getState());
   makeRoomBuckets.forEach((bucket) => {
     const items = store.buckets[bucket.hash];
-    if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
+    if (items.length > 0 && items.length >= capacityForItem(store, items[0])) {
       const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
         moveAsideCandidates,

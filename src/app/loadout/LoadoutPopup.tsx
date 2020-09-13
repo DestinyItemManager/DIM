@@ -148,7 +148,9 @@ function LoadoutPopup({
   const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
   const artifactLight = getArtifactBonus(dimStore);
 
-  const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
+  const numPostmasterItems = dimStore.isDestiny2()
+    ? pullablePostmasterItems(dimStore, stores).length
+    : 0;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
   const makeNewLoadout = () => {

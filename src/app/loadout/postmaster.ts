@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
-import { getVault } from 'app/inventory/stores-helpers';
+import { capacityForItem, getVault, spaceLeftForItem } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -21,7 +21,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
     _.forIn(postmasterItemCountsByType, (count, bucket) => {
       if (count > 0 && store.buckets[bucket].length > 0) {
         const items: DimItem[] = store.buckets[bucket];
-        const capacity = store.capacityForItem(items[0]);
+        const capacity = capacityForItem(store, items[0]);
         const numNeededToMove = Math.max(0, count + items.length - capacity);
         if (numNeededToMove > 0) {
           // We'll move the lowest-value item to the vault.
@@ -74,13 +74,13 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 }
 
 // D2 only
-export function pullablePostmasterItems(store: DimStore) {
+export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
   return (store.buckets[215593132] || []).filter(
     (i) =>
       // Can be pulled
       i.canPullFromPostmaster &&
       // Either has space, or is going to a bucket we can make room in
-      ((i.bucket.vaultBucket && !i.notransfer) || store.spaceLeftForItem(i) > 0)
+      ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
   );
 }
 
@@ -116,8 +116,9 @@ const showNoSpaceError = _.throttle(
 
 // D2 only
 export function pullFromPostmaster(store: DimStore): ThunkResult {
-  return async (dispatch) => {
-    const items = pullablePostmasterItems(store);
+  return async (dispatch, getState) => {
+    const stores = storesSelector(getState());
+    const items = pullablePostmasterItems(store, stores);
 
     // Only show one popup per message
     const errorNotification = _.memoize((message: string) => {
@@ -134,7 +135,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
       for (const item of items) {
         let amount = item.amount;
         if (item.uniqueStack) {
-          const spaceLeft = store.spaceLeftForItem(item);
+          const spaceLeft = spaceLeftForItem(store, item, storesSelector(getState()));
           if (spaceLeft > 0) {
             // Only transfer enough to top off the stack
             amount = Math.min(item.amount || 1, spaceLeft);
@@ -169,19 +170,21 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
 // cribbed from D1FarmingService, but modified
 function moveItemsToVault(store: DimStore, items: DimItem[]): ThunkResult {
   return async (dispatch, getState) => {
-    const stores = storesSelector(getState());
     const reservations: MoveReservations = {};
     // reserve space for all move-asides
     reservations[store.id] = _.countBy(items, (i) => i.type);
 
     for (const item of items) {
+      const stores = storesSelector(getState());
       // Move a single item. We reevaluate the vault each time in case things have changed.
       const vault = getVault(stores)!;
-      const vaultSpaceLeft = vault.spaceLeftForItem(item);
+      const vaultSpaceLeft = spaceLeftForItem(vault, item, stores);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
         const otherStores = stores.filter((store) => !store.isVault && store.id !== store.id);
-        const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
+        const otherStoresWithSpace = otherStores.filter((store) =>
+          spaceLeftForItem(store, item, stores)
+        );
 
         if (otherStoresWithSpace.length) {
           await dispatch(

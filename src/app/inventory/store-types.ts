@@ -90,23 +90,6 @@ export interface DimStore<Item = DimItem> {
     progressions: DestinyProgression[];
   };
 
-  /**
-   * Get the total amount of this item in the store, across all stacks,
-   * excluding stuff in the postmaster.
-   */
-  amountOfItem(item: { hash: number }): number;
-  /**
-   * How much of items like this item can fit in this store? For
-   * stackables, this is in stacks, not individual pieces.
-   */
-  capacityForItem(item: Item): number;
-  /**
-   * How many *more* items like this item can fit in this store?
-   * This takes into account stackables, so the answer will be in
-   * terms of individual pieces.
-   */
-  spaceLeftForItem(item: Item): number;
-
   /** Remove an item from this store. Returns whether it actually removed anything. */
   removeItem(item: Item): boolean;
 
@@ -117,9 +100,6 @@ export interface DimStore<Item = DimItem> {
   isDestiny1(): this is D1Store;
   /* Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store. */
   isDestiny2(): this is D2Store;
-
-  /** The stores service associated with this store. */
-  getStoresService(): StoreServiceType;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -200,8 +180,6 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: any;
-
-  getStoresService(): D1StoreServiceType;
 }
 
 /**
@@ -211,5 +189,4 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  getStoresService(): D1StoreServiceType;
 }

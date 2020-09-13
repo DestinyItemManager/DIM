@@ -39,7 +39,14 @@ import { itemHashTagsSelector, itemInfosSelector, storesSelector } from './selec
 import { DimStore } from './store-types';
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
-import { getCurrentStore, getItemAcrossStores, getStore, getVault } from './stores-helpers';
+import {
+  amountOfItem,
+  getCurrentStore,
+  getItemAcrossStores,
+  getStore,
+  getVault,
+  spaceLeftForItem,
+} from './stores-helpers';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -767,7 +774,7 @@ function canMoveToStore(
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
-      let left = s.spaceLeftForItem(i);
+      let left = spaceLeftForItem(s, i, storesSelector(getState()));
       // minus any reservations
       if (reservations[s.id]?.[i.type]) {
         left -= reservations[s.id][i.type];
@@ -784,7 +791,7 @@ function canMoveToStore(
     }
 
     // You can't move more than the max stack of a unique stack item.
-    if (item.uniqueStack && store.amountOfItem(item) + amount > item.maxStackSize) {
+    if (item.uniqueStack && amountOfItem(store, item) + amount > item.maxStackSize) {
       const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
       error.code = 'no-space';
       throw error;
@@ -842,7 +849,7 @@ function canMoveToStore(
 
       if (
         !moveAsideTarget ||
-        (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)
+        (!moveAsideTarget.isVault && spaceLeftForItem(moveAsideTarget, moveAsideItem, stores) <= 0)
       ) {
         const itemtype = moveAsideTarget.isVault
           ? moveAsideItem.destinyVersion === 1
