@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import { createSelector } from 'reselect';
 import { ActionType, getType } from 'typesafe-actions';
 import { storesSelector } from '../inventory/selectors';
-import * as actions from './actions';
+import * as actions from './basic-actions';
 
 export const farmingStoreSelector = () =>
   createSelector(
@@ -12,14 +12,20 @@ export const farmingStoreSelector = () =>
     (stores, storeId) => stores.find((s) => s.id === storeId)
   );
 
+export const farmingInterruptedSelector = (state: RootState) => state.farming.numInterruptions > 0;
+
 export interface FarmingState {
   // The actively farming store, if any
   readonly storeId?: string;
+  // A counter for pending tasks that interrupt farming
+  readonly numInterruptions: number;
 }
 
 export type FarmingAction = ActionType<typeof actions>;
 
-const initialState: FarmingState = {};
+const initialState: FarmingState = {
+  numInterruptions: 0,
+};
 
 export const farming: Reducer<FarmingState, FarmingAction> = (
   state: FarmingState = initialState,
@@ -36,6 +42,18 @@ export const farming: Reducer<FarmingState, FarmingAction> = (
       return {
         ...state,
         storeId: undefined,
+      };
+
+    case getType(actions.interruptFarming):
+      return {
+        ...state,
+        numInterruptions: state.numInterruptions + 1,
+      };
+
+    case getType(actions.resumeFarming):
+      return {
+        ...state,
+        numInterruptions: state.numInterruptions - 1,
       };
 
     default:

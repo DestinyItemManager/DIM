@@ -1,5 +1,5 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { currentAccountSelector } from 'app/accounts/selectors';
+import { startFarming } from 'app/farming/actions';
+import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
@@ -16,8 +16,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import PressTip from '../dim-ui/PressTip';
-import { D2FarmingService } from '../farming/d2farming.service';
-import { D1FarmingService } from '../farming/farming.service';
 import { queueAction } from '../inventory/action-queue';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -50,6 +48,7 @@ import {
   randomLoadout,
   searchLoadout,
 } from './auto-loadouts';
+import { applyLoadout } from './loadout-apply';
 import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, getLight, newLoadout } from './loadout-utils';
@@ -75,7 +74,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  account: DestinyAccount;
   previousLoadout?: Loadout;
   loadouts: Loadout[];
   query: string;
@@ -122,7 +120,6 @@ function mapStateToProps() {
       query: querySelector(state),
       searchFilter: searchFilterSelector(state),
       classTypeId: dimStore.classType,
-      account: currentAccountSelector(state)!,
       stores: storesSelector(state),
       buckets: bucketsSelector(state)!,
       hasClassified: hasClassifiedSelector(state),
@@ -140,7 +137,6 @@ function LoadoutPopup({
   hasClassified,
   classTypeId,
   searchFilter,
-  account,
   buckets,
   dispatch,
 }: Props) {
@@ -177,32 +173,31 @@ function LoadoutPopup({
 
   // TODO: move all these fancy loadouts to a new service
 
-  const applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
+  const onApplyLoadout = async (loadout: Loadout, e, filterToEquipped = false) => {
     e.preventDefault();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    if (dimStore.destinyVersion === 1) {
-      return D1FarmingService.interrupt(() => applyLoadout(dimStore, loadout, true));
-    }
-
-    if (dimStore.destinyVersion === 2) {
-      return D2FarmingService.interrupt(() => applyLoadout(dimStore, loadout, true));
+    dispatch(interruptFarming());
+    try {
+      return await dispatch(applyLoadout(dimStore, loadout, true));
+    } finally {
+      dispatch(resumeFarming());
     }
   };
 
   // A dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = (e) => {
     const loadout = itemLevelingLoadout(stores, dimStore);
-    applyLoadout(loadout, e);
+    onApplyLoadout(loadout, e);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   const makeMaxLightLoadout = (e) => {
     const loadout = maxLightLoadout(stores, dimStore);
-    applyLoadout(loadout, e);
+    onApplyLoadout(loadout, e);
   };
 
   // A dynamic loadout set up to level weapons and armor
@@ -214,7 +209,7 @@ function LoadoutPopup({
       showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
       return;
     }
-    applyLoadout(loadout, e);
+    onApplyLoadout(loadout, e);
   };
 
   const applyRandomLoadout = (e, weaponsOnly = false) => {
@@ -236,7 +231,7 @@ function LoadoutPopup({
         weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
       );
       if (loadout) {
-        applyLoadout(loadout, e);
+        onApplyLoadout(loadout, e);
       }
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
@@ -247,7 +242,7 @@ function LoadoutPopup({
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = (e) => {
     const loadout = searchLoadout(stores, dimStore, searchFilter);
-    applyLoadout(loadout, e);
+    onApplyLoadout(loadout, e);
   };
 
   const doMakeRoomForPostmaster = () =>
@@ -255,8 +250,8 @@ function LoadoutPopup({
 
   const doPullFromPostmaster = () => queueAction(() => dispatch(pullFromPostmaster(dimStore)));
 
-  const startFarming = () => {
-    (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(account, dimStore.id);
+  const onStartFarming = () => {
+    dispatch(startFarming(dimStore.id));
   };
 
   return (
@@ -381,7 +376,7 @@ function LoadoutPopup({
 
         {!dimStore.isVault && (
           <li className="loadout-set">
-            <span onClick={startFarming}>
+            <span onClick={onStartFarming}>
               <AppIcon icon={engramIcon} />
               <span>{t('FarmingMode.FarmingMode')}</span>
             </span>
@@ -392,12 +387,12 @@ function LoadoutPopup({
           <li className="loadout-set">
             <span
               title={previousLoadout.name}
-              onClick={(e) => applyLoadout(previousLoadout, e, true)}
+              onClick={(e) => onApplyLoadout(previousLoadout, e, true)}
             >
               <AppIcon icon={undoIcon} />
               {previousLoadout.name}
             </span>
-            <span onClick={(e) => applyLoadout(previousLoadout, e)}>
+            <span onClick={(e) => onApplyLoadout(previousLoadout, e)}>
               <span>{t('Loadouts.RestoreAllItems')}</span>
             </span>
           </li>
@@ -405,7 +400,7 @@ function LoadoutPopup({
 
         {loadouts.map((loadout) => (
           <li key={loadout.id} className="loadout-set">
-            <span title={loadout.name} onClick={(e) => applyLoadout(loadout, e)}>
+            <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
               <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
               {loadout.name}
             </span>

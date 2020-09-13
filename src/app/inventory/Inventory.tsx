@@ -1,5 +1,6 @@
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import Farming from 'app/farming/Farming';
 import { t } from 'app/i18next-t';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
@@ -8,8 +9,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Compare from '../compare/Compare';
-import D1Farming from '../farming/D1Farming';
-import D2Farming from '../farming/D2Farming';
 import GearPower from '../gear-power/GearPower';
 import InfusionFinder from '../infuse/InfusionFinder';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
@@ -52,7 +51,7 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
       <Compare />
       <StackableDragHelp />
       <DragPerformanceFix />
-      {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+      <Farming />
       {account.destinyVersion === 2 && <GearPower />}
       {$featureFlags.mobileInspect && isPhonePortrait && <MobileInspect />}
       <DragGhostItem />
