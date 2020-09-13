@@ -3,23 +3,21 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { queueAction } from 'app/inventory/action-queue';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import {
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/reducer';
 import { RootState } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -28,7 +26,6 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { refresh$ } from '../shell/refresh';
 import Milestones from './Milestones';
 import './progress.scss';
 import Pursuits from './Pursuits';
@@ -67,9 +64,6 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-const refreshStores = () =>
-  refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
-
 function Progress({
   account,
   defs,
@@ -82,13 +76,7 @@ function Progress({
 }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    if (!profileInfo) {
-      D2StoresService.getStoresStream(account);
-    }
-  });
-
-  useSubscription(refreshStores);
+  useLoadStores(account, Boolean(profileInfo));
 
   if (!defs || !profileInfo || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
