@@ -2,6 +2,7 @@ import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
@@ -15,7 +16,7 @@ import { DimItem } from './item-types';
 import { moveItemNotification } from './MoveNotifications';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
-import { getStore, getVault } from './stores-helpers';
+import { getCurrentStore, getStore, getVault } from './stores-helpers';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -43,6 +44,20 @@ function showMoveAmountPopup(
       onCancel: reject,
     });
   });
+}
+
+/**
+ * Move the item to the currently active store. Used for double-click action.
+ */
+export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
+  return async (dispatch, getState) => {
+    const active = getCurrentStore(storesSelector(getState()))!;
+
+    // Equip if it's not equipped or it's on another character
+    const equip = !item.equipped || item.owner !== active.id;
+
+    return dispatch(moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false));
+  };
 }
 
 /**
