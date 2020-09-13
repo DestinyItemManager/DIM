@@ -13,11 +13,10 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   killTrackerObjectivesByHash,
-  killTrackerSocketTypeHash,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import { DestinyClass, DestinyInventoryItemDefinition, PlugUiStyles } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import { objectifyArray } from './util';
@@ -175,15 +174,9 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
 /** verifies an item has kill tracker mod slot, which is returned */
 export const getKillTrackerSocket = (item: D2Item): DimSocket | undefined => {
   if (item.bucket.inWeapons) {
-    return (
-      item.sockets?.allSockets.find(
-        (socket) => socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash
-      ) ||
-      (item.masterwork &&
-        item.sockets?.allSockets.find(
-          (socket) => socket.plugged?.plugDef.plug.plugStyle === PlugUiStyles.Masterwork
-        )) ||
-      undefined
+    return item.sockets?.allSockets.find(
+      (socket) =>
+        (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash
     );
   }
 };
@@ -198,9 +191,8 @@ export type KillTracker = {
 const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
   const installedKillTracker = socket?.plugged;
   if (installedKillTracker) {
-    const type =
-      installedKillTracker.plugObjectives[0]?.objectiveHash &&
-      killTrackerObjectivesByHash[installedKillTracker.plugObjectives[0]?.objectiveHash];
+    // getKillTrackerSocket's find() ensures that objectiveHash is in killTrackerObjectivesByHash
+    const type = killTrackerObjectivesByHash[installedKillTracker.plugObjectives[0].objectiveHash];
     const count = installedKillTracker.plugObjectives[0]?.progress;
     if (type && count !== undefined) {
       return {
