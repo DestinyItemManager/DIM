@@ -408,7 +408,8 @@ function PerkPicker({
       {order.map(
         (bucketId) =>
           ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
-            (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
+            (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0) ||
+            queryFilteredBurns.length) && (
             <PickerSectionPerks
               key={bucketId}
               defs={defs}
