@@ -199,6 +199,7 @@ function mapStateToProps() {
             (i) =>
               i.item.inventory!.tierType !== TierType.Common &&
               !i.item.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
+              !i.item.itemCategoryHashes?.includes(ItemCategoryHashes.MasterworksMods) &&
               i.item.plug.insertionMaterialRequirementHash !== 0 && // not the empty mod sockets
               !isArmor2Mod(i.item)
           )
