@@ -44,7 +44,7 @@ function StoreService(): D1StoreServiceType {
     switchMap(() => loadingTracker.addPromise(badDispatch(loadStores()))),
     // Keep track of the last value for new subscribers
     publishReplay(1)
-  ) as ConnectableObservable<void>;
+  ) as ConnectableObservable<D1Store[] | undefined>;
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
   //       nothing changed!

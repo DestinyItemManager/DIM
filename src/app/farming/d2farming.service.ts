@@ -1,4 +1,4 @@
-import { bucketsSelector } from 'app/inventory/selectors';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { from, Subscription } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
@@ -89,5 +89,5 @@ async function makeRoomForItems(store: D2Store) {
   const makeRoomBuckets = Object.values(buckets.byHash).filter(
     (b) => b.category === BucketCategory.Equippable && b.type
   );
-  return makeRoomForItemsInBuckets(store.getStoresService().getStores(), store, makeRoomBuckets);
+  return makeRoomForItemsInBuckets(storesSelector(rxStore.getState()), store, makeRoomBuckets);
 }

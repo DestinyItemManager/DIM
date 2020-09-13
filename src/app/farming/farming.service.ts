@@ -1,4 +1,9 @@
-import { bucketsSelector, itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import {
+  bucketsSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
 import { getVault } from 'app/inventory/stores-helpers';
 import { settingsSelector } from 'app/settings/reducer';
 import { from, Subscription } from 'rxjs';
@@ -136,7 +141,7 @@ async function farmItems(store: D1Store) {
 async function makeRoomForItems(store: D1Store) {
   const buckets = bucketsSelector(rxStore.getState())!;
   const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
-  makeRoomForItemsInBuckets(store.getStoresService().getStores(), store, makeRoomBuckets);
+  makeRoomForItemsInBuckets(storesSelector(rxStore.getState()), store, makeRoomBuckets);
 }
 
 // Ensure that there's one open space in each category that could
