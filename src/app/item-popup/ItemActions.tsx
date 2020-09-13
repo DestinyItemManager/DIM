@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPopup } from 'app/item-popup/item-popup';
 import { ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
@@ -33,7 +33,7 @@ export default function ItemActions({
     () =>
       !store || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
         ? 1
-        : amountOfItem(store, item),
+        : store.amountOfItem(item),
     [store, item]
   );
 

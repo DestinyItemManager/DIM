@@ -6,7 +6,6 @@ import Sheet from '../dim-ui/Sheet';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-item';
 import './MoveAmountPopupContainer.scss';
-import { amountOfItem } from './stores-helpers';
 
 /**
  * A container that can show a single move amount popup. This is a
@@ -44,7 +43,7 @@ export default function MoveAmountPopupContainer() {
 
   const { item, maximum, targetStore } = options;
 
-  let targetAmount = amountOfItem(targetStore, item);
+  let targetAmount = targetStore.amountOfItem(item);
   while (targetAmount > 0) {
     targetAmount -= item.maxStackSize;
   }

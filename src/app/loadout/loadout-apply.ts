@@ -5,13 +5,7 @@ import { dimItemService, MoveReservations } from 'app/inventory/item-move-servic
 import { DimItem } from 'app/inventory/item-types';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { DimStore } from 'app/inventory/store-types';
-import {
-  amountOfItem,
-  getItemAcrossStores,
-  getStore,
-  getVault,
-  spaceLeftForItem,
-} from 'app/inventory/stores-helpers';
+import { getItemAcrossStores, getStore, getVault } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -260,7 +254,7 @@ async function applyLoadoutItems(
     if (item) {
       if (item.maxStackSize > 1) {
         // handle consumables!
-        const amountAlreadyHave = amountOfItem(store, pseudoItem);
+        const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
           const otherStores = store
@@ -270,7 +264,7 @@ async function applyLoadoutItems(
           const storesByAmount = _.sortBy(
             otherStores.map((store) => ({
               store,
-              amount: amountOfItem(store, pseudoItem),
+              amount: store.amountOfItem(pseudoItem),
             })),
             (v) => v.amount
           ).reverse();
@@ -406,13 +400,11 @@ export async function clearItemsOffCharacter(
     try {
       // Move a single item. We reevaluate each time in case something changed.
       const vault = getVault(stores)!;
-      const vaultSpaceLeft = spaceLeftForItem(vault, item, stores);
+      const vaultSpaceLeft = vault.spaceLeftForItem(item);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
         const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
-        const otherStoresWithSpace = otherStores.filter((store) =>
-          spaceLeftForItem(store, item, stores)
-        );
+        const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
         if (otherStoresWithSpace.length) {
           if ($featureFlags.debugMoves) {
