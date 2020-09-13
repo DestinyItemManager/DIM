@@ -28,12 +28,7 @@ export default function CompareItem({
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
-  updateSocketComparePlug(value: {
-    item: DimItem;
-    categoryHash: number;
-    socket: DimSocket;
-    plug: DimPlug;
-  }): void;
+  updateSocketComparePlug(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs: { [socketIndex: number]: DimPlug } | undefined;
   adjustedItemStats: { [statHash: number]: number } | undefined;
 }) {

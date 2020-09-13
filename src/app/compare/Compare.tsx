@@ -15,7 +15,7 @@ import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyDisplayPropertiesDefinition, SocketPlugSources } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -194,7 +194,6 @@ class Compare extends React.Component<Props, State> {
     // TODO: Should this go into its own module?
     const updateSocketComparePlug = ({
       item,
-      categoryHash,
       socket,
       plug: clickedPlug,
     }: {
@@ -208,27 +207,20 @@ class Compare extends React.Component<Props, State> {
         return null;
       }
 
-      let { socketIndex } = socket;
-      const categoryIndex = item.sockets.categories.findIndex(
-        (category) => category.category.hash === categoryHash
-      );
+      // Exit early if the socket plug source isn't a ReusablePlugItem
+      if (socket.socketDefinition.plugSources !== SocketPlugSources.ReusablePlugItems) {
+        return null;
+      }
+
       // Create deep copies of arrays to prevent directly mutating state
       // (cloneDeep is resulting in object mutation)
       const itemStatsClone: DimStat[] = JSON.parse(JSON.stringify(item.stats));
-
-      // socketIndex is correct for allSockets, but not categories[].sockets
-      // TODO: Confirm socket is always off by 1, otherwise this should use hashes to find plugs
-      socketIndex -= 1;
-
-      // Exit early if the socket index doesn't exist (kill tracker sockets)
-      if (!item.sockets.categories[categoryIndex].sockets[socketIndex]) {
-        return null;
-      }
+      const { socketIndex } = socket;
 
       if (
         (adjustedPlugs?.[item.id]?.[socketIndex] === undefined &&
           clickedPlug.plugDef.hash !==
-            item.sockets.categories[categoryIndex].sockets[socketIndex].plugged?.plugDef.hash) ||
+            item.sockets.allSockets[socketIndex].plugged?.plugDef.hash) ||
         clickedPlug.plugDef.hash !== adjustedPlugs?.[item.id]?.[socketIndex]?.plugDef.hash
       ) {
         // Clone stats so state isn't directly mutated by math
@@ -246,8 +238,7 @@ class Compare extends React.Component<Props, State> {
             : Object.assign({}, cloneDeep(adjustedStats), { [item.id]: {} });
 
         const prevAdjustedPlug =
-          updateAdjustedPlugs[item.id][socketIndex] ??
-          item.sockets.categories[categoryIndex].sockets[socketIndex].plugged;
+          updateAdjustedPlugs[item.id][socketIndex] ?? item.sockets.allSockets[socketIndex].plugged;
 
         // Remove old plug stats from adjustedStats
         if (prevAdjustedPlug?.stats) {
@@ -284,8 +275,7 @@ class Compare extends React.Component<Props, State> {
         }
 
         const isCurrentPlug =
-          clickedPlug.plugDef.hash ===
-          item.sockets.categories[categoryIndex].sockets[socketIndex].plugged?.plugDef.hash;
+          clickedPlug.plugDef.hash === item.sockets.allSockets[socketIndex].plugged?.plugDef.hash;
 
         // Add / remove plugs from adjustedPlugs
         if (isCurrentPlug) {
