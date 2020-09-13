@@ -8,7 +8,6 @@ import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definition
 import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import store from '../store/store';
 import { reportException } from '../utils/exceptions';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
@@ -43,7 +42,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
           getStores(account),
         ]);
         const lastPlayedDate = findLastPlayedDate(rawStores);
-        const buckets = bucketsSelector(store.getState())!;
+        const buckets = bucketsSelector(getState())!;
 
         // Currencies object gets mutated by processStore
         const currencies: DimVault['currencies'] = [];
@@ -73,7 +72,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       } catch (e) {
         console.error('Error loading stores', e);
         reportException('D1StoresService', e);
-        if (storesSelector(store.getState()).length > 0) {
+        if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));
         } else {

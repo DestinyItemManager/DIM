@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem, getVault } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
@@ -11,7 +12,6 @@ import { D1Item } from '../../inventory/item-types';
 import { D1Store } from '../../inventory/store-types';
 import { processItems } from '../../inventory/store/d1-item-factory';
 import { loadingTracker } from '../../shell/loading-tracker';
-import { default as rxStore } from '../../store/store';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { factionAligned } from '../d1-factions';
 
@@ -125,13 +125,16 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
     const stores = storesSelector(getState()) as D1Store[];
     const characters = stores.filter((s) => !s.isVault);
     const defs = getState().manifest.d1Manifest!;
+    const buckets = bucketsSelector(getState())!;
     const reloadPromise = (async () => {
       // Narrow down to only visible vendors (not packages and such)
       const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
 
       const vendors = _.compact(
         await Promise.all(
-          vendorList.flatMap((vendorDef) => fetchVendor(vendorDef, characters, account, defs))
+          vendorList.flatMap((vendorDef) =>
+            fetchVendor(vendorDef, characters, account, defs, buckets)
+          )
         )
       );
       return _.keyBy(vendors, (v) => v.hash);
@@ -146,14 +149,15 @@ async function fetchVendor(
   vendorDef,
   characters: D1Store[],
   account: DestinyAccount,
-  defs: D1ManifestDefinitions
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
 ): Promise<Vendor | null> {
   if (vendorDenyList.includes(vendorDef.hash)) {
     return null;
   }
 
   const vendorsForCharacters = await Promise.all(
-    characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
+    characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs, buckets))
   );
   const nonNullVendors = _.compact(vendorsForCharacters);
   if (nonNullVendors.length) {
@@ -203,10 +207,11 @@ async function loadVendorForCharacter(
   account: DestinyAccount,
   store: D1Store,
   vendorDef,
-  defs: D1ManifestDefinitions
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
 ) {
   try {
-    return await loadVendor(account, store, vendorDef, defs);
+    return await loadVendor(account, store, vendorDef, defs, buckets);
   } catch (e) {
     if (vendorDef.hash !== 2796397637 && vendorDef.hash !== 2610555297) {
       // Xur, IB
@@ -250,7 +255,8 @@ function loadVendor(
   account: DestinyAccount,
   store: D1Store,
   vendorDef,
-  defs: D1ManifestDefinitions
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
 ) {
   const vendorHash = vendorDef.hash;
 
@@ -294,8 +300,7 @@ function loadVendor(
     })
     .then((vendor) => {
       if (vendor?.enabled) {
-        const processed = processVendor(vendor, vendorDef, defs, store);
-        return processed;
+        return processVendor(vendor, vendorDef, defs, store, buckets);
       }
       // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
       return Promise.resolve(null);
@@ -324,7 +329,13 @@ function calculateExpiration(nextRefreshDate: string, vendorHash: number): numbe
   return date;
 }
 
-function processVendor(vendor, vendorDef, defs: D1ManifestDefinitions, store: D1Store) {
+function processVendor(
+  vendor,
+  vendorDef,
+  defs: D1ManifestDefinitions,
+  store: D1Store,
+  buckets: InventoryBuckets
+) {
   const def = vendorDef.summary;
   const createdVendor: Vendor = {
     def: vendorDef,
@@ -356,8 +367,6 @@ function processVendor(vendor, vendorDef, defs: D1ManifestDefinitions, store: D1
   saleItems.forEach((saleItem) => {
     saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
   });
-
-  const buckets = bucketsSelector(rxStore.getState())!;
 
   return processItems(
     { id: null } as any,

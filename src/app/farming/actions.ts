@@ -10,12 +10,12 @@ import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
 import { observeStore } from 'app/utils/redux-utils';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { D1Store, D2Store, DimStore } from '../inventory/store-types';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
-import rxStore from '../store/store';
 import * as actions from './basic-actions';
 import { farmingInterruptedSelector, farmingStoreSelector } from './reducer';
 
@@ -55,9 +55,19 @@ export function startFarming(storeId: string): ThunkResult {
   return async (dispatch, getState) => {
     dispatch(actions.start(storeId));
 
-    console.log('Started farming', storeId);
+    const storeSelector = farmingStoreSelector();
+    const farmingStore = storeSelector(getState());
 
-    const unsubscribe = observeStore(farmingStoreSelector(), (farmingStore) => {
+    if (!farmingStore || farmingStore.id !== storeId) {
+      return;
+    }
+
+    console.log('Started farming', farmingStore.name);
+
+    let unsubscribe = _.noop;
+
+    unsubscribe = observeStore(storeSelector, (_, farmingStore) => {
+      console.log(farmingStore, storeId, unsubscribe);
       if (!farmingStore || farmingStore.id !== storeId) {
         unsubscribe();
         return;
@@ -143,34 +153,36 @@ export function makeRoomForItemsInBuckets(
   store: DimStore,
   makeRoomBuckets: InventoryBucket[]
 ): ThunkResult {
-  // If any category is full, we'll move one aside
-  const itemsToMove: DimItem[] = [];
-  const itemInfos = itemInfosSelector(rxStore.getState());
-  const itemHashTags = itemHashTagsSelector(rxStore.getState());
-  makeRoomBuckets.forEach((bucket) => {
-    const items = store.buckets[bucket.hash];
-    if (items.length > 0 && items.length >= capacityForItem(store, items[0])) {
-      const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
-      const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
-        moveAsideCandidates,
-        store,
-        getVault(stores)!,
-        itemInfos,
-        itemHashTags
-      );
-      // We'll move the first one to the vault
-      const itemToMove = prioritizedMoveAsideCandidates[0];
-      if (itemToMove) {
-        itemsToMove.push(itemToMove);
+  return async (dispatch, getState) => {
+    // If any category is full, we'll move one aside
+    const itemsToMove: DimItem[] = [];
+    const itemInfos = itemInfosSelector(getState());
+    const itemHashTags = itemHashTagsSelector(getState());
+    makeRoomBuckets.forEach((bucket) => {
+      const items = store.buckets[bucket.hash];
+      if (items.length > 0 && items.length >= capacityForItem(store, items[0])) {
+        const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+        const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+          moveAsideCandidates,
+          store,
+          getVault(stores)!,
+          itemInfos,
+          itemHashTags
+        );
+        // We'll move the first one to the vault
+        const itemToMove = prioritizedMoveAsideCandidates[0];
+        if (itemToMove) {
+          itemsToMove.push(itemToMove);
+        }
       }
+    });
+
+    if (itemsToMove.length === 0) {
+      return;
     }
-  });
 
-  if (itemsToMove.length === 0) {
-    return () => Promise.resolve();
-  }
-
-  return moveItemsToVault(store, itemsToMove, makeRoomBuckets);
+    return dispatch(moveItemsToVault(store, itemsToMove, makeRoomBuckets));
+  };
 }
 
 function moveItemsToVault(
