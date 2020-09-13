@@ -78,7 +78,7 @@ function loadManifest(): ThunkResult<any> {
     try {
       return await loadManifestFromCache(version);
     } catch (e) {
-      return dispatch(loadManifestRemote(version, path));
+      return await dispatch(loadManifestRemote(version, path));
     }
   };
 }

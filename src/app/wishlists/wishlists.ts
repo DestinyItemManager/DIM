@@ -1,5 +1,4 @@
-import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -89,7 +88,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   }
 
   // if it's a modification, ignore it
-  if (plug.plugDef.inventory!.bucketTypeHash === MODIFICATIONS_BUCKET) {
+  if (plug.plugDef.inventory!.bucketTypeHash === BucketHashes.Modifications) {
     return false;
   }
 

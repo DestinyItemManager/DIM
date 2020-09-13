@@ -2,10 +2,10 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
-import { SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
 import { powerActionIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
@@ -29,7 +29,7 @@ function getItemsInListByCategory({
   const itemSet: DimItem[] = [];
   const categoryBuckets = buckets.byCategory[category];
   const missingBuckets = categoryBuckets.filter((bucket) => {
-    if (bucket.hash === SEASONAL_ARTIFACT_BUCKET) {
+    if (bucket.hash === BucketHashes.SeasonalArtifact) {
       return;
     }
     const item = items.find((item) => bucket.type === item.type);

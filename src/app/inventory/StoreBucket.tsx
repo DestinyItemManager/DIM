@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
-import { ENGRAMS_BUCKET } from 'app/search/d2-known-values';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
@@ -151,7 +151,7 @@ function StoreBucket({
           <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
         ))}
         {store.isDestiny2() &&
-          bucket.hash === ENGRAMS_BUCKET && // Engrams. D1 uses this same bucket hash for "Missions"
+          bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
           _.times(bucket.capacity - unequippedItems.length, (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
           ))}

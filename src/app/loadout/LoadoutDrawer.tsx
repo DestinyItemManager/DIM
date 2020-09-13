@@ -1,7 +1,6 @@
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
 import { useSubscription } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -34,6 +33,7 @@ import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import { loadoutsSelector } from './reducer';
+import { getItemsFromLoadoutItems } from './loadout-utils';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -333,54 +333,6 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
   });
 }
 
-/**
- * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
- * are returned as warnitems.
- */
-function findItems(
-  loadoutItems: LoadoutItem[] | undefined,
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  stores: DimStore[]
-): [DimItem[], DimItem[]] {
-  if (!loadoutItems) {
-    return [emptyArray(), emptyArray()];
-  }
-
-  const findItem = (loadoutItem: LoadoutItem) => {
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-          return item;
-        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
-          return item;
-        }
-      }
-    }
-    return undefined;
-  };
-
-  const items: DimItem[] = [];
-  const warnitems: DimItem[] = [];
-  for (const loadoutItem of loadoutItems) {
-    const item = findItem(loadoutItem);
-    if (item) {
-      items.push(item);
-    } else {
-      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-      if (itemDef) {
-        // TODO: makeFakeItem
-        warnitems.push({
-          ...loadoutItem,
-          icon: itemDef.displayProperties?.icon || itemDef.icon,
-          name: itemDef.displayProperties?.name || itemDef.itemName,
-        } as DimItem);
-      }
-    }
-  }
-
-  return [items, warnitems];
-}
-
 function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
@@ -440,7 +392,7 @@ function LoadoutDrawer({
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => findItems(loadoutItems, defs, stores), [
+  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, stores), [
     defs,
     loadoutItems,
     stores,

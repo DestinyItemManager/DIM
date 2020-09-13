@@ -6,7 +6,6 @@ import {
   DimSocket,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import {
   DestinyEnergyType,
@@ -14,7 +13,7 @@ import {
   DestinyItemSubType,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   LockedArmor2Mod,
@@ -105,7 +104,7 @@ export function filterPlugs(socket: DimSocket) {
   // Only real mods
   if (
     !socket.isPerk &&
-    (plugItem.inventory!.bucketTypeHash !== MODIFICATIONS_BUCKET ||
+    (plugItem.inventory!.bucketTypeHash !== BucketHashes.Modifications ||
       !plugItem.inventory!.recoveryBucketTypeHash)
   ) {
     return false;

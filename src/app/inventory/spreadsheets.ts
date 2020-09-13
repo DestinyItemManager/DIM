@@ -1,3 +1,4 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
@@ -12,10 +13,8 @@ import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getRating } from '../item-review/reducer';
-import store from '../store/store';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
@@ -51,6 +50,9 @@ const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].inclu
 export function downloadCsvFiles(
   stores: DimStore[],
   itemInfos: ItemInfos,
+  ratings: {
+    [key: string]: DtrRating;
+  },
   type: 'Weapons' | 'Armor' | 'Ghost'
 ) {
   // perhaps we're loading
@@ -90,10 +92,10 @@ export function downloadCsvFiles(
   });
   switch (type) {
     case 'Weapons':
-      downloadWeapons(items, nameMap, itemInfos);
+      downloadWeapons(items, nameMap, itemInfos, ratings);
       break;
     case 'Armor':
-      downloadArmor(items, nameMap, itemInfos);
+      downloadArmor(items, nameMap, itemInfos, ratings);
       break;
     case 'Ghost':
       downloadGhost(items, nameMap, itemInfos);
@@ -109,8 +111,8 @@ interface CSVRow {
 }
 
 export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
-  return async (dispatch) => {
-    const account = getActivePlatform();
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState());
     if (!account) {
       return;
     }
@@ -287,7 +289,14 @@ export function source(item: DimItem) {
   }
 }
 
-function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
+function downloadArmor(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: ItemInfos,
+  ratings: {
+    [key: string]: DtrRating;
+  }
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -332,7 +341,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     }
 
     if ($featureFlags.reviewsEnabled) {
-      const dtrRating = getDtrRating(item);
+      const dtrRating = getRating(item, ratings);
       row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
       row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
     }
@@ -395,14 +404,13 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
-function getDtrRating(item: DimItem): DtrRating | undefined {
-  return getRating(item, store.getState().reviews.ratings);
-}
-
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos
+  itemInfos: ItemInfos,
+  ratings: {
+    [key: string]: DtrRating;
+  }
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -445,7 +453,7 @@ function downloadWeapons(
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
-    const dtrRating = getDtrRating(item);
+    const dtrRating = getRating(item, ratings);
 
     if ($featureFlags.reviewsEnabled) {
       row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';

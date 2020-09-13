@@ -54,7 +54,7 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   });
 
   useSubscription(() =>
-    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
+    refresh$.subscribe(() => queueAction<any>(() => getStoresService(account).reloadStores()))
   );
 
   const [selection, onSelection] = useState<ItemCategoryTreeNode[]>([]);

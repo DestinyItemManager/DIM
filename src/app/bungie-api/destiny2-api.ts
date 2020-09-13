@@ -234,7 +234,7 @@ export async function transfer(
     ? pullFromPostmaster(httpAdapter, request)
     : transferItem(httpAdapter, request);
   try {
-    return response;
+    return await response;
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
   }
@@ -283,15 +283,14 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
  * Set the lock state of an item.
  */
 export function setLockState(
-  store: DimStore,
+  account: DestinyAccount,
+  storeId: string,
   item: DimItem,
   lockState: boolean
 ): Promise<ServerResponse<number>> {
-  const account = getActivePlatform();
-
   return setItemLockState(httpAdapter, {
-    characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.originalPlatformType,
+    characterId: storeId,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
     state: lockState,
   });
@@ -301,19 +300,18 @@ export function setLockState(
  * Set the tracked state of an item.
  */
 export function setTrackedState(
-  store: DimStore,
+  account: DestinyAccount,
+  storeId: string,
   item: DimItem,
   trackedState: boolean
 ): Promise<ServerResponse<number>> {
-  const account = getActivePlatform();
-
   if (item.id === '0') {
     throw new Error("Can't track non-instanced items");
   }
 
   return setQuestTrackedState(httpAdapter, {
-    characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.originalPlatformType,
+    characterId: storeId,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
     state: trackedState,
   });
