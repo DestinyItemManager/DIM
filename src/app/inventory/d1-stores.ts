@@ -5,7 +5,6 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
-import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import store from '../store/store';
@@ -113,10 +112,6 @@ function StoreService(): D1StoreServiceType {
         return processStorePromises;
       })
       .then((stores) => {
-        if ($featureFlags.reviewsEnabled) {
-          store.dispatch(fetchRatings(stores));
-        }
-
         store.dispatch(cleanInfos(stores));
 
         // Let our styling know how many characters there are

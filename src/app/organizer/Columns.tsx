@@ -14,7 +14,6 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import RatingIcon from 'app/inventory/RatingIcon';
 import { source } from 'app/inventory/spreadsheets';
 import { statAllowList } from 'app/inventory/store/stats';
 import TagIcon from 'app/inventory/TagIcon';
@@ -22,8 +21,6 @@ import { ItemStatValue } from 'app/item-popup/ItemStat';
 import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
 import NotesArea from 'app/item-popup/NotesArea';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import { getRating } from 'app/item-review/reducer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -77,7 +74,6 @@ export function getColumns(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
-  ratings: { [key: string]: DtrRating },
   wishList: {
     [key: string]: InventoryWishListRoll;
   },
@@ -312,20 +308,6 @@ export function getColumns(
         filter: (value) =>
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
-    $featureFlags.reviewsEnabled && {
-      id: 'rating',
-      header: t('Organizer.Columns.Rating'),
-      value: (item) => ratings && getRating(item, ratings)?.overallScore,
-      cell: (overallScore: number, item) =>
-        overallScore > 0 ? (
-          <>
-            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-            {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
-          </>
-        ) : undefined,
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `rating:>=${value}`,
-    },
     {
       id: 'tier',
       header: t('Organizer.Columns.Tier'),

@@ -374,7 +374,6 @@ module.exports = (env) => {
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        '$featureFlags.reviewsEnabled': JSON.stringify(false),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(!env.release),

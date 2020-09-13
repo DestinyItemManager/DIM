@@ -29,8 +29,6 @@ interface Props {
   tag?: TagValue;
   /**  */
   notes?: boolean;
-  /** Rating value */
-  rating?: number;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishListsEnabled?: boolean;
@@ -49,7 +47,6 @@ export default function InventoryItem({
   isNew,
   tag,
   notes,
-  rating,
   searchHidden,
   wishListsEnabled,
   inventoryWishListRoll,
@@ -112,7 +109,7 @@ export default function InventoryItem({
       {(subclassPath?.base && <img src={subclassPath.base} className={itemImageStyles} />) || (
         <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       )}
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
+      <BadgeInfo item={item} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
       {item.masterwork && (
         <div
           className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}

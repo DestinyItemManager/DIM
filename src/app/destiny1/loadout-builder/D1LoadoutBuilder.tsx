@@ -166,7 +166,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       this.setState({ loadingVendors: true });
       dimVendorService.getVendorsStream(this.props.account).subscribe(([_, vendors]) => {
         this.setState({ vendors, loadingVendors: false });
-        dimVendorService.requestRatings();
       });
     }
 

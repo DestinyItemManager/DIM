@@ -6,7 +6,6 @@ import { accounts } from '../accounts/reducer';
 import { dimApi, DimApiState, initialState as dimApiInitialState } from '../dim-api/reducer';
 import { farming } from '../farming/reducer';
 import { inventory } from '../inventory/reducer';
-import { reviews } from '../item-review/reducer';
 import { loadouts } from '../loadout/reducer';
 import { manifest } from '../manifest/reducer';
 import { shell } from '../shell/reducer';
@@ -17,7 +16,6 @@ const reducer: Reducer<RootState> = (state, action) => {
   const combinedReducers = combineReducers({
     accounts,
     inventory,
-    reviews,
     shell,
     loadouts,
     wishLists,

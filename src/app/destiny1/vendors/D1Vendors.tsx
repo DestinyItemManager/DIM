@@ -39,7 +39,6 @@ export default class D1Vendors extends React.Component<Props, State> {
       }),
       dimVendorService.getVendorsStream(this.props.account).subscribe(([stores, vendors]) => {
         this.setState({ stores, vendors });
-        dimVendorService.requestRatings();
       })
     );
   }

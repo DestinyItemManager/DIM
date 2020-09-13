@@ -11,7 +11,6 @@ import { D1StoresService } from '../../inventory/d1-stores';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store } from '../../inventory/store-types';
 import { processItems } from '../../inventory/store/d1-item-factory';
-import { updateVendorRankings } from '../../item-review/destiny-tracker.service';
 import { loadingTracker } from '../../shell/loading-tracker';
 import { default as rxStore, default as store } from '../../store/store';
 import { D1ManifestDefinitions, getDefinitions } from '../d1-definitions';
@@ -127,7 +126,6 @@ export interface VendorServiceType {
   getVendorsStream(account: DestinyAccount): Observable<[D1Store[], this['vendors']]>;
   reloadVendors(): void;
   getVendors(): this['vendors'];
-  requestRatings(): Promise<void>;
   countCurrencies(
     stores: D1Store[],
     vendors: this['vendors']
@@ -139,8 +137,6 @@ export interface VendorServiceType {
 export const dimVendorService = VendorService();
 
 function VendorService(): VendorServiceType {
-  let _ratingsRequested = false;
-
   const service: VendorServiceType = {
     vendorsLoaded: false,
     getVendorsStream,
@@ -152,7 +148,6 @@ function VendorService(): VendorServiceType {
     vendors: {},
     totalVendors: 0,
     loadedVendors: 0,
-    requestRatings,
     countCurrencies,
     // TODO: expose getVendor promise, idempotently?
   };
@@ -264,7 +259,6 @@ function VendorService(): VendorServiceType {
       })
       .then(() => {
         service.vendorsLoaded = true;
-        fulfillRatingsRequest();
         return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];
       });
 
@@ -535,20 +529,6 @@ function VendorService(): VendorServiceType {
 
   function isSaleItemUnlocked(saleItem) {
     return saleItem.unlockStatuses.every((s) => s.isSet);
-  }
-
-  // TODO: do this with another observable!
-  function requestRatings() {
-    _ratingsRequested = true;
-    return fulfillRatingsRequest();
-  }
-
-  async function fulfillRatingsRequest() {
-    if ($featureFlags.reviewsEnabled && service.vendorsLoaded && _ratingsRequested) {
-      // TODO: Throttle this. Right now we reload this on every page
-      // view and refresh of the vendors page.
-      store.dispatch(updateVendorRankings(service.vendors));
-    }
   }
 
   /**

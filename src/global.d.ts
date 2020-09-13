@@ -11,8 +11,6 @@ declare const $BROWSERS: string[];
 declare const $featureFlags: {
   /** Print debug info to console about item moves */
   debugMoves: boolean;
-  /** Enable item reviews */
-  reviewsEnabled: boolean;
   /** Sync data over gdrive */
   gdrive: boolean;
   debugSync: boolean;

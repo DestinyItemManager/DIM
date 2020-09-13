@@ -17,7 +17,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Events from 'data/d2/events.json';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
@@ -422,9 +422,6 @@ export function makeItem(
       createdItem.bucket.hash === BucketHashes.Shaders_Equippable
   );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean(
-    $featureFlags.reviewsEnabled && isWeaponOrArmor1OrExoticArmor2(createdItem)
-  );
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
@@ -572,16 +569,6 @@ export function makeItem(
   createdItem.index = createItemIndex(createdItem);
 
   return createdItem;
-}
-
-function isWeaponOrArmor1OrExoticArmor2(item: D2Item) {
-  return (
-    item.primStat &&
-    (item.primStat.statHash === StatHashes.Attack || // weapon
-      (item.primStat.statHash === StatHashes.Defense && // armor
-        (!item.energy || // energy is an armor 2.0 signifier
-          item.isExotic))) // but we want to allow exotic armor 2.0 reviews
-  );
 }
 
 function isLegendaryOrBetter(item) {

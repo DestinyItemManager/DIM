@@ -2,7 +2,6 @@ import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filter';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -27,7 +26,6 @@ interface StoreProps {
   isNew: boolean;
   tag?: TagValue;
   notes?: boolean;
-  rating?: number;
   searchHidden?: boolean;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
@@ -37,10 +35,6 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item } = props;
 
   const settings = settingsSelector(state);
-  const dtrRating = $featureFlags.reviewsEnabled
-    ? getRating(item, ratingsSelector(state))
-    : undefined;
-  const showRating = $featureFlags.reviewsEnabled && shouldShowRating(dtrRating);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
 
@@ -48,7 +42,6 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, itemInfos, itemHashTags),
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
-    rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     wishListsEnabled: wishListsEnabledSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
@@ -66,7 +59,6 @@ function ConnectedInventoryItem({
   isNew,
   tag,
   notes,
-  rating,
   onClick,
   onShiftClick,
   onDoubleClick,
@@ -82,7 +74,6 @@ function ConnectedInventoryItem({
       isNew={isNew}
       tag={tag}
       notes={notes}
-      rating={rating}
       onClick={onClick}
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}

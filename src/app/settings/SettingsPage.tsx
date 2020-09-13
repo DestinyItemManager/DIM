@@ -8,13 +8,10 @@ import { itemTagList } from 'app/inventory/dim-item-info';
 import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { clearRatings } from 'app/item-review/actions';
-import { fetchRatings } from 'app/item-review/destiny-tracker.service';
 import WishListSettings from 'app/settings/WishListSettings';
 import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
@@ -24,13 +21,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getPlatforms } from '../accounts/platforms';
 import { getDefinitions } from '../destiny2/d2-definitions';
-import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
-import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
-import RatingsKey from '../item-review/RatingsKey';
-import { reviewModesSelector } from '../item-review/reducer';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import { setCharacterOrder, setSetting } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
@@ -55,7 +48,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   storesLoaded: boolean;
   stores: DimStore[];
-  reviewModeOptions: D2ReviewMode[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -64,7 +56,6 @@ function mapStateToProps(state: RootState): StoreProps {
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
     currentAccount: currentAccountSelector(state),
   };
 }
@@ -159,7 +150,6 @@ const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 function SettingsPage({
   settings,
   isPhonePortrait,
-  reviewModeOptions,
   storesLoaded,
   stores,
   currentAccount,
@@ -198,18 +188,6 @@ function SettingsPage({
   const resetItemSize = (e) => {
     e.preventDefault();
     dispatch(setSetting('itemSize', 50));
-    return false;
-  };
-
-  const saveAndReloadReviews = (e) => {
-    e.preventDefault();
-    onChange(e);
-
-    if ($featureFlags.reviewsEnabled) {
-      dispatch(clearRatings());
-      dispatch(fetchRatings());
-    }
-
     return false;
   };
 
@@ -338,12 +316,7 @@ function SettingsPage({
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem
-                item={(fakeWeapon as any) as DimItem}
-                isNew={true}
-                rating={4.6}
-                tag="favorite"
-              />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} tag="favorite" />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
@@ -478,7 +451,7 @@ function SettingsPage({
           <section id="ratings">
             <h2>{t('Settings.Ratings')}</h2>
             <div className="examples sub-bucket">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} />
               <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
             </div>
 
@@ -488,57 +461,6 @@ function SettingsPage({
               value={settings.itemQuality}
               onChange={onChange}
             />
-
-            {$featureFlags.reviewsEnabled && (
-              <>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.ShowReviews')}
-                    name="showReviews"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
-                    value={settings.showReviews}
-                    onChange={onChange}
-                  />
-                  <RatingsKey />
-                </div>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.AllowIdPostToDtr')}
-                    name="allowIdPostToDtr"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
-                    value={settings.allowIdPostToDtr}
-                    onChange={onChange}
-                  />
-                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
-                </div>
-
-                {settings.allowIdPostToDtr && (
-                  <>
-                    <Select
-                      label={t('Settings.ReviewsPlatformSelection')}
-                      name="reviewsPlatformSelectionV2"
-                      value={settings.reviewsPlatformSelectionV2}
-                      options={reviewPlatformOptions.map((o) => ({
-                        name: t(o.description),
-                        value: o.platform,
-                      }))}
-                      onChange={saveAndReloadReviews}
-                    />
-
-                    <Select
-                      label={t('Settings.ReviewsModeSelection')}
-                      name="reviewsModeSelection"
-                      value={settings.reviewsModeSelection}
-                      options={reviewModeOptions.map((m) => ({
-                        name: m.description,
-                        value: m.mode,
-                      }))}
-                      onChange={saveAndReloadReviews}
-                    />
-                  </>
-                )}
-              </>
-            )}
           </section>
 
           <ErrorBoundary name="StorageSettings">

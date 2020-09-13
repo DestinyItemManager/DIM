@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { getRating } from '../item-review/reducer';
 import store from '../store/store';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
@@ -114,17 +113,6 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || item.primStat?.value)
-  ),
-  rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) => {
-      if (item.quality?.min) {
-        return item.quality.min;
-      }
-      const dtrRating = $featureFlags.reviewsEnabled
-        ? getRating(item, store.getState().reviews.ratings)
-        : undefined;
-      return dtrRating?.overallScore;
-    })
   ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),

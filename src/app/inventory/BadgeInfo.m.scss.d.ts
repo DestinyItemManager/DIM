@@ -9,7 +9,6 @@ interface CssExports {
   'masterwork': string;
   'primaryStat': string;
   'quality': string;
-  'review': string;
   'solar': string;
   'void': string;
   'wishlistRoll': string;

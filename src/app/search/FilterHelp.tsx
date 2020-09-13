@@ -505,32 +505,6 @@ function FilterHelp({ destinyVersion }: { destinyVersion: DestinyVersion }) {
               <td>{t('Filter.NewItems')}</td>
             </tr>
 
-            {$featureFlags.reviewsEnabled && (
-              <>
-                <tr>
-                  <td>
-                    <span>is:rated</span>
-                  </td>
-                  <td>{t('Filter.Rated')}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <span>rating:value</span> <span>rating:&gt;=value</span>{' '}
-                    <span>rating:&gt;value</span> <span>rating:&lt;value</span>{' '}
-                    <span>rating:&lt;=value</span>
-                  </td>
-                  <td>{t('Filter.Rating')}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <span>ratingcount:&gt;=value</span> <span>ratingcount:&gt;value</span>
-                    <span>ratingcount:&lt;value</span> <span>ratingcount:&lt;=value</span>
-                  </td>
-                  <td>{t('Filter.RatingCount')}</td>
-                </tr>
-              </>
-            )}
-
             <tr>
               <td>
                 <span>is:inleftchar</span> <span>is:inmiddlechar</span> <span>is:inrightchar</span>
