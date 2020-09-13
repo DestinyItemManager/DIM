@@ -3,6 +3,7 @@ import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
@@ -37,6 +38,7 @@ import {
 import { compareBy } from 'app/utils/comparators';
 import {
   getItemDamageShortName,
+  getItemKillTrackerInfo,
   getItemPowerCapFinalSeason,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
@@ -497,21 +499,21 @@ export function getColumns(
       isWeapon && {
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
-        value: (item) =>
-          (item.isDestiny2() &&
-            item.masterworkInfo &&
-            Boolean(item.masterwork || item.masterworkInfo.progress) &&
-            item.masterworkInfo.typeName &&
-            (item.masterworkInfo.progress || 0)) ||
-          undefined,
-        cell: (value, item) =>
-          item.isDestiny2() &&
-          (value || value === 0) && (
-            <div title={item.masterworkInfo!.typeDesc ?? undefined} className={styles.modPerk}>
-              {item.masterworkInfo!.typeIcon && <BungieImage src={item.masterworkInfo!.typeIcon} />}{' '}
-              {value}
-            </div>
-          ),
+        value: (item) => {
+          if (!item.isDestiny2()) {
+            return;
+          }
+          const killTrackerInfo = getItemKillTrackerInfo(item);
+          return killTrackerInfo?.count;
+        },
+        cell: (_, item) => {
+          const killTrackerInfo = item.isDestiny2() && getItemKillTrackerInfo(item);
+          return (
+            killTrackerInfo && (
+              <KillTrackerInfo tracker={killTrackerInfo} defs={defs} className={styles.modPerk} />
+            )
+          );
+        },
         defaultSort: SortDirection.DESC,
       },
     {
