@@ -1,3 +1,4 @@
+import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
@@ -10,10 +11,10 @@ import {
 } from 'react-dnd';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
-import moveDroppedItem from './move-dropped-item';
+import { moveItemTo } from './move-item';
 import { DimStore } from './store-types';
 
-interface ExternalProps {
+interface ExternalProps extends ThunkDispatchProp {
   bucket: InventoryBucket;
   store: DimStore;
   equip?: boolean;
@@ -42,7 +43,7 @@ const dropSpec: DropTargetSpec<Props> = {
     // https://github.com/react-dnd/react-dnd-html5-backend/issues/23
     const shiftPressed = (component as StoreBucketDropTarget).shiftKeyDown;
     const item = monitor.getItem().item as DimItem;
-    moveDroppedItem(props.store, item, Boolean(props.equip), shiftPressed);
+    props.dispatch(moveItemTo(item, props.store, Boolean(props.equip), item.amount, shiftPressed));
   },
   canDrop(props, monitor) {
     // You can drop anything that can be transferred into a non-equipped bucket

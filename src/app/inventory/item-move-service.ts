@@ -1,7 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { ThunkResult } from 'app/store/types';
+import { ThunkDispatchProp, ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -39,6 +39,8 @@ import { DimStore } from './store-types';
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
 import { getCurrentStore, getItemAcrossStores, getStore, getVault } from './stores-helpers';
+
+const dispatch = reduxStore.dispatch as ThunkDispatchProp['dispatch'];
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -278,7 +280,7 @@ function ItemService(): ItemServiceType {
       });
     }
 
-    reduxStore.dispatch(touch());
+    dispatch(touch());
 
     return item;
   }
@@ -507,7 +509,7 @@ function ItemService(): ItemServiceType {
           'to work around Bungie.net lock state bug'
         );
         try {
-          await setItemLockState(item, overrideLockState);
+          await dispatch(setItemLockState(item, overrideLockState));
         } catch (e) {
           console.error('Lock state override failed', e);
         }
