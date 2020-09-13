@@ -19,12 +19,12 @@ import locationFilters from './search-filters/stores';
 import wishlistFilters from './search-filters/wishlist';
 
 const allFilters = [
-  ...advancedFilters,
-  ...d1Filters,
   ...dupeFilters,
+  ...($featureFlags.wishLists ? wishlistFilters : []),
   ...freeformFilters,
   ...itemInfosFilters,
   ...knownValuesFilters,
+  ...d1Filters,
   ...loadoutFilters,
   ...simpleRangeFilters,
   ...overloadedRangeFilters,
@@ -33,7 +33,7 @@ const allFilters = [
   ...socketFilters,
   ...statFilters,
   ...locationFilters,
-  ...($featureFlags.wishLists ? wishlistFilters : []),
+  ...advancedFilters,
 ];
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
@@ -43,27 +43,32 @@ export const searchConfigSelector = createSelector(destinyVersionSelector, build
 //
 
 export interface SearchConfig {
+  allFilters: FilterDefinition[];
   filters: Record<string, FilterDefinition>;
   keywords: string[];
 }
 
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
-  let keywords: string[] = [];
+  const keywords = new Set<string>();
   const allFiltersByKeyword: Record<string, FilterDefinition> = {};
+  const allApplicableFilters: FilterDefinition[] = [];
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
-      keywords.push(...generateSuggestionsForFilter(filter));
+      for (const keyword of generateSuggestionsForFilter(filter)) {
+        keywords.add(keyword);
+      }
+      allApplicableFilters.push(filter);
       const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
       for (const keyword of filterKeywords) {
         allFiltersByKeyword[keyword] = filter;
       }
     }
   }
-  keywords = Array.from(new Set(keywords));
 
   return {
-    keywords,
+    allFilters: allApplicableFilters,
+    keywords: Array.from(keywords),
     filters: allFiltersByKeyword,
   };
 }
@@ -77,7 +82,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
  *
  * `[ a:, a:b:, a:c:, a:b:d, a:b:e, a:c:d, a:c:e ]`
  */
-function expandStringCombinations(stringGroups: string[][]) {
+function expandStringCombinations(stringGroups: string[][], minDepth = 0) {
   const results: string[][] = [];
   for (let i = 0; i < stringGroups.length; i++) {
     const stringGroup = stringGroups[i];
@@ -92,7 +97,7 @@ function expandStringCombinations(stringGroups: string[][]) {
     );
     results.push(newResults);
   }
-  return results.flat();
+  return results.slice(minDepth).flat();
 }
 
 const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
@@ -114,11 +119,12 @@ export function generateSuggestionsForFilter(filterDefinition: FilterDefinition)
     case 'range':
       return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions, operators]);
     case 'rangeoverload':
-      return expandStringCombinations([
-        thisFilterKeywords,
-        [...nestedSuggestions[0], ...operators],
-      ]);
+      return [
+        ...expandStringCombinations([thisFilterKeywords, operators]),
+        ...expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]),
+      ];
     default:
-      return expandStringCombinations([['is', 'not'], thisFilterKeywords]);
+      // Pass minDepth 1 to not generate "is:" and "not:" suggestions
+      return expandStringCombinations([['is', 'not'], thisFilterKeywords], 1);
   }
 }

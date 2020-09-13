@@ -14,7 +14,7 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: 'weapon',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Weapon'),
     filter: () => (item) =>
       item.bucket?.sort === 'Weapons' &&
       item.bucket.type !== 'SeasonalArtifacts' &&
@@ -22,7 +22,7 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: 'armor',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Armor'),
     filter: () => (item) => item.bucket?.sort === 'Armor',
   },
   {

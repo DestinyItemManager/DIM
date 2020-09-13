@@ -111,7 +111,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'dupelower',
-    description: tl('Filter.Dupe'),
+    description: tl('Filter.DupeLower'),
     filter: ({ stores, itemInfos, itemHashTags }) => {
       const duplicates = sortDupes(computeDupes(stores), itemInfos, itemHashTags);
       return (item) => {
@@ -138,7 +138,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'count',
-    description: tl('Filter.Dupe'),
+    description: tl('Filter.DupeCount'),
     format: 'range',
     filter: ({ stores, filterValue }) => {
       const compare = rangeStringToComparator(filterValue);

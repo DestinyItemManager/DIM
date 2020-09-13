@@ -17,6 +17,7 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
 import Login from './login/Login';
 import NotificationsContainer from './notifications/NotificationsContainer';
+import FilterHelp from './search/FilterHelp';
 import { settingsSelector } from './settings/reducer';
 import About from './shell/About';
 import AccountRedirectRoute from './shell/AccountRedirectRoute';
@@ -169,6 +170,9 @@ function App({
                 </Route>
                 <Route path="/settings" exact>
                   <SettingsPage />
+                </Route>
+                <Route path="/search-help" exact>
+                  <FilterHelp />
                 </Route>
                 <Route
                   path="/:membershipId(\d+)/d:destinyVersion(1|2)"

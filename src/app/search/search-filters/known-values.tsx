@@ -80,7 +80,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: 'cosmetic',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Cosmetic'),
     filter: () => (item) => cosmeticTypes.includes(item.type),
   },
   {
