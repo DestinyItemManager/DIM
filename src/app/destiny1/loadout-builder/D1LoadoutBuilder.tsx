@@ -2,7 +2,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
@@ -13,7 +13,7 @@ import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
-import { D1StoresService } from '../../inventory/d1-stores';
+import { loadStores } from '../../inventory/d1-stores';
 import { InventoryBuckets } from '../../inventory/inventory-buckets';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
 import { bucketsSelector, storesSelector } from '../../inventory/selectors';
@@ -22,7 +22,7 @@ import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { getColor } from '../../shell/filters';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
-import { dimVendorService, Vendor } from '../vendors/vendor.service';
+import { loadVendors, Vendor } from '../vendors/vendor.service';
 import { getSetBucketsStep } from './calculate';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
@@ -53,7 +53,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -129,11 +129,10 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    if (!this.props.stores.length) {
-      D1StoresService.getStoresStream(this.props.account);
-    }
-
-    if (this.props.stores.length > 0) {
+    const { stores, dispatch } = this.props;
+    if (!stores.length) {
+      dispatch(loadStores());
+    } else {
       // Exclude felwinters if we have them, but only the first time stores load
       const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
@@ -166,9 +165,8 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (this.state.includeVendors && !this.state.vendors && !this.state.loadingVendors) {
       this.setState({ loadingVendors: true });
-      dimVendorService.getVendorsStream(this.props.account).subscribe(([_, vendors]) => {
+      this.props.dispatch(loadVendors()).then((vendors) => {
         this.setState({ vendors, loadingVendors: false });
-        dimVendorService.requestRatings();
       });
     }
 
