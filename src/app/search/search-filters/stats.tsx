@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { D2Item, DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
@@ -85,7 +85,10 @@ export default statFilters;
 /**
  * given a stat name, this returns a FilterDefinition for comparing that stat
  */
-function statFilterFromString(filterValue: string, byBaseValue = false) {
+function statFilterFromString(
+  filterValue: string,
+  byBaseValue = false
+): (item: DimItem) => boolean {
   const [statName, statValue, shouldntExist] = filterValue.split(':');
 
   // we are looking for, at most, 3 colons in the overall filter text,

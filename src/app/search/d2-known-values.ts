@@ -130,12 +130,12 @@ export const D2WeaponStatHashByName = {
 };
 
 export const swordStatsByName = {
-  swingSpeed: StatHashes.SwingSpeed,
-  guardEfficiency: StatHashes.GuardEfficiency,
-  guardResistance: StatHashes.GuardResistance,
-  chargeRate: StatHashes.ChargeRate,
-  guardEndurance: StatHashes.GuardEndurance,
-  ammoCapacity: StatHashes.AmmoCapacity,
+  swingspeed: StatHashes.SwingSpeed,
+  guardefficiency: StatHashes.GuardEfficiency,
+  guardresistance: StatHashes.GuardResistance,
+  chargerate: StatHashes.ChargeRate,
+  guardendurance: StatHashes.GuardEndurance,
+  ammocapacity: StatHashes.AmmoCapacity,
 };
 
 //
