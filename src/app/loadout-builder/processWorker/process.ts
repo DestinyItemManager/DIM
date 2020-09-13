@@ -3,18 +3,13 @@ import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import {
-  canTakeAllGeneralMods,
-  canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
-} from './processUtils';
+import { canTakeAllGeneralMods, canTakeAllSeasonalMods } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
-  ProcessMod,
 } from './types';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -90,7 +85,6 @@ function insertIntoSetTracker(
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
-  processedSeasonalMods: ProcessMod[],
   modStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ProcessMods,
   assumeMasterwork: boolean,
@@ -104,8 +98,6 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
-
-  processedSeasonalMods.sort(sortProcessModsOrProcessItems);
 
   const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
   const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
@@ -260,12 +252,10 @@ export function process(
                 }
               }
 
-              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements.
-              // For mod armour 2 mods we do seasonal first as its more likely to have energy specific mods.
+              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+              // and we do seasonal first as its more likely to have energy specific mods.
               // TODO Check validity of this with the energy contraints in.
               if (
-                (processedSeasonalMods.length &&
-                  !canTakeAllSeasonalMods(processedSeasonalMods, armor)) ||
                 (lockedArmor2ModMap.seasonal.length &&
                   !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
                 (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&

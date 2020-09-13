@@ -8,7 +8,7 @@ import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import { LockedArmor2Mod, ModPickerCategories, ModPickerCategory } from '../types';
 import styles from './PickerSection.m.scss';
 
-export default function ModPickerSection({
+export default function PickerSectionMods({
   defs,
   mods,
   locked,
