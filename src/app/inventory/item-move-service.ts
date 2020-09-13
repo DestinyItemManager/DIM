@@ -507,7 +507,7 @@ function ItemService(): ItemServiceType {
           'to work around Bungie.net lock state bug'
         );
         try {
-          await setItemLockState(item, overrideLockState);
+          setItemLockState(item, overrideLockState);
         } catch (e) {
           console.error('Lock state override failed', e);
         }
