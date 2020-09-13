@@ -477,6 +477,7 @@ function ItemService(): ItemServiceType {
     // Note that this can result in the wrong lock state if DIM is out of date (they've locked/unlocked in game but we haven't refreshed).
     // Only apply this hack if the source bucket contains duplicates of the same item hash.
     const overrideLockState =
+      item.lockable &&
       count(ownerStore.buckets[item.location.hash], (i) => i.hash === item.hash) > 1
         ? item.locked
         : undefined;
