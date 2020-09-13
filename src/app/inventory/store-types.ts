@@ -90,23 +90,6 @@ export interface DimStore<Item = DimItem> {
     progressions: DestinyProgression[];
   };
 
-  /**
-   * Get the total amount of this item in the store, across all stacks,
-   * excluding stuff in the postmaster.
-   */
-  amountOfItem(item: { hash: number }): number;
-  /**
-   * How much of items like this item can fit in this store? For
-   * stackables, this is in stacks, not individual pieces.
-   */
-  capacityForItem(item: Item): number;
-  /**
-   * How many *more* items like this item can fit in this store?
-   * This takes into account stackables, so the answer will be in
-   * terms of individual pieces.
-   */
-  spaceLeftForItem(item: Item): number;
-
   /** Remove an item from this store. Returns whether it actually removed anything. */
   removeItem(item: Item): boolean;
 
