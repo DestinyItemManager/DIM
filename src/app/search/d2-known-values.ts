@@ -75,6 +75,16 @@ export const armor2PlugCategoryHashesByName = {
 
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
+export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
+  74070459: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[38912240] "Crucible Tracker"
+  1501870536: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[2285636663] "Crucible Tracker"
+  2439952408: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[3244015567] "Crucible Tracker"
+  73837075: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[905869860] "Kill Tracker"
+  90275515: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2240097604] "Kill Tracker"
+  2579044636: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2302094943] "Kill Tracker"
+};
+export const killTrackerSocketTypeHash = 1282012138;
+
 //
 // STATS KNOWN VALUES
 //

@@ -1,11 +1,13 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
+import { getItemKillTrackerInfo } from 'app/utils/item-utils';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
@@ -58,6 +60,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
+  const killTrackerInfo = item.isDestiny2() && getItemKillTrackerInfo(item);
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -89,23 +92,14 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() &&
-        item.masterworkInfo &&
-        Boolean(item.masterwork || item.masterworkInfo.progress) &&
-        item.masterworkInfo.typeName && (
-          <div className="masterwork-progress">
-            {item.masterworkInfo.typeIcon && (
-              <BungieImage
-                src={item.masterworkInfo.typeIcon}
-                title={item.masterworkInfo.typeName || undefined}
-              />
-            )}{' '}
-            <span>
-              {item.masterworkInfo.typeDesc}{' '}
-              <strong>{(item.masterworkInfo.progress || 0).toLocaleString()}</strong>
-            </span>
-          </div>
-        )}
+      {killTrackerInfo && isD2Manifest(defs) && (
+        <KillTrackerInfo
+          tracker={killTrackerInfo}
+          defs={defs}
+          textLabel={true}
+          className="masterwork-progress"
+        />
+      )}
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
