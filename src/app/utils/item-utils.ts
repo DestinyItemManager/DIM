@@ -172,7 +172,7 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
 }
 
 /** verifies an item has kill tracker mod slot, which is returned */
-export const getKillTrackerSocket = (item: D2Item): DimSocket | undefined => {
+const getKillTrackerSocket = (item: D2Item): DimSocket | undefined => {
   if (item.bucket.inWeapons) {
     return item.sockets?.allSockets.find(
       (socket) =>

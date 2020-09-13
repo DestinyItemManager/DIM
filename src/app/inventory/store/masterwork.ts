@@ -1,6 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DamageType } from 'bungie-api-ts/destiny2';
-// import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { D2Item, DimMasterwork, DimSockets } from '../item-types';
 
 /**
