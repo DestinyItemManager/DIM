@@ -10,7 +10,14 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
-import { D2Item, DimPlug, DimSocket, DimSocketCategory, DimItem } from '../inventory/item-types';
+import {
+  D2Item,
+  DimPlug,
+  DimSocket,
+  DimSocketCategory,
+  DimItem,
+  DimAdjustedItemPlug,
+} from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { getItemReviews } from '../item-review/destiny-tracker.service';
 import { getReviews } from '../item-review/reducer';
@@ -26,7 +33,7 @@ interface ProvidedProps {
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
   updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: { [socketIndex: number]: DimPlug } | undefined;
+  adjustedItemPlugs?: DimAdjustedItemPlug;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   onShiftClick?(lockedItem: LockedItemType): void;

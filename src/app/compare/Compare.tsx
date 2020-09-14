@@ -24,7 +24,14 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimStat, DimSocket, DimPlug } from '../inventory/item-types';
+import {
+  DimItem,
+  DimStat,
+  DimSocket,
+  DimPlug,
+  DimAdjustedPlugs,
+  DimAdjustedStats,
+} from '../inventory/item-types';
 import { isEmpty, cloneDeep } from 'lodash';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { showNotification } from '../notifications/notifications';
@@ -66,8 +73,8 @@ interface State {
   sortedHash?: string | number;
   sortBetterFirst: boolean;
   comparisonSets: { buttonLabel: React.ReactNode; items: DimItem[] }[];
-  adjustedPlugs?: { [itemId: string]: { [socketIndex: number]: DimPlug } } | undefined;
-  adjustedStats?: { [itemId: string]: { [statHash: number]: number } } | undefined;
+  adjustedPlugs?: DimAdjustedPlugs;
+  adjustedStats?: DimAdjustedStats;
 }
 
 export interface StatInfo {
@@ -349,8 +356,8 @@ class Compare extends React.Component<Props, State> {
                   setHighlight={this.setHighlight}
                   highlight={highlight}
                   updateSocketComparePlug={updateSocketComparePlug}
-                  adjustedItemPlugs={adjustedPlugs?.[item.id] ?? undefined}
-                  adjustedItemStats={adjustedStats?.[item.id] ?? undefined}
+                  adjustedItemPlugs={adjustedPlugs?.[item.id]}
+                  adjustedItemStats={adjustedStats?.[item.id]}
                   compareBaseStats={compareBaseStats}
                 />
               ))}

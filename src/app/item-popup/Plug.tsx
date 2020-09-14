@@ -43,7 +43,7 @@ export default function Plug({
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
-  adjustedPlug: DimPlug | undefined;
+  adjustedPlug?: DimPlug;
 }) {
   // Support dragging over plugs items on mobile
   const [{ hovering }, drop] = useDrop({

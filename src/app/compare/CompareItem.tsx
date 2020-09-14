@@ -1,6 +1,12 @@
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { DimItem, DimSocket, DimPlug } from '../inventory/item-types';
+import {
+  DimItem,
+  DimSocket,
+  DimPlug,
+  DimAdjustedItemPlug,
+  DimAdjustedItemStat,
+} from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTagSelector from '../item-popup/ItemTagSelector';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
@@ -29,8 +35,8 @@ export default function CompareItem({
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
   updateSocketComparePlug(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs: { [socketIndex: number]: DimPlug } | undefined;
-  adjustedItemStats: { [statHash: number]: number } | undefined;
+  adjustedItemPlugs?: DimAdjustedItemPlug;
+  adjustedItemStats?: DimAdjustedItemStat;
 }) {
   return (
     <div className="compare-item">

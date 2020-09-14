@@ -4,7 +4,7 @@ import RecoilStat from 'app/item-popup/RecoilStat';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { D1Stat, DimItem } from '../inventory/item-types';
+import { D1Stat, DimItem, DimAdjustedItemStat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import { MinimalStat, StatInfo } from './Compare';
@@ -22,7 +22,7 @@ export default function CompareStat({
   item: DimItem;
   highlight?: number | string | undefined;
   setHighlight?(value?: string | number): void;
-  adjustedItemStats?: { [statHash: number]: number } | undefined;
+  adjustedItemStats?: DimAdjustedItemStat;
 }) {
   const itemStat = stat.getStat(item);
   const adjustedStatValue = itemStat ? adjustedItemStats?.[itemStat.statHash] : undefined;
