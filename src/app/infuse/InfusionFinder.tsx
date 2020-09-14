@@ -328,7 +328,7 @@ function isInfusable(target: DimItem, source: DimItem) {
 
   if (source.isDestiny1() && target.isDestiny1()) {
     return source.type === target.type && target.primStat!.value < source.primStat!.value;
-  } else if (source.isDestiny2() && target.isDestiny2()) {
+  } else {
     return (
       source.infusionQuality &&
       target.infusionQuality &&

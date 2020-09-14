@@ -522,9 +522,8 @@ export function makeItem(
 
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
-  createdItem.infusionProcess = tier?.infusionProcess ?? null;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
+    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
