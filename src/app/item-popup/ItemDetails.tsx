@@ -140,7 +140,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() && item.flavorObjective && (
+      {item.flavorObjective && (
         <div className="item-details">
           <div className="flavor-objective">
             <BungieImage src={item.flavorObjective.icon} />

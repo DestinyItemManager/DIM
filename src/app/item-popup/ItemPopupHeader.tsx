@@ -40,7 +40,7 @@ export default function ItemPopupHeader({
     item.stats?.length ||
       item.talentGrid ||
       item.objectives ||
-      (item.isDestiny2() && item.flavorObjective) ||
+      item.flavorObjective ||
       item.secondaryIcon
   );
   const showDescription = Boolean(item.description?.length);
