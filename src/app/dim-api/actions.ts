@@ -7,7 +7,6 @@ import { showNotification } from 'app/notifications/notifications';
 import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh';
-import { SyncService } from 'app/storage/sync.service';
 import { RootState, ThunkResult } from 'app/store/types';
 import { delay } from 'app/utils/util';
 import { deepEqual } from 'fast-equals';
@@ -37,7 +36,6 @@ import {
   profileLoadError,
   setApiPermissionGranted,
 } from './basic-actions';
-import { importDataBackup } from './import';
 import { DimApiState } from './reducer';
 import { apiPermissionGrantedSelector } from './selectors';
 
@@ -182,11 +180,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     installObservers(dispatch); // idempotent
 
     if (!getState().dimApi.apiPermissionGranted) {
-      // If they don't have any data in the new storage model, try to get it from the old one
-      if (_.isEmpty(getState().dimApi.profiles)) {
-        await dispatch(tryLoadLegacyData());
-      }
-
       // They don't want to sync to the server, stay local only
       readyResolve();
       return;
@@ -345,21 +338,6 @@ export function loadProfileFromIndexedDB(): ThunkResult<any> {
     }
 
     dispatch(profileLoadedFromIDB(profile));
-  };
-}
-
-/**
- * Try to automatically load legacy data into the new model - this is only intended for when
- * DIM Sync is disabled.
- */
-function tryLoadLegacyData(): ThunkResult {
-  return async (dispatch, getState) => {
-    SyncService.init();
-    await delay(1000); // I don't know how to make sure sync service is fully initialized
-    const data = await SyncService.get();
-    if (!getState().dimApi.apiPermissionGranted && data && !_.isEmpty(data)) {
-      await dispatch(importDataBackup(data, true));
-    }
   };
 }
 

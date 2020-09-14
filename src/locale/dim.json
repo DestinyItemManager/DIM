@@ -848,16 +848,8 @@
     },
     "DimApiFinePrint": "DIM will save your tags, loadouts, and settings to the DIM servers and sync them between different versions of DIM.",
     "DimSyncEnabled": "DIM Sync Enabled",
-    "DriveLogout": "Log out of Google Drive",
-    "DriveSync": "Log in to Google Drive",
     "EnableDimApi": "Enable DIM Sync",
     "Export": "Download Data Backup",
-    "GDriveImport": "Import from legacy Google Drive or Local Storage data",
-    "GDriveImportButton": "Import legacy data",
-    "GDriveImportExplain": "You can restore legacy data stored in your browser or in Google Drive. Use this if you are just now upgrading DIM to v6 and had data stored before that.",
-    "GDriveSignInError": "Error signing in to Google Drive:",
-    "GDriveSignedIn": "Logged in to Google Drive as {{email}}",
-    "GoogleApiBlocked": "You can't sign in to Google Drive because a content blocker is blocking it. If you need to import legacy data from Google Drive, disable content blockers and reload.",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
@@ -885,9 +877,6 @@
     "FillStack": "Fill Stack ({{amount}})",
     "HowMuch": "How many {{itemname}} to move?",
     "Move": "Move"
-  },
-  "SyncService": {
-    "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser."
   },
   "Tags": {
     "Archive": "Archive",
