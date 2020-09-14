@@ -31,14 +31,14 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
-        return (item: D2Item) =>
+        return (item) =>
           Boolean(
             item.masterworkInfo?.tier &&
               numberComparisonFunction(Math.min(item.masterworkInfo.tier, 10))
           );
       }
       const searchedMasterworkStatHash = statHashByName[filterValue];
-      return (item: D2Item) =>
+      return (item) =>
         Boolean(
           searchedMasterworkStatHash &&
             item.masterworkInfo?.stats?.some((s) => s.hash === searchedMasterworkStatHash)

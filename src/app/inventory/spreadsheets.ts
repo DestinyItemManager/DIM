@@ -307,9 +307,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     if (item.isDestiny2()) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
@@ -411,9 +411,9 @@ function downloadWeapons(
     if (item.isDestiny2()) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }

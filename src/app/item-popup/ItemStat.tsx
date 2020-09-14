@@ -31,21 +31,15 @@ const modItemCategoryHashes = [
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const value = stat.value;
   const armor2MasterworkSockets =
-    item?.isDestiny2() &&
-    item.sockets &&
-    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
+    item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-  const masterworkValue =
-    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const masterworkValue = item?.masterworkInfo?.stats?.[masterworkIndex]?.value || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
@@ -200,12 +194,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
  */
 export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 

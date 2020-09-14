@@ -463,7 +463,7 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
-        value: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : undefined),
+        value: (item) => item.masterworkInfo?.tier,
         defaultSort: SortDirection.DESC,
         filter: (value) => `masterwork:>=${value}`,
       },
@@ -471,8 +471,7 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
-        value: (item) =>
-          item.isDestiny2() ? getMasterworkStatNames(item.masterworkInfo) : undefined,
+        value: (item) => getMasterworkStatNames(item.masterworkInfo),
       },
     destinyVersion === 2 &&
       isWeapon && {
