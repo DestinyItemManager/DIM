@@ -162,28 +162,22 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.rewards.length !== 0 && (
-          <div className="item-details">
-            <div>{t('MovePopup.Rewards')}</div>
-            {item.pursuit.rewards.map((reward) => (
-              <Reward key={reward.itemHash} reward={reward} defs={defs} />
-            ))}
-          </div>
-        )}
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.rewards.length !== 0 && (
+        <div className="item-details">
+          <div>{t('MovePopup.Rewards')}</div>
+          {item.pursuit.rewards.map((reward) => (
+            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
+        </div>
+      )}
 
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.modifierHashes.length !== 0 && (
-          <div className="item-details">
-            {item.pursuit.modifierHashes.map((modifierHash) => (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
-            ))}
-          </div>
-        )}
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+        <div className="item-details">
+          {item.pursuit.modifierHashes.map((modifierHash) => (
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+          ))}
+        </div>
+      )}
 
       {!extraInfo.mod && (
         <div className="item-details">

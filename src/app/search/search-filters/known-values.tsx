@@ -133,8 +133,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
-      item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
+    filter: () => (item) => item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
   {
     keywords: 'source',

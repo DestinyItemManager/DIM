@@ -340,6 +340,7 @@ function makeItem(
     missingSockets: false,
     energy: null,
     powerCap: null,
+    pursuit: null,
   };
 
   const createdItem: D1Item = Object.assign(Object.create(ItemProto), itemProps);

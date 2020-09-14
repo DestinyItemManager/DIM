@@ -178,6 +178,8 @@ export interface DimItem {
   collectibleHash?: number;
   /** The DestinyCollectibleDefinition sourceHash for a specific item (D2). */
   source?: number;
+  /** Extra pursuit info, if this item is a quest or bounty. */
+  pursuit: DimPursuit | null;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -211,9 +213,6 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  /** Extra pursuit info, if this item is a quest or bounty. */
-  pursuit: DimPursuit | null;
-
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
   plug?: {
     energyCost: number;
