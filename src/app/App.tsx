@@ -44,7 +44,6 @@ const AuditLog = React.lazy(async () => ({
 
 interface StoreProps {
   language: string;
-  showReviews: boolean;
   itemQuality: boolean;
   showNewItems: boolean;
   charColMobile: number;
@@ -58,7 +57,6 @@ function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     language: settings.language,
-    showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
     showNewItems: settings.showNewItems,
     charColMobile: settings.charColMobile,
@@ -76,7 +74,6 @@ const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 function App({
   language,
   charColMobile,
-  showReviews,
   itemQuality,
   showNewItems,
   needsLogin,
@@ -116,7 +113,6 @@ function App({
     <div
       key={`lang-${language}`}
       className={clsx(`lang-${language}`, `char-cols-${charColMobile}`, {
-        'show-reviews': $featureFlags.reviewsEnabled && showReviews,
         itemQuality: itemQuality,
         'show-new-items': showNewItems,
         'ms-edge': /Edge/.test(navigator.userAgent),

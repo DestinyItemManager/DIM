@@ -334,11 +334,6 @@ function makeItem(
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean(
-    $featureFlags.reviewsEnabled &&
-      createdItem.primStat &&
-      createdItem.primStat.statHash === 368428387
-  );
 
   // Moving rare masks destroys them
   if (createdItem.itemCategoryHashes.includes(55) && createdItem.tier !== 'Legendary') {

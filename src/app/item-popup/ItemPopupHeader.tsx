@@ -11,7 +11,6 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import { D2Item, DimItem } from '../inventory/item-types';
 import { AppIcon, faChevronCircleUp, faClone, openDropdownIcon } from '../shell/icons';
 import { ammoTypeClass } from './ammo-type';
-import ExpandedRating from './ExpandedRating';
 import { hideItemPopup } from './item-popup';
 import './ItemPopupHeader.scss';
 import { ItemSubHeader } from './ItemSubHeader';
@@ -116,7 +115,6 @@ export default function ItemPopupHeader({
           <div>{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
         </div>
       )}
-      {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );
 }

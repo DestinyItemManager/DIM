@@ -4,7 +4,6 @@ import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzServi
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
-import { fetchRatingsForVendors } from './vendor-ratings';
 
 export const loadedAll = createAction('vendors/LOADED_ALL')<{
   characterId: string;
@@ -38,10 +37,6 @@ export function loadAllVendors(
     try {
       const vendorsResponse = await getVendorsApi(account, characterId);
       dispatch(loadedAll({ vendorsResponse, characterId }));
-
-      if ($featureFlags.reviewsEnabled && vendorsResponse) {
-        dispatch(fetchRatingsForVendors(getState().manifest.d2Manifest!, vendorsResponse));
-      }
     } catch (error) {
       dispatch(loadedError({ characterId, error }));
     }

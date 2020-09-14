@@ -22,7 +22,6 @@ import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
-import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { getLight } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -179,10 +178,6 @@ export function loadStores(): ThunkResult<D2Store[] | undefined> {
         const stores = [...characters, vault];
 
         updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
-
-        if ($featureFlags.reviewsEnabled) {
-          dispatch(fetchRatings(stores));
-        }
 
         dispatch(cleanInfos(stores));
 

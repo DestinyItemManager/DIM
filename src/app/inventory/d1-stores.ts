@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
-import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
@@ -54,10 +53,6 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
             )
           )
         );
-
-        if ($featureFlags.reviewsEnabled) {
-          dispatch(fetchRatings(stores));
-        }
 
         dispatch(cleanInfos(stores));
 

@@ -136,32 +136,6 @@ export default function Privacy() {
               </ol>
             </li>
 
-            {$featureFlags.reviewsEnabled && (
-              <li>
-                <strong>Destiny Tracker: Item Reviews and Ratings</strong>
-                <ol>
-                  <li>
-                    DIM loads community reviews for items from Destiny Tracker, a service provided
-                    by Tracker Network LLC. Loading ratings and reviews shares no personal
-                    information with Destiny Tracker. If you choose to submit an item review, you
-                    must agree to share your Bungie account ID with Destiny Tracker as part of
-                    submitting your review.
-                  </li>
-                  <li>
-                    Use of Destiny Tracker for reviews is governed by the Tracker Network{' '}
-                    <ExternalLink href="https://thetrackernetwork.com/home/tos">
-                      Terms of Service
-                    </ExternalLink>{' '}
-                    and{' '}
-                    <ExternalLink href="https://thetrackernetwork.com/home/privacypolicy">
-                      Privacy Policy
-                    </ExternalLink>
-                    .
-                  </li>
-                </ol>
-              </li>
-            )}
-
             {$DIM_FLAVOR !== 'release' && (
               <li>
                 <strong>Sentry: Error reporting</strong>

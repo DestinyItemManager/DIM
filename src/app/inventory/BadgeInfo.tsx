@@ -17,8 +17,6 @@ import RatingIcon from './RatingIcon';
 interface Props {
   item: DimItem;
   isCapped: boolean;
-  /** Rating value */
-  rating?: number;
   uiWishListRoll?: UiWishListRoll;
 }
 
@@ -46,7 +44,7 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Props) {
+export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
@@ -82,7 +80,6 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
     (item.classified && '???');
 
   const reviewclsx = {
-    [styles.review]: true,
     [styles.wishlistRoll]: uiWishListRoll,
   };
 
@@ -93,9 +90,9 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
           {item.quality.min}%
         </div>
       )}
-      {(rating !== undefined || uiWishListRoll) && (
+      {uiWishListRoll && (
         <div className={clsx(reviewclsx)}>
-          <RatingIcon rating={rating || 1} uiWishListRoll={uiWishListRoll} />
+          <RatingIcon uiWishListRoll={uiWishListRoll} />
         </div>
       )}
       <div className={styles.primaryStat}>

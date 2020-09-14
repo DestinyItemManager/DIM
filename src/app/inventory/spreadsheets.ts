@@ -13,8 +13,6 @@ import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
-import { DtrRating } from '../item-review/dtr-api-types';
-import { getRating } from '../item-review/reducer';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
@@ -50,9 +48,6 @@ const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].inclu
 export function downloadCsvFiles(
   stores: DimStore[],
   itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  },
   type: 'Weapons' | 'Armor' | 'Ghost'
 ) {
   // perhaps we're loading
@@ -92,10 +87,10 @@ export function downloadCsvFiles(
   });
   switch (type) {
     case 'Weapons':
-      downloadWeapons(items, nameMap, itemInfos, ratings);
+      downloadWeapons(items, nameMap, itemInfos);
       break;
     case 'Armor':
-      downloadArmor(items, nameMap, itemInfos, ratings);
+      downloadArmor(items, nameMap, itemInfos);
       break;
     case 'Ghost':
       downloadGhost(items, nameMap, itemInfos);
@@ -289,14 +284,7 @@ export function source(item: DimItem) {
   }
 }
 
-function downloadArmor(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  }
-) {
+function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -338,12 +326,6 @@ function downloadArmor(
     if (item.isDestiny2()) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';
-    }
-
-    if ($featureFlags.reviewsEnabled) {
-      const dtrRating = getRating(item, ratings);
-      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
-      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
     }
 
     if (item.isDestiny1()) {
@@ -407,10 +389,7 @@ function downloadArmor(
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  }
+  itemInfos: ItemInfos
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -451,13 +430,6 @@ function downloadWeapons(
     if (item.isDestiny2()) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';
-    }
-
-    const dtrRating = getRating(item, ratings);
-
-    if ($featureFlags.reviewsEnabled) {
-      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
-      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
     }
 
     const stats = {

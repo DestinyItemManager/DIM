@@ -131,8 +131,6 @@ export interface DimItem {
   taggable: boolean;
   /** Can this be compared with other items? */
   comparable: boolean;
-  /** Can this be reviewed? */
-  reviewable: boolean;
   /** The "base power" without any power-enhancing mods. */
   basePower: number;
   /** A synthetic unique ID used to help React tell items apart. Use this as a "key" property. */

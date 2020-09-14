@@ -11,7 +11,6 @@ import knownValuesFilters from './search-filters/known-values';
 import loadoutFilters from './search-filters/loadouts';
 import simpleRangeFilters from './search-filters/range-numeric';
 import overloadedRangeFilters from './search-filters/range-overload';
-import ratingsFilters from './search-filters/ratings';
 import simpleFilters from './search-filters/simple';
 import socketFilters from './search-filters/sockets';
 import statFilters from './search-filters/stats';
@@ -28,7 +27,6 @@ const allFilters = [
   ...loadoutFilters,
   ...simpleRangeFilters,
   ...overloadedRangeFilters,
-  ...($featureFlags.reviewsEnabled ? ratingsFilters : []),
   ...simpleFilters,
   ...socketFilters,
   ...statFilters,

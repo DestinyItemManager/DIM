@@ -1,22 +1,17 @@
 import { t } from 'app/i18next-t';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
+import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { emptySet } from 'app/utils/empty';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import { D2Item, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
-import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
-import { getItemReviews } from '../item-review/destiny-tracker.service';
-import { getReviews } from '../item-review/reducer';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import BestRatedIcon from './BestRatedIcon';
 import './ItemSockets.scss';
 import Plug from './Plug';
 import SocketDetails from './SocketDetails';
@@ -33,23 +28,14 @@ interface ProvidedProps {
 interface StoreProps {
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
-  bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
   isPhonePortrait: boolean;
 }
 
-const EMPTY = [];
-
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  const reviewResponse = $featureFlags.reviewsEnabled ? getReviews(item, state) : undefined;
-  const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
-  const bestPerks = $featureFlags.reviewsEnabled
-    ? ratePerks(item, reviews as D2ItemUserReview[])
-    : emptySet<number>();
   return {
     wishListsEnabled: wishListsEnabledSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
-    bestPerks,
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
   };
@@ -63,22 +49,10 @@ function ItemSockets({
   minimal,
   wishListsEnabled,
   inventoryWishListRoll,
-  bestPerks,
   classesByHash,
   isPhonePortrait,
   onShiftClick,
-  dispatch,
 }: Props) {
-  if ($featureFlags.reviewsEnabled) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      // TODO: want to prevent double loading these
-      if (!bestPerks.size) {
-        dispatch(getItemReviews(item));
-      }
-    }, [item, bestPerks.size, dispatch]);
-  }
-
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
   if (!item.sockets || !defs) {
@@ -121,7 +95,7 @@ function ItemSockets({
           {!minimal && (
             <div className="item-socket-category-name">
               {category.category.displayProperties.name}
-              {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
+              {bestRatedIcon(category, wishListsEnabled, inventoryWishListRoll)}
             </div>
           )}
           <div className="item-sockets">
@@ -135,7 +109,6 @@ function ItemSockets({
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
                 classesByHash={classesByHash}
-                bestPerks={bestPerks}
                 onClick={() => setSocketInMenu(socketInfo)}
                 onShiftClick={onShiftClick}
               />
@@ -162,17 +135,14 @@ export default connect<StoreProps>(mapStateToProps)(ItemSockets);
 /** returns BestRatedIcon with appropriate label if this is the recommended perk */
 function bestRatedIcon(
   category: DimSocketCategory,
-  bestPerks: Set<number>,
   wishlistEnabled?: boolean,
   inventoryWishListRoll?: InventoryWishListRoll
 ) {
   const returnAsWishlisted =
-    (!wishlistEnabled || !inventoryWishListRoll) && anyBestRatedUnselected(category, bestPerks)
-      ? false // false for a review recommendation
-      : wishlistEnabled &&
-        inventoryWishListRoll &&
-        !inventoryWishListRoll.isUndesirable &&
-        anyWishListRolls(category, inventoryWishListRoll)
+    wishlistEnabled &&
+    inventoryWishListRoll &&
+    !inventoryWishListRoll.isUndesirable &&
+    anyWishListRolls(category, inventoryWishListRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
@@ -180,8 +150,12 @@ function bestRatedIcon(
     returnAsWishlisted !== null && (
       <div className="best-rated-key">
         <div className="tip-text">
-          <BestRatedIcon wishListsEnabled={returnAsWishlisted} />{' '}
-          {returnAsWishlisted ? t('WishListRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
+          <AppIcon
+            className="thumbs-up"
+            icon={thumbsUpIcon}
+            title={t('WishListRoll.BestRatedTip')}
+          />{' '}
+          {t('WishListRoll.BestRatedKey')}
         </div>
       </div>
     )
@@ -208,14 +182,6 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   }
 }
 
-function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<number>) {
-  return category.sockets.some((socket) =>
-    socket.plugOptions.some(
-      (plugOption) => plugOption !== socket.plugged && bestRated.has(plugOption.plugDef.hash)
-    )
-  );
-}
-
 function anyWishListRolls(
   category: DimSocketCategory,
   inventoryWishListRoll: InventoryWishListRoll
@@ -236,7 +202,6 @@ function Socket({
   wishListsEnabled,
   inventoryWishListRoll,
   classesByHash,
-  bestPerks,
   isPhonePortrait,
   onClick,
   onShiftClick,
@@ -248,7 +213,6 @@ function Socket({
   inventoryWishListRoll?: InventoryWishListRoll;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
-  bestPerks: Set<number>;
   isPhonePortrait: boolean;
   onClick(plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
@@ -270,7 +234,6 @@ function Socket({
           defs={defs}
           wishListsEnabled={wishListsEnabled}
           inventoryWishListRoll={inventoryWishListRoll}
-          bestPerks={bestPerks}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}

@@ -93,7 +93,6 @@
       "Archetype": "Cannot compare this item as it is not a {{type}}.",
       "Class": "Cannot compare this item as it is not for a {{class}}."
     },
-    "Rating": "Rating",
     "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {
@@ -114,35 +113,6 @@
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
-  },
-  "DtrReview": {
-    "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
-    "BestRatedKey": " = suggested perk",
-    "BestRatedTip": "This perk is associated with high community ratings.",
-    "Cancel": "Cancel",
-    "DaysAgo": "1 day ago on {{platform}}",
-    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
-    "ForGameMode": "For game mode {{mode}}",
-    "ForGameModeLabel": "For game mode",
-    "Help": "Write a review for this specific roll (optional). Note: available and selected perks are automatically sent.",
-    "ModeNotSpecified": "Not Specified",
-    "NoReviews": "There are no reviews for this item, be the first!",
-    "Platforms": {
-      "All": "Show All",
-      "AllConsoles": "All Consoles",
-      "Pc": "PC Only",
-      "Playstation": "Playstation Only",
-      "Xbox": "XBox Only"
-    },
-    "ReallyReport": "Report",
-    "ServiceCallError": "Destiny tracker service call failed.",
-    "ServiceSubmitError": "Destiny tracker service submit failed.",
-    "Submit": "Submit",
-    "ThankYou": "Thank you for submitting a review! It will go live shortly.",
-    "TooFew": "Too few reviews",
-    "UnknownGameMode": "Unknown",
-    "VerifyReport": "Are you sure you want to flag this review?",
-    "YourReview": "Your Review:"
   },
   "EnergyMeter": {
     "Energy": "Energy"
@@ -208,7 +178,6 @@
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
-    "HasRating": " Shows items that have a community rating.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -247,8 +216,6 @@
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
-    "Rating": "Shows weapons based on their rating from Destiny Tracker.",
-    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
@@ -657,7 +624,6 @@
     "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReadLoreLink": "Read lore",
-    "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
     "Split": "Split",
@@ -716,7 +682,6 @@
       "StatQualityStat": "{{stat}}%",
       "Perks": "Perks",
       "Quality": "Quality %",
-      "Rating": "Rating",
       "Tier": "Tier",
       "Source": "Source",
       "Year": "Year",
@@ -773,8 +738,6 @@
     "Title": "Records"
   },
   "Settings": {
-    "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
-    "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
@@ -802,12 +765,9 @@
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
-    "ReviewsModeSelection": "Only show ratings for the following play mode",
-    "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "Settings",
     "ShowNewItems": "Indicate new items with a red dot",
-    "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",

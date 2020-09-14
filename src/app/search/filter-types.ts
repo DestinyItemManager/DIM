@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { ReviewsState } from 'app/item-review/reducer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 type I18nInput = Parameters<typeof t>;
@@ -24,7 +23,6 @@ export interface FilterContext {
   currentStore: DimStore;
   loadouts: Loadout[];
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll };
-  ratings: ReviewsState['ratings'];
   newItems: Set<string>;
   itemInfos: ItemInfos;
   itemHashTags: {

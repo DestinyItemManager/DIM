@@ -25,7 +25,6 @@ import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimStat } from '../inventory/item-types';
-import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { Subscriptions } from '../utils/rx-utils';
@@ -34,7 +33,6 @@ import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
 
 interface StoreProps {
-  ratings: ReviewsState['ratings'];
   stores: DimStore[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
@@ -49,7 +47,6 @@ type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: ratingsSelector(state),
     stores: storesSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
@@ -93,7 +90,6 @@ class Compare extends React.Component<Props, State> {
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
     (state: State) => state.comparisonItems,
-    (_state: State, props: Props) => props.ratings,
     (_state: State, props: Props) => props.compareBaseStats,
     getAllStats
   );
@@ -121,7 +117,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { ratings, compareBaseStats, setSetting } = this.props;
+    const { compareBaseStats, setSetting } = this.props;
     const {
       show,
       comparisonItems: unsortedComparisonItems,
@@ -145,18 +141,9 @@ class Compare extends React.Component<Props, State> {
           reverseComparator(
             chainComparator(
               compareBy((item: DimItem) => {
-                const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
-                const showRating =
-                  $featureFlags.reviewsEnabled &&
-                  dtrRating &&
-                  shouldShowRating(dtrRating) &&
-                  dtrRating.overallScore;
-
                 const stat =
                   item.primStat && sortedHash === item.primStat.statHash
                     ? item.primStat
-                    : sortedHash === 'Rating'
-                    ? { value: showRating || 0 }
                     : sortedHash === 'EnergyCapacity'
                     ? {
                         value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
@@ -564,24 +551,10 @@ class Compare extends React.Component<Props, State> {
   };
 }
 
-function getAllStats(
-  comparisonItems: DimItem[],
-  ratings: ReviewsState['ratings'],
-  compareBaseStats: boolean
-) {
+function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
   const firstComparison = comparisonItems[0];
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
-
-  if ($featureFlags.reviewsEnabled) {
-    stats.push(
-      makeFakeStat('Rating', t('Compare.Rating'), (item: DimItem) => {
-        const dtrRating = getRating(item, ratings);
-        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return { statHash: 0, value: showRating || undefined };
-      })
-    );
-  }
 
   if (firstComparison.primStat) {
     stats.push(

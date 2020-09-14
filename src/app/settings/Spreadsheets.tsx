@@ -4,8 +4,6 @@ import { ItemInfos } from 'app/inventory/dim-item-info';
 import { itemInfosSelector, storesLoadedSelector, storesSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import { ratingsSelector } from 'app/item-review/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
@@ -16,9 +14,6 @@ interface StoreProps {
   disabled?: boolean;
   stores: DimStore[];
   itemInfos: ItemInfos;
-  ratings: {
-    [key: string]: DtrRating;
-  };
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -26,13 +21,12 @@ function mapStateToProps(state: RootState): StoreProps {
     disabled: !storesLoadedSelector(state),
     stores: storesSelector(state),
     itemInfos: itemInfosSelector(state),
-    ratings: ratingsSelector(state),
   };
 }
 
 type Props = StoreProps & ThunkDispatchProp;
 
-function Spreadsheets({ stores, itemInfos, ratings, disabled, dispatch }: Props) {
+function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
       alert(t('Csv.ImportWrongFileType'));
@@ -51,7 +45,7 @@ function Spreadsheets({ stores, itemInfos, ratings, disabled, dispatch }: Props)
   };
 
   const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-    downloadCsvFiles(stores, itemInfos, ratings, type);
+    downloadCsvFiles(stores, itemInfos, type);
     ga('send', 'event', 'Download CSV', type);
   };
 
