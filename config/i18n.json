@@ -741,7 +741,8 @@
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Date": "Last Used",
     "UsageCount": "# Used",
-    "Query": "Search"
+    "Query": "Search",
+    "Link": "View and edit search history."
   },
   "Settings": {
     "CharacterOrder": "Sort characters by",
