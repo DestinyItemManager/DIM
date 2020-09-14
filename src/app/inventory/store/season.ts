@@ -4,13 +4,13 @@ import D2Events from 'data/d2/events.json';
 import D2SeasonToSource from 'data/d2/season-to-source.json';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
-import { D2Item } from '../item-types';
+import { DimItem } from '../item-types';
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
 /** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
-export function getSeason(item: D2Item): number {
+export function getSeason(item: DimItem): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
@@ -34,6 +34,6 @@ export function getSeason(item: D2Item): number {
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
-export function getEvent(item: D2Item) {
+export function getEvent(item: DimItem) {
   return item.source ? D2SourcesToEvent[item.source] || D2Events[item.hash] : D2Events[item.hash];
 }

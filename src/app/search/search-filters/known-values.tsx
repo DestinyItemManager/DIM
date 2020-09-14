@@ -146,7 +146,7 @@ const knownValuesFilters: FilterDefinition[] = [
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
-        return (item: D2Item) =>
+        return (item) =>
           (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
           sourceInfo.itemHashes.includes(item.hash) ||
           missingSource?.includes(item.hash);

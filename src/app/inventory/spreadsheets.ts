@@ -276,7 +276,7 @@ function equippable(item: DimItem) {
 }
 
 export function source(item: DimItem) {
-  if (item.isDestiny2()) {
+  if (item.source) {
     return (
       sourceKeys.find(
         (src) =>
