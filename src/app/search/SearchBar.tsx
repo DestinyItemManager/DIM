@@ -288,6 +288,15 @@ function SearchBar(
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
       (e.nativeEvent as any).preventDownshiftDefault = true;
+    } else if (
+      (e.key === 'Delete' || e.key === 'Backspace') &&
+      e.shiftKey &&
+      highlightedIndex >= 0 &&
+      items[highlightedIndex]?.query &&
+      items[highlightedIndex]?.type === SearchItemType.Recent
+    ) {
+      e.preventDefault();
+      dispatch(searchDeleted(items[highlightedIndex].query));
     }
   };
 
