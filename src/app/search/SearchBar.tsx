@@ -379,7 +379,7 @@ function SearchBar(
           document.body
         )}
 
-      <ul {...getMenuProps()} className={clsx(styles.menu, { [styles.menuOpen]: isOpen })}>
+      <ul {...getMenuProps()} className={styles.menu}>
         {isOpen &&
           items.map((item, index) => (
             <li
@@ -444,17 +444,16 @@ const Row = React.memo(
       {!isPhonePortrait && highlighted && (
         <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
       )}
-      {(highlighted || isPhonePortrait) &&
-        (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-          <button
-            type="button"
-            className={styles.deleteIcon}
-            onClick={(e) => onClick(e, item)}
-            title={t('Header.DeleteSearch')}
-          >
-            <AppIcon icon={closeIcon} />
-          </button>
-        )}
+      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+        <button
+          type="button"
+          className={styles.deleteIcon}
+          onClick={(e) => onClick(e, item)}
+          title={t('Header.DeleteSearch')}
+        >
+          <AppIcon icon={closeIcon} />
+        </button>
+      )}
     </>
   )
 );

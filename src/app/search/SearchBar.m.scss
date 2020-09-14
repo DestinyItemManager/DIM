@@ -28,10 +28,6 @@
   @include phone-portrait {
     top: calc(100% + 1px);
   }
-
-  &.menuOpen {
-    padding-bottom: 4px;
-  }
 }
 
 .openButton {
@@ -61,6 +57,7 @@
   }
   .deleteIcon {
     color: #333;
+    visibility: visible;
   }
 }
 
@@ -78,6 +75,7 @@
 }
 
 .menuItemHelp {
+  margin: 0 8px;
   color: #999;
   .highlightedItem & {
     color: #222;
@@ -91,6 +89,10 @@
   color: #999;
   padding: 0 2px;
   cursor: pointer;
+  visibility: hidden;
+  @include phone-portrait {
+    visibility: visible;
+  }
 }
 
 /* Highlighted spans of text in the autocompleter */
