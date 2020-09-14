@@ -6,7 +6,6 @@ import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
-import _ from 'lodash';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import { breakerTypes, D2ItemCategoryHashesByName, powerfulSources } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
@@ -55,8 +54,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = tierMap[filterValue];
       if (!filterValue) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown rarity type ' + filterValue);
       }
       return (item) => item.tier === filterValue;
     },
@@ -97,8 +95,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue];
       if (!breakerType) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown breaker type ' + breakerType);
       }
       return (item: D2Item) => item.breakerType && item.breakerType.hash === breakerType;
     },
@@ -122,8 +119,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
       if (!categoryHash) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown weapon type ' + filterValue);
       }
       return (item) => item.itemCategoryHashes.includes(categoryHash);
     },
@@ -153,8 +149,7 @@ const knownValuesFilters: FilterDefinition[] = [
         const predicate = D2EventPredicateLookup[filterValue];
         return (item: D2Item) => item.event === predicate;
       } else {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown item source ' + filterValue);
       }
     },
   },
