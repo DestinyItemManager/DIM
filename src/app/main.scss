@@ -225,13 +225,6 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
-  &::before {
-    clear: both;
-    content: '';
-    display: table;
-    margin-top: -1px;
-    height: 0;
-  }
   @include phone-portrait {
     margin-bottom: 30px;
   }

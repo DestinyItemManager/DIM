@@ -33,6 +33,8 @@ export interface FilterContext {
   language: string;
 }
 
+// TODO: FilterCategory
+
 /**
  * A definition of a filter or closely related group of filters. This is
  * self-contained and can be used for both autocomplete and for building up the

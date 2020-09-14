@@ -95,7 +95,7 @@ const d1Filters: FilterDefinition[] = [
   },
   {
     keywords: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-    description: tl('Filter.Glimmer.Glimmer'),
+    description: tl('Filter.Glimmer'),
     destinyVersion: 1,
     filter: ({ filterValue }) => (item: D1Item) => {
       switch (filterValue) {

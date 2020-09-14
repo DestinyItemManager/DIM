@@ -57,7 +57,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: 'perk',
-    description: tl('Filter.PartialMatch'),
+    description: tl('Filter.Perk'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
@@ -73,7 +73,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: 'perkname',
-    description: tl('Filter.PartialMatch'),
+    description: tl('Filter.PerkName'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
