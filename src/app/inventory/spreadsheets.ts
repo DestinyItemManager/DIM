@@ -304,7 +304,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Equippable: equippable(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
     if (item.masterworkInfo) {
@@ -408,7 +408,7 @@ function downloadWeapons(
       Element: item.element?.displayProperties.name,
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
     if (item.masterworkInfo) {

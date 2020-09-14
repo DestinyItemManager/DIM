@@ -1,5 +1,4 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
 import { getItemYear } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
@@ -79,7 +78,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) =>
+      return (item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         compareTo(item.powerCap ?? 99999999);
     },

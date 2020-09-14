@@ -568,14 +568,10 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
     (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
   ) {
     stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
-        item.isDestiny2()
-          ? {
-              statHash: powerCapPlugSetHash,
-              value: item.powerCap ?? undefined,
-            }
-          : undefined
-      )
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
+        statHash: powerCapPlugSetHash,
+        value: item.powerCap ?? undefined,
+      }))
     );
   }
 

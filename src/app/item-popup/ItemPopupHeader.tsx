@@ -47,17 +47,16 @@ export default function ItemPopupHeader({
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
-  const maxLight = item.isDestiny2() && item.powerCap;
 
   useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
 
-  const finalSeason = item.isDestiny2() && item.powerCap && getItemPowerCapFinalSeason(item);
+  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
   const powerCapString =
     light &&
-    maxLight &&
+    item.powerCap &&
     (finalSeason
-      ? t('Stats.PowerCapWithSeason', { powerCap: maxLight, finalSeason })
-      : t('MovePopup.PowerCap', { powerCap: maxLight }));
+      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {

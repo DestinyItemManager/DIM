@@ -235,7 +235,7 @@ export function getColumns(
       destinyVersion === 2 && {
         id: 'maxpower',
         header: t('Stats.PowerCap'),
-        value: (item) => item.isDestiny2() && item.powerCap,
+        value: (item) => item.powerCap,
         cell: (value, item) =>
           value && (
             <>

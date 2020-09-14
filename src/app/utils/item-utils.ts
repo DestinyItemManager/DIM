@@ -106,7 +106,7 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
-  item.isDestiny2() ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
+  item.powerCap ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
 
 /** accepts a DimMasterwork or lack thereof, & always returns a string */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
