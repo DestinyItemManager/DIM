@@ -27,7 +27,6 @@ import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
-import { getSeason } from './season';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
@@ -400,12 +399,6 @@ export function makeItem(
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
   });
 
-  createdItem.season = getSeason(
-    createdItem,
-    (item.versionNumber !== undefined &&
-      itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
-      null
-  );
   createdItem.event = createdItem.source
     ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];

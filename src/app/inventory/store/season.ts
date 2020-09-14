@@ -7,7 +7,7 @@ import { D2Item } from '../item-types';
 const SourceToD2Season = D2SeasonToSource.sources;
 
 // TODO: load this lazily with import(). Requires some rework of the filters code.
-export function getSeason(item: D2Item, watermark: string | null): number {
+export function getSeason(item: D2Item): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
@@ -19,8 +19,8 @@ export function getSeason(item: D2Item, watermark: string | null): number {
     return 0;
   }
 
-  if (watermark) {
-    return Number(D2SeasonFromOverlay[watermark]);
+  if (item.iconOverlay) {
+    return Number(D2SeasonFromOverlay[item.iconOverlay]);
   }
 
   if (SourceToD2Season[item.source]) {

@@ -7,6 +7,7 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
   CUSTOM_TOTAL_STAT_HASH,
@@ -222,7 +223,7 @@ const d1YearSourceHashes = {
 export function getItemYear(item: DimItem) {
   if (item.isDestiny2()) {
     // TODO: D2SeasonInfo is only used for year?
-    return D2SeasonInfo[item.season].year;
+    return D2SeasonInfo[getSeason(item)].year;
   } else if (item.isDestiny1()) {
     if (!item.sourceHashes) {
       return 1;

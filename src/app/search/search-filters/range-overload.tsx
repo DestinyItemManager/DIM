@@ -1,5 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { D2Item } from 'app/inventory/item-types';
+import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
@@ -69,7 +70,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) => compareTo(item.season);
+      return (item: D2Item) => compareTo(getSeason(item));
     },
   },
   {

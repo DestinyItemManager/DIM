@@ -21,6 +21,7 @@ import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
 import { DimStore } from './store-types';
 import { getClass } from './store/character-utils';
+import { getSeason } from './store/season';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -323,7 +324,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     row.Equipped = item.equipped;
     row.Year = getItemYear(item);
     if (item.isDestiny2()) {
-      row.Season = item.season;
+      row.Season = getSeason(item);
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
@@ -423,7 +424,7 @@ function downloadWeapons(
     row.Equipped = item.equipped;
     row.Year = getItemYear(item);
     if (item.isDestiny2()) {
-      row.Season = item.season;
+      row.Season = getSeason(item);
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
