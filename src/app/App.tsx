@@ -17,7 +17,6 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
 import Login from './login/Login';
 import NotificationsContainer from './notifications/NotificationsContainer';
-import FilterHelp from './search/FilterHelp';
 import { settingsSelector } from './settings/reducer';
 import About from './shell/About';
 import AccountRedirectRoute from './shell/AccountRedirectRoute';
@@ -41,6 +40,9 @@ const SettingsPage = React.lazy(async () => ({
 const AuditLog = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog,
 }));
+const SearchHistory = React.lazy(
+  () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
+);
 
 interface StoreProps {
   language: string;
@@ -167,8 +169,8 @@ function App({
                 <Route path="/settings" exact>
                   <SettingsPage />
                 </Route>
-                <Route path="/search-help" exact>
-                  <FilterHelp />
+                <Route path="/search-history" exact>
+                  <SearchHistory />
                 </Route>
                 <Route
                   path="/:membershipId(\d+)/d:destinyVersion(1|2)"
