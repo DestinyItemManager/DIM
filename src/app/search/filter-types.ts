@@ -57,13 +57,19 @@ export type FilterDefinition = {
   /**
    * What kind of query this is, used to help generate suggestions.
    *
-   * undefined - a simple 'is/not' filter. the filter itself knows everything it's looking for
-   * query - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
-   * freeform - a starting stem and a freeform value. the filterValue will be some arbitrary string we test against other strings
-   * range - a starting stem and a mathlike string afterward like <=5
-   * rangeoverload - a starting stem like "masterwork" and then either a mathlike string or a word
+   * `undefined` - a simple 'is/not' filter. the filter itself knows everything it's looking for
+   *
+   * `query` - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
+   *
+   * `freeform` - a starting stem and a freeform value. the filterValue will be some arbitrary string we test against other strings
+   *
+   * `range` - a starting stem and a mathlike string afterward like <=5
+   *
+   * `rangeoverload` - a starting stem like "masterwork" and then either a mathlike string or a word
+   *
+   * `custom` - suppresses automated suggestion generation so suggestionsGenerator is the only source of suggestions
    */
-  format?: 'query' | 'freeform' | 'range' | 'rangeoverload';
+  format?: 'query' | 'freeform' | 'range' | 'rangeoverload' | 'custom';
 
   /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
   destinyVersion?: 1 | 2;
@@ -85,6 +91,11 @@ export type FilterDefinition = {
   /**
    * A list of suggested keywords for filters that can take a freeform filter value.
    */
-  // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing that's called on demand as we are autocompleting
   suggestions?: string[];
+
+  /**
+   * A custom function with access to a SuggestionsContext, used to generate (additional) suggestions
+   */
+  // TODO: add manifest to SuggestionsContext and we can generate archetype/perk/etc suggestions
+  suggestionsGenerator?: () => string[];
 };
