@@ -58,7 +58,6 @@ export default function Sheet({
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
   useEffect(() => {
-    console.log({ freezeInitialHeight, frozenHeight, height: sheetContents.current?.clientHeight });
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
       if (sheetContents.current.clientHeight > 0) {
         setFrozenHeight(sheetContents.current.clientHeight);

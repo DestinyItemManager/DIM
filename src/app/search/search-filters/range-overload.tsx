@@ -4,6 +4,7 @@ import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import { generateSuggestionsForFilter } from '../search-config';
 import { allStatNames, statHashByName } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 
@@ -27,7 +28,13 @@ const overloadedRangeFilters: FilterDefinition[] = [
     format: 'rangeoverload',
     destinyVersion: 2,
     suggestions: allStatNames,
+    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'masterwork' }),
     filter: ({ filterValue }) => {
+      // the "is:masterwork" case
+      if (filterValue === 'masterwork') {
+        return (item) => item.masterwork;
+      }
+      // "masterwork:<5" case
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: D2Item) =>
@@ -36,6 +43,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
               numberComparisonFunction(Math.min(item.masterworkInfo.tier, 10))
           );
       }
+      // "masterwork:range" case
       const searchedMasterworkStatHash = statHashByName[filterValue];
       return (item: D2Item) =>
         Boolean(
