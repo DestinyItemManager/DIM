@@ -9,7 +9,6 @@ interface CssExports {
   'menuItemHelp': string;
   'menuItemIcon': string;
   'menuItemQuery': string;
-  'menuOpen': string;
   'open': string;
   'openButton': string;
   'saveSearchButton': string;

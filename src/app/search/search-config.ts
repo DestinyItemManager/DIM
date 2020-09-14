@@ -2,6 +2,7 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { createSelector } from 'reselect';
 import { FilterDefinition } from './filter-types';
+import type { QueryAST } from './query-parser';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
@@ -56,6 +57,9 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
       for (const keyword of generateSuggestionsForFilter(filter)) {
         keywords.add(keyword);
       }
+      for (const keyword of filter.suggestionsGenerator?.() ?? []) {
+        keywords.add(keyword);
+      }
       allApplicableFilters.push(filter);
       const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
       for (const keyword of filterKeywords) {
@@ -102,8 +106,13 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 
 /**
  * Generates all the possible suggested keywords for the given filter
+ *
+ * Accepts partial filters with as little as just a "keywords" property,
+ * if you want to generate some keywords without a full valid filter
  */
-export function generateSuggestionsForFilter(filterDefinition: FilterDefinition) {
+export function generateSuggestionsForFilter(
+  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format'>
+) {
   const { suggestions, keywords } = filterDefinition;
   const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
@@ -121,8 +130,46 @@ export function generateSuggestionsForFilter(filterDefinition: FilterDefinition)
         ...expandStringCombinations([thisFilterKeywords, operators]),
         ...expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]),
       ];
+    case 'custom':
+      return [];
     default:
       // Pass minDepth 1 to not generate "is:" and "not:" suggestions
       return expandStringCombinations([['is', 'not'], thisFilterKeywords], 1);
+  }
+}
+
+/**
+ * Return whether the query is completely valid - syntactically, and where every term matches a known filter.
+ */
+export function validateQuery(query: QueryAST, searchConfig: SearchConfig) {
+  if (query.error) {
+    return false;
+  }
+  switch (query.op) {
+    case 'filter': {
+      let filterName = query.type;
+      const filterValue = query.args;
+
+      // "is:" filters are slightly special cased
+      if (filterName == 'is') {
+        filterName = filterValue;
+      }
+
+      const filterDef = searchConfig.filters[filterName];
+      if (filterDef) {
+        // TODO: validate that filterValue is correct
+        return true;
+      } else {
+        return false;
+      }
+    }
+    case 'not':
+      return validateQuery(query.operand, searchConfig);
+    case 'and':
+    case 'or': {
+      return query.operands.every((q) => validateQuery(q, searchConfig));
+    }
+    case 'noop':
+      return true;
   }
 }

@@ -1,4 +1,5 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -68,7 +69,12 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         }
       : undefined;
     // Generate completions of the current search
-    const filterSuggestions = autocompleteTermSuggestions(query, caretIndex, filterComplete);
+    const filterSuggestions = autocompleteTermSuggestions(
+      query,
+      caretIndex,
+      filterComplete,
+      searchConfig
+    );
 
     // Recent/saved searches
     const recentSearchItems = filterSortRecentSearches(query, recentSearches);
@@ -137,7 +143,7 @@ function normalizeRecency(timestamp: number) {
   return Math.pow(2, -days / halfLife);
 }
 
-export function filterSortRecentSearches(query: string, recentSearches: Search[]) {
+export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
   // TODO: Filter recent searches by query
   // TODO: Sort recent searches by relevance (time+usage+saved)
@@ -167,8 +173,9 @@ const caretEndRegex = /([\s)]|$)/;
 export function autocompleteTermSuggestions(
   query: string,
   caretIndex: number,
-  filterComplete: (term: string) => string[]
-) {
+  filterComplete: (term: string) => string[],
+  searchConfig: SearchConfig
+): SearchItem[] {
   if (!query) {
     return [];
   }
@@ -185,17 +192,35 @@ export function autocompleteTermSuggestions(
 
     // new query is existing query minus match plus suggestion
     return candidates.map((word) => {
+      const filterDef = findFilter(word, searchConfig);
       const newQuery = base + word + query.slice(caretIndex);
       return {
         query: newQuery,
         type: SearchItemType.Autocomplete,
         highlightRange: [match.index, match.index + word.length],
-        // TODO: help from the matched query
+        helpText: filterDef
+          ? (Array.isArray(filterDef.description)
+              ? t(...filterDef.description)
+              : t(filterDef.description)
+            )?.replace(/\.$/, '')
+          : undefined,
       };
     });
   }
 
   return [];
+}
+
+function findFilter(term: string, searchConfig: SearchConfig) {
+  const parts = term.split(':');
+  let filterName = parts[0];
+  const filterValue = parts[1];
+  // "is:" filters are slightly special cased
+  if (filterName == 'is') {
+    filterName = filterValue;
+  }
+
+  return searchConfig.filters[filterName];
 }
 
 /**

@@ -66,11 +66,6 @@ const simpleFilters: FilterDefinition[] = [
     filter: () => (item) => !item.locked,
   },
   {
-    keywords: ['masterwork', 'masterworks'],
-    description: tl('Filter.RarityTier'),
-    filter: () => (item) => item.masterwork,
-  },
-  {
     keywords: 'new',
     description: tl('Filter.NewItems'),
     filter: () => (item) => newItems.has(item.id),

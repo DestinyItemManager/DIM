@@ -288,6 +288,15 @@ function SearchBar(
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
       (e.nativeEvent as any).preventDownshiftDefault = true;
+    } else if (
+      (e.key === 'Delete' || e.key === 'Backspace') &&
+      e.shiftKey &&
+      highlightedIndex >= 0 &&
+      items[highlightedIndex]?.query &&
+      items[highlightedIndex]?.type === SearchItemType.Recent
+    ) {
+      e.preventDefault();
+      dispatch(searchDeleted(items[highlightedIndex].query));
     }
   };
 
@@ -370,7 +379,7 @@ function SearchBar(
           document.body
         )}
 
-      <ul {...getMenuProps()} className={clsx(styles.menu, { [styles.menuOpen]: isOpen })}>
+      <ul {...getMenuProps()} className={styles.menu}>
         {isOpen &&
           items.map((item, index) => (
             <li
@@ -428,24 +437,23 @@ const Row = React.memo(
           item.query
         )}
       </span>
-      {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
+      <span className={styles.menuItemHelp}>{item.helpText && <span>{item.helpText}</span>}</span>
       {!isPhonePortrait && isTabAutocompleteItem && (
         <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
       )}
       {!isPhonePortrait && highlighted && (
         <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
       )}
-      {(highlighted || isPhonePortrait) &&
-        (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-          <button
-            type="button"
-            className={styles.deleteIcon}
-            onClick={(e) => onClick(e, item)}
-            title={t('Header.DeleteSearch')}
-          >
-            <AppIcon icon={closeIcon} />
-          </button>
-        )}
+      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+        <button
+          type="button"
+          className={styles.deleteIcon}
+          onClick={(e) => onClick(e, item)}
+          title={t('Header.DeleteSearch')}
+        >
+          <AppIcon icon={closeIcon} />
+        </button>
+      )}
     </>
   )
 );

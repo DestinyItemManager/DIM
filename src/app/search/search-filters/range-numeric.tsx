@@ -7,18 +7,17 @@ const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
 export function rangeStringToComparator(rangeString: string) {
   if (!rangeString) {
-    return _.stubFalse;
+    throw new Error('Missing range comparison');
   }
   const matchedRangeString = rangeString.match(rangeStringRegex);
   if (!matchedRangeString) {
-    return _.stubFalse;
+    throw new Error("Doesn't match our range comparison syntax");
   }
 
   const [, operator, comparisonValueString] = matchedRangeString;
   const comparisonValue = parseFloat(comparisonValueString);
 
   switch (operator) {
-    case 'none':
     case '=':
     case '':
       return (compare: number) => compare === comparisonValue;
@@ -31,7 +30,7 @@ export function rangeStringToComparator(rangeString: string) {
     case '>=':
       return (compare: number) => compare >= comparisonValue;
   }
-  return _.stubFalse;
+  throw new Error('Unknown range operator ' + operator);
 }
 
 const simpleRangeFilters: FilterDefinition[] = [
