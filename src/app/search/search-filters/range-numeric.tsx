@@ -18,7 +18,6 @@ export function rangeStringToComparator(rangeString: string) {
   const comparisonValue = parseFloat(comparisonValueString);
 
   switch (operator) {
-    case 'none':
     case '=':
     case '':
       return (compare: number) => compare === comparisonValue;

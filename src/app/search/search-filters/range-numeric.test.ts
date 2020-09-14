@@ -15,7 +15,6 @@ describe('rangeStringToComparator', () => {
     ['=10', 10, true],
     ['=10', 15, false],
     ['10', 10, true],
-    ['none', 10, false],
   ];
 
   test.each(cases)(

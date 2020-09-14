@@ -202,7 +202,7 @@ export function autocompleteTermSuggestions(
           ? (Array.isArray(filterDef.description)
               ? t(...filterDef.description)
               : t(filterDef.description)
-            ).replace(/\.$/, '')
+            )?.replace(/\.$/, '')
           : undefined,
       };
     });
