@@ -1,7 +1,9 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import Objective from 'app/progress/Objective';
 import { RootState } from 'app/store/types';
+import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -44,6 +46,7 @@ interface ActivityTier {
     id: string;
     icon: string;
     steps: { complete: boolean }[];
+    objectives: DestinyObjectiveProgress[];
   }[];
 }
 
@@ -100,12 +103,16 @@ function Activities({ account, defs, stores }: Props) {
               steps = [store.advisors.activities[activityId].activityTiers[index].completion];
             }
 
+            const objectives: DestinyObjectiveProgress[] =
+              store.advisors.activities[activityId].extended?.objectives || [];
+
             return {
               name: store.name,
               lastPlayed: store.lastPlayed,
               id: store.id,
               icon: store.icon,
               steps,
+              objectives,
             };
           });
 
@@ -170,9 +177,9 @@ function Activities({ account, defs, stores }: Props) {
       'crota',
       'kingsfall',
       'wrathofthemachine',
-      // 'elderchallenge',
       'nightfall',
       'heroicstrike',
+      'elderchallenge',
     ];
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
@@ -235,12 +242,21 @@ function Activities({ account, defs, stores }: Props) {
                       characters.findIndex((s) => s.id === c.id)
                     ).map((character) => (
                       <div key={character.id} className="tier-row">
-                        {character.steps.map((step, index) => (
-                          <span
-                            key={index}
-                            className={clsx('step-icon', { complete: step.complete })}
+                        {character.objectives.length === 0 &&
+                          character.steps.map((step, index) => (
+                            <span
+                              key={index}
+                              className={clsx('step-icon', { complete: step.complete })}
+                            />
+                          ))}
+                        {character.objectives.map((objective) => (
+                          <Objective
+                            defs={defs}
+                            objective={objective}
+                            key={objective.objectiveHash}
                           />
                         ))}
+                        {character.objectives.length > 0 && <div className="objectives-spacer" />}
                       </div>
                     ))}
                   </div>
