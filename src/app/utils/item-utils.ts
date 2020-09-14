@@ -26,7 +26,7 @@ import { objectifyArray } from './util';
 // mainly for most css purposes and the filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  item.isDestiny2() && item.energy
+  item.energy
     ? energyNamesByEnum[item.element?.enumValue ?? -1]
     : damageNamesByEnum[item.element?.enumValue ?? -1];
 

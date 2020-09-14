@@ -260,7 +260,7 @@ export function getColumns(
       destinyVersion === 2 && {
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
-        value: (item) => item.isDestiny2() && item.energy?.energyCapacity,
+        value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity>=:${value}`,
       },

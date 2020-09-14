@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
-  D2Item,
+  DimItem,
   DimPlug,
   DimStat,
   PluggableInventoryItemDefinition,
@@ -31,7 +31,7 @@ export default function SocketDetailsSelectedPlug({
 }: {
   plug: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
-  item: D2Item;
+  item: DimItem;
   currentPlug: DimPlug | null;
 }) {
   const selectedPlugPerk =

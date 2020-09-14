@@ -159,6 +159,8 @@ export interface DimItem {
   metricObjective?: DestinyObjectiveProgress;
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
+  /** for D2 Y3 armor, this is the type and capacity information */
+  energy: DestinyItemInstanceEnergy | null;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -198,8 +200,6 @@ export interface D2Item extends DimItem {
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
-  /** for y3 armor, this is the type and capacity information */
-  energy: DestinyItemInstanceEnergy | null;
   /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
   powerCap: number | null;
   /** an item's current breaker type, if it has one */

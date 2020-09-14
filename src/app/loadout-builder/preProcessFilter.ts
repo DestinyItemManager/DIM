@@ -106,7 +106,7 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
   }
 
   // Checking energy tells us if it is Armour 2.0
-  if (item.sockets && item.isDestiny2() && item.energy) {
+  if (item.sockets && item.energy) {
     if (assumeMasterwork) {
       for (const statHash of statValues) {
         baseStats[statHash] += 2;

@@ -146,7 +146,7 @@ class Compare extends React.Component<Props, State> {
                     ? item.primStat
                     : sortedHash === 'EnergyCapacity'
                     ? {
-                        value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
+                        value: item.energy?.energyCapacity || 0,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
@@ -357,7 +357,7 @@ class Compare extends React.Component<Props, State> {
       item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
       exampleItemModSlot === getSpecialtySocketMetadata(item);
-    const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
+    const hasEnergy = (item: DimItem) => Boolean(item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class
     allArmors = allArmors
