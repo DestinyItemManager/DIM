@@ -1,5 +1,4 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
-import { right } from '@popperjs/core/lib';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { Loading } from 'app/dim-ui/Loading';
@@ -357,10 +356,8 @@ function SearchBar(
             onClose={() => setFilterHelpOpen(false)}
             header={
               <>
-                <div style={{ float: right }}>
-                  <UserGuideLink topic="Item_Search" />
-                </div>
                 <h1>{t('Header.Filters')}</h1>
+                <UserGuideLink topic="Item_Search" />
               </>
             }
             sheetClassName="filterHelp"

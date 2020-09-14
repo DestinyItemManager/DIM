@@ -272,7 +272,6 @@
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
-    "VideoExample": "Visit our User Guide for in-depth info on using search filters",
     "Weapon": "",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
