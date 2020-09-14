@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { energyCapacityTypeNames } from './d2-known-values';
 import { FilterDefinition } from './filter-types';
 import { buildSearchConfig, generateSuggestionsForFilter } from './search-config';
@@ -30,8 +29,6 @@ describe('generateSuggestionsForFilter', () => {
         format,
         keywords,
         suggestions,
-        description: '',
-        filter: () => _.stubTrue,
       });
       expect(candidates).toMatchSnapshot();
     }
