@@ -402,7 +402,7 @@ export function getColumns(
     (destinyVersion === 2 || isWeapon) && {
       id: 'breaker',
       header: t('Organizer.Columns.Breaker'),
-      value: (item) => item.isDestiny2() && item.breakerType?.displayProperties.name,
+      value: (item) => item.breakerType?.displayProperties.name,
       cell: (value, item) =>
         item.isDestiny2() &&
         value && (

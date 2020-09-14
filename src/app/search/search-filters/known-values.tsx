@@ -101,7 +101,7 @@ const knownValuesFilters: FilterDefinition[] = [
         // TODO: throw an error!
         return _.stubFalse;
       }
-      return (item: D2Item) => item.breakerType && item.breakerType.hash === breakerType;
+      return (item) => item.breakerType?.hash === breakerType;
     },
   },
   {

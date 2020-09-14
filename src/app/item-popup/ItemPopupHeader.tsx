@@ -101,7 +101,7 @@ export default function ItemPopupHeader({
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
-        {item.isDestiny2() && item.breakerType && (
+        {item.breakerType && (
           <BungieImage className="small-icon" src={item.breakerType.displayProperties.icon} />
         )}
         <div className="item-type-info">

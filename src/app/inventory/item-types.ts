@@ -166,6 +166,8 @@ export interface DimItem {
   powerCap: number | null;
   /** Some items have a "flavor objective", such as emblems that track stats. */
   flavorObjective: DimFlavorObjective | null;
+  /** an item's current breaker type, if it has one */
+  breakerType: DestinyBreakerTypeDefinition | null;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -199,8 +201,6 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  /** an item's current breaker type, if it has one */
-  breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
