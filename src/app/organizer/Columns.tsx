@@ -404,7 +404,6 @@ export function getColumns(
       header: t('Organizer.Columns.Breaker'),
       value: (item) => item.breakerType?.displayProperties.name,
       cell: (value, item) =>
-        item.isDestiny2() &&
         value && (
           <BungieImage
             className={styles.inlineIcon}

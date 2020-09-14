@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { FilterDefinition } from '../filter-types';
 
 const newItems: Set<string> = new Set();
@@ -10,7 +10,7 @@ const simpleFilters: FilterDefinition[] = [
     keywords: ['hascapacity', 'armor2.0'],
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) => Boolean(item.energy),
+    filter: () => (item: DimItem) => Boolean(item.energy),
   },
   {
     keywords: 'weapon',

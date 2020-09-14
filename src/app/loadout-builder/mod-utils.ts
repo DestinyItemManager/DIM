@@ -89,7 +89,7 @@ export function assignModsToArmorSet(
   for (const hash of LockableBucketHashes) {
     const item = setToMatch.find((i) => i.bucket.hash === hash);
 
-    if (item?.isDestiny2()) {
+    if (item) {
       const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
       assignModsForSlot(item, lockedMods, assignments);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));

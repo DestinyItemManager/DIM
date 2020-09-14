@@ -72,7 +72,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
   }
 
@@ -244,7 +244,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
  * The reusable socket category is used in armor 1.0 for perks and stats.
  */
 function getNonReuseableModSockets(item: DimItem) {
-  if (!item.isDestiny2() || !item.sockets) {
+  if (!item.sockets) {
     return [];
   }
 

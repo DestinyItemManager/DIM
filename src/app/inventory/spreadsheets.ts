@@ -317,7 +317,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     if (item.isDestiny1()) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
-    if (item.isDestiny2()) {
+    if (item.energy) {
       row['Armor2.0'] = Boolean(item.energy);
     }
     row.Locked = item.locked;
@@ -333,26 +333,28 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['% Quality'] = item.quality?.min ?? 0;
     }
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
-    if (item.isDestiny1() && item.stats) {
-      item.stats.forEach((stat) => {
-        let pct = 0;
-        if (stat.scaled?.min) {
-          pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
-        }
-        stats[stat.statHash] = {
-          value: stat.value,
-          pct,
-          base: 0,
-        };
-      });
-    } else if (item.isDestiny2() && item.stats) {
-      item.stats.forEach((stat) => {
-        stats[stat.statHash] = {
-          value: stat.value,
-          base: stat.base,
-          pct: 0,
-        };
-      });
+    if (item.stats) {
+      if (item.isDestiny1()) {
+        item.stats.forEach((stat) => {
+          let pct = 0;
+          if (stat.scaled?.min) {
+            pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
+          }
+          stats[stat.statHash] = {
+            value: stat.value,
+            pct,
+            base: 0,
+          };
+        });
+      } else {
+        item.stats.forEach((stat) => {
+          stats[stat.statHash] = {
+            value: stat.value,
+            base: stat.base,
+            pct: 0,
+          };
+        });
+      }
     }
     if (item.isDestiny1()) {
       row['% IntQ'] = stats.Intellect?.pct ?? 0;

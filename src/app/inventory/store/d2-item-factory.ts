@@ -21,7 +21,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D2Item, DimItem, DimPerk } from '../item-types';
+import { DimItem, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
@@ -51,16 +51,16 @@ const collectiblesByItemHash = _.once(
  */
 export const ItemProto = {
   // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: D2Item) {
+  updateManualMoveTimestamp(this: DimItem) {
     this.lastManuallyMoved = Date.now();
     if (this.id !== '0') {
       _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
     }
   },
-  isDestiny1(this: D2Item) {
+  isDestiny1(this: DimItem) {
     return false;
   },
-  isDestiny2(this: D2Item) {
+  isDestiny2(this: DimItem) {
     return true;
   },
 };
@@ -89,10 +89,10 @@ export function processItems(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): D2Item[] {
-  const result: D2Item[] = [];
+): DimItem[] {
+  const result: DimItem[] = [];
   for (const item of items) {
-    let createdItem: D2Item | null = null;
+    let createdItem: DimItem | null = null;
     try {
       createdItem = makeItem(
         defs,
@@ -116,7 +116,7 @@ export function processItems(
 }
 
 /** Set an ID for the item that should be unique across all items */
-export function createItemIndex(item: D2Item): string {
+export function createItemIndex(item: DimItem): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
@@ -147,7 +147,7 @@ export function makeFakeItem(
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
   }
-): D2Item | null {
+): DimItem | null {
   return makeItem(
     defs,
     buckets,
@@ -193,7 +193,7 @@ export function makeItem(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): D2Item | null {
+): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
     item.itemInstanceId && itemComponents?.instances.data
@@ -323,7 +323,7 @@ export function makeItem(
     }
   }
 
-  const itemProps: Omit<D2Item, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+  const itemProps: Omit<DimItem, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
     owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -414,7 +414,7 @@ export function makeItem(
     flavorObjective: null,
     infusionQuality: null,
   };
-  const createdItem: D2Item = Object.assign(Object.create(ItemProto), itemProps);
+  const createdItem: DimItem = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(
@@ -577,7 +577,7 @@ function isLegendaryOrBetter(item) {
 }
 
 function buildPursuitInfo(
-  createdItem: D2Item,
+  createdItem: DimItem,
   item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition
 ) {

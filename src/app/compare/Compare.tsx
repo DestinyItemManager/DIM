@@ -150,7 +150,7 @@ class Compare extends React.Component<Props, State> {
                       }
                     : sortedHash === 'PowerCap'
                     ? {
-                        value: (item.isDestiny2() && item.powerCap) || 99999999,
+                        value: item.powerCap || 99999999,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 

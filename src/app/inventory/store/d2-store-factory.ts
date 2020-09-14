@@ -10,7 +10,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { D2Item } from '../item-types';
+import { DimItem } from '../item-types';
 import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
 
 /**
@@ -28,9 +28,9 @@ const genderTypeToEnglish = {
 // stores.
 export const StoreProto = {
   // Remove an item from this store. Returns whether it actually removed anything.
-  removeItem(this: D2Store, item: D2Item) {
+  removeItem(this: D2Store, item: DimItem) {
     // Completely remove the source item
-    const match = (i: D2Item) => item.index === i.index;
+    const match = (i: DimItem) => item.index === i.index;
     const sourceIndex = this.items.findIndex(match);
     if (sourceIndex >= 0) {
       this.items = [...this.items.slice(0, sourceIndex), ...this.items.slice(sourceIndex + 1)];
@@ -54,7 +54,7 @@ export const StoreProto = {
     return false;
   },
 
-  addItem(this: D2Store, item: D2Item) {
+  addItem(this: D2Store, item: DimItem) {
     this.items = [...this.items, item];
     this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
     item.owner = this.id;
@@ -139,14 +139,14 @@ export function makeVault(
     currencies,
     isVault: true,
     color: { red: 49, green: 50, blue: 51 },
-    removeItem(this: D2Vault, item: D2Item): boolean {
+    removeItem(this: D2Vault, item: DimItem): boolean {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count--;
       }
       return result;
     },
-    addItem(this: D2Vault, item: D2Item) {
+    addItem(this: D2Vault, item: DimItem) {
       StoreProto.addItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count++;

@@ -242,10 +242,6 @@ export function generateMixesFromPerks(
   chosenValues: number[],
   statOrder: StatTypes[]
 ): DimPlug[] {
-  if (!item.isDestiny2()) {
-    return [];
-  }
-
   const stats = item.stats;
 
   if (!stats || stats.length < 3) {

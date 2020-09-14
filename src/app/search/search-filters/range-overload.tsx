@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
@@ -54,10 +54,10 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
-        return (item: D2Item) =>
+        return (item: DimItem) =>
           item.energy && numberComparisonFunction(item.energy.energyCapacity);
       }
-      return (item: D2Item) =>
+      return (item: DimItem) =>
         item.energy && filterValue === energyNamesByEnum[item.energy.energyType];
     },
   },
@@ -70,7 +70,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) => compareTo(getSeason(item));
+      return (item: DimItem) => compareTo(getSeason(item));
     },
   },
   {
@@ -82,7 +82,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) => {
+      return (item: DimItem) => {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return compareTo(itemFinalSeason ?? 0);
       };

@@ -25,8 +25,11 @@ import { InventoryBucket } from './inventory-buckets';
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
 
 /**
- * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
- * or you don't use anything specific to one of them.
+ * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
+ * though you can specialize down to the D1Item type for some special D1 properties and overrides.
+ *
+ * Prefer calculating values at the point of display instead of adding more stuff to this, and prefer making optional
+ * properties instead of "| null".
  */
 // TODO: This interface is clearly too large - break out interfaces for common subsets
 export interface DimItem {
@@ -191,8 +194,8 @@ export interface DimItem {
 
   /** Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item. */
   isDestiny1(): this is D1Item;
-  /** Check if this item is from D2. Inside an if statement, this item will be narrowed to type D2Item. */
-  isDestiny2(): this is D2Item;
+  /** Check if this item is from D2. */
+  isDestiny2(): boolean;
 }
 
 /**
@@ -213,11 +216,6 @@ export interface D1Item extends DimItem {
   /** Hashes that allow us to figure out where this item can be found (what activities, locations, etc.) */
   sourceHashes: number[];
 }
-
-/**
- * A Destiny 2 item. Use this type when you need specific D2 properties.
- */
-export type D2Item = DimItem;
 
 export interface DimMasterwork {
   /** The tier of the masterwork (not the same as the stat!). */

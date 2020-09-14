@@ -1,6 +1,6 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
@@ -68,7 +68,7 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const ammoType = d2AmmoTypes[filterValue];
-      return (item: D2Item) => item.ammoType === ammoType;
+      return (item: DimItem) => item.ammoType === ammoType;
     },
   },
   {
@@ -151,7 +151,7 @@ const knownValuesFilters: FilterDefinition[] = [
           missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];
-        return (item: D2Item) => getEvent(item) === predicate;
+        return (item: DimItem) => getEvent(item) === predicate;
       } else {
         // TODO: throw an error!
         return _.stubFalse;

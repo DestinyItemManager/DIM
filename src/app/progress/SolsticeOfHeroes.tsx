@@ -60,7 +60,6 @@ export function solsticeOfHeroesArmor(stores: DimStore[], selectedStore: DimStor
       store.items.filter(
         (item) =>
           item.bucket.inArmor &&
-          item.isDestiny2() &&
           item.objectives &&
           item.objectives.length > 0 &&
           item.classType === selectedStore.classType &&
