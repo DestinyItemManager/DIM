@@ -21,7 +21,7 @@ import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
 import { DimStore } from './store-types';
 import { getClass } from './store/character-utils';
-import { getSeason } from './store/season';
+import { getEvent, getSeason } from './store/season';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -325,7 +325,8 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     row.Year = getItemYear(item);
     if (item.isDestiny2()) {
       row.Season = getSeason(item);
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
     if (item.isDestiny1()) {
@@ -425,7 +426,8 @@ function downloadWeapons(
     row.Year = getItemYear(item);
     if (item.isDestiny2()) {
       row.Season = getSeason(item);
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
     const stats = {

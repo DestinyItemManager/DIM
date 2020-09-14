@@ -15,7 +15,7 @@ import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { source } from 'app/inventory/spreadsheets';
-import { getSeason } from 'app/inventory/store/season';
+import { getEvent, getSeason } from 'app/inventory/store/season';
 import { statAllowList } from 'app/inventory/store/stats';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
@@ -336,7 +336,10 @@ export function getColumns(
     destinyVersion === 2 && {
       id: 'event',
       header: t('Organizer.Columns.Event'),
-      value: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : undefined),
+      value: (item) => {
+        const event = item.isDestiny2() && getEvent(item);
+        return event ? D2EventInfo[event].name : undefined;
+      },
       filter: (value) => `event:${value}`,
     },
     destinyVersion === 2 &&

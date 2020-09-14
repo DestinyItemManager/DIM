@@ -20,7 +20,6 @@ import {
   DestinyStat,
   DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
-import { D2EventEnum } from 'data/d2/d2-event-info';
 import { InventoryBucket } from './inventory-buckets';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
@@ -208,8 +207,6 @@ export interface D2Item extends DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
-  /** The Destiny event that a specific item belongs to. */
-  event: D2EventEnum | null;
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
   displaySource?: string;

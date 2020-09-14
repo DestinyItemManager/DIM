@@ -15,8 +15,6 @@ import {
   ItemState,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
-import D2Events from 'data/d2/events.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -398,10 +396,6 @@ export function makeItem(
     metricObjective: item.metricObjective,
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
   });
-
-  createdItem.event = createdItem.source
-    ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
-    : D2Events[item.itemHash];
 
   // *able
   createdItem.taggable = Boolean(
