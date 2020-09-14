@@ -32,7 +32,12 @@ interface ProvidedProps {
   item: D2Item;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+  updateSocketComparePlug?(value: {
+    item: DimItem;
+    categoryStyle: number;
+    socket: DimSocket;
+    plug: DimPlug;
+  }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
@@ -92,12 +97,19 @@ function ItemSockets({
 
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
-  const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
+  const handleSocketClick = (
+    item: DimItem,
+    categoryStyle: number,
+    socket: DimSocket,
+    plug: DimPlug,
+    hasMenu: boolean
+  ) => {
     if (hasMenu) {
       setSocketInMenu(socket);
     } else if (updateSocketComparePlug) {
       updateSocketComparePlug({
         item,
+        categoryStyle,
         socket,
         plug,
       });
@@ -154,6 +166,7 @@ function ItemSockets({
                 defs={defs}
                 item={item}
                 isPhonePortrait={isPhonePortrait}
+                categoryStyle={category.category.categoryStyle}
                 socket={socketInfo}
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
@@ -256,6 +269,7 @@ function anyWishListRolls(
 function Socket({
   defs,
   item,
+  categoryStyle,
   socket,
   wishListsEnabled,
   inventoryWishListRoll,
@@ -268,6 +282,7 @@ function Socket({
 }: {
   defs: D2ManifestDefinitions;
   item: D2Item;
+  categoryStyle: number;
   socket: DimSocket;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
@@ -275,7 +290,13 @@ function Socket({
   classesByHash?: { [plugHash: number]: string };
   bestPerks: Set<number>;
   isPhonePortrait: boolean;
-  onClick(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick(
+    item: DimItem,
+    categoryStyle: number,
+    socket: DimSocket,
+    plug: DimPlug,
+    hasMenu: boolean
+  ): void;
   onShiftClick?(lockedItem: LockedItemType): void;
   adjustedPlug?: DimPlug | undefined;
 }) {
@@ -292,6 +313,7 @@ function Socket({
           key={plug.plugDef.hash}
           plug={plug}
           item={item}
+          categoryStyle={categoryStyle}
           socketInfo={socket}
           defs={defs}
           wishListsEnabled={wishListsEnabled}
@@ -301,7 +323,7 @@ function Socket({
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}
           onClick={() => {
-            onClick(item, socket, plug, hasMenu);
+            onClick(item, categoryStyle, socket, plug, hasMenu);
           }}
           onShiftClick={onShiftClick}
           adjustedPlug={adjustedPlug}

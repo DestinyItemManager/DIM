@@ -15,7 +15,10 @@ import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import { DestinyDisplayPropertiesDefinition, SocketPlugSources } from 'bungie-api-ts/destiny2';
+import {
+  DestinyDisplayPropertiesDefinition,
+  DestinySocketCategoryStyle,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -201,11 +204,12 @@ class Compare extends React.Component<Props, State> {
     // TODO: Should this go into its own module?
     const updateSocketComparePlug = ({
       item,
+      categoryStyle,
       socket,
       plug: clickedPlug,
     }: {
       item: DimItem;
-      categoryHash: number;
+      categoryStyle: number;
       socket: DimSocket;
       plug: DimPlug;
     }) => {
@@ -214,8 +218,8 @@ class Compare extends React.Component<Props, State> {
         return null;
       }
 
-      // Exit early if the socket plug source isn't a ReusablePlugItem
-      if (socket.socketDefinition.plugSources !== SocketPlugSources.ReusablePlugItems) {
+      // Exit early if the socket category isn't Reusable
+      if (categoryStyle !== DestinySocketCategoryStyle.Reusable) {
         return null;
       }
 

@@ -2,7 +2,7 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { LockedItemType } from 'app/loadout-builder/types';
-import { SocketPlugSources } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
@@ -20,6 +20,7 @@ export default function Plug({
   defs,
   plug,
   item,
+  categoryStyle,
   socketInfo,
   wishListsEnabled,
   inventoryWishListRoll,
@@ -34,6 +35,7 @@ export default function Plug({
   defs: D2ManifestDefinitions;
   plug: DimPlug;
   item: D2Item;
+  categoryStyle: number;
   socketInfo: DimSocket;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
@@ -122,7 +124,7 @@ export default function Plug({
         notChosen: plug !== socketInfo.plugged,
         selectable:
           socketInfo.plugOptions.length > 1 &&
-          socketInfo.socketDefinition.plugSources === SocketPlugSources.ReusablePlugItems,
+          categoryStyle === DestinySocketCategoryStyle.Reusable,
         selected: plug.plugDef.hash === adjustedPlug?.plugDef.hash,
         notSelected:
           plug === socketInfo.plugged &&
