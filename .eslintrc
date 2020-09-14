@@ -88,6 +88,7 @@
     "react/no-this-in-sfc": "error",
     "react/no-unused-state": "error",
     "react/button-has-type": "error",
+    "react/prop-types": "off",
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",

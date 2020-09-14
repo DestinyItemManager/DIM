@@ -6,33 +6,8 @@ import {
   DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import { ConnectableObservable } from 'rxjs';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { D1Item, D2Item, DimItem } from './item-types';
-
-/**
- * A generic store service that produces stores and items that are the same across D1 and D2. Use this
- * if you don't care about the differences between the two.
- */
-export interface StoreServiceType<StoreType = DimStore> {
-  /** Get a list of all characters plus the vault. */
-  getStores(): StoreType[];
-  /** A stream of store updates for a particular account. */
-  getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Reload inventory completely. */
-  reloadStores(): Promise<StoreType[] | undefined>;
-}
-
-/**
- * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
- */
-export type D2StoreServiceType = StoreServiceType<D2Store>;
-
-/**
- * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
- */
-export type D1StoreServiceType = StoreServiceType<D1Store>;
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
@@ -100,9 +75,6 @@ export interface DimStore<Item = DimItem> {
   isDestiny1(): this is D1Store;
   /* Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store. */
   isDestiny2(): this is D2Store;
-
-  /** The stores service associated with this store. */
-  getStoresService(): StoreServiceType;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -183,8 +155,6 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: any;
-
-  getStoresService(): D1StoreServiceType;
 }
 
 /**
@@ -194,5 +164,4 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  getStoresService(): D1StoreServiceType;
 }

@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from './action-queue';
@@ -9,9 +10,10 @@ import { D2Store } from './store-types';
 
 export function PullFromPostmaster({ store }: { store: D2Store }) {
   const [working, setWorking] = useState(false);
-  const stores = useSelector(storesSelector);
-
-  const numPullablePostmasterItems = pullablePostmasterItems(store, stores).length;
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const numPullablePostmasterItems = useSelector(
+    (state: RootState) => pullablePostmasterItems(store, storesSelector(state)).length
+  );
   if (numPullablePostmasterItems === 0) {
     return null;
   }
@@ -20,7 +22,7 @@ export function PullFromPostmaster({ store }: { store: D2Store }) {
     queueAction(async () => {
       setWorking(true);
       try {
-        await pullFromPostmaster(store, stores);
+        await dispatch(pullFromPostmaster(store));
       } finally {
         setWorking(false);
       }

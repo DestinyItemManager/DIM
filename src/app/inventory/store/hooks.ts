@@ -1,10 +1,12 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { refresh$ } from 'app/shell/refresh';
+import { ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { queueAction } from '../action-queue';
-import { D1StoresService } from '../d1-stores';
-import { D2StoresService } from '../d2-stores';
+import { loadStores as d1LoadStores } from '../d1-stores';
+import { loadStores as d2LoadStores } from '../d2-stores';
 
 /**
  * A simple hook (probably too simple!) that loads and refreshes stores. This is
@@ -14,22 +16,28 @@ import { D2StoresService } from '../d2-stores';
  * context that never changes.
  */
 export function useLoadStores(account: DestinyAccount | undefined, loaded: boolean) {
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+
   useEffect(() => {
     if (account && !loaded) {
-      account.destinyVersion === 2
-        ? D2StoresService.getStoresStream(account)
-        : D1StoresService.getStoresStream(account);
+      if (account?.destinyVersion == 2) {
+        dispatch(d2LoadStores());
+      } else {
+        dispatch(d1LoadStores());
+      }
     }
-  }, [account, loaded]);
+  }, [account, dispatch, loaded]);
 
   useSubscription(() =>
     refresh$.subscribe(() => {
       if (account) {
-        queueAction<any>(() =>
-          account.destinyVersion === 2
-            ? D2StoresService.reloadStores()
-            : D1StoresService.reloadStores()
-        );
+        queueAction<any>(() => {
+          if (account?.destinyVersion == 2) {
+            return dispatch(d2LoadStores());
+          } else {
+            return dispatch(d1LoadStores());
+          }
+        });
       }
     })
   );
