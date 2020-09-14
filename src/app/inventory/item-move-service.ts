@@ -817,7 +817,7 @@ function canMoveToStore(
       storeReservations.vault = amount;
     }
 
-    // How many moves (in amount, not stacks) are needed from each
+    // How many items need to be moved away from each store (in amount, not stacks)
     const movesNeeded: { [storeId: string]: number } = {};
     stores.forEach((s) => {
       if (storeReservations[s.id]) {
@@ -828,7 +828,8 @@ function canMoveToStore(
       }
     });
 
-    if (!Object.values(movesNeeded).some((m) => m > 0)) {
+    if (Object.values(movesNeeded).every((m) => m === 0)) {
+      // If there are no moves needed, we're clear to go
       return true;
     } else if (store.isVault || triedFallback) {
       // Move aside one of the items that's in the way
@@ -905,6 +906,17 @@ function canMoveToStore(
         }
       }
     } else {
+      if ($featureFlags.debugMoves) {
+        console.log(
+          'Reloading stores to see if space has freed up to move',
+          item.name,
+          item.id,
+          'to',
+          store.name,
+          movesNeeded,
+          options
+        );
+      }
       // Refresh the stores to see if anything has changed
       const reloadedStores =
         (await (item.destinyVersion === 2
