@@ -169,6 +169,8 @@ export interface DimItem {
   breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
+  /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
+  previewVendor?: number;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -202,8 +204,6 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
-  previewVendor?: number;
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
   displaySource?: string;
