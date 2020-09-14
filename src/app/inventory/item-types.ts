@@ -180,6 +180,11 @@ export interface DimItem {
   source?: number;
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
+  /** Information about this item as a plug. Mostly useful for mod collectibles. */
+  plug?: {
+    energyCost: number;
+    costElementIcon: string;
+  };
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -212,13 +217,7 @@ export interface D1Item extends DimItem {
 /**
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
-export interface D2Item extends DimItem {
-  /** Information about this item as a plug. Mostly useful for mod collectibles. */
-  plug?: {
-    energyCost: number;
-    costElementIcon: string;
-  };
-}
+export type D2Item = DimItem;
 
 export interface DimMasterwork {
   /** The tier of the masterwork (not the same as the stat!). */
