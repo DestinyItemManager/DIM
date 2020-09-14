@@ -102,73 +102,71 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     throw new Error("item needs a 'type' field");
   }
 
-  // Account-wide buckets (mods, etc) are only on the first character
-  if (item.bucket.accountWide && !store.current) {
-    return 0;
-  }
-  if (!item.bucket) {
-    return 0;
-  }
-
-  let openStacks = 0;
+  // Calculate how many full stacks (slots, where multiple items in a stack
+  // count as 1) are occupied in the bucket this item would go into.
+  let occupiedStacks = 0;
   if (store.isVault) {
-    if (store.isDestiny2()) {
-      if (!item.bucket.vaultBucket) {
-        return 0;
-      }
-      const vaultBucket = item.bucket.vaultBucket;
-      const usedSpace = item.bucket.vaultBucket
-        ? count(store.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
-        : 0;
-      openStacks = Math.max(0, capacityForItem(store, item) - usedSpace);
-    } else {
-      const sort = item.bucket?.sort;
-      if (!sort) {
-        throw new Error("item needs a 'sort' field");
-      }
-      openStacks = Math.max(
-        0,
-        capacityForItem(store, item) - count(store.items, (i) => i.bucket.sort === sort)
-      );
+    if (!item.bucket.vaultBucket) {
+      return 0;
     }
+    const vaultBucket = item.bucket.vaultBucket;
+    occupiedStacks = item.bucket.vaultBucket
+      ? count(store.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
+      : 0;
   } else {
-    const occupiedStacks = store.buckets[item.bucket.hash]
-      ? store.buckets[item.bucket.hash].length
-      : 10;
-    openStacks = Math.max(0, capacityForItem(store, item) - occupiedStacks);
-
-    // Some things can't have multiple stacks.
-    if (item.uniqueStack) {
-      // If the item lives in an account-wide bucket (like modulus reports)
-      // we need to check out how much space is left in that bucket, which is
-      // only on the current store.
-      if (item.bucket.accountWide) {
-        const existingAmount = amountOfItem(getCurrentStore(stores)!, item);
-
-        if (existingAmount === 0) {
-          // if this would be the first stack, make sure there's room for a stack
-          return openStacks > 0 ? item.maxStackSize : 0;
-        } else {
-          // return how much can be added to the existing stack
-          return Math.max(item.maxStackSize - existingAmount, 0);
-        }
-      }
-
-      // If there's some already there, we can add enough to fill a stack. Otherwise
-      // we can only add if there's an open stack.
-      const existingAmount = amountOfItem(store, item);
-      return existingAmount > 0
-        ? Math.max(item.maxStackSize - amountOfItem(store, item), 0)
-        : openStacks > 0
-        ? item.maxStackSize
-        : 0;
+    if (!item.bucket) {
+      return 0;
     }
+    // Account-wide buckets (mods, etc) are only on the first character
+    if (item.bucket.accountWide && !store.current) {
+      return 0;
+    }
+    occupiedStacks = store.buckets[item.bucket.hash] ? store.buckets[item.bucket.hash].length : 10;
   }
+
+  // The open stacks are just however many you *could* fit, minus how many are occupied
+  const openStacks = Math.max(0, capacityForItem(store, item) - occupiedStacks);
+
+  // Some things can't have multiple stacks (unique stacks) and must be handled
+  // specially. These won't ever be in the vault.
+  if (item.uniqueStack) {
+    // If the item lives in an account-wide bucket (like modulus reports)
+    // we need to check out how much space is left in that bucket, which is
+    // only on the current store.
+    if (item.bucket.accountWide) {
+      const existingAmount = amountOfItem(getCurrentStore(stores)!, item);
+
+      if (existingAmount === 0) {
+        // if this would be the first stack, make sure there's room for a stack
+        return openStacks > 0 ? item.maxStackSize : 0;
+      } else {
+        // return how much can be added to the existing stack
+        return Math.max(item.maxStackSize - existingAmount, 0);
+      }
+    }
+
+    // If there's some already there, we can add enough to fill a stack. Otherwise
+    // we can only add if there's an open stack.
+    const existingAmount = amountOfItem(store, item);
+    return existingAmount > 0
+      ? Math.max(item.maxStackSize - amountOfItem(store, item), 0)
+      : openStacks > 0
+      ? item.maxStackSize
+      : 0;
+  }
+
+  // Convert back from stacks to individual items, keeping in mind that we may
+  // be able to move some amount into an existing stack.
   const maxStackSize = item.maxStackSize || 1;
   if (maxStackSize === 1) {
+    // Stacks and individual items are the same, no conversion required
     return openStacks;
   } else {
+    // Get the existing amount in individual pieces, not stacks
     let existingAmount = amountOfItem(store, item);
+    // This helps us figure out the remainder that gets added back in from a
+    // partial stack - it'll end up negative, and when subtracted from the open
+    // stacks' worth, it will *add* in the remainder.
     while (existingAmount > 0) {
       existingAmount -= maxStackSize;
     }
