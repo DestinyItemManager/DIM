@@ -171,6 +171,8 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
+  /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
+  displaySource?: string;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -206,7 +208,6 @@ export interface D1Item extends DimItem {
 export interface D2Item extends DimItem {
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
-  displaySource?: string;
 
   /** The state of this item in the user's D2 Collection */
   collectibleState: DestinyCollectibleState | null;
