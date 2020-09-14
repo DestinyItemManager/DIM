@@ -30,14 +30,6 @@ export interface MinMaxIgnored {
   ignored: boolean;
 }
 
-export interface BurnItem {
-  dmg: BurnTypes;
-  displayProperties: {
-    name: string;
-    icon: string;
-  };
-}
-
 export interface LockedItemCase {
   type: 'item';
   item: DimItem;
@@ -48,26 +40,14 @@ export interface LockedPerk {
   perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
 }
-export interface LockedModBase {
-  mod: PluggableInventoryItemDefinition;
-  plugSetHash: number;
-}
-export interface LockedMod extends LockedModBase {
-  type: 'mod';
-  bucket: InventoryBucket;
-}
-export interface LockedBurn {
-  type: 'burn';
-  burn: BurnItem;
-  bucket: InventoryBucket;
-}
+
 export interface LockedExclude {
   type: 'exclude';
   item: DimItem;
   bucket: InventoryBucket;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedMod | LockedBurn | LockedExclude;
+export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
 
 /** A map from bucketHash or seasonal to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{

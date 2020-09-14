@@ -11,7 +11,6 @@ import {
   ProfileUpdateResponse,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { DimData } from 'app/storage/sync.service';
 import { authenticatedApi, unauthenticatedApi } from './dim-api-helper';
 
 export async function getGlobalSettings() {
@@ -42,7 +41,7 @@ export async function getDimApiProfile(account?: DestinyAccount) {
   return response;
 }
 
-export async function importData(data: DimData) {
+export async function importData(data: ExportResponse) {
   const response = await authenticatedApi<ImportResponse>({
     url: '/import',
     method: 'POST',

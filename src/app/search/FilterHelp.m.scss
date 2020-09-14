@@ -1,0 +1,59 @@
+@import '../variables.scss';
+
+.filterView {
+  padding: 0 10px 1em 10px !important;
+  user-select: text;
+
+  table {
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #222;
+    width: 100%;
+    @include phone-portrait {
+      table-layout: fixed;
+    }
+
+    tr:nth-child(2n + 1) {
+      background-color: #1b1b1b;
+    }
+  }
+  tr td:first-child {
+    border-left: none;
+  }
+  th {
+    text-align: left;
+  }
+  td,
+  th {
+    border: none;
+    font-size: 13px;
+    padding: 6px 9px;
+    vertical-align: top;
+
+    span,
+    a {
+      color: #eee;
+      display: block;
+      text-decoration: none;
+      margin-bottom: 4px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  kbd {
+    background-color: #222;
+    border-radius: 2px;
+    padding: 0 2px;
+    font-family: 'Open Sans', sans-serif;
+  }
+}
+
+.search {
+  margin: 8px 0 !important;
+}

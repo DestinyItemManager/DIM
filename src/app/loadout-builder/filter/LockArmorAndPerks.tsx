@@ -18,13 +18,10 @@ import {
   LockableBuckets,
   LockedArmor2Mod,
   LockedArmor2ModMap,
-  LockedBurn,
   LockedExclude,
   LockedItemCase,
   LockedItemType,
   LockedMap,
-  LockedMod,
-  LockedModBase,
   LockedPerk,
   ModPickerCategories,
 } from '../types';
@@ -36,7 +33,6 @@ import LockedItem from './LockedItem';
 interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
-  lockedSeasonalMods: LockedModBase[];
   lockedArmor2Mods: LockedArmor2ModMap;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
@@ -68,7 +64,6 @@ function LockArmorAndPerks({
   selectedStore,
   defs,
   lockedMap,
-  lockedSeasonalMods,
   lockedArmor2Mods,
   buckets,
   stores,
@@ -183,9 +178,9 @@ function LockArmorAndPerks({
   );
 
   const modOrder = Object.values(ModPickerCategories);
-  const flatLockedArmor2Mods: LockedArmor2Mod[] = $featureFlags.armor2ModPicker
-    ? modOrder.flatMap((category) => lockedArmor2Mods[category]).filter(Boolean)
-    : [];
+  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
+    .flatMap((category) => lockedArmor2Mods[category])
+    .filter(Boolean);
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
@@ -197,46 +192,13 @@ function LockArmorAndPerks({
       <div className={styles.area}>
         {(Boolean(flatLockedMap.perk?.length) ||
           Boolean(flatLockedMap.mod?.length) ||
-          Boolean(flatLockedMap.burn?.length) ||
-          Boolean(lockedSeasonalMods.length)) && (
+          Boolean(flatLockedMap.burn?.length)) && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
-              <LockedItem
-                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
-                lockedItem={lockedItem}
-                defs={defs}
-                onRemove={removeLockedItemType}
-              />
-            ))}
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
                 key={`${lockedItem.bucket?.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
-              />
-            ))}
-            {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
-              <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
-                lockedItem={lockedItem}
-                defs={defs}
-                onRemove={removeLockedItemType}
-              />
-            ))}
-            {lockedSeasonalMods.map((item) => (
-              <LockedArmor2ModIcon
-                key={item.mod.hash}
-                item={item}
-                defs={defs}
-                onModClicked={() =>
-                  lbDispatch({
-                    type: 'lockedSeasonalModsChanged',
-                    lockedSeasonalMods: lockedSeasonalMods.filter(
-                      (locked) => locked.mod.hash !== item.mod.hash
-                    ),
-                  })
-                }
               />
             ))}
           </div>
@@ -251,31 +213,29 @@ function LockArmorAndPerks({
           </button>
         </div>
       </div>
-      {$featureFlags.armor2ModPicker && (
-        <div className={styles.area}>
-          {Boolean(flatLockedArmor2Mods.length) && (
-            <div className={styles.itemGrid}>
-              {flatLockedArmor2Mods.map((item) => (
-                <LockedArmor2ModIcon
-                  key={item.key}
-                  item={item}
-                  defs={defs}
-                  onModClicked={() => onArmor2ModClicked(item)}
-                />
-              ))}
-            </div>
-          )}
-          <div className={styles.buttons}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={() => lbDispatch({ type: 'openModPicker' })}
-            >
-              <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
-            </button>
+      <div className={styles.area}>
+        {Boolean(flatLockedArmor2Mods.length) && (
+          <div className={styles.itemGrid}>
+            {flatLockedArmor2Mods.map((item) => (
+              <LockedArmor2ModIcon
+                key={item.key}
+                item={item}
+                defs={defs}
+                onModClicked={() => onArmor2ModClicked(item)}
+              />
+            ))}
           </div>
+        )}
+        <div className={styles.buttons}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => lbDispatch({ type: 'openModPicker' })}
+          >
+            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
+          </button>
         </div>
-      )}
+      </div>
       <LoadoutBucketDropTarget
         className={styles.area}
         storeIds={storeIds}
@@ -291,7 +251,6 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -321,7 +280,6 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}

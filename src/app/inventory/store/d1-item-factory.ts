@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/exceptions';
-import { D1StoresService } from '../d1-stores';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store } from '../store-types';
@@ -46,9 +45,6 @@ export const ItemProto = {
   },
   isDestiny2(this: D1Item) {
     return false;
-  },
-  getStoresService() {
-    return D1StoresService;
   },
 };
 

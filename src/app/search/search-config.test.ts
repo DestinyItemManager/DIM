@@ -16,6 +16,7 @@ describe('generateSuggestionsForFilter', () => {
     ['range', 'a', undefined],
     ['rangeoverload', 'a', ['b', 'c']],
     ['freeform', 'a', ['b', 'c']],
+    [undefined, ['a'], undefined],
     ['range', 'stat', allStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],

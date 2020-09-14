@@ -1,5 +1,12 @@
 ## Next
 
+## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
+
+* Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.
+* Improvements to search performance, and search autocomplete suggestions.
+* Fix cases where some odd stats would show up as kill trackers.
+* Sword-specific stats now show up in `stat:` filters.
+
 ## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
 
 * Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.

@@ -60,7 +60,6 @@ module.exports = (env) => {
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.ts',
-      gdriveReturn: './src/gdriveReturn.ts',
     },
 
     output: {
@@ -314,13 +313,6 @@ module.exports = (env) => {
       }),
 
       new HtmlWebpackPlugin({
-        inject: true,
-        filename: 'gdrive-return.html',
-        template: '!html-loader!src/gdrive-return.html',
-        chunks: ['gdriveReturn'],
-      }),
-
-      new HtmlWebpackPlugin({
         inject: false,
         filename: '404.html',
         template: '!html-loader!src/404.html',
@@ -364,18 +356,12 @@ module.exports = (env) => {
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
         $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
 
-        $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify(
-          '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
-        ),
-
         $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
         // Feature flags!
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        // Sync data over gdrive
-        '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
@@ -389,8 +375,6 @@ module.exports = (env) => {
         '$featureFlags.wishLists': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
-        // Enable the Armor 2 Mod picker
-        '$featureFlags.armor2ModPicker': JSON.stringify(true),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup

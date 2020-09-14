@@ -3,6 +3,7 @@ import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -197,6 +198,7 @@ function SearchBar(
     setInputValue,
     reset,
     openMenu,
+    closeMenu,
   } = useCombobox<SearchItem>({
     items,
     defaultIsOpen: isPhonePortrait && mainSearchBar,
@@ -207,6 +209,7 @@ function SearchBar(
         // Handle selecting the special "help" item
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
+          closeMenu();
         }
       }
     },
@@ -351,8 +354,14 @@ function SearchBar(
         ReactDOM.createPortal(
           <Sheet
             onClose={() => setFilterHelpOpen(false)}
-            header={<h1>{t('Header.Filters')}</h1>}
+            header={
+              <>
+                <h1>{t('Header.Filters')}</h1>
+                <UserGuideLink topic="Item_Search" />
+              </>
+            }
             sheetClassName="filterHelp"
+            freezeInitialHeight={true}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />

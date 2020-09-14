@@ -130,7 +130,6 @@ function LoadoutBuilder({
   const [
     {
       lockedMap,
-      lockedSeasonalMods,
       lockedArmor2Mods,
       selectedStoreId,
       statFilters,
@@ -166,7 +165,6 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
-    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -211,7 +209,6 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedSeasonalMods={lockedSeasonalMods}
         lockedArmor2Mods={lockedArmor2Mods}
         lbDispatch={lbDispatch}
       />
@@ -270,7 +267,6 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
-            lockedSeasonalMods={lockedSeasonalMods}
             loadouts={loadouts}
           />
         )}
@@ -291,7 +287,6 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
-              lockedSeasonalMods={lockedSeasonalMods}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
@@ -303,7 +298,6 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
-              lockedMap={lockedMap}
               lockedArmor2Mods={lockedArmor2Mods}
               defs={defs}
               classType={selectedStore.classType}
