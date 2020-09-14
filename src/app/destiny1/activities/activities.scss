@@ -29,6 +29,7 @@
 
   .activity-name {
     text-shadow: 2px 2px 5px black;
+    margin-left: 4px;
   }
   .activity-featured {
     color: gold;
@@ -104,6 +105,10 @@
     img {
       padding-right: 4px;
     }
+  }
+
+  .objectives-spacer {
+    height: 12px;
   }
 
   .step-icon {
