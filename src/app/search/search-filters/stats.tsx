@@ -2,7 +2,6 @@ import { tl } from 'app/i18next-t';
 import { D2Item, DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
-import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
   allStatNames,
@@ -94,7 +93,7 @@ function statFilterFromString(
   // we are looking for, at most, 3 colons in the overall filter text,
   // and one was already removed, so bail if a 3rd element was found by split()
   if (shouldntExist) {
-    return _.stubFalse;
+    throw new Error('Too many colons');
   }
   const numberComparisonFunction = rangeStringToComparator(statValue);
   const byWhichValue = byBaseValue ? 'base' : 'value';

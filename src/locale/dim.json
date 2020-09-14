@@ -722,6 +722,13 @@
   "Records": {
     "Title": "Records"
   },
+  "SearchHistory": {
+    "Date": "Last Used",
+    "Description": "These are all your past and saved searches. You can delete them from here.",
+    "Link": "View and edit search history.",
+    "Query": "Search",
+    "UsageCount": "# Used"
+  },
   "Settings": {
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",

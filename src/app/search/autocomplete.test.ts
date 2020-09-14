@@ -19,7 +19,12 @@ describe('autocompleteTermSuggestions', () => {
   test.each(cases)(
     'autocomplete within query for |%s| with caret at position %d',
     (query: string, caretIndex: number) => {
-      const candidates = autocompleteTermSuggestions(query, caretIndex, filterComplete);
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        filterComplete,
+        searchConfig
+      );
       expect(candidates).toMatchSnapshot();
     }
   );

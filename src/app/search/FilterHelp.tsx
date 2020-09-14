@@ -59,7 +59,8 @@ function FilterHelp({ searchConfig }: Props) {
           {t('Filter.Combine', {
             example: '(is:weapon and sunsetsafter:arrival) or (is:armor and stat:total:<55)',
           })}{' '}
-          {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}
+          {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
+          <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
         <div className={clsx(styles.search, 'search-filter')} role="search">
           <input

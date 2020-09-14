@@ -123,8 +123,12 @@ function makeSearchFilterFactory(
           const filterDef = filters[filterName];
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
-            // TODO: allow the filter generator to throw an error
-            return filterDef.filter({ filterValue, ...filterContext });
+            try {
+              return filterDef.filter({ filterValue, ...filterContext });
+            } catch (e) {
+              console.error('Invalid query term', filterName, filterValue, e);
+              return () => true;
+            }
           }
 
           // TODO: mark invalid - fill out what didn't make sense and where it was in the string
