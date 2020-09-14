@@ -71,7 +71,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {!item.stats && item.isDestiny2() && item.collectibleHash !== null && isD2Manifest(defs) && (
+      {!item.stats && item.collectibleHash !== undefined && isD2Manifest(defs) && (
         <div className="item-details">
           {defs.Collectible.get(item.collectibleHash).sourceString}
         </div>

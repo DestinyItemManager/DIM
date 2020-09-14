@@ -382,7 +382,7 @@ export function makeItem(
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash, itemDef.hash)?.sourceHash
       : null,
-    collectibleState: collectible ? collectible.state : null,
+    collectibleState: collectible ? collectible.state : undefined,
     collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
     displaySource: itemDef.displaySource,

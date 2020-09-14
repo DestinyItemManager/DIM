@@ -173,6 +173,9 @@ export interface DimItem {
   previewVendor?: number;
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
   displaySource?: string;
+  /** The state of this item in the user's D2 Collection */
+  collectibleState?: DestinyCollectibleState;
+  collectibleHash?: number;
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
@@ -208,11 +211,6 @@ export interface D1Item extends DimItem {
 export interface D2Item extends DimItem {
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
-
-  /** The state of this item in the user's D2 Collection */
-  collectibleState: DestinyCollectibleState | null;
-
-  collectibleHash: number | null;
 
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;

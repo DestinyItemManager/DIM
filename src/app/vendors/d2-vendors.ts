@@ -199,8 +199,8 @@ export function filterVendorGroupsToUnacquired(
           ...vendor,
           items: vendor.items.filter(
             (item) =>
-              item.item?.isDestiny2() &&
-              (item.item.collectibleState !== null
+              item.item &&
+              (item.item.collectibleState !== undefined
                 ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
                 : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
                   !ownedItemHashes.has(item.item.hash))
