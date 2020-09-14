@@ -18,12 +18,10 @@ import {
   LockableBuckets,
   LockedArmor2Mod,
   LockedArmor2ModMap,
-  LockedBurn,
   LockedExclude,
   LockedItemCase,
   LockedItemType,
   LockedMap,
-  LockedMod,
   LockedPerk,
   ModPickerCategories,
 } from '../types';
@@ -196,27 +194,10 @@ function LockArmorAndPerks({
           Boolean(flatLockedMap.mod?.length) ||
           Boolean(flatLockedMap.burn?.length)) && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
-              <LockedItem
-                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
-                lockedItem={lockedItem}
-                defs={defs}
-                onRemove={removeLockedItemType}
-              />
-            ))}
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
                 key={`${lockedItem.bucket?.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
-                defs={defs}
-                onRemove={removeLockedItemType}
-              />
-            ))}
-            {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
-              <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
-                lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -270,7 +251,6 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -300,7 +280,6 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
-                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}

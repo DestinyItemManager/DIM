@@ -69,11 +69,11 @@ export default function Plug({
     ((e: React.MouseEvent<HTMLDivElement>) => {
       if (onShiftClick && e.shiftKey) {
         e.stopPropagation();
-        const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
-        const lockedItem: LockedItemType =
-          energyType && plugSetHash
-            ? { type: 'mod', mod: plug.plugDef, plugSetHash, bucket: item.bucket }
-            : { type: 'perk', perk: plug.plugDef, bucket: item.bucket };
+        const lockedItem: LockedItemType = {
+          type: 'perk',
+          perk: plug.plugDef,
+          bucket: item.bucket,
+        };
         onShiftClick(lockedItem);
       } else {
         onClick?.(plug);

@@ -298,7 +298,6 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
-              lockedMap={lockedMap}
               lockedArmor2Mods={lockedArmor2Mods}
               defs={defs}
               classType={selectedStore.classType}

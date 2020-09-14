@@ -1,6 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
-import { getItemDamageShortName } from 'app/utils/item-utils';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -14,7 +13,6 @@ import {
   LockedMap,
   statValues,
 } from './types';
-import { canSlotMod } from './utils';
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -80,10 +78,6 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   switch (lockedItem.type) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
-    case 'burn':
-      return getItemDamageShortName(item) === lockedItem.burn.dmg;
-    case 'mod':
-      return canSlotMod(item, lockedItem);
     case 'perk':
       return (
         item.isDestiny2() &&
