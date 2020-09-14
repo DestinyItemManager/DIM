@@ -47,7 +47,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['light', 'power'],
-    description: tl('Filter.LightLevel'),
+    description: tl('Filter.PowerLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);

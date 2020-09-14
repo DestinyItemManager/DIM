@@ -85,7 +85,7 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
-    description: tl('Filter.ContributeLight'),
+    description: tl('Filter.ContributePower'),
     filter: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
