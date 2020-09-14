@@ -22,7 +22,6 @@ import {
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
-  item.isDestiny2() &&
   item.energy &&
   (mod.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
     mod.mod.plug.energyCost!.energyType === item.energy?.energyType);
@@ -75,8 +74,6 @@ function assignAllSeasonalMods(
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
 
-const emptyResult: [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] = [{}, []];
-
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
@@ -84,11 +81,7 @@ export function assignModsToArmorSet(
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
-    if (!item.isDestiny2()) {
-      return emptyResult;
-    } else {
-      assignments[item.id] = [];
-    }
+    assignments[item.id] = [];
   }
 
   const processItems: ProcessItem[] = [];

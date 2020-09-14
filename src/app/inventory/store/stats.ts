@@ -149,12 +149,7 @@ export function buildStats(
         investmentStats.push(cStat);
       }
     }
-  } else if (
-    createdItem.isDestiny2() &&
-    createdItem.type === 'ClassItem' &&
-    createdItem.energy &&
-    createdItem.sockets
-  ) {
+  } else if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
     investmentStats = buildStatsFromMods(createdItem.sockets, defs, statGroup, statDisplays);
   }
 

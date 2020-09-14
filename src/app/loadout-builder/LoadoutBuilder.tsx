@@ -70,7 +70,7 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
+          if (!item || !isLoadoutBuilderItem(item)) {
             continue;
           }
           for (const classType of item.classType === DestinyClass.Unknown

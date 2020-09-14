@@ -80,7 +80,7 @@ export function useProcess(
       const groupedItems = groupItems(items, lockedArmor2ModMap, statOrder, assumeMasterwork);
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
-        if (item?.isDestiny2()) {
+        if (item) {
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
           );
@@ -195,30 +195,26 @@ function groupItems(
   assumeMasterwork: boolean
 ) {
   const groupingFn = (item: DimItem) => {
-    if (item.isDestiny2()) {
-      const statValues: number[] = [];
-      const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
-      // Ensure ordering of stats
-      if (statsByHash) {
-        for (const statType of statOrder) {
-          statValues.push(statsByHash[statHashes[statType]].base);
-        }
+    const statValues: number[] = [];
+    const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+    // Ensure ordering of stats
+    if (statsByHash) {
+      for (const statType of statOrder) {
+        statValues.push(statsByHash[statHashes[statType]].base);
       }
-
-      let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
-
-      if (lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
-        groupId += `${getSpecialtySocketMetadata(item)?.season}`;
-      } else if (
-        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
-        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
-      ) {
-        groupId += `${item.energy?.energyType}`;
-      }
-      return groupId;
-    } else {
-      return 'throwAway';
     }
+
+    let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+
+    if (lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
+      groupId += `${getSpecialtySocketMetadata(item)?.season}`;
+    } else if (
+      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
+      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+    ) {
+      groupId += `${item.energy?.energyType}`;
+    }
+    return groupId;
   };
 
   return _.groupBy(items, groupingFn);

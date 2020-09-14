@@ -471,7 +471,7 @@ class Compare extends React.Component<Props, State> {
     };
 
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
+    const intrinsic = getWeaponArchetype(exampleItem);
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
     const intrinsicHash = intrinsic?.hash;
 
@@ -585,11 +585,10 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
         'EnergyCapacity',
         t('EnergyMeter.Energy'),
         (item: DimItem) =>
-          (item.isDestiny2() &&
-            item.energy && {
-              statHash: item.energy.energyType,
-              value: item.energy.energyCapacity,
-            }) ||
+          (item.energy && {
+            statHash: item.energy.energyType,
+            value: item.energy.energyCapacity,
+          }) ||
           undefined
       )
     );

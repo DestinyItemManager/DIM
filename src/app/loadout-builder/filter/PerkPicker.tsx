@@ -63,7 +63,6 @@ function mapStateToProps() {
         for (const item of store.items) {
           if (
             !item ||
-            !item.isDestiny2() ||
             !item.sockets ||
             !isLoadoutBuilderItem(item) ||
             !(item.classType === DestinyClass.Unknown || item.classType === classType)

@@ -32,7 +32,7 @@ export default function CompareStat({
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
-        {item.isDestiny2() && stat.id === 'EnergyCapacity' && itemStat && item.energy && (
+        {stat.id === 'EnergyCapacity' && itemStat && item.energy && (
           <ElementIcon element={item.element} />
         )}
         {itemStat?.value !== undefined ? (

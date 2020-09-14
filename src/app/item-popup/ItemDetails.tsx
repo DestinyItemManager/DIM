@@ -60,7 +60,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
-  const killTrackerInfo = item.isDestiny2() && getItemKillTrackerInfo(item);
+  const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -115,9 +115,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {item.isDestiny2() && isD2Manifest(defs) && item.energy && defs && (
-        <EnergyMeter item={item} defs={defs} />
-      )}
+      {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
       {item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (

@@ -1,7 +1,6 @@
 import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
-  D2Item,
   DimItem,
   DimMasterwork,
   DimSocket,
@@ -59,7 +58,7 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
 export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {
-  if (item.isDestiny2() && item.bucket.inArmor) {
+  if (item.bucket.inArmor && item.sockets) {
     return item.sockets?.allSockets.find((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
@@ -172,7 +171,7 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
 }
 
 /** verifies an item has kill tracker mod slot, which is returned */
-const getKillTrackerSocket = (item: D2Item): DimSocket | undefined => {
+const getKillTrackerSocket = (item: DimItem): DimSocket | undefined => {
   if (item.bucket.inWeapons) {
     return item.sockets?.allSockets.find(
       (socket) =>
@@ -205,5 +204,5 @@ const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | 
 };
 
 /** returns an item's kill tracker info */
-export const getItemKillTrackerInfo = (item: D2Item): KillTracker | undefined =>
+export const getItemKillTrackerInfo = (item: DimItem): KillTracker | undefined =>
   getSocketKillTrackerInfo(getKillTrackerSocket(item));

@@ -382,24 +382,22 @@ export function getColumns(
       isWeapon && {
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
-        value: (item) =>
-          item.isDestiny2() ? getWeaponArchetype(item)?.displayProperties.name : undefined,
-        cell: (_val, item) =>
-          item.isDestiny2() ? (
-            <div>
-              {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
-                <PressTip
-                  key={p.plugDef.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk}>
-                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </div>
-                </PressTip>
-              ))}
-            </div>
-          ) : undefined,
+        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        cell: (_val, item) => (
+          <div>
+            {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
+              <PressTip
+                key={p.plugDef.hash}
+                tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+              >
+                <div className={styles.modPerk}>
+                  <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                  {p.plugDef.displayProperties.name}
+                </div>
+              </PressTip>
+            ))}
+          </div>
+        ),
         filter: (value) => `perkname:"${value}"`,
       },
     (destinyVersion === 2 || isWeapon) && {
@@ -482,14 +480,11 @@ export function getColumns(
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
         value: (item) => {
-          if (!item.isDestiny2()) {
-            return;
-          }
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return killTrackerInfo?.count;
         },
         cell: (_, item) => {
-          const killTrackerInfo = item.isDestiny2() && getItemKillTrackerInfo(item);
+          const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
               <KillTrackerInfo tracker={killTrackerInfo} defs={defs} className={styles.modPerk} />
@@ -546,7 +541,7 @@ function PerksCell({
   item: DimItem;
   traitsOnly?: boolean;
 }) {
-  if (!item.isDestiny2() || !item.sockets) {
+  if (!item.sockets) {
     return null;
   }
 
@@ -586,20 +581,17 @@ function PerksCell({
             [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
           })}
         >
-          {socket.plugOptions.map(
-            (p) =>
-              item.isDestiny2() && (
-                <PressTip
-                  key={p.plugDef.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
-                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </div>
-                </PressTip>
-              )
-          )}
+          {socket.plugOptions.map((p) => (
+            <PressTip
+              key={p.plugDef.hash}
+              tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+            >
+              <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
+                <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                {p.plugDef.displayProperties.name}
+              </div>
+            </PressTip>
+          ))}
         </div>
       ))}
     </>

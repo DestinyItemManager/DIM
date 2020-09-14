@@ -79,12 +79,8 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
     case 'perk':
-      return (
-        item.isDestiny2() &&
-        item.sockets &&
-        item.sockets.allSockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
-        )
+      return item.sockets?.allSockets.some((slot) =>
+        slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
       );
     case 'item':
       return item.id === lockedItem.item.id;
