@@ -1,6 +1,7 @@
+import { useWhatChanged } from 'app/utils/useWhatChanged';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
+import React, { useMemo } from 'react';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
@@ -59,7 +60,21 @@ export default function InventoryItem({
   onDoubleClick,
   innerRef,
 }: Props) {
-  const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
+  useWhatChanged(item.name, {
+    item,
+    isNew,
+    tag,
+    notes,
+    rating,
+    searchHidden,
+    wishListsEnabled,
+    inventoryWishListRoll,
+    ignoreSelectedPerks,
+    onClick,
+    onShiftClick,
+    onDoubleClick,
+    innerRef,
+  });
 
   const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
 
@@ -76,24 +91,88 @@ export default function InventoryItem({
 
   const subclassPath =
     (!ignoreSelectedPerks &&
-      item.isDestiny2 &&
-      item.isDestiny2() &&
+      item.isDestiny2?.() &&
       item.talentGrid &&
       selectedSubclassPath(item.talentGrid)) ||
     null;
   const noBorder = borderless(item);
-  const itemStyles = {
+  const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
     [itemTierStyles[item.tier]]: !noBorder && !(item.isDestiny2?.() && item.plug),
-  };
-  const itemImageStyles = clsx('item-img', {
-    [styles.complete]: item.complete || isCapped,
-    [styles.borderless]: noBorder,
-    [styles.masterwork]: item.masterwork,
   });
+
+  // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
+  const contents = useMemo(() => {
+    const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
+    const itemImageStyles = clsx('item-img', {
+      [styles.complete]: item.complete || isCapped,
+      [styles.borderless]: noBorder,
+      [styles.masterwork]: item.masterwork,
+    });
+    return (
+      <>
+        {item.percentComplete > 0 && !item.complete && (
+          <div className={styles.xpBar}>
+            <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
+          </div>
+        )}
+        {subclassPath?.base ? (
+          <img src={subclassPath.base} className={itemImageStyles} alt="" />
+        ) : (
+          <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+        )}
+        <BadgeInfo
+          item={item}
+          rating={rating}
+          isCapped={isCapped}
+          uiWishListRoll={uiWishListRoll}
+        />
+        {item.masterwork && (
+          <div
+            className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
+          />
+        )}
+        {item.iconOverlay && (
+          <div className={clsx(styles.iconOverlay)}>
+            <BungieImage src={item.iconOverlay} />
+          </div>
+        )}
+        {(tag || item.locked || notes) && (
+          <div className={styles.icons}>
+            {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
+            {tag && <TagIcon className={styles.icon} tag={tag} />}
+            {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
+          </div>
+        )}
+        {isNew && <NewItemIndicator />}
+        {subclassPath?.super && (
+          <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
+        )}
+        {item.isDestiny2?.() && item.plug?.costElementIcon && (
+          <>
+            <div
+              style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
+              className="energyCostOverlay"
+            />
+            <div className="energyCost">{item.plug.energyCost}</div>
+          </>
+        )}
+      </>
+    );
+  }, [
+    isNew,
+    item,
+    noBorder,
+    notes,
+    rating,
+    subclassPath?.base,
+    subclassPath?.super,
+    tag,
+    uiWishListRoll,
+  ]);
 
   return (
     <div
@@ -101,48 +180,10 @@ export default function InventoryItem({
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${item.typeName}`}
-      className={clsx('item', itemStyles)}
+      className={itemStyles}
       ref={innerRef}
     >
-      {item.percentComplete > 0 && !item.complete && (
-        <div className={styles.xpBar}>
-          <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
-        </div>
-      )}
-      {(subclassPath?.base && <img src={subclassPath.base} className={itemImageStyles} />) || (
-        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
-      )}
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
-      {item.masterwork && (
-        <div
-          className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
-        />
-      )}
-      {item.iconOverlay && (
-        <div className={clsx(styles.iconOverlay)}>
-          <BungieImage src={item.iconOverlay} />
-        </div>
-      )}
-      {(tag || item.locked || notes) && (
-        <div className={styles.icons}>
-          {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
-          {tag && <TagIcon className={styles.icon} tag={tag} />}
-          {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
-        </div>
-      )}
-      {isNew && <NewItemIndicator />}
-      {subclassPath?.super && (
-        <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
-      )}
-      {item.isDestiny2?.() && item.plug?.costElementIcon && (
-        <>
-          <div
-            style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
-            className="energyCostOverlay"
-          />
-          <div className="energyCost">{item.plug.energyCost}</div>
-        </>
-      )}
+      {contents}
     </div>
   );
 }
