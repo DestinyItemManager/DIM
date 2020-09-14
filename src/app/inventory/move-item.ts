@@ -15,7 +15,7 @@ import { DimItem } from './item-types';
 import { moveItemNotification } from './MoveNotifications';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
-import { getStore, getVault } from './stores-helpers';
+import { amountOfItem, getStore, getVault } from './stores-helpers';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -80,7 +80,7 @@ export function moveItemTo(
         // https://github.com/DestinyItemManager/DIM/issues/3373
         !item.uniqueStack
       ) {
-        const maximum = getStore(stores, item.owner)!.amountOfItem(item);
+        const maximum = amountOfItem(getStore(stores, item.owner)!, item);
 
         try {
           moveAmount = await showMoveAmountPopup(item, store, maximum);
@@ -154,7 +154,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
                   store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster
               );
               if (item) {
-                const amount = s.amountOfItem(actionableItem);
+                const amount = amountOfItem(s, actionableItem);
                 await dimItemService.moveTo(item, vault, false, amount);
               }
             }
@@ -166,7 +166,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
                 (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
               );
               if (item) {
-                const amount = vault.amountOfItem(actionableItem);
+                const amount = amountOfItem(vault, actionableItem);
                 await dimItemService.moveTo(item, store, false, amount);
               }
             }
@@ -207,7 +207,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
 
           let total = 0;
           const amounts = stores.map((store) => {
-            const amount = store.amountOfItem(actionableItem);
+            const amount = amountOfItem(store, actionableItem);
             total += amount;
             return amount;
           });
