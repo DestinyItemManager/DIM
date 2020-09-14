@@ -93,7 +93,7 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedItems, lockedArmor2ModMap),
+        getTotalModStatChanges(lockedArmor2ModMap),
         _.mapValues(lockedArmor2ModMap, (mods) => mods.map((mod) => mapArmor2ModToProcessMod(mod))),
         assumeMasterwork,
         statOrder,

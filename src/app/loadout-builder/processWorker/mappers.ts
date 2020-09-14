@@ -6,10 +6,8 @@ import {
 } from '../../utils/item-utils';
 import {
   ArmorSet,
-  LockableBuckets,
   LockedArmor2Mod,
   LockedArmor2ModMap,
-  LockedMap,
   ModPickerCategories,
   statHashToType,
   StatTypes,
@@ -59,7 +57,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
  * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
  * just for the seasonal mods.
  */
-export function getTotalModStatChanges(lockedMap: LockedMap, lockedArmor2Mods: LockedArmor2ModMap) {
+export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -75,23 +73,6 @@ export function getTotalModStatChanges(lockedMap: LockedMap, lockedArmor2Mods: L
         const statType = statHashToType[stat.statTypeHash];
         if (statType) {
           totals[statType] += stat.value;
-        }
-      }
-    }
-  }
-
-  // Handle old armour mods
-  for (const bucket of Object.values(LockableBuckets)) {
-    const lockedItemsByBucket = lockedMap[bucket];
-    if (lockedItemsByBucket) {
-      for (const lockedItem of lockedItemsByBucket) {
-        if (lockedItem.type === 'mod') {
-          for (const stat of lockedItem.mod.investmentStats) {
-            const statType = statHashToType[stat.statTypeHash];
-            if (statType) {
-              totals[statType] += stat.value;
-            }
-          }
         }
       }
     }

@@ -78,16 +78,11 @@ export default function GeneratedSetItem({
   };
 
   const lockedPerks: DestinyInventoryItemDefinition[] = [];
-  /*  TODO: atm I just have all mods here but this will move to only old ones
-      when we get closer to releasing as perk picker will only have old mods */
-  const lockedOldMods: DestinyInventoryItemDefinition[] = [];
 
   if (locked?.length) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk' && matchLockedItem(item, lockedItem)) {
         lockedPerks.push(lockedItem.perk);
-      } else if (lockedItem.type === 'mod' && matchLockedItem(item, lockedItem)) {
-        lockedOldMods.push(lockedItem.mod);
       }
     }
   }

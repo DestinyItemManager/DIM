@@ -22,7 +22,6 @@ import {
   ArmorSet,
   LockableBucketHashes,
   LockedArmor2ModMap,
-  LockedMap,
   statHashes,
   statKeys,
   StatTypes,
@@ -80,7 +79,6 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
-  lockedMap: LockedMap;
   lockedArmor2Mods: LockedArmor2ModMap;
   defs: D2ManifestDefinitions;
   classType: DestinyClass;
@@ -106,7 +104,6 @@ function CompareDrawer({
   stores,
   loadouts,
   set,
-  lockedMap,
   lockedArmor2Mods,
   defs,
   classType,
@@ -147,7 +144,7 @@ function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedMap, lockedArmor2Mods);
+  const lockedModStats = getTotalModStatChanges(lockedArmor2Mods);
 
   for (const statType of statKeys) {
     loadoutStats[statType] += lockedModStats[statType];
