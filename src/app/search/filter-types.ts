@@ -94,8 +94,9 @@ export type FilterDefinition = {
   suggestions?: string[];
 
   /**
-   * A custom function with access to a SuggestionsContext, used to generate (additional) suggestions
+   * A custom function used to generate (additional) suggestions
    */
+  // TODO: give this access to a SuggestionsContext arg
   // TODO: add manifest to SuggestionsContext and we can generate archetype/perk/etc suggestions
   suggestionsGenerator?: () => string[];
 };
