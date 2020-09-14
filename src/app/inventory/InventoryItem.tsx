@@ -1,4 +1,3 @@
-import { useWhatChanged } from 'app/utils/useWhatChanged';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -60,22 +59,6 @@ export default function InventoryItem({
   onDoubleClick,
   innerRef,
 }: Props) {
-  useWhatChanged(item.name, {
-    item,
-    isNew,
-    tag,
-    notes,
-    rating,
-    searchHidden,
-    wishListsEnabled,
-    inventoryWishListRoll,
-    ignoreSelectedPerks,
-    onClick,
-    onShiftClick,
-    onDoubleClick,
-    innerRef,
-  });
-
   const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
 
   let enhancedOnClick = onClick;
