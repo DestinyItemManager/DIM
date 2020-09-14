@@ -16,8 +16,10 @@ import {
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
+import _ from 'lodash';
 import { objectifyArray } from './util';
 
 // damage is a mess!
@@ -206,3 +208,53 @@ const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | 
 /** returns an item's kill tracker info */
 export const getItemKillTrackerInfo = (item: DimItem): KillTracker | undefined =>
   getSocketKillTrackerInfo(getKillTrackerSocket(item));
+
+const d1YearSourceHashes = {
+  //         tTK       Variks        CoE         FoTL    Kings Fall
+  year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
+  //         RoI       WoTM         FoTl       Dawning    Raid Reprise
+  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381],
+};
+
+/**
+ * Which "Year" of Destiny did this item come from?
+ */
+export function getItemYear(item: DimItem) {
+  if (item.isDestiny2()) {
+    // TODO: D2SeasonInfo is only used for year?
+    return D2SeasonInfo[item.season].year;
+  } else if (item.isDestiny1()) {
+    if (!item.sourceHashes) {
+      return 1;
+    }
+
+    // determine what year this item came from based on sourceHash value
+    // items will hopefully be tagged as follows
+    // No value: Vanilla, Crota's End, House of Wolves
+    // The Taken King (year 2): 460228854
+    // Rise of Iron (year 3): 24296771
+    // if sourceHash doesn't contain these values, we assume they came from
+    // year 1
+
+    let year = 1;
+    const ttk = item.sourceHashes.includes(d1YearSourceHashes.year2[0]);
+    if (
+      ttk ||
+      item.infusable ||
+      _.intersection(d1YearSourceHashes.year2, item.sourceHashes).length
+    ) {
+      year = 2;
+    }
+    const roi = item.sourceHashes.includes(d1YearSourceHashes.year3[0]);
+    if (
+      !ttk &&
+      (item.classified || roi || _.intersection(d1YearSourceHashes.year3, item.sourceHashes).length)
+    ) {
+      year = 3;
+    }
+
+    return year;
+  } else {
+    return undefined;
+  }
+}

@@ -186,8 +186,6 @@ export interface D1Item extends DimItem {
     /** A displayable range of percentages. */
     range: string;
   } | null;
-  /** Which D1 "year" this item was associated with. */
-  year: number;
   /** Hashes that allow us to figure out where this item can be found (what activities, locations, etc.) */
   sourceHashes: number[];
 }

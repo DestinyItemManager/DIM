@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { getItemYear } from 'app/utils/item-utils';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -15,13 +16,6 @@ import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
-
-const yearHashes = {
-  //         tTK       Variks        CoE         FoTL    Kings Fall
-  year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
-  //         RoI       WoTM         FoTl       Dawning    Raid Reprise
-  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381],
-};
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unused 0', 'Unused 1', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -385,8 +379,6 @@ function makeItem(
     }
   }
 
-  createdItem.year = getItemYear(createdItem);
-
   // More objectives properties
   if (createdItem.objectives) {
     const objectives = createdItem.objectives;
@@ -408,7 +400,7 @@ function makeItem(
       createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired
     );
     createdItem.complete =
-      createdItem.year === 1
+      getItemYear(createdItem) === 1
         ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired
         : createdItem.talentGrid.complete;
   }
@@ -666,34 +658,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       totalXPRequired <= totalXP &&
       _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
   };
-}
-
-function getItemYear(item) {
-  // determine what year this item came from based on sourceHash value
-  // items will hopefully be tagged as follows
-  // No value: Vanilla, Crota's End, House of Wolves
-  // The Taken King (year 2): 460228854
-  // Rise of Iron (year 3): 24296771
-
-  // This could be further refined for CE/HoW based on activity. See
-  // DestinyRewardSourceDefinition and filter on %SOURCE%
-  // if sourceHash doesn't contain these values, we assume they came from
-  // year 1
-
-  let year = 1;
-  const ttk = item.sourceHashes.includes(yearHashes.year2[0]);
-  const roi = item.sourceHashes.includes(yearHashes.year3[0]);
-  if (ttk || item.infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
-    year = 2;
-  }
-  if (
-    !ttk &&
-    (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)
-  ) {
-    year = 3;
-  }
-
-  return year;
 }
 
 function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D1Stat[] | null {

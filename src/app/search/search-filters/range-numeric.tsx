@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { D2Item } from 'app/inventory/item-types';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
+import { getItemYear } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
@@ -60,13 +60,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
-      return (item) => {
-        if (item.isDestiny1()) {
-          return compareTo(item.year);
-        } else if (item.isDestiny2()) {
-          return compareTo(D2SeasonInfo[item.season]?.year ?? 0);
-        }
-      };
+      return (item) => compareTo(getItemYear(item) ?? 0);
     },
   },
   {

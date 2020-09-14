@@ -37,6 +37,7 @@ import {
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemPowerCapFinalSeason,
+  getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
   modMetadataByTag,
@@ -46,7 +47,6 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 /* eslint-disable react/jsx-key, react/prop-types */
@@ -323,12 +323,7 @@ export function getColumns(
     {
       id: 'year',
       header: t('Organizer.Columns.Year'),
-      value: (item) =>
-        item.isDestiny1()
-          ? item.year
-          : item.isDestiny2()
-          ? D2SeasonInfo[item.season].year
-          : undefined,
+      value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
     },
     destinyVersion === 2 && {

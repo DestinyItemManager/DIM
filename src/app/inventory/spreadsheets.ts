@@ -3,11 +3,14 @@ import { t } from 'app/i18next-t';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
-import { getMasterworkStatNames, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  getItemYear,
+  getMasterworkStatNames,
+  getSpecialtySocketMetadata,
+} from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -318,11 +321,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
+    row.Year = getItemYear(item);
     if (item.isDestiny2()) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';
@@ -422,11 +421,7 @@ function downloadWeapons(
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
+    row.Year = getItemYear(item);
     if (item.isDestiny2()) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';

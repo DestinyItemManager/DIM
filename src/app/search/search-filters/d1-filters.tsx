@@ -1,5 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { D1Item } from 'app/inventory/item-types';
+import { getItemYear } from 'app/utils/item-utils';
 import {
   boosts,
   D1ActivityHashes,
@@ -201,7 +202,6 @@ const d1Filters: FilterDefinition[] = [
     destinyVersion: 1,
     filter: ({ filterValue }) => (item: D1Item) => {
       if (filterValue === 'vanilla') {
-        return item.year === 1;
       } else if (D1ActivityHashes.restricted[filterValue]) {
         return (
           D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
@@ -211,6 +211,7 @@ const d1Filters: FilterDefinition[] = [
             item.sourceHashes.includes(sourceHash)
           )
         );
+        return getItemYear(item) === 1;
       } else {
         return D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
           item.sourceHashes.includes(sourceHash)
