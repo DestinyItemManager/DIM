@@ -21,7 +21,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D2Item, DimPerk } from '../item-types';
+import { D2Item, DimItem, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
@@ -30,7 +30,7 @@ import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
 // Maps tierType to tierTypeName in English
-const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 /**
  * A factory service for producing DIM inventory items.
@@ -258,10 +258,16 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
-  const primaryStat =
-    itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class' || isEngram
+  const primaryStat: DimItem['primStat'] =
+    !instanceDef.primaryStat ||
+    itemDef.stats?.disablePrimaryStatDisplay ||
+    itemType === 'Class' ||
+    isEngram
       ? null
-      : instanceDef?.primaryStat || null;
+      : {
+          ...instanceDef.primaryStat,
+          stat: defs.Stat.get(instanceDef.primaryStat.statHash),
+        } || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
@@ -317,7 +323,8 @@ export function makeItem(
     }
   }
 
-  const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
+  const itemProps: Omit<D2Item, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+    owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -360,8 +367,6 @@ export function makeItem(
     element,
     energy: instanceDef?.energy ?? null,
     powerCap,
-    breakerType: null,
-    visible: true,
     lockable: item.lockable,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -371,19 +376,13 @@ export function makeItem(
     isEngram,
     loreHash: itemDef.loreHash,
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
-    percentComplete: 0, // filled in later
-    hidePercentage: false,
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    dtrRating: null,
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash, itemDef.hash)?.sourceHash
-      : null,
+      : undefined,
     collectibleState: collectible ? collectible.state : undefined,
-    collectibleHash: itemDef.collectibleHash || null,
+    collectibleHash: itemDef.collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug?.energyCost && {
@@ -395,7 +394,27 @@ export function makeItem(
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
-  });
+    // These get filled in later
+    breakerType: null,
+    percentComplete: 0,
+    hidePercentage: false,
+    talentGrid: null,
+    stats: null,
+    objectives: null,
+    pursuit: null,
+    taggable: false,
+    comparable: false,
+    basePower: 0,
+    index: '',
+    infusable: false,
+    infusionFuel: false,
+    sockets: null,
+    perks: null,
+    masterworkInfo: null,
+    flavorObjective: null,
+    infusionQuality: null,
+  };
+  const createdItem: D2Item = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(

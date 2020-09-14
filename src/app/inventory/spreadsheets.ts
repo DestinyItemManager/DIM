@@ -280,7 +280,7 @@ export function source(item: DimItem) {
     return (
       sourceKeys.find(
         (src) =>
-          D2Sources[src].sourceHashes.includes(item.source) ||
+          (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
           D2MissingSources[src].includes(item.hash)
       ) || ''

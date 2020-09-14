@@ -22,7 +22,7 @@ import {
 import { InventoryBucket } from './inventory-buckets';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
-export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
+export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
 
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
@@ -146,7 +146,7 @@ export interface DimItem {
   /** Is this an engram? */
   isEngram: boolean;
   /** The reference hash for lore attached to this item (D2 only). */
-  loreHash: number;
+  loreHash?: number;
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
@@ -210,7 +210,7 @@ export interface D1Item extends DimItem {
  */
 export interface D2Item extends DimItem {
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
-  source: number;
+  source?: number;
 
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;

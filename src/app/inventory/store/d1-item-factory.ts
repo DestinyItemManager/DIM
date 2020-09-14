@@ -18,7 +18,7 @@ import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
 
 // Maps tierType to tierTypeName in English
-const tiers = ['Unused 0', 'Unused 1', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
@@ -245,9 +245,8 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const element = item.damageTypeHash
-    ? toD2DamageType(defs.DamageType.get(item.damageTypeHash))
-    : undefined;
+  const element =
+    (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -256,7 +255,8 @@ function makeItem(
     itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
   }
 
-  const createdItem: D1Item = Object.assign(Object.create(ItemProto), {
+  const itemProps: Omit<D1Item, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+    owner: owner.id,
     // figure out what year this item is probably from
     destinyVersion: 1,
     // The bucket the item is currently in
@@ -312,18 +312,37 @@ function makeItem(
     ),
     tracked: item.state === 2,
     locked: item.locked,
-    redacted: Boolean(itemDef.redacted),
     classified: Boolean(itemDef.classified),
-    loreHash: null,
     lastManuallyMoved:
       item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
-    percentComplete: null, // filled in later
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    quality: null, // filled in later
-    dtrRating: null,
-  });
+    // These get filled in later or aren't relevant to D1 items
+    percentComplete: 0,
+    talentGrid: null,
+    stats: null,
+    objectives: null,
+    quality: null,
+    sockets: null,
+    breakerType: null,
+    hidePercentage: false,
+    taggable: false,
+    comparable: false,
+    basePower: 0,
+    index: '',
+    infusable: false,
+    infusionFuel: false,
+    perks: null,
+    masterworkInfo: null,
+    flavorObjective: null,
+    infusionQuality: null,
+    canPullFromPostmaster: false,
+    uniqueStack: false,
+    masterwork: false,
+    missingSockets: false,
+    energy: null,
+    powerCap: null,
+  };
+
+  const createdItem: D1Item = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);

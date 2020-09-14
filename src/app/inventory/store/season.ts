@@ -26,7 +26,7 @@ export function getSeason(item: D2Item): number {
     return Number(D2SeasonFromOverlay[item.iconOverlay]);
   }
 
-  if (SourceToD2Season[item.source]) {
+  if (item.source && SourceToD2Season[item.source]) {
     return SourceToD2Season[item.source];
   }
 
