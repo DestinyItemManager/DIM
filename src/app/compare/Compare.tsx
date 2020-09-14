@@ -213,8 +213,8 @@ class Compare extends React.Component<Props, State> {
       socket: DimSocket;
       plug: DimPlug;
     }) => {
-      // Exit early if this is a D1 item or an item without sockets
-      if (!item.isDestiny2() || !item.sockets || item.sockets === undefined) {
+      // Exit early if this is a D1 item or an item without sockets or stats
+      if (!item.isDestiny2() || !item.sockets || !item.stats) {
         return null;
       }
 
@@ -223,9 +223,6 @@ class Compare extends React.Component<Props, State> {
         return null;
       }
 
-      // Create deep copies of arrays to prevent directly mutating state
-      // (cloneDeep is resulting in object mutation)
-      const itemStatsClone: DimStat[] = JSON.parse(JSON.stringify(item.stats));
       const { socketIndex } = socket;
 
       if (
@@ -235,13 +232,13 @@ class Compare extends React.Component<Props, State> {
         clickedPlug.plugDef.hash !== adjustedPlugs?.[item.id]?.[socketIndex]?.plugDef.hash
       ) {
         // Clone stats so state isn't directly mutated by math
-        const updateAdjustedPlugs =
+        const updateAdjustedPlugs: DimAdjustedPlugs =
           isEmpty(adjustedPlugs) || adjustedPlugs === undefined
             ? { [item.id]: {} }
             : adjustedPlugs[item.id]
             ? cloneDeep(adjustedPlugs)
             : Object.assign({}, cloneDeep(adjustedPlugs), { [item.id]: {} });
-        const updateAdjustedStats =
+        const updateAdjustedStats: DimAdjustedStats =
           isEmpty(adjustedStats) || adjustedStats === undefined
             ? { [item.id]: {} }
             : adjustedStats[item.id]
@@ -254,15 +251,13 @@ class Compare extends React.Component<Props, State> {
         // Remove old plug stats from adjustedStats
         if (prevAdjustedPlug?.stats) {
           for (const statHash in prevAdjustedPlug.stats) {
-            const statIndex = itemStatsClone.findIndex(
-              (stat) => stat.statHash === parseInt(statHash)
-            );
+            const statIndex = item.stats.findIndex((stat) => stat.statHash === parseInt(statHash));
             if (statIndex !== -1) {
               if (updateAdjustedStats[item.id][statHash]) {
                 updateAdjustedStats[item.id][statHash] -= prevAdjustedPlug.stats[statHash];
               } else {
                 updateAdjustedStats[item.id][statHash] =
-                  itemStatsClone[statIndex].value - prevAdjustedPlug.stats[statHash];
+                  item.stats[statIndex].value - prevAdjustedPlug.stats[statHash];
               }
             }
           }
@@ -271,15 +266,13 @@ class Compare extends React.Component<Props, State> {
         // Add new plug stats to adjustedStats
         if (clickedPlug.stats) {
           for (const statHash in clickedPlug.stats) {
-            const statIndex = itemStatsClone.findIndex(
-              (stat) => stat.statHash === parseInt(statHash)
-            );
+            const statIndex = item.stats.findIndex((stat) => stat.statHash === parseInt(statHash));
             if (statIndex !== -1) {
               if (updateAdjustedStats[item.id][statHash]) {
                 updateAdjustedStats[item.id][statHash] += clickedPlug.stats[statHash];
               } else {
                 updateAdjustedStats[item.id][statHash] =
-                  itemStatsClone[statIndex].value + clickedPlug.stats[statHash];
+                  item.stats[statIndex].value + clickedPlug.stats[statHash];
               }
             }
           }
@@ -290,7 +283,7 @@ class Compare extends React.Component<Props, State> {
 
         // Add / remove plugs from adjustedPlugs
         if (isCurrentPlug) {
-          delete updateAdjustedPlugs?.[item.id]?.[socketIndex];
+          delete updateAdjustedPlugs[item.id][socketIndex];
         } else {
           updateAdjustedPlugs[item.id][socketIndex] = clickedPlug;
         }
