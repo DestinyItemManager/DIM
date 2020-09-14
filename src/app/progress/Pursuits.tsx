@@ -55,7 +55,7 @@ export default function Pursuits({
     ) {
       return 'Quests';
     }
-    if (!item.objectives || item.objectives.length === 0 || (item.isDestiny2() && item.sockets)) {
+    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
       return 'Items';
     }
 

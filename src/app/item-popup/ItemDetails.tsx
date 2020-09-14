@@ -118,7 +118,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
       {item.isDestiny2() && isD2Manifest(defs) && item.energy && defs && (
         <EnergyMeter item={item} defs={defs} />
       )}
-      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
+      {item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
         <div className="item-details item-perks">

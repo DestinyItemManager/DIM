@@ -57,7 +57,7 @@ export function getInventoryWishListRolls(
 
   for (const store of stores) {
     for (const item of store.items) {
-      if (item.isDestiny2() && item.sockets && !seenItemIds.has(item.id)) {
+      if (item.sockets && !seenItemIds.has(item.id)) {
         const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
         if (wishListRoll) {
           inventoryRolls[item.id] = wishListRoll;

@@ -220,7 +220,7 @@ function getMaxPerks(items: DimItem[]) {
         (item) =>
           (item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
-            : item.isDestiny2() && item.sockets
+            : item.sockets
             ? buildSocketNames(item.sockets)
             : []
           ).length
@@ -232,7 +232,7 @@ function getMaxPerks(items: DimItem[]) {
 function addPerks(row: object, item: DimItem, maxPerks: number) {
   const perks = item.talentGrid
     ? buildNodeNames(item.talentGrid.nodes)
-    : item.isDestiny2() && item.sockets
+    : item.sockets
     ? buildSocketNames(item.sockets)
     : [];
 
@@ -372,7 +372,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
       });
 
-      if (item.isDestiny2() && item.sockets) {
+      if (item.sockets) {
         row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
       }
     }

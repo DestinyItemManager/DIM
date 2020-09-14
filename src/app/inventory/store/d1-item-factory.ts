@@ -292,7 +292,7 @@ function makeItem(
     equippingLabel:
       item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
-    amount: item.stackSize,
+    amount: item.stackSize || 1,
     primStat: item.primaryStat || null,
     typeName: itemDef.itemTypeName,
     isEngram: (itemDef.itemCategoryHashes || []).includes(34),

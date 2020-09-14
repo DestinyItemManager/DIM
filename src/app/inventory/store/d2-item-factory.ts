@@ -290,7 +290,7 @@ export function makeItem(
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
-    null;
+    undefined;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -352,7 +352,7 @@ export function makeItem(
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
-    amount: item.quantity,
+    amount: item.quantity || 1,
     primStat: primaryStat,
     typeName,
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,

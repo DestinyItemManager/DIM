@@ -12,7 +12,7 @@ import { useDrop } from 'react-dnd';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import PressTip from '../dim-ui/PressTip';
-import { D2Item, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import PlugTooltip from './PlugTooltip';
@@ -32,7 +32,7 @@ export default function Plug({
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
-  item: D2Item;
+  item: DimItem;
   socketInfo: DimSocket;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;

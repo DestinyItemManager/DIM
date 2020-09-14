@@ -37,7 +37,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
   );
 
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
-  if (item.isDestiny2() && item.sockets && item.energy) {
+  if (item.sockets && item.isDestiny2() && item.energy) {
     let masterworkSocketHashes: number[] = [];
     // only get masterwork sockets if we aren't manually adding the values
     if (!assumeMasterwork) {

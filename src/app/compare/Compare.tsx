@@ -506,9 +506,7 @@ class Compare extends React.Component<Props, State> {
       {
         buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
         items: exampleItem.isDestiny2()
-          ? allWeapons.filter(
-              (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
-            )
+          ? allWeapons.filter((i) => i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash)
           : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
 

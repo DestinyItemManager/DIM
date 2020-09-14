@@ -59,9 +59,9 @@ export interface DimItem {
   /** Icon path for the item. */
   icon: string;
   /** Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items */
-  iconOverlay: string | null;
+  iconOverlay?: string;
   /** Some items have a secondary icon, namely Emblems. */
-  secondaryIcon: string;
+  secondaryIcon?: string;
   /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
   element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** Whether this item CANNOT be transferred. */
@@ -84,7 +84,7 @@ export interface DimItem {
    * than the item in the slot that's about to be occupied).
    */
   equippingLabel?: string;
-  /** Is this item complete (leveled, unlocked, objectives complete). */
+  /** Is this item complete (leveled, unlocked, objectives complete)? */
   complete: boolean;
   /** How many items does this represent? Only greater than one if maxStackSize is greater than one. */
   amount: number;
@@ -113,11 +113,7 @@ export interface DimItem {
   trackable: boolean;
   /** Is this item tracked? (For quests/bounties). */
   tracked: boolean;
-  /**
-   * Is this item locked?
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
+  /** Is this item locked? */
   locked: boolean;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
@@ -141,6 +137,8 @@ export interface DimItem {
   infusionFuel: boolean;
   /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
   talentGrid: DimTalentGrid | null;
+  /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
+  sockets: DimSockets | null;
   /** Perks, which are specifically called-out special abilities of items shown in the game's popup UI. */
   perks: DimPerk[] | null;
   /** Detailed stats for the item. */
@@ -196,8 +194,6 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
-  sockets: DimSockets | null;
   /** Some items have a "flavor objective", such as emblems that track stats. */
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */

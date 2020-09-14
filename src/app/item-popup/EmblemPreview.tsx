@@ -31,7 +31,7 @@ export default function EmblemPreview({
       {item.metricObjective && (
         <div className={styles.value}>{(item.metricObjective.progress || 0).toLocaleString()}</div>
       )}
-      <BungieImage src={item.secondaryIcon} width="237" height="48" />
+      {item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="237" height="48" />}
       {parentPresentationNode && metricDef && trait && (
         <div>
           {trait.displayProperties.name}

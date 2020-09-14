@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
@@ -17,7 +17,7 @@ import Plug from './Plug';
 import SocketDetails from './SocketDetails';
 
 interface ProvidedProps {
-  item: D2Item;
+  item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
@@ -207,7 +207,7 @@ function Socket({
   onShiftClick,
 }: {
   defs: D2ManifestDefinitions;
-  item: D2Item;
+  item: DimItem;
   socket: DimSocket;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
