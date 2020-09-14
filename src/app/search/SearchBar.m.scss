@@ -96,7 +96,7 @@
   padding: 0 2px;
   cursor: pointer;
   visibility: hidden;
-  @include phone-portrait {
+  @media (hover: none) {
     visibility: visible;
   }
 }
