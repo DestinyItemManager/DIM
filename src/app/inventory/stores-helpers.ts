@@ -1,7 +1,8 @@
+import { count } from 'app/utils/util';
+import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
-
 import { DimItem } from './item-types';
 import { DimStore, DimVault } from './store-types';
 
@@ -63,4 +64,114 @@ export function getItemAcrossStores<Item extends DimItem, Store extends DimStore
 export function getArtifactBonus(store: DimStore) {
   const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
   return artifact?.primStat?.value || 0;
+}
+
+/**
+ * Get the total amount of this item in the store, across all stacks,
+ * excluding stuff in the postmaster.
+ */
+export function amountOfItem(store: DimStore, item: { hash: number }) {
+  return _.sumBy(store.items, (i) =>
+    i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0
+  );
+}
+
+/**
+ * How much of items like this item can fit in this store? For
+ * stackables, this is in stacks, not individual pieces.
+ */
+export function capacityForItem(store: DimStore, item: DimItem) {
+  if (!item.bucket) {
+    throw new Error("item needs a 'bucket' field");
+  }
+
+  if (store.isVault) {
+    const vaultBucket = item.bucket.vaultBucket;
+    return vaultBucket ? vaultBucket.capacity : 0;
+  }
+  return item.bucket.capacity;
+}
+
+/**
+ * How many *more* items like this item can fit in this store?
+ * This takes into account stackables, so the answer will be in
+ * terms of individual pieces.
+ */
+export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStore[]) {
+  if (!item.type) {
+    throw new Error("item needs a 'type' field");
+  }
+
+  // Account-wide buckets (mods, etc) are only on the first character
+  if (item.bucket.accountWide && !store.current) {
+    return 0;
+  }
+  if (!item.bucket) {
+    return 0;
+  }
+
+  let openStacks = 0;
+  if (store.isVault) {
+    if (store.isDestiny2()) {
+      if (!item.bucket.vaultBucket) {
+        return 0;
+      }
+      const vaultBucket = item.bucket.vaultBucket;
+      const usedSpace = item.bucket.vaultBucket
+        ? count(store.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
+        : 0;
+      openStacks = Math.max(0, capacityForItem(store, item) - usedSpace);
+    } else {
+      const sort = item.bucket?.sort;
+      if (!sort) {
+        throw new Error("item needs a 'sort' field");
+      }
+      openStacks = Math.max(
+        0,
+        capacityForItem(store, item) - count(store.items, (i) => i.bucket.sort === sort)
+      );
+    }
+  } else {
+    const occupiedStacks = store.buckets[item.bucket.hash]
+      ? store.buckets[item.bucket.hash].length
+      : 10;
+    openStacks = Math.max(0, capacityForItem(store, item) - occupiedStacks);
+
+    // Some things can't have multiple stacks.
+    if (item.uniqueStack) {
+      // If the item lives in an account-wide bucket (like modulus reports)
+      // we need to check out how much space is left in that bucket, which is
+      // only on the current store.
+      if (item.bucket.accountWide) {
+        const existingAmount = amountOfItem(getCurrentStore(stores)!, item);
+
+        if (existingAmount === 0) {
+          // if this would be the first stack, make sure there's room for a stack
+          return openStacks > 0 ? item.maxStackSize : 0;
+        } else {
+          // return how much can be added to the existing stack
+          return Math.max(item.maxStackSize - existingAmount, 0);
+        }
+      }
+
+      // If there's some already there, we can add enough to fill a stack. Otherwise
+      // we can only add if there's an open stack.
+      const existingAmount = amountOfItem(store, item);
+      return existingAmount > 0
+        ? Math.max(item.maxStackSize - amountOfItem(store, item), 0)
+        : openStacks > 0
+        ? item.maxStackSize
+        : 0;
+    }
+  }
+  const maxStackSize = item.maxStackSize || 1;
+  if (maxStackSize === 1) {
+    return openStacks;
+  } else {
+    let existingAmount = amountOfItem(store, item);
+    while (existingAmount > 0) {
+      existingAmount -= maxStackSize;
+    }
+    return Math.max(openStacks * maxStackSize - existingAmount, 0);
+  }
 }

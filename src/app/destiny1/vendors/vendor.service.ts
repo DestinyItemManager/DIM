@@ -1,5 +1,5 @@
 import { bucketsSelector } from 'app/inventory/selectors';
-import { getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem, getVault } from 'app/inventory/stores-helpers';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
 import _ from 'lodash';
@@ -579,7 +579,7 @@ function VendorService(): VendorServiceType {
           break;
         default:
           totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-            store.amountOfItem({ hash: currencyHash } as any)
+            amountOfItem(store, { hash: currencyHash } as any)
           );
           break;
       }
