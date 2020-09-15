@@ -32,7 +32,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         className="background"
         style={{
           backgroundImage: `url("${store.background}")`,
-          backgroundColor: store.isDestiny2()
+          backgroundColor: store.color
             ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
                 store.color.blue
               )}`

@@ -22,7 +22,7 @@ import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
-import { D2Store } from '../store-types';
+import { DimStore } from '../store-types';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
@@ -80,7 +80,7 @@ export function resetIdTracker() {
 export function processItems(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  owner: D2Store,
+  owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
   mergedCollectibles: {
@@ -186,7 +186,7 @@ export function makeItem(
   buckets: InventoryBuckets,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
-  owner: D2Store | undefined,
+  owner: DimStore | undefined,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
   },

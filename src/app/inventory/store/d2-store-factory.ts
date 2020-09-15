@@ -11,7 +11,7 @@ import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { DimItem } from '../item-types';
-import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
+import { DimCharacterStat, DimStore, DimVault } from '../store-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -28,7 +28,7 @@ const genderTypeToEnglish = {
 // stores.
 export const StoreProto = {
   // Remove an item from this store. Returns whether it actually removed anything.
-  removeItem(this: D2Store, item: DimItem) {
+  removeItem(this: DimStore, item: DimItem) {
     // Completely remove the source item
     const match = (i: DimItem) => item.index === i.index;
     const sourceIndex = this.items.findIndex(match);
@@ -54,7 +54,7 @@ export const StoreProto = {
     return false;
   },
 
-  addItem(this: D2Store, item: DimItem) {
+  addItem(this: DimStore, item: DimItem) {
     this.items = [...this.items, item];
     this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
     item.owner = this.id;
@@ -64,11 +64,11 @@ export const StoreProto = {
     }
   },
 
-  isDestiny1(this: D2Store) {
+  isDestiny1(this: DimStore) {
     return false;
   },
 
-  isDestiny2(this: D2Store) {
+  isDestiny2(this: DimStore) {
     return true;
   },
 };
@@ -77,7 +77,7 @@ export function makeCharacter(
   defs: D2ManifestDefinitions,
   character: DestinyCharacterComponent,
   mostRecentLastPlayed: Date
-): D2Store {
+): DimStore {
   const race = defs.Race[character.raceHash];
   const gender = defs.Gender[character.genderHash];
   const classy = defs.Class[character.classHash];
@@ -86,7 +86,7 @@ export function makeCharacter(
   const genderLocalizedName = gender.displayProperties.name;
   const lastPlayed = new Date(character.dateLastPlayed);
 
-  const store: D2Store = Object.assign(Object.create(StoreProto), {
+  const store: DimStore = Object.assign(Object.create(StoreProto), {
     destinyVersion: 2,
     id: character.characterId,
     icon: bungieNetPath(character.emblemPath),
@@ -117,7 +117,7 @@ export function makeCharacter(
 export function makeVault(
   defs: D2ManifestDefinitions,
   profileCurrencies: DestinyItemComponent[]
-): D2Vault {
+): DimVault {
   const currencies = profileCurrencies.map((c) => ({
     itemHash: c.itemHash,
     quantity: c.quantity,
@@ -139,14 +139,14 @@ export function makeVault(
     currencies,
     isVault: true,
     color: { red: 49, green: 50, blue: 51 },
-    removeItem(this: D2Vault, item: DimItem): boolean {
+    removeItem(this: DimVault, item: DimItem): boolean {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count--;
       }
       return result;
     },
-    addItem(this: D2Vault, item: DimItem) {
+    addItem(this: DimVault, item: DimItem) {
       StoreProto.addItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.hash].count++;

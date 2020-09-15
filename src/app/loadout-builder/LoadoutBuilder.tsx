@@ -20,7 +20,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { storesSelector } from '../inventory/selectors';
-import { D2Store, DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
@@ -194,7 +194,7 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore as D2Store}
+        selectedStore={selectedStore}
         minimumPower={minimumPower}
         minimumStatTotal={minimumStatTotal}
         stats={statFilters}
