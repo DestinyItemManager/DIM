@@ -315,6 +315,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
               <NavLink className="link menuItem" to="/settings">
                 {t('Settings.Settings')}
               </NavLink>
+              <ExternalLink
+                className="link menuItem"
+                href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
+              >
+                {t('General.UserGuideLink')}
+              </ExternalLink>
               {installPromptEvent ? (
                 <a className="link menuItem" onClick={installDim}>
                   {t('Header.InstallDIM')}

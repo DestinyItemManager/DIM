@@ -78,10 +78,9 @@ export default function PickerSectionMods({
     <div className={styles.bucket} id={`mod-picker-section-${category}`}>
       <div className={styles.header}>{title}</div>
       {Object.entries(modGroups).map(([subTitle, mods]) => (
-        <>
+        <div key={subTitle}>
           {subTitle !== 'nogroup' && <div className={styles.subheader}>{subTitle}</div>}
           <div className={styles.items}>
-            {console.log(mods)}
             {mods.map((item) => (
               <SelectableArmor2Mod
                 key={item.modDef.hash}
@@ -96,7 +95,7 @@ export default function PickerSectionMods({
               />
             ))}
           </div>
-        </>
+        </div>
       ))}
     </div>
   );

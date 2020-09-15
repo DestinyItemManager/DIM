@@ -1,5 +1,23 @@
 ## Next
 
+* Added a link to the DIM User Guide to the hamburger menu.
+* "Clear new items" has been moved into the Settings page instead of being a floating button. The "X" keyboard shortcut no longer clears new items.
+* Linear Fusion rifles are technically Fusion Rifles, but they won't show up in Organizer or in searches under Fusion Rifle anymore.
+* While API performance is ultimately up to Bungie, we've changed things around in DIM to hopefully make item transfers snappier. Note that these changes mean you may see outdated information in DIM if you've deleted or vaulted items in-game and haven't clicked the refresh button in DIM.
+* Improved the autocomplete for `sunsetsafter:` searches.
+* Fix the `is:new` search.
+* The D1 Activities page now shows Challenge of the Elders completion.
+* Fixed buttons not showing up on tablets for track/untrack triumphs.
+* Invalid searches are no longer saved to your search history.
+* The "Filter Help" page is now searchable, and clicking on search terms applies them to your current search.
+* Added a Search History page accessible from "Filter Help" and Settings so you can review and delete old searches.
+* Shift+Delete while highlighting a past search in the search dropdown will delete it from your history.
+* Fixed the `masterwork:` filters.
+* Fixed the icon for "Take" on the item popup for stackable items.
+* Removed the ability to restore old backups from Google Drive, or backups created from versions of DIM pre-6.0 (when DIM Sync was introduced).
+* Armor 1.0 mods and Elemental Affinities removed from the perk picker in Loadout Optimizer.
+* Improved search performance.
+
 ## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
 
 * Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.

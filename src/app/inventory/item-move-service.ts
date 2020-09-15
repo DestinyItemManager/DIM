@@ -1,7 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -26,8 +26,6 @@ import {
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { touch, touchItem } from './actions';
-import { loadStores as d1LoadStores } from './d1-stores';
-import { loadStores as d2LoadStores } from './d2-stores';
 import {
   characterDisplacePriority,
   getTag,
@@ -92,26 +90,6 @@ export function setItemLockState(
     dispatch(touchItem(item.id));
   };
 }
-
-// We'll reload the stores to check if things have been
-// thrown away or moved and we just don't have up to date info. But let's
-// throttle these calls so we don't just keep refreshing over and over.
-// This needs to be up here because of how we return the service object.
-const throttledReloadStores = _.throttle(
-  (dispatch: ThunkDispatchProp['dispatch']) => dispatch(d1LoadStores()),
-  10000,
-  {
-    trailing: false,
-  }
-);
-
-const throttledD2ReloadStores = _.throttle(
-  (dispatch: ThunkDispatchProp['dispatch']) => dispatch(d2LoadStores()),
-  10000,
-  {
-    trailing: false,
-  }
-);
 
 function equipApi(item: DimItem): typeof d2equip {
   return item.destinyVersion === 2 ? d2equip : d1equip;
@@ -476,6 +454,11 @@ function moveToStore(
       if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
         await dispatch(dequipItem(item));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
+      } else if (e.code === PlatformErrorCodes.DestinyItemNotFound) {
+        // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
+        // reload the profile or load just that item, but API caching means we aren't guaranteed to
+        // get the current view. So instead, we just pretend the move succeeded.
+        console.warn('Item', item.name, 'was not found - pretending the move succeeded');
       } else {
         throw e;
       }
@@ -773,14 +756,13 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    triedFallback?: boolean;
     excludes?: Pick<DimItem, 'id' | 'hash'>[];
     reservations?: MoveReservations;
     numRetries?: number;
   } = {}
 ): ThunkResult<boolean> {
   return async (dispatch, getState) => {
-    const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
+    const { excludes = [], reservations = {}, numRetries = 0 } = options;
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
@@ -817,7 +799,7 @@ function canMoveToStore(
       storeReservations.vault = amount;
     }
 
-    // How many moves (in amount, not stacks) are needed from each
+    // How many items need to be moved away from each store (in amount, not stacks)
     const movesNeeded: { [storeId: string]: number } = {};
     stores.forEach((s) => {
       if (storeReservations[s.id]) {
@@ -828,9 +810,10 @@ function canMoveToStore(
       }
     });
 
-    if (!Object.values(movesNeeded).some((m) => m > 0)) {
+    if (Object.values(movesNeeded).every((m) => m === 0)) {
+      // If there are no moves needed, we're clear to go
       return true;
-    } else if (store.isVault || triedFallback) {
+    } else {
       // Move aside one of the items that's in the way
       const moveContext: MoveContext = {
         originalItemType: item.type,
@@ -904,19 +887,6 @@ function canMoveToStore(
           }
         }
       }
-    } else {
-      // Refresh the stores to see if anything has changed
-      const reloadedStores =
-        (await (item.destinyVersion === 2
-          ? throttledD2ReloadStores(dispatch)
-          : throttledReloadStores(dispatch))) || storesSelector(getState());
-      const storeId = store.id;
-      options.triedFallback = true;
-      const reloadedStore = reloadedStores.find((s) => s.id === storeId);
-      if (!reloadedStore) {
-        throw new Error("Can't find the store to move to.");
-      }
-      return dispatch(canMoveToStore(item, reloadedStore, amount, options));
     }
   };
 }
@@ -967,6 +937,8 @@ function isValidTransfer(
   };
 }
 
+let lastTimeCurrentStoreWasReallyFull = 0;
+
 /**
  * Move item to target store, optionally equipping it.
  * @param item the item to move.
@@ -988,16 +960,39 @@ export function moveItemTo(
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
+    let source = getStore(getStores(), item.owner)!;
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
       target = getCurrentStore(getStores())!;
+    }
+
+    // We're moving from the vault to the current character. Maybe they're
+    // playing the game and deleting stuff? Try just jamming it in there, and
+    // catch any errors. If we find out that the store is full through this
+    // probe, don't try again for a while.
+    const timeSinceCurrentStoreWasReallyFull = Date.now() - lastTimeCurrentStoreWasReallyFull;
+    if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
+      try {
+        console.log('Try blind move of', item.name, 'to', target.name);
+        return await dispatch(moveToStore(item, target, equip, amount));
+      } catch (e) {
+        console.warn(
+          'Tried blindly moving',
+          item.name,
+          'to',
+          target.name,
+          'but the bucket is really full',
+          e.code
+        );
+        lastTimeCurrentStoreWasReallyFull = Date.now();
+      }
     }
 
     await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations));
 
     // Replace the target store - isValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
-    let source = getStore(getStores(), item.owner)!;
+    source = getStore(getStores(), item.owner)!;
 
     // Get from postmaster first
     if (item.location.inPostmaster) {
@@ -1029,7 +1024,7 @@ export function moveItemTo(
       // Vault to Vault
       // Do Nothing.
     } else if (source.isVault || target.isVault) {
-      // Guardian to Vault
+      // Guardian to Vault or Vault to Guardian
       if (item.equipped) {
         item = await dispatch(dequipItem(item));
       }
