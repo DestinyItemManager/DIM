@@ -12,7 +12,6 @@ import Compare from '../compare/Compare';
 import GearPower from '../gear-power/GearPower';
 import InfusionFinder from '../infuse/InfusionFinder';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
-import ClearNewItems from './ClearNewItems';
 import DragGhostItem from './DragGhostItem';
 import { isPhonePortraitSelector, storesLoadedSelector } from './selectors';
 import StackableDragHelp from './StackableDragHelp';
@@ -56,7 +55,6 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
       {$featureFlags.mobileInspect && isPhonePortrait && <MobileInspect />}
       <DragGhostItem />
       <InfusionFinder destinyVersion={account.destinyVersion} />
-      <ClearNewItems account={account} />
     </ErrorBoundary>
   );
 }
