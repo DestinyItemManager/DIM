@@ -71,7 +71,7 @@ export default function InventoryItem({
 
   const subclassPath =
     (!ignoreSelectedPerks &&
-      item.isDestiny2?.() &&
+      item?.destinyVersion === 2 &&
       item.talentGrid &&
       selectedSubclassPath(item.talentGrid)) ||
     null;
@@ -155,7 +155,7 @@ export default function InventoryItem({
 
 export function borderless(item: DimItem) {
   return (
-    (item.isDestiny2?.() &&
+    (item?.destinyVersion === 2 &&
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes?.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram

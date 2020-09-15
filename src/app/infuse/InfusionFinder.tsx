@@ -7,6 +7,7 @@ import SearchBar from 'app/search/SearchBar';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import copy from 'fast-copy';
 import React, { useEffect, useReducer } from 'react';
@@ -29,7 +30,7 @@ import './InfusionFinder.scss';
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
   compareBy((item: DimItem) =>
-    item.isDestiny1() && item.talentGrid
+    isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
       : 0
   )
@@ -326,7 +327,7 @@ function isInfusable(target: DimItem, source: DimItem) {
     return false;
   }
 
-  if (source.isDestiny1() && target.isDestiny1()) {
+  if (source.destinyVersion === 1 && target.destinyVersion === 1) {
     return source.type === target.type && target.primStat!.value < source.primStat!.value;
   } else {
     return (
@@ -369,7 +370,7 @@ async function transferItems(
     convertToLoadoutItem(source, source.equipped),
   ];
 
-  if (source.isDestiny1()) {
+  if (source.destinyVersion === 1) {
     if (target.bucket.sort === 'General') {
       // Mote of Light
       items.push({

@@ -7,6 +7,7 @@ import {
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
+  isD1Item,
 } from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -302,7 +303,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Type: item.typeName,
       Source: source(item),
       Equippable: equippable(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
     if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
@@ -314,7 +315,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         : undefined;
     }
     row.Owner = nameMap[item.owner];
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
     if (item.energy) {
@@ -323,18 +324,18 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     row.Locked = item.locked;
     row.Equipped = item.equipped;
     row.Year = getItemYear(item);
-    if (item.isDestiny2()) {
+    if (item.destinyVersion === 2) {
       row.Season = getSeason(item);
       const event = getEvent(item);
       row.Event = event ? D2EventInfo[event].name : '';
     }
 
-    if (item.isDestiny1()) {
+    if (isD1Item(item)) {
       row['% Quality'] = item.quality?.min ?? 0;
     }
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.stats) {
-      if (item.isDestiny1()) {
+      if (isD1Item(item)) {
         item.stats.forEach((stat) => {
           let pct = 0;
           if (stat.scaled?.min) {
@@ -356,7 +357,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         });
       }
     }
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% IntQ'] = stats.Intellect?.pct ?? 0;
       row['% DiscQ'] = stats.Discipline?.pct ?? 0;
       row['% StrQ'] = stats.Strength?.pct ?? 0;
@@ -408,7 +409,7 @@ function downloadWeapons(
       Source: source(item),
       Category: item.bucket.type,
       Element: item.element?.displayProperties.name,
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
     if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
@@ -420,13 +421,13 @@ function downloadWeapons(
         : undefined;
     }
     row.Owner = nameMap[item.owner];
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
     row.Year = getItemYear(item);
-    if (item.isDestiny2()) {
+    if (item.destinyVersion === 2) {
       row.Season = getSeason(item);
       const event = getEvent(item);
       row.Event = event ? D2EventInfo[event].name : '';
@@ -513,7 +514,7 @@ function downloadWeapons(
     row.Mag = stats.magazine;
     row.Equip = stats.equipSpeed;
     row['Charge Time'] = stats.chargetime;
-    if (item.isDestiny2()) {
+    if (item.destinyVersion === 2) {
       row['Draw Time'] = stats.drawtime;
       row.Accuracy = stats.accuracy;
     }

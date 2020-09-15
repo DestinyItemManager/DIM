@@ -98,7 +98,7 @@ export default function ItemPopupHeader({
               />
             </div>
           )}
-        {item.isDestiny2() && item.ammoType > 0 && (
+        {item.destinyVersion === 2 && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
         {item.breakerType && (

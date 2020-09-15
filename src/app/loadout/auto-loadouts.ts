@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
@@ -51,7 +51,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
     value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
 
     // Choose the item w/ the highest XP
-    if (item.isDestiny1() && item.talentGrid) {
+    if (isD1Item(item) && item.talentGrid) {
       value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
     }
 

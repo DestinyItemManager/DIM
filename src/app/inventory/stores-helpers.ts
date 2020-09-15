@@ -175,7 +175,7 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
 }
 
 /**
- * Is this store a Destiny 1 store? Use this when you want the item to
+ * Is this store a Destiny 1 store? Use this when you want the store to
  * automatically be typed as D1 store in the "true" branch of a conditional.
  * Otherwise you can just check "destinyVersion === 1".
  */

@@ -465,7 +465,9 @@ class Compare extends React.Component<Props, State> {
       const itemRpmStat = i.stats?.find(
         (s) =>
           s.statHash ===
-          (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : StatHashes.RoundsPerMinute)
+          (exampleItem.destinyVersion === 1
+            ? exampleItem.stats![0].statHash
+            : StatHashes.RoundsPerMinute)
       );
       return itemRpmStat?.value || -99999999;
     };
@@ -483,8 +485,8 @@ class Compare extends React.Component<Props, State> {
         (i) =>
           // specifically for destiny 2 grenade launchers, let's not compare special with heavy.
           // all other weapon types with multiple ammos, are novelty exotic exceptions
-          !exampleItem.isDestiny2() ||
-          !i.isDestiny2() ||
+          !(exampleItem.destinyVersion === 2) ||
+          !(i.destinyVersion === 2) ||
           !exampleItem.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
           exampleItem.ammoType === i.ammoType
       );
@@ -505,9 +507,10 @@ class Compare extends React.Component<Props, State> {
       // same weapon type plus matching intrinsic (rpm+impact..... ish)
       {
         buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
-        items: exampleItem.isDestiny2()
-          ? allWeapons.filter((i) => i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash)
-          : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
+        items:
+          exampleItem.destinyVersion === 2
+            ? allWeapons.filter((i) => i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash)
+            : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
 
       // same weapon type and also matching element (& usually same-slot because same element)
@@ -564,7 +567,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
     );
   }
   if (
-    firstComparison.isDestiny2() &&
+    firstComparison.destinyVersion === 2 &&
     (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
   ) {
     stats.push(
@@ -575,7 +578,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
     );
   }
 
-  if (firstComparison.isDestiny2() && firstComparison.bucket.inArmor) {
+  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
     stats.push(
       makeFakeStat(
         'EnergyCapacity',
