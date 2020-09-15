@@ -4,7 +4,7 @@ import { setSetting } from 'app/settings/actions';
 import _ from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { D2Store } from '../../inventory/store-types';
+import { DimStore } from '../../inventory/store-types';
 import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
@@ -26,7 +26,7 @@ export default function FilterBuilds({
   statRanges?: { [statType in StatTypes]: MinMax };
   minimumPower: number;
   minimumStatTotal: number;
-  selectedStore: D2Store;
+  selectedStore: DimStore;
   stats: { [statType in StatTypes]: MinMaxIgnored };
   defs: D2ManifestDefinitions;
   order: StatTypes[];

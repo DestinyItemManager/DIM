@@ -10,8 +10,10 @@ import { InventoryBucket } from './inventory-buckets';
 import { D1Item, DimItem } from './item-types';
 
 /**
- * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
- * or you don't use anything specific to one of them.
+ * A generic DIM character or vault - a "store" of items. This completely
+ * represents any D2 store, and most properties of D1 stores, though you can
+ * specialize down to the D1Store type for some special D1 properties and
+ * overrides.
  */
 export interface DimStore<Item = DimItem> {
   /** An ID for the store. Character ID or 'vault'. */
@@ -65,6 +67,10 @@ export interface DimStore<Item = DimItem> {
     progressions: DestinyProgression[];
   };
 
+  /** The vault associated with this store. */
+  vault?: DimVault;
+  color?: DestinyColor;
+
   /** Remove an item from this store. Returns whether it actually removed anything. */
   removeItem(item: Item): boolean;
 
@@ -73,8 +79,8 @@ export interface DimStore<Item = DimItem> {
 
   /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
   isDestiny1(): this is D1Store;
-  /* Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store. */
-  isDestiny2(): this is D2Store;
+  /* Check if this store is from D2. */
+  isDestiny2(): boolean;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -92,15 +98,6 @@ export interface DimVault extends DimStore {
 }
 
 export interface D1Vault extends D1Store {
-  vaultCounts: VaultCounts;
-  currencies: {
-    itemHash: number;
-    displayProperties: DestinyDisplayPropertiesDefinition;
-    quantity: number;
-  }[];
-}
-
-export interface D2Vault extends D2Store {
   vaultCounts: VaultCounts;
   currencies: {
     itemHash: number;
@@ -155,13 +152,4 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: any;
-}
-
-/**
- * A D2 character. Use this when you need D2-specific properties or D2-specific items.
- */
-export interface D2Store extends DimStore<DimItem> {
-  /** The vault associated with this store. */
-  vault?: D2Vault;
-  color: DestinyColor;
 }

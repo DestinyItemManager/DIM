@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
-import { D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
@@ -28,8 +28,8 @@ const bucketClassNames = {
 };
 
 export default function GearPower() {
-  const stores = useSelector<RootState, D2Store[]>((state) => storesSelector(state) as D2Store[]);
-  const [selectedStore, setSelectedStore] = useState<D2Store | undefined>();
+  const stores = useSelector<RootState, DimStore[]>((state) => storesSelector(state));
+  const [selectedStore, setSelectedStore] = useState<DimStore | undefined>();
   const reset = () => {
     setSelectedStore(undefined);
   };

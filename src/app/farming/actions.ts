@@ -14,7 +14,7 @@ import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
-import { D1Store, D2Store, DimStore } from '../inventory/store-types';
+import { D1Store, DimStore } from '../inventory/store-types';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import * as actions from './basic-actions';
 import { farmingInterruptedSelector, farmingStoreSelector } from './reducer';
@@ -75,11 +75,11 @@ export function startFarming(storeId: string): ThunkResult {
       if (farmingInterruptedSelector(getState())) {
         console.log('Farming interrupted, will resume when tasks are complete');
       } else {
-        if (farmingStore.isDestiny2()) {
+        if (farmingStore.isDestiny1()) {
+          dispatch(farmD1(farmingStore));
+        } else {
           // In D2 we just make room
           dispatch(makeRoomForItems(farmingStore));
-        } else if (farmingStore.isDestiny1()) {
-          dispatch(farmD1(farmingStore));
         }
       }
     });
@@ -100,7 +100,7 @@ export function stopFarming(): ThunkResult {
 
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
-function makeRoomForItems(store: D2Store): ThunkResult {
+function makeRoomForItems(store: DimStore): ThunkResult {
   return (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = Object.values(buckets.byHash).filter(

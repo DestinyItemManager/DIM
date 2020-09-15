@@ -240,7 +240,7 @@ export function dtrRatingColor(value: number, property = 'color') {
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
-  if ($featureFlags.gradientBackground || !store.isDestiny2() || !store.color) {
+  if ($featureFlags.gradientBackground || !store.color) {
     return undefined;
   }
 

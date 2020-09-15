@@ -6,9 +6,9 @@ import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmast
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from './action-queue';
 import { storesSelector } from './selectors';
-import { D2Store } from './store-types';
+import { DimStore } from './store-types';
 
-export function PullFromPostmaster({ store }: { store: D2Store }) {
+export function PullFromPostmaster({ store }: { store: DimStore }) {
   const [working, setWorking] = useState(false);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
   const numPullablePostmasterItems = useSelector(

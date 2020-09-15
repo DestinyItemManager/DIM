@@ -31,7 +31,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
-import { D2Store, D2Vault } from './store-types';
+import { DimStore, DimVault } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems, resetIdTracker } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
@@ -114,7 +114,7 @@ export function mergeCollectibles(
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
-export function loadStores(): ThunkResult<D2Store[] | undefined> {
+export function loadStores(): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
       let account = currentAccountSelector(getState());
@@ -231,7 +231,7 @@ function processCharacter(
     [hash: number]: DestinyCollectibleComponent;
   },
   lastPlayedDate: Date
-): D2Store {
+): DimStore {
   const character = profileInfo.characters.data![characterId];
   const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
   const profileInventory = profileInfo.profileInventory.data?.items || [];
@@ -290,7 +290,7 @@ function processVault(
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   }
-): D2Vault {
+): DimVault {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
     : [];
@@ -353,7 +353,7 @@ function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
 }
 
 // Add a fake stat for "max base power"
-function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
+function updateBasePower(stores: DimStore[], store: DimStore, defs: D2ManifestDefinitions) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
     const { equippable, unrestricted } = maxLightItemSet(stores, store);
@@ -407,7 +407,7 @@ function updateBasePower(stores: D2Store[], store: D2Store, defs: D2ManifestDefi
 
 // TODO: vault counts are silly and convoluted. We really need an
 // object to represent a Profile.
-function updateVaultCounts(buckets: InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
+function updateVaultCounts(buckets: InventoryBuckets, activeStore: DimStore, vault: DimVault) {
   // Fill in any missing buckets
   Object.values(buckets.byType).forEach((bucket) => {
     if (bucket.accountWide && bucket.vaultBucket) {
