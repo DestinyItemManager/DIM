@@ -195,7 +195,7 @@ export function makeItem(
   }
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
-  const instanceDef: Partial<DestinyItemInstanceComponent> =
+  const instanceDef: Partial<DestinyItemInstanceComponent> | undefined =
     item.itemInstanceId && itemComponents?.instances.data
       ? itemComponents.instances.data[item.itemInstanceId]
       : {};
@@ -259,7 +259,7 @@ export function makeItem(
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
   const primaryStat: DimItem['primStat'] =
-    !instanceDef.primaryStat ||
+    !instanceDef?.primaryStat ||
     itemDef.stats?.disablePrimaryStatDisplay ||
     itemType === 'Class' ||
     isEngram
