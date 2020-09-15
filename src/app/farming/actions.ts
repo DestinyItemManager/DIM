@@ -67,7 +67,6 @@ export function startFarming(storeId: string): ThunkResult {
     let unsubscribe = _.noop;
 
     unsubscribe = observeStore(storeSelector, (_, farmingStore) => {
-      console.log(farmingStore, storeId, unsubscribe);
       if (!farmingStore || farmingStore.id !== storeId) {
         unsubscribe();
         return;

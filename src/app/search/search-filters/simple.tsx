@@ -2,8 +2,6 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { FilterDefinition } from '../filter-types';
 
-const newItems: Set<string> = new Set();
-
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [
   {
@@ -68,7 +66,7 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'new',
     description: tl('Filter.NewItems'),
-    filter: () => (item) => newItems.has(item.id),
+    filter: ({ newItems }) => (item) => newItems.has(item.id),
   },
 ];
 
