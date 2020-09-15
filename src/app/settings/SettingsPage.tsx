@@ -4,7 +4,9 @@ import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -339,13 +341,23 @@ function SettingsPage({
                 <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.ShowNewItems')}
+                name="showNewItems"
+                value={settings.showNewItems}
+                onChange={onChange}
+              />
 
-            <Checkbox
-              label={t('Settings.ShowNewItems')}
-              name="showNewItems"
-              value={settings.showNewItems}
-              onChange={onChange}
-            />
+              <button
+                type="button"
+                className="dim-button"
+                onClick={() => dispatch(clearAllNewItems())}
+                title={t('Hotkey.ClearNewItemsTitle')}
+              >
+                <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+              </button>
+            </div>
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
