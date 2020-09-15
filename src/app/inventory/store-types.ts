@@ -76,11 +76,6 @@ export interface DimStore<Item = DimItem> {
 
   /** Add an item to the store. */
   addItem(item: Item): void;
-
-  /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
-  isDestiny1(): this is D1Store;
-  /* Check if this store is from D2. */
-  isDestiny2(): boolean;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */

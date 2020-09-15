@@ -144,9 +144,8 @@ function LoadoutPopup({
   const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
   const artifactLight = getArtifactBonus(dimStore);
 
-  const numPostmasterItems = dimStore.isDestiny2()
-    ? pullablePostmasterItems(dimStore, stores).length
-    : 0;
+  const numPostmasterItems =
+    dimStore.destinyVersion === 2 ? pullablePostmasterItems(dimStore, stores).length : 0;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
   const makeNewLoadout = () => {
@@ -182,7 +181,7 @@ function LoadoutPopup({
 
     dispatch(interruptFarming());
     try {
-      return await dispatch(applyLoadout(dimStore, loadout, true));
+      await dispatch(applyLoadout(dimStore, loadout, true));
     } finally {
       dispatch(resumeFarming());
     }
@@ -307,7 +306,7 @@ function LoadoutPopup({
               </span>
             </li>
 
-            {dimStore.isDestiny1() && (
+            {dimStore.destinyVersion === 1 && (
               <>
                 <li className="loadout-set">
                   <span onClick={makeItemLevelingLoadout}>
@@ -327,7 +326,7 @@ function LoadoutPopup({
               </>
             )}
 
-            {dimStore.isDestiny2() && numPostmasterItems > 0 && (
+            {dimStore.destinyVersion === 2 && numPostmasterItems > 0 && (
               <li className="loadout-set">
                 <span onClick={doPullFromPostmaster}>
                   <AppIcon icon={sendIcon} />
@@ -337,18 +336,20 @@ function LoadoutPopup({
                 <span onClick={doMakeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
               </li>
             )}
-            {dimStore.isDestiny2() && numPostmasterItems === 0 && numPostmasterItemsTotal > 0 && (
-              <li className="loadout-set">
-                <span onClick={doMakeRoomForPostmaster}>
-                  <AppIcon icon={sendIcon} />
-                  <span>{t('Loadouts.MakeRoom')}</span>
-                </span>
-              </li>
-            )}
+            {dimStore.destinyVersion === 2 &&
+              numPostmasterItems === 0 &&
+              numPostmasterItemsTotal > 0 && (
+                <li className="loadout-set">
+                  <span onClick={doMakeRoomForPostmaster}>
+                    <AppIcon icon={sendIcon} />
+                    <span>{t('Loadouts.MakeRoom')}</span>
+                  </span>
+                </li>
+              )}
           </>
         )}
 
-        {dimStore.isDestiny1() && (
+        {dimStore.destinyVersion === 1 && (
           <li className="loadout-set">
             <span onClick={(e) => gatherEngramsLoadout(e, { exotics: true })}>
               <AppIcon icon={engramIcon} />

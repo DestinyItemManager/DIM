@@ -19,7 +19,7 @@ export default function CharacterTileButton({
       onClick={handleClick}
       className={clsx('character', {
         current: character.current,
-        destiny2: character.isDestiny2(),
+        destiny2: character.destinyVersion === 2,
       })}
     >
       <CharacterTile store={character} />

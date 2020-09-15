@@ -61,7 +61,9 @@ export default function CharacterTile({ store }: { store: DimStore }) {
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>
-              {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
+              {store.destinyVersion === 1 && store.level < 40 && (
+                <div className="level">{store.level}</div>
+              )}
             </>
           )}
         </div>

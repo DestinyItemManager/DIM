@@ -44,7 +44,7 @@ export function getInventoryWishListRolls(
     !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
     !stores.length ||
-    !stores[0].isDestiny2()
+    stores[0].destinyVersion === 1
   ) {
     return {};
   }
