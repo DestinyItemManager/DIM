@@ -233,13 +233,14 @@ function CompareDrawer({
           <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
           <select
             className={styles.loadoutSelect}
+            value={selectedLoadout.id}
             onChange={(event) => {
               const selected = useableLoadouts.find((l) => l.id === event.target.value);
               setSelectedLoadout(selected);
             }}
           >
             {useableLoadouts.map((l) => (
-              <option key={l.id} value={l.id} selected={l.id === selectedLoadout?.id}>
+              <option key={l.id} value={l.id}>
                 {l.name}
               </option>
             ))}
