@@ -10,7 +10,7 @@ export enum D2SeasonEnum {
   SHADOWKEEP,
   DAWN,
   WORTHY,
-  REDACTED_11, // TODO: Update on verification
+  ARRIVAL,
   REDACTED_12, // TODO: Update on verification
 
   __LENGTH__, // This always needs to be last
