@@ -23,8 +23,8 @@ import {
  */
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.energy &&
-  (mod.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
-    mod.mod.plug.energyCost!.energyType === item.energy?.energyType);
+  (mod.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+    mod.modDef.plug.energyCost!.energyType === item.energy?.energyType);
 
 /**
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones
@@ -54,7 +54,7 @@ function assignModsForSlot(
   assignments: Record<string, number[]>
 ): void {
   if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
-    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.mod.hash)];
+    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
   }
 }
 
@@ -104,7 +104,7 @@ export function assignModsToArmorSet(
 
   assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
 
-  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
+  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())

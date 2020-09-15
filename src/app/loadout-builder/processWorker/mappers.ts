@@ -29,16 +29,16 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod = {
-    hash: mod.mod.hash,
+    hash: mod.modDef.hash,
     energy: {
-      type: mod.mod.plug.energyCost!.energyType,
-      val: mod.mod.plug.energyCost!.energyCost,
+      type: mod.modDef.plug.energyCost!.energyType,
+      val: mod.modDef.plug.energyCost!.energyCost,
     },
-    investmentStats: mod.mod.investmentStats,
+    investmentStats: mod.modDef.investmentStats,
   };
 
   if (mod.category === 'seasonal') {
-    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.mod.plug.plugCategoryHash);
+    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
     return {
       ...processMod,
       season: metadata?.season,
@@ -69,7 +69,7 @@ export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
 
   for (const category of Object.values(ModPickerCategories)) {
     for (const mod of lockedArmor2Mods[category]) {
-      for (const stat of mod.mod.investmentStats) {
+      for (const stat of mod.modDef.investmentStats) {
         const statType = statHashToType[stat.statTypeHash];
         if (statType) {
           totals[statType] += stat.value;
@@ -109,7 +109,7 @@ export function mapDimItemToProcessItem(
 
   const modMetadata = getSpecialtySocketMetadata(dimItem);
   const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.mod.plug.energyCost!.energyCost);
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost!.energyCost);
   return {
     bucketHash: bucket.hash,
     id,

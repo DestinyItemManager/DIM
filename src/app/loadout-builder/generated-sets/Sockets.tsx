@@ -53,7 +53,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
     let toSave: DestinyInventoryItemDefinition | undefined;
 
     for (let modIndex = 0; modIndex < modsToUse.length; modIndex++) {
-      const mod = modsToUse[modIndex].mod;
+      const mod = modsToUse[modIndex].modDef;
       if (
         socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug.plugCategoryHash)
       ) {

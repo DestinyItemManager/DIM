@@ -276,7 +276,7 @@ function CompareDrawer({
             )}
             <div className={styles.unassignedMods}>
               {loadoutUnassignedMods.map((unassigned) => (
-                <Mod key={unassigned.key} plugDef={unassigned.mod} defs={defs} large={true} />
+                <Mod key={unassigned.key} plugDef={unassigned.modDef} defs={defs} large={true} />
               ))}
             </div>
           </>

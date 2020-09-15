@@ -15,7 +15,7 @@ function LockedArmor2ModIcon({ item, defs, onModClicked }: Props) {
   return (
     <ClosableContainer onClose={onModClicked} showCloseIconOnHover={true}>
       <div className={styles.emptyItem}>
-        <SocketDetailsMod itemDef={item.mod} defs={defs} />
+        <SocketDetailsMod itemDef={item.modDef} defs={defs} />
       </div>
     </ClosableContainer>
   );

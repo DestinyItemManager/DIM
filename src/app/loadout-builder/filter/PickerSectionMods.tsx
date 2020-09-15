@@ -34,15 +34,15 @@ export default function PickerSectionMods({
   if (!mods.length) {
     return null;
   }
-  const lockedModCost = _.sumBy(locked, (l) => l.mod.plug.energyCost?.energyCost || 0);
+  const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
   const isNotGeneralOrSeasonal =
     category !== ModPickerCategories.general && category !== ModPickerCategories.seasonal;
   const allLockedAreAnyEnergy = locked?.every(
-    (locked) => locked.mod.plug.energyCost!.energyType === DestinyEnergyType.Any
+    (locked) => locked.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any
   );
 
   const isModUnSelectable = (item: LockedArmor2Mod) => {
-    const itemEnergyCost = item.mod.plug.energyCost?.energyCost || 0;
+    const itemEnergyCost = item.modDef.plug.energyCost?.energyCost || 0;
     if (
       locked &&
       (locked.length >= maximumSelectable ||
@@ -53,14 +53,14 @@ export default function PickerSectionMods({
 
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
-      if (item.mod.plug.energyCost!.energyType === DestinyEnergyType.Any || allLockedAreAnyEnergy) {
+      if (item.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any || allLockedAreAnyEnergy) {
         return false;
       }
 
       if (
         locked?.some(
           (lockedMod) =>
-            lockedMod.mod.plug.energyCost!.energyType !== item.mod.plug.energyCost!.energyType
+            lockedMod.modDef.plug.energyCost!.energyType !== item.modDef.plug.energyCost!.energyType
         )
       ) {
         return true;
@@ -83,10 +83,10 @@ export default function PickerSectionMods({
           <div className={styles.items}>
             {mods.map((item) => (
               <SelectableArmor2Mod
-                key={item.mod.hash}
+                key={item.modDef.hash}
                 defs={defs}
                 selected={Boolean(
-                  locked?.some((lockedItem) => lockedItem.mod.hash === item.mod.hash)
+                  locked?.some((lockedItem) => lockedItem.modDef.hash === item.modDef.hash)
                 )}
                 mod={item}
                 unselectable={isModUnSelectable(item)}
