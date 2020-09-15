@@ -437,7 +437,7 @@ const Row = React.memo(
           item.query
         )}
       </span>
-      <span className={styles.menuItemHelp}>{item.helpText && <span>{item.helpText}</span>}</span>
+      <span className={styles.menuItemHelp} />
       {!isPhonePortrait && isTabAutocompleteItem && (
         <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
       )}
