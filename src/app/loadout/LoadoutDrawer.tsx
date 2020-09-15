@@ -29,11 +29,11 @@ import { updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import './loadout-drawer.scss';
 import { Loadout, LoadoutItem } from './loadout-types';
+import { getItemsFromLoadoutItems } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import { loadoutsSelector } from './reducer';
-import { getItemsFromLoadoutItems } from './loadout-utils';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
