@@ -84,7 +84,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: 'sunsetsafter',
     description: tl('Filter.SunsetAfter'),
-    format: 'range',
+    format: 'rangeoverload',
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
