@@ -59,11 +59,11 @@ export function SelectableArmor2Mod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod itemDef={mod.mod} defs={defs} />
+        <SocketDetailsMod itemDef={mod.modDef} defs={defs} />
         <div className={styles.perkInfo}>
-          <div className={styles.perkTitle}>{mod.mod.displayProperties.name}</div>
-          <div className={styles.perkDescription}>{mod.mod.displayProperties.description}</div>
-          {mod.mod.investmentStats
+          <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
+          <div className={styles.perkDescription}>{mod.modDef.displayProperties.description}</div>
+          {mod.modDef.investmentStats
             .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>

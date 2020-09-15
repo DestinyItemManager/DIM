@@ -1,10 +1,5 @@
 import { tl } from 'app/i18next-t';
-import {
-  DimItem,
-  DimPlug,
-  DimSocket,
-  PluggableInventoryItemDefinition,
-} from 'app/inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -302,7 +297,7 @@ export function getLockedModStats(
   const lockedModStats: { [statHash: number]: number } = {};
   if (lockedArmor2Mods) {
     for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.mod.investmentStats) {
+      for (const stat of lockedMod.modDef.investmentStats) {
         lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
         // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
         lockedModStats[stat.statTypeHash] += stat.value;
@@ -317,10 +312,8 @@ export function getLockedModStats(
  * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
-export function someModHasEnergyRequirement(
-  mods: readonly { mod: PluggableInventoryItemDefinition }[]
-) {
-  return mods.some((mod) => mod.mod.plug.energyCost!.energyType !== DestinyEnergyType.Any);
+export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
+  return mods.some((mod) => mod.modDef.plug.energyCost!.energyType !== DestinyEnergyType.Any);
 }
 
 export const armor2ModPlugCategoriesTitles = {
