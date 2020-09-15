@@ -255,9 +255,9 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   }
 }
 
-// Handle "DestinyUniquenessViolation" (1648)
+// Handle "DestinyUniquenessViolation"
 export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
-  if (e?.code === 1648) {
+  if (e?.code === PlatformErrorCodes.DestinyUniquenessViolation) {
     throw error(
       t('BungieService.ItemUniquenessExplanation', {
         // t('BungieService.ItemUniquenessExplanation_female')

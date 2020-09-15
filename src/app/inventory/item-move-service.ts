@@ -932,6 +932,8 @@ function isValidTransfer(
   };
 }
 
+let lastTimeCurrentStoreWasReallyFull = 0;
+
 /**
  * Move item to target store, optionally equipping it.
  * @param item the item to move.
@@ -953,16 +955,39 @@ export function moveItemTo(
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
+    let source = getStore(getStores(), item.owner)!;
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
       target = getCurrentStore(getStores())!;
+    }
+
+    // We're moving from the vault to the current character. Maybe they're
+    // playing the game and deleting stuff? Try just jamming it in there, and
+    // catch any errors. If we find out that the store is full through this
+    // probe, don't try again for a while.
+    const timeSinceCurrentStoreWasReallyFull = Date.now() - lastTimeCurrentStoreWasReallyFull;
+    if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
+      try {
+        console.log('Try blind move of', item.name, 'to', target.name);
+        return await dispatch(moveToStore(item, target, equip, amount));
+      } catch (e) {
+        console.warn(
+          'Tried blindly moving',
+          item.name,
+          'to',
+          target.name,
+          'but the bucket is really full',
+          e.code
+        );
+        lastTimeCurrentStoreWasReallyFull = Date.now();
+      }
     }
 
     await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations));
 
     // Replace the target store - isValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
-    let source = getStore(getStores(), item.owner)!;
+    source = getStore(getStores(), item.owner)!;
 
     // Get from postmaster first
     if (item.location.inPostmaster) {
@@ -994,7 +1019,7 @@ export function moveItemTo(
       // Vault to Vault
       // Do Nothing.
     } else if (source.isVault || target.isVault) {
-      // Guardian to Vault
+      // Guardian to Vault or Vault to Guardian
       if (item.equipped) {
         item = await dispatch(dequipItem(item));
       }
