@@ -454,6 +454,11 @@ function moveToStore(
       if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
         await dispatch(dequipItem(item));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
+      } else if (e.code === PlatformErrorCodes.DestinyItemNotFound) {
+        // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
+        // reload the profile or load just that item, but API caching means we aren't guaranteed to
+        // get the current view. So instead, we just pretend the move succeeded.
+        console.warn('Item', item.name, 'was not found - pretending the move succeeded');
       } else {
         throw e;
       }
