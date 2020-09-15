@@ -146,11 +146,11 @@ class Compare extends React.Component<Props, State> {
                     ? item.primStat
                     : sortedHash === 'EnergyCapacity'
                     ? {
-                        value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
+                        value: item.energy?.energyCapacity || 0,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
-                        value: (item.isDestiny2() && item.powerCap) || 99999999,
+                        value: item.powerCap || 99999999,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -357,7 +357,7 @@ class Compare extends React.Component<Props, State> {
       item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
       exampleItemModSlot === getSpecialtySocketMetadata(item);
-    const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
+    const hasEnergy = (item: DimItem) => Boolean(item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class
     allArmors = allArmors
@@ -471,7 +471,7 @@ class Compare extends React.Component<Props, State> {
     };
 
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
+    const intrinsic = getWeaponArchetype(exampleItem);
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
     const intrinsicHash = intrinsic?.hash;
 
@@ -506,9 +506,7 @@ class Compare extends React.Component<Props, State> {
       {
         buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
         items: exampleItem.isDestiny2()
-          ? allWeapons.filter(
-              (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
-            )
+          ? allWeapons.filter((i) => i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash)
           : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
 
@@ -570,14 +568,10 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
     (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
   ) {
     stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
-        item.isDestiny2()
-          ? {
-              statHash: powerCapPlugSetHash,
-              value: item.powerCap ?? undefined,
-            }
-          : undefined
-      )
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
+        statHash: powerCapPlugSetHash,
+        value: item.powerCap ?? undefined,
+      }))
     );
   }
 
@@ -587,11 +581,10 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
         'EnergyCapacity',
         t('EnergyMeter.Energy'),
         (item: DimItem) =>
-          (item.isDestiny2() &&
-            item.energy && {
-              statHash: item.energy.energyType,
-              value: item.energy.energyCapacity,
-            }) ||
+          (item.energy && {
+            statHash: item.energy.energyType,
+            value: item.energy.energyCapacity,
+          }) ||
           undefined
       )
     );

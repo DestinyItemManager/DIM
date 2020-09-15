@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { getSpecialtySocketMetadata, modSlotTags } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -16,14 +16,14 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'randomroll',
     description: tl('Filter.RandomRoll'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
+    filter: () => (item: DimItem) =>
       Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
   },
   {
     keywords: 'curated',
     description: tl('Filter.Curated'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) => {
+    filter: () => (item: DimItem) => {
       if (!item) {
         return false;
       }
@@ -53,7 +53,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: ['shaded', 'hasshader'],
     description: tl('Filter.HasShader'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
+    filter: () => (item: DimItem) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged?.plugDef.plug &&
@@ -66,7 +66,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: ['ornamented', 'hasornament'],
     description: tl('Filter.HasOrnament'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
+    filter: () => (item: DimItem) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
@@ -83,7 +83,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'hasmod',
     description: tl('Filter.Mods.Y2'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
+    filter: () => (item: DimItem) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
@@ -103,7 +103,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'modded',
     description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
+    filter: () => (item: DimItem) =>
       Boolean(item.energy) &&
       item.sockets &&
       item.sockets.allSockets.some((socket) =>
@@ -125,7 +125,7 @@ const socketFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,
-    filter: ({ filterValue }) => (item: D2Item) => {
+    filter: ({ filterValue }) => (item: DimItem) => {
       const modSocketTypeHash = getSpecialtySocketMetadata(item);
       return (
         (filterValue === 'none' && !modSocketTypeHash) ||
@@ -139,7 +139,7 @@ const socketFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,
-    filter: ({ filterValue }) => (item: D2Item) => {
+    filter: ({ filterValue }) => (item: DimItem) => {
       const modSocketTypeHash = getSpecialtySocketMetadata(item);
       return (
         (filterValue === 'none' && !modSocketTypeHash) ||

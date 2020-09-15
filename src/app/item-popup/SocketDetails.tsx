@@ -4,7 +4,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { D2Item, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector, storesSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { RootState } from 'app/store/types';
@@ -26,7 +26,7 @@ import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
 interface ProvidedProps {
-  item: D2Item;
+  item: DimItem;
   socket: DimSocket;
   initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;

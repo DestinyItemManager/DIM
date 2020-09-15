@@ -119,6 +119,8 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
   Rare: styles.rare,
   Uncommon: styles.uncommon,
   Common: styles.common,
+  Unknown: '',
+  Currency: '',
 } as const;
 
 /**

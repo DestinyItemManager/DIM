@@ -21,7 +21,7 @@ interface Props {
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
-  item.isDestiny2?.() && item.sockets && item.itemCategoryHashes.includes(ItemCategoryHashes.Ghost)
+  item.sockets && item.itemCategoryHashes.includes(ItemCategoryHashes.Ghost)
     ? _.compact(
         item.sockets.allSockets.map((s) => {
           const hash = s.plugged?.plugDef?.hash;
@@ -98,7 +98,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
       <div className={styles.primaryStat}>
         {/*
         // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
-        item.isDestiny2() && item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+        item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
         {item.energy.energyCapacity}</span>)
         */}
         {item.element &&

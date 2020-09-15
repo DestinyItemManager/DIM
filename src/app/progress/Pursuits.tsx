@@ -14,7 +14,7 @@ export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) => (item.isDestiny2() && item.pursuit?.expirationDate) || defaultExpirationDate),
+  compareBy((item) => item.pursuit?.expirationDate || defaultExpirationDate),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name)
@@ -55,7 +55,7 @@ export default function Pursuits({
     ) {
       return 'Quests';
     }
-    if (!item.objectives || item.objectives.length === 0 || (item.isDestiny2() && item.sockets)) {
+    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
       return 'Items';
     }
 

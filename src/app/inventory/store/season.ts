@@ -1,13 +1,16 @@
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import D2Events from 'data/d2/events.json';
 import D2SeasonToSource from 'data/d2/season-to-source.json';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
-import { D2Item } from '../item-types';
+import { DimItem } from '../item-types';
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
+/** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
-export function getSeason(item: D2Item, watermark: string | null): number {
+export function getSeason(item: DimItem): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
@@ -19,13 +22,18 @@ export function getSeason(item: D2Item, watermark: string | null): number {
     return 0;
   }
 
-  if (watermark) {
-    return Number(D2SeasonFromOverlay[watermark]);
+  if (item.iconOverlay) {
+    return Number(D2SeasonFromOverlay[item.iconOverlay]);
   }
 
-  if (SourceToD2Season[item.source]) {
+  if (item.source && SourceToD2Season[item.source]) {
     return SourceToD2Season[item.source];
   }
 
   return D2Seasons[item.hash] || D2CalculatedSeason;
+}
+
+/** The Destiny event (D2) that a specific item belongs to. */
+export function getEvent(item: DimItem) {
+  return item.source ? D2SourcesToEvent[item.source] || D2Events[item.hash] : D2Events[item.hash];
 }

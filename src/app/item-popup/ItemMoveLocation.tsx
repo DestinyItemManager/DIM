@@ -74,15 +74,15 @@ export default function ItemMoveLocation({
 
     // Can pull items from the postmaster.
     if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-      return item.isDestiny2() && item.canPullFromPostmaster;
+      return item.canPullFromPostmaster;
     } else if (item.notransfer) {
       // Can store an equiped item in same itemStore
       if (item.equipped && store.id === buttonStore.id) {
         return true;
       }
     } else if (store.id !== buttonStore.id || item.equipped) {
-      // In Destiny2, only show one store for account wide items
-      if (item.isDestiny2() && item.bucket?.accountWide && !buttonStore.current) {
+      // Only show one store for account wide items
+      if (item.bucket?.accountWide && !buttonStore.current) {
         return false;
       } else {
         return true;

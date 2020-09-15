@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { CompareService } from '../compare/compare.service';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { D2Item, DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { AppIcon, faChevronCircleUp, faClone, openDropdownIcon } from '../shell/icons';
 import { ammoTypeClass } from './ammo-type';
 import { hideItemPopup } from './item-popup';
@@ -40,28 +40,27 @@ export default function ItemPopupHeader({
     item.stats?.length ||
       item.talentGrid ||
       item.objectives ||
-      (item.isDestiny2() && item.flavorObjective) ||
+      item.flavorObjective ||
       item.secondaryIcon
   );
   const showDescription = Boolean(item.description?.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
-  const maxLight = item.isDestiny2() && item.powerCap;
 
   useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
 
-  const finalSeason = item.isDestiny2() && item.powerCap && getItemPowerCapFinalSeason(item);
+  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
   const powerCapString =
     light &&
-    maxLight &&
+    item.powerCap &&
     (finalSeason
-      ? t('Stats.PowerCapWithSeason', { powerCap: maxLight, finalSeason })
-      : t('MovePopup.PowerCap', { powerCap: maxLight }));
+      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
-        masterwork: item.isDestiny2() && item.masterwork,
+        masterwork: item.masterwork,
       })}
     >
       <div className="item-title-container">
@@ -102,7 +101,7 @@ export default function ItemPopupHeader({
         {item.isDestiny2() && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
-        {item.isDestiny2() && item.breakerType && (
+        {item.breakerType && (
           <BungieImage className="small-icon" src={item.breakerType.displayProperties.icon} />
         )}
         <div className="item-type-info">
@@ -137,11 +136,11 @@ function destinyDBLink(item: DimItem, language: string) {
     return `http://db.destinytracker.com/d${item.destinyVersion}/${language}/items/${item.hash}`;
   }
 
-  const d2Item = item as D2Item;
+  const DimItem = item;
   let perkQueryString = '';
 
-  if (d2Item) {
-    const perkCsv = buildPerksCsv(d2Item);
+  if (DimItem) {
+    const perkCsv = buildPerksCsv(DimItem);
     // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
     if (perkCsv?.length) {
       perkQueryString = `?perks=${perkCsv}`;
@@ -158,7 +157,7 @@ function destinyDBLink(item: DimItem, language: string) {
  * (and other sockets), as we build our definition of sockets we care about, so
  * I look for gaps in the index and drop a zero in where I see them.
  */
-function buildPerksCsv(item: D2Item): string {
+function buildPerksCsv(item: DimItem): string {
   const perkValues: number[] = [];
 
   if (item.sockets) {

@@ -42,12 +42,7 @@ interface State {
 function numColumns(set: ArmorSet) {
   return _.sumBy(set.armor, (items) => {
     const item = items[0];
-    return (
-      (item.isDestiny2() &&
-        item.sockets &&
-        _.max(item.sockets.categories.map((c) => c.sockets.length))) ||
-      0
-    );
+    return (item.sockets && _.max(item.sockets.categories.map((c) => c.sockets.length))) || 0;
   });
 }
 

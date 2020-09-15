@@ -53,12 +53,9 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
           )}
         </div>
       )}
-      {item.isDestiny2() &&
-        !item.bucket.inWeapons &&
-        !item.bucket.inArmor &&
-        Boolean(item.displaySource?.length) && (
-          <div className={styles.officialDescription}>{item.displaySource}</div>
-        )}
+      {!item.bucket.inWeapons && !item.bucket.inArmor && Boolean(item.displaySource?.length) && (
+        <div className={styles.officialDescription}>{item.displaySource}</div>
+      )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
         <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>

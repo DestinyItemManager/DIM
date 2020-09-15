@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { D2Item, DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
+import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
   getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
@@ -92,7 +92,7 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
 }
 
 export function mapDimItemToProcessItem(
-  dimItem: D2Item,
+  dimItem: DimItem,
   modsForSlot: LockedArmor2Mod[]
 ): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;

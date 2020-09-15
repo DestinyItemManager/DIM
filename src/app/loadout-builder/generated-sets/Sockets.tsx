@@ -41,7 +41,7 @@ interface Props {
 }
 
 function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
-  if (!item.isDestiny2()) {
+  if (!item.sockets) {
     return null;
   }
 

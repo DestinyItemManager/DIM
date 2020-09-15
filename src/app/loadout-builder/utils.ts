@@ -183,7 +183,7 @@ export function getFilteredPerksAndPlugSets(
     // flat list of plugSetHashes per item
     const itemPlugSets: number[] = [];
 
-    if (item.isDestiny2() && item.sockets) {
+    if (item.sockets) {
       for (const socket of item.sockets.allSockets) {
         // Populate mods
         if (!socket.isPerk) {
@@ -252,7 +252,7 @@ export function generateMixesFromPerks(
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
-  if (stats && item.isDestiny2() && item.sockets && !item.energy) {
+  if (stats && item.sockets && !item.energy) {
     for (const socket of item.sockets.allSockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {

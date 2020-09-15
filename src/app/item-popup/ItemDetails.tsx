@@ -60,7 +60,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
-  const killTrackerInfo = item.isDestiny2() && getItemKillTrackerInfo(item);
+  const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -71,7 +71,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {!item.stats && item.isDestiny2() && item.collectibleHash !== null && isD2Manifest(defs) && (
+      {!item.stats && item.collectibleHash !== undefined && isD2Manifest(defs) && (
         <div className="item-details">
           {defs.Collectible.get(item.collectibleHash).sourceString}
         </div>
@@ -115,10 +115,8 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {item.isDestiny2() && isD2Manifest(defs) && item.energy && defs && (
-        <EnergyMeter item={item} defs={defs} />
-      )}
-      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
+      {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
+      {item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
         <div className="item-details item-perks">
@@ -142,7 +140,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() && item.flavorObjective && (
+      {item.flavorObjective && (
         <div className="item-details">
           <div className="flavor-objective">
             <BungieImage src={item.flavorObjective.icon} />
@@ -154,7 +152,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
+      {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <Link
             to={`/${urlParams.membershipId}/d${urlParams.destinyVersion}/vendors/${item.previewVendor}`}
@@ -164,28 +162,22 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.rewards.length !== 0 && (
-          <div className="item-details">
-            <div>{t('MovePopup.Rewards')}</div>
-            {item.pursuit.rewards.map((reward) => (
-              <Reward key={reward.itemHash} reward={reward} defs={defs} />
-            ))}
-          </div>
-        )}
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.rewards.length !== 0 && (
+        <div className="item-details">
+          <div>{t('MovePopup.Rewards')}</div>
+          {item.pursuit.rewards.map((reward) => (
+            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
+        </div>
+      )}
 
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.modifierHashes.length !== 0 && (
-          <div className="item-details">
-            {item.pursuit.modifierHashes.map((modifierHash) => (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
-            ))}
-          </div>
-        )}
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+        <div className="item-details">
+          {item.pursuit.modifierHashes.map((modifierHash) => (
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+          ))}
+        </div>
+      )}
 
       {!extraInfo.mod && (
         <div className="item-details">

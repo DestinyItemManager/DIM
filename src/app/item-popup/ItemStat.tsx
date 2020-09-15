@@ -31,21 +31,15 @@ const modItemCategoryHashes = [
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const value = stat.value;
   const armor2MasterworkSockets =
-    item?.isDestiny2() &&
-    item.sockets &&
-    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
+    item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-  const masterworkValue =
-    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const masterworkValue = item?.masterworkInfo?.stats?.[masterworkIndex]?.value || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
@@ -78,7 +72,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
   }
 
@@ -200,12 +194,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
  */
 export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
@@ -253,7 +244,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
  * The reusable socket category is used in armor 1.0 for perks and stats.
  */
 function getNonReuseableModSockets(item: DimItem) {
-  if (!item.isDestiny2() || !item.sockets) {
+  if (!item.sockets) {
     return [];
   }
 

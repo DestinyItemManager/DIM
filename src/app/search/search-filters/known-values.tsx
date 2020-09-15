@@ -1,6 +1,7 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
+import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
@@ -65,7 +66,7 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const ammoType = d2AmmoTypes[filterValue];
-      return (item: D2Item) => item.ammoType === ammoType;
+      return (item: DimItem) => item.ammoType === ammoType;
     },
   },
   {
@@ -97,7 +98,7 @@ const knownValuesFilters: FilterDefinition[] = [
       if (!breakerType) {
         throw new Error('Unknown breaker type ' + breakerType);
       }
-      return (item: D2Item) => item.breakerType && item.breakerType.hash === breakerType;
+      return (item) => item.breakerType?.hash === breakerType;
     },
   },
   {
@@ -128,8 +129,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
-      item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
+    filter: () => (item) => item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
   {
     keywords: 'source',
@@ -141,13 +141,13 @@ const knownValuesFilters: FilterDefinition[] = [
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
-        return (item: D2Item) =>
+        return (item) =>
           (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
           sourceInfo.itemHashes.includes(item.hash) ||
           missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];
-        return (item: D2Item) => item.event === predicate;
+        return (item: DimItem) => getEvent(item) === predicate;
       } else {
         throw new Error('Unknown item source ' + filterValue);
       }

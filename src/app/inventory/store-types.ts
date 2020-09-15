@@ -7,7 +7,7 @@ import {
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
-import { D1Item, D2Item, DimItem } from './item-types';
+import { D1Item, DimItem } from './item-types';
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
@@ -160,7 +160,7 @@ export interface D1Store extends DimStore<D1Item> {
 /**
  * A D2 character. Use this when you need D2-specific properties or D2-specific items.
  */
-export interface D2Store extends DimStore<D2Item> {
+export interface D2Store extends DimStore<DimItem> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;

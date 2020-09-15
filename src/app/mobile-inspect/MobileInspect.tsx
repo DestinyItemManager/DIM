@@ -44,7 +44,7 @@ export default function MobileInspect() {
           </div>
           <div className={styles.content}>
             <div className={styles.inspectRow}>
-              {item.isDestiny2() && <ItemSockets item={item} minimal={true} />}
+              {item.sockets && <ItemSockets item={item} minimal={true} />}
             </div>
             {inspectType === Inspect.showMoveLocations && (
               <div className={styles.inspectRow}>

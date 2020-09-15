@@ -15,25 +15,22 @@ import {
   ItemState,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
-import D2Events from 'data/d2/events.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D2Item, DimPerk } from '../item-types';
+import { DimItem, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
-import { getSeason } from './season';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
 // Maps tierType to tierTypeName in English
-const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 /**
  * A factory service for producing DIM inventory items.
@@ -54,16 +51,16 @@ const collectiblesByItemHash = _.once(
  */
 export const ItemProto = {
   // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: D2Item) {
+  updateManualMoveTimestamp(this: DimItem) {
     this.lastManuallyMoved = Date.now();
     if (this.id !== '0') {
       _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
     }
   },
-  isDestiny1(this: D2Item) {
+  isDestiny1(this: DimItem) {
     return false;
   },
-  isDestiny2(this: D2Item) {
+  isDestiny2(this: DimItem) {
     return true;
   },
 };
@@ -92,10 +89,10 @@ export function processItems(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): D2Item[] {
-  const result: D2Item[] = [];
+): DimItem[] {
+  const result: DimItem[] = [];
   for (const item of items) {
-    let createdItem: D2Item | null = null;
+    let createdItem: DimItem | null = null;
     try {
       createdItem = makeItem(
         defs,
@@ -119,7 +116,7 @@ export function processItems(
 }
 
 /** Set an ID for the item that should be unique across all items */
-export function createItemIndex(item: D2Item): string {
+export function createItemIndex(item: DimItem): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
@@ -150,7 +147,7 @@ export function makeFakeItem(
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
   }
-): D2Item | null {
+): DimItem | null {
   return makeItem(
     defs,
     buckets,
@@ -196,7 +193,7 @@ export function makeItem(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): D2Item | null {
+): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
     item.itemInstanceId && itemComponents?.instances.data
@@ -261,10 +258,16 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
-  const primaryStat =
-    itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class' || isEngram
+  const primaryStat: DimItem['primStat'] =
+    !instanceDef.primaryStat ||
+    itemDef.stats?.disablePrimaryStatDisplay ||
+    itemType === 'Class' ||
+    isEngram
       ? null
-      : instanceDef?.primaryStat || null;
+      : {
+          ...instanceDef.primaryStat,
+          stat: defs.Stat.get(instanceDef.primaryStat.statHash),
+        } || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
@@ -290,7 +293,7 @@ export function makeItem(
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
-    null;
+    undefined;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -320,7 +323,8 @@ export function makeItem(
     }
   }
 
-  const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
+  const itemProps: Omit<DimItem, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+    owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -352,7 +356,7 @@ export function makeItem(
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
-    amount: item.quantity,
+    amount: item.quantity || 1,
     primStat: primaryStat,
     typeName,
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
@@ -363,8 +367,6 @@ export function makeItem(
     element,
     energy: instanceDef?.energy ?? null,
     powerCap,
-    breakerType: null,
-    visible: true,
     lockable: item.lockable,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -374,19 +376,13 @@ export function makeItem(
     isEngram,
     loreHash: itemDef.loreHash,
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
-    percentComplete: 0, // filled in later
-    hidePercentage: false,
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    dtrRating: null,
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash, itemDef.hash)?.sourceHash
-      : null,
-    collectibleState: collectible ? collectible.state : null,
-    collectibleHash: itemDef.collectibleHash || null,
+      : undefined,
+    collectibleState: collectible ? collectible.state : undefined,
+    collectibleHash: itemDef.collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug?.energyCost && {
@@ -398,17 +394,27 @@ export function makeItem(
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
-  });
-
-  createdItem.season = getSeason(
-    createdItem,
-    (item.versionNumber !== undefined &&
-      itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
-      null
-  );
-  createdItem.event = createdItem.source
-    ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
-    : D2Events[item.itemHash];
+    // These get filled in later
+    breakerType: null,
+    percentComplete: 0,
+    hidePercentage: false,
+    talentGrid: null,
+    stats: null,
+    objectives: null,
+    pursuit: null,
+    taggable: false,
+    comparable: false,
+    basePower: 0,
+    index: '',
+    infusable: false,
+    infusionFuel: false,
+    sockets: null,
+    perks: null,
+    masterworkInfo: null,
+    flavorObjective: null,
+    infusionQuality: null,
+  };
+  const createdItem: DimItem = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(
@@ -535,9 +541,8 @@ export function makeItem(
 
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
-  createdItem.infusionProcess = tier?.infusionProcess ?? null;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
+    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
@@ -572,7 +577,7 @@ function isLegendaryOrBetter(item) {
 }
 
 function buildPursuitInfo(
-  createdItem: D2Item,
+  createdItem: DimItem,
   item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition
 ) {

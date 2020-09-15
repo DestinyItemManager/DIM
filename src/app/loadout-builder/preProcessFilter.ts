@@ -79,12 +79,8 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
     case 'perk':
-      return (
-        item.isDestiny2() &&
-        item.sockets &&
-        item.sockets.allSockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
-        )
+      return item.sockets?.allSockets.some((slot) =>
+        slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
       );
     case 'item':
       return item.id === lockedItem.item.id;
@@ -106,7 +102,7 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
   }
 
   // Checking energy tells us if it is Armour 2.0
-  if (item.isDestiny2() && item.sockets && item.energy) {
+  if (item.sockets && item.energy) {
     if (assumeMasterwork) {
       for (const statHash of statValues) {
         baseStats[statHash] += 2;

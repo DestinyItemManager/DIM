@@ -5,7 +5,6 @@ import React from 'react';
 
 export function ItemSubHeader({ item }: { item: DimItem }) {
   const light = item.primStat?.value.toString();
-  const maxLight = item.isDestiny2() && item.powerCap;
 
   const classType =
     item.classType !== DestinyClass.Unknown &&
@@ -18,7 +17,7 @@ export function ItemSubHeader({ item }: { item: DimItem }) {
 
   const subtitleData = {
     light,
-    maxLight,
+    maxLight: item.powerCap,
     statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
     typeName: item.typeName,

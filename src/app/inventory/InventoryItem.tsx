@@ -81,7 +81,7 @@ export default function InventoryItem({
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
-    [itemTierStyles[item.tier]]: !noBorder && !(item.isDestiny2?.() && item.plug),
+    [itemTierStyles[item.tier]]: !noBorder && !item.plug,
   });
 
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
@@ -126,7 +126,7 @@ export default function InventoryItem({
         {subclassPath?.super && (
           <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
         )}
-        {item.isDestiny2?.() && item.plug?.costElementIcon && (
+        {item.plug?.costElementIcon && (
           <>
             <div
               style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}

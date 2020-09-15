@@ -21,7 +21,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { D2Item } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import styles from './ItemTriage.m.scss';
 import { getValueColors, KeepJunkDial } from './ValueDial';
 
@@ -29,9 +29,9 @@ import { getValueColors, KeepJunkDial } from './ValueDial';
 interface Factor {
   id: string;
   /** bother checking this factor, if the seed item returns truthy */
-  runIf(item: D2Item): any;
-  render(item: D2Item): React.ReactElement;
-  value(item: D2Item): string | number;
+  runIf(item: DimItem): any;
+  render(item: DimItem): React.ReactElement;
+  value(item: DimItem): string | number;
 }
 
 // factors someone might value in an item, like its mod slot or its element
@@ -141,7 +141,7 @@ const factorCombos = {
 type factorComboCategory = keyof typeof factorCombos;
 const factorComboCategories = Object.keys(factorCombos);
 
-export function ItemTriage({ item }: { item: D2Item }) {
+export function ItemTriage({ item }: { item: DimItem }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
   const stores = useSelector(storesSelector);
@@ -257,7 +257,7 @@ export function ItemTriage({ item }: { item: D2Item }) {
  * keyed by item factor combination i.e. "arcwarlockopulent"
  * with values representing how many of that type you own
  */
-function collectRelevantItemFactors(exampleItem: D2Item, stores: DimStore[]) {
+function collectRelevantItemFactors(exampleItem: DimItem, stores: DimStore[]) {
   const combinationCounts: { [key: string]: number } = {};
   getAllItems(stores)
     .filter(
@@ -270,7 +270,7 @@ function collectRelevantItemFactors(exampleItem: D2Item, stores: DimStore[]) {
           i.classType === DestinyClass.Unknown ||
           i.classType === exampleItem.classType)
     )
-    .forEach((item: D2Item) => {
+    .forEach((item: DimItem) => {
       factorCombos[exampleItem.bucket.sort as factorComboCategory].forEach((factorCombo) => {
         const combination = applyFactorCombo(item, factorCombo);
         combinationCounts[combination] = (combinationCounts[combination] ?? 0) + 1;
@@ -278,7 +278,7 @@ function collectRelevantItemFactors(exampleItem: D2Item, stores: DimStore[]) {
     });
   return combinationCounts;
 }
-function getSimilarItems(exampleItem: D2Item, stores: DimStore[]) {
+function getSimilarItems(exampleItem: DimItem, stores: DimStore[]) {
   if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
     return [];
   }
@@ -295,7 +295,7 @@ function getSimilarItems(exampleItem: D2Item, stores: DimStore[]) {
       };
     });
 }
-function getItemFactorComboDisplays(exampleItem: D2Item) {
+function getItemFactorComboDisplays(exampleItem: DimItem) {
   if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
     return [];
   }
@@ -309,7 +309,7 @@ function getItemFactorComboDisplays(exampleItem: D2Item) {
  * derives all items from stores, then gathers stat maxes for items worth comparing
  */
 function collectRelevantStatMaxes(
-  exampleItem: D2Item,
+  exampleItem: DimItem,
   customStatTotalHashes: number[],
   stores: DimStore[]
 ) {
@@ -356,7 +356,7 @@ const notabilityThreshold = 0.8;
  * returns an entry for each notable stat found on the seed item
  */
 function getNotableStats(
-  exampleItem: D2Item,
+  exampleItem: DimItem,
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
   stores: DimStore[]
 ) {
@@ -402,7 +402,7 @@ function getNotableStats(
  * for factorCombo [class, element]
  * and an item that's a warlock void armor
  */
-function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
+function applyFactorCombo(item: DimItem, factorCombo: Factor[]) {
   return factorCombo.map((factor) => factor.id + factor.value(item)).join();
 }
 
@@ -412,7 +412,7 @@ function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
  * for factorCombo [class, element]
  * and an exampleItem that's a warlock void armor
  */
-function renderFactorCombo(exampleItem: D2Item, factorCombo: Factor[]) {
+function renderFactorCombo(exampleItem: DimItem, factorCombo: Factor[]) {
   return (
     <div className={styles.factorCombo}>
       {factorCombo.map((factor) => (

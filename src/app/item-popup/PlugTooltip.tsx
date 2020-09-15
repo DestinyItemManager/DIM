@@ -9,7 +9,7 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 
@@ -20,7 +20,7 @@ export default function PlugTooltip({
   wishListsEnabled,
   inventoryWishListRoll,
 }: {
-  item: D2Item;
+  item: DimItem;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
   wishListsEnabled?: boolean;

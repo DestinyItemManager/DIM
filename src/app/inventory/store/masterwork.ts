@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DamageType } from 'bungie-api-ts/destiny2';
-import { D2Item, DimMasterwork, DimSockets } from '../item-types';
+import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**
  * These are the utilities that deal with figuring out Masterwork info.
@@ -21,7 +21,7 @@ const resistanceMods = {
  * kill trackers before they're masterworked.
  */
 export function buildMasterwork(
-  createdItem: D2Item,
+  createdItem: DimItem,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   if (!createdItem.sockets) {
@@ -44,7 +44,7 @@ export function buildMasterwork(
 }
 
 function buildForsakenMasterworkStats(
-  createdItem: D2Item,
+  createdItem: DimItem,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   const masterworkSocket = createdItem.sockets!.allSockets.find((socket) =>

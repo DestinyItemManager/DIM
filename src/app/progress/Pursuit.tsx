@@ -105,13 +105,10 @@ export default connect<StoreProps>(mapStateToProps)(Pursuit);
 export function showPursuitAsExpired(item: DimItem) {
   // Suppress description when expiration is shown
   const suppressExpiration =
-    item.isDestiny2() &&
-    item.pursuit &&
-    item.pursuit.suppressExpirationWhenObjectivesComplete &&
-    item.complete;
+    item.pursuit?.suppressExpirationWhenObjectivesComplete && item.complete;
 
   const expired =
-    !suppressExpiration && item.isDestiny2() && item.pursuit?.expirationDate
+    !suppressExpiration && item.pursuit?.expirationDate
       ? item.pursuit.expirationDate.getTime() < Date.now()
       : false;
 

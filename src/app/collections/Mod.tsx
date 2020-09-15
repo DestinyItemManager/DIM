@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
@@ -11,7 +11,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import '../progress/milestone.scss';
 
 interface ModProps {
-  item: D2Item;
+  item: DimItem;
   defs: D2ManifestDefinitions;
   children?: React.ReactNode;
   allowFilter?: boolean;

@@ -3,11 +3,14 @@ import { t } from 'app/i18next-t';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
-import { getMasterworkStatNames, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  getItemYear,
+  getMasterworkStatNames,
+  getSpecialtySocketMetadata,
+} from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -18,6 +21,7 @@ import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
 import { DimStore } from './store-types';
 import { getClass } from './store/character-utils';
+import { getEvent, getSeason } from './store/season';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -220,7 +224,7 @@ function getMaxPerks(items: DimItem[]) {
         (item) =>
           (item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
-            : item.isDestiny2() && item.sockets
+            : item.sockets
             ? buildSocketNames(item.sockets)
             : []
           ).length
@@ -232,7 +236,7 @@ function getMaxPerks(items: DimItem[]) {
 function addPerks(row: object, item: DimItem, maxPerks: number) {
   const perks = item.talentGrid
     ? buildNodeNames(item.talentGrid.nodes)
-    : item.isDestiny2() && item.sockets
+    : item.sockets
     ? buildSocketNames(item.sockets)
     : [];
 
@@ -272,11 +276,11 @@ function equippable(item: DimItem) {
 }
 
 export function source(item: DimItem) {
-  if (item.isDestiny2()) {
+  if (item.source) {
     return (
       sourceKeys.find(
         (src) =>
-          D2Sources[src].sourceHashes.includes(item.source) ||
+          (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
           D2MissingSources[src].includes(item.hash)
       ) || ''
@@ -300,12 +304,12 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Equippable: equippable(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
@@ -313,45 +317,44 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     if (item.isDestiny1()) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
-    if (item.isDestiny2()) {
+    if (item.energy) {
       row['Armor2.0'] = Boolean(item.energy);
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
+    row.Year = getItemYear(item);
     if (item.isDestiny2()) {
-      row.Season = item.season;
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
+      row.Season = getSeason(item);
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
     if (item.isDestiny1()) {
       row['% Quality'] = item.quality?.min ?? 0;
     }
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
-    if (item.isDestiny1() && item.stats) {
-      item.stats.forEach((stat) => {
-        let pct = 0;
-        if (stat.scaled?.min) {
-          pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
-        }
-        stats[stat.statHash] = {
-          value: stat.value,
-          pct,
-          base: 0,
-        };
-      });
-    } else if (item.isDestiny2() && item.stats) {
-      item.stats.forEach((stat) => {
-        stats[stat.statHash] = {
-          value: stat.value,
-          base: stat.base,
-          pct: 0,
-        };
-      });
+    if (item.stats) {
+      if (item.isDestiny1()) {
+        item.stats.forEach((stat) => {
+          let pct = 0;
+          if (stat.scaled?.min) {
+            pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
+          }
+          stats[stat.statHash] = {
+            value: stat.value,
+            pct,
+            base: 0,
+          };
+        });
+      } else {
+        item.stats.forEach((stat) => {
+          stats[stat.statHash] = {
+            value: stat.value,
+            base: stat.base,
+            pct: 0,
+          };
+        });
+      }
     }
     if (item.isDestiny1()) {
       row['% IntQ'] = stats.Intellect?.pct ?? 0;
@@ -372,7 +375,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
       });
 
-      if (item.isDestiny2() && item.sockets) {
+      if (item.sockets) {
         row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
       }
     }
@@ -407,12 +410,12 @@ function downloadWeapons(
       Element: item.element?.displayProperties.name,
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
@@ -422,14 +425,11 @@ function downloadWeapons(
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
+    row.Year = getItemYear(item);
     if (item.isDestiny2()) {
-      row.Season = item.season;
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
+      row.Season = getSeason(item);
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
     const stats = {

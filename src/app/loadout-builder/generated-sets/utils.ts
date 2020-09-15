@@ -62,7 +62,7 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
       (set) =>
         -_.sumBy(set.armor, (items) => {
           const item = items?.[0];
-          if (!item || !item.isDestiny2() || !item.sockets) {
+          if (!item || !item.sockets) {
             return 0;
           }
 
