@@ -229,7 +229,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
 }
 
 export function statTier(stat: number) {
-  return Math.floor(stat / 10);
+  return Math.min(10, Math.max(0, Math.floor(stat / 10)));
 }
 
 /**

@@ -53,7 +53,7 @@ function assignModsForSlot(
   mods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
-  if (!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item))) {
+  if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.mod.hash)];
   }
 }
@@ -96,17 +96,19 @@ export function assignModsToArmorSet(
     }
   }
 
-  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
-
   assignGeneralMods(
     processItems,
     lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
     assignments
   );
 
-  const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
+  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
+
+  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>
-    modHashes.map((modHash) => modsByHash[modHash])
+    modHashes
+      .map((modHash) => modsByHash[modHash].pop())
+      .filter((x): x is LockedArmor2Mod => Boolean(x))
   );
   const assigned = Object.values(assignedMods).flat();
   const unassignedMods = Object.values(lockedArmor2Mods)
