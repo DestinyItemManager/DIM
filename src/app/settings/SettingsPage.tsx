@@ -348,15 +348,16 @@ function SettingsPage({
                 value={settings.showNewItems}
                 onChange={onChange}
               />
-
-              <button
-                type="button"
-                className="dim-button"
-                onClick={() => dispatch(clearAllNewItems())}
-                title={t('Hotkey.ClearNewItemsTitle')}
-              >
-                <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
-              </button>
+              <div className="subSetting">
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => dispatch(clearAllNewItems())}
+                  title={t('Hotkey.ClearNewItemsTitle')}
+                >
+                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+                </button>
+              </div>
             </div>
 
             <div className="setting">
