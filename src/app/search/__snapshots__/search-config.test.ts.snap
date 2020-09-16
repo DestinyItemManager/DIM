@@ -90,6 +90,7 @@ Array [
   "year",
   "level",
   "powerlimit",
+  "kills",
   "masterwork",
   "energycapacity",
   "season",

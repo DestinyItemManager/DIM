@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { getItemYear } from 'app/utils/item-utils';
+import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
@@ -80,6 +80,36 @@ const simpleRangeFilters: FilterDefinition[] = [
       return (item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         compareTo(item.powerCap ?? 99999999);
+    },
+  },
+  {
+    keywords: 'kills',
+    description: tl('Filter.MasterworkKills'),
+    format: 'range',
+    destinyVersion: 2,
+    suggestions: ['pve', 'pvp'],
+    filter: ({ filterValue }) => {
+        let count;
+        let activityType;
+        const parts = filterValue.split(':');
+
+        if(parts.length > 2) {
+          throw new Error('Too many filter parameters.');
+        } else if (parts.length === 2) {
+          [activityType, count] = parts;
+        } else {
+          [count] = parts;
+        }
+
+        const numberComparisonFunction = rangeStringToComparator(count);
+        return (item) => {
+          const killTrackerInfo = getItemKillTrackerInfo(item);
+          return Boolean(
+            killTrackerInfo &&
+              (!activityType || activityType === killTrackerInfo.type) &&
+              numberComparisonFunction(killTrackerInfo.count)
+          );
+        }
     },
   },
 ];

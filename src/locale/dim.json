@@ -191,6 +191,7 @@
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
