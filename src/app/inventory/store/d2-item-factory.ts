@@ -165,6 +165,7 @@ export function makeFakeItem(
       isWrapper: false,
       tooltipNotificationIndexes: [],
       metricObjective: {} as DestinyObjectiveProgress,
+      versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
     undefined,
     mergedCollectibles
