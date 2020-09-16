@@ -4,7 +4,12 @@ import {
   itemInfosSelector,
   storesSelector,
 } from 'app/inventory/selectors';
-import { capacityForItem, getVault, isD1Store } from 'app/inventory/stores-helpers';
+import {
+  capacityForItem,
+  findItemsByBucket,
+  getVault,
+  isD1Store,
+} from 'app/inventory/stores-helpers';
 import { settingsSelector } from 'app/settings/reducer';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
@@ -158,7 +163,7 @@ export function makeRoomForItemsInBuckets(
     const itemInfos = itemInfosSelector(getState());
     const itemHashTags = itemHashTagsSelector(getState());
     makeRoomBuckets.forEach((bucket) => {
-      const items = store.buckets[bucket.hash];
+      const items = findItemsByBucket(store, bucket.hash);
       if (items.length > 0 && items.length >= capacityForItem(store, items[0])) {
         const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
         const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(

@@ -5,7 +5,6 @@ import { DestinyColor, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { get } from 'idb-keyval';
 import { createAction } from 'typesafe-actions';
 import { TagValue } from './dim-item-info';
-import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { DimCharacterStat, DimStore } from './store-types';
 
@@ -53,14 +52,9 @@ export const touchItem = createAction('inventory/TOUCH_ITEM')<string>();
 export const error = createAction('inventory/ERROR')<DimError>();
 
 /**
- * Set the bucket info.
+ * An item has moved (or equipped/dequipped)
  */
-export const setBuckets = createAction('inventory/SET_BUCKETS')<InventoryBuckets>();
-
-/**
- * Move an item from one store to another.
- */
-export const moveItem = createAction('inventory/MOVE_ITEM')<{
+export const itemMoved = createAction('inventory/MOVE_ITEM')<{
   item: DimItem;
   source: DimStore;
   target: DimStore;

@@ -13,6 +13,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
   amountOfItem,
+  findItemsByBucket,
   getItemAcrossStores,
   getStore,
   getVault,
@@ -366,7 +367,8 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[]) {
       return;
     }
     let numUnequippedLoadoutItems = 0;
-    for (const existingItem of store.buckets[bucketId]) {
+    const bucketHash = parseInt(bucketId, 10);
+    for (const existingItem of findItemsByBucket(store, bucketHash)) {
       if (existingItem.equipped) {
         // ignore equipped items
         continue;

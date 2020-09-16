@@ -23,6 +23,7 @@ import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
+import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildFlavorObjective, buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
@@ -32,11 +33,6 @@ import { buildTalentGrid } from './talent-grids';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
-/**
- * A factory service for producing DIM inventory items.
- */
-
-let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
 
@@ -57,17 +53,7 @@ export const ItemProto = {
       _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
     }
   },
-  isDestiny1(this: DimItem) {
-    return false;
-  },
-  isDestiny2(this: DimItem) {
-    return true;
-  },
 };
-
-export function resetIdTracker() {
-  _idTracker = {};
-}
 
 /**
  * Process an entire list of items into DIM items.
@@ -113,18 +99,6 @@ export function processItems(
     }
   }
   return result;
-}
-
-/** Set an ID for the item that should be unique across all items */
-export function createItemIndex(item: DimItem): string {
-  // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-  let index = item.id;
-  if (item.id === '0') {
-    _idTracker[index] = (_idTracker[index] || 0) + 1;
-    index = `${index}-t${_idTracker[index]}`;
-  }
-
-  return index;
 }
 
 const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2ManifestDefinitions) => {
@@ -537,16 +511,6 @@ export function makeItem(
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }
-  }
-
-  // linear fusion rifles always seem to contain the "fusion rifle" category as well.
-  // it's a fascinating "did you know", but ultimately not useful to us, so we remove it
-  // because we don't want to filter FRs and see LFRs
-  if (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles)) {
-    const fusionRifleLocation = createdItem.itemCategoryHashes.indexOf(
-      ItemCategoryHashes.FusionRifle
-    );
-    fusionRifleLocation !== -1 && createdItem.itemCategoryHashes.splice(fusionRifleLocation, 1);
   }
 
   // Infusion

@@ -6,6 +6,7 @@ import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { DimStore, DimVault } from './store-types';
 import StoreBucket from './StoreBucket';
+import { findItemsByBucket } from './stores-helpers';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -24,7 +25,7 @@ export function StoreBuckets({
   // Don't show buckets with no items
   if (
     (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
-    !stores.some((s) => s.buckets[bucket.hash].length > 0)
+    !stores.some((s) => findItemsByBucket(s, bucket.hash).length > 0)
   ) {
     return null;
   }
@@ -62,7 +63,7 @@ export function StoreBuckets({
         {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&
           store.destinyVersion === 2 &&
-          store.buckets[bucket.hash].length > 0 && <PullFromPostmaster store={store} />}
+          findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
       </div>
     ));
   }
