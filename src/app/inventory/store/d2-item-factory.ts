@@ -530,7 +530,7 @@ export function makeItem(
 
   // TODO: Phase out "base power"
   if (createdItem.primStat) {
-    createdItem.basePower = createdItem.primStat ? createdItem.primStat.value : 0;
+    createdItem.basePower = createdItem.primStat.value;
   }
 
   createdItem.index = createItemIndex(createdItem);
