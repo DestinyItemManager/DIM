@@ -17,7 +17,7 @@ import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import { bucketsSelector, sortedStoresSelector } from './selectors';
 import { DimStore, DimVault } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
-import { getCurrentStore, getStore, getVault } from './stores-helpers';
+import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface StoreProps {
@@ -207,7 +207,7 @@ function categoryHasItems(
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
     const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
-    return storesToSearch.some((s) => s.buckets[bucket.hash] && s.buckets[bucket.hash].length > 0);
+    return storesToSearch.some((s) => findItemsByBucket(s, bucket.hash).length > 0);
   });
 }
 

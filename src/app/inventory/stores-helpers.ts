@@ -1,4 +1,6 @@
-import { count } from 'app/utils/util';
+import { emptyArray } from 'app/utils/empty';
+import { count, weakMemoize } from 'app/utils/util';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
@@ -33,6 +35,27 @@ export const getAllItems = <Item extends DimItem, Store extends DimStore<Item>>(
 ) => stores.flatMap((s) => (filter ? s.items.filter(filter) : s.items));
 
 /**
+ * This is a memoized function that generates a map of items by their bucket
+ * location. It could be a redux selector but I didn't want to have to thread it
+ * through everywhere, so instead we do our own weak memoization to avoid
+ * recalculation and memory leaks. The items by buckets used to be stored
+ * directly on DimStore, but that violates the rules that allow Immer to work.
+ * An alternative to this would be to have items stored in a map based on their
+ * index and then have buckets reference items by index. This is slightly worse
+ * than what we had before, because it recreates all buckets for the store whenever
+ * the store changes for any reason.
+ */
+const itemsByBucket = weakMemoize((store: DimStore) =>
+  _.groupBy(store.items, (i) => i.location.hash)
+);
+
+/**
+ * Find items in a specific store bucket, taking into account that there may not be any in that bucket!
+ */
+export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] =>
+  itemsByBucket(store)[bucketId] ?? emptyArray();
+
+/**
  * Find an item among all stores that matches the params provided.
  */
 export function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
@@ -62,7 +85,7 @@ export function getItemAcrossStores<Item extends DimItem, Store extends DimStore
 
 /** Get the bonus power from the Seasonal Artifact */
 export function getArtifactBonus(store: DimStore) {
-  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+  const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
   return artifact?.primStat?.value || 0;
 }
 
@@ -121,7 +144,7 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     if (item.bucket.accountWide && !store.current) {
       return 0;
     }
-    occupiedStacks = store.buckets[item.bucket.hash] ? store.buckets[item.bucket.hash].length : 10;
+    occupiedStacks = itemsByBucket(store)[item.bucket.hash].length;
   }
 
   // The open stacks are just however many you *could* fit, minus how many are occupied
@@ -181,4 +204,13 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
  */
 export function isD1Store(store: DimStore): store is D1Store {
   return store.destinyVersion === 1;
+}
+
+/**
+ * Is this store the vault? Use this when you want the store to
+ * automatically be typed as DimVault in the "true" branch of a conditional.
+ * Otherwise you can just check "store.isVault".
+ */
+export function isVault(store: DimStore): store is DimVault {
+  return store.isVault;
 }

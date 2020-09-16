@@ -12,39 +12,14 @@ import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D1GridNode, D1Item, D1Stat, D1TalentGrid, DimItem } from '../item-types';
+import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
+import { createItemIndex } from './item-index';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
-
-let _idTracker: { [id: string]: number } = {};
-// A map from instance id to the last time it was manually moved this session
-const _moveTouchTimestamps = new Map<string, number>();
-
-// Prototype for Item objects - add methods to this to add them to all
-// items.
-export const ItemProto = {
-  // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: D1Item) {
-    this.lastManuallyMoved = Date.now();
-    if (this.id !== '0') {
-      _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
-    }
-  },
-  isDestiny1(this: D1Item) {
-    return true;
-  },
-  isDestiny2(this: D1Item) {
-    return false;
-  },
-};
-
-export function resetIdTracker() {
-  _idTracker = {};
-}
 
 /**
  * Process an entire list of items into DIM items.
@@ -255,7 +230,7 @@ function makeItem(
     itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
   }
 
-  const itemProps: Omit<D1Item, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+  const createdItem: D1Item = {
     owner: owner.id,
     // figure out what year this item is probably from
     destinyVersion: 1,
@@ -313,8 +288,6 @@ function makeItem(
     tracked: item.state === 2,
     locked: item.locked,
     classified: Boolean(itemDef.classified),
-    lastManuallyMoved:
-      item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
     // These get filled in later or aren't relevant to D1 items
     percentComplete: 0,
     talentGrid: null,
@@ -342,8 +315,6 @@ function makeItem(
     powerCap: null,
     pursuit: null,
   };
-
-  const createdItem: D1Item = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);
@@ -450,18 +421,6 @@ function getAmmoType(itemType: string) {
   }
 
   return DestinyAmmunitionType.None;
-}
-
-// Set an ID for the item that should be unique across all items
-export function createItemIndex(item: DimItem) {
-  // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-  let index = item.id;
-  if (item.id === '0') {
-    _idTracker[index] = (_idTracker[index] || 0) + 1;
-    index = `${index}-t${_idTracker[index]}`;
-  }
-
-  return index;
 }
 
 function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {

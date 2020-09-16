@@ -22,8 +22,6 @@ export interface DimStore<Item = DimItem> {
   name: string;
   /** All items in the store, across all buckets. */
   items: Item[];
-  /** All items, grouped by their bucket. */
-  buckets: { [bucketHash: number]: Item[] };
   /** The Destiny version this store came from. */
   destinyVersion: DestinyVersion;
   /** An icon (emblem) for the store. */
@@ -70,12 +68,6 @@ export interface DimStore<Item = DimItem> {
   /** The vault associated with this store. */
   vault?: DimVault;
   color?: DestinyColor;
-
-  /** Remove an item from this store. Returns whether it actually removed anything. */
-  removeItem(item: Item): boolean;
-
-  /** Add an item to the store. */
-  addItem(item: Item): void;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */

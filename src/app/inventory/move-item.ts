@@ -13,6 +13,7 @@ import { queueAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
 import { moveItemTo as moveTo } from './item-move-service';
 import { DimItem } from './item-types';
+import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
@@ -132,7 +133,7 @@ export function moveItemTo(
         dispatch(updateCharacters());
       }
 
-      item.updateManualMoveTimestamp();
+      updateManualMoveTimestamp(item);
     } catch (e) {
       console.error('error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting

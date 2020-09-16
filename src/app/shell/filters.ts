@@ -103,7 +103,7 @@ const ITEM_SORT_DENYLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
-  215593132, // LostItems
+  BucketHashes.LostItems, // LostItems
 ]);
 
 // TODO: pass in state
