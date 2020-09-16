@@ -24,7 +24,7 @@ import {
   transfer as d2Transfer,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { itemMoved, touchItem } from './actions';
+import { itemLockStateChanged, itemMoved } from './actions';
 import {
   characterDisplacePriority,
   getTag,
@@ -78,14 +78,7 @@ export function setItemLockState(
       await d1SetItemState(account, item, storeId, state, type);
     }
 
-    if (type === 'lock') {
-      item.locked = state;
-    } else if (type === 'track') {
-      item.tracked = state;
-    }
-
-    // TODO: dispatch a better action to mutate the item!
-    dispatch(touchItem(item.id));
+    dispatch(itemLockStateChanged({ item, state, type }));
   };
 }
 

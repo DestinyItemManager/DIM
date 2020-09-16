@@ -9,10 +9,8 @@ import { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
-import { ItemProto as D1ItemProto } from './store/d1-item-factory';
-import { ItemProto as D2ItemProto } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
-import { findItemsByBucket, getItemAcrossStores, getStore, isVault } from './stores-helpers';
+import { findItemsByBucket, getStore, isVault } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -54,16 +52,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
-    case getType(actions.touch):
-      return {
-        ...state,
-        // Make a new array to break change detection for the root stores components
-        stores: [...state.stores],
-      };
-
-    case getType(actions.touchItem):
-      return touchItem(state, action.payload);
-
     case getType(actions.charactersUpdated):
       return updateCharacters(state, action.payload);
 
@@ -71,6 +59,11 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.itemMoved): {
       const { item, source, target, equip, amount } = action.payload;
       return produce(state, (draft) => itemMoved(draft, item, source.id, target.id, equip, amount));
+    }
+
+    case getType(actions.itemLockStateChanged): {
+      const { item, state: lockState, type } = action.payload;
+      return produce(state, (draft) => itemLockStateChanged(draft, item, lockState, type));
     }
 
     case getType(actions.error):
@@ -268,27 +261,6 @@ function setsEqual<T>(first: Set<T>, second: Set<T>) {
   return equal;
 }
 
-function touchItem(state: InventoryState, itemId: string) {
-  let item = getItemAcrossStores(state.stores, { id: itemId })!;
-  if (!item) {
-    return state;
-  }
-  let store = getStore(state.stores, item.owner)!;
-  item = Object.assign(
-    Object.create(store.destinyVersion === 2 ? D2ItemProto : D1ItemProto),
-    item
-  ) as DimItem;
-  store = {
-    ...store,
-    items: store.items.map((i) => (i.id === item.id ? item : i)),
-  };
-
-  return {
-    ...state,
-    stores: state.stores.map((s) => (s.id === store.id ? store : s)),
-  };
-}
-
 /**
  * Update our item and store models after an item has been moved (or equipped/dequipped).
  * @return the new or updated item (it may create a new item!)
@@ -409,6 +381,32 @@ function itemMoved(
         i.equipped = i.index === item.index;
       }
     }
+  }
+}
+
+function itemLockStateChanged(
+  draft: Draft<InventoryState>,
+  item: DimItem,
+  state: boolean,
+  type: 'lock' | 'track'
+) {
+  const source = getStore(draft.stores, item.owner);
+  if (!source) {
+    // TODO: log error
+    return;
+  }
+
+  // Only instanced items can be locked/tracked
+  item = source.items.find((i) => i.id === item.id)!;
+  if (!item) {
+    // TODO: log error
+    return;
+  }
+
+  if (type === 'lock') {
+    item.locked = state;
+  } else if (type === 'track') {
+    item.tracked = state;
   }
 }
 

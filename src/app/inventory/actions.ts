@@ -35,18 +35,6 @@ export interface CharacterInfo {
 export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterInfo[]>();
 
 /**
- * Force stores to be updated to reflect a change. This is a hack that should go
- * away as we normalize inventory state.
- */
-export const touch = createAction('inventory/TOUCH')();
-
-/**
- * Force stores to be updated to reflect a change in a single item by instance ID. This is a hack that should go
- * away as we normalize inventory state.
- */
-export const touchItem = createAction('inventory/TOUCH_ITEM')<string>();
-
-/**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const error = createAction('inventory/ERROR')<DimError>();
@@ -60,6 +48,16 @@ export const itemMoved = createAction('inventory/MOVE_ITEM')<{
   target: DimStore;
   equip: boolean;
   amount: number;
+}>();
+
+/*
+ * An item has been locked or unlocked (or tracked/untracked)
+ */
+export const itemLockStateChanged = createAction('inventory/ITEM_LOCK')<{
+  item: DimItem;
+
+  state: boolean;
+  type: 'lock' | 'track';
 }>();
 
 /** Update the set of new items. */
