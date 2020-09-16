@@ -61,7 +61,6 @@ export interface DimStore<Item = DimItem> {
     [hash: number]: DimCharacterStat;
   };
   /** Character progression. */
-  // TODO: wtf
   progression: null | {
     progressions: DestinyProgression[];
   };
