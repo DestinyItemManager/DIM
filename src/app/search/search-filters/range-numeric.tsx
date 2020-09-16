@@ -97,7 +97,7 @@ const simpleRangeFilters: FilterDefinition[] = [
           throw new Error('Too many filter parameters.');
         } else if (parts.length === 2) {
           [activityType, count] = parts;
-        } else {
+        } else if(parts.length === 1) {
           [count] = parts;
         }
 
@@ -105,6 +105,7 @@ const simpleRangeFilters: FilterDefinition[] = [
         return (item) => {
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return Boolean(
+            count &&
             killTrackerInfo &&
               (!activityType || activityType === killTrackerInfo.type) &&
               numberComparisonFunction(killTrackerInfo.count)
