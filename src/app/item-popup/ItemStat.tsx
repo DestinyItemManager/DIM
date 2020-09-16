@@ -102,7 +102,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         {displayValue}
       </div>
 
-      {item?.isDestiny2() && statsMs.includes(stat.statHash) && (
+      {item?.destinyVersion === 2 && statsMs.includes(stat.statHash) && (
         <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
       )}
 
@@ -269,7 +269,7 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
-  return item.isDestiny1();
+  return item.destinyVersion === 1;
 }
 
 /**

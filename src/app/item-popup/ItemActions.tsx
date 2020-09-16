@@ -71,7 +71,7 @@ export default function ItemActions({
 
   const canConsolidate =
     !item.notransfer && item.location.hasTransferDestination && item.maxStackSize > 1;
-  const canDistribute = item.isDestiny1() && !item.notransfer && item.maxStackSize > 1;
+  const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
   return (
     <>
@@ -115,7 +115,7 @@ export default function ItemActions({
           <ItemActionButtonGroup vertical={Boolean(mobileInspect)}>
             <ItemActionButton
               className={clsx(styles.infusePerk, {
-                [styles.destiny2]: item.isDestiny2(),
+                [styles.destiny2]: item.destinyVersion === 2,
                 [styles.weapons]: item.bucket.sort === 'Weapons',
                 [styles.armor]: item.bucket.sort === 'Armor',
               })}

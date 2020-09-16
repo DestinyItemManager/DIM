@@ -40,7 +40,7 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
  */
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-  if (store.isDestiny2()) {
+  if (store.destinyVersion === 2) {
     const exactLight = _.sumBy(items, (i) => i.primStat!.value) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {

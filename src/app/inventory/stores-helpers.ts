@@ -4,7 +4,7 @@ import _ from 'lodash';
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
 import { DimItem } from './item-types';
-import { DimStore, DimVault } from './store-types';
+import { D1Store, DimStore, DimVault } from './store-types';
 
 /**
  * Get whichever character was last played.
@@ -172,4 +172,13 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     }
     return Math.max(openStacks * maxStackSize - existingAmount, 0);
   }
+}
+
+/**
+ * Is this store a Destiny 1 store? Use this when you want the store to
+ * automatically be typed as D1 store in the "true" branch of a conditional.
+ * Otherwise you can just check "destinyVersion === 1".
+ */
+export function isD1Store(store: DimStore): store is D1Store {
+  return store.destinyVersion === 1;
 }

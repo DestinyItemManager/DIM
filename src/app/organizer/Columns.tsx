@@ -41,6 +41,7 @@ import {
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
+  isD1Item,
   modMetadataByTag,
 } from 'app/utils/item-utils';
 import { isUsedModSocket } from 'app/utils/socket-utils';
@@ -330,14 +331,14 @@ export function getColumns(
     destinyVersion === 2 && {
       id: 'season',
       header: t('Organizer.Columns.Season'),
-      value: (i) => i.isDestiny2() && getSeason(i),
+      value: (i) => getSeason(i),
       filter: (value) => `season:${value}`,
     },
     destinyVersion === 2 && {
       id: 'event',
       header: t('Organizer.Columns.Event'),
       value: (item) => {
-        const event = item.isDestiny2() && getEvent(item);
+        const event = getEvent(item);
         return event ? D2EventInfo[event].name : undefined;
       },
       filter: (value) => `event:${value}`,
@@ -418,7 +419,7 @@ export function getColumns(
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_, item) =>
-        item.isDestiny1() ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
+        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -440,7 +441,7 @@ export function getColumns(
       isArmor && {
         id: 'quality',
         header: t('Organizer.Columns.Quality'),
-        value: (item) => (item.isDestiny1() && item.quality ? item.quality.min : 0),
+        value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
         cell: (value: number) => <span style={getColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       },
@@ -596,7 +597,7 @@ function PerksCell({
 }
 
 function D1PerksCell({ item }: { item: D1Item }) {
-  if (!item.isDestiny1() || !item.talentGrid) {
+  if (!isD1Item(item) || !item.talentGrid) {
     return null;
   }
   const sockets = Object.values(
@@ -620,7 +621,7 @@ function D1PerksCell({ item }: { item: D1Item }) {
         >
           {socket.map(
             (p) =>
-              item.isDestiny1() && (
+              isD1Item(item) && (
                 <PressTip
                   key={p.hash}
                   tooltip={

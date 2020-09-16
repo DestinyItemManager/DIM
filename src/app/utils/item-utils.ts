@@ -1,6 +1,7 @@
 import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
+  D1Item,
   DimItem,
   DimMasterwork,
   DimSocket,
@@ -160,7 +161,7 @@ export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
     // can be moved or is already here
     (!item.notransfer || item.owner === store.id) &&
     !item.location.inPostmaster &&
-    (item.isDestiny1() ? factionItemAligns(store, item) : true)
+    (isD1Item(item) ? factionItemAligns(store, item) : true)
   );
 }
 /** Could this be added to a loadout? */
@@ -221,10 +222,10 @@ const d1YearSourceHashes = {
  * Which "Year" of Destiny did this item come from?
  */
 export function getItemYear(item: DimItem) {
-  if (item.isDestiny2()) {
+  if (item.destinyVersion === 2) {
     // TODO: D2SeasonInfo is only used for year?
     return D2SeasonInfo[getSeason(item)].year;
-  } else if (item.isDestiny1()) {
+  } else if (isD1Item(item)) {
     if (!item.sourceHashes) {
       return 1;
     }
@@ -258,4 +259,13 @@ export function getItemYear(item: DimItem) {
   } else {
     return undefined;
   }
+}
+
+/**
+ * Is this item a Destiny 1 item? Use this when you want the item to
+ * automatically be typed as D1 item in the "true" branch of a conditional.
+ * Otherwise you can just check "destinyVersion === 1".
+ */
+export function isD1Item(item: DimItem): item is D1Item {
+  return item.destinyVersion === 1;
 }

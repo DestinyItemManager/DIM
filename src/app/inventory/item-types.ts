@@ -191,11 +191,6 @@ export interface DimItem {
 
   /** "Touch" the item to mark it as having been manually moved. */
   updateManualMoveTimestamp(): void;
-
-  /** Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item. */
-  isDestiny1(): this is D1Item;
-  /** Check if this item is from D2. */
-  isDestiny2(): boolean;
 }
 
 /**

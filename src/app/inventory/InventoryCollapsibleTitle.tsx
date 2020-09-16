@@ -64,7 +64,7 @@ function InventoryCollapsibleTitle({
         })}
       >
         {stores.map((store, index) => {
-          const storeIsDestiny2 = store.isDestiny2();
+          const storeIsDestiny2 = store.destinyVersion === 2;
           const isPostmasterAlmostFull = postmasterAlmostFull(store);
           const postMasterSpaceUsed = postmasterSpaceUsed(store);
           const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;

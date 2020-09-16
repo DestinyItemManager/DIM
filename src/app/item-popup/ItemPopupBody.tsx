@@ -52,7 +52,7 @@ export default function ItemPopupBody({
   ];
   if (
     $featureFlags.triage &&
-    item.isDestiny2() &&
+    item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
       (item.bucket.sort === 'Weapons' &&
         item.bucket.type !== 'SeasonalArtifacts' &&

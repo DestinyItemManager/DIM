@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import iconStyles from 'app/inventory/ElementIcon.m.scss';
+import { isD1Item } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/util';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
@@ -49,7 +50,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
   const isGhost = Boolean(
-    item.isDestiny2?.() && item.itemCategoryHashes?.includes(ItemCategoryHashes.Ghost)
+    item?.destinyVersion === 2 && item.itemCategoryHashes?.includes(ItemCategoryHashes.Ghost)
   );
   const isGeneric = !isBounty && !isStackable && !isGhost;
 
@@ -85,7 +86,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
 
   return (
     <div className={clsx(styles.badge, badgeclsx)}>
-      {item.isDestiny1() && item.quality && (
+      {isD1Item(item) && item.quality && (
         <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
           {item.quality.min}%
         </div>

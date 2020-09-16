@@ -50,9 +50,9 @@ function Farming({ store, makeRoomForItems, dispatch }: Props) {
           <div
             ref={nodeRef}
             id="item-farming"
-            className={clsx({ 'd2-farming': store.isDestiny2() })}
+            className={clsx({ 'd2-farming': store.destinyVersion === 2 })}
           >
-            {store.isDestiny2() ? (
+            {store.destinyVersion === 2 ? (
               <div>
                 <p>
                   {t('FarmingMode.D2Desc', {

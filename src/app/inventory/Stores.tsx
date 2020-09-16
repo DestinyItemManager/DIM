@@ -292,7 +292,7 @@ function StoresInventory(props: InventoryContainerProps) {
           inventoryBucket={inventoryBucket}
         />
       ))}
-      {stores[0].isDestiny1() && <D1ReputationSection stores={stores} />}
+      {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
     </>
   );
 }

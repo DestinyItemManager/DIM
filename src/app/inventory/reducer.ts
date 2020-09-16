@@ -32,7 +32,7 @@ export interface InventoryState {
   readonly newItemsLoaded: boolean;
 
   /** Are we currently dragging a stack? */
-  readonly isDraggingStack;
+  readonly isDraggingStack: boolean;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -160,7 +160,7 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
       const { characterId, ...characterInfo } = character;
       return Object.assign(
         // Have to make it into a full object again. TODO: un-object-ify this
-        Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto),
+        Object.create(store.destinyVersion === 2 ? D2StoreProto : D1StoreProto),
         {
           ...store,
           ...characterInfo,
@@ -279,10 +279,10 @@ function touchItem(state: InventoryState, itemId: string) {
   }
   let store = getStore(state.stores, item.owner)!;
   item = Object.assign(
-    Object.create(store.isDestiny2() ? D2ItemProto : D1ItemProto),
+    Object.create(store.destinyVersion === 2 ? D2ItemProto : D1ItemProto),
     item
   ) as DimItem;
-  store = Object.assign(Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto), {
+  store = Object.assign(Object.create(store.destinyVersion === 2 ? D2StoreProto : D1StoreProto), {
     ...store,
     items: store.items.map((i) => (i.id === item.id ? item : i)),
     buckets: {

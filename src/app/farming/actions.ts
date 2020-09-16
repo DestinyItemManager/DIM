@@ -4,7 +4,7 @@ import {
   itemInfosSelector,
   storesSelector,
 } from 'app/inventory/selectors';
-import { capacityForItem, getVault } from 'app/inventory/stores-helpers';
+import { capacityForItem, getVault, isD1Store } from 'app/inventory/stores-helpers';
 import { settingsSelector } from 'app/settings/reducer';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
@@ -75,7 +75,7 @@ export function startFarming(storeId: string): ThunkResult {
       if (farmingInterruptedSelector(getState())) {
         console.log('Farming interrupted, will resume when tasks are complete');
       } else {
-        if (farmingStore.isDestiny1()) {
+        if (isD1Store(farmingStore)) {
           dispatch(farmD1(farmingStore));
         } else {
           // In D2 we just make room

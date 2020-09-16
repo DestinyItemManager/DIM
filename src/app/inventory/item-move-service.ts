@@ -70,13 +70,13 @@ export function setItemLockState(
     const storeId =
       item.owner === 'vault' ? getCurrentStore(storesSelector(getState()))!.id : item.owner;
 
-    if (item.isDestiny2()) {
+    if (item.destinyVersion === 2) {
       if (type === 'lock') {
         await d2SetLockState(account, storeId, item, state);
       } else {
         await d2SetTrackedState(account, storeId, item, state);
       }
-    } else if (item.isDestiny1()) {
+    } else if (item.destinyVersion === 1) {
       await d1SetItemState(account, item, storeId, state, type);
     }
 
@@ -104,9 +104,9 @@ function transferApi(item: DimItem): typeof d2Transfer {
 }
 
 function createItemIndex(item: DimItem): string {
-  if (item.isDestiny2()) {
+  if (item.destinyVersion === 2) {
     return d2CreateItemIndex(item);
-  } else if (item.isDestiny1()) {
+  } else if (item.destinyVersion === 1) {
     return d1CreateItemIndex(item);
   } else {
     throw new Error('Destiny 3??');

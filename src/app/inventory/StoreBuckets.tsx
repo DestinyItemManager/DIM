@@ -53,13 +53,15 @@ export function StoreBuckets({
         className={clsx('store-cell', {
           vault: store.isVault,
           postmasterFull:
-            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store),
+            bucket.sort === 'Postmaster' &&
+            store.destinyVersion === 2 &&
+            postmasterAlmostFull(store),
         })}
         style={storeBackgroundColor(store, index)}
       >
         {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&
-          store.isDestiny2() &&
+          store.destinyVersion === 2 &&
           store.buckets[bucket.hash].length > 0 && <PullFromPostmaster store={store} />}
       </div>
     ));

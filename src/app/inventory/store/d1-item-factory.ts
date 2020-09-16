@@ -12,7 +12,7 @@ import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
+import { D1GridNode, D1Item, D1Stat, D1TalentGrid, DimItem } from '../item-types';
 import { D1Store } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
@@ -453,7 +453,7 @@ function getAmmoType(itemType: string) {
 }
 
 // Set an ID for the item that should be unique across all items
-export function createItemIndex(item: D1Item) {
+export function createItemIndex(item: DimItem) {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
