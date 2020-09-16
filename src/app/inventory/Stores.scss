@@ -20,8 +20,6 @@
   );
   @include phone-portrait {
     min-width: auto;
-    // Give room for the category selector strip
-    padding-bottom: 50px;
   }
 
   .body-scroll-lock & {
@@ -44,6 +42,13 @@
   @include phone-portrait {
     // Full-width, single column
     grid-template-columns: 1fr;
+  }
+
+  @include phone-portrait {
+    &:last-child .store-cell {
+      // Give room for the category selector strip
+      padding-bottom: 50px;
+    }
   }
 }
 
