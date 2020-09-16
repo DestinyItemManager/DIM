@@ -725,8 +725,9 @@
   "SearchHistory": {
     "Date": "Last Used",
     "Description": "These are all your past and saved searches. You can delete them from here.",
-    "Link": "View and edit search history.",
+    "Link": "View and edit search history",
     "Query": "Search",
+    "Title": "Search History",
     "UsageCount": "# Used"
   },
   "Settings": {
