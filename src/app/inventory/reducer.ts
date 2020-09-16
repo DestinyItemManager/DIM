@@ -48,14 +48,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
   action: InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
-    // TODO: rename to "replace inventory"
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
     case getType(actions.charactersUpdated):
       return updateCharacters(state, action.payload);
 
-    // TODO: lock/unlock, track/untrack, etc
     case getType(actions.itemMoved): {
       const { item, source, target, equip, amount } = action.payload;
       return produce(state, (draft) => itemMoved(draft, item, source.id, target.id, equip, amount));
@@ -263,7 +261,6 @@ function setsEqual<T>(first: Set<T>, second: Set<T>) {
 
 /**
  * Update our item and store models after an item has been moved (or equipped/dequipped).
- * @return the new or updated item (it may create a new item!)
  */
 function itemMoved(
   draft: Draft<InventoryState>,
@@ -278,7 +275,7 @@ function itemMoved(
   const source = getStore(stores, sourceStoreId);
   const target = getStore(stores, targetStoreId);
   if (!source || !target) {
-    // TODO: log error
+    console.warn('Either source or target store not found', source, target);
     return;
   }
 
@@ -286,7 +283,7 @@ function itemMoved(
     (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash
   )!;
   if (!item) {
-    // TODO: log error
+    console.warn('Moved item not found', item);
     return;
   }
 
@@ -331,7 +328,7 @@ function itemMoved(
     while (removeAmount > 0) {
       const sourceItem = sourceItems.shift();
       if (!sourceItem) {
-        // TODO: log error
+        console.warn('Source item missing', item);
         return;
       }
 
@@ -392,14 +389,14 @@ function itemLockStateChanged(
 ) {
   const source = getStore(draft.stores, item.owner);
   if (!source) {
-    // TODO: log error
+    console.warn('Store', item.owner, 'not found');
     return;
   }
 
   // Only instanced items can be locked/tracked
   item = source.items.find((i) => i.id === item.id)!;
   if (!item) {
-    // TODO: log error
+    console.warn('Item not found in stores', item);
     return;
   }
 

@@ -494,6 +494,16 @@ export function makeItem(
     }
   }
 
+  // linear fusion rifles always seem to contain the "fusion rifle" category as well.
+  // it's a fascinating "did you know", but ultimately not useful to us, so we remove it
+  // because we don't want to filter FRs and see LFRs
+  if (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles)) {
+    const fusionRifleLocation = createdItem.itemCategoryHashes.indexOf(
+      ItemCategoryHashes.FusionRifle
+    );
+    fusionRifleLocation !== -1 && createdItem.itemCategoryHashes.splice(fusionRifleLocation, 1);
+  }
+
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionFuel = Boolean(

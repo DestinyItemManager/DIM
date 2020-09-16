@@ -144,7 +144,7 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     if (item.bucket.accountWide && !store.current) {
       return 0;
     }
-    occupiedStacks = itemsByBucket(store)[item.bucket.hash]?.length ?? 10;
+    occupiedStacks = itemsByBucket(store)[item.bucket.hash].length;
   }
 
   // The open stacks are just however many you *could* fit, minus how many are occupied
