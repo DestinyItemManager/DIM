@@ -1,6 +1,5 @@
 import { tl } from 'app/i18next-t';
 import { getItemYear } from 'app/utils/item-utils';
-import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;

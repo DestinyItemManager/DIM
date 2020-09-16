@@ -18,6 +18,10 @@
 * Armor 1.0 mods and Elemental Affinities removed from the perk picker in Loadout Optimizer.
 * Improved search performance.
 
+### Beta Only
+
+* On mobile, there is now a bar to quickly swap between different item categories on the inventory screen.
+
 ## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
 
 * Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.
