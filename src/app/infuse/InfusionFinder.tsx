@@ -28,7 +28,7 @@ import { showInfuse$ } from './infuse';
 import './InfusionFinder.scss';
 
 const itemComparator = chainComparator(
-  reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
+  reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
   compareBy((item: DimItem) =>
     isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
