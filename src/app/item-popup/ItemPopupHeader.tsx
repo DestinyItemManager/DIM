@@ -50,10 +50,9 @@ export default function ItemPopupHeader({
 
   useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
 
-  const finalSeason = item.powerCap && getItemPowerCapFinalSeason(item);
+  const finalSeason = getItemPowerCapFinalSeason(item);
   const powerCapString =
-    light &&
-    item.powerCap &&
+    (light || item.powerCap) &&
     (finalSeason
       ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
       : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
