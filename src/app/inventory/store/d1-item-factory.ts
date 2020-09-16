@@ -21,21 +21,6 @@ import { createItemIndex } from './item-index';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
-// A map from instance id to the last time it was manually moved this session
-const _moveTouchTimestamps = new Map<string, number>();
-
-// Prototype for Item objects - add methods to this to add them to all
-// items.
-export const ItemProto = {
-  // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: D1Item) {
-    this.lastManuallyMoved = Date.now();
-    if (this.id !== '0') {
-      _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
-    }
-  },
-};
-
 /**
  * Process an entire list of items into DIM items.
  * @param owner the ID of the owning store.
@@ -245,7 +230,7 @@ function makeItem(
     itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
   }
 
-  const itemProps: Omit<D1Item, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+  const createdItem: D1Item = {
     owner: owner.id,
     // figure out what year this item is probably from
     destinyVersion: 1,
@@ -303,8 +288,6 @@ function makeItem(
     tracked: item.state === 2,
     locked: item.locked,
     classified: Boolean(itemDef.classified),
-    lastManuallyMoved:
-      item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
     // These get filled in later or aren't relevant to D1 items
     percentComplete: 0,
     talentGrid: null,
@@ -332,8 +315,6 @@ function makeItem(
     powerCap: null,
     pursuit: null,
   };
-
-  const createdItem: D1Item = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);

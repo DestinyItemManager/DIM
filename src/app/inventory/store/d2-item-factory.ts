@@ -33,27 +33,10 @@ import { buildTalentGrid } from './talent-grids';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
-// A map from instance id to the last time it was manually moved this session
-const _moveTouchTimestamps = new Map<string, number>();
-
 const collectiblesByItemHash = _.once(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
     _.keyBy(Collectible, (c) => c.itemHash)
 );
-
-/**
- * Prototype for Item objects - add methods to this to add them to all
- * items. Items use classic JS prototype inheritance.
- */
-export const ItemProto = {
-  // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: DimItem) {
-    this.lastManuallyMoved = Date.now();
-    if (this.id !== '0') {
-      _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
-    }
-  },
-};
 
 /**
  * Process an entire list of items into DIM items.
@@ -297,7 +280,7 @@ export function makeItem(
     }
   }
 
-  const itemProps: Omit<DimItem, 'isDestiny2' | 'isDestiny1' | 'updateManualMoveTimestamp'> = {
+  const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -349,7 +332,6 @@ export function makeItem(
     classified: Boolean(itemDef.redacted),
     isEngram,
     loreHash: itemDef.loreHash,
-    lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
@@ -388,7 +370,6 @@ export function makeItem(
     flavorObjective: null,
     infusionQuality: null,
   };
-  const createdItem: DimItem = Object.assign(Object.create(ItemProto), itemProps);
 
   // *able
   createdItem.taggable = Boolean(

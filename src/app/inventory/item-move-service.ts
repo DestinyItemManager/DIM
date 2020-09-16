@@ -32,6 +32,7 @@ import {
   vaultDisplacePriority,
 } from './dim-item-info';
 import { DimItem } from './item-types';
+import { getLastManuallyMoved } from './manual-moves';
 import { itemHashTagsSelector, itemInfosSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import {
@@ -948,7 +949,7 @@ export function sortMoveAsideCandidatesForStore(
       // or at least same category
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is
-      compareBy((i) => -i.lastManuallyMoved),
+      compareBy((i) => -getLastManuallyMoved(i)),
       // Engrams prefer to be in the vault, so not-engram is larger than engram
       compareBy((i) => (fromStore.isVault ? !i.isEngram : i.isEngram)),
       // Prefer moving things the target store can use
