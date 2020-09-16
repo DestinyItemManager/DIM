@@ -103,7 +103,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
         <ScrollClassDiv
           className="store-row store-header"
           scrollClass="sticky"
-          style={storeBackgroundColor(selectedStore, 0, true)}
+          style={storeBackgroundColor(selectedStore, 0, true, isPhonePortrait)}
           onTouchStart={(e) => e.stopPropagation()}
         >
           <ViewPager>
@@ -137,7 +137,10 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
             {$featureFlags.unstickyStats && (
               <StoreStats
                 store={selectedStore}
-                style={{ ...storeBackgroundColor(selectedStore, 0, true), paddingBottom: 8 }}
+                style={{
+                  ...storeBackgroundColor(selectedStore, 0, true, isPhonePortrait),
+                  paddingBottom: 8,
+                }}
               />
             )}
             <StoresInventory
@@ -249,6 +252,7 @@ function CollapsibleContainer({
           stores={stores}
           vault={vault}
           currentStore={currentStore}
+          isPhonePortrait={false}
         />
       ))}
     </InventoryCollapsibleTitle>
@@ -276,6 +280,7 @@ function StoresInventory(props: InventoryContainerProps) {
             stores={stores}
             vault={vault}
             currentStore={currentStore}
+            isPhonePortrait={true}
           />
         ))}
       </>

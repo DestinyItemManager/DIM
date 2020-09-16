@@ -14,11 +14,13 @@ export function StoreBuckets({
   stores,
   vault,
   currentStore,
+  isPhonePortrait,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
   vault: DimStore;
   currentStore: DimStore;
+  isPhonePortrait: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -58,7 +60,7 @@ export function StoreBuckets({
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),
         })}
-        style={storeBackgroundColor(store, index)}
+        style={storeBackgroundColor(store, index, false, isPhonePortrait)}
       >
         {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&

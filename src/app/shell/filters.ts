@@ -224,8 +224,13 @@ export function getColor(value: number, property = 'background-color') {
   };
 }
 
-export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
-  if ($featureFlags.gradientBackground || !store.color) {
+export function storeBackgroundColor(
+  store: DimStore,
+  index = 0,
+  header = false,
+  isPhonePortrait = false
+) {
+  if ($featureFlags.gradientBackground || !store.color || isPhonePortrait) {
     return undefined;
   }
 
