@@ -5,7 +5,7 @@ import { FilterDefinition } from '../filter-types';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
-export function rangeStringToComparator(rangeString: string) {
+export function rangeStringToComparator(rangeString?: string) {
   if (!rangeString) {
     throw new Error('Missing range comparison');
   }
@@ -89,16 +89,11 @@ const simpleRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
     filter: ({ filterValue }) => {
-        let count;
-        let activityType;
         const parts = filterValue.split(':');
+        const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
-        if(parts.length > 2) {
+        if(shouldntExist) {
           throw new Error('Too many filter parameters.');
-        } else if (parts.length === 2) {
-          [activityType, count] = parts;
-        } else if(parts.length === 1) {
-          [count] = parts;
         }
 
         const numberComparisonFunction = rangeStringToComparator(count);
