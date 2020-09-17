@@ -73,7 +73,7 @@ export function StoreBuckets({
 
   return (
     <div className={`store-row bucket-${bucket.hash}`}>
-      {labels && <BucketLabel bucket={bucket} />}
+      {labels && <BucketLabel store={stores[0]} bucket={bucket} />}
       {content}
     </div>
   );
