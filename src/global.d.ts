@@ -41,6 +41,8 @@ declare const $featureFlags: {
   gradientBackground: boolean;
   /** Use mobile category strip on inventory page */
   mobileCategoryStrip: boolean;
+  /** Move the pull from button to the bucket label */
+  movePullFromButton: boolean;
 };
 
 declare namespace React {

@@ -24,9 +24,7 @@ export default function PullFromBucketButton({ label, className, bucket, store }
     try {
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
-          item.bucket.hash === bucket.hash &&
-          itemCanBeEquippedBy(item, store) &&
-          item.owner !== store.id, // Filter items that are already on the character
+          item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
         prompt: t('MovePopup.PullItem', {
           bucket: bucket.name,
           store: store.name,

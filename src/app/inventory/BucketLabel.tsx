@@ -36,7 +36,9 @@ function BucketLabel({
             defs.InventoryBucket[bucket.hash]?.title}
         </div>
       )}
-      <PullFromBucketButton store={store} bucket={bucket} label={t('StoreBucket.Add')} />
+      {$featureFlags.movePullFromButton && (
+        <PullFromBucketButton store={store} bucket={bucket} label={t('StoreBucket.Add')} />
+      )}
     </div>
   );
 }
