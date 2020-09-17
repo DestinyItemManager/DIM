@@ -134,12 +134,6 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
 
         <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
           <div>
-            {$featureFlags.unstickyStats && selectedCategoryId === 'Armor' && (
-              <StoreStats
-                store={selectedStore}
-                style={{ ...storeBackgroundColor(selectedStore, 0, true), paddingBottom: 8 }}
-              />
-            )}
             <StoresInventory
               stores={[selectedStore]}
               selectedCategoryId={selectedCategoryId}
