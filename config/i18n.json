@@ -743,7 +743,8 @@
     "Date": "Last Used",
     "UsageCount": "# Used",
     "Query": "Search",
-    "Link": "View and edit search history."
+    "Link": "View and edit search history",
+    "Title": "Search History"
   },
   "Settings": {
     "CharacterOrder": "Sort characters by",

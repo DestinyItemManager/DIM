@@ -20,6 +20,8 @@
   );
   @include phone-portrait {
     min-width: auto;
+    // Give room for the category selector strip
+    padding-bottom: 50px;
   }
 
   .body-scroll-lock & {
@@ -241,26 +243,29 @@
 .category-options {
   display: flex;
   background-color: black;
-  height: 50px;
   position: fixed;
+  align-items: center;
   bottom: 0;
   top: inherit;
   left: 0;
-  width: 94%;
-  padding: 0 3%;
+  right: 0;
+  $vpadding: 15px;
+  padding: ($vpadding + 1) 10px ($vpadding - 1) 10px;
   justify-content: space-around;
+  padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
+  padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
 
   > div {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 1.2px;
-    padding-bottom: 1px;
+    border-bottom: 2px solid transparent;
   }
   .selected {
     font-weight: bold;
+    border-bottom: 2px solid $orange;
   }
 }

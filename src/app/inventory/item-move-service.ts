@@ -6,7 +6,6 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -25,7 +24,7 @@ import {
   transfer as d2Transfer,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { touch, touchItem } from './actions';
+import { itemLockStateChanged, itemMoved } from './actions';
 import {
   characterDisplacePriority,
   getTag,
@@ -33,12 +32,12 @@ import {
   vaultDisplacePriority,
 } from './dim-item-info';
 import { DimItem } from './item-types';
+import { getLastManuallyMoved } from './manual-moves';
 import { itemHashTagsSelector, itemInfosSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
-import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
-import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
 import {
   amountOfItem,
+  findItemsByBucket,
   getCurrentStore,
   getItemAcrossStores,
   getStore,
@@ -80,14 +79,7 @@ export function setItemLockState(
       await d1SetItemState(account, item, storeId, state, type);
     }
 
-    if (type === 'lock') {
-      item.locked = state;
-    } else if (type === 'track') {
-      item.tracked = state;
-    }
-
-    // TODO: dispatch a better action to mutate the item!
-    dispatch(touchItem(item.id));
+    dispatch(itemLockStateChanged({ item, state, type }));
   };
 }
 
@@ -103,16 +95,6 @@ function transferApi(item: DimItem): typeof d2Transfer {
   return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
 }
 
-function createItemIndex(item: DimItem): string {
-  if (item.destinyVersion === 2) {
-    return d2CreateItemIndex(item);
-  } else if (item.destinyVersion === 1) {
-    return d1CreateItemIndex(item);
-  } else {
-    throw new Error('Destiny 3??');
-  }
-}
-
 /**
  * Update our item and store models after an item has been moved (or equipped/dequipped).
  * @return the new or updated item (it may create a new item!)
@@ -125,112 +107,9 @@ function updateItemModel(
   amount: number = item.amount
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
-    // Refresh all the items - they may have been reloaded!
+    dispatch(itemMoved({ item, source, target, equip, amount }));
     const stores = storesSelector(getState());
-    source = getStore(stores, source.id)!;
-    target = getStore(stores, target.id)!;
-    // We really shouldn't do this!
-    item = getItemAcrossStores(stores, item) || item;
-
-    // If we've moved to a new place
-    if (source.id !== target.id || item.location.inPostmaster) {
-      // We handle moving stackable and nonstackable items almost exactly the same!
-      const stackable = item.maxStackSize > 1;
-      // Items to be decremented
-      const sourceItems = stackable
-        ? _.sortBy(
-            source.buckets[item.location.hash].filter(
-              (i) => i.hash === item.hash && i.id === item.id
-            ),
-            (i) => i.amount
-          )
-        : [item];
-      // Items to be incremented. There's really only ever at most one of these, but
-      // it's easier to deal with as a list.
-      const targetItems = stackable
-        ? _.sortBy(
-            target.buckets[item.bucket.hash].filter(
-              (i) =>
-                i.hash === item.hash &&
-                i.id === item.id &&
-                // Don't consider full stacks as targets
-                i.amount !== i.maxStackSize
-            ),
-            (i) => i.amount
-          )
-        : [];
-      // moveAmount could be more than maxStackSize if there is more than one stack on a character!
-      const moveAmount = amount || item.amount || 1;
-      let addAmount = moveAmount;
-      let removeAmount = moveAmount;
-      let removedSourceItem = false;
-
-      // Remove inventory from the source
-      while (removeAmount > 0) {
-        let sourceItem = sourceItems.shift();
-        if (!sourceItem) {
-          throw new Error(t('ItemService.TooMuch'));
-        }
-
-        const amountToRemove = Math.min(removeAmount, sourceItem.amount);
-        sourceItem.amount -= amountToRemove;
-        if (sourceItem.amount <= 0) {
-          // Completely remove the source item
-          if (source.removeItem(sourceItem)) {
-            removedSourceItem = sourceItem.index === item.index;
-          }
-        } else {
-          // Remove and replace with a copy so the reference updates for Redux
-          source.removeItem(sourceItem);
-          sourceItem = copy(sourceItem);
-          source.addItem(sourceItem);
-        }
-
-        removeAmount -= amountToRemove;
-      }
-
-      // Add inventory to the target (destination)
-      let targetItem = item;
-      while (addAmount > 0) {
-        targetItem = targetItems.shift()!;
-
-        if (!targetItem) {
-          targetItem = item;
-          if (!removedSourceItem) {
-            targetItem = copy(item);
-            targetItem.index = createItemIndex(targetItem);
-          }
-          removedSourceItem = false; // only move without cloning once
-          targetItem.amount = 0; // We'll increment amount below
-          if (targetItem.location.inPostmaster) {
-            targetItem.location = targetItem.bucket;
-          }
-          target.addItem(targetItem);
-        } else {
-          // Remove and replace with a copy so the reference updates for Redux
-          target.removeItem(targetItem);
-          targetItem = copy(targetItem);
-          target.addItem(targetItem);
-        }
-
-        const amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
-        targetItem.amount += amountToAdd;
-        addAmount -= amountToAdd;
-      }
-      item = targetItem; // The item we're operating on switches to the last target
-    }
-
-    if (equip) {
-      target.buckets[item.bucket.hash] = target.buckets[item.bucket.hash].map((i) => {
-        // TODO: this state needs to be moved out
-        i.equipped = i.index === item.index;
-        return i;
-      });
-    }
-
-    dispatch(touch());
-
-    return item;
+    return getItemAcrossStores(stores, item) || item;
   };
 }
 
@@ -443,7 +322,7 @@ function moveToStore(
     // Only apply this hack if the source bucket contains duplicates of the same item hash.
     const overrideLockState =
       item.lockable &&
-      count(ownerStore.buckets[item.location.hash], (i) => i.hash === item.hash) > 1
+      count(findItemsByBucket(ownerStore, item.location.hash), (i) => i.hash === item.hash) > 1
         ? item.locked
         : undefined;
 
@@ -589,7 +468,7 @@ function chooseMoveAsideItem(
             item.bucket.vaultBucket &&
             i.bucket.vaultBucket.hash === item.bucket.vaultBucket.hash
         )
-      : target.buckets[item.bucket.hash];
+      : findItemsByBucket(target, item.bucket.hash);
   } catch (e) {
     if (target.isVault && !item.bucket.vaultBucket) {
       console.error(
@@ -1070,7 +949,7 @@ export function sortMoveAsideCandidatesForStore(
       // or at least same category
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is
-      compareBy((i) => -i.lastManuallyMoved),
+      compareBy((i) => -getLastManuallyMoved(i)),
       // Engrams prefer to be in the vault, so not-engram is larger than engram
       compareBy((i) => (fromStore.isVault ? !i.isEngram : i.isEngram)),
       // Prefer moving things the target store can use

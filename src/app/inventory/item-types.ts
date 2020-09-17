@@ -150,8 +150,6 @@ export interface DimItem {
   isEngram: boolean;
   /** The reference hash for lore attached to this item (D2 only). */
   loreHash?: number;
-  /** A timestamp of when, in this session, the item was last manually moved */
-  lastManuallyMoved: number;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
   /** Stat Tracker */
@@ -188,9 +186,6 @@ export interface DimItem {
     energyCost: number;
     costElementIcon: string;
   };
-
-  /** "Touch" the item to mark it as having been manually moved. */
-  updateManualMoveTimestamp(): void;
 }
 
 /**

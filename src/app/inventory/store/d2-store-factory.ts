@@ -10,7 +10,6 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { DimItem } from '../item-types';
 import { DimCharacterStat, DimStore, DimVault } from '../store-types';
 
 /**
@@ -22,56 +21,7 @@ const genderTypeToEnglish = {
   [DestinyGender.Male]: 'male',
   [DestinyGender.Female]: 'female',
   [DestinyGender.Unknown]: '',
-};
-
-// Prototype for Store objects - add methods to this to add them to all
-// stores.
-export const StoreProto = {
-  // Remove an item from this store. Returns whether it actually removed anything.
-  removeItem(this: DimStore, item: DimItem) {
-    // Completely remove the source item
-    const match = (i: DimItem) => item.index === i.index;
-    const sourceIndex = this.items.findIndex(match);
-    if (sourceIndex >= 0) {
-      this.items = [...this.items.slice(0, sourceIndex), ...this.items.slice(sourceIndex + 1)];
-
-      let bucketItems = this.buckets[item.location.hash];
-      const bucketIndex = bucketItems.findIndex(match);
-      bucketItems = [...bucketItems.slice(0, bucketIndex), ...bucketItems.slice(bucketIndex + 1)];
-      this.buckets[item.location.hash] = bucketItems;
-
-      if (
-        this.current &&
-        item.location.accountWide &&
-        this.vault &&
-        this.vault.vaultCounts[item.location.hash]
-      ) {
-        this.vault.vaultCounts[item.location.hash].count--;
-      }
-
-      return true;
-    }
-    return false;
-  },
-
-  addItem(this: DimStore, item: DimItem) {
-    this.items = [...this.items, item];
-    this.buckets[item.location.hash] = [...this.buckets[item.location.hash], item];
-    item.owner = this.id;
-
-    if (this.current && item.location.accountWide && this.vault) {
-      this.vault.vaultCounts[item.location.hash].count++;
-    }
-  },
-
-  isDestiny1(this: DimStore) {
-    return false;
-  },
-
-  isDestiny2(this: DimStore) {
-    return true;
-  },
-};
+} as const;
 
 export function makeCharacter(
   defs: D2ManifestDefinitions,
@@ -86,7 +36,7 @@ export function makeCharacter(
   const genderLocalizedName = gender.displayProperties.name;
   const lastPlayed = new Date(character.dateLastPlayed);
 
-  const store: DimStore = Object.assign(Object.create(StoreProto), {
+  return {
     destinyVersion: 2,
     id: character.characterId,
     icon: bungieNetPath(character.emblemPath),
@@ -109,9 +59,11 @@ export function makeCharacter(
     genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
     color: character.emblemColor,
-  });
-
-  return store;
+    items: [],
+    progression: {
+      progressions: [],
+    },
+  };
 }
 
 export function makeVault(
@@ -124,7 +76,7 @@ export function makeVault(
     displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
   }));
 
-  return Object.assign(Object.create(StoreProto), {
+  return {
     destinyVersion: 2,
     id: 'vault',
     name: t('Bucket.Vault'),
@@ -138,21 +90,18 @@ export function makeVault(
     items: [],
     currencies,
     isVault: true,
-    color: { red: 49, green: 50, blue: 51 },
-    removeItem(this: DimVault, item: DimItem): boolean {
-      const result = StoreProto.removeItem.call(this, item);
-      if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.hash].count--;
-      }
-      return result;
+    color: { red: 49, green: 50, blue: 51, alpha: 1 },
+    vaultCounts: {},
+    level: 0,
+    percentToNextLevel: 0,
+    powerLevel: 0,
+    gender: '',
+    genderRace: '',
+    stats: [],
+    progression: {
+      progressions: [],
     },
-    addItem(this: DimVault, item: DimItem) {
-      StoreProto.addItem.call(this, item);
-      if (item.location.vaultBucket) {
-        this.vaultCounts[item.location.vaultBucket.hash].count++;
-      }
-    },
-  });
+  };
 }
 
 /**

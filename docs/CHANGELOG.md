@@ -17,6 +17,11 @@
 * Removed the ability to restore old backups from Google Drive, or backups created from versions of DIM pre-6.0 (when DIM Sync was introduced).
 * Armor 1.0 mods and Elemental Affinities removed from the perk picker in Loadout Optimizer.
 * Improved search performance.
+* Items in collections now show their power cap.
+
+### Beta Only
+
+* On mobile, there is now a bar to quickly swap between different item categories on the inventory screen.
 
 ## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
 

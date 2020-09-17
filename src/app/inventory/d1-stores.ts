@@ -14,8 +14,10 @@ import { InventoryBuckets } from './inventory-buckets';
 import { D1Item } from './item-types';
 import { bucketsSelector, storesSelector } from './selectors';
 import { D1Store, D1Vault, DimVault } from './store-types';
-import { processItems, resetIdTracker } from './store/d1-item-factory';
+import { processItems } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
+import { resetItemIndexGenerator } from './store/item-index';
+import { findItemsByBucket } from './stores-helpers';
 
 /**
  * Returns a promise for a fresh view of the stores and their items.
@@ -33,7 +35,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
             return;
           }
         }
-        resetIdTracker();
+        resetItemIndexGenerator();
 
         const [defs, , rawStores] = await Promise.all([
           (dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
@@ -114,16 +116,6 @@ function processStore(
   return processItems(store, items, defs, buckets).then((items) => {
     store.items = items;
 
-    // by type-bucket
-    store.buckets = _.groupBy(items, (i) => i.location.hash);
-
-    // Fill in any missing buckets
-    Object.values(buckets.byType).forEach((bucket) => {
-      if (!store.buckets[bucket.hash]) {
-        store.buckets[bucket.hash] = [];
-      }
-    });
-
     if (isVault(store)) {
       const vault = store;
       vault.vaultCounts = {};
@@ -142,7 +134,7 @@ function processStore(
           count: 0,
           bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
         };
-        vault.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
+        vault.vaultCounts[vaultBucketId].count += findItemsByBucket(store, bucket.hash).length;
       });
     }
 

@@ -8,11 +8,13 @@ import {
   MoveReservations,
 } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
+import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
   amountOfItem,
+  findItemsByBucket,
   getItemAcrossStores,
   getStore,
   getVault,
@@ -310,6 +312,7 @@ function applyLoadoutItems(
 
       if (item) {
         scope.successfulItems.push(item);
+        updateManualMoveTimestamp(item);
       }
     } catch (e) {
       const level = e.level || 'error';
@@ -366,7 +369,8 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[]) {
       return;
     }
     let numUnequippedLoadoutItems = 0;
-    for (const existingItem of store.buckets[bucketId]) {
+    const bucketHash = parseInt(bucketId, 10);
+    for (const existingItem of findItemsByBucket(store, bucketHash)) {
       if (existingItem.equipped) {
         // ignore equipped items
         continue;

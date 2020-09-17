@@ -102,20 +102,26 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
         <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}
       {apiPermissionGranted && (
-        <div className="setting horizontal">
-          <label>{t('Storage.AuditLogLabel')}</label>
-          <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
-            {t('Storage.AuditLog')}
-          </Link>
-        </div>
-      )}
-      {apiPermissionGranted && (
-        <div className="setting horizontal">
-          <label>{t('Storage.DeleteAllDataLabel')}</label>
-          <button type="button" className="dim-button" onClick={deleteAllData}>
-            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-          </button>
-        </div>
+        <>
+          <div className="setting horizontal">
+            <label>{t('Storage.AuditLogLabel')}</label>
+            <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
+              {t('Storage.AuditLog')}
+            </Link>
+          </div>
+          <div className="setting horizontal">
+            <label>{t('SearchHistory.Link')}</label>
+            <Link to="/search-history" className="dim-button">
+              {t('SearchHistory.Title')}
+            </Link>
+          </div>
+          <div className="setting horizontal">
+            <label>{t('Storage.DeleteAllDataLabel')}</label>
+            <button type="button" className="dim-button" onClick={deleteAllData}>
+              <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+            </button>
+          </div>
+        </>
       )}
       <LocalStorageInfo showDetails={!apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />

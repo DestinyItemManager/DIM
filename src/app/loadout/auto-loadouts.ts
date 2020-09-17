@@ -105,7 +105,7 @@ export function maxLightItemSet(
   }
 
   const bestItemFn = (item: DimItem) => {
-    let value = item.primStat!.value;
+    let value = item.primStat?.value ?? 0;
 
     // Break ties when items have the same stats. Note that this should only
     // add less than 0.25 total, since in the exotics special case there can be

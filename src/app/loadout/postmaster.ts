@@ -1,10 +1,16 @@
 import { t } from 'app/i18next-t';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
-import { capacityForItem, getVault, spaceLeftForItem } from 'app/inventory/stores-helpers';
+import {
+  capacityForItem,
+  findItemsByBucket,
+  getVault,
+  spaceLeftForItem,
+} from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { moveItemTo, MoveReservations } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -12,15 +18,16 @@ import { showNotification } from '../notifications/notifications';
 
 export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets): ThunkResult {
   return async (dispatch) => {
-    const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
-      (bucket: InventoryBucket) => store.buckets[bucket.hash]
+    const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap((bucket) =>
+      findItemsByBucket(store, bucket.hash)
     );
     const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
     // If any category is full, we'll move enough aside
     const itemsToMove: DimItem[] = [];
     _.forIn(postmasterItemCountsByType, (count, bucket) => {
-      if (count > 0 && store.buckets[bucket].length > 0) {
-        const items: DimItem[] = store.buckets[bucket];
+      const bucketHash = parseInt(bucket, 10);
+      if (count > 0 && findItemsByBucket(store, bucketHash).length > 0) {
+        const items: DimItem[] = findItemsByBucket(store, bucketHash);
         const capacity = capacityForItem(store, items[0]);
         const numNeededToMove = Math.max(0, count + items.length - capacity);
         if (numNeededToMove > 0) {
@@ -75,7 +82,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
-  return (store.buckets[215593132] || []).filter(
+  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter(
     (i) =>
       // Can be pulled
       i.canPullFromPostmaster &&
@@ -100,7 +107,7 @@ export function postmasterSpaceUsed(store: DimStore) {
 
 // to-do: either typing is wrong and this can return undefined, or this doesn't need &&s and ?.s
 export function totalPostmasterItems(store: DimStore) {
-  return store.buckets[215593132]?.length || 0;
+  return findItemsByBucket(store, BucketHashes.LostItems).length;
 }
 
 const showNoSpaceError = _.throttle(

@@ -33,9 +33,10 @@ import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
 import { DimStore, DimVault } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
-import { processItems, resetIdTracker } from './store/d2-item-factory';
+import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
-import { getArtifactBonus } from './stores-helpers';
+import { resetItemIndexGenerator } from './store/item-index';
+import { findItemsByBucket, getArtifactBonus } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores
@@ -126,7 +127,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
           return;
         }
       }
-      resetIdTracker();
+      resetItemIndexGenerator();
 
       // TODO: if we've already loaded profile recently, don't load it again
 
@@ -272,14 +273,6 @@ function processCharacter(
     uninstancedItemObjectives
   );
   store.items = processedItems;
-  // by type-bucket
-  store.buckets = _.groupBy(store.items, (i) => i.location.hash);
-  // Fill in any missing buckets
-  Object.values(buckets.byType).forEach((bucket) => {
-    if (!store.buckets[bucket.hash]) {
-      store.buckets[bucket.hash] = [];
-    }
-  });
   return store;
 }
 
@@ -320,20 +313,16 @@ function processVault(
   );
   store.items = processedItems;
   // by type-bucket
-  store.buckets = _.groupBy(store.items, (i) => i.location.hash);
   store.vaultCounts = {};
   // Fill in any missing buckets
   Object.values(buckets.byType).forEach((bucket) => {
-    if (!store.buckets[bucket.hash]) {
-      store.buckets[bucket.hash] = [];
-    }
     if (bucket.vaultBucket) {
       const vaultBucketId = bucket.vaultBucket.hash;
       store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
         count: 0,
         bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
       };
-      store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
+      store.vaultCounts[vaultBucketId].count += findItemsByBucket(store, bucket.hash).length;
     }
   });
   return store;
@@ -416,7 +405,7 @@ function updateVaultCounts(buckets: InventoryBuckets, activeStore: DimStore, vau
         count: 0,
         bucket,
       };
-      vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.hash].length;
+      vault.vaultCounts[vaultBucketId].count += findItemsByBucket(activeStore, bucket.hash).length;
     }
   });
   activeStore.vault = vault; // god help me
