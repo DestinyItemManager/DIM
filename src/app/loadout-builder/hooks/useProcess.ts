@@ -10,8 +10,8 @@ import {
   mapDimItemToProcessItem,
 } from '../processWorker/mappers';
 import {
-  sortGeneralModsOrProcessItem,
-  sortProcessModsOrProcessItems,
+  sortForGeneralProcessMods,
+  sortForSeasonalProcessMods,
 } from '../processWorker/processUtils';
 import { ProcessItemsByBucket } from '../processWorker/types';
 import {
@@ -96,10 +96,10 @@ export function useProcess(
     const lockedProcessMods = _.mapValues(lockedArmor2ModMap, (mods) =>
       mods.map((mod) => mapArmor2ModToProcessMod(mod))
     );
-    lockedProcessMods.seasonal = lockedProcessMods.seasonal.sort(sortProcessModsOrProcessItems);
+    lockedProcessMods.seasonal = lockedProcessMods.seasonal.sort(sortForSeasonalProcessMods);
     lockedProcessMods[ModPickerCategories.general] = lockedProcessMods[
       ModPickerCategories.general
-    ].sort(sortGeneralModsOrProcessItem);
+    ].sort(sortForGeneralProcessMods);
 
     const workerStart = performance.now();
     worker
