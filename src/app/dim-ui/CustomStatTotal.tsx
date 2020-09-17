@@ -21,7 +21,9 @@ export function StatTotalToggle({
   forClass?: DestinyClass;
   readOnly?: boolean;
 }) {
-  const defs = useSelector<RootState, D2ManifestDefinitions>((state) => state.manifest.d2Manifest!);
+  const defs = useSelector<RootState, D2ManifestDefinitions | undefined>(
+    (state) => state.manifest.d2Manifest
+  );
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
   );
@@ -41,36 +43,38 @@ export function StatTotalToggle({
   const activeStats = customTotalStatsByClass[forClass]?.length
     ? customTotalStatsByClass[forClass]
     : [];
-
   return (
-    <div className={clsx(className)}>
-      {addDividers(
-        [
-          { className: 'activeStatLabels', includesCheck: true },
-          { className: 'inactiveStatLabels', includesCheck: false },
-        ].map(({ className, includesCheck }) => (
-          <span
-            key={className}
-            className={clsx(styles[className], { [styles.readOnly]: readOnly })}
-          >
-            {addDividers(
-              armorStats
-                .filter((statHash) => activeStats.includes(statHash) === includesCheck)
-                .map((statHash) => (
-                  <StatToggleButton
-                    key={statHash}
-                    stat={defs.Stat.get(statHash)}
-                    toggleStat={toggleStat}
-                    readOnly={readOnly}
-                  />
-                )),
-              <span className={styles.divider} />
-            )}
-          </span>
-        )),
-        <span className={styles.divider} />
-      )}
-    </div>
+    (defs && (
+      <div className={clsx(className)}>
+        {addDividers(
+          [
+            { className: 'activeStatLabels', includesCheck: true },
+            { className: 'inactiveStatLabels', includesCheck: false },
+          ].map(({ className, includesCheck }) => (
+            <span
+              key={className}
+              className={clsx(styles[className], { [styles.readOnly]: readOnly })}
+            >
+              {addDividers(
+                armorStats
+                  .filter((statHash) => activeStats.includes(statHash) === includesCheck)
+                  .map((statHash) => (
+                    <StatToggleButton
+                      key={statHash}
+                      stat={defs.Stat.get(statHash)}
+                      toggleStat={toggleStat}
+                      readOnly={readOnly}
+                    />
+                  )),
+                <span className={styles.divider} />
+              )}
+            </span>
+          )),
+          <span className={styles.divider} />
+        )}
+      </div>
+    )) ||
+    null
   );
 }
 
