@@ -252,7 +252,6 @@ function CollapsibleContainer({
           stores={stores}
           vault={vault}
           currentStore={currentStore}
-          isPhonePortrait={false}
         />
       ))}
     </InventoryCollapsibleTitle>
@@ -271,6 +270,12 @@ function StoresInventory(props: InventoryContainerProps) {
           category={'Postmaster'}
           inventoryBucket={buckets.byCategory['Postmaster']}
         />
+        {$featureFlags.unstickyStats && selectedCategoryId === 'Armor' && (
+          <StoreStats
+            store={currentStore}
+            style={{ ...storeBackgroundColor(currentStore, 0, true), paddingBottom: 8 }}
+          />
+        )}
         {buckets.byCategory[selectedCategoryId].map((bucket) => (
           <StoreBuckets
             key={bucket.hash}
