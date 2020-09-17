@@ -129,14 +129,14 @@ export function buildInstancedSockets(
     }
 
     categories.push({
-      category: defs.SocketCategory.get(category.socketCategoryHash),
+      category: defs.SocketCategory.get(category.socketCategoryHash, itemDef),
       sockets,
     });
   }
 
   return {
     allSockets: _.compact(realSockets), // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category?.index)), // Sockets organized by category
   };
 }
 
