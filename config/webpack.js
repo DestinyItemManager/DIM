@@ -380,7 +380,7 @@ module.exports = (env) => {
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Detach stats from the sticky header on mobile
-        '$featureFlags.unstickyStats': JSON.stringify(!env.release),
+        '$featureFlags.unstickyStats': JSON.stringify(true),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
         // Rearrange buckets in categories

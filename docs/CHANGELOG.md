@@ -18,6 +18,7 @@
 * Armor 1.0 mods and Elemental Affinities removed from the perk picker in Loadout Optimizer.
 * Improved search performance.
 * Items in collections now show their power cap.
+* Character stats now scroll with items on mobile, instead of always being visible. Max power is still shown in the character header.
 
 ### Beta Only
 
