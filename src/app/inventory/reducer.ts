@@ -422,7 +422,7 @@ function removeItem(store: Draft<DimStore>, item: Draft<DimItem>) {
     ) {
       store.vault.vaultCounts[item.location.hash].count--;
     } else if (isVault(store) && item.location.vaultBucket) {
-      this.vaultCounts[item.location.vaultBucket.hash].count--;
+      store.vaultCounts[item.location.vaultBucket.hash].count--;
     }
 
     return true;
