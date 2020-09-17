@@ -855,15 +855,19 @@ export function moveItemTo(
         console.log('Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount));
       } catch (e) {
-        console.warn(
-          'Tried blindly moving',
-          item.name,
-          'to',
-          target.name,
-          'but the bucket is really full',
-          e.code
-        );
-        lastTimeCurrentStoreWasReallyFull = Date.now();
+        if (e.code === PlatformErrorCodes.DestinyNoRoomInDestination) {
+          console.warn(
+            'Tried blindly moving',
+            item.name,
+            'to',
+            target.name,
+            'but the bucket is really full',
+            e.code
+          );
+          lastTimeCurrentStoreWasReallyFull = Date.now();
+        } else {
+          throw e;
+        }
       }
     }
 

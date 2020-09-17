@@ -427,12 +427,14 @@ function removeItem(store: Draft<DimStore>, item: Draft<DimItem>) {
 
     return true;
   }
+
   return false;
 }
 
 function addItem(store: Draft<DimStore>, item: Draft<DimItem>) {
-  store.items.push(item);
   item.owner = store.id;
+  // Originally this was just "store.items.push(item)" but it caused Immer to think we had circular references
+  store.items = [...store.items, item];
 
   // TODO: replace vaultCounts with a selector
   if (item.location.accountWide && store.current && store.vault) {
