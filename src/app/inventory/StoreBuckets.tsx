@@ -1,3 +1,4 @@
+import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
 import React from 'react';
@@ -14,13 +15,13 @@ export function StoreBuckets({
   stores,
   vault,
   currentStore,
-  isPhonePortrait,
+  labels,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
   vault: DimStore;
   currentStore: DimStore;
-  isPhonePortrait: boolean;
+  labels?: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -60,7 +61,7 @@ export function StoreBuckets({
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),
         })}
-        style={storeBackgroundColor(store, index, false, isPhonePortrait)}
+        style={storeBackgroundColor(store, index, false, labels)}
       >
         {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&
@@ -70,5 +71,10 @@ export function StoreBuckets({
     ));
   }
 
-  return <div className={`store-row bucket-${bucket.hash}`}>{content}</div>;
+  return (
+    <div className={`store-row bucket-${bucket.hash}`}>
+      {labels && <BucketLabel store={stores[0]} bucket={bucket} />}
+      {content}
+    </div>
+  );
 }

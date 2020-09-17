@@ -134,7 +134,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
 
         <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
           <div>
-            {$featureFlags.unstickyStats && (
+            {$featureFlags.unstickyStats && selectedCategoryId === 'Armor' && (
               <StoreStats
                 store={selectedStore}
                 style={{
@@ -265,14 +265,12 @@ function StoresInventory(props: InventoryContainerProps) {
   if (selectedCategoryId) {
     return (
       <>
-        {selectedCategoryId === 'Inventory' && (
-          <CollapsibleContainer
-            {...props}
-            buckets={buckets}
-            category={'Postmaster'}
-            inventoryBucket={buckets.byCategory['Postmaster']}
-          />
-        )}
+        <CollapsibleContainer
+          {...props}
+          buckets={buckets}
+          category={'Postmaster'}
+          inventoryBucket={buckets.byCategory['Postmaster']}
+        />
         {buckets.byCategory[selectedCategoryId].map((bucket) => (
           <StoreBuckets
             key={bucket.hash}
@@ -280,7 +278,7 @@ function StoresInventory(props: InventoryContainerProps) {
             stores={stores}
             vault={vault}
             currentStore={currentStore}
-            isPhonePortrait={true}
+            labels={true}
           />
         ))}
       </>

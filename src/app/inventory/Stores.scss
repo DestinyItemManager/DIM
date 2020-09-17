@@ -44,6 +44,22 @@
   @include phone-portrait {
     // Full-width, single column
     grid-template-columns: 1fr;
+
+    .bucket-label {
+      opacity: 0.8;
+      margin: 0px 0 5px;
+      z-index: inherit;
+      // background: none; // uncomment to remove transparent background
+
+      a {
+        text-decoration: none;
+        font-size: 0.8em;
+        opacity: 0.8;
+        span {
+          margin-right: 2px;
+        }
+      }
+    }
   }
 }
 
@@ -250,7 +266,6 @@
   left: 0;
   right: 0;
   $vpadding: 15px;
-  padding: ($vpadding + 1) 10px ($vpadding - 1) 10px;
   justify-content: space-around;
   padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
   padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
@@ -263,9 +278,10 @@
     font-size: 12px;
     letter-spacing: 1.2px;
     border-bottom: 2px solid transparent;
+    padding: $vpadding 0 5px;
   }
   .selected {
-    font-weight: bold;
+    color: $orange;
     border-bottom: 2px solid $orange;
   }
 }
