@@ -96,10 +96,8 @@ export function useProcess(
     const lockedProcessMods = _.mapValues(lockedArmor2ModMap, (mods) =>
       mods.map((mod) => mapArmor2ModToProcessMod(mod))
     );
-    lockedProcessMods.seasonal = lockedProcessMods.seasonal.sort(sortForSeasonalProcessMods);
-    lockedProcessMods[ModPickerCategories.general] = lockedProcessMods[
-      ModPickerCategories.general
-    ].sort(sortForGeneralProcessMods);
+    lockedProcessMods.seasonal.sort(sortForSeasonalProcessMods);
+    lockedProcessMods[ModPickerCategories.general].sort(sortForGeneralProcessMods);
 
     const workerStart = performance.now();
     worker
