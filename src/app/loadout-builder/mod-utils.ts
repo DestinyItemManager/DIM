@@ -96,13 +96,13 @@ export function assignModsToArmorSet(
     }
   }
 
+  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
+
   assignGeneralMods(
     processItems,
     lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
     assignments
   );
-
-  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
 
   const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>
