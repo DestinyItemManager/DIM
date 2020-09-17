@@ -43,38 +43,39 @@ export function StatTotalToggle({
   const activeStats = customTotalStatsByClass[forClass]?.length
     ? customTotalStatsByClass[forClass]
     : [];
+
+  if (!defs) {
+    return null;
+  }
   return (
-    (defs && (
-      <div className={clsx(className)}>
-        {addDividers(
-          [
-            { className: 'activeStatLabels', includesCheck: true },
-            { className: 'inactiveStatLabels', includesCheck: false },
-          ].map(({ className, includesCheck }) => (
-            <span
-              key={className}
-              className={clsx(styles[className], { [styles.readOnly]: readOnly })}
-            >
-              {addDividers(
-                armorStats
-                  .filter((statHash) => activeStats.includes(statHash) === includesCheck)
-                  .map((statHash) => (
-                    <StatToggleButton
-                      key={statHash}
-                      stat={defs.Stat.get(statHash)}
-                      toggleStat={toggleStat}
-                      readOnly={readOnly}
-                    />
-                  )),
-                <span className={styles.divider} />
-              )}
-            </span>
-          )),
-          <span className={styles.divider} />
-        )}
-      </div>
-    )) ||
-    null
+    <div className={clsx(className)}>
+      {addDividers(
+        [
+          { className: 'activeStatLabels', includesCheck: true },
+          { className: 'inactiveStatLabels', includesCheck: false },
+        ].map(({ className, includesCheck }) => (
+          <span
+            key={className}
+            className={clsx(styles[className], { [styles.readOnly]: readOnly })}
+          >
+            {addDividers(
+              armorStats
+                .filter((statHash) => activeStats.includes(statHash) === includesCheck)
+                .map((statHash) => (
+                  <StatToggleButton
+                    key={statHash}
+                    stat={defs.Stat.get(statHash)}
+                    toggleStat={toggleStat}
+                    readOnly={readOnly}
+                  />
+                )),
+              <span className={styles.divider} />
+            )}
+          </span>
+        )),
+        <span className={styles.divider} />
+      )}
+    </div>
   );
 }
 

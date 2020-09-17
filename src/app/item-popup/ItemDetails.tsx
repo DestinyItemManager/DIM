@@ -71,9 +71,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {!item.stats && item.collectibleHash && isD2Manifest(defs) && (
+      {!item.stats && Boolean(item.collectibleHash) && isD2Manifest(defs) && (
         <div className="item-details">
-          {defs.Collectible.get(item.collectibleHash).sourceString}
+          {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
 
