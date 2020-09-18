@@ -256,13 +256,13 @@ export function process(
               // and we do seasonal first as its more likely to have energy specific mods.
               // TODO Check validity of this with the energy contraints in.
               if (
+                (lockedArmor2ModMap.seasonal.length &&
+                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
                 (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllGeneralMods(
                     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
                     armor
-                  )) ||
-                (lockedArmor2ModMap.seasonal.length &&
-                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor))
+                  ))
               ) {
                 continue;
               }

@@ -6,7 +6,7 @@ import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWork
 import {
   canTakeAllGeneralMods,
   canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
+  sortForSeasonalProcessMods,
 } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
@@ -38,7 +38,7 @@ function assignGeneralMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
+  const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortForSeasonalProcessMods);
 
   canTakeAllGeneralMods(sortedMods, setToMatch, assignments);
 }
@@ -69,7 +69,7 @@ function assignAllSeasonalMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
+  const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortForSeasonalProcessMods);
 
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
@@ -96,13 +96,13 @@ export function assignModsToArmorSet(
     }
   }
 
+  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
+
   assignGeneralMods(
     processItems,
     lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
     assignments
   );
-
-  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
 
   const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>
