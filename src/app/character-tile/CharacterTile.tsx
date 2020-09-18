@@ -57,7 +57,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         </div>
         <div className="bottom">
           {isVault(store) ? (
-            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity store={store} />
+            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity />
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>

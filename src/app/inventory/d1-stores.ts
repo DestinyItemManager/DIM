@@ -11,13 +11,11 @@ import { reportException } from '../utils/exceptions';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
-import { D1Item } from './item-types';
 import { bucketsSelector, storesSelector } from './selectors';
-import { D1Store, D1Vault, DimVault } from './store-types';
+import { D1Store, DimVault } from './store-types';
 import { processItems } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
-import { findItemsByBucket } from './stores-helpers';
 
 /**
  * Returns a promise for a fresh view of the stores and their items.
@@ -102,48 +100,21 @@ function processStore(
   }
 
   let store: D1Store;
-  let items: D1Item[];
+  let rawItems: any[];
   if (raw.id === 'vault') {
     const result = makeVault(raw, currencies);
     store = result.store;
-    items = result.items;
+    rawItems = result.items;
   } else {
     const result = makeCharacter(raw, defs, lastPlayedDate, currencies);
     store = result.store;
-    items = result.items;
+    rawItems = result.items;
   }
 
-  return processItems(store, items, defs, buckets).then((items) => {
+  return processItems(store, rawItems, defs, buckets).then((items) => {
     store.items = items;
-
-    if (isVault(store)) {
-      const vault = store;
-      vault.vaultCounts = {};
-      const vaultBucketOrder = [
-        4046403665, // Weapons
-        3003523923, // Armor
-        138197802, // General
-      ];
-
-      _.sortBy(
-        Object.values(buckets.byType).filter((b) => b.vaultBucket),
-        (b) => vaultBucketOrder.indexOf(b.vaultBucket!.hash)
-      ).forEach((bucket) => {
-        const vaultBucketId = bucket.vaultBucket!.hash;
-        vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
-          count: 0,
-          bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
-        };
-        vault.vaultCounts[vaultBucketId].count += findItemsByBucket(store, bucket.hash).length;
-      });
-    }
-
     return store;
   });
-}
-
-function isVault(store: D1Store): store is D1Vault {
-  return store.isVault;
 }
 
 /**

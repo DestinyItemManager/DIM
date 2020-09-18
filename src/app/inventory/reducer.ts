@@ -10,7 +10,7 @@ import * as actions from './actions';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { createItemIndex } from './store/item-index';
-import { findItemsByBucket, getStore, isVault } from './stores-helpers';
+import { findItemsByBucket, getStore } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -413,18 +413,6 @@ function removeItem(store: Draft<DimStore>, item: Draft<DimItem>) {
   const sourceIndex = store.items.findIndex((i: DimItem) => item.index === i.index);
   if (sourceIndex >= 0) {
     store.items.splice(sourceIndex, 1);
-
-    // TODO: replace vaultCounts with a selector
-    if (
-      item.location.accountWide &&
-      store.current &&
-      store.vault?.vaultCounts[item.location.hash]
-    ) {
-      store.vault.vaultCounts[item.location.hash].count--;
-    } else if (isVault(store) && item.location.vaultBucket) {
-      store.vaultCounts[item.location.vaultBucket.hash].count--;
-    }
-
     return true;
   }
 
@@ -435,11 +423,4 @@ function addItem(store: Draft<DimStore>, item: Draft<DimItem>) {
   item.owner = store.id;
   // Originally this was just "store.items.push(item)" but it caused Immer to think we had circular references
   store.items = [...store.items, item];
-
-  // TODO: replace vaultCounts with a selector
-  if (item.location.accountWide && store.current && store.vault) {
-    store.vault.vaultCounts[item.location.hash].count++;
-  } else if (isVault(store) && item.location.vaultBucket) {
-    store.vaultCounts[item.location.vaultBucket.hash].count++;
-  }
 }

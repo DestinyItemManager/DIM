@@ -6,7 +6,6 @@ import {
   DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import { InventoryBucket } from './inventory-buckets';
 import { D1Item, DimItem } from './item-types';
 
 /**
@@ -64,19 +63,12 @@ export interface DimStore<Item = DimItem> {
   progression: null | {
     progressions: DestinyProgression[];
   };
-
-  /** The vault associated with this store. */
-  vault?: DimVault;
+  /** The background or dominant color of the equipped emblem, if available. */
   color?: DestinyColor;
 }
 
-/** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
-interface VaultCounts {
-  [bucketHash: number]: { count: number; bucket: InventoryBucket };
-}
-
 export interface DimVault extends DimStore {
-  vaultCounts: VaultCounts;
+  // TODO: move to top level? Drive off profile?
   currencies: {
     itemHash: number;
     displayProperties: DestinyDisplayPropertiesDefinition;
@@ -85,7 +77,6 @@ export interface DimVault extends DimStore {
 }
 
 export interface D1Vault extends D1Store {
-  vaultCounts: VaultCounts;
   currencies: {
     itemHash: number;
     displayProperties: DestinyDisplayPropertiesDefinition;

@@ -36,7 +36,7 @@ import { getCharacterStatsData as getD1CharacterStatsData } from './store/charac
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
-import { findItemsByBucket, getArtifactBonus } from './stores-helpers';
+import { getArtifactBonus } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores
@@ -178,8 +178,6 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
 
         const stores = [...characters, vault];
 
-        updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
-
         dispatch(cleanInfos(stores));
 
         for (const s of stores) {
@@ -312,19 +310,6 @@ function processVault(
     mergedCollectibles
   );
   store.items = processedItems;
-  // by type-bucket
-  store.vaultCounts = {};
-  // Fill in any missing buckets
-  Object.values(buckets.byType).forEach((bucket) => {
-    if (bucket.vaultBucket) {
-      const vaultBucketId = bucket.vaultBucket.hash;
-      store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
-        count: 0,
-        bucket: bucket.accountWide ? bucket : bucket.vaultBucket,
-      };
-      store.vaultCounts[vaultBucketId].count += findItemsByBucket(store, bucket.hash).length;
-    }
-  });
   return store;
 }
 
@@ -392,21 +377,4 @@ function updateBasePower(stores: DimStore[], store: DimStore, defs: D2ManifestDe
       icon: bungieNetPath(def.displayProperties.icon),
     };
   }
-}
-
-// TODO: vault counts are silly and convoluted. We really need an
-// object to represent a Profile.
-function updateVaultCounts(buckets: InventoryBuckets, activeStore: DimStore, vault: DimVault) {
-  // Fill in any missing buckets
-  Object.values(buckets.byType).forEach((bucket) => {
-    if (bucket.accountWide && bucket.vaultBucket) {
-      const vaultBucketId = bucket.hash;
-      vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
-        count: 0,
-        bucket,
-      };
-      vault.vaultCounts[vaultBucketId].count += findItemsByBucket(activeStore, bucket.hash).length;
-    }
-  });
-  activeStore.vault = vault; // god help me
 }
