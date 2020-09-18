@@ -17,9 +17,10 @@ export interface ProcessItemSubset extends SortParam {
 
 /**
  * This sorting function is pivitol in the algorithm to figure out it seasonal mods can be slotted into
- * a list of items. It sorts by season and then energyType in descending order.
+ * a list of items. It sorts by season and then energyType in descending order. Both mods and items
+ * should be sorted by this algorithms.
  */
-export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
+export function sortForSeasonalProcessMods(a: SortParam, b: SortParam) {
   if (a.season && b.season) {
     if (a.season === b.season) {
       if (a.energy && b.energy) {
@@ -41,9 +42,10 @@ export function sortProcessModsOrProcessItems(a: SortParam, b: SortParam) {
 
 /**
  * This sorting function is pivitol in the algorithm to figure out it general mods can be slotted into
- * a list of items. It sorts by energyType in descending order.
+ * a list of items. It sorts by energyType in descending order. Both mods and items should be sorted
+ * by this algorithms.
  */
-export function sortGeneralModsOrProcessItem(a: SortParam, b: SortParam) {
+export function sortForGeneralProcessMods(a: SortParam, b: SortParam) {
   // any energy is 0 so check undefined rather than falsey
   if (a.energy && b.energy) {
     if (a.energy.type === b.energy.type) {
@@ -73,7 +75,7 @@ export function canTakeAllSeasonalMods(
   items: ProcessItemSubset[],
   assignments?: Record<string, number[]>
 ) {
-  const sortedItems = Array.from(items).sort(sortProcessModsOrProcessItems);
+  const sortedItems = Array.from(items).sort(sortForSeasonalProcessMods);
 
   let modIndex = 0;
   let itemIndex = 0;
@@ -125,7 +127,7 @@ export function canTakeAllGeneralMods(
   items: ProcessItemSubset[],
   assignments?: Record<string, number[]>
 ) {
-  const sortedItems = Array.from(items).sort(sortGeneralModsOrProcessItem);
+  const sortedItems = Array.from(items).sort(sortForGeneralProcessMods);
 
   let modIndex = 0;
   let itemIndex = 0;

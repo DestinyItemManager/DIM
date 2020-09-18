@@ -528,7 +528,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       },
     };
 
-    function filterItems(items: D1Item[]) {
+    function filterItems(items: readonly D1Item[]) {
       return items.filter(
         (item) =>
           item.primStat &&

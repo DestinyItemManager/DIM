@@ -21,7 +21,9 @@ export function StatTotalToggle({
   forClass?: DestinyClass;
   readOnly?: boolean;
 }) {
-  const defs = useSelector<RootState, D2ManifestDefinitions>((state) => state.manifest.d2Manifest!);
+  const defs = useSelector<RootState, D2ManifestDefinitions | undefined>(
+    (state) => state.manifest.d2Manifest
+  );
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
   );
@@ -42,6 +44,9 @@ export function StatTotalToggle({
     ? customTotalStatsByClass[forClass]
     : [];
 
+  if (!defs) {
+    return null;
+  }
   return (
     <div className={clsx(className)}>
       {addDividers(

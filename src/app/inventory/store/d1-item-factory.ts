@@ -327,13 +327,15 @@ function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = statDef;
-    // D2 is much better about display info
-    statDef.displayProperties = {
-      name: statDef.statName,
-      description: statDef.statDescription,
-      icon: statDef.icon,
-      hasIcon: Boolean(statDef.icon),
+    createdItem.primStat.stat = {
+      ...statDef,
+      // D2 is much better about display info
+      displayProperties: {
+        name: statDef.statName,
+        description: statDef.statDescription,
+        icon: statDef.icon,
+        hasIcon: Boolean(statDef.icon),
+      },
     };
   }
 

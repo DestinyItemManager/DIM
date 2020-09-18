@@ -21,7 +21,7 @@ export interface DimStore<Item = DimItem> {
   /** Localized name for the store. */
   name: string;
   /** All items in the store, across all buckets. */
-  items: Item[];
+  items: readonly Item[];
   /** The Destiny version this store came from. */
   destinyVersion: DestinyVersion;
   /** An icon (emblem) for the store. */
