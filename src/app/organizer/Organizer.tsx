@@ -7,15 +7,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { queueAction } from 'app/inventory/action-queue';
-import { D1StoresService } from 'app/inventory/d1-stores';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { refresh$ } from 'app/shell/refresh';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { RootState } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ItemTable from './ItemTable';
 import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
@@ -42,20 +38,8 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps;
 
-function getStoresService(account: DestinyAccount) {
-  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
-}
-
 function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
-  useEffect(() => {
-    if (!stores.length) {
-      getStoresService(account).getStoresStream(account);
-    }
-  });
-
-  useSubscription(() =>
-    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
-  );
+  useLoadStores(account, stores.length > 0);
 
   const [selection, onSelection] = useState<ItemCategoryTreeNode[]>([]);
 

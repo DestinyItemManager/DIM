@@ -192,7 +192,7 @@
     "Activity": "Verfügbar durch Aktivität <i>{{activity}}</i>",
     "AmmoType": "Zeigt Items basierend auf deren Munitionstyp.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
-    "Ascended": "Zeigt Items, die einen Aufstiegsknoten haben und ob sie aufgestiegen sind oder nicht.",
+    "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Nach Brechertyp oder dem entsprechenden Champion-Typ filtern.",
     "BulkClear": "Tag von 1 Item entfernt.",
     "BulkClear_plural": "Tags entfernt von {{count}} Items.",
@@ -205,6 +205,7 @@
     "Combine": "Filter können kombiniert werden, um deine Suche einzugrenzen: '{{example}}' zeigt alle Arkus-Items mit über 300 Licht an.",
     "ContributeLight": "Zeige Items die Licht haben und zu deinem Lichtlevel beitragen können.",
     "ContributePower": "Zeige Items die Power haben und zu deinem Power-Level beitragen können.",
+    "Curated": "Shows items that are a curated roll.",
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "Zeige Items mit Notizen an.",
     "HasOrnament": "Zeigt Items an, die ein Ornament haben.",
+    "HasRating": " Shows items that have a community rating.",
     "HasShader": "Zeigt Items die einen Shader angewendet haben.",
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
     "InLoadout": "Zeigt Items die in einem Loadout verwendet werden.",
     "Infusable": "Zeigt Items die infundiert werden können.",
+    "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
+    "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
       "Complete": "{{term}} - zeigt Items die fertig sind - jedes Upgrade freigeschaltet.",
       "Incomplete": "{{term}} - zeigt Items die nicht fertig sind - es gibt noch mindestens ein freischaltbares Upgrade.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "Fehler beim Sperren von Items",
     "LockAllSuccess": "{{num}} Items gesperrt",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
+    "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MaxPower": "Zeigt die Gegenstände, die die Leistungsstufe für jede Charakterklasse maximieren würden.",
     "ModSlot": "Zeigt Rüstungen mit einem bestimmten Saisonal Mod Slot.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
     "PowerLimit": "Zeigt Items basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können.",
+    "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
     "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
     "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
+    "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "Source": {
       "Adventure": "Item ist verfügbar bei <i>Abenteuern</i>.",
       "BlackArmory": "Der Artikel ist bei der <i>Schwarzen Waffenkammer</i> verfügbar.",
@@ -319,11 +326,14 @@
       "Favorite": "Zeigt favorisierte Items an.",
       "Infuse": "Zeigt Items an, die du eventuell infundieren möchtest.",
       "Keep": "Zeigt zu behaltende Items an.",
-      "NoTag": "Zeigt Items ohne Markierung an."
+      "NoTag": "Zeigt Items ohne Markierung an.",
+      "Tag": "Shows items that have a specific tag.",
+      "Tagged": "Shows items that have any tag."
     },
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
     "Transferable": "Items die zwischen den Charakteren verschoben werden können.",
     "Trashlist": "Zeigt Items, die der Müllliste deiner Wunschliste entsprechen.",
+    "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Undo": "Rückgängig",
     "UnlockAllFailed": "Konnte Items nicht entsperren",
     "UnlockAllSuccess": "{{num}} Items entsperrt",
@@ -376,6 +386,7 @@
     "FilterHelp": "Suche Item/Perk, {{example}} und mehr",
     "FilterHelpBrief": "Suche Items",
     "FilterHelpMenuItem": "Filter Hilfe...",
+    "FilterHelpRecords": "Triumphe und Sammlungen durchsuchen",
     "FilterMatchCount": "1 Item",
     "FilterMatchCount_plural": "{{count}} Items",
     "Filters": "Filter",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
     "ResetLocked": "Setze gesperrte Items zurück",
+    "SeasonNum": "Saison {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Rüstungs-Stats Total",
@@ -799,20 +811,29 @@
     "Bounties": "Beutezüge",
     "CrucibleRank": "Ränge",
     "Items": "Quest-Items",
+    "LegacyRecord": "Dieser Triumph wird nicht mehr verfügbar sein, nachdem Jenseits des Lichts veröffentlicht wurde.",
+    "LegacyTriumphs": "Vermächtnis Triumphe",
     "Milestones": "Meilensteine & Herausforderungen",
+    "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge einen im Spiel oder so vielen wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",
     "Progress": "Fortschritt",
+    "QueryFilteredTrackedTriumphs": "Keiner deiner verfolgten Triumphe entsprach der Suche",
     "QuestExpired": "Abgelaufen",
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
-    "SecretTriumph": "Geheimer Triumph"
+    "SecretTriumph": "Geheimer Triumph",
+    "StatTrackers": "Statistiken Tracker",
+    "TrackedTriumphs": "Verfolgte Triumphe"
   },
   "RecordBooks": {
     "HideCompleted": "Abgeschlossene Urkunden nicht anzeigen",
     "RecordBooks": "Urkundenbücher"
+  },
+  "Records": {
+    "Title": "Sammlungen"
   },
   "Settings": {
     "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen",
@@ -958,8 +979,8 @@
     "UnlockAll": "Entsperre Items"
   },
   "Triumphs": {
-    "HideCompleted": "Abgeschlossene verbergen",
-    "RevealRedacted": "Zeige verborgene"
+    "HideCompleted": "Abgeschlossene Triumphe ausblenden",
+    "RevealRedacted": "Versteckte Triumphe enthüllen"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz meldet, dass dieser Anbieter hochstufige Items anbietet.",

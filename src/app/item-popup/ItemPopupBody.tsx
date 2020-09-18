@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import { DimItem } from '../inventory/item-types';
-import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -14,7 +13,6 @@ import './ItemPopupBody.scss';
 export const enum ItemPopupTab {
   Overview,
   Triage,
-  Reviews,
 }
 
 const spring = { stiffness: 200, damping: 22 };
@@ -54,7 +52,7 @@ export default function ItemPopupBody({
   ];
   if (
     $featureFlags.triage &&
-    item.isDestiny2() &&
+    item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
       (item.bucket.sort === 'Weapons' &&
         item.bucket.type !== 'SeasonalArtifacts' &&
@@ -69,13 +67,6 @@ export default function ItemPopupBody({
       tab: ItemPopupTab.Triage,
       title: t('MovePopup.TriageTab'),
       component: <ItemTriage item={item} />,
-    });
-  }
-  if ($featureFlags.reviewsEnabled && item.reviewable) {
-    tabs.push({
-      tab: ItemPopupTab.Reviews,
-      title: t('MovePopup.ReviewsTab'),
-      component: <ItemReviews item={item} />,
     });
   }
 

@@ -15,6 +15,7 @@ import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, faClone, tagIcon } from '../shell/icons';
 import { loadingTracker } from '../shell/loading-tracker';
+import { ItemFilter } from './filter-types';
 import { searchFilterSelector } from './search-filter';
 import './search-filter.scss';
 
@@ -31,7 +32,7 @@ interface StoreProps {
   searchQuery: string;
   stores: DimStore[];
   buckets?: InventoryBuckets;
-  searchFilter(item: DimItem): boolean;
+  searchFilter: ItemFilter;
 }
 
 type DispatchProps = {

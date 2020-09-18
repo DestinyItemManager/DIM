@@ -4,6 +4,7 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
 import { ArmorSet } from '../types';
@@ -16,12 +17,18 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  canCompareLoadouts,
   onLoadoutSet,
+  onCompareSet,
 }: {
   store: DimStore;
   set: ArmorSet;
+  canCompareLoadouts: boolean;
   onLoadoutSet(loadout: Loadout): void;
+  onCompareSet(): void;
 }) {
+  const dispatch = useDispatch();
+
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
     onLoadoutSet(createLoadout(store.classType, set));
@@ -30,11 +37,16 @@ export default function GeneratedSetButtons({
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
     const loadout = createLoadout(store.classType, set);
-    return applyLoadout(store, loadout, true);
+    return dispatch(applyLoadout(store, loadout, true));
   };
 
   return (
     <div className={styles.buttons}>
+      {canCompareLoadouts && (
+        <button type="button" className="dim-button" onClick={onCompareSet}>
+          {t('LoadoutBuilder.CompareLoadout')}
+        </button>
+      )}
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>

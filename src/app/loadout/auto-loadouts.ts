@@ -1,5 +1,7 @@
 import { t } from 'app/i18next-t';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
+import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
@@ -16,7 +18,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
   const applicableItems = getAllItems(
     stores,
     (i) =>
-      i.canBeEquippedBy(store) &&
+      itemCanBeEquippedBy(i, store) &&
       i.talentGrid &&
       !(i.talentGrid as any).xpComplete && // Still need XP
       i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
@@ -49,7 +51,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
     value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
 
     // Choose the item w/ the highest XP
-    if (item.isDestiny1() && item.talentGrid) {
+    if (isD1Item(item) && item.talentGrid) {
       value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
     }
 
@@ -67,7 +69,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
 export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
   const { equippable } = maxLightItemSet(stores, store);
   return newLoadout(
-    name,
+    store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
     equippable.map((i) => convertToLoadoutItem(i, true))
   );
 }
@@ -89,7 +91,7 @@ export function maxLightItemSet(
   for (const s of stores) {
     for (const i of s.items) {
       if (
-        (i.canBeEquippedBy(store) ||
+        (itemCanBeEquippedBy(i, store) ||
           (i.location.inPostmaster &&
             (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
             // nothing we are too low-level to equip
@@ -103,7 +105,7 @@ export function maxLightItemSet(
   }
 
   const bestItemFn = (item: DimItem) => {
-    let value = item.primStat!.value;
+    let value = item.primStat?.value ?? 0;
 
     // Break ties when items have the same stats. Note that this should only
     // add less than 0.25 total, since in the exotics special case there can be
@@ -133,7 +135,7 @@ export function maxStatLoadout(statHash: number, stores: DimStore[], store: DimS
   const applicableItems = getAllItems(
     stores,
     (i) =>
-      (i.canBeEquippedBy(store) ||
+      (itemCanBeEquippedBy(i, store) ||
         (i.location.inPostmaster &&
           (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
           // nothing we are too low-level to equip
@@ -210,7 +212,7 @@ export function gatherEngramsLoadout(
 export function searchLoadout(
   stores: DimStore[],
   store: DimStore,
-  searchFilter: (item: DimItem) => boolean
+  searchFilter: ItemFilter
 ): Loadout {
   let items = getAllItems(
     stores,
@@ -284,7 +286,7 @@ const randomLoadoutTypes = new Set([
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
-export function randomLoadout(stores: DimStore[], filter: (i: DimItem) => boolean) {
+export function randomLoadout(stores: DimStore[], filter: ItemFilter) {
   const currentCharacter = getCurrentStore(stores);
   if (!currentCharacter) {
     return null;
@@ -293,7 +295,7 @@ export function randomLoadout(stores: DimStore[], filter: (i: DimItem) => boolea
   // Any item equippable by this character in the given types
   const applicableItems = getAllItems(
     stores,
-    (i) => randomLoadoutTypes.has(i.type) && i.canBeEquippedBy(currentCharacter) && filter(i)
+    (i) => randomLoadoutTypes.has(i.type) && itemCanBeEquippedBy(i, currentCharacter) && filter(i)
   );
 
   // Use "random" as the value function

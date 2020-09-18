@@ -3,6 +3,7 @@ import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -197,6 +198,7 @@ function SearchBar(
     setInputValue,
     reset,
     openMenu,
+    closeMenu,
   } = useCombobox<SearchItem>({
     items,
     defaultIsOpen: isPhonePortrait && mainSearchBar,
@@ -207,6 +209,7 @@ function SearchBar(
         // Handle selecting the special "help" item
         if (selectedItem.type === SearchItemType.Help) {
           setFilterHelpOpen(true);
+          closeMenu();
         }
       }
     },
@@ -285,6 +288,15 @@ function SearchBar(
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
       (e.nativeEvent as any).preventDownshiftDefault = true;
+    } else if (
+      (e.key === 'Delete' || e.key === 'Backspace') &&
+      e.shiftKey &&
+      highlightedIndex >= 0 &&
+      items[highlightedIndex]?.query &&
+      items[highlightedIndex]?.type === SearchItemType.Recent
+    ) {
+      e.preventDefault();
+      dispatch(searchDeleted(items[highlightedIndex].query));
     }
   };
 
@@ -351,8 +363,14 @@ function SearchBar(
         ReactDOM.createPortal(
           <Sheet
             onClose={() => setFilterHelpOpen(false)}
-            header={<h1>{t('Header.Filters')}</h1>}
+            header={
+              <>
+                <h1>{t('Header.Filters')}</h1>
+                <UserGuideLink topic="Item_Search" />
+              </>
+            }
             sheetClassName="filterHelp"
+            freezeInitialHeight={true}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />
@@ -361,7 +379,7 @@ function SearchBar(
           document.body
         )}
 
-      <ul {...getMenuProps()} className={clsx(styles.menu, { [styles.menuOpen]: isOpen })}>
+      <ul {...getMenuProps()} className={styles.menu}>
         {isOpen &&
           items.map((item, index) => (
             <li
@@ -419,24 +437,23 @@ const Row = React.memo(
           item.query
         )}
       </span>
-      {item.helpText && <span className={styles.menuItemHelp}>{item.helpText}</span>}
+      <span className={styles.menuItemHelp} />
       {!isPhonePortrait && isTabAutocompleteItem && (
         <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
       )}
       {!isPhonePortrait && highlighted && (
         <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
       )}
-      {(highlighted || isPhonePortrait) &&
-        (item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-          <button
-            type="button"
-            className={styles.deleteIcon}
-            onClick={(e) => onClick(e, item)}
-            title={t('Header.DeleteSearch')}
-          >
-            <AppIcon icon={closeIcon} />
-          </button>
-        )}
+      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+        <button
+          type="button"
+          className={styles.deleteIcon}
+          onClick={(e) => onClick(e, item)}
+          title={t('Header.DeleteSearch')}
+        >
+          <AppIcon icon={closeIcon} />
+        </button>
+      )}
     </>
   )
 );

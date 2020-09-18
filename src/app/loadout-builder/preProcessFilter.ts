@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { getItemDamageShortName } from 'app/utils/item-utils';
+import { ItemFilter } from 'app/search/filter-types';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -13,7 +13,6 @@ import {
   LockedMap,
   statValues,
 } from './types';
-import { canSlotMod } from './utils';
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -24,7 +23,7 @@ export function filterItems(
   lockedArmor2ModMap: LockedArmor2ModMap,
   minimumStatTotal: number,
   assumeMasterwork: boolean,
-  filter: (item: DimItem) => boolean
+  filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
@@ -79,17 +78,9 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   switch (lockedItem.type) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
-    case 'burn':
-      return getItemDamageShortName(item) === lockedItem.burn.dmg;
-    case 'mod':
-      return canSlotMod(item, lockedItem);
     case 'perk':
-      return (
-        item.isDestiny2() &&
-        item.sockets &&
-        item.sockets.allSockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
-        )
+      return item.sockets?.allSockets.some((slot) =>
+        slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
       );
     case 'item':
       return item.id === lockedItem.item.id;
@@ -111,7 +102,7 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
   }
 
   // Checking energy tells us if it is Armour 2.0
-  if (item.isDestiny2() && item.sockets && item.energy) {
+  if (item.sockets && item.energy) {
     if (assumeMasterwork) {
       for (const statHash of statValues) {
         baseStats[statHash] += 2;

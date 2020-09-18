@@ -1,5 +1,7 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import produce, { Draft } from 'immer';
+import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
@@ -7,10 +9,8 @@ import { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
-import { StoreProto as D1StoreProto } from './store/d1-store-factory';
-import { ItemProto } from './store/d2-item-factory';
-import { StoreProto as D2StoreProto, StoreProto } from './store/d2-store-factory';
-import { getItemAcrossStores, getStore } from './stores-helpers';
+import { createItemIndex } from './store/item-index';
+import { findItemsByBucket, getStore } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -31,7 +31,7 @@ export interface InventoryState {
   readonly newItemsLoaded: boolean;
 
   /** Are we currently dragging a stack? */
-  readonly isDraggingStack;
+  readonly isDraggingStack: boolean;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -46,31 +46,23 @@ const initialState: InventoryState = {
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
   state: InventoryState = initialState,
   action: InventoryAction | AccountsAction
-) => {
+): InventoryState => {
   switch (action.type) {
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
-    case getType(actions.touch):
-      return {
-        ...state,
-        // Make a new array to break change detection for the root stores components
-        stores: [...state.stores],
-      };
-
-    case getType(actions.touchItem):
-      return touchItem(state, action.payload);
-
     case getType(actions.charactersUpdated):
       return updateCharacters(state, action.payload);
 
-    // Buckets
-    // TODO: only need to do this once, on loading a new platform.
-    case getType(actions.setBuckets):
-      return {
-        ...state,
-        buckets: action.payload,
-      };
+    case getType(actions.itemMoved): {
+      const { item, source, target, equip, amount } = action.payload;
+      return produce(state, (draft) => itemMoved(draft, item, source.id, target.id, equip, amount));
+    }
+
+    case getType(actions.itemLockStateChanged): {
+      const { item, state: lockState, type } = action.payload;
+      return produce(state, (draft) => itemLockStateChanged(draft, item, lockState, type));
+    }
 
     case getType(actions.error):
       return {
@@ -157,18 +149,14 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
         return store;
       }
       const { characterId, ...characterInfo } = character;
-      return Object.assign(
-        // Have to make it into a full object again. TODO: un-object-ify this
-        Object.create(store.isDestiny2() ? D2StoreProto : D1StoreProto),
-        {
-          ...store,
-          ...characterInfo,
-          stats: {
-            ...store.stats,
-            ...characterInfo.stats,
-          },
-        }
-      );
+      return {
+        ...store,
+        ...characterInfo,
+        stats: {
+          ...store.stats,
+          ...characterInfo.stats,
+        },
+      };
     }),
   };
 }
@@ -271,26 +259,168 @@ function setsEqual<T>(first: Set<T>, second: Set<T>) {
   return equal;
 }
 
-function touchItem(state: InventoryState, itemId: string) {
-  let item = getItemAcrossStores(state.stores, { id: itemId })!;
-  if (!item) {
-    return state;
+/**
+ * Update our item and store models after an item has been moved (or equipped/dequipped).
+ */
+function itemMoved(
+  draft: Draft<InventoryState>,
+  item: DimItem,
+  sourceStoreId: string,
+  targetStoreId: string,
+  equip: boolean,
+  amount: number
+): void {
+  // Refresh all the items - they may have been reloaded!
+  const stores = draft.stores;
+  const source = getStore(stores, sourceStoreId);
+  const target = getStore(stores, targetStoreId);
+  if (!source || !target) {
+    console.warn('Either source or target store not found', source, target);
+    return;
   }
-  let store = getStore(state.stores, item.owner)!;
-  item = Object.assign(Object.create(ItemProto), item) as DimItem;
-  store = Object.assign(Object.create(StoreProto), {
-    ...store,
-    items: store.items.map((i) => (i.id === item.id ? item : i)),
-    buckets: {
-      ...store.buckets,
-      [item.location.hash]: store.buckets[item.location.hash].map((i) =>
-        i.id === item.id ? item : i
-      ),
-    },
-  });
 
-  return {
-    ...state,
-    stores: state.stores.map((s) => (s.id === store.id ? store : s)),
-  };
+  item = source.items.find(
+    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash
+  )!;
+  if (!item) {
+    console.warn('Moved item not found', item);
+    return;
+  }
+
+  // If we've moved to a new place
+  if (source.id !== target.id || item.location.inPostmaster) {
+    // We handle moving stackable and nonstackable items almost exactly the same!
+    const stackable = item.maxStackSize > 1;
+    // Items to be decremented
+    const sourceItems = stackable
+      ? // For stackables, pull from all the items as a pool
+        _.sortBy(
+          findItemsByBucket(source, item.location.hash).filter(
+            (i) => i.hash === item.hash && i.id === item.id
+          ),
+          (i) => i.amount
+        )
+      : // Otherwise we're moving the exact item we passed in
+        [item];
+
+    // Items to be incremented. There's really only ever at most one of these, but
+    // it's easier to deal with as a list. An empty list means we'll vivify a new item there.
+    const targetItems = stackable
+      ? _.sortBy(
+          findItemsByBucket(target, item.bucket.hash).filter(
+            (i) =>
+              i.hash === item.hash &&
+              i.id === item.id &&
+              // Don't consider full stacks as targets
+              i.amount !== i.maxStackSize
+          ),
+          (i) => i.amount
+        )
+      : [];
+
+    // moveAmount could be more than maxStackSize if there is more than one stack on a character!
+    const moveAmount = amount || item.amount || 1;
+    let addAmount = moveAmount;
+    let removeAmount = moveAmount;
+    let removedSourceItem = false;
+
+    // Remove inventory from the source
+    while (removeAmount > 0) {
+      const sourceItem = sourceItems.shift();
+      if (!sourceItem) {
+        console.warn('Source item missing', item);
+        return;
+      }
+
+      const amountToRemove = Math.min(removeAmount, sourceItem.amount);
+      sourceItem.amount -= amountToRemove;
+      if (sourceItem.amount <= 0) {
+        // Completely remove the source item
+        if (removeItem(source, sourceItem)) {
+          removedSourceItem = sourceItem.index === item.index;
+        }
+      }
+
+      removeAmount -= amountToRemove;
+    }
+
+    // Add inventory to the target (destination)
+    let targetItem = item;
+    while (addAmount > 0) {
+      targetItem = targetItems.shift()!;
+
+      if (!targetItem) {
+        targetItem = item;
+        if (!removedSourceItem) {
+          // This assumes (as we shouldn't) that we have no nested mutable state in the item
+          targetItem = { ...item };
+          targetItem.index = createItemIndex(targetItem);
+        }
+        removedSourceItem = false; // only move without cloning once
+        targetItem.amount = 0; // We'll increment amount below
+        if (targetItem.location.inPostmaster) {
+          targetItem.location = targetItem.bucket;
+        }
+        addItem(target, targetItem);
+      }
+
+      const amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
+      targetItem.amount += amountToAdd;
+      addAmount -= amountToAdd;
+    }
+    item = targetItem; // The item we're operating on switches to the last target
+  }
+
+  if (equip) {
+    for (const i of target.items) {
+      // Set equipped for all items in the bucket
+      if (i.location.hash === item.bucket.hash) {
+        i.equipped = i.index === item.index;
+      }
+    }
+  }
+}
+
+function itemLockStateChanged(
+  draft: Draft<InventoryState>,
+  item: DimItem,
+  state: boolean,
+  type: 'lock' | 'track'
+) {
+  const source = getStore(draft.stores, item.owner);
+  if (!source) {
+    console.warn('Store', item.owner, 'not found');
+    return;
+  }
+
+  // Only instanced items can be locked/tracked
+  item = source.items.find((i) => i.id === item.id)!;
+  if (!item) {
+    console.warn('Item not found in stores', item);
+    return;
+  }
+
+  if (type === 'lock') {
+    item.locked = state;
+  } else if (type === 'track') {
+    item.tracked = state;
+  }
+}
+
+// Remove an item from this store. Returns whether it actually removed anything.
+function removeItem(store: Draft<DimStore>, item: Draft<DimItem>) {
+  // Completely remove the source item
+  const sourceIndex = store.items.findIndex((i: DimItem) => item.index === i.index);
+  if (sourceIndex >= 0) {
+    store.items.splice(sourceIndex, 1);
+    return true;
+  }
+
+  return false;
+}
+
+function addItem(store: Draft<DimStore>, item: Draft<DimItem>) {
+  item.owner = store.id;
+  // Originally this was just "store.items.push(item)" but it caused Immer to think we had circular references
+  store.items = [...store.items, item];
 }

@@ -8,8 +8,11 @@ import {
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
   mapDimItemToProcessItem,
-  mapSeasonalModsToProcessMods,
 } from '../processWorker/mappers';
+import {
+  sortForGeneralProcessMods,
+  sortForSeasonalProcessMods,
+} from '../processWorker/processUtils';
 import { ProcessItemsByBucket } from '../processWorker/types';
 import {
   ArmorSet,
@@ -17,7 +20,6 @@ import {
   ItemsByBucket,
   LockedArmor2ModMap,
   LockedMap,
-  LockedModBase,
   MinMax,
   MinMaxIgnored,
   ModPickerCategories,
@@ -43,7 +45,6 @@ interface ProcessState {
 export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -59,7 +60,6 @@ export function useProcess(
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
-    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -81,16 +81,10 @@ export function useProcess(
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      const groupedItems = groupItems(
-        items,
-        lockedSeasonalMods,
-        lockedArmor2ModMap,
-        statOrder,
-        assumeMasterwork
-      );
+      const groupedItems = groupItems(items, lockedArmor2ModMap, statOrder, assumeMasterwork);
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
-        if (item?.isDestiny2()) {
+        if (item) {
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
           );
@@ -99,13 +93,18 @@ export function useProcess(
       }
     }
 
+    const lockedProcessMods = _.mapValues(lockedArmor2ModMap, (mods) =>
+      mods.map((mod) => mapArmor2ModToProcessMod(mod))
+    );
+    lockedProcessMods.seasonal.sort(sortForSeasonalProcessMods);
+    lockedProcessMods[ModPickerCategories.general].sort(sortForGeneralProcessMods);
+
     const workerStart = performance.now();
     worker
       .process(
         processItems,
-        mapSeasonalModsToProcessMods(lockedSeasonalMods),
-        getTotalModStatChanges(lockedItems, lockedArmor2ModMap),
-        _.mapValues(lockedArmor2ModMap, (mods) => mods.map((mod) => mapArmor2ModToProcessMod(mod))),
+        getTotalModStatChanges(lockedArmor2ModMap),
+        lockedProcessMods,
         assumeMasterwork,
         statOrder,
         statFilters,
@@ -133,7 +132,6 @@ export function useProcess(
   }, [
     filteredItems,
     lockedItems,
-    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -154,7 +152,6 @@ export function useProcess(
 function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
@@ -164,7 +161,6 @@ function useWorkerAndCleanup(
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
-    lockedSeasonalMods,
     lockedArmor2ModMap,
     assumeMasterwork,
     statOrder,
@@ -204,37 +200,31 @@ function createWorker() {
  */
 function groupItems(
   items: readonly DimItem[],
-  lockedSeasonalMods: readonly LockedModBase[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   statOrder: StatTypes[],
   assumeMasterwork: boolean
 ) {
   const groupingFn = (item: DimItem) => {
-    if (item.isDestiny2()) {
-      const statValues: number[] = [];
-      const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
-      // Ensure ordering of stats
-      if (statsByHash) {
-        for (const statType of statOrder) {
-          statValues.push(statsByHash[statHashes[statType]].base);
-        }
+    const statValues: number[] = [];
+    const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+    // Ensure ordering of stats
+    if (statsByHash) {
+      for (const statType of statOrder) {
+        statValues.push(statsByHash[statHashes[statType]].base);
       }
-
-      let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
-
-      if (lockedSeasonalMods.length || lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
-        groupId += `${getSpecialtySocketMetadata(item)?.season}`;
-      } else if (
-        someModHasEnergyRequirement(lockedSeasonalMods) ||
-        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
-        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
-      ) {
-        groupId += `${item.energy?.energyType}`;
-      }
-      return groupId;
-    } else {
-      return 'throwAway';
     }
+
+    let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+
+    if (lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
+      groupId += `${getSpecialtySocketMetadata(item)?.season}`;
+    } else if (
+      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
+      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+    ) {
+      groupId += `${item.energy?.energyType}`;
+    }
+    return groupId;
   };
 
   return _.groupBy(items, groupingFn);

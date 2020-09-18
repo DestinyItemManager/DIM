@@ -4,6 +4,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { getEvent, getSeason } from 'app/inventory/store/season';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import _ from 'lodash';
 import React from 'react';
@@ -59,12 +60,11 @@ export function solsticeOfHeroesArmor(stores: DimStore[], selectedStore: DimStor
       store.items.filter(
         (item) =>
           item.bucket.inArmor &&
-          item.isDestiny2() &&
           item.objectives &&
           item.objectives.length > 0 &&
           item.classType === selectedStore.classType &&
-          item.event === D2EventEnum.SOLSTICE_OF_HEROES &&
-          item.season === 11
+          getEvent(item) === D2EventEnum.SOLSTICE_OF_HEROES &&
+          getSeason(item) === 11
       )
     ),
     (i) => D2Categories.Armor.indexOf(i.type)

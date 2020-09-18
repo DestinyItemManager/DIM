@@ -1,5 +1,27 @@
+@import '../variables.scss';
+
 .link {
+  cursor: pointer;
+  background-color: #313233;
+  padding: 3px 8px;
+  color: white;
+  border-radius: 50px;
+  border: 1px solid #666;
+  display: inline-block;
+  text-decoration: none;
   > :global(.app-icon) {
-    margin-right: 2px;
+    margin-right: 4px;
+  }
+  &:hover {
+    background-color: $orange;
+    border-color: $orange;
+    color: black;
+  }
+  &:active,
+  &.selected {
+    box-shadow: none;
+    background-color: $orange;
+    border-color: $orange;
+    color: black;
   }
 }

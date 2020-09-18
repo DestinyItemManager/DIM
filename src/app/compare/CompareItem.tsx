@@ -64,7 +64,7 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && (
+      {item.sockets && (
         <ItemSockets
           item={item}
           minimal={true}

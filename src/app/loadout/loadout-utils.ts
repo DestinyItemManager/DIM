@@ -2,7 +2,9 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
-import { armorStats } from 'app/inventory/store/stats';
+import { armorStats } from 'app/search/d2-known-values';
+import { emptyArray } from 'app/utils/empty';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,8 +40,8 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
  */
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-  if (store.isDestiny2()) {
-    const exactLight = _.sumBy(items, (i) => i.primStat!.value) / items.length;
+  if (store.destinyVersion === 2) {
+    const exactLight = _.sumBy(items, (i) => i.primStat?.value ?? 0) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
     const itemWeight = {
@@ -58,7 +60,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
       items.reduce(
         (memo, item) =>
           memo +
-          item.primStat!.value *
+          (item.primStat?.value ?? 0) *
             (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
         0
       ) / itemWeightDenominator;
@@ -165,7 +167,7 @@ export function loadoutFromAllItems(
   onlyEquipped?: boolean
 ): Loadout {
   const allItems = store.items.filter(
-    (item) => item.canBeInLoadout() && (!onlyEquipped || item.equipped)
+    (item) => (!onlyEquipped || item.equipped) && itemCanBeInLoadout(item)
   );
   return newLoadout(
     name,
@@ -183,4 +185,52 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     amount: item.amount,
     equipped,
   };
+}
+
+/**
+ * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
+ * are returned as warnitems.
+ */
+export function getItemsFromLoadoutItems(
+  loadoutItems: LoadoutItem[] | undefined,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  stores: DimStore[]
+): [DimItem[], DimItem[]] {
+  if (!loadoutItems) {
+    return [emptyArray(), emptyArray()];
+  }
+
+  const findItem = (loadoutItem: LoadoutItem) => {
+    for (const store of stores) {
+      for (const item of store.items) {
+        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
+          return item;
+        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+          return item;
+        }
+      }
+    }
+    return undefined;
+  };
+
+  const items: DimItem[] = [];
+  const warnitems: DimItem[] = [];
+  for (const loadoutItem of loadoutItems) {
+    const item = findItem(loadoutItem);
+    if (item) {
+      items.push(item);
+    } else {
+      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
+      if (itemDef) {
+        // TODO: makeFakeItem
+        warnitems.push({
+          ...loadoutItem,
+          icon: itemDef.displayProperties?.icon || itemDef.icon,
+          name: itemDef.displayProperties?.name || itemDef.itemName,
+        } as DimItem);
+      }
+    }
+  }
+
+  return [items, warnitems];
 }

@@ -12,8 +12,6 @@ module.exports = function csp(env) {
       SELF,
       // Include a snippet of inline scripts
       "'report-sample'",
-      // Google API (Drive)
-      'https://apis.google.com',
       'https://www.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
@@ -69,16 +67,8 @@ module.exports = function csp(env) {
       // Google Fonts
       'https://fonts.gstatic.com',
     ],
-    childSrc: [
-      SELF,
-      // Google Login
-      'https://accounts.google.com',
-      'https://content.googleapis.com',
-    ],
+    childSrc: [SELF],
     frameSrc: [
-      // Google Login
-      'https://accounts.google.com',
-      'https://content.googleapis.com',
       // Twitter Widget
       'https://syndication.twitter.com/',
       'https://platform.twitter.com/',

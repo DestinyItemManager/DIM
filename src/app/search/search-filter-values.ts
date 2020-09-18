@@ -5,6 +5,7 @@ import {
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
+  swordStatsByName,
   TOTAL_STAT_HASH,
 } from './d2-known-values';
 
@@ -38,7 +39,7 @@ export const dimArmorStatHashByName = {
 };
 
 /** stats names used to create armor-specific filters, real ones plus an "any" keyword */
-export const searchableStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
+export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
 
 /** armor stat hashes to check for the "any" keyword */
 export const armorAnyStatHashes = Object.values(D2ArmorStatHashByName);
@@ -49,6 +50,7 @@ export const armorStatHashes = Object.values(dimArmorStatHashByName);
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName = {
   ...D2WeaponStatHashByName,
+  ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
 

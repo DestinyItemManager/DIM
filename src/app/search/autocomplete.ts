@@ -1,4 +1,5 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
+import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -68,7 +69,12 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         }
       : undefined;
     // Generate completions of the current search
-    const filterSuggestions = autocompleteTermSuggestions(query, caretIndex, filterComplete);
+    const filterSuggestions = autocompleteTermSuggestions(
+      query,
+      caretIndex,
+      filterComplete,
+      searchConfig
+    );
 
     // Recent/saved searches
     const recentSearchItems = filterSortRecentSearches(query, recentSearches);
@@ -137,7 +143,7 @@ function normalizeRecency(timestamp: number) {
   return Math.pow(2, -days / halfLife);
 }
 
-export function filterSortRecentSearches(query: string, recentSearches: Search[]) {
+export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
   // TODO: Filter recent searches by query
   // TODO: Sort recent searches by relevance (time+usage+saved)
@@ -167,8 +173,9 @@ const caretEndRegex = /([\s)]|$)/;
 export function autocompleteTermSuggestions(
   query: string,
   caretIndex: number,
-  filterComplete: (term: string) => string[]
-) {
+  filterComplete: (term: string) => string[],
+  searchConfig: SearchConfig
+): SearchItem[] {
   if (!query) {
     return [];
   }
@@ -185,17 +192,35 @@ export function autocompleteTermSuggestions(
 
     // new query is existing query minus match plus suggestion
     return candidates.map((word) => {
+      const filterDef = findFilter(word, searchConfig);
       const newQuery = base + word + query.slice(caretIndex);
       return {
         query: newQuery,
         type: SearchItemType.Autocomplete,
         highlightRange: [match.index, match.index + word.length],
-        // TODO: help from the matched query
+        helpText: filterDef
+          ? (Array.isArray(filterDef.description)
+              ? t(...filterDef.description)
+              : t(filterDef.description)
+            )?.replace(/\.$/, '')
+          : undefined,
       };
     });
   }
 
   return [];
+}
+
+function findFilter(term: string, searchConfig: SearchConfig) {
+  const parts = term.split(':');
+  let filterName = parts[0];
+  const filterValue = parts[1];
+  // "is:" filters are slightly special cased
+  if (filterName == 'is') {
+    filterName = filterValue;
+  }
+
+  return searchConfig.filters[filterName];
 }
 
 /**
@@ -205,44 +230,67 @@ export function autocompleteTermSuggestions(
 export function makeFilterComplete(searchConfig: SearchConfig) {
   // TODO: also search filter descriptions
   // TODO: also search individual items from the manifest???
-  return (term: string): string[] => {
-    if (!term) {
+  return (typed: string): string[] => {
+    if (!typed) {
       return [];
     }
 
-    const lowerTerm = term.toLowerCase();
+    const typedToLower = typed.toLowerCase();
 
-    let words = term.includes(':') // with a colon, only match from beginning
+    // because we are fighting against other elements for space in the suggestion dropdown,
+    // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
+    // unless the user seems to explicity be working toward them
+    const hasNotModifier = typedToLower.startsWith('not');
+    const includesAdvancedMath =
+      typedToLower.endsWith(':') || typedToLower.endsWith('<') || typedToLower.endsWith('<');
+    const filterLowPrioritySuggestions = (s: string) =>
+      (hasNotModifier || !s.startsWith('not')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
+
+    // if there's already a colon typed, we are on a path, not wildly guessing,
+    // so only match from beginning of the typed string
+    let suggestions = (typedToLower.includes(':')
       ? // ("stat:" matches "stat:" but not "basestat:")
-        searchConfig.keywords.filter((word) => word.startsWith(lowerTerm))
+        searchConfig.keywords.filter((word) => word.startsWith(typedToLower))
       : // ("stat" matches "stat:" and "basestat:")
-        searchConfig.keywords.filter((word) => word.includes(lowerTerm));
+        searchConfig.keywords.filter((word) => word.includes(typedToLower))
+    ).filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
-    words = words.sort(
+    suggestions = suggestions.sort(
       chainComparator(
-        // tags are UGC and therefore important
-        compareBy((word) => !word.startsWith('tag:')),
-        // prioritize is: & not: because a pair takes up only 2 slots at the top,
-        // vs filters that end in like 8 statnames
-        compareBy((word) => !(word.startsWith('is:') || word.startsWith('not:'))),
+        // above all else, push "not" and "<=" and ">=" to the bottom if they are present
+        // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
+        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
+        // bring "is" filters to the front above multiple-ending stuff like "season"
+        compareBy((word) => !word.startsWith('is:')),
         // sort incomplete terms (ending with ':') to the front
         compareBy((word) => !word.endsWith(':')),
+        // tags are UGC and therefore important
+        compareBy((word) => !word.startsWith('tag:')),
         // sort more-basic incomplete terms (fewer colons) to the front
+        // i.e. suggest "stat:" before "stat:magazine:"
         compareBy((word) => word.split(':').length),
-        // prioritize strings we are typing the beginning of
-        compareBy((word) => word.indexOf(term.toLowerCase()) !== 0),
+        // prioritize strings we are typing the beginning of (guessing at user intention)
+        compareBy((word) => word.indexOf(typedToLower) !== 0),
+
         // prioritize words with less left to type
-        compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
+        // this needs additional conditions like looking forward for another colon.
+        // otherwise it prioritizes "dawn" over "redwar" which is silly.
+        // compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
+
+        // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
         compareBy((word) => !mathCheck.test(word))
       )
     );
-    if (filterNames.includes(term.split(':')[0])) {
-      return words;
-    } else if (words.length) {
-      const deDuped = new Set([term, ...words]);
-      deDuped.delete(term);
+    if (filterNames.includes(typedToLower.split(':')[0])) {
+      return suggestions;
+    } else if (suggestions.length) {
+      // we will always add in (later) a suggestion of "what you've already typed so far"
+      // so prevent "what's been typed" from appearing in the returned suggestions form this function
+      const deDuped = new Set([typed, typedToLower, ...suggestions]);
+      deDuped.delete(typed);
+      deDuped.delete(typedToLower);
       return [...deDuped];
     }
     return [];

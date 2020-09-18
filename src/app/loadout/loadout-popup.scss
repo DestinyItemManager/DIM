@@ -108,7 +108,7 @@
     var(--item-margin)
   );
   box-sizing: border-box;
-  max-height: 60vh;
+  max-height: 90vh;
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
@@ -117,6 +117,10 @@
   cursor: pointer;
 
   @include visible-scrollbars;
+
+  @include phone-portrait {
+    max-height: 60vh;
+  }
 
   [role='button'] {
     outline: none;

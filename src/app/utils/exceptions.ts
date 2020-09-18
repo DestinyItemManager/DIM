@@ -39,8 +39,6 @@ if ($featureFlags.sentry) {
       /^moz-extension:\/\//i,
     ],
     attachStackTrace: true,
-    // We're flooding Sentry for some reason
-    sampleRate: 0.05,
     beforeSend: function (event, hint) {
       if (hint.originalException.errorCode) {
         event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];

@@ -1,9 +1,10 @@
 import { t } from 'app/i18next-t';
-import { getStore } from 'app/inventory/stores-helpers';
+import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import { showItemPopup } from 'app/item-popup/item-popup';
+import { ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
@@ -25,18 +26,19 @@ export default function ItemActions({
   const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const store = getStore(stores, item.owner);
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
     () =>
       !store || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
         ? 1
-        : store.amountOfItem(item),
+        : amountOfItem(store, item),
     [store, item]
   );
 
   const onMoveItemTo = (store: DimStore, equip = false) => {
-    moveItemTo(item, store, equip, amount);
+    dispatch(moveItemTo(item, store, equip, amount));
     hideItemPopup();
   };
 
@@ -51,13 +53,13 @@ export default function ItemActions({
 
   const onConsolidate = () => {
     if (store) {
-      consolidate(item, store);
+      dispatch(consolidate(item, store));
       hideItemPopup();
     }
   };
 
   const onDistribute = () => {
-    distribute(item);
+    dispatch(distribute(item));
     hideItemPopup();
   };
 
@@ -69,7 +71,7 @@ export default function ItemActions({
 
   const canConsolidate =
     !item.notransfer && item.location.hasTransferDestination && item.maxStackSize > 1;
-  const canDistribute = item.isDestiny1() && !item.notransfer && item.maxStackSize > 1;
+  const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
   return (
     <>
@@ -95,7 +97,7 @@ export default function ItemActions({
 
         {canConsolidate && (
           <ItemActionButton
-            className={styles.moveDistribute}
+            className={styles.moveConsolidate}
             title={t('MovePopup.Consolidate')}
             onClick={onConsolidate}
             label={t('MovePopup.Take')}
@@ -113,7 +115,7 @@ export default function ItemActions({
           <ItemActionButtonGroup vertical={Boolean(mobileInspect)}>
             <ItemActionButton
               className={clsx(styles.infusePerk, {
-                [styles.destiny2]: item.isDestiny2(),
+                [styles.destiny2]: item.destinyVersion === 2,
                 [styles.weapons]: item.bucket.sort === 'Weapons',
                 [styles.armor]: item.bucket.sort === 'Armor',
               })}

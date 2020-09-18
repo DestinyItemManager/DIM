@@ -4,17 +4,12 @@ declare const $DIM_BUILD_DATE: string;
 declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;
 declare const $DIM_WEB_CLIENT_SECRET: string;
-declare const $GOOGLE_DRIVE_CLIENT_ID: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
   /** Print debug info to console about item moves */
   debugMoves: boolean;
-  /** Enable item reviews */
-  reviewsEnabled: boolean;
-  /** Sync data over gdrive */
-  gdrive: boolean;
   debugSync: boolean;
   /** Enable color-blind a11y */
   colorA11y: boolean;
@@ -62,8 +57,6 @@ interface Window {
   };
   BroadcastChannel?: BroadcastChannel;
   OC?: any;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  gapi_onload(): void;
 
   // Service worker stuff
   __precacheManifest: string[];

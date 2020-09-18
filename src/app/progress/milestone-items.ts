@@ -1,8 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { D2Item } from 'app/inventory/item-types';
-import { ItemProto } from 'app/inventory/store/d2-item-factory';
+import { DimItem } from 'app/inventory/item-types';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -23,7 +22,7 @@ export function milestoneToItems(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   characterClass: DestinyClass
-): D2Item[] {
+): DimItem[] {
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
   // TODO: activity locations (nightfalls, etc)
@@ -63,7 +62,7 @@ function availableQuestToItem(
   milestoneDef: DestinyMilestoneDefinition,
   availableQuest: DestinyMilestoneQuest,
   characterClass: DestinyClass
-): D2Item {
+): DimItem {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: DestinyDisplayPropertiesDefinition =
     questDef.displayProperties || milestoneDef.displayProperties;
@@ -115,7 +114,7 @@ function activityMilestoneToItem(
   buckets: InventoryBuckets,
   milestoneDef: DestinyMilestoneDefinition,
   milestone: DestinyMilestone
-): D2Item | null {
+): DimItem | null {
   const objectives = milestone.activities[0].challenges.map((a) => a.objective);
   if (objectives.every((objective) => objective.complete)) {
     return null;
@@ -156,7 +155,7 @@ function weeklyClanMilestoneToItems(
   milestoneDef: DestinyMilestoneDefinition,
   milestone: DestinyMilestone,
   milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition
-): D2Item {
+): DimItem {
   const reward = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
   const displayProperties = {
@@ -189,7 +188,7 @@ function makeFakePursuitItem(
   hash: number,
   typeName: string
 ) {
-  const dimItem: D2Item = Object.assign(Object.create(ItemProto), {
+  const dimItem: DimItem = {
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -222,26 +221,38 @@ function makeFakePursuitItem(
     classType: 3,
     classTypeNameLocalized: 'Any',
     element: null,
-    visible: true,
     lockable: false,
     tracked: false,
     locked: false,
     masterwork: false,
     classified: false,
     isEngram: false,
-    lastManuallyMoved: 0,
     percentComplete: 0, // filled in later
     hidePercentage: false,
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
-    dtrRating: null,
     ammoType: DestinyAmmunitionType.None,
-    source: null,
-    collectibleState: null,
-    collectibleHash: null,
     missingSockets: false,
-  });
+    breakerType: null,
+    pursuit: null,
+    taggable: false,
+    comparable: false,
+    basePower: 0,
+    index: '',
+    infusable: false,
+    infusionFuel: false,
+    sockets: null,
+    perks: null,
+    masterworkInfo: null,
+    flavorObjective: null,
+    infusionQuality: null,
+    owner: 'unknown',
+    uniqueStack: false,
+    trackable: false,
+    energy: null,
+    powerCap: null,
+  };
 
   return dimItem;
 }

@@ -1,18 +1,23 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import ItemSockets from 'app/item-popup/ItemSockets';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import React, { Dispatch, useMemo } from 'react';
-import { DimItem } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { matchLockedItem } from '../preProcessFilter';
-import { LockedArmor2Mod, LockedItemType, StatTypes } from '../types';
-import { generateMixesFromPerks, lockedItemsEqual } from '../utils';
+import {
+  LockedArmor2Mod,
+  LockedItemType,
+  ModPickerCategories,
+  ModPickerCategory,
+  StatTypes,
+} from '../types';
+import { armor2ModPlugCategoriesTitles, generateMixesFromPerks } from '../utils';
 import styles from './GeneratedSetItem.m.scss';
-import GeneratedSetSockets from './GeneratedSetSockets';
+import Sockets from './Sockets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -72,26 +77,31 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
-  const onShiftClick = (lockedItem: LockedItemType) => {
-    locked?.some((li) => lockedItemsEqual(lockedItem, li))
-      ? removeLockedItem(lockedItem)
-      : addLockedItem(lockedItem);
-  };
-
   const lockedPerks: DestinyInventoryItemDefinition[] = [];
-  /*  TODO: atm I just have all mods here but this will move to only old ones
-      when we get closer to releasing as perk picker will only have old mods */
-  const lockedOldMods: DestinyInventoryItemDefinition[] = [];
 
-  if ($featureFlags.armor2ModPicker && locked?.length) {
+  if (locked?.length) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk' && matchLockedItem(item, lockedItem)) {
         lockedPerks.push(lockedItem.perk);
-      } else if (lockedItem.type === 'mod' && matchLockedItem(item, lockedItem)) {
-        lockedOldMods.push(lockedItem.mod);
       }
     }
   }
+
+  const onSocketClick = (
+    plugDef: PluggableInventoryItemDefinition,
+    category?: ModPickerCategory,
+    season?: number
+  ) => {
+    if (category) {
+      const initialQuery =
+        category === ModPickerCategories.seasonal
+          ? season?.toString()
+          : t(armor2ModPlugCategoriesTitles[category]);
+      lbDispatch({ type: 'openModPicker', initialQuery });
+    } else {
+      lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
+    }
+  };
 
   return (
     <div className={styles.item}>
@@ -118,24 +128,9 @@ export default function GeneratedSetItem({
           </button>
         )
       )}
-      {!$featureFlags.armor2ModPicker && item.isDestiny2() && (
-        <ItemSockets
-          item={item}
-          minimal={true}
-          classesByHash={classesByHash}
-          onShiftClick={onShiftClick}
-        />
-      )}
-      {$featureFlags.armor2ModPicker && (
-        <div className={styles.lockedSockets}>
-          <GeneratedSetSockets
-            item={item}
-            lockedMods={lockedMods}
-            defs={defs}
-            lbDispatch={lbDispatch}
-          />
-        </div>
-      )}
+      <div className={styles.lockedSockets}>
+        <Sockets item={item} lockedMods={lockedMods} defs={defs} onSocketClick={onSocketClick} />
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortSelector } from '../settings/character-sort';
 import { ItemInfos } from './dim-item-info';
-import { getCurrentStore } from './stores-helpers';
+import { getCurrentStore, getVault } from './stores-helpers';
 
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
@@ -37,6 +37,9 @@ export const storesLoadedSelector = (state: RootState) => storesSelector(state).
 
 /** The current (last played) character */
 export const currentStoreSelector = (state: RootState) => getCurrentStore(storesSelector(state));
+
+/** The vault */
+export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;

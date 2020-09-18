@@ -1,15 +1,27 @@
+import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimMasterwork, DimSocket } from 'app/inventory/item-types';
+import {
+  D1Item,
+  DimItem,
+  DimMasterwork,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
+import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
+  killTrackerObjectivesByHash,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
+import _ from 'lodash';
 import { objectifyArray } from './util';
 
 // damage is a mess!
@@ -17,7 +29,7 @@ import { objectifyArray } from './util';
 // mainly for most css purposes and the filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  item.isDestiny2() && item.energy
+  item.energy
     ? energyNamesByEnum[item.element?.enumValue ?? -1]
     : damageNamesByEnum[item.element?.enumValue ?? -1];
 
@@ -44,9 +56,13 @@ export const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes
 );
 
+export const emptySpecialtySocketHashes = modSocketMetadata.map(
+  (modMetadata) => modMetadata.emptyModSocketHash
+);
+
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
 export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {
-  if (item.isDestiny2() && item.bucket.inArmor) {
+  if (item.bucket.inArmor) {
     return item.sockets?.allSockets.find((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
@@ -91,7 +107,7 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 
 /** given item, get the final season it will be relevant (able to hit max power level) */
 export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
-  item.isDestiny2() ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
+  item.powerCap ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
 
 /** accepts a DimMasterwork or lack thereof, & always returns a string */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
@@ -128,4 +144,128 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
  */
 export function itemIsInstanced(item: DimItem): boolean {
   return item.id !== '0';
+}
+
+/** Can this item be equipped by the given store? */
+export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
+  if (store.isVault) {
+    return false;
+  }
+
+  return (
+    item.equipment &&
+    // For the right class
+    (item.classType === DestinyClass.Unknown || item.classType === store.classType) &&
+    // nothing we are too low-level to equip
+    item.equipRequiredLevel <= store.level &&
+    // can be moved or is already here
+    (!item.notransfer || item.owner === store.id) &&
+    !item.location.inPostmaster &&
+    (isD1Item(item) ? factionItemAligns(store, item) : true)
+  );
+}
+/** Could this be added to a loadout? */
+export function itemCanBeInLoadout(item: DimItem): boolean {
+  return (
+    item.equipment ||
+    item.type === 'Consumables' ||
+    // D1 had a "Material" type
+    item.type === 'Material'
+  );
+}
+
+/** verifies an item has kill tracker mod slot, which is returned */
+const getKillTrackerSocket = (item: DimItem): DimSocket | undefined => {
+  if (item.bucket.inWeapons) {
+    return item.sockets?.allSockets.find(
+      (socket) =>
+        (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash
+    );
+  }
+};
+
+export type KillTracker = {
+  type: 'pve' | 'pvp';
+  count: number;
+  trackerDef: PluggableInventoryItemDefinition;
+};
+
+/** returns a socket's kill tracker info */
+const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
+  const installedKillTracker = socket?.plugged;
+  if (installedKillTracker) {
+    // getKillTrackerSocket's find() ensures that objectiveHash is in killTrackerObjectivesByHash
+    const type = killTrackerObjectivesByHash[installedKillTracker.plugObjectives[0].objectiveHash];
+    const count = installedKillTracker.plugObjectives[0]?.progress;
+    if (type && count !== undefined) {
+      return {
+        type,
+        count,
+        trackerDef: installedKillTracker.plugDef,
+      };
+    }
+  }
+};
+
+/** returns an item's kill tracker info */
+export const getItemKillTrackerInfo = (item: DimItem): KillTracker | undefined =>
+  getSocketKillTrackerInfo(getKillTrackerSocket(item));
+
+const d1YearSourceHashes = {
+  //         tTK       Variks        CoE         FoTL    Kings Fall
+  year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
+  //         RoI       WoTM         FoTl       Dawning    Raid Reprise
+  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381],
+};
+
+/**
+ * Which "Year" of Destiny did this item come from?
+ */
+export function getItemYear(item: DimItem) {
+  if (item.destinyVersion === 2) {
+    // TODO: D2SeasonInfo is only used for year?
+    return D2SeasonInfo[getSeason(item)].year;
+  } else if (isD1Item(item)) {
+    if (!item.sourceHashes) {
+      return 1;
+    }
+
+    // determine what year this item came from based on sourceHash value
+    // items will hopefully be tagged as follows
+    // No value: Vanilla, Crota's End, House of Wolves
+    // The Taken King (year 2): 460228854
+    // Rise of Iron (year 3): 24296771
+    // if sourceHash doesn't contain these values, we assume they came from
+    // year 1
+
+    let year = 1;
+    const ttk = item.sourceHashes.includes(d1YearSourceHashes.year2[0]);
+    if (
+      ttk ||
+      item.infusable ||
+      _.intersection(d1YearSourceHashes.year2, item.sourceHashes).length
+    ) {
+      year = 2;
+    }
+    const roi = item.sourceHashes.includes(d1YearSourceHashes.year3[0]);
+    if (
+      !ttk &&
+      (item.classified || roi || _.intersection(d1YearSourceHashes.year3, item.sourceHashes).length)
+    ) {
+      year = 3;
+    }
+
+    return year;
+  } else {
+    return undefined;
+  }
+}
+
+/**
+ * Is this item a Destiny 1 item? Use this when you want the item to
+ * automatically be typed as D1 item in the "true" branch of a conditional.
+ * Otherwise you can just check "destinyVersion === 1".
+ */
+export function isD1Item(item: DimItem): item is D1Item {
+  return item.destinyVersion === 1;
 }

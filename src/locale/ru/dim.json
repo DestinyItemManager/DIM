@@ -192,7 +192,7 @@
     "Activity": "Доступно в активности <i>{{activity}}</i>",
     "AmmoType": "По типу используемых боеприпасов.",
     "ArmorCategory": "Броня по слотам. Шлемы, перчатки, тело, ноги, классовые предметы.",
-    "Ascended": "Поднимающие уровень их Света и был ли он поднят или нет.",
+    "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Удалён тег с одного предмета.",
     "BulkClear_plural": "Удалены теги с нескольких предметов в количестве {{count}}.",
@@ -205,6 +205,7 @@
     "Combine": "Комбинируйте фильтры для более точного поиска: '{{example}}' найдёт все электрические предметы с силой больше 300.",
     "ContributeLight": "Увеличивающие Ваш лайт.",
     "ContributePower": "Увеличивающие Вашу силу.",
+    "Curated": "Shows items that are a curated roll.",
     "DamageType": "По типу урона.",
     "Description": "Описание",
     "Dupe": "Дубликаты",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "Показать элементы, к которым применены заметки.",
     "HasOrnament": "Показывает предметы с применённым орнаментом.",
+    "HasRating": " Shows items that have a community rating.",
     "HasShader": "Покрашенные шейдерами.",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "В ваших Наборах.",
     "Infusable": "Доступные для Синтеза.",
+    "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
+    "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
       "Complete": "{{term}} - показывает вещи, которые завершены - все улучшения открыты.",
       "Incomplete": "{{term}} - показывать незаконченные предметы - есть как минимум одно улучшение для разблокировки.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "Ошибка выбора предметов",
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
+    "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MaxPower": "Показывает элементы, которые максимизируют уровень мощности света [лайта] для каждого класса персонажей.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "По Силе.",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
+    "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "По общей сумме процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
     "RandomRoll": "Со случайными бонусами.",
     "RarityTier": "По редкости.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "По требуемому уровню.",
     "Season": "По сезонам Destiny 2.",
+    "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "Source": {
       "Adventure": "Предмет <i>Приключений</i>.",
       "BlackArmory": "Предмет <i>Черного Арсенала</i>.",
@@ -319,11 +326,14 @@
       "Favorite": "Отмеченные в DIM как \"Избранные\".",
       "Infuse": "Отмеченные в DIM \"для Синтеза\".",
       "Keep": "Отмеченные в DIM как \"Оставить\".",
-      "NoTag": "Не отмеченные в DIM."
+      "NoTag": "Не отмеченные в DIM.",
+      "Tag": "Shows items that have a specific tag.",
+      "Tagged": "Shows items that have any tag."
     },
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Доступные всем Персонажам.",
     "Trashlist": "Показывает элементы, которые соответствуют вашей корзине списка желаний.",
+    "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Undo": "Отменить",
     "UnlockAllFailed": "Разблокирование не удалось",
     "UnlockAllSuccess": "Разблокировано {{num}} предметов",
@@ -376,6 +386,7 @@
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Очистить Фильтр предметов",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -799,20 +811,29 @@
     "Bounties": "Контракты",
     "CrucibleRank": "Ранги",
     "Items": "Предметы Заданий",
+    "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
+    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "Испытания",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
     "Progress": "Чек-Лист",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Просрочен",
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
-    "SecretTriumph": "Скрытый Триумф"
+    "SecretTriumph": "Скрытый Триумф",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
     "RecordBooks": "Таблица Рекордов"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
@@ -958,8 +979,8 @@
     "UnlockAll": "Разблокировать всё"
   },
   "Triumphs": {
-    "HideCompleted": "Скрыть выполненное",
-    "RevealRedacted": "Показать скрытое"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz сообщает, что этот вендор даёт предметы мощных энграмм.",

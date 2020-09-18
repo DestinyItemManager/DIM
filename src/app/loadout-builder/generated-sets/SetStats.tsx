@@ -2,36 +2,41 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import { ArmorSet, statHashes, StatTypes } from '../types';
+import { statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  set: ArmorSet;
+  stats: Readonly<{ [statType in StatTypes]: number }>;
+  items: DimItem[];
+  maxPower: number;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
+  className?: string;
 }
 
-function SetStats({ defs, set, statOrder, enabledStats }: Props) {
-  const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
-  const totalTier = calculateTotalTier(set.stats);
-  const enabledTier = sumEnabledStats(set.stats, enabledStats);
+function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats, className }: Props) {
+  const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
+  const totalTier = calculateTotalTier(stats);
+  const enabledTier = sumEnabledStats(stats, enabledStats);
   // class items is the only array larger than 1 and it cannot have incorrect stats
-  const incorrectStats = _.uniq(set.armor.flatMap((items) => getPossiblyIncorrectStats(items[0])));
+  const incorrectStats = _.uniq(items.flatMap((item) => getPossiblyIncorrectStats(item)));
 
-  const displayStats = { ...set.stats };
+  const displayStats = { ...stats };
 
   return (
-    <div>
+    <div className={clsx(styles.container, className)}>
       <span>
-        {set.armor.some((items) => items[0].stats?.some((stat) => stat.baseMayBeWrong)) && (
+        {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
           <PressTip
             elementType="span"
             tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
@@ -63,13 +68,13 @@ function SetStats({ defs, set, statOrder, enabledStats }: Props) {
           <Stat
             key={stat}
             isActive={enabledStats.has(stat)}
-            stat={stats[stat]}
+            stat={statsDefs[stat]}
             value={displayStats[stat]}
           />
         ))}
       </span>
       <span className={styles.light}>
-        <AppIcon icon={powerIndicatorIcon} /> {set.maxPower}
+        <AppIcon icon={powerIndicatorIcon} /> {maxPower}
       </span>
     </div>
   );

@@ -6,7 +6,6 @@ import type { AccountsState } from '../accounts/reducer';
 import type { DimApiState } from '../dim-api/reducer';
 import type { FarmingState } from '../farming/reducer';
 import type { InventoryState } from '../inventory/reducer';
-import type { ReviewsState } from '../item-review/reducer';
 import type { LoadoutsState } from '../loadout/reducer';
 import type { ManifestState } from '../manifest/reducer';
 import type { ShellState } from '../shell/reducer';
@@ -17,7 +16,6 @@ import type { WishListsState } from '../wishlists/reducer';
 export interface RootState {
   readonly accounts: AccountsState;
   readonly inventory: InventoryState;
-  readonly reviews: ReviewsState;
   readonly shell: ShellState;
   readonly loadouts: LoadoutsState;
   readonly wishLists: WishListsState;

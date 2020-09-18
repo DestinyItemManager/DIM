@@ -6,6 +6,8 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { loadoutsSelector } from 'app/loadout/reducer';
+import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { settingsSelector } from 'app/settings/reducer';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -18,11 +20,12 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { storesSelector } from '../inventory/selectors';
-import { D2Store, DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
 import PerkPicker from './filter/PerkPicker';
+import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { useProcess } from './hooks/useProcess';
@@ -48,7 +51,8 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  filter(item: DimItem): boolean;
+  loadouts: Loadout[];
+  filter: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -66,7 +70,7 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
+          if (!item || !isLoadoutBuilderItem(item)) {
             continue;
           }
           for (const classType of item.classType === DestinyClass.Unknown
@@ -101,6 +105,7 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
+      loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
     };
   };
@@ -118,18 +123,19 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
+  loadouts,
   filter,
   preloadedLoadout,
 }: Props) {
   const [
     {
       lockedMap,
-      lockedSeasonalMods,
       lockedArmor2Mods,
       selectedStoreId,
       statFilters,
       modPicker,
       perkPicker,
+      compareSet,
     },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
@@ -159,7 +165,6 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
-    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -189,7 +194,7 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore as D2Store}
+        selectedStore={selectedStore}
         minimumPower={minimumPower}
         minimumStatTotal={minimumStatTotal}
         stats={statFilters}
@@ -204,7 +209,6 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedSeasonalMods={lockedSeasonalMods}
         lockedArmor2Mods={lockedArmor2Mods}
         lbDispatch={lbDispatch}
       />
@@ -263,7 +267,7 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
-            lockedSeasonalMods={lockedSeasonalMods}
+            loadouts={loadouts}
           />
         )}
         {modPicker.open &&
@@ -283,10 +287,24 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
-              lockedSeasonalMods={lockedSeasonalMods}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
+            />,
+            document.body
+          )}
+        {compareSet &&
+          ReactDOM.createPortal(
+            <CompareDrawer
+              set={compareSet}
+              loadouts={loadouts}
+              lockedArmor2Mods={lockedArmor2Mods}
+              defs={defs}
+              classType={selectedStore.classType}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              assumeMasterwork={assumeMasterwork}
+              onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
           )}

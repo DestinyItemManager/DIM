@@ -192,7 +192,7 @@
     "Activity": "Disponible en la actividad <i>{{activity}}</i>",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
-    "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
+    "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
     "Breaker": "Filtrar por tipo de rompedor o campeón correspondiente.",
     "BulkClear": "Etiqueta eliminada de 1 objeto.",
     "BulkClear_plural": "Etiquetas eliminadas de {{count}} objetos.",
@@ -205,6 +205,7 @@
     "Combine": "Los filtros pueden ser combinados para acortar tu búsqueda: '{{example}}' devolverá todos los objetos de arco con más de 300 de luz.",
     "ContributeLight": "Muestra los objetos que tienen luz y pueden contribuir a subir tu nivel de luz.",
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
+    "Curated": "Muestra objetos que tengan una tirada de curador.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "Muestra objetos que contengan notas.",
     "HasOrnament": "Muestra objeto que tengan el ornamento aplicado.",
+    "HasRating": " Muestra objetos que tengan una calificación de la comunidad.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InLoadout": "Muestra objetos que estén incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
+    "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
+    "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
     "Leveling": {
       "Complete": "{{term}} - muestra objetos que están totalmente completos - todas las mejoras desbloqueadas.",
       "Incomplete": "{{term}} - muestra objetos que no están completos - aún queda al menos una mejora por desbloquear.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "Error al bloquear objetos",
     "LockAllSuccess": "Bloqueados {{num}} objetos",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
+    "Masterwork": "Muestra objetos basados en su nivel de estadística de obra maestra o nivel de obra maestra.",
     "MaxPower": "Muestra objetos que maximizarían el Nivel de Poder para cada clase de personaje.",
     "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "Objetos que están actualmente en la Administración.",
     "PowerLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
     "PowerLimit": "Muestra objetos basados en el máximo nivel de poder en el que pueden ser infundidos.",
+    "PowerfulReward": "Muestra aventuras que tengan una recompensa poderosa.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad total de su estadística. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
     "RandomRoll": "Muestra objetos que suelten tiradas aleatorias.",
     "RarityTier": "Muestra objetos basado en su nivel de rareza.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "Muestra objetos basado en su nivel requerido.",
     "Season": "Mostrar objetos en cuya temporada de Destiny 2 aparecieron.",
+    "SeasonalDupe": "Muestra objetos duplicados, sin contar reincidencias de una temporada diferente como el mismo objeto.",
     "Source": {
       "Adventure": "El objeto está disponible en <i>Aventuras</i>.",
       "BlackArmory": "El objeto está disponible en la <i>Armería Negra</i>.",
@@ -319,11 +326,14 @@
       "Favorite": "Muestra tus objetos favoritos.",
       "Infuse": "Muestra objetos que desearías infundir.",
       "Keep": "Muestra los objetos guardados.",
-      "NoTag": "Muestra objetos sin una etiqueta."
+      "NoTag": "Muestra objetos sin una etiqueta.",
+      "Tag": "Muestra objetos que tengan una etiqueta específica.",
+      "Tagged": "Muestra objetos que tengan cualquier etiqueta."
     },
     "Tracked": "Muestra misiones/contratos basado en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
     "Trashlist": "Muestra objetos que coincidan con la lista basura de tu lista de deseos.",
+    "Unascended": "Muestra objetos que tengan un nodo ascendente en el que no haya sido ascendido.",
     "Undo": "Deshacer",
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "Desbloqueados {{num}} objetos",
@@ -376,6 +386,7 @@
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
+    "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
     "Filters": "Filtros",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "SHIFT+CLICK en una ventaja para seleccionarla. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos bloqueados",
+    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
@@ -799,20 +811,29 @@
     "Bounties": "Contratos",
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
+    "LegacyRecord": "Este Triunfo ya no estará disponible para completar después de que Más Allá de la Luz sea lanzado.",
+    "LegacyTriumphs": "Triunfos Legados",
     "Milestones": "Hazañas & Desafíos",
+    "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% para el reinicio",
     "Progress": "Progreso",
+    "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos seguidos coincidió con la búsqueda",
     "QuestExpired": "Caducado",
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
-    "SecretTriumph": "Triunfo Secreto"
+    "SecretTriumph": "Triunfo Secreto",
+    "StatTrackers": "Rastreadores de estadísticas",
+    "TrackedTriumphs": "Triunfos seguidos"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar hazañas completadas",
     "RecordBooks": "Libros de hazañas"
+  },
+  "Records": {
+    "Title": "Hazañas"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análisis detallado de armas y permitir calificación de armas",
@@ -958,8 +979,8 @@
     "UnlockAll": "Desbloquear objetos"
   },
   "Triumphs": {
-    "HideCompleted": "Esconder Completados",
-    "RevealRedacted": "Revelar Clasificados"
+    "HideCompleted": "Ocultar triunfos completados",
+    "RevealRedacted": "Revelar triunfos clasificados"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",

@@ -12,6 +12,8 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
+import { searchConfigSelector, validateQuery } from 'app/search/search-config';
+import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { clearWishLists } from 'app/wishlists/actions';
 import produce, { Draft } from 'immer';
@@ -344,7 +346,7 @@ export const dimApi = (
 
     case getType(actions.saveSearch):
       return produce(state, (draft) => {
-        saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
+        saveSearch(account!, draft, action.payload.query, action.payload.saved);
       });
 
     case getType(actions.searchDeleted):
@@ -1012,14 +1014,29 @@ function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, q
 }
 
 function saveSearch(
+  account: DestinyAccount,
   draft: Draft<DimApiState>,
-  destinyVersion: DestinyVersion,
   query: string,
   saved: boolean
 ) {
+  const destinyVersion = account.destinyVersion;
+
+  // Real hack to fake out enough store to select out the search configs
+  const searchConfigs = searchConfigSelector(({
+    accounts: {
+      accounts: [account],
+      currentAccount: 0,
+    },
+  } as any) as RootState);
+
   // Canonicalize the query so we always save it the same way
   try {
-    query = canonicalizeQuery(parseQuery(query));
+    const ast = parseQuery(query);
+    if (!validateQuery(ast, searchConfigs)) {
+      console.error('Query not valid - not saving', query);
+      return;
+    }
+    query = canonicalizeQuery(ast);
   } catch (e) {
     console.error('Query not parseable - not saving', query, e);
     return;

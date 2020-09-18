@@ -1,7 +1,6 @@
-import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { DimWishList, WishListRoll } from './types';
 
@@ -45,7 +44,7 @@ export function getInventoryWishListRolls(
     !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
     !stores.length ||
-    !stores[0].isDestiny2()
+    stores[0].destinyVersion === 1
   ) {
     return {};
   }
@@ -58,7 +57,7 @@ export function getInventoryWishListRolls(
 
   for (const store of stores) {
     for (const item of store.items) {
-      if (item.isDestiny2() && item.sockets && !seenItemIds.has(item.id)) {
+      if (item.sockets && !seenItemIds.has(item.id)) {
         const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
         if (wishListRoll) {
           inventoryRolls[item.id] = wishListRoll;
@@ -89,7 +88,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   }
 
   // if it's a modification, ignore it
-  if (plug.plugDef.inventory!.bucketTypeHash === MODIFICATIONS_BUCKET) {
+  if (plug.plugDef.inventory!.bucketTypeHash === BucketHashes.Modifications) {
     return false;
   }
 
@@ -110,7 +109,7 @@ function isWishListPlug(plug: DimPlug, wishListRoll: WishListRoll): boolean {
 }
 
 /** Get all of the plugs for this item that match the wish list roll. */
-function getWishListPlugs(item: D2Item, wishListRoll: WishListRoll): Set<number> {
+function getWishListPlugs(item: DimItem, wishListRoll: WishListRoll): Set<number> {
   if (!item.sockets) {
     return new Set();
   }
@@ -134,7 +133,7 @@ function getWishListPlugs(item: D2Item, wishListRoll: WishListRoll): Set<number>
  * Do all desired perks from the wish list roll exist on this item?
  * Disregards cosmetics and some other socket types.
  */
-function allDesiredPerksExist(item: D2Item, wishListRoll: WishListRoll): boolean {
+function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolean {
   if (!item.sockets) {
     return false;
   }
@@ -174,7 +173,7 @@ function getInventoryWishListRoll(
   item: DimItem,
   wishListRolls: { [itemHash: number]: WishListRoll[] }
 ): InventoryWishListRoll | undefined {
-  if (!wishListRolls || !item || !item.isDestiny2() || !item.sockets) {
+  if (!wishListRolls || !item || !item.sockets) {
     return undefined;
   }
 

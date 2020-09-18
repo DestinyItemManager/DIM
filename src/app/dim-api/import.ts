@@ -7,10 +7,8 @@ import {
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { initialSettingsState } from 'app/settings/initial-settings';
-import { DimData } from 'app/storage/sync.service';
 import { ThunkResult } from 'app/store/types';
 import { observeStore } from 'app/utils/redux-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
@@ -18,10 +16,10 @@ import { importData } from './dim-api';
 import { DimApiState, makeProfileKey } from './reducer';
 
 /**
- * Import data (either legacy-format from SyncService or the new DIM Sync export) into DIM Sync.
+ * Import data in the DIM Sync export format into DIM Sync or local storage.
  * This is from a user clicking "Import" and will always overwrite the data saved locally or on the server.
  */
-export function importDataBackup(data: DimData | ExportResponse, silent = false): ThunkResult {
+export function importDataBackup(data: ExportResponse, silent = false): ThunkResult {
   return async (dispatch, getState) => {
     const dimApiData = getState().dimApi;
 
@@ -41,7 +39,7 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
         showImportSuccessNotification(result, true);
 
         // Reload from the server
-        return dispatch(loadDimApiData(true));
+        return await dispatch(loadDimApiData(true));
       } catch (e) {
         if (!silent) {
           console.error('[importLegacyData] Error importing legacy data into DIM API', e);
@@ -51,7 +49,7 @@ export function importDataBackup(data: DimData | ExportResponse, silent = false)
       }
     } else {
       // Import directly into local state, since the user doesn't want to use DIM Sync
-      const settings = data.settings || data['settings-v1.0'];
+      const settings = data.settings;
       const loadouts = extractLoadouts(data);
       const tags = extractItemAnnotations(data);
       const triumphs: ExportResponse['triumphs'] = data.triumphs || [];
@@ -181,30 +179,15 @@ function showImportFailedNotification(e: Error) {
   });
 }
 
-/** This is the enum loadouts have been stored with - it does not align with DestinyClass */
-const enum LoadoutClass {
-  any = -1,
-  warlock = 0,
-  titan = 1,
-  hunter = 2,
-}
-
-const loadoutClassToClassType = {
-  [LoadoutClass.warlock]: DestinyClass.Warlock,
-  [LoadoutClass.titan]: DestinyClass.Titan,
-  [LoadoutClass.hunter]: DestinyClass.Hunter,
-  [LoadoutClass.any]: DestinyClass.Unknown,
-};
-
 type PlatformLoadout = Loadout & {
   platformMembershipId: string;
   destinyVersion: DestinyVersion;
 };
 
 /**
- * Extract loadouts in DIM API format from the legacy DimData or a new DIM Sync export.
+ * Extract loadouts in DIM API format from an export.
  */
-function extractLoadouts(importData: DimData): PlatformLoadout[] {
+function extractLoadouts(importData: ExportResponse): PlatformLoadout[] {
   if (importData.loadouts) {
     return importData.loadouts.map((l) => ({
       ...l.loadout,
@@ -212,29 +195,7 @@ function extractLoadouts(importData: DimData): PlatformLoadout[] {
       destinyVersion: l.destinyVersion,
     }));
   }
-
-  const ids = importData['loadouts-v3.0'];
-  if (!ids) {
-    return [];
-  }
-  return ids
-    .map((id) => importData[id])
-    .filter(Boolean)
-    .map((rawLoadout) => ({
-      platformMembershipId: rawLoadout.membershipId,
-      destinyVersion: rawLoadout.destinyVersion,
-      id: rawLoadout.id,
-      name: rawLoadout.name,
-      classType:
-        loadoutClassToClassType[rawLoadout.classType === undefined ? -1 : rawLoadout.classType],
-      clearSpace: rawLoadout.clearSpace || false,
-      equipped: rawLoadout.items
-        .filter((i) => i.equipped)
-        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
-      unequipped: rawLoadout.items
-        .filter((i) => !i.equipped)
-        .map((item) => ({ id: item.id, hash: item.hash, amount: item.amount })),
-    }));
+  return [];
 }
 
 type PlatformItemAnnotation = ItemAnnotation & {
@@ -243,9 +204,9 @@ type PlatformItemAnnotation = ItemAnnotation & {
 };
 
 /**
- * Extract tags/notes in DIM API format from the legacy DimData or a new DIM Sync export.
+ * Extract tags/notes in DIM API format from an export.
  */
-function extractItemAnnotations(importData: DimData): PlatformItemAnnotation[] {
+function extractItemAnnotations(importData: ExportResponse): PlatformItemAnnotation[] {
   if (importData.tags) {
     return importData.tags.map((t) => ({
       ...t.annotation,
@@ -253,24 +214,5 @@ function extractItemAnnotations(importData: DimData): PlatformItemAnnotation[] {
       destinyVersion: t.destinyVersion,
     }));
   }
-
-  const annotations: PlatformItemAnnotation[] = [];
-  for (const key in importData) {
-    const match = /dimItemInfo-m(\d+)-d(1|2)/.exec(key);
-    if (match) {
-      const platformMembershipId = match[1];
-      const destinyVersion = parseInt(match[2], 10) as DestinyVersion;
-      for (const id in importData[key]) {
-        const value = importData[key][id];
-        annotations.push({
-          platformMembershipId,
-          destinyVersion,
-          id,
-          tag: value.tag,
-          notes: value.notes,
-        });
-      }
-    }
-  }
-  return annotations;
+  return [];
 }

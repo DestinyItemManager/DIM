@@ -1,5 +1,54 @@
 ## Next
 
+* Added a link to the DIM User Guide to the hamburger menu.
+* "Clear new items" has been moved into the Settings page instead of being a floating button. The "X" keyboard shortcut no longer clears new items.
+* Linear Fusion rifles are technically Fusion Rifles, but they won't show up in Organizer or in searches under Fusion Rifle anymore.
+* While API performance is ultimately up to Bungie, we've changed things around in DIM to hopefully make item transfers snappier. Note that these changes mean you may see outdated information in DIM if you've deleted or vaulted items in-game and haven't clicked the refresh button in DIM.
+* Improved the autocomplete for `sunsetsafter:` searches.
+* Fix the `is:new` search.
+* The D1 Activities page now shows Challenge of the Elders completion.
+* Fixed buttons not showing up on tablets for track/untrack triumphs.
+* Invalid searches are no longer saved to your search history.
+* The "Filter Help" page is now searchable, and clicking on search terms applies them to your current search.
+* Added a Search History page accessible from "Filter Help" and Settings so you can review and delete old searches.
+* Shift+Delete while highlighting a past search in the search dropdown will delete it from your history.
+* Fixed the `masterwork:` filters.
+* Fixed the icon for "Take" on the item popup for stackable items.
+* Removed the ability to restore old backups from Google Drive, or backups created from versions of DIM pre-6.0 (when DIM Sync was introduced).
+* Armor 1.0 mods and Elemental Affinities removed from the perk picker in Loadout Optimizer.
+* Improved search performance.
+* Items in collections now show their power cap.
+* Character stats now scroll with items on mobile, instead of always being visible. Max power is still shown in the character header.
+
+### Beta Only
+
+* On mobile, there is now a bar to quickly swap between different item categories on the inventory screen.
+
+## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
+
+* Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.
+* Improvements to search performance, and search autocomplete suggestions.
+* Fix cases where some odd stats would show up as kill trackers.
+* Sword-specific stats now show up in `stat:` filters.
+
+## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
+
+* Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.
+* Fixed a couple of the legacy triumphs that indicated the wrong triumph was being retired.
+* Completed legacy triumph categories, and collections categories, now show the "completed" yellow background.
+* is:seasonaldupe now correctly pays attention to the season of the item.
+* Fixed a bug where notes wouldn't be saved if you clicked another item before dismissing the item popup.
+* Tweaks to the display of legacy triumphs.
+* Reduce the number of situations in which we autoscroll the triumph category you clicked into view.
+
+## 6.29.0 <span className="changelog-date">(2020-09-10)</span>
+
+* Legacy Triumphs are now indicated on the Records page and have their own checklist section. Legacy Triumphs are triumphs that will not be possible to complete after Beyond Light releases. The list of which Triumphs are Legacy Triumphs was provided by Bungie.
+* Mods in the Loadout Optimizer mod picker are now split up by season.
+* The number of selected items is now shown on the Organizer page.
+* Empty mod slot tooltips spell out which season they're from.
+* Locking/unlocking items in D1 works again.
+
 ## 6.28.1 <span className="changelog-date">(2020-09-06)</span>
 
 * Actually release the Records page

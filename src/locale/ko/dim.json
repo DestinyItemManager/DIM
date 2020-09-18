@@ -192,7 +192,7 @@
     "Activity": "<i>{{activity}}</i>에서 획득 가능",
     "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
-    "Ascended": "상향 노드가 있는 아이템을 보여주고, 상향 여부 표시",
+    "Ascended": "주입 노드가 있으며 주입이 된 아이템 표시",
     "Breaker": "차단기나 용사 종류에 따라 필터링",
     "BulkClear": "1개의 아이템에서 태그를 삭제하였습니다.",
     "BulkClear_plural": "{{count}}개의 아이템에서 태그를 삭제하였습니다.",
@@ -205,6 +205,7 @@
     "Combine": "필터는 검색 결과를 줄이기 위해 혼합하여 사용될 수 있습니다. '{{example}}'은 전투력이 300을 넘는 전기 속성 아이템을 표시합니다.",
     "ContributeLight": "전투력을 높일 수 있는 아이템 표시",
     "ContributePower": "전투력을 높일 수 있는 아이템 표시",
+    "Curated": "고정 특성 조합이 있는 아이템 표시",
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복된 아이템 표시",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "메모가 추가된 아이템 표시",
     "HasOrnament": "장식이 적용된 아이템 표시",
+    "HasRating": " 커뮤니티 평가가 있는 아이템 표시",
     "HasShader": "안료가 적용된 아이템 표시",
     "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "InLoadout": "로드아웃에 포함된 아이템 표시",
     "Infusable": "주입할 수 있는 장비 표시",
+    "ItemHash": "주어진 소지품 아이템 해시와 일치하는 아이템 표시. 고급 사용자용.",
+    "ItemId": "주어진 소지품 아이템 ID와 일치하는 아이템 표시. 고급 사용자용.",
     "Leveling": {
       "Complete": "{{term}} - 완전히 완료된 아이템 표시 - 모든 업그레이드 해금됨.",
       "Incomplete": "{{term}} - 완료되지 않은 아이템 표시 - 여전히 최소 하나의 해금해야 하는 업그레이드.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "아이템 잠금 실패",
     "LockAllSuccess": "아이템 {{num}}개 잠김",
     "Locked": "잠금 여부에 따른 아이템 표시",
+    "Masterwork": "걸작 능력치나 단계에 따른 아이템 표시",
     "MaxPower": "각 캐릭터 직업의 전투력을 최대화할 수 있는 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품 슬롯이 있는 방어구 표시",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "전투력에 따른 아이템 표시 (무기는 공격력, 방어구는 방어력)",
     "PowerLimit": "최대로 주입할 수 있는 전투력에 따른 아이템 표시",
+    "PowerfulReward": "강력한 보상을 주는 활동 표시",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성 아이템 표시",
     "RarityTier": "희귀도에 따른 아이템 표시",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "필요 레벨에 따른 아이템 표시",
     "Season": "데스티니 2의 특정 시즌에서 나온 아이템 표시",
+    "SeasonalDupe": "중복된 아이템 표시, 다른 시즌의 아이템은 같은 아이템으로 취급하지 않음.",
     "Source": {
       "Adventure": "<i>모험</i>에서 획득 가능한 아이템",
       "BlackArmory": "<i>검은 무기고</i>에서 획득 가능한 아이템",
@@ -319,11 +326,14 @@
       "Favorite": "즐겨찾기한 아이템 표시",
       "Infuse": "주입할 아이템 표시",
       "Keep": "보관할 아이템 표시",
-      "NoTag": "태그가 없는 아이템 표시"
+      "NoTag": "태그가 없는 아이템 표시",
+      "Tag": "특정 태그가 있는 아이템 표시",
+      "Tagged": "태그가 있는 아이템 표시"
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
     "Trashlist": "희망 아이템 목록의 쓰레기 목록과 일치하는 아이템 표시",
+    "Unascended": "주입 노드가 있으나 주입이 되지 않은 아이템 표시",
     "Undo": "되돌리기",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
@@ -376,6 +386,7 @@
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
     "FilterHelpMenuItem": "필터 도움말...",
+    "FilterHelpRecords": "업적과 수집품 검색",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "잠긴 아이템 초기화",
+    "SeasonNum": "시즌 {{season}}",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "SelectMinStatTotal": "방어구 총 능력치 최솟값",
@@ -799,20 +811,29 @@
     "Bounties": "현상금",
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
+    "LegacyRecord": "빛의 저편이 출시된 뒤에는 이 업적을 완료할 수 없습니다.",
+    "LegacyTriumphs": "과거의 업적",
     "Milestones": "이정표 & 도전",
+    "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
     "Progress": "진척도",
+    "QueryFilteredTrackedTriumphs": "검색된 추적 중인 업적이 없습니다.",
     "QuestExpired": "만료됨",
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
-    "SecretTriumph": "비밀 업적"
+    "SecretTriumph": "비밀 업적",
+    "StatTrackers": "통계 추적기",
+    "TrackedTriumphs": "추적 중인 업적"
   },
   "RecordBooks": {
     "HideCompleted": "완료한 기록 숨기기",
     "RecordBooks": "기록 모음집"
+  },
+  "Records": {
+    "Title": "기록"
   },
   "Settings": {
     "AllowIdPostToDtr": "자세한 무기 리뷰 표시 및 무기 평가 허용",
@@ -958,8 +979,8 @@
     "UnlockAll": "아이템 잠금 해제"
   },
   "Triumphs": {
-    "HideCompleted": "완료 항목 숨기기",
-    "RevealRedacted": "숨긴 항목 표시"
+    "HideCompleted": "완료한 업적 숨기기",
+    "RevealRedacted": "삭제된 업적 표시"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz에서 이 상인이 높은 전투력의 아이템을 판매하는 것을 보고하였습니다.",

@@ -1,6 +1,6 @@
 {
   "rules": {
-    "declaration-property-value-blacklist": [
+    "declaration-property-value-disallowed-list": [
       {
         "display": ["contents"]
       }

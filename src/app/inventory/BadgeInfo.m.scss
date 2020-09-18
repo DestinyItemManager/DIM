@@ -26,22 +26,6 @@
   justify-content: flex-end;
 }
 
-.review {
-  display: none;
-
-  :global(.show-reviews) & {
-    display: flex;
-  }
-
-  text-align: left;
-  align-items: center;
-
-  :global(.app-icon) {
-    font-size: 1.3em;
-    padding-right: 1px;
-  }
-}
-
 .wishlistRoll {
   display: flex;
 }

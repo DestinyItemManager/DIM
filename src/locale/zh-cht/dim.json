@@ -192,7 +192,7 @@
     "Activity": "可以從<i>{{activity}}</i>活動中獲得",
     "AmmoType": "按照彈藥類型顯示物品",
     "ArmorCategory": "按照類別顯示防具.",
-    "Ascended": "顯示可以提高光等的物品.",
+    "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "移除物品標籤",
     "BulkClear_plural": "移除 {{count}} 物品標籤",
@@ -205,6 +205,7 @@
     "Combine": "篩檢程式可以混合使用以便得出更精確的搜索結果:'{{example}}' 會得到超過300光等的電弧道具。",
     "ContributeLight": "顯示擁有光等的物品.",
     "ContributePower": "顯示擁有光等的物品.",
+    "Curated": "Shows items that are a curated roll.",
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "顯示重複物品",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "顯示已有備註的物品",
     "HasOrnament": "顯示已應用皮膚的物品",
+    "HasRating": " Shows items that have a community rating.",
     "HasShader": "顯示已應用著色器的物品",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
+    "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
+    "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
       "Complete": "{{term}}-顯示完全完成的物品-每次升級均解鎖.",
       "Incomplete": "{{term}}-顯示尚未完成的物品-至少升一級才能解鎖.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "鎖定道具失敗",
     "LockAllSuccess": "已經鎖定 {{num}} 件道具",
     "Locked": "根據物品鎖定狀態顯示.",
+    "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MaxPower": "顯示每個職業的最大光等物品",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
+    "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
     "RandomRoll": "顯示可以隨機特性掉落的物品",
     "RarityTier": "按照稀有度顯示.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "根據需要的等級顯示物品.",
     "Season": "按照物品推出季度顯示.",
+    "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "Source": {
       "Adventure": "<i>劇情</i>出產物品",
       "BlackArmory": "此物品從可從<i>黑色軍武</i>獲得",
@@ -319,11 +326,14 @@
       "Favorite": "顯示你的收藏物品.",
       "Infuse": "顯示你想要用於灌注的物品.",
       "Keep": "顯示你想要保留的物品.",
-      "NoTag": "顯示沒有標籤的物品."
+      "NoTag": "顯示沒有標籤的物品.",
+      "Tag": "Shows items that have a specific tag.",
+      "Tagged": "Shows items that have any tag."
     },
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
     "Trashlist": "顯示你願望單中廢棄列表物品",
+    "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Undo": "撤銷",
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
@@ -376,6 +386,7 @@
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1個物品",
     "FilterMatchCount_plural": "{{count}} 個物品",
     "Filters": "篩檢程式",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "右擊某一特性來選中。按住Shift點擊一個物品來排除。拖動物品至側邊欄以排除或者鎖定。",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "重置鎖定物品",
+    "SeasonNum": "Season {{season}}",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -799,20 +811,29 @@
     "Bounties": "賞金單",
     "CrucibleRank": "排名",
     "Items": "任務物品",
+    "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
+    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "里程碑和挑戰",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "重置百分比{{pct}}%",
     "Progress": "進度",
+    "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "已過期",
     "QuestExpires": "有效期至 ",
     "Quests": "任務",
     "RecordValue": "{{value}}點",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
-    "SecretTriumph": "秘密勝利"
+    "SecretTriumph": "秘密勝利",
+    "StatTrackers": "Stat Trackers",
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "隱藏完成事件",
     "RecordBooks": "記事本"
+  },
+  "Records": {
+    "Title": "Records"
   },
   "Settings": {
     "AllowIdPostToDtr": "顯示詳細的武器評論並允許評測武器.",
@@ -958,8 +979,8 @@
     "UnlockAll": "解鎖物品"
   },
   "Triumphs": {
-    "HideCompleted": "隱藏已完成",
-    "RevealRedacted": "顯示隱藏項目"
+    "HideCompleted": "Hide completed triumphs",
+    "RevealRedacted": "Reveal redacted triumphs"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz 提示這位商販掉落高光等物品。",

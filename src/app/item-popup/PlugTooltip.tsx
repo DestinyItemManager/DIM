@@ -2,13 +2,15 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { statAllowList } from 'app/inventory/store/stats';
+import { thumbsUpIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
-import BestRatedIcon from './BestRatedIcon';
 import './ItemSockets.scss';
 
 // TODO: Connect this to redux
@@ -17,14 +19,12 @@ export default function PlugTooltip({
   defs,
   wishListsEnabled,
   inventoryWishListRoll,
-  bestPerks,
 }: {
-  item: D2Item;
+  item: DimItem;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
-  bestPerks?: Set<number>;
 }) {
   // TODO: show insertion costs
 
@@ -36,6 +36,9 @@ export default function PlugTooltip({
   return (
     <>
       <h2>{plug.plugDef.displayProperties.name}</h2>
+      {emptySpecialtySocketHashes.includes(plug.plugDef.hash) && (
+        <h3>{plug.plugDef.itemTypeDisplayName}</h3>
+      )}
 
       {plug.plugDef.displayProperties.description ? (
         <div>
@@ -78,16 +81,16 @@ export default function PlugTooltip({
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
 
-      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks?.has(plug.plugDef.hash) && (
-        <>
-          <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('DtrReview.BestRatedTip')}
-        </>
-      )}
       {wishListsEnabled &&
         inventoryWishListRoll &&
         inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
           <>
-            <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('WishListRoll.BestRatedTip')}
+            <AppIcon
+              className="thumbs-up"
+              icon={thumbsUpIcon}
+              title={t('WishListRoll.BestRatedTip')}
+            />{' '}
+            = {t('WishListRoll.BestRatedTip')}
           </>
         )}
     </>

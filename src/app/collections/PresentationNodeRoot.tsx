@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -23,7 +23,7 @@ interface Props {
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
-  searchFilter?(item: DimItem): boolean;
+  searchFilter?: ItemFilter;
 }
 
 /**

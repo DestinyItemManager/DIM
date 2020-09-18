@@ -16,10 +16,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { exportBackupData } from './export-data';
 import ImportExport from './ImportExport';
-import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import LocalStorageInfo from './LocalStorageInfo';
 import './storage.scss';
-import { DimData } from './sync.service';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -66,7 +64,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     }
   };
 
-  const onImportData = async (data: DimData | ExportResponse) => {
+  const onImportData = async (data: ExportResponse) => {
     if (confirm(t('Storage.ImportConfirmDimApi'))) {
       await dispatch(importDataBackup(data));
     }
@@ -104,24 +102,29 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
         <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}
       {apiPermissionGranted && (
-        <div className="setting horizontal">
-          <label>{t('Storage.AuditLogLabel')}</label>
-          <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
-            {t('Storage.AuditLog')}
-          </Link>
-        </div>
-      )}
-      {apiPermissionGranted && (
-        <div className="setting horizontal">
-          <label>{t('Storage.DeleteAllDataLabel')}</label>
-          <button type="button" className="dim-button" onClick={deleteAllData}>
-            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-          </button>
-        </div>
+        <>
+          <div className="setting horizontal">
+            <label>{t('Storage.AuditLogLabel')}</label>
+            <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
+              {t('Storage.AuditLog')}
+            </Link>
+          </div>
+          <div className="setting horizontal">
+            <label>{t('SearchHistory.Link')}</label>
+            <Link to="/search-history" className="dim-button">
+              {t('SearchHistory.Title')}
+            </Link>
+          </div>
+          <div className="setting horizontal">
+            <label>{t('Storage.DeleteAllDataLabel')}</label>
+            <button type="button" className="dim-button" onClick={deleteAllData}>
+              <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+            </button>
+          </div>
+        </>
       )}
       <LocalStorageInfo showDetails={!apiPermissionGranted} />
       <ImportExport onExportData={onExportData} onImportData={onImportData} />
-      <LegacyGoogleDriveSettings onImportData={onImportData} />
     </section>
   );
 }

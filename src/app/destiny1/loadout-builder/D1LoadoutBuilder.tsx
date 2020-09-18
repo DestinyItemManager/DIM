@@ -2,7 +2,8 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import _ from 'lodash';
@@ -12,7 +13,7 @@ import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
-import { D1StoresService } from '../../inventory/d1-stores';
+import { loadStores } from '../../inventory/d1-stores';
 import { InventoryBuckets } from '../../inventory/inventory-buckets';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
 import { bucketsSelector, storesSelector } from '../../inventory/selectors';
@@ -21,7 +22,7 @@ import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { getColor } from '../../shell/filters';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
-import { dimVendorService, Vendor } from '../vendors/vendor.service';
+import { loadVendors, Vendor } from '../vendors/vendor.service';
 import { getSetBucketsStep } from './calculate';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
@@ -52,7 +53,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -87,50 +88,51 @@ interface State {
 
 const allClassTypes: ClassTypes[] = [DestinyClass.Titan, DestinyClass.Warlock, DestinyClass.Hunter];
 
+const initialState: State = {
+  activesets: '5/5/2',
+  type: 'Helmet',
+  scaleType: 'scaled',
+  progress: 0,
+  fullMode: false,
+  includeVendors: false,
+  showAdvanced: false,
+  showHelp: false,
+  loadingVendors: false,
+  allSetTiers: [],
+  highestsets: {},
+  excludeditems: [],
+  lockeditems: {
+    Helmet: null,
+    Gauntlets: null,
+    Chest: null,
+    Leg: null,
+    ClassItem: null,
+    Artifact: null,
+    Ghost: null,
+  },
+  lockedperks: {
+    Helmet: {},
+    Gauntlets: {},
+    Chest: {},
+    Leg: {},
+    ClassItem: {},
+    Artifact: {},
+    Ghost: {},
+  },
+};
+
 class D1LoadoutBuilder extends React.Component<Props, State> {
-  state: State = {
-    activesets: '5/5/2',
-    type: 'Helmet',
-    scaleType: 'scaled',
-    progress: 0,
-    fullMode: false,
-    includeVendors: false,
-    showAdvanced: false,
-    showHelp: false,
-    loadingVendors: false,
-    allSetTiers: [],
-    highestsets: {},
-    excludeditems: [],
-    lockeditems: {
-      Helmet: null,
-      Gauntlets: null,
-      Chest: null,
-      Leg: null,
-      ClassItem: null,
-      Artifact: null,
-      Ghost: null,
-    },
-    lockedperks: {
-      Helmet: {},
-      Gauntlets: {},
-      Chest: {},
-      Leg: {},
-      ClassItem: {},
-      Artifact: {},
-      Ghost: {},
-    },
-  };
+  state: State = initialState;
 
   private cancelToken: { cancelled: boolean } = {
     cancelled: false,
   };
 
   componentDidMount() {
-    if (!this.props.stores.length) {
-      D1StoresService.getStoresStream(this.props.account);
-    }
-
-    if (this.props.stores.length > 0) {
+    const { stores, dispatch } = this.props;
+    if (!stores.length) {
+      dispatch(loadStores());
+    } else {
       // Exclude felwinters if we have them, but only the first time stores load
       const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
@@ -163,9 +165,8 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (this.state.includeVendors && !this.state.vendors && !this.state.loadingVendors) {
       this.setState({ loadingVendors: true });
-      dimVendorService.getVendorsStream(this.props.account).subscribe(([_, vendors]) => {
+      this.props.dispatch(loadVendors()).then((vendors) => {
         this.setState({ vendors, loadingVendors: false });
-        dimVendorService.requestRatings();
       });
     }
 
@@ -527,7 +528,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       },
     };
 
-    function filterItems(items: D1Item[]) {
+    function filterItems(items: readonly D1Item[]) {
       return items.filter(
         (item) =>
           item.primStat &&
@@ -739,7 +740,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     const items = _.groupBy(
       store.items.filter(
         (item) =>
-          item.canBeInLoadout() &&
+          itemCanBeInLoadout(item) &&
           item.equipped &&
           lockEquippedTypes.includes(item.type.toLowerCase())
       ),

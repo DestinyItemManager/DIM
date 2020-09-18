@@ -5,7 +5,7 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
-import { setItemHashTag, setItemTagsBulk, touch, touchItem } from './actions';
+import { setItemHashTag, setItemTagsBulk } from './actions';
 import { getTag, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
@@ -107,11 +107,7 @@ export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
   return async (dispatch) => {
     try {
       for (const item of items) {
-        await setItemLockState(item, locked);
-
-        // TODO: Gotta do this differently in react land
-        item.locked = locked;
-        dispatch(touchItem(item.id));
+        await dispatch(setItemLockState(item, locked));
       }
       showNotification({
         type: 'success',
@@ -125,11 +121,6 @@ export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
         title: locked ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
         body: e.message,
       });
-    } finally {
-      // Touch the stores service to update state
-      if (items.length) {
-        dispatch(touch());
-      }
     }
   };
 }

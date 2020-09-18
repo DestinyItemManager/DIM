@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { armorStats } from 'app/inventory/store/stats';
+import { armorStats } from 'app/search/d2-known-values';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
@@ -21,7 +21,9 @@ export function StatTotalToggle({
   forClass?: DestinyClass;
   readOnly?: boolean;
 }) {
-  const defs = useSelector<RootState, D2ManifestDefinitions>((state) => state.manifest.d2Manifest!);
+  const defs = useSelector<RootState, D2ManifestDefinitions | undefined>(
+    (state) => state.manifest.d2Manifest
+  );
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
   );
@@ -42,6 +44,9 @@ export function StatTotalToggle({
     ? customTotalStatsByClass[forClass]
     : [];
 
+  if (!defs) {
+    return null;
+  }
   return (
     <div className={clsx(className)}>
       {addDividers(

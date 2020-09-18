@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
-import { FINISHERS_BUCKET, SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -65,23 +66,23 @@ export default function ItemMoveLocation({
     // Don't show "Store" for finishers, seasonal artifacts, or clan banners
     if (
       item.location.capacity === 1 ||
-      item.location.hash === SEASONAL_ARTIFACT_BUCKET ||
-      item.location.hash === FINISHERS_BUCKET
+      item.location.hash === BucketHashes.SeasonalArtifact ||
+      item.location.hash === BucketHashes.Finishers
     ) {
       return false;
     }
 
     // Can pull items from the postmaster.
     if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-      return item.isDestiny2() && item.canPullFromPostmaster;
+      return item.canPullFromPostmaster;
     } else if (item.notransfer) {
       // Can store an equiped item in same itemStore
       if (item.equipped && store.id === buttonStore.id) {
         return true;
       }
     } else if (store.id !== buttonStore.id || item.equipped) {
-      // In Destiny2, only show one store for account wide items
-      if (item.isDestiny2() && item.bucket?.accountWide && !buttonStore.current) {
+      // Only show one store for account wide items
+      if (item.bucket?.accountWide && !buttonStore.current) {
         return false;
       } else {
         return true;
@@ -101,7 +102,7 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Vault')}
         />
       )}
-      {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
+      {!(item.owner === store.id && item.equipped) && itemCanBeEquippedBy(item, store) && (
         <ItemActionButton
           title={t('MovePopup.EquipWithName', { character: store.name })}
           onClick={equipItem}

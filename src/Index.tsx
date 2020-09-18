@@ -9,7 +9,6 @@ import ReactDOM from 'react-dom';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import './app/google';
 import { initi18n } from './app/i18n';
-import { saveReviewsToIndexedDB } from './app/item-review/observers';
 import './app/main.scss';
 import registerServiceWorker from './app/register-service-worker';
 import Root from './app/Root';
@@ -25,9 +24,6 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 setupRateLimiter();
-if ($featureFlags.reviewsEnabled) {
-  saveReviewsToIndexedDB();
-}
 if ($featureFlags.wishLists) {
   saveWishListToIndexedDB();
 }

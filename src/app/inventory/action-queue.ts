@@ -1,9 +1,9 @@
-const _queue: Promise<void>[] = [];
+const _queue: Promise<any>[] = [];
 
 // A global queue of functions that will execute one after the other. The function must return a promise.
 // fn is either a blocking function or a function that returns a promise
-export function queueAction(fn: () => Promise<any>) {
-  let promise = _queue.length ? _queue[_queue.length - 1] : Promise.resolve();
+export function queueAction<K>(fn: () => Promise<K>) {
+  let promise: Promise<K> = _queue.length ? _queue[_queue.length - 1] : Promise.resolve();
   // Execute fn regardless of the result of the existing promise. We
   // don't use finally here because finally can't modify the return value.
   promise = promise
@@ -30,6 +30,6 @@ export function queueAction(fn: () => Promise<any>) {
 export function queuedAction<T extends any[], K>(
   fn: (...args: T) => Promise<K>,
   context?
-): (...args: T) => Promise<any> {
+): (...args: T) => Promise<K> {
   return (...args: T) => queueAction(() => fn.apply(context, args));
 }

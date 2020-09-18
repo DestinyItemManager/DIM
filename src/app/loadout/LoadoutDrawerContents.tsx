@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -154,7 +155,7 @@ async function pickLoadoutItem(
           loadout.classType === DestinyClass.Unknown ||
           item.classType === loadoutClassType ||
           item.classType === DestinyClass.Unknown) &&
-        item.canBeInLoadout() &&
+        itemCanBeInLoadout(item) &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
 
@@ -184,7 +185,7 @@ function fillLoadoutFromEquipped(
     getCurrentStore(stores)!;
 
   const items = dimStore.items.filter(
-    (item) => item.equipped && item.canBeInLoadout() && fromEquippedTypes.includes(item.type)
+    (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
 
   console.log({ items, loadout, dimStore });

@@ -1,5 +1,6 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -13,7 +14,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
+import { mergeCollectibles } from '../inventory/d2-stores';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
@@ -101,9 +102,7 @@ function SingleVendor({
     }
   }, [account, characterId, defs, dispatch, vendorHash]);
 
-  useEffect(() => {
-    D2StoresService.getStoresStream(account);
-  }, [account]);
+  useLoadStores(account, stores.length > 0);
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;

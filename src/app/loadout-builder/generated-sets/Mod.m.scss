@@ -1,0 +1,67 @@
+@import '../../variables.scss';
+
+.item {
+  margin: 0 4px 4px 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  width: calc(0.59 * var(--item-size));
+  height: calc(0.59 * var(--item-size));
+
+  &:nth-child(even) {
+    margin-right: 0;
+  }
+
+  img {
+    -webkit-touch-callout: none;
+    width: calc(0.59 * var(--item-size));
+    height: calc(0.59 * var(--item-size));
+    display: block;
+  }
+}
+
+.largeItem {
+  width: var(--item-size);
+  height: var(--item-size);
+  img {
+    width: var(--item-size);
+    height: var(--item-size);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.energyCostOverlay {
+  position: absolute;
+  height: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
+  width: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
+  background-size: calc(0.59 * var(--item-size));
+}
+
+.largeEnergyCostOverlay {
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
+  background-size: calc(var(--item-size));
+}
+
+.energyCost {
+  position: absolute;
+  top: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 13));
+  right: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 10.5));
+  font-size: calc((0.59 * var(--item-size)) / 5.5);
+}
+
+.largeEnergyCost {
+  top: calc(#{$item-border-width} + ((var(--item-size)) / 13));
+  right: calc(#{$item-border-width} + ((var(--item-size)) / 10.5));
+  font-size: calc((var(--item-size)) / 5.5);
+}
+
+.perk {
+  img {
+    border: none;
+  }
+}

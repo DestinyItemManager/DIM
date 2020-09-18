@@ -192,7 +192,7 @@
     "Activity": "Disponibile dall'attività <i>{{activity}}</i>",
     "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
-    "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
+    "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" che sono stati ascesi.",
     "Breaker": "Filtra per tipo di Modifica anti-campioni oppure per tipo di campione corrispondente.",
     "BulkClear": "Etichetta rimossa da 1 oggetto.",
     "BulkClear_plural": "Etichette rimosse da {{count}} oggetti.",
@@ -205,6 +205,7 @@
     "Combine": "I filtri possono essere combinati per restringere la ricerca: '{{example}}' restituirà tutti gli oggetti ad arco più alti di 300 Luce.",
     "ContributeLight": "Mostra gli oggetti che hanno Luce e possono contribuire al tuo livello Luce.",
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
+    "Curated": "Mostra gli oggetti che hanno un roll curato.",
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti doppioni",
@@ -222,10 +223,13 @@
     },
     "HasNotes": "Mostra gli oggetti che hanno delle note.",
     "HasOrnament": "Mostra gli oggetti sui quali è applicato un decoro.",
+    "HasRating": " Mostra gli oggetti che hanno una valutazione della comunità.",
     "HasShader": "Mostra oggetti che hanno uno shader applicato.",
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
+    "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
+    "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
     "Leveling": {
       "Complete": "{{term}} - mostra gli oggetti che sono completi - con ogni potenziamento sbloccato.",
       "Incomplete": "{{term}} - mostra gli oggetti che non sono completi - c'è ancora almeno un potenziamento da sbloccare.",
@@ -239,6 +243,7 @@
     "LockAllFailed": "Impossibile bloccare gli oggetti",
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
+    "Masterwork": "Mostra gli oggetti basandosi sulla loro statistica o livello di Prodigio.",
     "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
     "ModSlot": "Mostra armature con uno specifico slot Modifica stagionale.",
     "Mods": {
@@ -254,6 +259,7 @@
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
     "PowerLimit": "Mostra gli oggetti basandosi sul massimo livello di potere al quale possono essere infusi.",
+    "PowerfulReward": "Mostra gli incarichi che portano ad una ricompensa potente.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
     "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
     "RarityTier": "Mostra gli oggetti basandosi sulla loro rarità.",
@@ -269,6 +275,7 @@
     },
     "RequiredLevel": "Mostra gli oggetti in base al livello richiesto.",
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
+    "SeasonalDupe": "Mostra gli oggetti duplicati, senza contare quelli ri-emessi in una stagione diversa come stesso oggetto.",
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
       "BlackArmory": "Oggetto disponibile dall' <i>Armeria Nera</i>.",
@@ -319,11 +326,14 @@
       "Favorite": "Mostra gli oggetti preferiti.",
       "Infuse": "Mostra gli oggetti che potresti voler infondere.",
       "Keep": "Mostra gli oggetti da conservare.",
-      "NoTag": "Mostra gli oggetti senza un'etichetta."
+      "NoTag": "Mostra gli oggetti senza un'etichetta.",
+      "Tag": "Mostra gli oggetti con un'etichetta specifica.",
+      "Tagged": "Mostra gli oggetti che hanno una qualsiasi etichetta."
     },
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
     "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua lista desideri.",
+    "Unascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" che non sono stati ascesi.",
     "Undo": "Annulla",
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
@@ -376,6 +386,7 @@
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
     "FilterHelpMenuItem": "Aiuto per Filtri...",
+    "FilterHelpRecords": "Cerca trionfi e collezioni",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
@@ -570,6 +581,7 @@
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
+    "SeasonNum": "Stagione {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
@@ -799,20 +811,29 @@
     "Bounties": "Taglie",
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
+    "LegacyRecord": "Questo Trionfo non sarà più completabile dopo l'uscita di Oltre la Luce.",
+    "LegacyTriumphs": "Trionfi Storici",
     "Milestones": "Pietre miliari & Sfide",
+    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure quanti ne vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "Progress": "Avanzamento",
+    "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
     "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Trionfo Segreto"
+    "SecretTriumph": "Trionfo Segreto",
+    "StatTrackers": "Contatori Statistiche",
+    "TrackedTriumphs": "Trionfi Seguiti"
   },
   "RecordBooks": {
     "HideCompleted": "Nascondi completati",
     "RecordBooks": "Registri"
+  },
+  "Records": {
+    "Title": "Record"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
@@ -958,8 +979,8 @@
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triumphs": {
-    "HideCompleted": "Nascondi Completati",
-    "RevealRedacted": "Rivela Segreti"
+    "HideCompleted": "Nascondi trionfi completati",
+    "RevealRedacted": "Mostra trionfi segreti"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",
@@ -993,7 +1014,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM é un'app gratuita ed open source costruita da sviluppatori della community basandosi sugli stessi servizi di Bungie.net e la Companion App di Destiny.",
+      "HowItsMade": "DIM é un'app gratuita ed open source costruita da sviluppatori della comunità basandosi sugli stessi servizi di Bungie.net e la Companion App di Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
       "Schedule": {

@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DamageType } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import { D2Item, DimMasterwork, DimSockets } from '../item-types';
+import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**
  * These are the utilities that deal with figuring out Masterwork info.
@@ -22,7 +21,7 @@ const resistanceMods = {
  * kill trackers before they're masterworked.
  */
 export function buildMasterwork(
-  createdItem: D2Item,
+  createdItem: DimItem,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   if (!createdItem.sockets) {
@@ -38,55 +37,14 @@ export function buildMasterwork(
 
   // Forsaken Masterwork
   if (!masterworkInfo) {
-    masterworkInfo = buildForsakenMasterworkInfo(createdItem, defs);
+    masterworkInfo = buildForsakenMasterworkStats(createdItem, defs);
   }
 
   return masterworkInfo;
 }
 
-/**
- * Post-Forsaken weapons store their masterwork info and kill tracker on different plugs.
- */
-function buildForsakenMasterworkInfo(
-  createdItem: D2Item,
-  defs: D2ManifestDefinitions
-): DimMasterwork | null {
-  const masterworkStats = buildForsakenMasterworkStats(createdItem, defs);
-  const killTracker = buildForsakenKillTracker(createdItem, defs);
-
-  // override stats values with killtracker if it's available
-  if (masterworkStats && killTracker) {
-    return { ...masterworkStats, ...killTracker };
-  }
-  return masterworkStats || killTracker || null;
-}
-
-function buildForsakenKillTracker(
-  createdItem: D2Item,
-  defs: D2ManifestDefinitions
-): DimMasterwork | null {
-  const killTrackerSocket = createdItem.sockets!.allSockets.find((socket) =>
-    Boolean(socket.plugged?.plugObjectives?.length)
-  );
-
-  if (killTrackerSocket?.plugged?.plugObjectives?.length) {
-    const plugObjective = killTrackerSocket.plugged.plugObjectives[0];
-
-    const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-
-    return {
-      progress: plugObjective.progress,
-      typeIcon: objectiveDef.displayProperties.icon,
-      typeDesc: objectiveDef.progressDescription,
-      typeName: [3244015567, 2285636663, 38912240].includes(killTrackerSocket.plugged.plugDef.hash)
-        ? 'Crucible'
-        : 'Vanguard',
-    };
-  }
-  return null;
-}
 function buildForsakenMasterworkStats(
-  createdItem: D2Item,
+  createdItem: DimItem,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   const masterworkSocket = createdItem.sockets!.allSockets.find((socket) =>
@@ -106,9 +64,6 @@ function buildForsakenMasterworkStats(
     }
 
     return {
-      typeName: null,
-      typeIcon: masterworkSocket.plugged.plugDef.displayProperties.icon,
-      typeDesc: masterworkSocket.plugged.plugDef.displayProperties.description,
       tier: masterwork.value,
       stats: [
         {
@@ -150,14 +105,6 @@ function buildMasterworkInfo(
   }));
 
   return {
-    progress: plugObjective.progress,
-    typeName:
-      socket.plugged.plugDef.plug.plugCategoryHash ===
-      PlugCategoryHashes.V300PlugsMasterworksGenericWeaponsKills
-        ? 'Vanguard'
-        : 'Crucible',
-    typeIcon: objectiveDef.displayProperties.icon,
-    typeDesc: objectiveDef.progressDescription,
     tier: socket.plugged?.plugDef.investmentStats[0].value,
     stats,
   };

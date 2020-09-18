@@ -1,5 +1,6 @@
 import { D1Item } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
 
 // In D1 there were exotic ghosts that you could only equip if you also had a "Faction Badge" equipped
 // that matched that faction. These functions help identify what faction badge is equipped on the character
@@ -28,7 +29,7 @@ const factionsByHash = {
 
 /** What faction is this character aligned with (by equipping that faction's badge)? */
 export function factionAlignment(store: DimStore): string | null {
-  const badge = store.buckets[375726501].find((i) => factionBadges[i.hash]);
+  const badge = findItemsByBucket(store, 375726501).find((i) => factionBadges[i.hash]);
   if (!badge) {
     return null;
   }

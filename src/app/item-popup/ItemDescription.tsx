@@ -28,8 +28,9 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function ItemDescription({ item, inventoryWishListRoll }: Props) {
-  const showDescription =
-    !item.bucket.inWeapons && !item.bucket.inArmor && Boolean(item.description?.length);
+  // suppressing some unnecessary information for weapons and armor,
+  // to make room for all that other delicious info
+  const showFlavor = !item.bucket.inWeapons && !item.bucket.inArmor;
 
   const loreLink = item.loreHash
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
@@ -37,28 +38,29 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
 
   return (
     <>
-      {showDescription && (
-        <div className={styles.officialDescription}>
-          {item.description}{' '}
-          {loreLink && (
-            <ExternalLink
-              className={styles.loreLink}
-              href={loreLink}
-              title={t('MovePopup.ReadLore')}
-              onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
-            >
-              <img src={ishtarLogo} height="16" width="16" />
-              {t('MovePopup.ReadLoreLink')}
-            </ExternalLink>
+      {showFlavor && (
+        <>
+          {Boolean(item.description?.length) && (
+            <div className={styles.officialDescription}>
+              {item.description}{' '}
+              {loreLink && (
+                <ExternalLink
+                  className={styles.loreLink}
+                  href={loreLink}
+                  title={t('MovePopup.ReadLore')}
+                  onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
+                >
+                  <img src={ishtarLogo} height="16" width="16" />
+                  {t('MovePopup.ReadLoreLink')}
+                </ExternalLink>
+              )}
+            </div>
           )}
-        </div>
+          {Boolean(item.displaySource?.length) && (
+            <div className={styles.officialDescription}>{item.displaySource}</div>
+          )}
+        </>
       )}
-      {item.isDestiny2() &&
-        !item.bucket.inWeapons &&
-        !item.bucket.inArmor &&
-        Boolean(item.displaySource?.length) && (
-          <div className={styles.officialDescription}>{item.displaySource}</div>
-        )}
       {inventoryWishListRoll?.notes && inventoryWishListRoll.notes.length > 0 && (
         <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>

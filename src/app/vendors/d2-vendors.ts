@@ -1,8 +1,8 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
 import { VENDORS } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
 import {
   BungieMembershipType,
   DestinyCollectibleComponent,
@@ -199,8 +199,8 @@ export function filterVendorGroupsToUnacquired(
           ...vendor,
           items: vendor.items.filter(
             (item) =>
-              item.item?.isDestiny2() &&
-              (item.item.collectibleState !== null
+              item.item &&
+              (item.item.collectibleState !== undefined
                 ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
                 : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
                   !ownedItemHashes.has(item.item.hash))
@@ -214,7 +214,7 @@ export function filterVendorGroupsToUnacquired(
 export function filterVendorGroupsToSearch(
   vendorGroups: readonly D2VendorGroup[],
   searchQuery: string,
-  filterItems: (item: DimItem) => boolean
+  filterItems: ItemFilter
 ) {
   return vendorGroups
     .map((group) => ({

@@ -1,15 +1,9 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
-import {
-  CONSUMABLES_BUCKET,
-  MATERIALS_BUCKET,
-  MODIFICATIONS_BUCKET,
-} from 'app/search/d2-known-values';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { getRating } from '../item-review/reducer';
-import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
@@ -34,13 +28,6 @@ export function rarity(item: DimItem) {
     default:
       return 5;
   }
-}
-
-/**
- * Sort the stores according to the user's preferences (via the order parameter).
- */
-export function sortStores(stores: DimStore[]) {
-  return characterSortSelector(store.getState())(stores);
 }
 
 const D1_CONSUMABLE_SORT_ORDER = [
@@ -116,7 +103,7 @@ const ITEM_SORT_DENYLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
-  215593132, // LostItems
+  BucketHashes.LostItems, // LostItems
 ]);
 
 // TODO: pass in state
@@ -126,17 +113,6 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || item.primStat?.value)
-  ),
-  rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) => {
-      if (item.quality?.min) {
-        return item.quality.min;
-      }
-      const dtrRating = $featureFlags.reviewsEnabled
-        ? getRating(item, store.getState().reviews.ratings)
-        : undefined;
-      return dtrRating?.overallScore;
-    })
   ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
@@ -171,12 +147,12 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === CONSUMABLES_BUCKET) {
+  if (itemLocationId === BucketHashes.Consumables) {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === MATERIALS_BUCKET) {
+  if (itemLocationId === BucketHashes.Materials) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
@@ -189,7 +165,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort mods
-  if (itemLocationId === MODIFICATIONS_BUCKET) {
+  if (itemLocationId === BucketHashes.Modifications) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
     if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
@@ -198,7 +174,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort consumables
-  if (itemLocationId === CONSUMABLES_BUCKET) {
+  if (itemLocationId === BucketHashes.Consumables) {
     return items.sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,
@@ -264,7 +240,7 @@ export function dtrRatingColor(value: number, property = 'color') {
 }
 
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
-  if ($featureFlags.gradientBackground || !store.isDestiny2() || !store.color) {
+  if ($featureFlags.gradientBackground || !store.color) {
     return undefined;
   }
 
