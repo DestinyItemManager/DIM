@@ -9,6 +9,5 @@ export function getWeaponArchetypeSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
-export const getWeaponArchetype: (item: DimItem) => PluggableInventoryItemDefinition | undefined = (
-  item
-) => getWeaponArchetypeSocket(item)?.plugged?.plugDef;
+export const getWeaponArchetype = (item: DimItem): PluggableInventoryItemDefinition | undefined =>
+  getWeaponArchetypeSocket(item)?.plugged?.plugDef;
