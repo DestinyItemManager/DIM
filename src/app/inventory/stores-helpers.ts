@@ -205,12 +205,3 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
 export function isD1Store(store: DimStore): store is D1Store {
   return store.destinyVersion === 1;
 }
-
-/**
- * Is this store the vault? Use this when you want the store to
- * automatically be typed as DimVault in the "true" branch of a conditional.
- * Otherwise you can just check "store.isVault".
- */
-export function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}

@@ -67,22 +67,16 @@ export interface DimStore<Item = DimItem> {
   color?: DestinyColor;
 }
 
-export interface DimVault extends DimStore {
-  // TODO: move to top level? Drive off profile?
-  currencies: {
-    itemHash: number;
-    displayProperties: DestinyDisplayPropertiesDefinition;
-    quantity: number;
-  }[];
+/** Account-wide currency counts, e.g. glimmer */
+export interface AccountCurrency {
+  readonly itemHash: number;
+  readonly displayProperties: DestinyDisplayPropertiesDefinition;
+  readonly quantity: number;
 }
 
-export interface D1Vault extends D1Store {
-  currencies: {
-    itemHash: number;
-    displayProperties: DestinyDisplayPropertiesDefinition;
-    quantity: number;
-  }[];
-}
+export type DimVault = DimStore;
+
+export type D1Vault = D1Store;
 
 /** A character-level stat. */
 export interface DimCharacterStat {

@@ -1,8 +1,9 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { amountOfItem, getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
 import _ from 'lodash';
@@ -436,7 +437,15 @@ function isSaleItemUnlocked(saleItem) {
  * have on all characters, limited to only currencies required to
  * buy items from the provided vendors.
  */
-export function countCurrencies(stores: D1Store[], vendors: { [vendorHash: number]: Vendor }) {
+export function countCurrencies(
+  stores: D1Store[],
+  vendors: { [vendorHash: number]: Vendor },
+  currencies: {
+    readonly itemHash: number;
+    readonly displayProperties: DestinyDisplayPropertiesDefinition;
+    readonly quantity: number;
+  }[]
+) {
   if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
     return {};
   }
@@ -444,25 +453,24 @@ export function countCurrencies(stores: D1Store[], vendors: { [vendorHash: numbe
   const categories = Object.values(vendors).flatMap((v) => v.categories);
   const saleItems = categories.flatMap((c) => c.saleItems);
   const costs = saleItems.flatMap((i) => i.costs);
-  const currencies = costs.map((c) => c.currency.itemHash);
 
   const totalCoins: { [currencyHash: number]: number } = {};
-  currencies.forEach((currencyHash) => {
-    // Legendary marks and glimmer are special cases
-    switch (currencyHash) {
-      case 2534352370:
-      case 3159615086:
-      case 2749350776:
-        totalCoins[currencyHash] = getVault(stores)!.currencies.find(
-          (c) => c.itemHash === currencyHash
-        )!.quantity;
-        break;
-      default:
-        totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-          amountOfItem(store, { hash: currencyHash })
-        );
-        break;
-    }
-  });
+  costs
+    .map((c) => c.currency.itemHash)
+    .forEach((currencyHash) => {
+      // Legendary marks and glimmer are special cases
+      switch (currencyHash) {
+        case 2534352370:
+        case 3159615086:
+        case 2749350776:
+          totalCoins[currencyHash] = currencies.find((c) => c.itemHash === currencyHash)!.quantity;
+          break;
+        default:
+          totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+            amountOfItem(store, { hash: currencyHash })
+          );
+          break;
+      }
+    });
   return totalCoins;
 }

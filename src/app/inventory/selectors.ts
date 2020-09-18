@@ -41,6 +41,9 @@ export const currentStoreSelector = (state: RootState) => getCurrentStore(stores
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 
+/** Account wide currencies */
+export const currenciesSelector = (state: RootState) => state.inventory.currencies;
+
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 

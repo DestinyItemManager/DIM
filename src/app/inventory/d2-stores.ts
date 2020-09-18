@@ -184,6 +184,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
           updateBasePower(stores, s, defs);
         }
 
+        const currencies = processCurrencies(profileInfo, defs);
+
         // Let our styling know how many characters there are
         // TODO: this should be an effect on the stores component, except it's also
         // used on D1 activities page
@@ -193,7 +195,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
         console.timeEnd('Process inventory');
 
         console.time('Inventory state update');
-        dispatch(update({ stores, profileResponse: profileInfo }));
+        dispatch(update({ stores, profileResponse: profileInfo, currencies }));
         console.timeEnd('Inventory state update');
 
         return stores;
@@ -216,6 +218,18 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     loadingTracker.addPromise(promise);
     return promise;
   };
+}
+
+function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2ManifestDefinitions) {
+  const profileCurrencies = profileInfo.profileCurrencies.data
+    ? profileInfo.profileCurrencies.data.items
+    : [];
+  const currencies = profileCurrencies.map((c) => ({
+    itemHash: c.itemHash,
+    quantity: c.quantity,
+    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
+  }));
+  return currencies;
 }
 
 /**
@@ -285,12 +299,9 @@ function processVault(
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
     : [];
-  const profileCurrencies = profileInfo.profileCurrencies.data
-    ? profileInfo.profileCurrencies.data.items
-    : [];
   const itemComponents = profileInfo.itemComponents;
 
-  const store = makeVault(defs, profileCurrencies);
+  const store = makeVault();
 
   const items: DestinyItemComponent[] = [];
   for (const i of profileInventory) {
