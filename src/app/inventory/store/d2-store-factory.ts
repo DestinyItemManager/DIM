@@ -60,9 +60,6 @@ export function makeCharacter(
     isVault: false,
     color: character.emblemColor,
     items: [],
-    progression: {
-      progressions: [],
-    },
   };
 }
 
@@ -97,9 +94,6 @@ export function makeVault(
     gender: '',
     genderRace: '',
     stats: [],
-    progression: {
-      progressions: [],
-    },
   };
 }
 

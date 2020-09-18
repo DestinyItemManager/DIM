@@ -225,7 +225,7 @@ async function loadVendorForCharacter(
  * Get this character's level for the given faction.
  */
 function factionLevel(store: D1Store, factionHash: number) {
-  const rep = store.progression?.progressions.find((rep) => rep.faction?.hash === factionHash);
+  const rep = store.progressions.find((rep) => rep.faction?.hash === factionHash);
   return rep?.level || 0;
 }
 

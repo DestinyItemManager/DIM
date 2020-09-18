@@ -59,10 +59,6 @@ export interface DimStore<Item = DimItem> {
     maxTotalPower?: DimCharacterStat;
     [hash: number]: DimCharacterStat;
   };
-  /** Character progression. */
-  progression: null | {
-    progressions: DestinyProgression[];
-  };
   /** The background or dominant color of the equipped emblem, if available. */
   color?: DestinyColor;
 }
@@ -124,10 +120,11 @@ export interface D1Progression extends DestinyProgression {
  * A D1 character. Use this when you need D1-specific properties or D1-specific items.
  */
 export interface D1Store extends DimStore<D1Item> {
-  progression: null | {
-    progressions: D1Progression[];
-  };
+  progressions: D1Progression[];
 
   // TODO: shape?
-  advisors: any;
+  advisors: {
+    recordBooks: any;
+    activities: any;
+  };
 }
