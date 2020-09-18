@@ -34,7 +34,7 @@ export default function StoreStats({
       {isVault(store) ? (
         <div className={styles.vaultStats}>
           <AccountCurrencies store={store} />
-          {shouldShowCapacity(isPhonePortrait) && <VaultCapacity store={store} />}
+          {shouldShowCapacity(isPhonePortrait) && <VaultCapacity />}
         </div>
       ) : store.destinyVersion === 1 ? (
         <D1CharacterStats stats={store.stats} />

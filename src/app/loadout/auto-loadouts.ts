@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
@@ -51,7 +51,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
     value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
 
     // Choose the item w/ the highest XP
-    if (item.isDestiny1() && item.talentGrid) {
+    if (isD1Item(item) && item.talentGrid) {
       value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
     }
 
@@ -69,7 +69,7 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
 export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
   const { equippable } = maxLightItemSet(stores, store);
   return newLoadout(
-    name,
+    store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
     equippable.map((i) => convertToLoadoutItem(i, true))
   );
 }
@@ -105,7 +105,7 @@ export function maxLightItemSet(
   }
 
   const bestItemFn = (item: DimItem) => {
-    let value = item.primStat!.value;
+    let value = item.primStat?.value ?? 0;
 
     // Break ties when items have the same stats. Note that this should only
     // add less than 0.25 total, since in the exotics special case there can be

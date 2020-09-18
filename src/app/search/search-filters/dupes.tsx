@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { getSeason } from 'app/inventory/store/season';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
@@ -21,9 +22,9 @@ export const makeDupeID = (item: DimItem) =>
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
 export const makeSeasonalDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
-  `${item.name}${item.classType}${item.tier}${
-    item.isDestiny2() ? `${item.collectibleHash}${item.powerCap}${item.season}` : ''
-  }${item.itemCategoryHashes.join('.')}`;
+  `${item.name}${item.classType}${item.tier}item.collectibleHash}${item.powerCap}${getSeason(
+    item
+  )}${item.itemCategoryHashes.join('.')}`;
 
 const sortDupes = (
   dupes: {
@@ -101,6 +102,7 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'seasonaldupe',
     description: tl('Filter.SeasonalDupe'),
+    destinyVersion: 2,
     filter: ({ stores }) => {
       const duplicates = computeSeasonalDupes(stores);
       return (item) => {
@@ -111,7 +113,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'dupelower',
-    description: tl('Filter.Dupe'),
+    description: tl('Filter.DupeLower'),
     filter: ({ stores, itemInfos, itemHashTags }) => {
       const duplicates = sortDupes(computeDupes(stores), itemInfos, itemHashTags);
       return (item) => {
@@ -138,7 +140,7 @@ const dupeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'count',
-    description: tl('Filter.Dupe'),
+    description: tl('Filter.DupeCount'),
     format: 'range',
     filter: ({ stores, filterValue }) => {
       const compare = rangeStringToComparator(filterValue);

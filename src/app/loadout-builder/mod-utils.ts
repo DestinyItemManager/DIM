@@ -6,7 +6,7 @@ import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWork
 import {
   canTakeAllGeneralMods,
   canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
+  sortForSeasonalProcessMods,
 } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
@@ -22,10 +22,9 @@ import {
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
-  item.isDestiny2() &&
   item.energy &&
-  (mod.mod.plug.energyCost!.energyType === DestinyEnergyType.Any ||
-    mod.mod.plug.energyCost!.energyType === item.energy?.energyType);
+  (mod.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+    mod.modDef.plug.energyCost!.energyType === item.energy?.energyType);
 
 /**
  * Assignes the general mods to armour pieces in assignments, including the energy specific ones
@@ -39,7 +38,7 @@ function assignGeneralMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
+  const sortedMods = generalMods.map(mapArmor2ModToProcessMod).sort(sortForSeasonalProcessMods);
 
   canTakeAllGeneralMods(sortedMods, setToMatch, assignments);
 }
@@ -54,8 +53,8 @@ function assignModsForSlot(
   mods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
-  if (!mods?.length || mods.every((mod) => doEnergiesMatch(mod, item))) {
-    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.mod.hash)];
+  if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
+    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
   }
 }
 
@@ -70,12 +69,10 @@ function assignAllSeasonalMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortProcessModsOrProcessItems);
+  const sortedMods = seasonalMods.map(mapArmor2ModToProcessMod).sort(sortForSeasonalProcessMods);
 
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
-
-const emptyResult: [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] = [{}, []];
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
@@ -84,11 +81,7 @@ export function assignModsToArmorSet(
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
-    if (!item.isDestiny2()) {
-      return emptyResult;
-    } else {
-      assignments[item.id] = [];
-    }
+    assignments[item.id] = [];
   }
 
   const processItems: ProcessItem[] = [];
@@ -96,7 +89,7 @@ export function assignModsToArmorSet(
   for (const hash of LockableBucketHashes) {
     const item = setToMatch.find((i) => i.bucket.hash === hash);
 
-    if (item?.isDestiny2()) {
+    if (item) {
       const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
       assignModsForSlot(item, lockedMods, assignments);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));
@@ -111,9 +104,11 @@ export function assignModsToArmorSet(
     assignments
   );
 
-  const modsByHash = _.keyBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.mod.hash);
+  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>
-    modHashes.map((modHash) => modsByHash[modHash])
+    modHashes
+      .map((modHash) => modsByHash[modHash].pop())
+      .filter((x): x is LockedArmor2Mod => Boolean(x))
   );
   const assigned = Object.values(assignedMods).flat();
   const unassignedMods = Object.values(lockedArmor2Mods)

@@ -32,7 +32,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         className="background"
         style={{
           backgroundImage: `url("${store.background}")`,
-          backgroundColor: store.isDestiny2()
+          backgroundColor: store.color
             ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
                 store.color.blue
               )}`
@@ -57,11 +57,13 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         </div>
         <div className="bottom">
           {isVault(store) ? (
-            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity store={store} />
+            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity />
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>
-              {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
+              {store.destinyVersion === 1 && store.level < 40 && (
+                <div className="level">{store.level}</div>
+              )}
             </>
           )}
         </div>

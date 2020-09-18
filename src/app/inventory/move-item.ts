@@ -2,6 +2,7 @@ import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
@@ -10,12 +11,13 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
 import { queueAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
-import { dimItemService } from './item-move-service';
+import { moveItemTo as moveTo } from './item-move-service';
 import { DimItem } from './item-types';
+import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
-import { getStore, getVault } from './stores-helpers';
+import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -43,6 +45,20 @@ function showMoveAmountPopup(
       onCancel: reject,
     });
   });
+}
+
+/**
+ * Move the item to the currently active store. Used for double-click action.
+ */
+export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
+  return async (dispatch, getState) => {
+    const active = getCurrentStore(storesSelector(getState()))!;
+
+    // Equip if it's not equipped or it's on another character
+    const equip = !item.equipped || item.owner !== active.id;
+
+    return dispatch(moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false));
+  };
 }
 
 /**
@@ -80,7 +96,7 @@ export function moveItemTo(
         // https://github.com/DestinyItemManager/DIM/issues/3373
         !item.uniqueStack
       ) {
-        const maximum = getStore(stores, item.owner)!.amountOfItem(item);
+        const maximum = amountOfItem(getStore(stores, item.owner)!, item);
 
         try {
           moveAmount = await showMoveAmountPopup(item, store, maximum);
@@ -105,7 +121,7 @@ export function moveItemTo(
       }
 
       const movePromise = queueAction(() =>
-        loadingTracker.addPromise(dimItemService.moveTo(item, store, equip, moveAmount))
+        loadingTracker.addPromise(dispatch(moveTo(item, store, equip, moveAmount)))
       );
       showNotification(moveItemNotification(item, store, movePromise));
 
@@ -117,7 +133,7 @@ export function moveItemTo(
         dispatch(updateCharacters());
       }
 
-      item.updateManualMoveTimestamp();
+      updateManualMoveTimestamp(item);
     } catch (e) {
       console.error('error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
@@ -138,7 +154,7 @@ export function moveItemTo(
  * Consolidate all copies of a stackable item into a single stack in store.
  */
 export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResult {
-  return (_dispatch, getState) =>
+  return (dispatch, getState) =>
     queueAction(() =>
       loadingTracker.addPromise(
         (async () => {
@@ -154,8 +170,8 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
                   store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster
               );
               if (item) {
-                const amount = s.amountOfItem(actionableItem);
-                await dimItemService.moveTo(item, vault, false, amount);
+                const amount = amountOfItem(s, actionableItem);
+                await dispatch(moveTo(item, vault, false, amount));
               }
             }
 
@@ -166,8 +182,8 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
                 (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
               );
               if (item) {
-                const amount = vault.amountOfItem(actionableItem);
-                await dimItemService.moveTo(item, store, false, amount);
+                const amount = amountOfItem(vault, actionableItem);
+                await dispatch(moveTo(item, store, false, amount));
               }
             }
             const data = { name: actionableItem.name, store: store.name };
@@ -198,7 +214,7 @@ interface Move {
  * Distribute a stackable item evently across characters.
  */
 export function distribute(actionableItem: DimItem): ThunkResult {
-  return (_dispatch, getState) =>
+  return (dispatch, getState) =>
     queueAction(() =>
       loadingTracker.addPromise(
         (async () => {
@@ -207,7 +223,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
 
           let total = 0;
           const amounts = stores.map((store) => {
-            const amount = store.amountOfItem(actionableItem);
+            const amount = amountOfItem(store, actionableItem);
             total += amount;
             return amount;
           });
@@ -250,7 +266,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           async function applyMoves(moves: Move[]) {
             for (const move of moves) {
               const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
-              await dimItemService.moveTo(item, move.target, false, move.amount);
+              await dispatch(moveTo(item, move.target, false, move.amount));
             }
           }
 

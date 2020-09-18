@@ -1,9 +1,11 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
+import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import { generateSuggestionsForFilter } from '../search-config';
 import { allStatNames, statHashByName } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 
@@ -27,17 +29,24 @@ const overloadedRangeFilters: FilterDefinition[] = [
     format: 'rangeoverload',
     destinyVersion: 2,
     suggestions: allStatNames,
+    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'masterwork' }),
     filter: ({ filterValue }) => {
+      // the "is:masterwork" case
+      if (filterValue === 'masterwork') {
+        return (item) => item.masterwork;
+      }
+      // "masterwork:<5" case
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
-        return (item: D2Item) =>
+        return (item) =>
           Boolean(
             item.masterworkInfo?.tier &&
               numberComparisonFunction(Math.min(item.masterworkInfo.tier, 10))
           );
       }
+      // "masterwork:range" case
       const searchedMasterworkStatHash = statHashByName[filterValue];
-      return (item: D2Item) =>
+      return (item) =>
         Boolean(
           searchedMasterworkStatHash &&
             item.masterworkInfo?.stats?.some((s) => s.hash === searchedMasterworkStatHash)
@@ -53,10 +62,10 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
-        return (item: D2Item) =>
+        return (item: DimItem) =>
           item.energy && numberComparisonFunction(item.energy.energyCapacity);
       }
-      return (item: D2Item) =>
+      return (item: DimItem) =>
         item.energy && filterValue === energyNamesByEnum[item.energy.energyType];
     },
   },
@@ -69,19 +78,19 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) => compareTo(item.season);
+      return (item: DimItem) => compareTo(getSeason(item));
     },
   },
   {
     keywords: 'sunsetsafter',
     description: tl('Filter.SunsetAfter'),
-    format: 'range',
+    format: 'rangeoverload',
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) => {
+      return (item: DimItem) => {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return compareTo(itemFinalSeason ?? 0);
       };

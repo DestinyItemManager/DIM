@@ -6,9 +6,6 @@ import clsx from 'clsx';
 import React from 'react';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
-  if (!item.isDestiny2()) {
-    return null;
-  }
   if (!item.pursuit || !item.pursuit.expirationDate) {
     return null;
   }

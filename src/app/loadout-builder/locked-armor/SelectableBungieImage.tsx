@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import React from 'react';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import ClosableContainer from '../ClosableContainer';
-import { BurnItem, LockedArmor2Mod, LockedItemType, LockedModBase } from '../types';
+import { LockedArmor2Mod, LockedItemType } from '../types';
 import styles from './SelectableBungieImage.m.scss';
 
 const badPerk = new Set([
@@ -28,61 +28,6 @@ const badPerk = new Set([
   377666359, // energy dexterity
   2326218464, // kinetic dexterity
 ]);
-
-/**
- * A mod option in the PerkPicker.
- */
-export function SelectableMod({
-  mod,
-  plugSetHash,
-  defs,
-  bucket,
-  selected,
-  unselectable,
-  onLockedPerk,
-  onLockedModBase,
-}: {
-  mod: PluggableInventoryItemDefinition;
-  // plugSet this mod appears in
-  plugSetHash: number;
-  defs: D2ManifestDefinitions;
-  bucket?: InventoryBucket;
-  selected: boolean;
-  unselectable?: boolean;
-  onLockedPerk?(perk: LockedItemType): void;
-  onLockedModBase?(mod: LockedModBase): void;
-}) {
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (bucket && onLockedPerk) {
-      onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
-    } else if (onLockedModBase) {
-      onLockedModBase({ mod, plugSetHash });
-    }
-  };
-
-  const perk = Boolean(mod.perks?.length) && defs.SandboxPerk.get(mod.perks[0].perkHash);
-
-  return (
-    <div
-      className={clsx(styles.perk, {
-        [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable,
-      })}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-    >
-      <SocketDetailsMod itemDef={mod} defs={defs} />
-      <div className={styles.perkInfo}>
-        <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
-        <div className={styles.perkDescription}>
-          {perk ? perk.displayProperties.description : mod.displayProperties.description}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function SelectableArmor2Mod({
   mod,
@@ -114,11 +59,11 @@ export function SelectableArmor2Mod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod itemDef={mod.mod} defs={defs} />
+        <SocketDetailsMod itemDef={mod.modDef} defs={defs} />
         <div className={styles.perkInfo}>
-          <div className={styles.perkTitle}>{mod.mod.displayProperties.name}</div>
-          <div className={styles.perkDescription}>{mod.mod.displayProperties.description}</div>
-          {mod.mod.investmentStats
+          <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
+          <div className={styles.perkDescription}>{mod.modDef.displayProperties.description}</div>
+          {mod.modDef.investmentStats
             .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>
@@ -185,45 +130,6 @@ export function SelectablePerk({
           {isBadPerk && <p>{t('LoadoutBuilder.BadPerk')}</p>}
           {perk.hash === TRACTION_PERK && t('LoadoutBuilder.Traction')}
         </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * A burn option in the PerkPicker.
- */
-export function SelectableBurn({
-  burn,
-  bucket,
-  selected,
-  unselectable,
-  onLockedPerk,
-}: {
-  burn: BurnItem;
-  bucket: InventoryBucket;
-  selected: boolean;
-  unselectable: boolean;
-  onLockedPerk(burn: LockedItemType): void;
-}) {
-  const handleClick = (e) => {
-    e.preventDefault();
-    onLockedPerk({ type: 'burn', burn, bucket });
-  };
-
-  return (
-    <div
-      className={clsx(styles.perk, {
-        [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable,
-      })}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-    >
-      <img className={`perk-image ${burn.dmg}`} alt="" src={burn.displayProperties.icon} />
-      <div className={styles.perkInfo}>
-        <div className={styles.perkTitle}>{burn.displayProperties.name}</div>
       </div>
     </div>
   );

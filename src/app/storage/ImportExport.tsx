@@ -5,7 +5,6 @@ import { AppIcon, downloadIcon } from 'app/shell/icons';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import './storage.scss';
-import { DimData } from './sync.service';
 
 declare global {
   interface Window {
@@ -21,7 +20,7 @@ export default function ImportExport({
   onImportData,
 }: {
   onExportData(): void;
-  onImportData(data: DimData | ExportResponse): Promise<any>;
+  onImportData(data: ExportResponse): Promise<any>;
 }) {
   if (!supportsExport) {
     return null;

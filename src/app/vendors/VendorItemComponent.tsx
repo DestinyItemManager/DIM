@@ -47,8 +47,7 @@ export default function VendorItemComponent({
   }
 
   const acquired =
-    item.item.isDestiny2() &&
-    item.item.collectibleState !== null &&
+    item.item.collectibleState !== undefined &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
   return (

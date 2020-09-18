@@ -3,23 +3,26 @@ import { t } from 'app/i18next-t';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
-import { getMasterworkStatNames, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import {
+  getItemYear,
+  getMasterworkStatNames,
+  getSpecialtySocketMetadata,
+  isD1Item,
+} from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
-import { DtrRating } from '../item-review/dtr-api-types';
-import { getRating } from '../item-review/reducer';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
 import { DimStore } from './store-types';
 import { getClass } from './store/character-utils';
+import { getEvent, getSeason } from './store/season';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -50,9 +53,6 @@ const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].inclu
 export function downloadCsvFiles(
   stores: DimStore[],
   itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  },
   type: 'Weapons' | 'Armor' | 'Ghost'
 ) {
   // perhaps we're loading
@@ -92,10 +92,10 @@ export function downloadCsvFiles(
   });
   switch (type) {
     case 'Weapons':
-      downloadWeapons(items, nameMap, itemInfos, ratings);
+      downloadWeapons(items, nameMap, itemInfos);
       break;
     case 'Armor':
-      downloadArmor(items, nameMap, itemInfos, ratings);
+      downloadArmor(items, nameMap, itemInfos);
       break;
     case 'Ghost':
       downloadGhost(items, nameMap, itemInfos);
@@ -225,7 +225,7 @@ function getMaxPerks(items: DimItem[]) {
         (item) =>
           (item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
-            : item.isDestiny2() && item.sockets
+            : item.sockets
             ? buildSocketNames(item.sockets)
             : []
           ).length
@@ -237,7 +237,7 @@ function getMaxPerks(items: DimItem[]) {
 function addPerks(row: object, item: DimItem, maxPerks: number) {
   const perks = item.talentGrid
     ? buildNodeNames(item.talentGrid.nodes)
-    : item.isDestiny2() && item.sockets
+    : item.sockets
     ? buildSocketNames(item.sockets)
     : [];
 
@@ -277,11 +277,11 @@ function equippable(item: DimItem) {
 }
 
 export function source(item: DimItem) {
-  if (item.isDestiny2()) {
+  if (item.source) {
     return (
       sourceKeys.find(
         (src) =>
-          D2Sources[src].sourceHashes.includes(item.source) ||
+          (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
           D2MissingSources[src].includes(item.hash)
       ) || ''
@@ -289,14 +289,7 @@ export function source(item: DimItem) {
   }
 }
 
-function downloadArmor(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  }
-) {
+function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -310,68 +303,61 @@ function downloadArmor(
       Type: item.typeName,
       Source: source(item),
       Equippable: equippable(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
     row.Owner = nameMap[item.owner];
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
-    if (item.isDestiny2()) {
+    if (item.energy) {
       row['Armor2.0'] = Boolean(item.energy);
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
-    if (item.isDestiny2()) {
-      row.Season = item.season;
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
+    row.Year = getItemYear(item);
+    if (item.destinyVersion === 2) {
+      row.Season = getSeason(item);
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
-    if ($featureFlags.reviewsEnabled) {
-      const dtrRating = getRating(item, ratings);
-      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
-      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
-    }
-
-    if (item.isDestiny1()) {
+    if (isD1Item(item)) {
       row['% Quality'] = item.quality?.min ?? 0;
     }
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
-    if (item.isDestiny1() && item.stats) {
-      item.stats.forEach((stat) => {
-        let pct = 0;
-        if (stat.scaled?.min) {
-          pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
-        }
-        stats[stat.statHash] = {
-          value: stat.value,
-          pct,
-          base: 0,
-        };
-      });
-    } else if (item.isDestiny2() && item.stats) {
-      item.stats.forEach((stat) => {
-        stats[stat.statHash] = {
-          value: stat.value,
-          base: stat.base,
-          pct: 0,
-        };
-      });
+    if (item.stats) {
+      if (isD1Item(item)) {
+        item.stats.forEach((stat) => {
+          let pct = 0;
+          if (stat.scaled?.min) {
+            pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
+          }
+          stats[stat.statHash] = {
+            value: stat.value,
+            pct,
+            base: 0,
+          };
+        });
+      } else {
+        item.stats.forEach((stat) => {
+          stats[stat.statHash] = {
+            value: stat.value,
+            base: stat.base,
+            pct: 0,
+          };
+        });
+      }
     }
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% IntQ'] = stats.Intellect?.pct ?? 0;
       row['% DiscQ'] = stats.Discipline?.pct ?? 0;
       row['% StrQ'] = stats.Strength?.pct ?? 0;
@@ -390,7 +376,7 @@ function downloadArmor(
         row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
       });
 
-      if (item.isDestiny2() && item.sockets) {
+      if (item.sockets) {
         row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
       }
     }
@@ -407,10 +393,7 @@ function downloadArmor(
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
-  ratings: {
-    [key: string]: DtrRating;
-  }
+  itemInfos: ItemInfos
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -426,38 +409,28 @@ function downloadWeapons(
       Source: source(item),
       Category: item.bucket.type,
       Element: item.element?.displayProperties.name,
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.isDestiny2()) {
+    if (item.powerCap) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.isDestiny2()) {
+    if (item.masterworkInfo) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
+      row['Masterwork Tier'] = item.masterworkInfo.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
     row.Owner = nameMap[item.owner];
-    if (item.isDestiny1()) {
+    if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
-    if (item.isDestiny1()) {
-      row.Year = item.year;
-    } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo[item.season].year;
-    }
-    if (item.isDestiny2()) {
-      row.Season = item.season;
-      row.Event = item.event ? D2EventInfo[item.event].name : '';
-    }
-
-    const dtrRating = getRating(item, ratings);
-
-    if ($featureFlags.reviewsEnabled) {
-      row['DTR Rating'] = dtrRating?.overallScore ?? 'N/A';
-      row['# of Reviews'] = dtrRating?.ratingCount ?? 'N/A';
+    row.Year = getItemYear(item);
+    if (item.destinyVersion === 2) {
+      row.Season = getSeason(item);
+      const event = getEvent(item);
+      row.Event = event ? D2EventInfo[event].name : '';
     }
 
     const stats = {
@@ -541,7 +514,7 @@ function downloadWeapons(
     row.Mag = stats.magazine;
     row.Equip = stats.equipSpeed;
     row['Charge Time'] = stats.chargetime;
-    if (item.isDestiny2()) {
+    if (item.destinyVersion === 2) {
       row['Draw Time'] = stats.drawtime;
       row.Accuracy = stats.accuracy;
     }

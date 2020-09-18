@@ -2,12 +2,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
-import {
-  SelectableBurn,
-  SelectableMod,
-  SelectablePerk,
-} from '../locked-armor/SelectableBungieImage';
-import { BurnItem, LockedItemType } from '../types';
+import { SelectablePerk } from '../locked-armor/SelectableBungieImage';
+import { LockedItemType } from '../types';
 import { getFilteredPerksAndPlugSets } from '../utils';
 import styles from './PickerSection.m.scss';
 
@@ -18,8 +14,6 @@ export default function PerksForBucket({
   bucket,
   defs,
   perks,
-  mods,
-  burns,
   locked,
   items,
   onPerkSelected,
@@ -27,12 +21,6 @@ export default function PerksForBucket({
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
   perks: readonly PluggableInventoryItemDefinition[];
-  mods: readonly {
-    item: PluggableInventoryItemDefinition;
-    // plugSet this mod appears in
-    plugSetHash: number;
-  }[];
-  burns: BurnItem[];
   locked: readonly LockedItemType[];
   items: readonly DimItem[];
   onPerkSelected(perk: LockedItemType);
@@ -43,24 +31,6 @@ export default function PerksForBucket({
     <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
       <div className={styles.header}>{bucket.name}</div>
       <div className={styles.items}>
-        {mods.map((mod) => (
-          <SelectableMod
-            key={mod.item.hash}
-            defs={defs}
-            bucket={bucket}
-            selected={Boolean(
-              locked?.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
-            )}
-            unselectable={Boolean(
-              filterInfo.filteredPlugSetHashes &&
-                !filterInfo.filteredPlugSetHashes.has(mod.plugSetHash)
-            )}
-            mod={mod.item}
-            plugSetHash={mod.plugSetHash}
-            onLockedPerk={onPerkSelected}
-          />
-        ))}
-
         {perks.map((perk) => (
           <SelectablePerk
             key={perk.hash}
@@ -69,19 +39,6 @@ export default function PerksForBucket({
             selected={Boolean(locked?.some((p) => p.type === 'perk' && p.perk.hash === perk.hash))}
             unselectable={Boolean(filterInfo.filteredPerks && !filterInfo.filteredPerks.has(perk))}
             perk={perk}
-            onLockedPerk={onPerkSelected}
-          />
-        ))}
-
-        {burns.map((burn) => (
-          <SelectableBurn
-            key={burn.dmg}
-            bucket={bucket}
-            burn={burn}
-            selected={Boolean(locked?.some((p) => p.type === 'burn' && p.burn.dmg === burn.dmg))}
-            unselectable={Boolean(
-              locked?.some((p) => p.type === 'burn' && p.burn.dmg !== burn.dmg)
-            )}
             onLockedPerk={onPerkSelected}
           />
         ))}

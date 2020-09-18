@@ -38,9 +38,9 @@ let modKey = 0;
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => (l.season ? -l.season : 0)),
-  compareBy((l) => l.mod.plug.energyCost?.energyType),
-  compareBy((l) => l.mod.plug.energyCost?.energyCost),
-  compareBy((l) => l.mod.displayProperties.name)
+  compareBy((l) => l.modDef.plug.energyCost?.energyType),
+  compareBy((l) => l.modDef.plug.energyCost?.energyCost),
+  compareBy((l) => l.modDef.displayProperties.name)
 );
 
 interface ProvidedProps {
@@ -79,7 +79,6 @@ function mapStateToProps() {
         for (const item of store.items) {
           if (
             !item ||
-            !item.isDestiny2() ||
             !item.sockets ||
             !isLoadoutBuilderItem(item) ||
             !(item.classType === DestinyClass.Unknown || item.classType === classType)
@@ -135,7 +134,7 @@ function mapStateToProps() {
               undefined;
 
             if (category) {
-              transformedMods.push({ mod: def, category, season: metadata?.season });
+              transformedMods.push({ modDef: def, category, season: metadata?.season });
             }
           }
         }
@@ -143,7 +142,7 @@ function mapStateToProps() {
         return transformedMods.sort(sortMods);
       });
 
-      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.mod.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.modDef.hash);
     }
   );
 
@@ -180,26 +179,26 @@ function ModPicker({
   }, [isPhonePortrait, filterInput]);
 
   const onModSelected = useCallback(
-    (item: LockedArmor2Mod) => {
+    (mod: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => ({
         ...oldState,
-        [item.category]: [...oldState[item.category], { ...item, key: modKey++ }],
+        [mod.category]: [...oldState[mod.category], { ...mod, key: modKey++ }],
       }));
     },
     [setLockedArmor2ModsInternal]
   );
 
   const onModRemoved = useCallback(
-    (item: LockedArmor2Mod) => {
+    (mod: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[item.category].findIndex((li) => li.mod.hash === item.mod.hash);
+        const firstIndex = oldState[mod.category].findIndex((li) => li.modDef.hash === mod.modDef.hash);
 
         if (firstIndex >= 0) {
-          const newState = [...oldState[item.category]];
+          const newState = [...oldState[mod.category]];
           newState.splice(firstIndex, 1);
           return {
             ...oldState,
-            [item.category]: newState,
+            [mod.category]: newState,
           };
         }
 
@@ -237,8 +236,8 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.mod.displayProperties.name) ||
-            regexp.test(mod.mod.displayProperties.description) ||
+            regexp.test(mod.modDef.displayProperties.name) ||
+            regexp.test(mod.modDef.displayProperties.description) ||
             (mod.season && regexp.test(mod.season.toString())) ||
             regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
         )

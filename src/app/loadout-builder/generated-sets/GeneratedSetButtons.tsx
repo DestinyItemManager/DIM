@@ -4,6 +4,7 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
 import { ArmorSet } from '../types';
@@ -26,6 +27,8 @@ export default function GeneratedSetButtons({
   onLoadoutSet(loadout: Loadout): void;
   onCompareSet(): void;
 }) {
+  const dispatch = useDispatch();
+
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
     onLoadoutSet(createLoadout(store.classType, set));
@@ -34,7 +37,7 @@ export default function GeneratedSetButtons({
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
     const loadout = createLoadout(store.classType, set);
-    return applyLoadout(store, loadout, true);
+    return dispatch(applyLoadout(store, loadout, true));
   };
 
   return (

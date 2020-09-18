@@ -1,12 +1,12 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
+import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
-import _ from 'lodash';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import { breakerTypes, D2ItemCategoryHashesByName, powerfulSources } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
@@ -55,8 +55,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = tierMap[filterValue];
       if (!filterValue) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown rarity type ' + filterValue);
       }
       return (item) => item.tier === filterValue;
     },
@@ -67,7 +66,7 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const ammoType = d2AmmoTypes[filterValue];
-      return (item: D2Item) => item.ammoType === ammoType;
+      return (item: DimItem) => item.ammoType === ammoType;
     },
   },
   {
@@ -80,12 +79,12 @@ const knownValuesFilters: FilterDefinition[] = [
   },
   {
     keywords: 'cosmetic',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Cosmetic'),
     filter: () => (item) => cosmeticTypes.includes(item.type),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],
-    description: tl('Filter.ContributeLight'),
+    description: tl('Filter.ContributePower'),
     filter: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
   },
   {
@@ -97,10 +96,9 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue];
       if (!breakerType) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown breaker type ' + breakerType);
       }
-      return (item: D2Item) => item.breakerType && item.breakerType.hash === breakerType;
+      return (item) => item.breakerType?.hash === breakerType;
     },
   },
   {
@@ -122,8 +120,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
       if (!categoryHash) {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown weapon type ' + filterValue);
       }
       return (item) => item.itemCategoryHashes.includes(categoryHash);
     },
@@ -132,8 +129,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) =>
-      item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
+    filter: () => (item) => item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
   {
     keywords: 'source',
@@ -145,16 +141,15 @@ const knownValuesFilters: FilterDefinition[] = [
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
-        return (item: D2Item) =>
+        return (item) =>
           (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
           sourceInfo.itemHashes.includes(item.hash) ||
           missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];
-        return (item: D2Item) => item.event === predicate;
+        return (item: DimItem) => getEvent(item) === predicate;
       } else {
-        // TODO: throw an error!
-        return _.stubFalse;
+        throw new Error('Unknown item source ' + filterValue);
       }
     },
   },

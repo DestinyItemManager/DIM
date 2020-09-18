@@ -28,10 +28,6 @@
   @include phone-portrait {
     top: calc(100% + 1px);
   }
-
-  &.menuOpen {
-    padding-bottom: 4px;
-  }
 }
 
 .openButton {
@@ -61,6 +57,7 @@
   }
   .deleteIcon {
     color: #333;
+    visibility: visible;
   }
 }
 
@@ -71,14 +68,21 @@
 }
 
 .menuItemQuery {
-  flex: 1;
   white-space: normal;
   padding: 1px 0;
   overflow: hidden;
 }
 
 .menuItemHelp {
+  flex: 1;
   color: #999;
+  span {
+    margin: 0 8px 0 24px;
+    @include phone-portrait {
+      // TODO: I don't have a good way to show these on mobile yet
+      display: none;
+    }
+  }
   .highlightedItem & {
     color: #222;
   }
@@ -91,6 +95,10 @@
   color: #999;
   padding: 0 2px;
   cursor: pointer;
+  visibility: hidden;
+  @media (hover: none) {
+    visibility: visible;
+  }
 }
 
 /* Highlighted spans of text in the autocompleter */

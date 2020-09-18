@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { isD1Store } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -35,8 +36,8 @@ const CharacterHeader = ({
   <div
     className={clsx('character', {
       current: store.current,
-      destiny1: store.isDestiny1(),
-      destiny2: store.isDestiny2(),
+      destiny1: store.destinyVersion === 1,
+      destiny2: store.destinyVersion === 2,
       vault: store.isVault,
     })}
     ref={menuRef}
@@ -50,7 +51,7 @@ const CharacterHeader = ({
     >
       <AppIcon icon={faEllipsisV} title={t('Loadouts.Loadouts')} />
     </div>
-    {!store.isVault && store.isDestiny1() && <CharacterHeaderXPBar store={store} />}
+    {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
   </div>
 );
 

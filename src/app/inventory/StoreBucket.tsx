@@ -22,6 +22,7 @@ import { DimStore } from './store-types';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
+import { findItemsByBucket } from './stores-helpers';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -42,12 +43,12 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { store, bucket } = props;
 
   return {
-    items: store.buckets[bucket.hash] ?? emptyArray(),
     itemSortOrder: itemSortOrderSelector(state),
     // We only need this property when this is a vault armor bucket
     allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
     characterOrder: characterOrderSelector(state),
     isPhonePortrait: isPhonePortraitSelector(state),
+    items: findItemsByBucket(store, bucket.hash),
   };
 }
 
@@ -153,7 +154,7 @@ function StoreBucket({
         {unequippedItems.map((item) => (
           <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
         ))}
-        {store.isDestiny2() &&
+        {store.destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
           _.times(bucket.capacity - unequippedItems.length, (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />

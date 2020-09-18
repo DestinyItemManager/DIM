@@ -25,7 +25,6 @@ import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimStat } from '../inventory/item-types';
-import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { Subscriptions } from '../utils/rx-utils';
@@ -34,7 +33,6 @@ import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
 
 interface StoreProps {
-  ratings: ReviewsState['ratings'];
   stores: DimStore[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
@@ -49,7 +47,6 @@ type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: ratingsSelector(state),
     stores: storesSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
@@ -93,7 +90,6 @@ class Compare extends React.Component<Props, State> {
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
     (state: State) => state.comparisonItems,
-    (_state: State, props: Props) => props.ratings,
     (_state: State, props: Props) => props.compareBaseStats,
     getAllStats
   );
@@ -121,7 +117,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { ratings, compareBaseStats, setSetting } = this.props;
+    const { compareBaseStats, setSetting } = this.props;
     const {
       show,
       comparisonItems: unsortedComparisonItems,
@@ -145,25 +141,16 @@ class Compare extends React.Component<Props, State> {
           reverseComparator(
             chainComparator(
               compareBy((item: DimItem) => {
-                const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
-                const showRating =
-                  $featureFlags.reviewsEnabled &&
-                  dtrRating &&
-                  shouldShowRating(dtrRating) &&
-                  dtrRating.overallScore;
-
                 const stat =
                   item.primStat && sortedHash === item.primStat.statHash
                     ? item.primStat
-                    : sortedHash === 'Rating'
-                    ? { value: showRating || 0 }
                     : sortedHash === 'EnergyCapacity'
                     ? {
-                        value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
+                        value: item.energy?.energyCapacity || 0,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
-                        value: (item.isDestiny2() && item.powerCap) || 99999999,
+                        value: item.powerCap || 99999999,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -370,7 +357,7 @@ class Compare extends React.Component<Props, State> {
       item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
       exampleItemModSlot === getSpecialtySocketMetadata(item);
-    const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
+    const hasEnergy = (item: DimItem) => Boolean(item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class
     allArmors = allArmors
@@ -478,13 +465,15 @@ class Compare extends React.Component<Props, State> {
       const itemRpmStat = i.stats?.find(
         (s) =>
           s.statHash ===
-          (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : StatHashes.RoundsPerMinute)
+          (exampleItem.destinyVersion === 1
+            ? exampleItem.stats![0].statHash
+            : StatHashes.RoundsPerMinute)
       );
       return itemRpmStat?.value || -99999999;
     };
 
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
+    const intrinsic = getWeaponArchetype(exampleItem);
     const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
     const intrinsicHash = intrinsic?.hash;
 
@@ -496,8 +485,8 @@ class Compare extends React.Component<Props, State> {
         (i) =>
           // specifically for destiny 2 grenade launchers, let's not compare special with heavy.
           // all other weapon types with multiple ammos, are novelty exotic exceptions
-          !exampleItem.isDestiny2() ||
-          !i.isDestiny2() ||
+          !(exampleItem.destinyVersion === 2) ||
+          !(i.destinyVersion === 2) ||
           !exampleItem.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
           exampleItem.ammoType === i.ammoType
       );
@@ -518,11 +507,10 @@ class Compare extends React.Component<Props, State> {
       // same weapon type plus matching intrinsic (rpm+impact..... ish)
       {
         buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
-        items: exampleItem.isDestiny2()
-          ? allWeapons.filter(
-              (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
-            )
-          : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
+        items:
+          exampleItem.destinyVersion === 2
+            ? allWeapons.filter((i) => getWeaponArchetype(i)?.hash === intrinsicHash)
+            : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
       },
 
       // same weapon type and also matching element (& usually same-slot because same element)
@@ -564,24 +552,10 @@ class Compare extends React.Component<Props, State> {
   };
 }
 
-function getAllStats(
-  comparisonItems: DimItem[],
-  ratings: ReviewsState['ratings'],
-  compareBaseStats: boolean
-) {
+function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
   const firstComparison = comparisonItems[0];
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
-
-  if ($featureFlags.reviewsEnabled) {
-    stats.push(
-      makeFakeStat('Rating', t('Compare.Rating'), (item: DimItem) => {
-        const dtrRating = getRating(item, ratings);
-        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return { statHash: 0, value: showRating || undefined };
-      })
-    );
-  }
 
   if (firstComparison.primStat) {
     stats.push(
@@ -593,32 +567,27 @@ function getAllStats(
     );
   }
   if (
-    firstComparison.isDestiny2() &&
+    firstComparison.destinyVersion === 2 &&
     (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
   ) {
     stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
-        item.isDestiny2()
-          ? {
-              statHash: powerCapPlugSetHash,
-              value: item.powerCap ?? undefined,
-            }
-          : undefined
-      )
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
+        statHash: powerCapPlugSetHash,
+        value: item.powerCap ?? undefined,
+      }))
     );
   }
 
-  if (firstComparison.isDestiny2() && firstComparison.bucket.inArmor) {
+  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
     stats.push(
       makeFakeStat(
         'EnergyCapacity',
         t('EnergyMeter.Energy'),
         (item: DimItem) =>
-          (item.isDestiny2() &&
-            item.energy && {
-              statHash: item.energy.energyType,
-              value: item.energy.energyCapacity,
-            }) ||
+          (item.energy && {
+            statHash: item.energy.energyType,
+            value: item.energy.energyCapacity,
+          }) ||
           undefined
       )
     );

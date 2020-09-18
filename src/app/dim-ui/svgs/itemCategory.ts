@@ -1,4 +1,4 @@
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -74,7 +74,7 @@ export const cosmeticSvgByCategoryHash = {
 export const consumableSvgByCategoryHash = {};
 
 /** an SVG of the weapon's type, or slot, if possible */
-export function getWeaponSvgIcon(item: D2Item) {
+export function getWeaponSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
@@ -91,7 +91,7 @@ export function getWeaponSvgIcon(item: D2Item) {
  * an SVG of the item's type, or undefined.
  * i like this idea but not sure where to employ it yet.
  */
-export function getItemSvgIcon(item: D2Item) {
+export function getItemSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
     const svg: string =
       weaponTypeSvgByCategoryHash[ich] ??

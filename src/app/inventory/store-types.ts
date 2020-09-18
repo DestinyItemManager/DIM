@@ -6,37 +6,13 @@ import {
   DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import { ConnectableObservable } from 'rxjs';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { InventoryBucket } from './inventory-buckets';
-import { D1Item, D2Item, DimItem } from './item-types';
+import { D1Item, DimItem } from './item-types';
 
 /**
- * A generic store service that produces stores and items that are the same across D1 and D2. Use this
- * if you don't care about the differences between the two.
- */
-export interface StoreServiceType<StoreType = DimStore> {
-  /** Get a list of all characters plus the vault. */
-  getStores(): StoreType[];
-  /** A stream of store updates for a particular account. */
-  getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Reload inventory completely. */
-  reloadStores(): Promise<StoreType[] | undefined>;
-}
-
-/**
- * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
- */
-export type D2StoreServiceType = StoreServiceType<D2Store>;
-
-/**
- * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
- */
-export type D1StoreServiceType = StoreServiceType<D1Store>;
-
-/**
- * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
- * or you don't use anything specific to one of them.
+ * A generic DIM character or vault - a "store" of items. This completely
+ * represents any D2 store, and most properties of D1 stores, though you can
+ * specialize down to the D1Store type for some special D1 properties and
+ * overrides.
  */
 export interface DimStore<Item = DimItem> {
   /** An ID for the store. Character ID or 'vault'. */
@@ -44,9 +20,7 @@ export interface DimStore<Item = DimItem> {
   /** Localized name for the store. */
   name: string;
   /** All items in the store, across all buckets. */
-  items: Item[];
-  /** All items, grouped by their bucket. */
-  buckets: { [bucketHash: number]: Item[] };
+  items: readonly Item[];
   /** The Destiny version this store came from. */
   destinyVersion: DestinyVersion;
   /** An icon (emblem) for the store. */
@@ -89,46 +63,12 @@ export interface DimStore<Item = DimItem> {
   progression: null | {
     progressions: DestinyProgression[];
   };
-
-  /**
-   * Get the total amount of this item in the store, across all stacks,
-   * excluding stuff in the postmaster.
-   */
-  amountOfItem(item: { hash: number }): number;
-  /**
-   * How much of items like this item can fit in this store? For
-   * stackables, this is in stacks, not individual pieces.
-   */
-  capacityForItem(item: Item): number;
-  /**
-   * How many *more* items like this item can fit in this store?
-   * This takes into account stackables, so the answer will be in
-   * terms of individual pieces.
-   */
-  spaceLeftForItem(item: Item): number;
-
-  /** Remove an item from this store. Returns whether it actually removed anything. */
-  removeItem(item: Item): boolean;
-
-  /** Add an item to the store. */
-  addItem(item: Item): void;
-
-  /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
-  isDestiny1(): this is D1Store;
-  /* Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store. */
-  isDestiny2(): this is D2Store;
-
-  /** The stores service associated with this store. */
-  getStoresService(): StoreServiceType;
-}
-
-/** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
-interface VaultCounts {
-  [bucketHash: number]: { count: number; bucket: InventoryBucket };
+  /** The background or dominant color of the equipped emblem, if available. */
+  color?: DestinyColor;
 }
 
 export interface DimVault extends DimStore {
-  vaultCounts: VaultCounts;
+  // TODO: move to top level? Drive off profile?
   currencies: {
     itemHash: number;
     displayProperties: DestinyDisplayPropertiesDefinition;
@@ -137,16 +77,6 @@ export interface DimVault extends DimStore {
 }
 
 export interface D1Vault extends D1Store {
-  vaultCounts: VaultCounts;
-  currencies: {
-    itemHash: number;
-    displayProperties: DestinyDisplayPropertiesDefinition;
-    quantity: number;
-  }[];
-}
-
-export interface D2Vault extends D2Store {
-  vaultCounts: VaultCounts;
   currencies: {
     itemHash: number;
     displayProperties: DestinyDisplayPropertiesDefinition;
@@ -200,16 +130,4 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: any;
-
-  getStoresService(): D1StoreServiceType;
-}
-
-/**
- * A D2 character. Use this when you need D2-specific properties or D2-specific items.
- */
-export interface D2Store extends DimStore<D2Item> {
-  /** The vault associated with this store. */
-  vault?: D2Vault;
-  color: DestinyColor;
-  getStoresService(): D1StoreServiceType;
 }

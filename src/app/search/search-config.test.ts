@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { energyCapacityTypeNames } from './d2-known-values';
 import { FilterDefinition } from './filter-types';
 import { buildSearchConfig, generateSuggestionsForFilter } from './search-config';
@@ -16,6 +15,7 @@ describe('generateSuggestionsForFilter', () => {
     ['range', 'a', undefined],
     ['rangeoverload', 'a', ['b', 'c']],
     ['freeform', 'a', ['b', 'c']],
+    [undefined, ['a'], undefined],
     ['range', 'stat', allStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],
@@ -29,8 +29,6 @@ describe('generateSuggestionsForFilter', () => {
         format,
         keywords,
         suggestions,
-        description: '',
-        filter: () => _.stubTrue,
       });
       expect(candidates).toMatchSnapshot();
     }

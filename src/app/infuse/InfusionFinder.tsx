@@ -5,8 +5,9 @@ import { LoadoutItem } from 'app/loadout/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import copy from 'fast-copy';
 import React, { useEffect, useReducer } from 'react';
@@ -27,9 +28,9 @@ import { showInfuse$ } from './infuse';
 import './InfusionFinder.scss';
 
 const itemComparator = chainComparator(
-  reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
+  reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
   compareBy((item: DimItem) =>
-    item.isDestiny1() && item.talentGrid
+    isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
       : 0
   )
@@ -57,12 +58,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-const mapDispatchToProps = {
-  setSetting,
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface State {
   direction: InfuseDirection;
@@ -158,6 +154,7 @@ function InfusionFinder({
   filters,
   isPhonePortrait,
   lastInfusionDirection,
+  dispatch,
 }: Props) {
   const [{ direction, query, source, target, filter }, stateDispatch] = useReducer(stateReducer, {
     direction: lastInfusionDirection,
@@ -185,9 +182,9 @@ function InfusionFinder({
   // Save direction to settings
   useEffect(() => {
     if (direction != lastInfusionDirection) {
-      setSetting('infusionDirection', direction);
+      dispatch(setSetting('infusionDirection', direction));
     }
-  }, [direction, lastInfusionDirection]);
+  }, [direction, lastInfusionDirection, dispatch]);
 
   if (!query) {
     return null;
@@ -265,7 +262,7 @@ function InfusionFinder({
                 type="button"
                 className="dim-button"
                 onClick={() =>
-                  transferItems(currentStore, onClose, effectiveSource, effectiveTarget)
+                  transferItems(dispatch, currentStore, onClose, effectiveSource, effectiveTarget)
                 }
               >
                 <AppIcon icon={faArrowCircleDown} /> {t('Infusion.TransferItems')}
@@ -320,10 +317,7 @@ function InfusionFinder({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(InfusionFinder);
+export default connect<StoreProps>(mapStateToProps)(InfusionFinder);
 
 /**
  * Can source be infused into target?
@@ -333,9 +327,9 @@ function isInfusable(target: DimItem, source: DimItem) {
     return false;
   }
 
-  if (source.isDestiny1() && target.isDestiny1()) {
+  if (source.destinyVersion === 1 && target.destinyVersion === 1) {
     return source.type === target.type && target.primStat!.value < source.primStat!.value;
-  } else if (source.isDestiny2() && target.isDestiny2()) {
+  } else {
     return (
       source.infusionQuality &&
       target.infusionQuality &&
@@ -351,6 +345,7 @@ function isInfusable(target: DimItem, source: DimItem) {
 }
 
 async function transferItems(
+  dispatch: ThunkDispatchProp['dispatch'],
   currentStore: DimStore,
   onClose: () => void,
   source: DimItem,
@@ -375,7 +370,7 @@ async function transferItems(
     convertToLoadoutItem(source, source.equipped),
   ];
 
-  if (source.isDestiny1()) {
+  if (source.destinyVersion === 1) {
     if (target.bucket.sort === 'General') {
       // Mote of Light
       items.push({
@@ -415,5 +410,5 @@ async function transferItems(
   // TODO: another one where we want to respect equipped
   const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
-  await applyLoadout(currentStore, loadout);
+  await dispatch(applyLoadout(currentStore, loadout));
 }

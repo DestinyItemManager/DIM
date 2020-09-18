@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { getItemYear } from 'app/utils/item-utils';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -10,51 +11,15 @@ import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/exceptions';
-import { D1StoresService } from '../d1-stores';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
-
-const yearHashes = {
-  //         tTK       Variks        CoE         FoTL    Kings Fall
-  year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
-  //         RoI       WoTM         FoTl       Dawning    Raid Reprise
-  year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381],
-};
+import { createItemIndex } from './item-index';
 
 // Maps tierType to tierTypeName in English
-const tiers = ['Unused 0', 'Unused 1', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
-
-let _idTracker: { [id: string]: number } = {};
-// A map from instance id to the last time it was manually moved this session
-const _moveTouchTimestamps = new Map<string, number>();
-
-// Prototype for Item objects - add methods to this to add them to all
-// items.
-export const ItemProto = {
-  // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: D1Item) {
-    this.lastManuallyMoved = Date.now();
-    if (this.id !== '0') {
-      _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
-    }
-  },
-  isDestiny1(this: D1Item) {
-    return true;
-  },
-  isDestiny2(this: D1Item) {
-    return false;
-  },
-  getStoresService() {
-    return D1StoresService;
-  },
-};
-
-export function resetIdTracker() {
-  _idTracker = {};
-}
+const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 /**
  * Process an entire list of items into DIM items.
@@ -255,9 +220,8 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const element = item.damageTypeHash
-    ? toD2DamageType(defs.DamageType.get(item.damageTypeHash))
-    : undefined;
+  const element =
+    (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -266,7 +230,8 @@ function makeItem(
     itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
   }
 
-  const createdItem: D1Item = Object.assign(Object.create(ItemProto), {
+  const createdItem: D1Item = {
+    owner: owner.id,
     // figure out what year this item is probably from
     destinyVersion: 1,
     // The bucket the item is currently in
@@ -296,7 +261,7 @@ function makeItem(
     equippingLabel:
       item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
-    amount: item.stackSize,
+    amount: item.stackSize || 1,
     primStat: item.primaryStat || null,
     typeName: itemDef.itemTypeName,
     isEngram: (itemDef.itemCategoryHashes || []).includes(34),
@@ -322,27 +287,38 @@ function makeItem(
     ),
     tracked: item.state === 2,
     locked: item.locked,
-    redacted: Boolean(itemDef.redacted),
     classified: Boolean(itemDef.classified),
-    loreHash: null,
-    lastManuallyMoved:
-      item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
-    percentComplete: null, // filled in later
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    quality: null, // filled in later
-    dtrRating: null,
-  });
+    // These get filled in later or aren't relevant to D1 items
+    percentComplete: 0,
+    talentGrid: null,
+    stats: null,
+    objectives: null,
+    quality: null,
+    sockets: null,
+    breakerType: null,
+    hidePercentage: false,
+    taggable: false,
+    comparable: false,
+    basePower: 0,
+    index: '',
+    infusable: false,
+    infusionFuel: false,
+    perks: null,
+    masterworkInfo: null,
+    flavorObjective: null,
+    infusionQuality: null,
+    canPullFromPostmaster: false,
+    uniqueStack: false,
+    masterwork: false,
+    missingSockets: false,
+    energy: null,
+    powerCap: null,
+    pursuit: null,
+  };
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean(
-    $featureFlags.reviewsEnabled &&
-      createdItem.primStat &&
-      createdItem.primStat.statHash === 368428387
-  );
 
   // Moving rare masks destroys them
   if (createdItem.itemCategoryHashes.includes(55) && createdItem.tier !== 'Legendary') {
@@ -351,13 +327,15 @@ function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = statDef;
-    // D2 is much better about display info
-    statDef.displayProperties = {
-      name: statDef.statName,
-      description: statDef.statDescription,
-      icon: statDef.icon,
-      hasIcon: Boolean(statDef.icon),
+    createdItem.primStat.stat = {
+      ...statDef,
+      // D2 is much better about display info
+      displayProperties: {
+        name: statDef.statName,
+        description: statDef.statDescription,
+        icon: statDef.icon,
+        hasIcon: Boolean(statDef.icon),
+      },
     };
   }
 
@@ -394,8 +372,6 @@ function makeItem(
     }
   }
 
-  createdItem.year = getItemYear(createdItem);
-
   // More objectives properties
   if (createdItem.objectives) {
     const objectives = createdItem.objectives;
@@ -417,7 +393,7 @@ function makeItem(
       createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired
     );
     createdItem.complete =
-      createdItem.year === 1
+      getItemYear(createdItem) === 1
         ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired
         : createdItem.talentGrid.complete;
   }
@@ -447,18 +423,6 @@ function getAmmoType(itemType: string) {
   }
 
   return DestinyAmmunitionType.None;
-}
-
-// Set an ID for the item that should be unique across all items
-export function createItemIndex(item: D1Item) {
-  // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-  let index = item.id;
-  if (item.id === '0') {
-    _idTracker[index] = (_idTracker[index] || 0) + 1;
-    index = `${index}-t${_idTracker[index]}`;
-  }
-
-  return index;
 }
 
 function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
@@ -675,34 +639,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       totalXPRequired <= totalXP &&
       _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
   };
-}
-
-function getItemYear(item) {
-  // determine what year this item came from based on sourceHash value
-  // items will hopefully be tagged as follows
-  // No value: Vanilla, Crota's End, House of Wolves
-  // The Taken King (year 2): 460228854
-  // Rise of Iron (year 3): 24296771
-
-  // This could be further refined for CE/HoW based on activity. See
-  // DestinyRewardSourceDefinition and filter on %SOURCE%
-  // if sourceHash doesn't contain these values, we assume they came from
-  // year 1
-
-  let year = 1;
-  const ttk = item.sourceHashes.includes(yearHashes.year2[0]);
-  const roi = item.sourceHashes.includes(yearHashes.year3[0]);
-  if (ttk || item.infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
-    year = 2;
-  }
-  if (
-    !ttk &&
-    (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)
-  ) {
-    year = 3;
-  }
-
-  return year;
 }
 
 function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D1Stat[] | null {

@@ -1,12 +1,5 @@
 import { tl } from 'app/i18next-t';
-import {
-  D2Item,
-  DimItem,
-  DimPlug,
-  DimSocket,
-  PluggableInventoryItemDefinition,
-} from 'app/inventory/item-types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -18,7 +11,6 @@ import _ from 'lodash';
 import {
   LockedArmor2Mod,
   LockedItemType,
-  LockedMod,
   ModPickerCategories,
   StatTypes,
   statValues,
@@ -125,13 +117,6 @@ export function addLockedItem(
     return [lockedItem];
   }
 
-  // there can only be one burn type per bucket
-  if (lockedItem.type === 'burn') {
-    const newLockedItems = locked.filter((li) => li.type !== 'burn');
-    newLockedItems.push(lockedItem);
-    return newLockedItems;
-  }
-
   // Only add if it's not already there.
   if (!locked.some((existing) => lockedItemsEqual(existing, lockedItem))) {
     const newLockedItems = Array.from(locked);
@@ -160,12 +145,8 @@ export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) 
       return second.type === 'item' && first.item.id === second.item.id;
     case 'exclude':
       return second.type === 'exclude' && first.item.id === second.item.id;
-    case 'mod':
-      return second.type === 'mod' && first.mod.hash === second.mod.hash;
     case 'perk':
       return second.type === 'perk' && first.perk.hash === second.perk.hash;
-    case 'burn':
-      return second.type === 'burn' && first.burn.dmg === second.burn.dmg;
   }
 }
 
@@ -197,7 +178,7 @@ export function getFilteredPerksAndPlugSets(
     // flat list of plugSetHashes per item
     const itemPlugSets: number[] = [];
 
-    if (item.isDestiny2() && item.sockets) {
+    if (item.sockets) {
       for (const socket of item.sockets.allSockets) {
         // Populate mods
         if (!socket.isPerk) {
@@ -217,34 +198,10 @@ export function getFilteredPerksAndPlugSets(
       }
     }
 
-    // The item must be able to slot all mods
-    let matches = true;
-    for (const lockedItem of locked) {
-      if (lockedItem.type === 'mod') {
-        const mod = lockedItem.mod;
-        if (item.isDestiny2() && matchesEnergy(item, mod)) {
-          const plugSetIndex = itemPlugSets.indexOf(lockedItem.plugSetHash);
-          if (plugSetIndex >= 0) {
-            // Remove this plugSetHash from the list because it is now "occupied"
-            itemPlugSets.splice(plugSetIndex, 1);
-          } else {
-            matches = false;
-            break;
-          }
-        } else {
-          matches = false;
-          break;
-        }
-      }
-    }
-
     // for each item, look to see if all perks match locked
-    matches =
-      matches &&
-      locked.every(
-        (locked) =>
-          locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
-      );
+    const matches = locked.every(
+      (locked) => locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
+    );
 
     // It matches all perks and plugs
     if (matches) {
@@ -260,39 +217,6 @@ export function getFilteredPerksAndPlugSets(
   return { filteredPlugSetHashes, filteredPerks };
 }
 
-function matchesEnergy(item: D2Item, mod: DestinyInventoryItemDefinition) {
-  return (
-    !mod.plug ||
-    !mod.plug.energyCost ||
-    !item.energy ||
-    mod.plug.energyCost.energyType === item.energy.energyType ||
-    mod.plug.energyCost.energyType === DestinyEnergyType.Any
-  );
-}
-
-/**
- * Can this mod be slotted onto this item?
- */
-export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
-  const mod = lockedItem.mod;
-  return (
-    item.isDestiny2() &&
-    matchesEnergy(item, mod) &&
-    // is a seasonal mod and item has correct socket
-    (getSpecialtySocketMetadata(item)?.compatiblePlugCategoryHashes.includes(
-      lockedItem.mod.plug.plugCategoryHash
-    ) ||
-      // or matches socket plugsets
-      item.sockets?.allSockets.some(
-        (socket) =>
-          (socket.socketDefinition.reusablePlugSetHash &&
-            lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
-          (socket.socketDefinition.randomizedPlugSetHash &&
-            lockedItem.plugSetHash === socket.socketDefinition.randomizedPlugSetHash)
-      ))
-  );
-}
-
 /** Whether this item is eligible for being in loadout builder */
 export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
@@ -300,7 +224,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
 }
 
 export function statTier(stat: number) {
-  return Math.floor(stat / 10);
+  return Math.min(10, Math.max(0, Math.floor(stat / 10)));
 }
 
 /**
@@ -323,7 +247,7 @@ export function generateMixesFromPerks(
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
-  if (stats && item.isDestiny2() && item.sockets && !item.energy) {
+  if (stats && item.sockets && !item.energy) {
     for (const socket of item.sockets.allSockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -368,27 +292,12 @@ function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
  * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
  */
 export function getLockedModStats(
-  lockedItems?: readonly LockedItemType[],
-  lockedArmor2Mods?: readonly LockedArmor2Mod[]
+  lockedArmor2Mods: readonly LockedArmor2Mod[]
 ): { [statHash: number]: number } {
   const lockedModStats: { [statHash: number]: number } = {};
-  // Handle old armour mods
-  if (lockedItems) {
-    for (const lockedItem of lockedItems) {
-      if (lockedItem.type === 'mod') {
-        for (const stat of lockedItem.mod.investmentStats) {
-          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
-          // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
-          lockedModStats[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
-  // Handle armour 2.0 mods
   if (lockedArmor2Mods) {
     for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.mod.investmentStats) {
+      for (const stat of lockedMod.modDef.investmentStats) {
         lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
         // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
         lockedModStats[stat.statTypeHash] += stat.value;
@@ -403,10 +312,8 @@ export function getLockedModStats(
  * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
-export function someModHasEnergyRequirement(
-  mods: readonly { mod: PluggableInventoryItemDefinition }[]
-) {
-  return mods.some((mod) => mod.mod.plug.energyCost!.energyType !== DestinyEnergyType.Any);
+export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
+  return mods.some((mod) => mod.modDef.plug.energyCost!.energyType !== DestinyEnergyType.Any);
 }
 
 export const armor2ModPlugCategoriesTitles = {

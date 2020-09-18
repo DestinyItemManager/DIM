@@ -1,8 +1,6 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { FilterDefinition } from '../filter-types';
-
-const newItems: Set<string> = new Set();
 
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [
@@ -10,11 +8,11 @@ const simpleFilters: FilterDefinition[] = [
     keywords: ['hascapacity', 'armor2.0'],
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filter: () => (item: D2Item) => Boolean(item.energy),
+    filter: () => (item: DimItem) => Boolean(item.energy),
   },
   {
     keywords: 'weapon',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Weapon'),
     filter: () => (item) =>
       item.bucket?.sort === 'Weapons' &&
       item.bucket.type !== 'SeasonalArtifacts' &&
@@ -22,7 +20,7 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: 'armor',
-    description: tl('Filter.Categories'),
+    description: tl('Filter.Armor'),
     filter: () => (item) => item.bucket?.sort === 'Armor',
   },
   {
@@ -66,14 +64,9 @@ const simpleFilters: FilterDefinition[] = [
     filter: () => (item) => !item.locked,
   },
   {
-    keywords: ['masterwork', 'masterworks'],
-    description: tl('Filter.RarityTier'),
-    filter: () => (item) => item.masterwork,
-  },
-  {
     keywords: 'new',
     description: tl('Filter.NewItems'),
-    filter: () => (item) => newItems.has(item.id),
+    filter: ({ newItems }) => (item) => newItems.has(item.id),
   },
 ];
 

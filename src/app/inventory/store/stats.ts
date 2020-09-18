@@ -27,7 +27,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
 import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
-import { D2Item, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
+import { DimItem, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -97,7 +97,7 @@ const hiddenStatsAllowList = [
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
-  createdItem: D2Item,
+  createdItem: DimItem,
   stats: {
     [key: string]: DestinyItemStatsComponent;
   } | null,
@@ -149,12 +149,7 @@ export function buildStats(
         investmentStats.push(cStat);
       }
     }
-  } else if (
-    createdItem.isDestiny2() &&
-    createdItem.type === 'ClassItem' &&
-    createdItem.energy &&
-    createdItem.sockets
-  ) {
+  } else if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
     investmentStats = buildStatsFromMods(createdItem.sockets, defs, statGroup, statDisplays);
   }
 
@@ -465,7 +460,7 @@ function buildLiveStats(
 function buildBaseStats(
   stats: DimStat[], //mutated
   statsByHash: { [k: number]: DimStat }, // mutated, same as above but keyed by hash
-  item: D2Item
+  item: DimItem
 ) {
   // Class Items always have a base stat of 0;
   if (item.bucket.hash === armorBuckets.classitem) {

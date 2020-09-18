@@ -11,8 +11,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { itemInfosSelector, storesSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import { ratingsSelector } from 'app/item-review/reducer';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
@@ -68,7 +66,6 @@ interface StoreProps {
   items: DimItem[];
   defs: D2ManifestDefinitions;
   itemInfos: ItemInfos;
-  ratings: { [key: string]: DtrRating };
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
@@ -112,7 +109,6 @@ function mapStateToProps() {
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
-      ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
@@ -131,7 +127,6 @@ function ItemTable({
   items,
   categories,
   itemInfos,
-  ratings,
   wishList,
   defs,
   stores,
@@ -192,7 +187,6 @@ function ItemTable({
         classIfAny,
         defs,
         itemInfos,
-        ratings,
         wishList,
         customStatTotal,
         loadouts,
@@ -204,7 +198,6 @@ function ItemTable({
       statHashes,
       itemType,
       itemInfos,
-      ratings,
       defs,
       customStatTotal,
       classIfAny,
@@ -317,7 +310,7 @@ function ItemTable({
         selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
-      applyLoadout(store, loadout, true);
+      dispatch(applyLoadout(store, loadout, true));
     }
   };
 
@@ -407,7 +400,7 @@ function ItemTable({
   );
   if (downloadButtonSetting) {
     const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-      downloadCsvFiles(stores, itemInfos, ratings, type);
+      downloadCsvFiles(stores, itemInfos, type);
       ga('send', 'event', 'Download CSV', type);
     };
     const downloadHandler = (e) => {

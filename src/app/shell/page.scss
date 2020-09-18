@@ -54,29 +54,6 @@
   dd {
     margin: 4px 0px 8px 0px;
   }
-  table {
-    padding: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #222;
-    width: 100%;
-    @include phone-portrait {
-      table-layout: fixed;
-    }
-
-    tr:nth-child(2n + 1) {
-      background-color: #1b1b1b;
-    }
-  }
-  tr td:first-child {
-    border-left: none;
-  }
-  td {
-    border: none;
-    font-size: 13px;
-    padding: 6px 9px;
-    vertical-align: top;
-  }
   .social {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

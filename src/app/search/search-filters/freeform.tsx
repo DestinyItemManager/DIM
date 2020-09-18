@@ -57,7 +57,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: 'perk',
-    description: tl('Filter.PartialMatch'),
+    description: tl('Filter.Perk'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
@@ -73,7 +73,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: 'perkname',
-    description: tl('Filter.PartialMatch'),
+    description: tl('Filter.PerkName'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
@@ -151,16 +151,13 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 /** includes name and description unless you set the arg2 flag */
 export function getStringsFromAllSockets(item, includeDescription = true) {
   return (
-    (item.isDestiny2() &&
-      item.sockets &&
-      item.sockets.allSockets.flatMap((socket) => {
-        const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
-          plug.plugDef.displayProperties,
-          plug.perks.map((perk) => perk.displayProperties),
-        ]);
-        return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
-      })) ||
-    []
+    item.sockets?.allSockets.flatMap((socket) => {
+      const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
+        plug.plugDef.displayProperties,
+        plug.perks.map((perk) => perk.displayProperties),
+      ]);
+      return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
+    }) || []
   );
 }
 /** includes name and description unless you set the arg2 flag */

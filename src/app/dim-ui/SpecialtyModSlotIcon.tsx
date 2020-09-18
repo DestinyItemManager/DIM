@@ -63,8 +63,7 @@ const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|che
 
 /** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
 export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
-  (item.isDestiny2() &&
-    item.bucket.inArmor &&
+  (item.bucket.inArmor &&
     item.sockets?.allSockets.find((socket) =>
       socket?.plugged?.plugDef?.plug.plugCategoryIdentifier.match(
         armorSlotSpecificPlugCategoryIdentifier

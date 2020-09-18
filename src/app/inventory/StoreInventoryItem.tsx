@@ -1,7 +1,6 @@
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import { ThunkDispatchProp } from 'app/store/types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { CompareService } from '../compare/compare.service';
@@ -9,8 +8,7 @@ import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import { DimItem } from './item-types';
 import ItemPopupTrigger from './ItemPopupTrigger';
-import { moveItemTo } from './move-item';
-import { getCurrentStore } from './stores-helpers';
+import { moveItemToCurrentStore } from './move-item';
 
 interface Props {
   item: DimItem;
@@ -26,12 +24,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const doubleClicked = (e: React.MouseEvent) => {
     if (!loadoutDialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
-      const active = getCurrentStore(item.getStoresService().getStores())!;
-
-      // Equip if it's not equipped or it's on another character
-      const equip = !item.equipped || item.owner !== active.id;
-
-      dispatch(moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false));
+      dispatch(moveItemToCurrentStore(item));
     }
   };
 

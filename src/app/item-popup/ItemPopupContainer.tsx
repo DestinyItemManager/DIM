@@ -119,6 +119,8 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
   Rare: styles.rare,
   Uncommon: styles.uncommon,
   Common: styles.common,
+  Unknown: '',
+  Currency: '',
 } as const;
 
 /**
@@ -188,9 +190,6 @@ function ItemPopupContainer({
           element,
           extraInfo,
         });
-        setTab((tab) =>
-          !item.reviewable && tab === ItemPopupTab.Reviews ? ItemPopupTab.Overview : tab
-        );
         // Log the item so it's easy to inspect item structure by clicking on an item
         if ($DIM_FLAVOR !== 'release') {
           console.log(item);

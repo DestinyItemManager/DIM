@@ -1,7 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
-import { emptyObject } from 'app/utils/empty';
 import { createSelector } from 'reselect';
 import { getTag, ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
@@ -12,7 +11,6 @@ import {
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { ratingsSelector, ReviewsState } from '../item-review/reducer';
 import { Loadout } from '../loadout/loadout-types';
 import { loadoutsSelector } from '../loadout/reducer';
 import { querySelector } from '../shell/reducer';
@@ -37,7 +35,6 @@ export const searchFiltersConfigSelector = createSelector(
   currentStoreSelector,
   loadoutsSelector,
   inventoryWishListsSelector,
-  $featureFlags.reviewsEnabled ? ratingsSelector : emptyObject,
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
@@ -58,7 +55,6 @@ function makeSearchFilterFactory(
   currentStore: DimStore,
   loadouts: Loadout[],
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
-  ratings: ReviewsState['ratings'],
   newItems: Set<string>,
   itemInfos: ItemInfos,
   itemHashTags: {
@@ -71,7 +67,6 @@ function makeSearchFilterFactory(
     currentStore,
     loadouts,
     inventoryWishListRolls,
-    ratings,
     newItems,
     itemInfos,
     itemHashTags,
@@ -128,8 +123,12 @@ function makeSearchFilterFactory(
           const filterDef = filters[filterName];
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
-            // TODO: allow the filter generator to throw an error
-            return filterDef.filter({ filterValue, ...filterContext });
+            try {
+              return filterDef.filter({ filterValue, ...filterContext });
+            } catch (e) {
+              console.error('Invalid query term', filterName, filterValue, e);
+              return () => true;
+            }
           }
 
           // TODO: mark invalid - fill out what didn't make sense and where it was in the string

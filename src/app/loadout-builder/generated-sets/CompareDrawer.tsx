@@ -22,7 +22,6 @@ import {
   ArmorSet,
   LockableBucketHashes,
   LockedArmor2ModMap,
-  LockedMap,
   statHashes,
   statKeys,
   StatTypes,
@@ -38,7 +37,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
   );
 
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
-  if (item.isDestiny2() && item.sockets && item.energy) {
+  if (item.sockets && item.energy) {
     let masterworkSocketHashes: number[] = [];
     // only get masterwork sockets if we aren't manually adding the values
     if (!assumeMasterwork) {
@@ -80,7 +79,6 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
-  lockedMap: LockedMap;
   lockedArmor2Mods: LockedArmor2ModMap;
   defs: D2ManifestDefinitions;
   classType: DestinyClass;
@@ -106,7 +104,6 @@ function CompareDrawer({
   stores,
   loadouts,
   set,
-  lockedMap,
   lockedArmor2Mods,
   defs,
   classType,
@@ -147,7 +144,7 @@ function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedMap, lockedArmor2Mods);
+  const lockedModStats = getTotalModStatChanges(lockedArmor2Mods);
 
   for (const statType of statKeys) {
     loadoutStats[statType] += lockedModStats[statType];
@@ -236,13 +233,14 @@ function CompareDrawer({
           <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
           <select
             className={styles.loadoutSelect}
+            value={selectedLoadout.id}
             onChange={(event) => {
               const selected = useableLoadouts.find((l) => l.id === event.target.value);
               setSelectedLoadout(selected);
             }}
           >
             {useableLoadouts.map((l) => (
-              <option key={l.id} value={l.id} selected={l.id === selectedLoadout?.id}>
+              <option key={l.id} value={l.id}>
                 {l.name}
               </option>
             ))}
@@ -278,7 +276,7 @@ function CompareDrawer({
             )}
             <div className={styles.unassignedMods}>
               {loadoutUnassignedMods.map((unassigned) => (
-                <Mod key={unassigned.key} plugDef={unassigned.mod} defs={defs} large={true} />
+                <Mod key={unassigned.key} plugDef={unassigned.modDef} defs={defs} large={true} />
               ))}
             </div>
           </>

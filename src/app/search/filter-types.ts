@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { ReviewsState } from 'app/item-review/reducer';
 import { Loadout } from 'app/loadout/loadout-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 type I18nInput = Parameters<typeof t>;
@@ -24,7 +23,6 @@ export interface FilterContext {
   currentStore: DimStore;
   loadouts: Loadout[];
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll };
-  ratings: ReviewsState['ratings'];
   newItems: Set<string>;
   itemInfos: ItemInfos;
   itemHashTags: {
@@ -32,6 +30,8 @@ export interface FilterContext {
   };
   language: string;
 }
+
+// TODO: FilterCategory
 
 /**
  * A definition of a filter or closely related group of filters. This is
@@ -55,13 +55,19 @@ export type FilterDefinition = {
   /**
    * What kind of query this is, used to help generate suggestions.
    *
-   * undefined - a simple 'is/not' filter. the filter itself knows everything it's looking for
-   * query - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
-   * freeform - a starting stem and a freeform value. the filterValue will be some arbitrary string we test against other strings
-   * range - a starting stem and a mathlike string afterward like <=5
-   * rangeoverload - a starting stem like "masterwork" and then either a mathlike string or a word
+   * `undefined` - a simple 'is/not' filter. the filter itself knows everything it's looking for
+   *
+   * `query` - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
+   *
+   * `freeform` - a starting stem and a freeform value. the filterValue will be some arbitrary string we test against other strings
+   *
+   * `range` - a starting stem and a mathlike string afterward like <=5
+   *
+   * `rangeoverload` - a starting stem like "masterwork" and then either a mathlike string or a word
+   *
+   * `custom` - suppresses automated suggestion generation so suggestionsGenerator is the only source of suggestions
    */
-  format?: 'query' | 'freeform' | 'range' | 'rangeoverload';
+  format?: 'query' | 'freeform' | 'range' | 'rangeoverload' | 'custom';
 
   /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
   destinyVersion?: 1 | 2;
@@ -83,6 +89,12 @@ export type FilterDefinition = {
   /**
    * A list of suggested keywords for filters that can take a freeform filter value.
    */
-  // TODO: get back to the idea of generating suggestions based on manifest. that'll probably have to be a separate thing that's called on demand as we are autocompleting
   suggestions?: string[];
+
+  /**
+   * A custom function used to generate (additional) suggestions
+   */
+  // TODO: give this access to a SuggestionsContext arg
+  // TODO: add manifest to SuggestionsContext and we can generate archetype/perk/etc suggestions
+  suggestionsGenerator?: () => string[];
 };

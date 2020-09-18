@@ -1,8 +1,7 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
-import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
   allStatNames,
@@ -55,7 +54,7 @@ const statFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
-      return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
+      return (item: DimItem) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
     },
   },
   {
@@ -66,7 +65,8 @@ const statFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue, stores }) => {
       const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
-      return (item: D2Item) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
+      return (item: DimItem) =>
+        checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
     },
   },
   {
@@ -75,7 +75,7 @@ const statFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ stores }) => {
       const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores);
-      return (item: D2Item) => maxPowerLoadoutItems.includes(item.id);
+      return (item: DimItem) => maxPowerLoadoutItems.includes(item.id);
     },
   },
 ];
@@ -85,13 +85,16 @@ export default statFilters;
 /**
  * given a stat name, this returns a FilterDefinition for comparing that stat
  */
-function statFilterFromString(filterValue: string, byBaseValue = false) {
+function statFilterFromString(
+  filterValue: string,
+  byBaseValue = false
+): (item: DimItem) => boolean {
   const [statName, statValue, shouldntExist] = filterValue.split(':');
 
   // we are looking for, at most, 3 colons in the overall filter text,
   // and one was already removed, so bail if a 3rd element was found by split()
   if (shouldntExist) {
-    return _.stubFalse;
+    throw new Error('Too many colons');
   }
   const numberComparisonFunction = rangeStringToComparator(statValue);
   const byWhichValue = byBaseValue ? 'base' : 'value';
@@ -116,12 +119,12 @@ function checkIfHasMaxStatValue(
   maxStatValues: {
     [key: string]: { [key: string]: { value: number; base: number } };
   },
-  item: D2Item,
+  item: DimItem,
   statName: string,
   byBaseValue = false
 ) {
   // filterValue stat must exist, and this must be armor
-  if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
+  if (!item.bucket.inArmor || !item.stats) {
     return false;
   }
   const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
@@ -141,7 +144,7 @@ function gatherHighestStatsPerSlot(stores: DimStore[]) {
   } | null = {};
   for (const store of stores) {
     for (const i of store.items) {
-      if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
+      if (!i.bucket.inArmor || !i.stats) {
         continue;
       }
       const itemSlot = `${i.classType}${i.type}`;

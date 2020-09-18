@@ -2,7 +2,6 @@ import { tl } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 
 // filters that check stores
@@ -27,8 +26,6 @@ const locationFilters: FilterDefinition[] = [
             storeIndex = stores.length - 2;
           }
           break;
-        default:
-          return _.stubFalse;
       }
 
       const storeId = stores[storeIndex].id;

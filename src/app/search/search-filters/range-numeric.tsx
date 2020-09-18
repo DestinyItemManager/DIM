@@ -1,25 +1,22 @@
 import { tl } from 'app/i18next-t';
-import { D2Item } from 'app/inventory/item-types';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import _ from 'lodash';
+import { getItemYear } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
 export function rangeStringToComparator(rangeString: string) {
   if (!rangeString) {
-    return _.stubFalse;
+    throw new Error('Missing range comparison');
   }
   const matchedRangeString = rangeString.match(rangeStringRegex);
   if (!matchedRangeString) {
-    return _.stubFalse;
+    throw new Error("Doesn't match our range comparison syntax");
   }
 
   const [, operator, comparisonValueString] = matchedRangeString;
   const comparisonValue = parseFloat(comparisonValueString);
 
   switch (operator) {
-    case 'none':
     case '=':
     case '':
       return (compare: number) => compare === comparisonValue;
@@ -32,7 +29,7 @@ export function rangeStringToComparator(rangeString: string) {
     case '>=':
       return (compare: number) => compare >= comparisonValue;
   }
-  return _.stubFalse;
+  throw new Error('Unknown range operator ' + operator);
 }
 
 const simpleRangeFilters: FilterDefinition[] = [
@@ -47,7 +44,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['light', 'power'],
-    description: tl('Filter.LightLevel'),
+    description: tl('Filter.PowerLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
@@ -60,13 +57,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
-      return (item) => {
-        if (item.isDestiny1()) {
-          return compareTo(item.year);
-        } else if (item.isDestiny2()) {
-          return compareTo(D2SeasonInfo[item.season]?.year ?? 0);
-        }
-      };
+      return (item) => compareTo(getItemYear(item) ?? 0);
     },
   },
   {
@@ -85,7 +76,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: D2Item) =>
+      return (item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         compareTo(item.powerCap ?? 99999999);
     },

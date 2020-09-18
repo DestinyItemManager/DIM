@@ -1,3 +1,4 @@
+import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import { DimItem, DimStat } from '../inventory/item-types';
@@ -29,7 +30,7 @@ export default function ItemStats({
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item?.isDestiny1() && item.quality?.min && <D1QualitySummaryStat item={item} />}
+      {item && isD1Item(item) && item.quality?.min && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

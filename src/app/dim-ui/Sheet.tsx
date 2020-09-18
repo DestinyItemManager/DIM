@@ -59,7 +59,13 @@ export default function Sheet({
 
   useEffect(() => {
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
-      setFrozenHeight(sheetContents.current.clientHeight);
+      if (sheetContents.current.clientHeight > 0) {
+        setFrozenHeight(sheetContents.current.clientHeight);
+      } else {
+        setTimeout(() => {
+          sheetContents.current && setFrozenHeight(sheetContents.current.clientHeight);
+        }, 500);
+      }
     }
   }, [freezeInitialHeight, frozenHeight]);
 

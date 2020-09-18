@@ -20,7 +20,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { storesSelector } from '../inventory/selectors';
-import { D2Store, DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
@@ -70,7 +70,7 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
+          if (!item || !isLoadoutBuilderItem(item)) {
             continue;
           }
           for (const classType of item.classType === DestinyClass.Unknown
@@ -130,7 +130,6 @@ function LoadoutBuilder({
   const [
     {
       lockedMap,
-      lockedSeasonalMods,
       lockedArmor2Mods,
       selectedStoreId,
       statFilters,
@@ -166,7 +165,6 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
-    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -196,7 +194,7 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore as D2Store}
+        selectedStore={selectedStore}
         minimumPower={minimumPower}
         minimumStatTotal={minimumStatTotal}
         stats={statFilters}
@@ -211,7 +209,6 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedSeasonalMods={lockedSeasonalMods}
         lockedArmor2Mods={lockedArmor2Mods}
         lbDispatch={lbDispatch}
       />
@@ -270,7 +267,6 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
-            lockedSeasonalMods={lockedSeasonalMods}
             loadouts={loadouts}
           />
         )}
@@ -291,7 +287,6 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
-              lockedSeasonalMods={lockedSeasonalMods}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
@@ -303,7 +298,6 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
-              lockedMap={lockedMap}
               lockedArmor2Mods={lockedArmor2Mods}
               defs={defs}
               classType={selectedStore.classType}
