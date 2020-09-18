@@ -2,6 +2,7 @@ import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
+import { generateSuggestionsForFilter } from '../search-config';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
@@ -88,6 +89,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
+    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'kills', format: 'range'}),
     filter: ({ filterValue }) => {
         const parts = filterValue.split(':');
         const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
