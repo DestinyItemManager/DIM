@@ -4,10 +4,12 @@ import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { useWhatChanged } from 'app/utils/useWhatChanged';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
+import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { connect, useDispatch } from 'react-redux';
@@ -40,16 +42,29 @@ interface StoreProps {
   isPhonePortrait: boolean;
 }
 
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { store, bucket } = props;
+function mapStateToProps() {
+  let _lastItems: DimItem[] = [];
+  const internArray = (arr: DimItem[]) => {
+    if (!shallowEqual(_lastItems, arr)) {
+      _lastItems = arr;
+    }
+    return _lastItems;
+  };
 
-  return {
-    itemSortOrder: itemSortOrderSelector(state),
-    // We only need this property when this is a vault armor bucket
-    allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
-    characterOrder: characterOrderSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
-    items: findItemsByBucket(store, bucket.hash),
+  // TODO: store changes. Figure out how to make it not
+  // TODO: items compare irrespective of order!
+
+  return (state: RootState, props: ProvidedProps): StoreProps => {
+    const { store, bucket } = props;
+
+    return {
+      items: internArray(findItemsByBucket(store, bucket.hash)),
+      itemSortOrder: itemSortOrderSelector(state),
+      // We only need this property when this is a vault armor bucket
+      allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
+      characterOrder: characterOrderSelector(state),
+      isPhonePortrait: isPhonePortraitSelector(state),
+    };
   };
 }
 
@@ -76,6 +91,17 @@ function StoreBucket({
 }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
+  useWhatChanged(`Bucket ${store.name} ${bucket.name}`, {
+    items,
+    itemSortOrder,
+    bucket,
+    store,
+    allStores,
+    characterOrder,
+    isPhonePortrait,
+  });
+
+  // TODO: move to action
   const pickEquipItem = useCallback(async () => {
     try {
       const { item } = await showItemPicker({

@@ -1,5 +1,6 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
+import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -58,6 +59,25 @@ export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
     const equip = !item.equipped || item.owner !== active.id;
 
     return dispatch(moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false));
+  };
+}
+
+/**
+ * Show an item picker dialog, and then pull the selected item to the current store.
+ */
+export function pullItem(store: DimStore): ThunkResult<DimItem> {
+  return async (dispatch, getState) => {
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name,
+        }),
+      });
+
+      return await dispatch(moveItemTo(item, store));
+    } catch (e) {}
   };
 }
 
