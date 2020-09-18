@@ -4,7 +4,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { D1Store, D1Vault, DimStore } from '../store-types';
+import { D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
@@ -121,10 +121,10 @@ export function makeCharacter(
 export function makeVault(
   raw
 ): {
-  store: D1Vault;
+  store: D1Store;
   items: any[];
 } {
-  const store: D1Vault = {
+  const store: D1Store = {
     destinyVersion: 1,
     id: 'vault',
     name: t('Bucket.Vault'),

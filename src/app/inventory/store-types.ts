@@ -74,10 +74,6 @@ export interface AccountCurrency {
   readonly quantity: number;
 }
 
-export type DimVault = DimStore;
-
-export type D1Vault = D1Store;
-
 /** A character-level stat. */
 export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */

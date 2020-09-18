@@ -31,7 +31,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
-import { DimStore, DimVault } from './store-types';
+import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
@@ -295,7 +295,7 @@ function processVault(
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   }
-): DimVault {
+): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
     : [];

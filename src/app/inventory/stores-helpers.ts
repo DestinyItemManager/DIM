@@ -6,7 +6,7 @@ import _ from 'lodash';
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
 import { DimItem } from './item-types';
-import { D1Store, DimStore, DimVault } from './store-types';
+import { D1Store, DimStore } from './store-types';
 
 /**
  * Get whichever character was last played.
@@ -23,8 +23,7 @@ export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
 /**
  * Get the Vault from a list of stores.
  */
-export const getVault = (stores: DimStore[]): DimVault | undefined =>
-  stores.find((s) => s.isVault) as DimVault | undefined;
+export const getVault = (stores: DimStore[]): DimStore | undefined => stores.find((s) => s.isVault);
 
 /**
  * Get all items from all stores as a flat list.

@@ -5,7 +5,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { DimCharacterStat, DimStore, DimVault } from '../store-types';
+import { DimCharacterStat, DimStore } from '../store-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -61,7 +61,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(): DimVault {
+export function makeVault(): DimStore {
   return {
     destinyVersion: 2,
     id: 'vault',
