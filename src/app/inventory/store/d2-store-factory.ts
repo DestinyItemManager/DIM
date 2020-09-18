@@ -91,7 +91,6 @@ export function makeVault(
     currencies,
     isVault: true,
     color: { red: 49, green: 50, blue: 51, alpha: 1 },
-    vaultCounts: {},
     level: 0,
     percentToNextLevel: 0,
     powerLevel: 0,

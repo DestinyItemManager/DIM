@@ -162,7 +162,6 @@ export function makeVault(
     items: [],
     currencies,
     isVault: true,
-    vaultCounts: {},
     progression: {
       progressions: [],
     },
