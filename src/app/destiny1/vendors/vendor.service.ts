@@ -3,14 +3,13 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { D1Item } from '../../inventory/item-types';
-import { D1Store } from '../../inventory/store-types';
+import { AccountCurrency, D1Store } from '../../inventory/store-types';
 import { processItems } from '../../inventory/store/d1-item-factory';
 import { loadingTracker } from '../../shell/loading-tracker';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -440,11 +439,7 @@ function isSaleItemUnlocked(saleItem) {
 export function countCurrencies(
   stores: D1Store[],
   vendors: { [vendorHash: number]: Vendor },
-  currencies: {
-    readonly itemHash: number;
-    readonly displayProperties: DestinyDisplayPropertiesDefinition;
-    readonly quantity: number;
-  }[]
+  currencies: AccountCurrency[]
 ) {
   if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
     return {};
