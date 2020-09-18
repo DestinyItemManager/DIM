@@ -15,12 +15,10 @@ import {
   getItemSpecialtyModSlotDisplayName,
   getSpecialtySocketMetadata,
 } from 'app/utils/item-utils';
-import {
-  DestinyDisplayPropertiesDefinition,
-  DestinySocketCategoryStyle,
-} from 'bungie-api-ts/destiny2';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import produce from 'immer';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -29,13 +27,15 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import {
   DimItem,
+  D2Item,
   DimStat,
   DimSocket,
   DimPlug,
   DimAdjustedPlugs,
+  DimAdjustedItemStat,
   DimAdjustedStats,
 } from '../inventory/item-types';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty } from 'lodash';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -201,103 +201,116 @@ class Compare extends React.Component<Props, State> {
 
     const stats = this.getAllStatsSelector(this.state, this.props);
 
-    // TODO: Should this go into its own module?
     const updateSocketComparePlug = ({
       item,
-      categoryStyle,
       socket,
       plug: clickedPlug,
     }: {
-      item: DimItem;
-      categoryStyle: number;
+      item: D2Item;
       socket: DimSocket;
       plug: DimPlug;
     }) => {
-      // Exit early if this is a D1 item or an item without sockets or stats
-      if (!item.isDestiny2() || !item.sockets || !item.stats) {
-        return null;
-      }
-
-      // Exit early if the socket category isn't Reusable
-      if (categoryStyle !== DestinySocketCategoryStyle.Reusable) {
-        return null;
-      }
-
       const { socketIndex } = socket;
+      const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
+      const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
 
+      /**
+       * Exit early if this plug / socket isn't a clickable target
+       * TODO: check the socket index detail
+       * */
       if (
-        (adjustedPlugs?.[item.id]?.[socketIndex] === undefined &&
-          clickedPlug.plugDef.hash !==
-            item.sockets.allSockets[socketIndex].plugged?.plugDef.hash) ||
-        clickedPlug.plugDef.hash !== adjustedPlugs?.[item.id]?.[socketIndex]?.plugDef.hash
+        !item.isDestiny2() ||
+        !item.sockets ||
+        !item.stats ||
+        socketIndex > 2 ||
+        !pluggedPlug ||
+        (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash &&
+          currentAdjustedPlug === undefined)
       ) {
-        // Clone stats so state isn't directly mutated by math
-        const updateAdjustedPlugs: DimAdjustedPlugs =
-          isEmpty(adjustedPlugs) || adjustedPlugs === undefined
-            ? { [item.id]: {} }
-            : adjustedPlugs[item.id]
-            ? cloneDeep(adjustedPlugs)
-            : Object.assign({}, cloneDeep(adjustedPlugs), { [item.id]: {} });
-        const updateAdjustedStats: DimAdjustedStats =
-          isEmpty(adjustedStats) || adjustedStats === undefined
-            ? { [item.id]: {} }
-            : adjustedStats[item.id]
-            ? cloneDeep(adjustedStats)
-            : Object.assign({}, cloneDeep(adjustedStats), { [item.id]: {} });
-
-        const prevAdjustedPlug =
-          updateAdjustedPlugs[item.id][socketIndex] ?? item.sockets.allSockets[socketIndex].plugged;
-
-        // Remove old plug stats from adjustedStats
-        if (prevAdjustedPlug?.stats) {
-          for (const statHash in prevAdjustedPlug.stats) {
-            const statIndex = item.stats.findIndex((stat) => stat.statHash === parseInt(statHash));
-            if (statIndex !== -1) {
-              if (updateAdjustedStats[item.id][statHash]) {
-                updateAdjustedStats[item.id][statHash] -= prevAdjustedPlug.stats[statHash];
-              } else {
-                updateAdjustedStats[item.id][statHash] =
-                  item.stats[statIndex].value - prevAdjustedPlug.stats[statHash];
-              }
-            }
-          }
-        }
-
-        // Add new plug stats to adjustedStats
-        if (clickedPlug.stats) {
-          for (const statHash in clickedPlug.stats) {
-            const statIndex = item.stats.findIndex((stat) => stat.statHash === parseInt(statHash));
-            if (statIndex !== -1) {
-              if (updateAdjustedStats[item.id][statHash]) {
-                updateAdjustedStats[item.id][statHash] += clickedPlug.stats[statHash];
-              } else {
-                updateAdjustedStats[item.id][statHash] =
-                  item.stats[statIndex].value + clickedPlug.stats[statHash];
-              }
-            }
-          }
-        }
-
-        const isCurrentPlug =
-          clickedPlug.plugDef.hash === item.sockets.allSockets[socketIndex].plugged?.plugDef.hash;
-
-        // Add / remove plugs from adjustedPlugs
-        if (isCurrentPlug) {
-          delete updateAdjustedPlugs[item.id][socketIndex];
-        } else {
-          updateAdjustedPlugs[item.id][socketIndex] = clickedPlug;
-        }
-
-        if (isEmpty(updateAdjustedPlugs[item.id])) {
-          delete updateAdjustedPlugs[item.id];
-          delete updateAdjustedStats[item.id];
-        }
-
-        this.setState({
-          adjustedPlugs: updateAdjustedPlugs,
-          adjustedStats: updateAdjustedStats,
-        });
+        return;
       }
+
+      /**
+       * Determine the next plug
+       * If the clicked plug is the currently adjusted plug,
+       * the next should be the original plug in the socket
+       */
+      const nextPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash ? pluggedPlug : clickedPlug;
+
+      /**
+       * Determine the previous plug
+       * If the clicked plug is the currently adjusted plug,
+       * the previous should be the clicked plug
+       */
+      const prevPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
+          ? clickedPlug
+          : currentAdjustedPlug ?? pluggedPlug;
+
+      /**
+       * Update the adjustedPlugs object
+       * If the next plug is the original plug, delete the adjustedPlug entry
+       * Else add the next plug to the item socket entry
+       */
+      const updatedPlugs =
+        nextPlug.plugDef.hash === pluggedPlug.plugDef.hash
+          ? produce(adjustedPlugs, (draft) => {
+              delete draft?.[item.id]?.[socketIndex];
+            })
+          : adjustedPlugs?.[item.id] !== undefined
+          ? produce(adjustedPlugs, (draft) => {
+              draft[item.id][socketIndex] = nextPlug;
+            })
+          : produce(adjustedPlugs ?? {}, (draft) => {
+              draft[item.id] = { [socketIndex]: nextPlug };
+            });
+
+      /**
+       * If there are no more adjustedPlugs for the item
+       * delete the associated adjustedPlugs and adjustedStats entries and exit
+       */
+      if (isEmpty(updatedPlugs?.[item.id])) {
+        const emptiedPlugs = produce(updatedPlugs, (draft) => {
+          delete draft?.[item.id];
+        });
+        const emptiedStats = produce(adjustedStats, (draft) => {
+          delete draft?.[item.id];
+        });
+        this.setState({
+          adjustedPlugs: emptiedPlugs,
+          adjustedStats: emptiedStats,
+        });
+        return;
+      }
+
+      // Remove the stats listed on the previous plug from adjustedStats
+      const itemStatsAfterRemoval: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: adjustedStats?.[item.id] ?? {},
+        plugStats: prevPlug.stats,
+        mode: 'remove',
+      });
+
+      // Add the stats listed on the next plug to adjustedStats
+      const itemStatsAfterAddition: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: itemStatsAfterRemoval ?? adjustedStats?.[item.id] ?? {},
+        plugStats: nextPlug.stats,
+        mode: 'add',
+      });
+
+      // Update the adjustedStats object
+      const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+        if (itemStatsAfterAddition) {
+          draft[item.id] = itemStatsAfterAddition;
+        }
+      });
+
+      this.setState({
+        adjustedPlugs: updatedPlugs,
+        adjustedStats: updatedStats,
+      });
     };
 
     return (
@@ -364,6 +377,36 @@ class Compare extends React.Component<Props, State> {
       </Sheet>
     );
   }
+
+  private calculateUpdatedStats = ({
+    itemStats,
+    adjustedStats,
+    plugStats,
+    mode,
+  }: {
+    itemStats: DimStat[];
+    adjustedStats: DimAdjustedItemStat;
+    plugStats: DimPlug['stats'];
+    mode: string;
+  }): DimAdjustedItemStat | undefined => {
+    if (!plugStats) {
+      return adjustedStats;
+    }
+
+    const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+      for (const statHash in plugStats) {
+        const itemStatIndex = itemStats.findIndex((stat) => stat.statHash === parseInt(statHash));
+        const calcStat: number = draft?.[statHash] ?? itemStats[itemStatIndex]?.value;
+
+        if (calcStat) {
+          draft[statHash] =
+            mode === 'add' ? calcStat + plugStats[statHash] : calcStat - plugStats[statHash];
+        }
+      }
+    });
+
+    return updatedStats;
+  };
 
   // prevent touches from bubbling which blocks scrolling
   private stopTouches = (e: React.TouchEvent) => {
