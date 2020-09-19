@@ -140,18 +140,6 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.flavorObjective && (
-        <div className="item-details">
-          <div className="flavor-objective">
-            <BungieImage src={item.flavorObjective.icon} />
-            <span>
-              {' '}
-              {item.flavorObjective.progress} {'//'} {item.flavorObjective.description}
-            </span>
-          </div>
-        </div>
-      )}
-
       {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <Link
@@ -179,22 +167,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {!extraInfo.mod && (
-        <div className="item-details">
-          {extraInfo.owned && (
-            <div>
-              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
-            </div>
-          )}
-          {extraInfo.acquired && (
-            <div>
-              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
-            </div>
-          )}
-        </div>
-      )}
-
-      {extraInfo.mod && (
+      {extraInfo.mod ? (
         <div className="item-details mods">
           {extraInfo.owned && (
             <div>
@@ -204,6 +177,19 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           {extraInfo.acquired && (
             <div>
               <img className="acquired-icon" src={modTypeIcon} /> {t('MovePopup.AcquiredMod')}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="item-details">
+          {extraInfo.owned && (
+            <div>
+              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
+            </div>
+          )}
+          {extraInfo.acquired && (
+            <div>
+              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
             </div>
           )}
         </div>

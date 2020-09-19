@@ -25,7 +25,7 @@ import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
-import { buildFlavorObjective, buildObjectives } from './objectives';
+import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
@@ -368,7 +368,6 @@ export function makeItem(
     sockets: null,
     perks: null,
     masterworkInfo: null,
-    flavorObjective: null,
     infusionQuality: null,
   };
 
@@ -426,15 +425,6 @@ export function makeItem(
   } catch (e) {
     console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     reportException('Objectives', e, { itemHash: item.itemHash });
-  }
-
-  try {
-    if (objectiveData) {
-      createdItem.flavorObjective = buildFlavorObjective(item, objectiveData, defs);
-    }
-  } catch (e) {
-    console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
-    reportException('FlavorObjectives', e, { itemHash: item.itemHash });
   }
 
   // TODO: Are these ever defined??

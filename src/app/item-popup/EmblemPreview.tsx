@@ -20,7 +20,7 @@ export default function EmblemPreview({
 
   return (
     <div className={styles.container}>
-      {item.metricObjective && item.metricHash && (
+      {item.metricObjective && item.metricHash !== undefined && (
         <MetricBanner
           className={styles.banner}
           defs={defs}

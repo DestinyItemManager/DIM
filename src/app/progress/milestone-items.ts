@@ -245,7 +245,6 @@ function makeFakePursuitItem(
     sockets: null,
     perks: null,
     masterworkInfo: null,
-    flavorObjective: null,
     infusionQuality: null,
     owner: 'unknown',
     uniqueStack: false,

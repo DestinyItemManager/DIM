@@ -66,8 +66,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
-  dtrRating: 4.9,
-  dtrRatingCount: 100,
   element: {
     displayProperties: {
       icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
