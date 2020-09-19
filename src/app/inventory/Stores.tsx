@@ -15,7 +15,7 @@ import D1ReputationSection from './D1ReputationSection';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import { bucketsSelector, sortedStoresSelector } from './selectors';
-import { DimStore, DimVault } from './store-types';
+import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
 import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 import './Stores.scss';
@@ -218,7 +218,7 @@ interface InventoryContainerProps {
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
-  vault: DimVault;
+  vault: DimStore;
 }
 
 function CollapsibleContainer({

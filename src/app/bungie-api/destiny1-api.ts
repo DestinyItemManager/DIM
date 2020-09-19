@@ -42,7 +42,7 @@ export async function getCharacters(platform: DestinyAccount) {
   });
 }
 
-export async function getStores(platform: DestinyAccount): Promise<any> {
+export async function getStores(platform: DestinyAccount): Promise<any[]> {
   const characters = await getCharacters(platform);
   const data = await Promise.all([
     getDestinyInventories(platform, characters),

@@ -1,5 +1,5 @@
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
-import type { DimStore, DimVault } from 'app/inventory/store-types';
+import type { DimStore } from 'app/inventory/store-types';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -8,10 +8,6 @@ import AccountCurrencies from './AccountCurrencies';
 import D1CharacterStats from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
-
-function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}
 
 function shouldShowCapacity(isPhonePortrait: boolean) {
   if (!isPhonePortrait) {
@@ -31,9 +27,9 @@ export default function StoreStats({
   const isPhonePortrait = useSelector(isPhonePortraitSelector);
   return (
     <div className={clsx({ ['store-cell']: Boolean(style), vault: store.isVault })} style={style}>
-      {isVault(store) ? (
+      {store.isVault ? (
         <div className={styles.vaultStats}>
-          <AccountCurrencies store={store} />
+          <AccountCurrencies />
           {shouldShowCapacity(isPhonePortrait) && <VaultCapacity />}
         </div>
       ) : store.destinyVersion === 1 ? (
