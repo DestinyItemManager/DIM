@@ -250,14 +250,10 @@ function processCharacter(
   const profileInventory = profileInfo.profileInventory.data?.items || [];
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
   const itemComponents = profileInfo.itemComponents;
-  const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
   const uninstancedItemObjectives =
     profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
 
   const store = makeCharacter(defs, character, lastPlayedDate);
-
-  // This is pretty much just needed for the xp bar under the character header
-  store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
   // We work around the weird account-wide buckets by assigning them to the current character
   const items = characterInventory.slice();
