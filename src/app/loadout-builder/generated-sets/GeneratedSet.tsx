@@ -61,6 +61,10 @@ function GeneratedSet({
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
 
+  const isInLoadout = loadouts.some((loadout) =>
+    set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
+  );
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
@@ -78,6 +82,7 @@ function GeneratedSet({
           canCompareLoadouts={canCompareLoadouts}
           onLoadoutSet={setCreateLoadout}
           onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
+          isInLoadout={isInLoadout}
         />
       </div>
       <div className={styles.items}>

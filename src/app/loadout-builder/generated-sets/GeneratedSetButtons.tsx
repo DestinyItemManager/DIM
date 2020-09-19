@@ -20,12 +20,14 @@ export default function GeneratedSetButtons({
   canCompareLoadouts,
   onLoadoutSet,
   onCompareSet,
+  isInLoadout,
 }: {
   store: DimStore;
   set: ArmorSet;
   canCompareLoadouts: boolean;
   onLoadoutSet(loadout: Loadout): void;
   onCompareSet(): void;
+  isInLoadout: boolean;
 }) {
   const dispatch = useDispatch();
 
@@ -47,8 +49,13 @@ export default function GeneratedSetButtons({
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
       )}
-      <button type="button" className="dim-button" onClick={openLoadout}>
-        {t('LoadoutBuilder.CreateLoadout')}
+      <button
+        type="button"
+        className="dim-button"
+        style={isInLoadout ? { backgroundColor: '#48ba7bbb' } : undefined}
+        onClick={openLoadout}
+      >
+        {isInLoadout ? t('LoadoutBuilder.IsInLoadout') : t('LoadoutBuilder.CreateLoadout')}
       </button>
       <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}

@@ -447,6 +447,7 @@
     "Combinations_plural": "{{count, number}} combinations",
     "CompareLoadout": "Compare Loadout",
     "CreateLoadout": "+ Loadout",
+    "IsInLoadout": "Loadout exists",
     "DropToExclude": "Drag items here to exclude",
     "DropToLock": "Drag items here to lock",
     "EquipItems": "Equip",
