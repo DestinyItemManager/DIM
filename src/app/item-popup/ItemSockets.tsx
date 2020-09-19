@@ -240,7 +240,7 @@ function Socket({
   isPhonePortrait: boolean;
   onClick(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
   onShiftClick?(lockedItem: LockedItemType): void;
-  adjustedPlug?: DimPlug | undefined;
+  adjustedPlug?: DimPlug;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 

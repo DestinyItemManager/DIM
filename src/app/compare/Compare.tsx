@@ -717,7 +717,7 @@ class Compare extends React.Component<Props, State> {
 function getAllStats(
   comparisonItems: DimItem[],
   compareBaseStats: boolean,
-  adjustedStats?: { [itemId: string]: { [statHash: number]: number } } | undefined
+  adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
 ) {
   const firstComparison = comparisonItems[0];
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
