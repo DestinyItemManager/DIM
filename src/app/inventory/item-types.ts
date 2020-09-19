@@ -164,8 +164,6 @@ export interface DimItem {
   masterworkInfo: DimMasterwork | null;
   /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
   powerCap: number | null;
-  /** Some items have a "flavor objective", such as emblems that track stats. */
-  flavorObjective: DimFlavorObjective | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** Information about how this item works with infusion. */
@@ -265,15 +263,6 @@ export interface D1Stat extends DimStat {
   };
 }
 
-export interface DimFlavorObjective {
-  /** Localized description for the flavor objective. */
-  description: string;
-  /** Icon for the flavor objective. */
-  icon: string;
-  /** Current value of the tracker. */
-  progress: number;
-}
-
 export interface DimTalentGrid {
   /** A flat list of nodes in the grid. */
   nodes: DimGridNode[];
@@ -295,10 +284,6 @@ export interface D1TalentGrid extends DimTalentGrid {
   ascended: boolean;
   /** Can this item be infused? */
   infusable: boolean;
-  /** A representation of the perk grid for DTR integration. */
-  dtrPerks: string;
-  /** Another representation of the perk grid for DTR integration. */
-  dtrRoll: string;
 }
 
 export interface DimGridNode {
@@ -335,11 +320,6 @@ export interface D1GridNode extends DimGridNode {
   xpRequired: number;
   /** Has the XP requirement been met? */
   xpRequirementMet: boolean;
-
-  /** A representation of the node for DTR integration. */
-  dtrHash: string | null;
-  /** Another representation of the node for DTR integration. */
-  dtrRoll: string;
 }
 
 /** an InventoryItem known to have a plug attribute, because this item is located in a socket */
