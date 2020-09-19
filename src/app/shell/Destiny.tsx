@@ -20,17 +20,21 @@ import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
-const Inventory = React.lazy(() =>
-  import(/* webpackChunkName: "inventory" */ 'app/inventory/Inventory')
+const Inventory = React.lazy(
+  () => import(/* webpackChunkName: "inventory" */ 'app/inventory/Inventory')
 );
-const Progress = React.lazy(() =>
-  import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
+const Progress = React.lazy(
+  () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
 );
-const LoadoutBuilderContainer = React.lazy(() =>
-  import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
+const LoadoutBuilderContainer = React.lazy(
+  () =>
+    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
 );
-const D1LoadoutBuilder = React.lazy(() =>
-  import(/* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder')
+const D1LoadoutBuilder = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
+    )
 );
 const Vendors = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
@@ -38,20 +42,20 @@ const Vendors = React.lazy(async () => ({
 const SingleVendor = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
 }));
-const D1Vendors = React.lazy(() =>
-  import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
+const D1Vendors = React.lazy(
+  () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
 );
-const RecordBooks = React.lazy(() =>
-  import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
+const RecordBooks = React.lazy(
+  () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
 );
-const Organizer = React.lazy(() =>
-  import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
+const Organizer = React.lazy(
+  () => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
 );
-const Activities = React.lazy(() =>
-  import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
+const Activities = React.lazy(
+  () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
-const Collections = React.lazy(() =>
-  import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
+const Collections = React.lazy(
+  () => import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
 );
 
 interface ProvidedProps {

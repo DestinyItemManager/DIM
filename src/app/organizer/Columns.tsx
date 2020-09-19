@@ -549,7 +549,7 @@ function PerksCell({
         s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-        isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
               !s.plugged.plugDef.itemCategoryHashes?.includes(

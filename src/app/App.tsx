@@ -29,8 +29,8 @@ import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
 
-const WhatsNew = React.lazy(() =>
-  import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
+const WhatsNew = React.lazy(
+  () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
 
 // These three are all from the same chunk

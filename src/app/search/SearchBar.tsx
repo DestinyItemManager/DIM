@@ -106,8 +106,8 @@ function mapStateToProps() {
   };
 }
 
-const LazyFilterHelp = React.lazy(() =>
-  import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+const LazyFilterHelp = React.lazy(
+  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
