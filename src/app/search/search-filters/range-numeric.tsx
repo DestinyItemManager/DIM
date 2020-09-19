@@ -1,8 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
-import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
-import { generateSuggestionsForFilter } from '../search-config';
+import { generateSuggestionsForFilter } from '../search-utils';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
@@ -94,7 +93,7 @@ const simpleRangeFilters: FilterDefinition[] = [
         const parts = filterValue.split(':');
         const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
-        if(shouldntExist) {
+        if (shouldntExist) {
           throw new Error('Too many filter parameters.');
         }
 
