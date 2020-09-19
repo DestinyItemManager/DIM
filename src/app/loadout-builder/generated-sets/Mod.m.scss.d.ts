@@ -3,7 +3,6 @@
 interface CssExports {
   'clickable': string;
   'energyCost': string;
-  'energyCostOverlay': string;
   'item': string;
   'largeEnergyCost': string;
   'largeEnergyCostOverlay': string;

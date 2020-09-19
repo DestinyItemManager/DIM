@@ -34,13 +34,6 @@
   cursor: pointer;
 }
 
-.energyCostOverlay {
-  position: absolute;
-  height: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
-  width: calc(0.59 * var(--item-size) - #{2 * $item-border-width});
-  background-size: calc(0.59 * var(--item-size));
-}
-
 .largeEnergyCostOverlay {
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});

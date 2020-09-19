@@ -25,7 +25,7 @@ import { getPlatforms } from '../accounts/platforms';
 import { getDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { DimItem } from '../inventory/item-types';
+import { D1Item, DimItem } from '../inventory/item-types';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import { setCharacterOrder, setSetting } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
@@ -64,7 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = StoreProps & ThunkDispatchProp;
 
-const fakeWeapon = {
+const fakeWeapon: DimItem = {
   icon: `~${exampleWeaponImage}`,
   element: {
     displayProperties: {
@@ -82,15 +82,11 @@ const fakeWeapon = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return true;
-  },
-  isDestiny1() {
-    return false;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 2,
 };
 
-const fakeArmor = {
+const fakeArmor: D1Item = {
   icon: `~${exampleArmorImage}`,
   quality: {
     min: 96,
@@ -106,12 +102,8 @@ const fakeArmor = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return false;
-  },
-  isDestiny1() {
-    return true;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 1,
 };
 
 const languageOptions = mapToOptions({

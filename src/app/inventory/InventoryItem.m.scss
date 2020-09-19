@@ -1,11 +1,5 @@
 @import '../variables.scss';
 
-$legendaryBg: #522f65;
-$exoticBg: #ceae33;
-$basicBg: #c3bcb4;
-$rareBg: #5076a3;
-$commonBg: #366f42;
-
 // Items hidden by search.
 .searchHidden {
   opacity: 0.2;
@@ -34,53 +28,9 @@ $commonBg: #366f42;
   transition: opacity 0.2s, transform 0.2s;
 }
 
-// The image within the overall item. Global because it's referenced by other styles.
-:global(.item-img) {
-  display: block;
-  width: var(--item-size);
-  height: var(--item-size);
-  box-sizing: border-box;
-  border: $item-border-width solid #ddd;
-
-  &:focus {
-    outline: none;
-  }
-
-  // Used by vendors
-  &:global(.transparent) {
-    border-color: transparent;
-  }
-}
-
-.legendary :global(.item-img) {
-  background-color: $legendaryBg;
-}
-.exotic :global(.item-img) {
-  background-color: $exoticBg;
-}
-.basic :global(.item-img) {
-  background-color: $basicBg;
-}
-.rare :global(.item-img) {
-  background-color: $rareBg;
-}
-.common :global(.item-img) {
-  background-color: $commonBg;
-}
-
-// Masterwork item image
-.masterwork {
-  border-color: $masterwork-border-color;
-}
-
-// Subclass items and engrams image
-.borderless {
+// Subclass items
+.subclassBase {
   border-color: transparent;
-}
-
-// Completed items or capped stackables image
-.complete {
-  border-color: $gold;
 }
 
 // The bar we show for items that have some progress on them
@@ -97,67 +47,6 @@ $commonBg: #366f42;
 .xpBarAmount {
   height: 100%;
   background-color: $xp;
-}
-
-// The overlay image for masterworks
-.masterworkOverlay {
-  box-sizing: border-box;
-  top: $item-border-width;
-  left: $item-border-width;
-  border-width: 0px;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
-  position: absolute;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
-    calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
-
-  background-image: url('../../images/masterwork.png');
-}
-.exoticMasterwork {
-  background-image: url('../../images/exotic-masterwork.png');
-}
-
-.iconOverlay {
-  overflow: hidden;
-  top: $item-border-width;
-  left: $item-border-width;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
-  position: absolute;
-  & > img {
-    top: 0;
-    left: 0;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    position: absolute;
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    transform: rotate(44.3deg);
-    left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
-    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
-    background: #444;
-  }
-  .legendary &::before {
-    background: $legendaryBg;
-  }
-  .exotic &::before {
-    background: $exoticBg;
-  }
-  .basic &::before {
-    background: $basicBg;
-  }
-  .rare &::before {
-    background: $rareBg;
-  }
-  .common &::before {
-    background: $commonBg;
-  }
 }
 
 // The container for the tag/notes/wishlist icons
