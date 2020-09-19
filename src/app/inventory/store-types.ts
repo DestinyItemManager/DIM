@@ -15,28 +15,16 @@ import { D1Item, DimItem } from './item-types';
  * overrides.
  */
 export interface DimStore<Item = DimItem> {
+  // Static data - these properties will never change after the character/store is created
+
   /** An ID for the store. Character ID or 'vault'. */
   id: string;
   /** Localized name for the store. */
   name: string;
-  /** All items in the store, across all buckets. */
-  items: readonly Item[];
+  /** Is this the vault? */
+  isVault: boolean;
   /** The Destiny version this store came from. */
   destinyVersion: DestinyVersion;
-  /** An icon (emblem) for the store. */
-  icon: string;
-  /** Is this the most-recently-played character? */
-  current: boolean;
-  /** The date the character was last played. */
-  lastPlayed: Date;
-  /** Emblem background. */
-  background: string;
-  /** Character level. */
-  level: number;
-  /** Progress towards the next level (or "prestige level") */
-  percentToNextLevel: number;
-  /** Power/light level. */
-  powerLevel: number;
   /** Enum class type. */
   classType: DestinyClass;
   /** Localized class name. */
@@ -45,10 +33,32 @@ export interface DimStore<Item = DimItem> {
   gender: string;
   /** Localized gender and race together. */
   genderRace: string;
-  /** String gender name: 'male' | 'female' | '' */
+  /** String gender name: 'male' | 'female' | '', used exclusively for i18n when translating to gendered languages */
   genderName: 'male' | 'female' | '';
-  /** Is this the vault? */
-  isVault: boolean;
+
+  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh.
+
+  /** All items in the store, across all buckets. */
+  items: readonly Item[];
+
+  // Dynamic data - this may change between profile updates, (whether that's full or partial profile update)
+
+  /** An icon (emblem) for the store. */
+  icon: string;
+  /** Is this the most-recently-played character? */
+  current: boolean;
+  /** The date the character was last played. */
+  lastPlayed: Date;
+  /** Emblem background image */
+  background: string;
+  /** The background or dominant color of the equipped emblem, if available. */
+  color?: DestinyColor;
+  /** Character level. */
+  level: number;
+  /** Progress towards the next level (or "prestige level") */
+  percentToNextLevel: number;
+  /** Power/light level. */
+  powerLevel: number;
   /** Character stats. */
   stats: {
     /** average of your highest simultaneously equippable gear with bonus fields for rich tooltip content and equippability warnings */
@@ -59,8 +69,6 @@ export interface DimStore<Item = DimItem> {
     maxTotalPower?: DimCharacterStat;
     [hash: number]: DimCharacterStat;
   };
-  /** The background or dominant color of the equipped emblem, if available. */
-  color?: DestinyColor;
 }
 
 /** Account-wide currency counts, e.g. glimmer */
