@@ -124,7 +124,7 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: {
-    recordBooks: any;
-    activities: any;
+    recordBooks?: any;
+    activities?: any;
   };
 }
