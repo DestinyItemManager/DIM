@@ -1,11 +1,11 @@
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import {
-  DimItem,
-  DimSocket,
-  DimPlug,
   DimAdjustedItemPlug,
   DimAdjustedItemStat,
+  DimItem,
+  DimPlug,
+  DimSocket,
 } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTagSelector from '../item-popup/ItemTagSelector';

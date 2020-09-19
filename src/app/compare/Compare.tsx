@@ -19,6 +19,7 @@ import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -26,15 +27,14 @@ import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import {
-  DimItem,
-  DimStat,
-  DimSocket,
-  DimPlug,
-  DimAdjustedPlugs,
   DimAdjustedItemStat,
+  DimAdjustedPlugs,
   DimAdjustedStats,
+  DimItem,
+  DimPlug,
+  DimSocket,
+  DimStat,
 } from '../inventory/item-types';
-import { isEmpty } from 'lodash';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { Subscriptions } from '../utils/rx-utils';
