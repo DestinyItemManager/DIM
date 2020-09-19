@@ -1,3 +1,5 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 /* eslint-disable react/jsx-key, react/prop-types */
 import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -29,6 +31,7 @@ import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
@@ -74,6 +77,7 @@ interface StoreProps {
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
   loadouts: Loadout[];
   newItems: Set<string>;
+  destinyVersion: DestinyVersion;
 }
 
 function mapStateToProps() {
@@ -115,6 +119,7 @@ function mapStateToProps() {
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
       newItems: state.inventory.newItems,
+      destinyVersion: destinyVersionSelector(state),
     };
   };
 }
@@ -134,6 +139,7 @@ function ItemTable({
   customTotalStatsByClass,
   loadouts,
   newItems,
+  destinyVersion,
   dispatch,
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -164,20 +170,26 @@ function ItemTable({
     }
   });
 
+  // Are we at a item category that can show items?
+  const terminal = Boolean(_.last(categories)?.terminal);
+
   // Build a list of all the stats relevant to this set of items
   const statHashes = useMemo(
-    () => buildStatInfo(items, categories),
-    // We happen to know that we only need to recalculate this when the categories change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [categories]
+    () =>
+      terminal
+        ? buildStatInfo(items)
+        : emptyObject<{
+            [statHash: number]: StatInfo;
+          }>(),
+    [terminal, items]
   );
 
-  const firstItem = items[0];
-  const isWeapon = Boolean(firstItem?.bucket.inWeapons);
-  const isArmor = Boolean(firstItem?.bucket.inArmor);
+  const firstCategory = categories[1];
+  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
+  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
+  const isArmor = !isWeapon && !isGhost;
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
   const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
-  const destinyVersion = firstItem?.destinyVersion || 2;
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
@@ -578,15 +590,10 @@ function sortRows(
  * It will return the same result for the same category, since all items in a category share stats.
  */
 function buildStatInfo(
-  items: DimItem[],
-  categories: ItemCategoryTreeNode[]
+  items: DimItem[]
 ): {
   [statHash: number]: StatInfo;
 } {
-  const terminal = Boolean(_.last(categories)?.terminal);
-  if (!terminal) {
-    return emptyObject();
-  }
   const statHashes: {
     [statHash: number]: StatInfo;
   } = {};
