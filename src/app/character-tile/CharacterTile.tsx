@@ -1,5 +1,5 @@
 import { isPhonePortraitSelector } from 'app/inventory/selectors';
-import type { DimStore, DimVault } from 'app/inventory/store-types';
+import type { DimStore } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import clsx from 'clsx';
@@ -13,10 +13,6 @@ const CharacterEmblem = ({ store }: { store: DimStore }) => (
     style={{ backgroundImage: `url("${store.icon}")` }}
   />
 );
-
-function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}
 
 /**
  * Render a basic character tile without any event handlers
@@ -56,7 +52,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
           )}
         </div>
         <div className="bottom">
-          {isVault(store) ? (
+          {store.isVault ? (
             $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity />
           ) : (
             <>

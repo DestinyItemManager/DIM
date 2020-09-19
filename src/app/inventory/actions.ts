@@ -6,13 +6,14 @@ import { get } from 'idb-keyval';
 import { createAction } from 'typesafe-actions';
 import { TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
-import { DimCharacterStat, DimStore } from './store-types';
+import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
 
 /**
- * Reflect the old stores service data into the Redux store as a migration aid.
+ * Update the current profile (D2 only) and the computed/massaged state of inventory, plus account-wide info like currencies.
  */
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
+  currencies: AccountCurrency[];
   profileResponse?: DestinyProfileResponse;
 }>();
 

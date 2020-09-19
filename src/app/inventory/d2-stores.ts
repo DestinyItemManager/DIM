@@ -31,7 +31,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
-import { DimStore, DimVault } from './store-types';
+import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
@@ -184,6 +184,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
           updateBasePower(stores, s, defs);
         }
 
+        const currencies = processCurrencies(profileInfo, defs);
+
         // Let our styling know how many characters there are
         // TODO: this should be an effect on the stores component, except it's also
         // used on D1 activities page
@@ -193,7 +195,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
         console.timeEnd('Process inventory');
 
         console.time('Inventory state update');
-        dispatch(update({ stores, profileResponse: profileInfo }));
+        dispatch(update({ stores, profileResponse: profileInfo, currencies }));
         console.timeEnd('Inventory state update');
 
         return stores;
@@ -216,6 +218,18 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     loadingTracker.addPromise(promise);
     return promise;
   };
+}
+
+function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2ManifestDefinitions) {
+  const profileCurrencies = profileInfo.profileCurrencies.data
+    ? profileInfo.profileCurrencies.data.items
+    : [];
+  const currencies = profileCurrencies.map((c) => ({
+    itemHash: c.itemHash,
+    quantity: c.quantity,
+    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
+  }));
+  return currencies;
 }
 
 /**
@@ -277,16 +291,13 @@ function processVault(
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
   }
-): DimVault {
+): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
     : [];
-  const profileCurrencies = profileInfo.profileCurrencies.data
-    ? profileInfo.profileCurrencies.data.items
-    : [];
   const itemComponents = profileInfo.itemComponents;
 
-  const store = makeVault(defs, profileCurrencies);
+  const store = makeVault();
 
   const items: DestinyItemComponent[] = [];
   for (const i of profileInventory) {

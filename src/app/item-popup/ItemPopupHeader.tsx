@@ -37,11 +37,7 @@ export default function ItemPopupHeader({
   };
 
   const hasDetails = Boolean(
-    item.stats?.length ||
-      item.talentGrid ||
-      item.objectives ||
-      item.flavorObjective ||
-      item.secondaryIcon
+    item.stats?.length || item.talentGrid || item.objectives || item.secondaryIcon
   );
   const showDescription = Boolean(item.description?.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;

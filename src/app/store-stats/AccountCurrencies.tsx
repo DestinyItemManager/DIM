@@ -1,14 +1,16 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import { currenciesSelector } from 'app/inventory/selectors';
 import _ from 'lodash';
 import React from 'react';
-import type { DimVault } from '../inventory/store-types';
+import { useSelector } from 'react-redux';
 import styles from './AccountCurrencies.m.scss';
 
 /** The account currencies (glimmer, shards, etc.) */
-export default function AccountCurrency({ store }: { store: DimVault }) {
+export default React.memo(function AccountCurrency() {
+  const currencies = useSelector(currenciesSelector);
   return (
     <>
-      {store.currencies.map((currency) => (
+      {currencies.map((currency) => (
         <React.Fragment key={currency.itemHash}>
           <BungieImage
             className={styles.currency}
@@ -20,7 +22,7 @@ export default function AccountCurrency({ store }: { store: DimVault }) {
           </div>
         </React.Fragment>
       ))}
-      {_.times(4 - store.currencies.length, (i) => (
+      {_.times(4 - currencies.length, (i) => (
         <React.Fragment key={i}>
           <div />
           <div />
@@ -28,4 +30,4 @@ export default function AccountCurrency({ store }: { store: DimVault }) {
       ))}
     </>
   );
-}
+});

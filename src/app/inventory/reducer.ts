@@ -8,7 +8,7 @@ import { setCurrentAccount } from '../accounts/actions';
 import { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
-import { DimStore } from './store-types';
+import { AccountCurrency, DimStore } from './store-types';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getStore } from './stores-helpers';
 
@@ -19,6 +19,12 @@ export interface InventoryState {
   // Updates to items need to deeply modify their store though.
   // TODO: ReadonlyArray<Readonly<DimStore>>
   readonly stores: DimStore[];
+
+  /**
+   * Account-wide currencies (glimmer, shards, etc.). Silver is only available
+   * while the player is in game.
+   */
+  readonly currencies: AccountCurrency[];
 
   readonly profileResponse?: DestinyProfileResponse;
 
@@ -38,6 +44,7 @@ export type InventoryAction = ActionType<typeof actions>;
 
 const initialState: InventoryState = {
   stores: [],
+  currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
   isDraggingStack: false,
@@ -118,9 +125,11 @@ function updateInventory(
   {
     stores,
     profileResponse,
+    currencies,
   }: {
     stores: DimStore[];
-    profileResponse?: DestinyProfileResponse | undefined;
+    currencies: AccountCurrency[];
+    profileResponse?: DestinyProfileResponse;
   }
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
@@ -128,6 +137,7 @@ function updateInventory(
   const newState = {
     ...state,
     stores,
+    currencies,
     newItems: computeNewItems(state.stores, state.newItems, stores),
     profileError: undefined,
   };
