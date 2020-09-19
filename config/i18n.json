@@ -781,7 +781,7 @@
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
-    "SortByRating": "Community Rating or Armor Quality",
+    "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
