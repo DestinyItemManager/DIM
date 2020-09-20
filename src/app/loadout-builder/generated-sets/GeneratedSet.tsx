@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import React, { Dispatch } from 'react';
@@ -61,7 +62,7 @@ function GeneratedSet({
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
 
-  const isInLoadout = loadouts.some((loadout) =>
+  const existingLoadout = loadouts.find((loadout) =>
     set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
   );
 
@@ -82,9 +83,16 @@ function GeneratedSet({
           canCompareLoadouts={canCompareLoadouts}
           onLoadoutSet={setCreateLoadout}
           onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
-          isInLoadout={isInLoadout}
         />
       </div>
+      {existingLoadout ? (
+        <div className={styles.existingLoadoutContainer}>
+          <span className={styles.existingLoadout}>
+            {t('LoadoutBuilder.ExistingLoadout')}:{' '}
+            <span className={styles.loadoutName}>{existingLoadout.name}</span>
+          </span>
+        </div>
+      ) : null}
       <div className={styles.items}>
         {set.armor.map((items, index) => (
           <GeneratedSetItem

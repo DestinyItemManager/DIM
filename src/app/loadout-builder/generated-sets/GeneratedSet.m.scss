@@ -25,6 +25,25 @@
   }
 }
 
+.existing-loadout-container {
+  text-align: right;
+  padding-bottom: 8px;
+}
+
+.existing-loadout {
+  margin: 0 4px;
+  font-weight: bold;
+  color: #e8a534;
+
+  @media (min-width: 540px) {
+    margin: 0;
+  }
+}
+
+.loadout-name {
+  white-space: nowrap;
+}
+
 .items {
   display: flex;
   flex-direction: row;

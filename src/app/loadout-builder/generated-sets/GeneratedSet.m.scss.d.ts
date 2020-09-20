@@ -2,8 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'build': string;
+  'existingLoadout': string;
+  'existingLoadoutContainer': string;
   'header': string;
   'items': string;
+  'loadoutName': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
