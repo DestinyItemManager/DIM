@@ -1,18 +1,6 @@
-import { RootState } from 'app/store/types';
 import { Reducer } from 'redux';
-import { createSelector } from 'reselect';
 import { ActionType, getType } from 'typesafe-actions';
-import { storesSelector } from '../inventory/selectors';
 import * as actions from './basic-actions';
-
-export const farmingStoreSelector = () =>
-  createSelector(
-    storesSelector,
-    (state: RootState) => state.farming.storeId,
-    (stores, storeId) => stores.find((s) => s.id === storeId)
-  );
-
-export const farmingInterruptedSelector = (state: RootState) => state.farming.numInterruptions > 0;
 
 export interface FarmingState {
   // The actively farming store, if any

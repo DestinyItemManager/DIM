@@ -1,6 +1,6 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { Settings } from './initial-settings';
-import { settingsSelector } from './reducer';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],

@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
-import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
+import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import Plug from './Plug';

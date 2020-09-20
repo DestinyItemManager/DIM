@@ -1,5 +1,5 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

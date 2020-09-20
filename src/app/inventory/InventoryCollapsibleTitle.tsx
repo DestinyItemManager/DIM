@@ -1,6 +1,6 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React from 'react';

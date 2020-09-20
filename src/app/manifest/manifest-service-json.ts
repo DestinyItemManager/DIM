@@ -1,5 +1,5 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { settingsSelector } from 'app/settings/reducer';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';

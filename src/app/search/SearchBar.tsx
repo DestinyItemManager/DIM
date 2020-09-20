@@ -5,7 +5,7 @@ import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';

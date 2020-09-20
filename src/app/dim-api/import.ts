@@ -13,7 +13,8 @@ import _ from 'lodash';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
 import { importData } from './dim-api';
-import { DimApiState, makeProfileKey } from './reducer';
+import type { DimApiState } from './reducer';
+import { makeProfileKey } from './selectors';
 
 /**
  * Import data in the DIM Sync export format into DIM Sync or local storage.

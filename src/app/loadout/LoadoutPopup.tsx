@@ -39,7 +39,7 @@ import {
   undoIcon,
   warlockIcon,
 } from '../shell/icons';
-import { querySelector } from '../shell/reducer';
+import { querySelector } from '../shell/selectors';
 import { deleteLoadout } from './actions';
 import {
   itemLevelingLoadout,
@@ -59,7 +59,7 @@ import {
   pullFromPostmaster,
   totalPostmasterItems,
 } from './postmaster';
-import { loadoutsSelector, previousLoadoutSelector } from './reducer';
+import { loadoutsSelector, previousLoadoutSelector } from './selectors';
 
 const loadoutIcon = {
   [DestinyClass.Unknown]: globeIcon,

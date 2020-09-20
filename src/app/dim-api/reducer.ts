@@ -26,6 +26,7 @@ import * as settingsActions from '../settings/actions';
 import { initialSettingsState, Settings } from '../settings/initial-settings';
 import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
 import * as actions from './basic-actions';
+import { makeProfileKey, makeProfileKeyFromAccount } from './selectors';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -1081,13 +1082,6 @@ function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion,
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
   // TODO: put things back the way they were
   console.log('TODO: Reversing', draft, update);
-}
-
-export function makeProfileKeyFromAccount(account: DestinyAccount) {
-  return makeProfileKey(account.membershipId, account.destinyVersion);
-}
-export function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
-  return `${platformMembershipId}-d${destinyVersion}`;
 }
 
 export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
