@@ -34,25 +34,6 @@
   cursor: pointer;
 }
 
-.largeEnergyCostOverlay {
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
-  background-size: calc(var(--item-size));
-}
-
-.energyCost {
-  position: absolute;
-  top: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 13));
-  right: calc(#{$item-border-width} + ((0.59 * var(--item-size)) / 10.5));
-  font-size: calc((0.59 * var(--item-size)) / 5.5);
-}
-
-.largeEnergyCost {
-  top: calc(#{$item-border-width} + ((var(--item-size)) / 13));
-  right: calc(#{$item-border-width} + ((var(--item-size)) / 10.5));
-  font-size: calc((var(--item-size)) / 5.5);
-}
-
 .perk {
   img {
     border: none;

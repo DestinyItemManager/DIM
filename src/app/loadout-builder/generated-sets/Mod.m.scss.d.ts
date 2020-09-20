@@ -2,10 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'clickable': string;
-  'energyCost': string;
   'item': string;
-  'largeEnergyCost': string;
-  'largeEnergyCostOverlay': string;
   'largeItem': string;
   'perk': string;
 }
