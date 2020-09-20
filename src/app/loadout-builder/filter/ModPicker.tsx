@@ -3,7 +3,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { bucketsSelector, profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
@@ -65,41 +69,39 @@ function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedModsSelector = createSelector(
     profileResponseSelector,
-    storesSelector,
+    allItemsSelector,
     (state: RootState) => state.manifest.d2Manifest!,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (profileResponse, stores, defs, classType): StoreProps['mods'] => {
+    (profileResponse, allItems, defs, classType): StoreProps['mods'] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse) {
         return [];
       }
 
       // 1. loop through all items, build up a map of mod sockets by bucket
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (
-            !item ||
-            !item.sockets ||
-            !isLoadoutBuilderItem(item) ||
-            !(item.classType === DestinyClass.Unknown || item.classType === classType)
-          ) {
-            continue;
-          }
-          if (!plugSets[item.bucket.hash]) {
-            plugSets[item.bucket.hash] = new Set<number>();
-          }
-          // build the filtered unique perks item picker
-          item.sockets.allSockets
-            .filter((s) => !s.isPerk)
-            .forEach((socket) => {
-              if (socket.socketDefinition.reusablePlugSetHash) {
-                plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
-              } else if (socket.socketDefinition.randomizedPlugSetHash) {
-                plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
-              }
-              // TODO: potentially also add inventory-based mods
-            });
+      for (const item of allItems) {
+        if (
+          !item ||
+          !item.sockets ||
+          !isLoadoutBuilderItem(item) ||
+          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+        ) {
+          continue;
         }
+        if (!plugSets[item.bucket.hash]) {
+          plugSets[item.bucket.hash] = new Set<number>();
+        }
+        // build the filtered unique perks item picker
+        item.sockets.allSockets
+          .filter((s) => !s.isPerk)
+          .forEach((socket) => {
+            if (socket.socketDefinition.reusablePlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+            } else if (socket.socketDefinition.randomizedPlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
+            }
+            // TODO: potentially also add inventory-based mods
+          });
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods

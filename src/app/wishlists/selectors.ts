@@ -1,4 +1,4 @@
-import { storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -17,7 +17,7 @@ export const wishListsEnabledSelector = (state: RootState) =>
   (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
 
 export const inventoryWishListsSelector = createSelector(
-  storesSelector,
+  allItemsSelector,
   wishListsByHashSelector,
   getInventoryWishListRolls
 );

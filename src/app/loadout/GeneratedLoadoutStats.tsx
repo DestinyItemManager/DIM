@@ -49,12 +49,14 @@ function getItemsInListByCategory({
 export function GeneratedLoadoutStats({
   defs,
   stores,
+  allItems,
   buckets,
   items,
   loadout,
 }: {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   stores: DimStore[];
+  allItems: DimItem[];
   buckets: InventoryBuckets;
   items: DimItem[];
   loadout: Loadout;
@@ -74,7 +76,7 @@ export function GeneratedLoadoutStats({
   if (weaponItems.missingBuckets) {
     // If any weapon types are missing, fill them in with max weapons to assume light level
     const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
-    const maxPowerItems = maxLightItemSet(stores, subclass).unrestricted;
+    const maxPowerItems = maxLightItemSet(allItems, subclass).unrestricted;
     const maxWeapons = _.compact(
       weaponItems.missingBuckets.map(
         (bucket) => maxPowerItems.find((item) => bucket.type === item.type)!

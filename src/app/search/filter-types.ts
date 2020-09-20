@@ -20,6 +20,7 @@ export type ItemFilter = (item: DimItem) => ValidFilterOutput;
  */
 export interface FilterContext {
   stores: DimStore[];
+  allItems: DimItem[];
   currentStore: DimStore;
   loadouts: Loadout[];
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll };
