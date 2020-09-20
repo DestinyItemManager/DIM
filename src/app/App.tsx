@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { set } from 'idb-keyval';
@@ -17,7 +18,6 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
 import Login from './login/Login';
 import NotificationsContainer from './notifications/NotificationsContainer';
-import { settingsSelector } from './settings/reducer';
 import About from './shell/About';
 import AccountRedirectRoute from './shell/AccountRedirectRoute';
 import DefaultAccount from './shell/DefaultAccount';

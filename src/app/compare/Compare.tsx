@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
@@ -9,7 +10,6 @@ import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { makeDupeID } from 'app/search/search-filters/dupes';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import {
   getItemSpecialtyModSlotDisplayName,

@@ -1,5 +1,5 @@
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
 import type { DimStore } from 'app/inventory/store-types';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';

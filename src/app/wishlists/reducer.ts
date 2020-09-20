@@ -1,30 +1,7 @@
-import { RootState } from 'app/store/types';
-import _ from 'lodash';
 import { Reducer } from 'redux';
-import { createSelector } from 'reselect';
 import { ActionType, getType } from 'typesafe-actions';
-import { storesSelector } from '../inventory/selectors';
 import * as actions from './actions';
 import { WishListAndInfo } from './types';
-import { getInventoryWishListRolls } from './wishlists';
-
-export const wishListsSelector = (state: RootState) => state.wishLists;
-
-export const wishListsLastFetchedSelector = (state: RootState) =>
-  wishListsSelector(state).lastFetched;
-
-const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
-  _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
-);
-
-export const wishListsEnabledSelector = (state: RootState) =>
-  (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
-
-export const inventoryWishListsSelector = createSelector(
-  storesSelector,
-  wishListsByHashSelector,
-  getInventoryWishListRolls
-);
 
 export interface WishListsState {
   loaded: boolean;

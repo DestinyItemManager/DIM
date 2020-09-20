@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PressTip from 'app/dim-ui/PressTip';
@@ -13,7 +14,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { classIcons } from 'app/inventory/StoreBucket';
 import { getAllItems } from 'app/inventory/stores-helpers';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import { settingsSelector } from 'app/settings/reducer';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';

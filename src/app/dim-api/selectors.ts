@@ -1,7 +1,17 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
-import { makeProfileKeyFromAccount } from './reducer';
+
+export function makeProfileKeyFromAccount(account: DestinyAccount) {
+  return makeProfileKey(account.membershipId, account.destinyVersion);
+}
+export function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
+  return `${platformMembershipId}-d${destinyVersion}`;
+}
+
+export const settingsSelector = (state: RootState) => state.dimApi.settings;
 
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;

@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -14,8 +15,7 @@ import {
   wishListsEnabledSelector,
   wishListsLastFetchedSelector,
   wishListsSelector,
-} from '../wishlists/reducer';
-import { settingsSelector } from './reducer';
+} from '../wishlists/selectors';
 
 // config/content-security-policy.js must be edited alongside this list
 export const wishListAllowedPrefixes = [

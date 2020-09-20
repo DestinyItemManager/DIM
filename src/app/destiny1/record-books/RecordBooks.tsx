@@ -1,7 +1,7 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import _ from 'lodash';

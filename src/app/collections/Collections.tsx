@@ -1,4 +1,4 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { settingsSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -9,8 +9,7 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
-import { querySelector } from 'app/shell/reducer';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
@@ -21,12 +20,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import {
-  bucketsSelector,
-  isPhonePortraitSelector,
-  profileResponseSelector,
-  storesSelector,
-} from '../inventory/selectors';
+import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
 import Catalysts from './Catalysts';
 import './collections.scss';
 import LegacyTriumphs from './LegacyTriumphs';

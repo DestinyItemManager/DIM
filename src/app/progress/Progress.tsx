@@ -14,7 +14,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { querySelector } from 'app/shell/reducer';
+import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';

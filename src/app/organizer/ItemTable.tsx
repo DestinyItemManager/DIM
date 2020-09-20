@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
@@ -14,10 +15,9 @@ import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
-import { loadoutsSelector } from 'app/loadout/reducer';
+import { loadoutsSelector } from 'app/loadout/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -25,7 +25,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useShiftHeld } from 'app/utils/hooks';
-import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

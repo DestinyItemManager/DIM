@@ -27,7 +27,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
-import { VendorsState } from './reducer';
+import type { VendorsState } from './reducer';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
 import VendorItems from './VendorItems';
