@@ -143,14 +143,16 @@ class Compare extends React.Component<Props, State> {
               compareBy((item: DimItem) => {
                 const stat =
                   item.primStat && sortedHash === item.primStat.statHash
-                    ? item.primStat
+                    ? (item.primStat as MinimalStat)
                     : sortedHash === 'EnergyCapacity'
                     ? {
                         value: item.energy?.energyCapacity || 0,
+                        base: undefined,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
                         value: item.powerCap || 99999999,
+                        base: undefined,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -162,7 +164,9 @@ class Compare extends React.Component<Props, State> {
                   isDimStat(stat) && stat.smallerIsBetter
                     ? this.state.sortBetterFirst
                     : !this.state.sortBetterFirst;
-                return shouldReverse ? -stat.value : stat.value;
+
+                const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+                return shouldReverse ? -statValue : statValue;
               }),
               compareBy((i) => i.index),
               compareBy((i) => i.name)
@@ -574,6 +578,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
       makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
         statHash: powerCapPlugSetHash,
         value: item.powerCap ?? undefined,
+        base: undefined,
       }))
     );
   }
@@ -587,6 +592,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
           (item.energy && {
             statHash: item.energy.energyType,
             value: item.energy.energyCapacity,
+            base: undefined,
           }) ||
           undefined
       )
