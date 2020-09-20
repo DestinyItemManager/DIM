@@ -16,7 +16,6 @@ interface CssExports {
   'itemIcon': string;
   'loadouts': string;
   'locked': string;
-  'miniPerk': string;
   'miniPerkContainer': string;
   'modPerk': string;
   'modPerks': string;

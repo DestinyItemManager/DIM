@@ -74,7 +74,7 @@ export default function Plug({
 
   const contents = (
     <div ref={drop}>
-      <DefItemIcon itemDef={plug.plugDef} defs={defs} />
+      <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
     </div>
   );
 

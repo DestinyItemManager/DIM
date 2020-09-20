@@ -388,7 +388,7 @@ export function getColumns(
               >
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
-                    <DefItemIcon itemDef={p.plugDef} defs={defs} className={styles.miniPerk} />
+                    <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
                   </div>{' '}
                   {p.plugDef.displayProperties.name}
                 </div>

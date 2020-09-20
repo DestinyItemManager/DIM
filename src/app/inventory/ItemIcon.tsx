@@ -79,13 +79,16 @@ export function DefItemIcon({
   itemDef,
   defs,
   className,
+  borderless,
 }: {
   itemDef: DestinyInventoryItemDefinition;
   defs?: D2ManifestDefinitions;
   className?: string;
+  borderless?: boolean;
 }) {
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
-  const borderless =
+  borderless =
+    borderless ||
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
   const itemImageStyles = clsx(
