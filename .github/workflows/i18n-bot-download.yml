@@ -11,11 +11,8 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
         with:
-          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v2.x
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.PAT }}
 
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
@@ -48,14 +45,9 @@ jobs:
 
       - name: Commit files
         if: steps.porcelain.outputs.porcelain
-        run: |
-          git config --local user.email "destinyitemmanager@gmail.com"
-          git config --local user.name "DIM i18n Bot"
-          git add .
-          git commit -m "i18n - ${{ env.GITHUB_SHA_SHORT }}" -a
-
-      - name: Push changes
-        if: steps.porcelain.outputs.porcelain
-        uses: ad-m/github-push-action@master
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          github_token: ${{ secrets.I18N_PAT }}
+          commit_message: i18n
+          commit_user_name: DIM i18n Bot
+          commit_user_email: destinyitemmanager@gmail.com
+          commit_author: DIM i18n Bot <destinyitemmanager@gmail.com>
