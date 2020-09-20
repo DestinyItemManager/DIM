@@ -1,17 +1,7 @@
+@import 'ceaser-easing';
 @import '../variables.scss';
 
 $animationSpeed: 150ms;
-
-@keyframes zoom {
-  from {
-    transform: scale(0.85);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 
 .sheetBackground {
   position: fixed;
@@ -36,7 +26,6 @@ $animationSpeed: 150ms;
   top: 25%;
   backface-visibility: hidden;
   z-index: 13;
-  animation: zoom $animationSpeed;
 }
 
 .container {
@@ -98,4 +87,28 @@ $animationSpeed: 150ms;
   height: 30px;
   min-width: 30px;
   margin-right: 10px;
+}
+
+// CSS show/hide transition
+
+.enter {
+  transform: scale(0.85);
+  opacity: 0;
+}
+
+.enter.enterActive {
+  transform: scale(1);
+  opacity: 1;
+  transition: all $animationSpeed $easeOutCubic;
+}
+
+.exit {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.exit.exitActive {
+  transform: scale(0.85);
+  opacity: 0;
+  transition: all $animationSpeed $easeOutCubic;
 }
