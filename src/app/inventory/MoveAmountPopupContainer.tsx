@@ -55,7 +55,9 @@ export default function MoveAmountPopupContainer() {
       onClose={onClose}
       header={
         <h1>
-          <ItemIcon item={item} />
+          <div className="item">
+            <ItemIcon item={item} />
+          </div>
           <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
         </h1>
       }
