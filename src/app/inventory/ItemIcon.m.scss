@@ -80,24 +80,24 @@ $commonBg: #366f42;
   overflow: hidden;
   top: $item-border-width;
   left: $item-border-width;
-  height: calc(100% - #{2 * $item-border-width});
-  width: calc(100% - #{2 * $item-border-width});
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
   position: absolute;
   & > img {
     top: 0;
     left: 0;
-    height: calc(100% - #{2 * $item-border-width});
-    width: calc(100% - #{2 * $item-border-width});
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
     position: absolute;
   }
   &::before {
     content: '';
     position: absolute;
-    height: calc(100% - #{2 * $item-border-width});
-    width: calc(100% - #{2 * $item-border-width});
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
     transform: rotate(44.3deg);
-    left: calc((100% - #{2 * $item-border-width}) * -0.5);
-    top: calc((100% - #{2 * $item-border-width}) * -0.665);
+    left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
+    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
     background: #444;
   }
   .legendary &::before {
@@ -119,10 +119,10 @@ $commonBg: #366f42;
 
 .energyCostOverlay {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  top: $item-border-width;
+  bottom: $item-border-width;
+  right: $item-border-width;
+  left: $item-border-width;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -131,14 +131,13 @@ $commonBg: #366f42;
 
 .energyCost {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  top: $item-border-width;
+  bottom: $item-border-width;
+  right: $item-border-width;
+  left: $item-border-width;
   pointer-events: none;
 
   text {
     fill: white;
-    text-anchor: end;
   }
 }

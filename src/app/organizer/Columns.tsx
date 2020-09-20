@@ -387,7 +387,9 @@ export function getColumns(
                 tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
               >
                 <div className={styles.modPerk}>
-                  <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                  <div className={styles.miniPerkContainer}>
+                    <DefItemIcon itemDef={p.plugDef} defs={defs} className={styles.miniPerk} />
+                  </div>{' '}
                   {p.plugDef.displayProperties.name}
                 </div>
               </PressTip>

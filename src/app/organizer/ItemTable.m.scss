@@ -161,7 +161,10 @@ $toolbarHeight: 41px - 16px + 8px;
     padding-top: 0;
   }
   z-index: 1;
-  --item-size: 40px;
+  --icon-item-size: calc(var(--item-size) * 0.75);
+  > :global(.item) {
+    --item-size: var(--icon-item-size) !important;
+  }
 }
 
 .inlineIcon {
@@ -222,17 +225,17 @@ $toolbarHeight: 41px - 16px + 8px;
   align-items: flex-start;
 }
 .miniPerk {
-  border: none;
+  border-color: transparent;
 }
 .miniPerkContainer {
   position: relative;
   contain: layout paint style;
   box-sizing: border-box;
-  height: 16px;
-  width: 16px;
-  --item-size: 16px;
-  margin-right: 4px;
-  margin-top: 1px;
+  height: 18px;
+  width: 18px;
+  --item-size: 18px;
+  margin-right: 3px;
+  margin-left: -1px;
   flex-shrink: 0;
 }
 

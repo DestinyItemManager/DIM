@@ -99,8 +99,6 @@ export function DefItemIcon({
   );
   const modInfo = defs && getModCostInfo(itemDef, defs);
 
-  // TODO: give mods an elemental background!
-
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />

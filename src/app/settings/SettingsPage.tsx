@@ -82,12 +82,8 @@ const fakeWeapon = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return true;
-  },
-  isDestiny1() {
-    return false;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 2,
 };
 
 const fakeArmor = {
@@ -106,12 +102,8 @@ const fakeArmor = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return false;
-  },
-  isDestiny1() {
-    return true;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 1,
 };
 
 const languageOptions = mapToOptions({
