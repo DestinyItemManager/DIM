@@ -3,9 +3,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { getAllItems } from 'app/inventory/stores-helpers';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { makeDupeID } from 'app/search/search-filters/dupes';
 import { setSetting } from 'app/settings/actions';
@@ -33,7 +31,7 @@ import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
 
 interface StoreProps {
-  stores: DimStore[];
+  allItems: DimItem[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
 }
@@ -47,7 +45,7 @@ type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
   };
@@ -310,7 +308,7 @@ class Compare extends React.Component<Props, State> {
 
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
     else {
-      const allItems = getAllItems(this.props.stores);
+      const allItems = this.props.allItems;
       // comparisonSets is an array so that it has order, filled with {label, setOfItems} objects
       const comparisonSets = exampleItem.bucket.inArmor
         ? this.findSimilarArmors(allItems, additionalItems)

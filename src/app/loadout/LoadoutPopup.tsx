@@ -2,8 +2,9 @@ import { startFarming } from 'app/farming/actions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { getAllItems, getArtifactBonus } from 'app/inventory/stores-helpers';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -42,6 +43,7 @@ import {
 import { querySelector } from '../shell/selectors';
 import { deleteLoadout } from './actions';
 import {
+  gatherEngramsLoadout,
   itemLevelingLoadout,
   maxLightItemSet,
   maxLightLoadout,
@@ -82,14 +84,15 @@ interface StoreProps {
   hasClassified: boolean;
   buckets: InventoryBuckets;
   searchFilter: ItemFilter;
+  allItems: DimItem[];
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
   /** Does the user have an classified items? */
-  const hasClassifiedSelector = createSelector(storesSelector, (stores) =>
-    getAllItems(stores).some(
+  const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
+    allItems.some(
       (i) =>
         i.classified &&
         (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
@@ -123,6 +126,7 @@ function mapStateToProps() {
       stores: storesSelector(state),
       buckets: bucketsSelector(state)!,
       hasClassified: hasClassifiedSelector(state),
+      allItems: allItemsSelector(state),
     };
   };
 }
@@ -138,10 +142,11 @@ function LoadoutPopup({
   classTypeId,
   searchFilter,
   buckets,
+  allItems,
   dispatch,
 }: Props) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
-  const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore).equippable);
+  const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
   const artifactLight = getArtifactBonus(dimStore);
 
   const numPostmasterItems =
@@ -189,21 +194,21 @@ function LoadoutPopup({
 
   // A dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = (e) => {
-    const loadout = itemLevelingLoadout(stores, dimStore);
+    const loadout = itemLevelingLoadout(allItems, dimStore);
     onApplyLoadout(loadout, e);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   const makeMaxLightLoadout = (e) => {
-    const loadout = maxLightLoadout(stores, dimStore);
+    const loadout = maxLightLoadout(allItems, dimStore);
     onApplyLoadout(loadout, e);
   };
 
   // A dynamic loadout set up to level weapons and armor
-  const gatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
+  const applyGatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
     let loadout;
     try {
-      loadout = gatherEngramsLoadout(stores, options);
+      loadout = gatherEngramsLoadout(allItems, options);
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
       return;
@@ -226,7 +231,8 @@ function LoadoutPopup({
     }
     try {
       const loadout = randomLoadout(
-        stores,
+        dimStore,
+        allItems,
         weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
       );
       if (loadout) {
@@ -240,7 +246,7 @@ function LoadoutPopup({
 
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = (e) => {
-    const loadout = searchLoadout(stores, dimStore, searchFilter);
+    const loadout = searchLoadout(allItems, dimStore, searchFilter);
     onApplyLoadout(loadout, e);
   };
 
@@ -351,11 +357,11 @@ function LoadoutPopup({
 
         {dimStore.destinyVersion === 1 && (
           <li className="loadout-set">
-            <span onClick={(e) => gatherEngramsLoadout(e, { exotics: true })}>
+            <span onClick={(e) => applyGatherEngramsLoadout(e, { exotics: true })}>
               <AppIcon icon={engramIcon} />
               <span>{t('Loadouts.GatherEngrams')}</span>
             </span>
-            <span onClick={(e) => gatherEngramsLoadout(e, { exotics: false })}>
+            <span onClick={(e) => applyGatherEngramsLoadout(e, { exotics: false })}>
               <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
             </span>
           </li>

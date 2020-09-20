@@ -30,6 +30,13 @@ export const sortedStoresSelector = createSelector(
   (stores, sortStores) => sortStores(stores)
 );
 
+/**
+ * Get a flat list of all items.
+ */
+export const allItemsSelector = createSelector(storesSelector, (stores) =>
+  stores.flatMap((s) => s.items)
+);
+
 /** Have stores been loaded? */
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 

@@ -9,10 +9,8 @@ import SpecialtyModSlotIcon, {
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { classIcons } from 'app/inventory/StoreBucket';
-import { getAllItems } from 'app/inventory/stores-helpers';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState } from 'app/store/types';
@@ -144,7 +142,7 @@ const factorComboCategories = Object.keys(factorCombos);
 export function ItemTriage({ item }: { item: DimItem }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
-  const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
 
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
@@ -158,10 +156,10 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {
-      setNotableStats(getNotableStats(item, customTotalStatsByClass, stores));
+      setNotableStats(getNotableStats(item, customTotalStatsByClass, allItems));
     }
-    setItemFactors(getSimilarItems(item, stores));
-  }, [item, customTotalStatsByClass, stores]);
+    setItemFactors(getSimilarItems(item, allItems));
+  }, [item, customTotalStatsByClass, allItems]);
 
   // this lets us lay out the factor categories before we have their calculated numbers
   // useEffect fills those in later for us
@@ -257,9 +255,9 @@ export function ItemTriage({ item }: { item: DimItem }) {
  * keyed by item factor combination i.e. "arcwarlockopulent"
  * with values representing how many of that type you own
  */
-function collectRelevantItemFactors(exampleItem: DimItem, stores: DimStore[]) {
+function collectRelevantItemFactors(exampleItem: DimItem, allItems: DimItem[]) {
   const combinationCounts: { [key: string]: number } = {};
-  getAllItems(stores)
+  allItems
     .filter(
       (i) =>
         // compare only items with the same canonical bucket.
@@ -278,11 +276,12 @@ function collectRelevantItemFactors(exampleItem: DimItem, stores: DimStore[]) {
     });
   return combinationCounts;
 }
-function getSimilarItems(exampleItem: DimItem, stores: DimStore[]) {
+
+function getSimilarItems(exampleItem: DimItem, allItems: DimItem[]) {
   if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
     return [];
   }
-  const relevantFactors = collectRelevantItemFactors(exampleItem, stores);
+  const relevantFactors = collectRelevantItemFactors(exampleItem, allItems);
   return factorCombos[exampleItem.bucket.sort as factorComboCategory]
     .filter((factorCombo) => factorCombo.every((factor) => factor.runIf(exampleItem)))
     .map((factorCombo) => {
@@ -311,11 +310,11 @@ function getItemFactorComboDisplays(exampleItem: DimItem) {
 function collectRelevantStatMaxes(
   exampleItem: DimItem,
   customStatTotalHashes: number[],
-  stores: DimStore[]
+  allItems: DimItem[]
 ) {
   // highest values found in relevant items, keyed by stat hash
   const statMaxes: Record<number | string, number> = { custom: 0 };
-  getAllItems(stores)
+  allItems
     .filter(
       (i) =>
         // compare only items with the same canonical bucket.
@@ -358,10 +357,10 @@ const notabilityThreshold = 0.8;
 function getNotableStats(
   exampleItem: DimItem,
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
-  stores: DimStore[]
+  allItems: DimItem[]
 ) {
   const customStatTotalHashes = customTotalStatsByClass[exampleItem.classType] ?? [];
-  const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes, stores);
+  const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes, allItems);
 
   const customTotal =
     exampleItem.stats?.reduce(

@@ -1,9 +1,7 @@
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { getAllItems } from 'app/inventory/stores-helpers';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
@@ -30,7 +28,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   searchQuery: string;
-  stores: DimStore[];
+  allItems: DimItem[];
   buckets?: InventoryBuckets;
   searchFilter: ItemFilter;
 }
@@ -51,7 +49,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     searchQuery: querySelector(state),
     searchFilter: searchFilterSelector(state),
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     buckets: bucketsSelector(state),
   };
 }
@@ -63,7 +61,7 @@ function mapStateToProps(state: RootState): StoreProps {
  */
 function MainSearchBarActions({
   searchQuery,
-  stores,
+  allItems,
   buckets,
   searchFilter,
   bulkTagItems,
@@ -98,12 +96,11 @@ function MainSearchBarActions({
   const filteredItems = useMemo(
     () =>
       !onProgress && displayableBuckets.size
-        ? getAllItems(
-            stores,
+        ? allItems.filter(
             (item: DimItem) => displayableBuckets.has(item.bucket.hash) && searchFilter(item)
           )
         : emptyArray<DimItem>(),
-    [displayableBuckets, onProgress, searchFilter, stores]
+    [displayableBuckets, onProgress, searchFilter, allItems]
   );
 
   let isComparable = false;
