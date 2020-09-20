@@ -1,5 +1,11 @@
 @import '../variables.scss';
 
+$legendaryBg: #522f65;
+$exoticBg: #ceae33;
+$basicBg: #c3bcb4;
+$rareBg: #5076a3;
+$commonBg: #366f42;
+
 // The image within the overall item. Global because it's referenced by other styles.
 :global(.item-img) {
   display: block;
@@ -7,7 +13,6 @@
   height: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
-  contain: layout paint style;
 
   &:focus {
     outline: none;
@@ -17,28 +22,22 @@
   &:global(.transparent) {
     border-color: transparent;
   }
-}
 
-$legendaryBg: #522f65;
-$exoticBg: #ceae33;
-$basicBg: #c3bcb4;
-$rareBg: #5076a3;
-$commonBg: #366f42;
-
-.legendary {
-  background-color: $legendaryBg;
-}
-.exotic {
-  background-color: $exoticBg;
-}
-.basic {
-  background-color: $basicBg;
-}
-.rare {
-  background-color: $rareBg;
-}
-.common {
-  background-color: $commonBg;
+  &.legendary {
+    background-color: $legendaryBg;
+  }
+  &.exotic {
+    background-color: $exoticBg;
+  }
+  &.basic {
+    background-color: $basicBg;
+  }
+  &.rare {
+    background-color: $rareBg;
+  }
+  &.common {
+    background-color: $commonBg;
+  }
 }
 
 // Masterwork item image
@@ -100,19 +99,19 @@ $commonBg: #366f42;
     top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
     background: #444;
   }
-  .legendary &::before {
+  &.legendary::before {
     background: $legendaryBg;
   }
-  .exotic &::before {
+  &.exotic::before {
     background: $exoticBg;
   }
-  .basic &::before {
+  &.basic::before {
     background: $basicBg;
   }
-  .rare &::before {
+  &.rare::before {
     background: $rareBg;
   }
-  .common &::before {
+  &.common::before {
     background: $commonBg;
   }
 }

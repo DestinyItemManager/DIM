@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
@@ -38,6 +38,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.masterwork]: item.masterwork,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
+  const overlayStyles = item.iconOverlay && clsx(styles.iconOverlay, [itemTierStyles[item.tier]]);
 
   return (
     <>
@@ -48,14 +49,14 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         />
       )}
       {item.iconOverlay && (
-        <div className={clsx(styles.iconOverlay)}>
+        <div className={overlayStyles}>
           <BungieImage src={item.iconOverlay} />
         </div>
       )}
       {item.plug?.costElementIcon && (
         <>
           <div
-            style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
+            style={bungieBackgroundStyle(item.plug.costElementIcon)}
             className={styles.energyCostOverlay}
           />
           <svg viewBox="0 0 100 100" className={styles.energyCost}>
