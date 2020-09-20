@@ -1,10 +1,10 @@
 import { DestinyVersion, InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';

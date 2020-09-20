@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import {
   bucketsSelector,
   itemHashTagsSelector,
@@ -10,7 +11,6 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
-import { settingsSelector } from 'app/settings/reducer';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
 import { observeStore } from 'app/utils/redux-utils';
@@ -22,7 +22,7 @@ import { DimItem } from '../inventory/item-types';
 import { D1Store, DimStore } from '../inventory/store-types';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import * as actions from './basic-actions';
-import { farmingInterruptedSelector, farmingStoreSelector } from './reducer';
+import { farmingInterruptedSelector, farmingStoreSelector } from './selectors';
 
 // D1 Glimmer items
 const glimmerHashes = new Set([

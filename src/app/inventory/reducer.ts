@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
-import { AccountsAction } from '../accounts/reducer';
+import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';

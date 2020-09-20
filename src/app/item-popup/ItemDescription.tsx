@@ -3,7 +3,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
-import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import React from 'react';
 import { connect } from 'react-redux';

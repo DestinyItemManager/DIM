@@ -1,4 +1,4 @@
-import { settingsSelector } from './settings/reducer';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { observeStore } from './utils/redux-utils';
 
 function setCSSVariable(property: string, value: any) {

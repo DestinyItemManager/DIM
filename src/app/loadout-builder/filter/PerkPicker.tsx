@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
@@ -7,7 +8,6 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { settingsSelector } from 'app/settings/reducer';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

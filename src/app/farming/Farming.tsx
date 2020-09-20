@@ -1,5 +1,5 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useRef } from 'react';
@@ -9,7 +9,7 @@ import { DimStore } from '../inventory/store-types';
 import { setSetting } from '../settings/actions';
 import { stopFarming } from './actions';
 import './farming.scss';
-import { farmingStoreSelector } from './reducer';
+import { farmingStoreSelector } from './selectors';
 
 interface StoreProps {
   makeRoomForItems: boolean;

@@ -1,14 +1,15 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { setSetting } from 'app/settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
 import { settingsReady } from 'app/settings/settings';
 import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
 import { ThunkResult } from 'app/store/types';
 import { get } from 'idb-keyval';
 import _ from 'lodash';
 import { loadWishLists, touchWishLists } from './actions';
-import { wishListsSelector, WishListsState } from './reducer';
+import type { WishListsState } from './reducer';
+import { wishListsSelector } from './selectors';
 import { WishListAndInfo } from './types';
 import { toWishList } from './wishlist-file';
 

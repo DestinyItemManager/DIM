@@ -1,8 +1,8 @@
 import { CompareService } from 'app/compare/compare.service';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
-import { settingsSelector } from 'app/settings/reducer';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
