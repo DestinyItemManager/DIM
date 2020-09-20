@@ -352,8 +352,7 @@
     "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
@@ -653,6 +652,7 @@
       "Icon": "Icon",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
+      "Location": "Location",
       "MasterworkStat": "Masterwork Stat",
       "MasterworkTier": "Masterwork Tier",
       "ModSlot": "Mod Slot",

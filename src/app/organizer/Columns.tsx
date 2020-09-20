@@ -14,9 +14,11 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { statAllowList } from 'app/inventory/store/stats';
+import { getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
@@ -33,6 +35,7 @@ import {
   thumbsDownIcon,
   thumbsUpIcon,
 } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import {
   getItemDamageShortName,
@@ -53,6 +56,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styles from './ItemTable.m.scss';
 import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 
@@ -492,6 +496,12 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
       },
     {
+      id: 'location',
+      header: t('Organizer.Columns.Location'),
+      value: (item) => item.owner,
+      cell: (_, item) => <StoreLocation storeId={item.owner} />,
+    },
+    {
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
       value: () => 0,
@@ -641,5 +651,15 @@ function D1PerksCell({ item }: { item: D1Item }) {
         </div>
       ))}
     </>
+  );
+}
+
+function StoreLocation({ storeId }: { storeId: string }) {
+  const store = useSelector((state: RootState) => getStore(storesSelector(state), storeId)!);
+
+  return (
+    <div className={styles.locationCell}>
+      <img src={store.icon} width="16" height="16" alt="" /> {store.name}
+    </div>
   );
 }

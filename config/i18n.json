@@ -674,6 +674,7 @@
       "Element": "Element",
       "Damage": "Damage",
       "Energy": "Energy",
+      "Location": "Location",
       "Tag": "Tag",
       "WishList": "Wish List",
       "Reacquirable": "Reacquirable",

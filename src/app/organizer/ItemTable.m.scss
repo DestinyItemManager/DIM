@@ -237,6 +237,16 @@ $toolbarHeight: 41px - 16px + 8px;
   }
 }
 
+.locationCell {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  white-space: nowrap;
+  img {
+    margin-right: 4px;
+  }
+}
+
 $modslotSize: 30px;
 .modslot {
   display: flex;
