@@ -58,7 +58,13 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
             className={styles.energyCostOverlay}
           />
-          <div className={styles.energyCost}>{item.plug.energyCost}</div>
+          <svg viewBox="0 0 100 100" className={styles.energyCost}>
+            <svg x="100%" y="0" width="0" height="0" overflow="visible">
+              <text x="-13" y="26" fontSize="18px" textAnchor="end">
+                {item.plug.energyCost}
+              </text>
+            </svg>
+          </svg>
         </>
       )}
     </>
@@ -93,6 +99,8 @@ export function DefItemIcon({
   );
   const modInfo = defs && getModCostInfo(itemDef, defs);
 
+  // TODO: give mods an elemental background!
+
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
@@ -102,7 +110,13 @@ export function DefItemIcon({
             style={{ backgroundImage: `url("${bungieNetPath(modInfo.energyCostElementOverlay)}")` }}
             className={styles.energyCostOverlay}
           />
-          <div className={styles.energyCost}>{modInfo.energyCost}</div>
+          <svg viewBox="0 0 100 100" className={styles.energyCost}>
+            <svg x="100%" y="0" width="0" height="0" overflow="visible">
+              <text x="-13" y="26" fontSize="18px" textAnchor="end">
+                {modInfo.energyCost}
+              </text>
+            </svg>
+          </svg>
         </>
       )}
     </>
