@@ -19,6 +19,8 @@
 * Improved search performance.
 * Items in collections now show their power cap.
 * Character stats now scroll with items on mobile, instead of always being visible. Max power is still shown in the character header.
+* Added "Location" column to the Organizer to show what character the item is on.
+* When "Base Stats" is checked in the Compare tool, clicking on stats will sort by base stat, not actual stat.
 
 ### Beta Only
 
