@@ -3,7 +3,6 @@
 interface CssExports {
   'build': string;
   'existingLoadout': string;
-  'existingLoadoutContainer': string;
   'header': string;
   'items': string;
   'loadoutName': string;

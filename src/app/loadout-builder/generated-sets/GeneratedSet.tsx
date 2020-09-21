@@ -69,14 +69,22 @@ function GeneratedSet({
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
-        <SetStats
-          defs={defs}
-          stats={set.stats}
-          items={set.armor.map((items) => items[0])}
-          maxPower={set.maxPower}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-        />
+        <div>
+          <SetStats
+            defs={defs}
+            stats={set.stats}
+            items={set.armor.map((items) => items[0])}
+            maxPower={set.maxPower}
+            statOrder={statOrder}
+            enabledStats={enabledStats}
+          />
+          {existingLoadout ? (
+            <span className={styles.existingLoadout}>
+              {t('LoadoutBuilder.ExistingLoadout')}:{' '}
+              <span className={styles.loadoutName}>{existingLoadout.name}</span>
+            </span>
+          ) : null}
+        </div>
         <GeneratedSetButtons
           set={set}
           store={selectedStore!}
@@ -85,14 +93,6 @@ function GeneratedSet({
           onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
         />
       </div>
-      {existingLoadout ? (
-        <div className={styles.existingLoadoutContainer}>
-          <span className={styles.existingLoadout}>
-            {t('LoadoutBuilder.ExistingLoadout')}:{' '}
-            <span className={styles.loadoutName}>{existingLoadout.name}</span>
-          </span>
-        </div>
-      ) : null}
       <div className={styles.items}>
         {set.armor.map((items, index) => (
           <GeneratedSetItem
