@@ -293,6 +293,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
+  // In PapaParse, the keys of the first objects are used as columns. So if a
+  // key is omitted from the first object, it won't show up.
+  // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
@@ -305,12 +308,12 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Equippable: equippable(item),
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.powerCap) {
+    if (item.destinyVersion === 2) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.masterworkInfo) {
+    if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo.tier
+      row['Masterwork Tier'] = item.masterworkInfo?.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
@@ -318,7 +321,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
-    if (item.energy) {
+    if (item.destinyVersion === 2) {
       row['Armor2.0'] = Boolean(item.energy);
     }
     row.Locked = item.locked;
@@ -398,6 +401,9 @@ function downloadWeapons(
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
+  // In PapaParse, the keys of the first objects are used as columns. So if a
+  // key is omitted from the first object, it won't show up.
+  // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
@@ -411,12 +417,12 @@ function downloadWeapons(
       Element: item.element?.displayProperties.name,
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
     };
-    if (item.powerCap) {
+    if (item.destinyVersion === 2) {
       row['Power Limit'] = item.powerCap;
     }
-    if (item.masterworkInfo) {
+    if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo.tier
+      row['Masterwork Tier'] = item.masterworkInfo?.tier
         ? Math.min(10, item.masterworkInfo.tier)
         : undefined;
     }
@@ -524,5 +530,6 @@ function downloadWeapons(
 
     return row;
   });
+
   downloadCsv('destinyWeapons', Papa.unparse(data));
 }
