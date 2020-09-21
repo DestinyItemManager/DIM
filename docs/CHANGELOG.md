@@ -1,5 +1,7 @@
 ## Next
 
+## 6.31.0 <span className="changelog-date">(2020-09-20)</span>
+
 * Added a link to the DIM User Guide to the hamburger menu.
 * "Clear new items" has been moved into the Settings page instead of being a floating button. The "X" keyboard shortcut no longer clears new items.
 * Linear Fusion rifles are technically Fusion Rifles, but they won't show up in Organizer or in searches under Fusion Rifle anymore.
