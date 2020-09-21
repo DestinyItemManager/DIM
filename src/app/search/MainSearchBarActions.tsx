@@ -4,7 +4,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getAllItems } from 'app/inventory/stores-helpers';
-import { querySelector } from 'app/shell/reducer';
+import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
 import React, { useEffect, useMemo, useState } from 'react';

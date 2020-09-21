@@ -1,11 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { settingsSelector } from 'app/settings/reducer';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';

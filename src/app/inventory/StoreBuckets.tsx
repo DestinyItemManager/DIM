@@ -4,7 +4,7 @@ import React from 'react';
 import { storeBackgroundColor } from '../shell/filters';
 import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { DimStore, DimVault } from './store-types';
+import { DimStore } from './store-types';
 import StoreBucket from './StoreBucket';
 import { findItemsByBucket } from './stores-helpers';
 
@@ -17,7 +17,7 @@ export function StoreBuckets({
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
-  vault: DimVault;
+  vault: DimStore;
   currentStore: DimStore;
 }) {
   let content: React.ReactNode;

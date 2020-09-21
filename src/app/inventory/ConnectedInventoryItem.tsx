@@ -1,9 +1,9 @@
-import { settingsSelector } from 'app/settings/reducer';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { searchFilterSelector } from '../search/search-filter';
-import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
+import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';

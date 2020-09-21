@@ -8,7 +8,7 @@ import { percent } from '../shell/filters';
 import styles from './CharacterHeaderXP.m.scss';
 
 function getLevelBar(store: D1Store) {
-  const prestige = store.progression?.progressions.find(
+  const prestige = store.progressions.find(
     (p) => p.progressionHash === D1ProgressionHashes.Prestige
   );
   let levelBar = store?.percentToNextLevel ?? 0;

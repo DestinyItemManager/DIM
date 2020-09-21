@@ -16,7 +16,7 @@ import {
   DimSocket,
   DimSocketCategory,
 } from '../inventory/item-types';
-import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/reducer';
+import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import Plug from './Plug';

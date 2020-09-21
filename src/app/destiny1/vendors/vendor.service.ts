@@ -1,7 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { amountOfItem, getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
@@ -9,7 +9,7 @@ import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { D1Item } from '../../inventory/item-types';
-import { D1Store } from '../../inventory/store-types';
+import { AccountCurrency, D1Store } from '../../inventory/store-types';
 import { processItems } from '../../inventory/store/d1-item-factory';
 import { loadingTracker } from '../../shell/loading-tracker';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -225,7 +225,7 @@ async function loadVendorForCharacter(
  * Get this character's level for the given faction.
  */
 function factionLevel(store: D1Store, factionHash: number) {
-  const rep = store.progression?.progressions.find((rep) => rep.faction?.hash === factionHash);
+  const rep = store.progressions.find((rep) => rep.faction?.hash === factionHash);
   return rep?.level || 0;
 }
 
@@ -436,7 +436,11 @@ function isSaleItemUnlocked(saleItem) {
  * have on all characters, limited to only currencies required to
  * buy items from the provided vendors.
  */
-export function countCurrencies(stores: D1Store[], vendors: { [vendorHash: number]: Vendor }) {
+export function countCurrencies(
+  stores: D1Store[],
+  vendors: { [vendorHash: number]: Vendor },
+  currencies: AccountCurrency[]
+) {
   if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
     return {};
   }
@@ -444,25 +448,24 @@ export function countCurrencies(stores: D1Store[], vendors: { [vendorHash: numbe
   const categories = Object.values(vendors).flatMap((v) => v.categories);
   const saleItems = categories.flatMap((c) => c.saleItems);
   const costs = saleItems.flatMap((i) => i.costs);
-  const currencies = costs.map((c) => c.currency.itemHash);
 
   const totalCoins: { [currencyHash: number]: number } = {};
-  currencies.forEach((currencyHash) => {
-    // Legendary marks and glimmer are special cases
-    switch (currencyHash) {
-      case 2534352370:
-      case 3159615086:
-      case 2749350776:
-        totalCoins[currencyHash] = getVault(stores)!.currencies.find(
-          (c) => c.itemHash === currencyHash
-        )!.quantity;
-        break;
-      default:
-        totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-          amountOfItem(store, { hash: currencyHash })
-        );
-        break;
-    }
-  });
+  costs
+    .map((c) => c.currency.itemHash)
+    .forEach((currencyHash) => {
+      // Legendary marks and glimmer are special cases
+      switch (currencyHash) {
+        case 2534352370:
+        case 3159615086:
+        case 2749350776:
+          totalCoins[currencyHash] = currencies.find((c) => c.itemHash === currencyHash)!.quantity;
+          break;
+        default:
+          totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+            amountOfItem(store, { hash: currencyHash })
+          );
+          break;
+      }
+    });
   return totalCoins;
 }

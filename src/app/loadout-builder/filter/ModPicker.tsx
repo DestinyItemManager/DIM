@@ -1,5 +1,6 @@
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, profileResponseSelector, storesSelector } from 'app/inventory/selectors';
@@ -7,7 +8,6 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
@@ -191,7 +191,9 @@ function ModPicker({
   const onModRemoved = useCallback(
     (mod: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[mod.category].findIndex((li) => li.modDef.hash === mod.modDef.hash);
+        const firstIndex = oldState[mod.category].findIndex(
+          (li) => li.modDef.hash === mod.modDef.hash
+        );
 
         if (firstIndex >= 0) {
           const newState = [...oldState[mod.category]];

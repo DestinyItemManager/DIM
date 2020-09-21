@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
@@ -8,7 +9,6 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
-import { settingsSelector } from 'app/settings/reducer';
 import { compareBy } from 'app/utils/comparators';
 import {
   DestinyClass,

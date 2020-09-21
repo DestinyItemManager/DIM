@@ -305,7 +305,6 @@ function makeItem(
     infusionFuel: false,
     perks: null,
     masterworkInfo: null,
-    flavorObjective: null,
     infusionQuality: null,
     canPullFromPostmaster: false,
     uniqueStack: false,
@@ -516,30 +515,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       }
     }
 
-    // Generate a hash that identifies the weapons permutation and selected perks.
-    // This is used by the Weapon Reviewing system.
-    const generateNodeDtrRoll = (node, talentNodeSelected): string => {
-      let dtrRoll = node.nodeHash.toString(16);
-
-      if (dtrRoll.length > 1) {
-        dtrRoll += '.';
-      }
-
-      dtrRoll += node.stepIndex.toString(16);
-
-      if (node.isActivated) {
-        dtrRoll += 'o';
-      }
-
-      if (talentNodeSelected.perkHashes?.length) {
-        dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
-      }
-
-      return dtrRoll;
-    };
-
-    const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
-
     // hacky way to determine if the node is a weapon ornament
     let ornamentComplete = false;
     if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
@@ -572,9 +547,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       unlocked,
       // Some nodes don't show up in the grid, like purchased ascend nodes
       hidden: node.hidden,
-
-      dtrHash,
-      dtrRoll,
 
       // Whether (and in which order) this perk should be
       // "featured" on an abbreviated info panel, as in the
@@ -633,8 +605,6 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     hasAscendNode: Boolean(ascendNode),
     ascended: Boolean(ascendNode?.activated),
     infusable: gridNodes.some((n) => n.hash === 1270552711),
-    dtrPerks: _.compact(gridNodes.map((i) => i.dtrHash)).join(';'),
-    dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
     complete:
       totalXPRequired <= totalXP &&
       _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),

@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { characterOrderSelector } from 'app/settings/character-sort';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -17,7 +18,7 @@ import { addIcon, AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from 
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { moveItemTo } from './move-item';
-import { isPhonePortraitSelector, sortedStoresSelector } from './selectors';
+import { sortedStoresSelector } from './selectors';
 import { DimStore } from './store-types';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';

@@ -1,16 +1,11 @@
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
-import {
-  DestinyCharacterComponent,
-  DestinyClass,
-  DestinyGender,
-  DestinyItemComponent,
-} from 'bungie-api-ts/destiny2';
+import { DestinyCharacterComponent, DestinyClass, DestinyGender } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { DimCharacterStat, DimStore, DimVault } from '../store-types';
+import { DimCharacterStat, DimStore } from '../store-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -60,22 +55,10 @@ export function makeCharacter(
     isVault: false,
     color: character.emblemColor,
     items: [],
-    progression: {
-      progressions: [],
-    },
   };
 }
 
-export function makeVault(
-  defs: D2ManifestDefinitions,
-  profileCurrencies: DestinyItemComponent[]
-): DimVault {
-  const currencies = profileCurrencies.map((c) => ({
-    itemHash: c.itemHash,
-    quantity: c.quantity,
-    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
-  }));
-
+export function makeVault(): DimStore {
   return {
     destinyVersion: 2,
     id: 'vault',
@@ -88,7 +71,6 @@ export function makeVault(
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
-    currencies,
     isVault: true,
     color: { red: 49, green: 50, blue: 51, alpha: 1 },
     level: 0,
@@ -97,9 +79,6 @@ export function makeVault(
     gender: '',
     genderRace: '',
     stats: [],
-    progression: {
-      progressions: [],
-    },
   };
 }
 

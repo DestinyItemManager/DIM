@@ -12,7 +12,7 @@ import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { bucketsSelector, storesSelector } from './selectors';
-import { D1Store, DimVault } from './store-types';
+import { D1Store } from './store-types';
 import { processItems } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
@@ -43,25 +43,20 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
         const lastPlayedDate = findLastPlayedDate(rawStores);
         const buckets = bucketsSelector(getState())!;
 
-        // Currencies object gets mutated by processStore
-        const currencies: DimVault['currencies'] = [];
-
         const stores = await Promise.all(
-          _.compact(
-            (rawStores as any[]).map((raw) =>
-              processStore(raw, defs, buckets, currencies, lastPlayedDate)
-            )
-          )
+          _.compact(rawStores.map((raw) => processStore(raw, defs, buckets, lastPlayedDate)))
         );
 
         dispatch(cleanInfos(stores));
+
+        const currencies = processCurrencies(rawStores, defs);
 
         // Let our styling know how many characters there are
         document
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
 
-        dispatch(update({ stores }));
+        dispatch(update({ stores, currencies }));
 
         return stores;
       } catch (e) {
@@ -85,6 +80,27 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
   };
 }
 
+function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
+  try {
+    return rawStores[0].character.base.inventory.currencies.map((c) => {
+      const itemDef = defs.InventoryItem.get(c.itemHash);
+      return {
+        itemHash: c.itemHash,
+        quantity: c.value,
+        displayProperties: {
+          name: itemDef.itemName,
+          description: itemDef.itemDescription,
+          icon: itemDef.icon,
+          hasIcon: Boolean(itemDef.icon),
+        },
+      };
+    });
+  } catch (e) {
+    console.log('error', e);
+  }
+  return [];
+}
+
 /**
  * Process a single store from its raw form to a DIM store, with all the items.
  */
@@ -92,7 +108,6 @@ function processStore(
   raw,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
-  currencies: DimVault['currencies'],
   lastPlayedDate: Date
 ) {
   if (!raw) {
@@ -102,11 +117,11 @@ function processStore(
   let store: D1Store;
   let rawItems: any[];
   if (raw.id === 'vault') {
-    const result = makeVault(raw, currencies);
+    const result = makeVault(raw);
     store = result.store;
     rawItems = result.items;
   } else {
-    const result = makeCharacter(raw, defs, lastPlayedDate, currencies);
+    const result = makeCharacter(raw, defs, lastPlayedDate);
     store = result.store;
     rawItems = result.items;
   }

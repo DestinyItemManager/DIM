@@ -1,15 +1,15 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
-import { loadoutsSelector } from 'app/loadout/reducer';
+import { loadoutsSelector } from 'app/loadout/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { settingsSelector } from 'app/settings/reducer';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

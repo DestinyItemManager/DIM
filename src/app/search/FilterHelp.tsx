@@ -6,7 +6,8 @@ import React, { useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
-import { generateSuggestionsForFilter, SearchConfig, searchConfigSelector } from './search-config';
+import { SearchConfig, searchConfigSelector } from './search-config';
+import { generateSuggestionsForFilter } from './search-utils';
 
 interface StoreProps {
   searchConfig: SearchConfig;
@@ -97,9 +98,10 @@ export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
+  const additionalSuggestions = filter.suggestionsGenerator?.() || [];
   const suggestions = Array.from(
     new Set(
-      generateSuggestionsForFilter(filter).filter(
+      [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(
         (s) =>
           !s.startsWith('not:') &&
           (filter.format === 'freeform' ||

@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { querySelector, searchQueryVersionSelector } from 'app/shell/reducer';
+import { querySelector, searchQueryVersionSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';

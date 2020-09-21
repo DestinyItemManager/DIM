@@ -1,6 +1,6 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { observeStore } from 'app/utils/redux-utils';
 import i18next from 'i18next';
-import { settingsSelector } from './reducer';
 
 export function watchLanguageChanges() {
   return observeStore(

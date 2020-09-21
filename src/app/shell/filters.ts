@@ -114,6 +114,15 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || item.primStat?.value)
   ),
+  // This only sorts by D1 item quality
+  rating: reverseComparator(
+    compareBy((item: DimItem & { quality: { min: number } }) => {
+      if (item.quality?.min) {
+        return item.quality.min;
+      }
+      return undefined;
+    })
+  ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
@@ -212,30 +221,6 @@ export function getColor(value: number, property = 'background-color') {
   }
   return {
     [property]: `hsla(${color},65%,50%, 1)`,
-  };
-}
-
-export function dtrRatingColor(value: number, property = 'color') {
-  if (!value) {
-    return {};
-  }
-
-  let color;
-  if (value < 2) {
-    color = 'hsl(0,45%,45%)';
-  } else if (value <= 3) {
-    color = 'hsl(15,65%,40%)';
-  } else if (value <= 4) {
-    color = 'hsl(30,75%,45%)';
-  } else if (value <= 4.4) {
-    color = 'hsl(60,100%,30%)';
-  } else if (value <= 4.8) {
-    color = 'hsl(120,65%,40%)';
-  } else if (value >= 4.9) {
-    color = 'hsl(190,90%,45%)';
-  }
-  return {
-    [property]: color,
   };
 }
 

@@ -4,7 +4,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { D1Store, D1Vault, DimStore, DimVault } from '../store-types';
+import { D1Progression, D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
@@ -26,35 +26,12 @@ const progressionMeta = {
 export function makeCharacter(
   raw,
   defs: D1ManifestDefinitions,
-  mostRecentLastPlayed: Date,
-  currencies: DimVault['currencies']
+  mostRecentLastPlayed: Date
 ): {
   store: D1Store;
   items: any[];
 } {
   const character = raw.character.base;
-  if (!currencies.length) {
-    try {
-      currencies.push(
-        ...character.inventory.currencies.map((c) => {
-          const itemDef = defs.InventoryItem.get(c.itemHash);
-          return {
-            itemHash: c.itemHash,
-            quantity: c.value,
-            displayProperties: {
-              name: itemDef.itemName,
-              description: itemDef.itemDescription,
-              icon: itemDef.icon,
-              hasIcon: Boolean(itemDef.icon),
-            },
-          };
-        })
-      );
-    } catch (e) {
-      console.log('error', e);
-    }
-  }
-
   const race = defs.Race[character.characterBase.raceHash];
   let genderRace = '';
   let className = '';
@@ -73,6 +50,19 @@ export function makeCharacter(
   }
 
   const lastPlayed = new Date(character.characterBase.dateLastPlayed);
+
+  const progressions: D1Progression[] = raw.character.progression?.progressions ?? [];
+  for (const prog of progressions) {
+    Object.assign(
+      prog,
+      defs.Progression.get(prog.progressionHash),
+      progressionMeta[prog.progressionHash]
+    );
+    const faction = _.find(defs.Faction, (f) => f.progressionHash === prog.progressionHash);
+    if (faction) {
+      prog.faction = faction;
+    }
+  }
 
   const store: D1Store = {
     destinyVersion: 1,
@@ -94,25 +84,11 @@ export function makeCharacter(
     genderRace,
     genderName,
     percentToNextLevel: character.percentToNextLevel / 100,
-    progression: raw.character.progression,
+    progressions,
     advisors: raw.character.advisors,
     isVault: false,
     items: [],
   };
-
-  if (store.progression) {
-    store.progression.progressions.forEach((prog) => {
-      Object.assign(
-        prog,
-        defs.Progression.get(prog.progressionHash),
-        progressionMeta[prog.progressionHash]
-      );
-      const faction = _.find(defs.Faction, (f) => f.progressionHash === prog.progressionHash);
-      if (faction) {
-        prog.faction = faction;
-      }
-    });
-  }
 
   let items: any[] = [];
   _.forIn(raw.data.buckets, (bucket: any) => {
@@ -142,13 +118,12 @@ export function makeCharacter(
 }
 
 export function makeVault(
-  raw,
-  currencies: DimVault['currencies']
+  raw
 ): {
-  store: D1Vault;
+  store: D1Store;
   items: any[];
 } {
-  const store: D1Vault = {
+  const store: D1Store = {
     destinyVersion: 1,
     id: 'vault',
     name: t('Bucket.Vault'),
@@ -160,11 +135,8 @@ export function makeVault(
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
-    currencies,
     isVault: true,
-    progression: {
-      progressions: [],
-    },
+    progressions: [],
     advisors: {},
     level: 0,
     percentToNextLevel: 0,

@@ -191,6 +191,7 @@
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -352,8 +353,7 @@
     "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
@@ -653,6 +653,7 @@
       "Icon": "Icon",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
+      "Location": "Location",
       "MasterworkStat": "Masterwork Stat",
       "MasterworkTier": "Masterwork Tier",
       "ModSlot": "Mod Slot",
@@ -766,7 +767,7 @@
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
-    "SortByRating": "Community Rating or Armor Quality",
+    "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",

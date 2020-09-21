@@ -1,5 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -32,7 +33,6 @@ import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { Settings } from './initial-settings';
 import { itemSortOrder } from './item-sort';
-import { settingsSelector } from './reducer';
 import Select, { listToOptions, mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -66,8 +66,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
-  dtrRating: 4.9,
-  dtrRatingCount: 100,
   element: {
     displayProperties: {
       icon: '/img/destiny_content/damage_types/destiny2/thermal.png',

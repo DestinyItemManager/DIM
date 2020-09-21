@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/settings/reducer';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';

@@ -1,6 +1,6 @@
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
-import { DimStore, DimVault } from 'app/inventory/store-types';
+import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -44,7 +44,7 @@ interface VaultCounts {
  * buckets are, for display. We could calculate this straight from the profile, but we want to be able to recompute it
  * when items move without reloading the profile.
  */
-function computeVaultCounts(activeStore: DimStore, vault: DimVault, buckets: InventoryBuckets) {
+function computeVaultCounts(activeStore: DimStore, vault: DimStore, buckets: InventoryBuckets) {
   const vaultCounts: VaultCounts = {};
 
   for (const bucket of Object.values(buckets.byType)) {

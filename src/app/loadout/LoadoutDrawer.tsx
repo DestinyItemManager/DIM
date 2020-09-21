@@ -33,7 +33,7 @@ import { getItemsFromLoadoutItems } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import { loadoutsSelector } from './reducer';
+import { loadoutsSelector } from './selectors';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
