@@ -12,7 +12,8 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
-import { searchConfigSelector, validateQuery } from 'app/search/search-config';
+import { searchConfigSelector } from 'app/search/search-config';
+import { validateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { clearWishLists } from 'app/wishlists/actions';

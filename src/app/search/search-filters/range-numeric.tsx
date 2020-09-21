@@ -1,10 +1,11 @@
 import { tl } from 'app/i18next-t';
-import { getItemYear } from 'app/utils/item-utils';
+import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
+import { generateSuggestionsForFilter } from '../search-utils';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 
-export function rangeStringToComparator(rangeString: string) {
+export function rangeStringToComparator(rangeString?: string) {
   if (!rangeString) {
     throw new Error('Missing range comparison');
   }
@@ -79,6 +80,33 @@ const simpleRangeFilters: FilterDefinition[] = [
       return (item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         compareTo(item.powerCap ?? 99999999);
+    },
+  },
+  {
+    keywords: 'kills',
+    description: tl('Filter.MasterworkKills'),
+    format: 'range',
+    destinyVersion: 2,
+    suggestions: ['pve', 'pvp'],
+    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'kills', format: 'range'}),
+    filter: ({ filterValue }) => {
+        const parts = filterValue.split(':');
+        const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
+
+        if (shouldntExist) {
+          throw new Error('Too many filter parameters.');
+        }
+
+        const numberComparisonFunction = rangeStringToComparator(count);
+        return (item) => {
+          const killTrackerInfo = getItemKillTrackerInfo(item);
+          return Boolean(
+            count &&
+            killTrackerInfo &&
+              (!activityType || activityType === killTrackerInfo.type) &&
+              numberComparisonFunction(killTrackerInfo.count)
+          );
+        }
     },
   },
 ];
