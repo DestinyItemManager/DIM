@@ -17,12 +17,22 @@
   justify-content: space-between;
   padding-bottom: 8px;
   align-items: center;
+  min-height: 50px;
 
   img {
     vertical-align: middle;
     height: 16px;
     width: 16px;
   }
+}
+
+.existing-loadout {
+  margin: 0;
+  color: #e8a534;
+}
+
+.loadout-name {
+  font-weight: bold;
 }
 
 .items {

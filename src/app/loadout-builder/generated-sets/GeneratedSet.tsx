@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import React, { Dispatch } from 'react';
@@ -61,17 +62,29 @@ function GeneratedSet({
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
 
+  const existingLoadout = loadouts.find((loadout) =>
+    set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
+  );
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
-        <SetStats
-          defs={defs}
-          stats={set.stats}
-          items={set.armor.map((items) => items[0])}
-          maxPower={set.maxPower}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-        />
+        <div>
+          <SetStats
+            defs={defs}
+            stats={set.stats}
+            items={set.armor.map((items) => items[0])}
+            maxPower={set.maxPower}
+            statOrder={statOrder}
+            enabledStats={enabledStats}
+          />
+          {existingLoadout ? (
+            <span className={styles.existingLoadout}>
+              {t('LoadoutBuilder.ExistingLoadout')}:{' '}
+              <span className={styles.loadoutName}>{existingLoadout.name}</span>
+            </span>
+          ) : null}
+        </div>
         <GeneratedSetButtons
           set={set}
           store={selectedStore!}
