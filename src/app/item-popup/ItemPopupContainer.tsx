@@ -1,12 +1,5 @@
-import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
-import arrow from '@popperjs/core/lib/modifiers/arrow';
-import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import offset from '@popperjs/core/lib/modifiers/offset';
-import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import { Instance, Options, Padding, popperGenerator } from '@popperjs/core/lib/popper-lite';
 import { settingsSelector } from 'app/dim-api/selectors';
+import { usePopper } from 'app/dim-ui/usePopper';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
@@ -56,63 +49,6 @@ type DispatchProps = typeof mapDispatchToProps;
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
-/** Makes a custom popper that doesn't have the event listeners modifier */
-const createPopper = popperGenerator({
-  defaultModifiers: [
-    popperOffsets,
-    offset,
-    computeStyles,
-    applyStyles,
-    flip,
-    preventOverflow,
-    arrow,
-  ],
-});
-
-const popperOptions = (boundarySelector: string | undefined): Partial<Options> => {
-  const headerHeight = document.getElementById('header')!.clientHeight;
-  const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-  const padding: Padding = {
-    left: 0,
-    top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
-    right: 0,
-    bottom: 0,
-  };
-  return {
-    placement: 'auto',
-    modifiers: [
-      {
-        name: 'preventOverflow',
-        options: {
-          priority: ['bottom', 'top', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'flip',
-        options: {
-          behavior: ['top', 'bottom', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'offset',
-        options: {
-          offset: [0, 5],
-        },
-      },
-      {
-        name: 'arrow',
-        options: {
-          element: '.' + styles.arrow,
-        },
-      },
-    ],
-  };
-};
-
 const tierClasses: { [key in DimItem['tier']]: string } = {
   Exotic: styles.exotic,
   Legendary: styles.legendary,
@@ -138,12 +74,9 @@ function ItemPopupContainer({
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const [currentItem, setCurrentItem] = useState<{
     item: DimItem;
-    element?: Element;
+    element?: HTMLElement;
     extraInfo?: ItemPopupExtraInfo;
   }>();
-  const popper = useRef<Instance>();
-  const popupRef = useRef<HTMLDivElement>(null);
-
   const onTabChanged = (newTab: ItemPopupTab) => {
     if (newTab !== tab) {
       setTab(newTab);
@@ -151,28 +84,6 @@ function ItemPopupContainer({
   };
 
   const onClose = () => setCurrentItem(undefined);
-
-  // Reposition the popup as it is shown or if its size changes
-  const reposition = () => {
-    if (currentItem?.element && popupRef.current) {
-      if (popper.current) {
-        popper.current.update();
-      } else {
-        const options = popperOptions(boundarySelector);
-
-        popper.current = createPopper(currentItem.element, popupRef.current, options);
-        popper.current.update();
-        setTimeout(() => popper.current?.update(), 0); // helps fix arrow position
-      }
-    }
-  };
-
-  const clearPopper = () => {
-    if (popper) {
-      popper.current?.destroy();
-      popper.current = undefined;
-    }
-  };
 
   const toggleItemDetails = () => {
     setSetting('itemDetails', !itemDetails);
@@ -183,8 +94,6 @@ function ItemPopupContainer({
       if (!item || item === currentItem?.item) {
         onClose();
       } else {
-        clearPopper();
-
         setCurrentItem({
           item,
           element,
@@ -203,8 +112,12 @@ function ItemPopupContainer({
     onClose();
   }, [pathname]);
 
-  useEffect(() => {
-    reposition();
+  const popupRef = useRef<HTMLDivElement>(null);
+  usePopper({
+    contents: popupRef,
+    reference: { current: currentItem?.element || null },
+    boundarySelector,
+    arrowClassName: styles.arrow,
   });
 
   useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
