@@ -1,5 +1,7 @@
 ## Next
 
+## 6.31.1 <span className="changelog-date">(2020-09-21)</span>
+
 * Loadout Optimizer highlights loadouts you've already saved.
 * Add new searches `kills:`, `kills:pvp:`, and `kills:pve:` for Masterwork kill trackers.
 * Fixed: "Source" was not being set for all items.
