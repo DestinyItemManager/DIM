@@ -1,3 +1,4 @@
+import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { queueAction } from 'app/inventory/action-queue';
 import { updateCharacters } from 'app/inventory/d2-stores';
@@ -93,6 +94,7 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
 
 function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): ThunkResult<Scope> {
   return async (dispatch, getState) => {
+    dispatch(interruptFarming());
     const getStores = () => storesSelector(getState());
     if (allowUndo && !store.isVault) {
       dispatch(
@@ -232,6 +234,7 @@ function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): T
       await dispatch(clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems));
     }
 
+    dispatch(resumeFarming());
     return scope;
   };
 }
