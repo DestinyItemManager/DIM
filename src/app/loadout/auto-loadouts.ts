@@ -1,5 +1,4 @@
 import { t } from 'app/i18next-t';
-import { getAllItems, getCurrentStore } from 'app/inventory/stores-helpers';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -14,9 +13,8 @@ import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from
 /**
  *  A dynamic loadout set up to level weapons and armor
  */
-export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadout {
-  const applicableItems = getAllItems(
-    stores,
+export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loadout {
+  const applicableItems = allItems.filter(
     (i) =>
       itemCanBeEquippedBy(i, store) &&
       i.talentGrid &&
@@ -66,8 +64,8 @@ export function itemLevelingLoadout(stores: DimStore[], store: DimStore): Loadou
 /**
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
-export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
-  const { equippable } = maxLightItemSet(stores, store);
+export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
+  const { equippable } = maxLightItemSet(allItems, store);
   return newLoadout(
     store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
     equippable.map((i) => convertToLoadoutItem(i, true))
@@ -84,23 +82,21 @@ const powerStatHashes = [
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
 export function maxLightItemSet(
-  stores: DimStore[],
+  allItems: DimItem[],
   store: DimStore
 ): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
-  for (const s of stores) {
-    for (const i of s.items) {
-      if (
-        (itemCanBeEquippedBy(i, store) ||
-          (i.location.inPostmaster &&
-            (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-            // nothing we are too low-level to equip
-            i.equipRequiredLevel <= store.level)) &&
-        i.primStat?.value && // has a primary stat (sanity check)
-        powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
-      ) {
-        applicableItems.push(i);
-      }
+  for (const i of allItems) {
+    if (
+      (itemCanBeEquippedBy(i, store) ||
+        (i.location.inPostmaster &&
+          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
+          // nothing we are too low-level to equip
+          i.equipRequiredLevel <= store.level)) &&
+      i.primStat?.value && // has a primary stat (sanity check)
+      powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
+    ) {
+      applicableItems.push(i);
     }
   }
 
@@ -131,9 +127,8 @@ export function maxLightItemSet(
 /**
  * A loadout to maximize a specific stat
  */
-export function maxStatLoadout(statHash: number, stores: DimStore[], store: DimStore): Loadout {
-  const applicableItems = getAllItems(
-    stores,
+export function maxStatLoadout(statHash: number, allItems: DimItem[], store: DimStore): Loadout {
+  const applicableItems = allItems.filter(
     (i) =>
       (itemCanBeEquippedBy(i, store) ||
         (i.location.inPostmaster &&
@@ -173,11 +168,10 @@ export function maxStatLoadout(statHash: number, stores: DimStore[], store: DimS
  * A dynamic loadout set up to level weapons and armor
  */
 export function gatherEngramsLoadout(
-  stores: DimStore[],
+  allItems: DimItem[],
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
-  const engrams = getAllItems(
-    stores,
+  const engrams = allItems.filter(
     (i) => i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic)
   );
 
@@ -210,14 +204,11 @@ export function gatherEngramsLoadout(
  * Move items matching the current search.
  */
 export function searchLoadout(
-  stores: DimStore[],
+  allItems: DimItem[],
   store: DimStore,
   searchFilter: ItemFilter
 ): Loadout {
-  let items = getAllItems(
-    stores,
-    (i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i)
-  );
+  let items = allItems.filter((i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i));
 
   items = addUpStackables(items);
 
@@ -286,16 +277,10 @@ const randomLoadoutTypes = new Set([
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
-export function randomLoadout(stores: DimStore[], filter: ItemFilter) {
-  const currentCharacter = getCurrentStore(stores);
-  if (!currentCharacter) {
-    return null;
-  }
-
+export function randomLoadout(store: DimStore, allItems: DimItem[], filter: ItemFilter) {
   // Any item equippable by this character in the given types
-  const applicableItems = getAllItems(
-    stores,
-    (i) => randomLoadoutTypes.has(i.type) && itemCanBeEquippedBy(i, currentCharacter) && filter(i)
+  const applicableItems = allItems.filter(
+    (i) => randomLoadoutTypes.has(i.type) && itemCanBeEquippedBy(i, store) && filter(i)
   );
 
   // Use "random" as the value function

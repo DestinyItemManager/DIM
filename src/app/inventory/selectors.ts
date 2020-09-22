@@ -30,6 +30,13 @@ export const sortedStoresSelector = createSelector(
   (stores, sortStores) => sortStores(stores)
 );
 
+/**
+ * Get a flat list of all items.
+ */
+export const allItemsSelector = createSelector(storesSelector, (stores) =>
+  stores.flatMap((s) => s.items)
+);
+
 /** Have stores been loaded? */
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 
@@ -47,12 +54,10 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 
 /** A set containing all the hashes of owned items. */
 export const ownedItemsSelector = () =>
-  createSelector(profileResponseSelector, storesSelector, (profileResponse, stores) => {
+  createSelector(profileResponseSelector, allItemsSelector, (profileResponse, allItems) => {
     const ownedItemHashes = new Set<number>();
-    for (const store of stores) {
-      for (const item of store.items) {
-        ownedItemHashes.add(item.hash);
-      }
+    for (const item of allItems) {
+      ownedItemHashes.add(item.hash);
     }
     if (profileResponse?.profilePlugSets?.data) {
       for (const plugSet of Object.values(profileResponse.profilePlugSets.data.plugs)) {

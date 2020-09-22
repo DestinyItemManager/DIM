@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { storesSelector } from '../inventory/selectors';
+import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
@@ -59,31 +59,29 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     (
-      stores
+      allItems
     ): Readonly<{
       [classType: number]: ItemsByBucket;
     }> => {
       const items: {
         [classType: number]: { [bucketHash: number]: DimItem[] };
       } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (!item || !isLoadoutBuilderItem(item)) {
-            continue;
+      for (const item of allItems) {
+        if (!item || !isLoadoutBuilderItem(item)) {
+          continue;
+        }
+        for (const classType of item.classType === DestinyClass.Unknown
+          ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+          : [item.classType]) {
+          if (!items[classType]) {
+            items[classType] = {};
           }
-          for (const classType of item.classType === DestinyClass.Unknown
-            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
-            : [item.classType]) {
-            if (!items[classType]) {
-              items[classType] = {};
-            }
-            if (!items[classType][item.bucket.hash]) {
-              items[classType][item.bucket.hash] = [];
-            }
-            items[classType][item.bucket.hash].push(item);
+          if (!items[classType][item.bucket.hash]) {
+            items[classType][item.bucket.hash] = [];
           }
+          items[classType][item.bucket.hash].push(item);
         }
       }
 

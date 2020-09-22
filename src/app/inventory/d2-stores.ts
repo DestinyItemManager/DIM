@@ -29,6 +29,7 @@ import { reportException } from '../utils/exceptions';
 import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
+import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
 import { bucketsSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
@@ -180,8 +181,16 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
 
         dispatch(cleanInfos(stores));
 
+        const allItems = stores.flatMap((s) => s.items);
+
+        const hasClassified = allItems.some(
+          (i) =>
+            i.classified &&
+            (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+        );
+
         for (const s of stores) {
-          updateBasePower(stores, s, defs);
+          updateBasePower(allItems, s, defs, hasClassified);
         }
 
         const currencies = processCurrencies(profileInfo, defs);
@@ -334,21 +343,18 @@ function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
 }
 
 // Add a fake stat for "max base power"
-function updateBasePower(stores: DimStore[], store: DimStore, defs: D2ManifestDefinitions) {
+function updateBasePower(
+  allItems: DimItem[],
+  store: DimStore,
+  defs: D2ManifestDefinitions,
+  hasClassified: boolean
+) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
-    const { equippable, unrestricted } = maxLightItemSet(stores, store);
+    const { equippable, unrestricted } = maxLightItemSet(allItems, store);
     const unrestrictedMaxGearPower = getLight(store, unrestricted);
     const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
     const equippableMaxGearPower = getLight(store, equippable);
-
-    const hasClassified = stores.some((s) =>
-      s.items.some(
-        (i) =>
-          i.classified &&
-          (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-      )
-    );
 
     const differentEquippableMaxGearPower =
       (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) || undefined;

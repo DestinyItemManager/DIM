@@ -1,7 +1,6 @@
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import { DimWishList, WishListRoll } from './types';
 
 export const enum UiWishListRoll {
@@ -37,14 +36,14 @@ let inventoryRolls: { [key: string]: InventoryWishListRoll } = {};
 
 /** Get InventoryWishListRolls for every item in the stores. */
 export function getInventoryWishListRolls(
-  stores: DimStore[],
+  allItems: DimItem[],
   rollsByHash: { [itemHash: number]: WishListRoll[] }
 ): { [key: string]: InventoryWishListRoll } {
   if (
     !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
-    !stores.length ||
-    stores[0].destinyVersion === 1
+    !allItems.length ||
+    allItems[0].destinyVersion === 1
   ) {
     return {};
   }
@@ -55,15 +54,13 @@ export function getInventoryWishListRolls(
     inventoryRolls = {};
   }
 
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (item.sockets && !seenItemIds.has(item.id)) {
-        const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
-        if (wishListRoll) {
-          inventoryRolls[item.id] = wishListRoll;
-        }
-        seenItemIds.add(item.id);
+  for (const item of allItems) {
+    if (item.sockets && !seenItemIds.has(item.id)) {
+      const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
+      if (wishListRoll) {
+        inventoryRolls[item.id] = wishListRoll;
       }
+      seenItemIds.add(item.id);
     }
   }
 

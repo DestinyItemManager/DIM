@@ -1,6 +1,6 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { currenciesSelector, storesSelector } from 'app/inventory/selectors';
+import { currenciesSelector, ownedItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import _ from 'lodash';
@@ -19,13 +19,16 @@ interface ProvidedProps {
 interface StoreProps {
   stores: D1Store[];
   currencies: AccountCurrency[];
+  ownedItemHashes: Set<number>;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+function mapStateToProps() {
+  const ownedItemsSelectorInstance = ownedItemsSelector();
+  return (state: RootState): StoreProps => ({
     stores: storesSelector(state) as D1Store[],
     currencies: currenciesSelector(state),
-  };
+    ownedItemHashes: ownedItemsSelectorInstance(state),
+  });
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -33,7 +36,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * The "All Vendors" page for D1 that shows all the rotating vendors.
  */
-function D1Vendors({ account, stores, currencies, dispatch }: Props) {
+function D1Vendors({ account, stores, currencies, ownedItemHashes, dispatch }: Props) {
   const [vendors, setVendors] = useState<{
     [vendorHash: number]: Vendor;
   }>();
@@ -52,12 +55,6 @@ function D1Vendors({ account, stores, currencies, dispatch }: Props) {
   }
 
   const totalCoins = countCurrencies(stores, vendors, currencies);
-  const ownedItemHashes = new Set<number>();
-  for (const store of stores) {
-    for (const item of store.items) {
-      ownedItemHashes.add(item.hash);
-    }
-  }
   const sortedVendors = _.sortBy(Object.values(vendors), (v) => v.vendorOrder);
 
   return (

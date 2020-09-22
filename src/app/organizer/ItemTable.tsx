@@ -11,7 +11,7 @@ import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { itemInfosSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, itemInfosSelector, storesSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
@@ -82,22 +82,20 @@ interface StoreProps {
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     searchFilterSelector,
     (_, props: ProvidedProps) => props.categories,
-    (stores, searchFilter, categories) => {
+    (allItems, searchFilter, categories) => {
       const terminal = Boolean(_.last(categories)?.terminal);
       if (!terminal) {
         return emptyArray<DimItem>();
       }
       const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-      const items = stores.flatMap((s) =>
-        s.items.filter(
-          (i) =>
-            i.comparable &&
-            categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
-            searchFilter(i)
-        )
+      const items = allItems.filter(
+        (i) =>
+          i.comparable &&
+          categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
+          searchFilter(i)
       );
       return items;
     }

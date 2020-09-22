@@ -5,6 +5,7 @@ import { createSelector } from 'reselect';
 import { getTag, ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
+  allItemsSelector,
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
@@ -32,6 +33,7 @@ import { SearchConfig, searchConfigSelector } from './search-config';
 export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
+  allItemsSelector,
   currentStoreSelector,
   loadoutsSelector,
   inventoryWishListsSelector,
@@ -52,6 +54,7 @@ export const searchFilterSelector = createSelector(
 function makeSearchFilterFactory(
   { filters }: SearchConfig,
   stores: DimStore[],
+  allItems: DimItem[],
   currentStore: DimStore,
   loadouts: Loadout[],
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
@@ -64,6 +67,7 @@ function makeSearchFilterFactory(
 ) {
   const filterContext: FilterContext = {
     stores,
+    allItems,
     currentStore,
     loadouts,
     inventoryWishListRolls,
