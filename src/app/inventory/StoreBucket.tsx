@@ -4,7 +4,6 @@ import { characterOrderSelector } from 'app/settings/character-sort';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { useWhatChanged } from 'app/utils/useWhatChanged';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -34,7 +33,6 @@ interface ProvidedProps {
 
 // Props from Redux via mapStateToProps
 interface StoreProps {
-  store: DimStore | null;
   destinyVersion: DestinyVersion;
   storeId: string;
   storeName: string;
@@ -42,24 +40,34 @@ interface StoreProps {
   isVault: boolean;
   items: DimItem[];
   itemSortOrder: string[];
-  allStores: DimStore[];
+  storeClassList: DestinyClass[];
   characterOrder: string;
   isPhonePortrait: boolean;
 }
 
-function mapStateToProps() {
-  let _lastItems: DimItem[] = [];
-  const internArray = (arr: DimItem[]) => {
+/**
+ * Generate a function that will produce a new array (by-ref) only if the array's contents change.
+ */
+function makeInternArray<T>() {
+  let _lastItems: T[] = [];
+  return (arr: T[]) => {
     if (!shallowEqual(_lastItems, arr)) {
       _lastItems = arr;
     }
     return _lastItems;
   };
+}
 
-  // TODO: store changes. Figure out how to make it not
-  // TODO: items compare irrespective of order!
+function mapStateToProps() {
+  const internItems = makeInternArray<DimItem>();
+  const internClassList = makeInternArray<DestinyClass>();
 
-  return (state: RootState, props: ProvidedProps): StoreProps => {
+  return (
+    state: RootState,
+    props: ProvidedProps
+  ): StoreProps & {
+    store: DimStore | null;
+  } => {
     const { store, bucket } = props;
 
     return {
@@ -69,10 +77,13 @@ function mapStateToProps() {
       storeName: store.name,
       storeClassType: store.classType,
       isVault: store.isVault,
-      items: internArray(findItemsByBucket(store, bucket.hash)),
+      items: internItems(findItemsByBucket(store, bucket.hash)),
       itemSortOrder: itemSortOrderSelector(state),
       // We only need this property when this is a vault armor bucket
-      allStores: store.isVault && bucket.inArmor ? sortedStoresSelector(state) : emptyArray(),
+      storeClassList:
+        store.isVault && bucket.inArmor
+          ? internClassList(sortedStoresSelector(state).map((s) => s.classType))
+          : emptyArray(),
       characterOrder: characterOrderSelector(state),
       isPhonePortrait: isPhonePortraitSelector(state),
     };
@@ -100,23 +111,11 @@ function StoreBucket({
   storeName,
   storeClassType,
   isVault,
-  allStores,
+  storeClassList,
   characterOrder,
   isPhonePortrait,
 }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
-
-  useWhatChanged(`Bucket ${storeName} ${bucket.name}`, {
-    items,
-    itemSortOrder,
-    bucket,
-    storeName,
-    storeId,
-    isVault,
-    allStores,
-    characterOrder,
-    isPhonePortrait,
-  });
 
   const pickEquipItem = useCallback(() => {
     dispatch(pullItem(storeId, bucket));
@@ -127,7 +126,7 @@ function StoreBucket({
     const itemsByClass = _.groupBy(items, (item) => item.classType);
     const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
       const classTypeNum = parseInt(classType, 10);
-      const index = allStores.findIndex((s) => s.classType === classTypeNum);
+      const index = storeClassList.findIndex((s) => s === classTypeNum);
       return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
     });
 
