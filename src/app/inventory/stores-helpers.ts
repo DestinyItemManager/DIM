@@ -142,12 +142,12 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
   const openStacks = Math.max(0, capacityForItem(store, item) - occupiedStacks);
 
   // Some things can't have multiple stacks (unique stacks) and must be handled
-  // specially. These won't ever be in the vault.
+  // specially. This only matters if they're not in the vault (pull from postmaster scenario)
   if (item.uniqueStack) {
     // If the item lives in an account-wide bucket (like modulus reports)
     // we need to check out how much space is left in that bucket, which is
     // only on the current store.
-    if (item.bucket.accountWide) {
+    if (item.bucket.accountWide && !store.isVault) {
       const existingAmount = amountOfItem(getCurrentStore(stores)!, item);
 
       if (existingAmount === 0) {
