@@ -277,7 +277,7 @@ function equippable(item: DimItem) {
 }
 
 export function source(item: DimItem) {
-  if (item.source) {
+  if (item.destinyVersion === 2) {
     return (
       sourceKeys.find(
         (src) =>
