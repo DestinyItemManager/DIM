@@ -35,8 +35,8 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
-    filter: ({ filterValue, stores }) => {
-      const maxStatLoadout = findMaxStatLoadout(stores, filterValue);
+    filter: ({ filterValue, stores, allItems }) => {
+      const maxStatLoadout = findMaxStatLoadout(stores, allItems, filterValue);
       return (item) => {
         // filterValue stat must exist, and this must be armor
         if (!item.bucket.inArmor || !statHashByName[filterValue]) {
@@ -73,8 +73,8 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxpower',
     description: tl('Filter.MaxPower'),
     destinyVersion: 2,
-    filter: ({ stores }) => {
-      const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores);
+    filter: ({ stores, allItems }) => {
+      const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores, allItems);
       return (item: DimItem) => maxPowerLoadoutItems.includes(item.id);
     },
   },
@@ -108,10 +108,10 @@ function statFilterFromString(
   };
 }
 
-function findMaxStatLoadout(stores: DimStore[], statName: string) {
+function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: string) {
   const maxStatHash = statHashByName[statName];
   return stores.flatMap((store) =>
-    maxStatLoadout(maxStatHash, stores, store).items.map((i) => i.id)
+    maxStatLoadout(maxStatHash, allItems, store).items.map((i) => i.id)
   );
 }
 
@@ -171,6 +171,6 @@ function gatherHighestStatsPerSlot(stores: DimStore[]) {
   return maxStatValues;
 }
 
-function calculateMaxPowerLoadoutItems(stores: DimStore[]) {
-  return stores.flatMap((store) => maxLightItemSet(stores, store).equippable.map((i) => i.id));
+function calculateMaxPowerLoadoutItems(stores: DimStore[], allItems: DimItem[]) {
+  return stores.flatMap((store) => maxLightItemSet(allItems, store).equippable.map((i) => i.id));
 }

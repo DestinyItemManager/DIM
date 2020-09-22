@@ -1,5 +1,15 @@
 ## Next
 
+## 6.31.1 <span className="changelog-date">(2020-09-21)</span>
+
+* Loadout Optimizer highlights loadouts you've already saved.
+* Add new searches `kills:`, `kills:pvp:`, and `kills:pve:` for Masterwork kill trackers.
+* Fixed: "Source" was not being set for all items.
+* Fixed: Item type searches (e.g. is:pulserifle) not working for D1.
+* Fixed: Spreadsheets missing power cap.
+
+## 6.31.0 <span className="changelog-date">(2020-09-20)</span>
+
 * Added a link to the DIM User Guide to the hamburger menu.
 * "Clear new items" has been moved into the Settings page instead of being a floating button. The "X" keyboard shortcut no longer clears new items.
 * Linear Fusion rifles are technically Fusion Rifles, but they won't show up in Organizer or in searches under Fusion Rifle anymore.
@@ -19,6 +29,8 @@
 * Improved search performance.
 * Items in collections now show their power cap.
 * Character stats now scroll with items on mobile, instead of always being visible. Max power is still shown in the character header.
+* Added "Location" column to the Organizer to show what character the item is on.
+* When "Base Stats" is checked in the Compare tool, clicking on stats will sort by base stat, not actual stat.
 
 ### Beta Only
 

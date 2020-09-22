@@ -26,14 +26,6 @@ export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
 export const getVault = (stores: DimStore[]): DimStore | undefined => stores.find((s) => s.isVault);
 
 /**
- * Get all items from all stores as a flat list.
- */
-export const getAllItems = <Item extends DimItem, Store extends DimStore<Item>>(
-  stores: Store[],
-  filter?: (item: Item) => unknown
-) => stores.flatMap((s) => (filter ? s.items.filter(filter) : s.items));
-
-/**
  * This is a memoized function that generates a map of items by their bucket
  * location. It could be a redux selector but I didn't want to have to thread it
  * through everywhere, so instead we do our own weak memoization to avoid

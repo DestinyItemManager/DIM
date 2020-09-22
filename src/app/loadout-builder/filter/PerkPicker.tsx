@@ -1,13 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { settingsSelector } from 'app/settings/reducer';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -55,30 +55,28 @@ type Props = ProvidedProps & StoreProps;
 function mapStateToProps() {
   // Get a list of lockable perks by bucket.
   const perksSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (stores, classType) => {
+    (allItems, classType) => {
       const perks: { [bucketHash: number]: PluggableInventoryItemDefinition[] } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (
-            !item ||
-            !item.sockets ||
-            !isLoadoutBuilderItem(item) ||
-            !(item.classType === DestinyClass.Unknown || item.classType === classType)
-          ) {
-            continue;
-          }
-          if (!perks[item.bucket.hash]) {
-            perks[item.bucket.hash] = [];
-          }
-          // build the filtered unique perks item picker
-          item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
-            socket.plugOptions.forEach((option) => {
-              perks[item.bucket.hash].push(option.plugDef);
-            });
-          });
+      for (const item of allItems) {
+        if (
+          !item ||
+          !item.sockets ||
+          !isLoadoutBuilderItem(item) ||
+          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+        ) {
+          continue;
         }
+        if (!perks[item.bucket.hash]) {
+          perks[item.bucket.hash] = [];
+        }
+        // build the filtered unique perks item picker
+        item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
+          socket.plugOptions.forEach((option) => {
+            perks[item.bucket.hash].push(option.plugDef);
+          });
+        });
       }
 
       // sort exotic perks first, then by index

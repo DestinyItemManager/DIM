@@ -1,10 +1,11 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/settings/reducer';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { getTag, ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
+  allItemsSelector,
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
@@ -12,9 +13,9 @@ import {
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { Loadout } from '../loadout/loadout-types';
-import { loadoutsSelector } from '../loadout/reducer';
-import { querySelector } from '../shell/reducer';
-import { inventoryWishListsSelector } from '../wishlists/reducer';
+import { loadoutsSelector } from '../loadout/selectors';
+import { querySelector } from '../shell/selectors';
+import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { FilterContext, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
@@ -32,6 +33,7 @@ import { SearchConfig, searchConfigSelector } from './search-config';
 export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
+  allItemsSelector,
   currentStoreSelector,
   loadoutsSelector,
   inventoryWishListsSelector,
@@ -52,6 +54,7 @@ export const searchFilterSelector = createSelector(
 function makeSearchFilterFactory(
   { filters }: SearchConfig,
   stores: DimStore[],
+  allItems: DimItem[],
   currentStore: DimStore,
   loadouts: Loadout[],
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
@@ -64,6 +67,7 @@ function makeSearchFilterFactory(
 ) {
   const filterContext: FilterContext = {
     stores,
+    allItems,
     currentStore,
     loadouts,
     inventoryWishListRolls,

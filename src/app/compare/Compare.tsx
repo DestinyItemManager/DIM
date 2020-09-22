@@ -1,15 +1,13 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { getAllItems } from 'app/inventory/stores-helpers';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { makeDupeID } from 'app/search/search-filters/dupes';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { settingsSelector } from 'app/settings/reducer';
 import { RootState } from 'app/store/types';
 import {
   getItemSpecialtyModSlotDisplayName,
@@ -33,7 +31,7 @@ import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
 
 interface StoreProps {
-  stores: DimStore[];
+  allItems: DimItem[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
 }
@@ -47,7 +45,7 @@ type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
   };
@@ -143,14 +141,16 @@ class Compare extends React.Component<Props, State> {
               compareBy((item: DimItem) => {
                 const stat =
                   item.primStat && sortedHash === item.primStat.statHash
-                    ? item.primStat
+                    ? (item.primStat as MinimalStat)
                     : sortedHash === 'EnergyCapacity'
                     ? {
                         value: item.energy?.energyCapacity || 0,
+                        base: undefined,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
                         value: item.powerCap || 99999999,
+                        base: undefined,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -162,7 +162,9 @@ class Compare extends React.Component<Props, State> {
                   isDimStat(stat) && stat.smallerIsBetter
                     ? this.state.sortBetterFirst
                     : !this.state.sortBetterFirst;
-                return shouldReverse ? -stat.value : stat.value;
+
+                const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+                return shouldReverse ? -statValue : statValue;
               }),
               compareBy((i) => i.index),
               compareBy((i) => i.name)
@@ -306,7 +308,7 @@ class Compare extends React.Component<Props, State> {
 
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
     else {
-      const allItems = getAllItems(this.props.stores);
+      const allItems = this.props.allItems;
       // comparisonSets is an array so that it has order, filled with {label, setOfItems} objects
       const comparisonSets = exampleItem.bucket.inArmor
         ? this.findSimilarArmors(allItems, additionalItems)
@@ -574,6 +576,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
       makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
         statHash: powerCapPlugSetHash,
         value: item.powerCap ?? undefined,
+        base: undefined,
       }))
     );
   }
@@ -587,6 +590,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
           (item.energy && {
             statHash: item.energy.energyType,
             value: item.energy.energyCapacity,
+            base: undefined,
           }) ||
           undefined
       )

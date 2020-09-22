@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/DestinyItemManager/DIM.svg?branch=master)](https://travis-ci.com/DestinyItemManager/DIM)
-[![Crowdin](http://d322cqt584bo4o.cloudfront.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)
+[![Crowdin](https://badges.crowdin.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)
 [![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)
 

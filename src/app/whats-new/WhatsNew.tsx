@@ -1,4 +1,4 @@
-import { settingsSelector } from 'app/settings/reducer';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';

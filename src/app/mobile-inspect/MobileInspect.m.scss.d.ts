@@ -3,6 +3,10 @@
 interface CssExports {
   'container': string;
   'content': string;
+  'enter': string;
+  'enterActive': string;
+  'exit': string;
+  'exitActive': string;
   'header': string;
   'headerInfo': string;
   'inspectActive': string;
@@ -11,7 +15,6 @@ interface CssExports {
   'locations': string;
   'mobileInspectSheet': string;
   'sheetBackground': string;
-  'zoom': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

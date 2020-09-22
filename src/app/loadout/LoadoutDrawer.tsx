@@ -20,7 +20,7 @@ import Sheet from '../dim-ui/Sheet';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { bucketsSelector, storesSelector } from '../inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { showNotification } from '../notifications/notifications';
@@ -33,7 +33,7 @@ import { getItemsFromLoadoutItems } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import { loadoutsSelector } from './reducer';
+import { loadoutsSelector } from './selectors';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -79,6 +79,7 @@ interface StoreProps {
     value: number;
   }[];
   stores: DimStore[];
+  allItems: DimItem[];
   buckets: InventoryBuckets;
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   loadouts: Loadout[];
@@ -350,6 +351,7 @@ function mapStateToProps() {
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     buckets: bucketsSelector(state)!,
     defs:
       destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
@@ -366,6 +368,7 @@ function LoadoutDrawer({
   buckets,
   classTypeOptions,
   stores,
+  allItems,
   itemSortOrder,
   defs,
   loadouts,
@@ -510,6 +513,7 @@ function LoadoutDrawer({
         buckets={buckets}
         items={items}
         loadout={loadout}
+        allItems={allItems}
       />
     </div>
   );

@@ -5,7 +5,7 @@ import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { generateSuggestionsForFilter } from '../search-config';
+import { generateSuggestionsForFilter } from '../search-utils';
 import { allStatNames, statHashByName } from '../search-filter-values';
 import { rangeStringToComparator } from './range-numeric';
 

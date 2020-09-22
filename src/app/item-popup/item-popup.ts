@@ -3,7 +3,7 @@ import { DimItem } from '../inventory/item-types';
 
 export const showItemPopup$ = new Subject<{
   item?: DimItem;
-  element?: Element;
+  element?: HTMLElement;
   extraInfo?: ItemPopupExtraInfo;
 }>();
 
@@ -15,7 +15,11 @@ export interface ItemPopupExtraInfo {
   mod?: boolean;
 }
 
-export function showItemPopup(item: DimItem, element?: Element, extraInfo?: ItemPopupExtraInfo) {
+export function showItemPopup(
+  item: DimItem,
+  element?: HTMLElement,
+  extraInfo?: ItemPopupExtraInfo
+) {
   showItemPopup$.next({ item, element, extraInfo });
 }
 

@@ -1,4 +1,4 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { settingsSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -9,23 +9,20 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
-import { settingsSelector } from 'app/settings/reducer';
-import { querySelector } from 'app/shell/reducer';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
-import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
-  isPhonePortraitSelector,
+  ownedItemsSelector,
   profileResponseSelector,
-  storesSelector,
 } from '../inventory/selectors';
 import Catalysts from './Catalysts';
 import './collections.scss';
@@ -52,24 +49,13 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
-  const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
-    const ownedItemHashes = new Set<number>();
-    if (stores) {
-      for (const store of stores) {
-        for (const item of store.items) {
-          ownedItemHashes.add(item.hash);
-        }
-      }
-    }
-    return ownedItemHashes;
-  });
-
+  const ownedItemsSelectorInstance = ownedItemsSelector();
   return (state: RootState): StoreProps => {
     const settings = settingsSelector(state);
     return {
       buckets: bucketsSelector(state),
       defs: state.manifest.d2Manifest,
-      ownedItemHashes: ownedItemHashesSelector(state),
+      ownedItemHashes: ownedItemsSelectorInstance(state),
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
       searchFilter: searchFilterSelector(state),

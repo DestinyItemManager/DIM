@@ -5,13 +5,12 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
-import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
-import { storesSelector } from '../inventory/selectors';
+import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
@@ -28,7 +27,8 @@ const bucketClassNames = {
 };
 
 export default function GearPower() {
-  const stores = useSelector<RootState, DimStore[]>((state) => storesSelector(state));
+  const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
   const [selectedStore, setSelectedStore] = useState<DimStore | undefined>();
   const reset = () => {
     setSelectedStore(undefined);
@@ -44,7 +44,7 @@ export default function GearPower() {
     return null;
   }
 
-  const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
+  const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
   const maxBasePower = getLight(selectedStore, unrestricted);
   const equippableMaxBasePower = getLight(selectedStore, equippable);
   const powerFloor = Math.floor(maxBasePower);

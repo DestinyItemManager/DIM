@@ -5,7 +5,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { profileResponseSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
@@ -61,10 +61,10 @@ function mapStateToProps() {
   );
 
   const inventoryPlugs = createSelector(
-    storesSelector,
+    allItemsSelector,
     (_: RootState, props: ProvidedProps) => props.socket,
     (state: RootState) => state.manifest.d2Manifest!,
-    (stores, socket, defs) => {
+    (allItems, socket, defs) => {
       const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
       if (
         !(
@@ -78,12 +78,10 @@ function mapStateToProps() {
       const modHashes = new Set<number>();
 
       const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
-      for (const store of stores) {
-        for (const item of store.items) {
-          const itemDef = defs.InventoryItem.get(item.hash);
-          if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
-            modHashes.add(item.hash);
-          }
+      for (const item of allItems) {
+        const itemDef = defs.InventoryItem.get(item.hash);
+        if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
+          modHashes.add(item.hash);
         }
       }
 
