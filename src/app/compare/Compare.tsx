@@ -16,19 +16,22 @@ import {
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import produce from 'immer';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimStat } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { Subscriptions } from '../utils/rx-utils';
 import './compare.scss';
 import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
+import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
 
 interface StoreProps {
   allItems: DimItem[];
@@ -60,6 +63,8 @@ interface State {
   sortedHash?: string | number;
   sortBetterFirst: boolean;
   comparisonSets: { buttonLabel: React.ReactNode; items: DimItem[] }[];
+  adjustedPlugs?: DimAdjustedPlugs;
+  adjustedStats?: DimAdjustedStats;
 }
 
 export interface StatInfo {
@@ -89,6 +94,7 @@ class Compare extends React.Component<Props, State> {
   private getAllStatsSelector = createSelector(
     (state: State) => state.comparisonItems,
     (_state: State, props: Props) => props.compareBaseStats,
+    (state: State) => state.adjustedStats,
     getAllStats
   );
 
@@ -122,6 +128,8 @@ class Compare extends React.Component<Props, State> {
       sortedHash,
       highlight,
       comparisonSets,
+      adjustedPlugs,
+      adjustedStats,
     } = this.state;
 
     if (!show || unsortedComparisonItems.length === 0) {
@@ -173,6 +181,118 @@ class Compare extends React.Component<Props, State> {
         );
 
     const stats = this.getAllStatsSelector(this.state, this.props);
+
+    const updateSocketComparePlug = ({
+      item,
+      socket,
+      plug: clickedPlug,
+    }: {
+      item: DimItem;
+      socket: DimSocket;
+      plug: DimPlug;
+    }) => {
+      const { socketIndex } = socket;
+      const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
+      const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
+
+      /**
+       * Exit early if this plug / socket isn't a clickable target
+       * TODO: check the socket index detail
+       * */
+      if (
+        item.destinyVersion === 1 ||
+        !item.sockets ||
+        !item.stats ||
+        socketIndex > 2 ||
+        !pluggedPlug ||
+        (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash &&
+          currentAdjustedPlug === undefined)
+      ) {
+        return;
+      }
+
+      /**
+       * Determine the next plug
+       * If the clicked plug is the currently adjusted plug,
+       * the next should be the original plug in the socket
+       */
+      const nextPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash ? pluggedPlug : clickedPlug;
+
+      /**
+       * Determine the previous plug
+       * If the clicked plug is the currently adjusted plug,
+       * the previous should be the clicked plug
+       */
+      const prevPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
+          ? clickedPlug
+          : currentAdjustedPlug ?? pluggedPlug;
+
+      /**
+       * Update the adjustedPlugs object
+       * If the next plug is the original plug, delete the adjustedPlug entry
+       * Else add the next plug to the item socket entry
+       */
+      const updatedPlugs =
+        nextPlug.plugDef.hash === pluggedPlug.plugDef.hash
+          ? produce(adjustedPlugs, (draft) => {
+              delete draft?.[item.id]?.[socketIndex];
+            })
+          : adjustedPlugs?.[item.id] !== undefined
+          ? produce(adjustedPlugs, (draft) => {
+              draft[item.id][socketIndex] = nextPlug;
+            })
+          : produce(adjustedPlugs ?? {}, (draft) => {
+              draft[item.id] = { [socketIndex]: nextPlug };
+            });
+
+      /**
+       * If there are no more adjustedPlugs for the item
+       * delete the associated adjustedPlugs and adjustedStats entries and exit
+       */
+      if (isEmpty(updatedPlugs?.[item.id])) {
+        const emptiedPlugs = produce(updatedPlugs, (draft) => {
+          delete draft?.[item.id];
+        });
+        const emptiedStats = produce(adjustedStats, (draft) => {
+          delete draft?.[item.id];
+        });
+        this.setState({
+          adjustedPlugs: emptiedPlugs,
+          adjustedStats: emptiedStats,
+        });
+        return;
+      }
+
+      // Remove the stats listed on the previous plug from adjustedStats
+      const itemStatsAfterRemoval: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: adjustedStats?.[item.id] ?? {},
+        plugStats: prevPlug.stats,
+        mode: 'remove',
+      });
+
+      // Add the stats listed on the next plug to adjustedStats
+      const itemStatsAfterAddition: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: itemStatsAfterRemoval ?? adjustedStats?.[item.id] ?? {},
+        plugStats: nextPlug.stats,
+        mode: 'add',
+      });
+
+      // Update the adjustedStats object
+      const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+        if (itemStatsAfterAddition) {
+          draft[item.id] = itemStatsAfterAddition;
+        }
+      });
+
+      this.setState({
+        adjustedPlugs: updatedPlugs,
+        adjustedStats: updatedStats,
+      });
+    };
 
     return (
       <Sheet
@@ -226,6 +346,9 @@ class Compare extends React.Component<Props, State> {
                   remove={this.remove}
                   setHighlight={this.setHighlight}
                   highlight={highlight}
+                  updateSocketComparePlug={updateSocketComparePlug}
+                  adjustedItemPlugs={adjustedPlugs?.[item.id]}
+                  adjustedItemStats={adjustedStats?.[item.id]}
                   compareBaseStats={compareBaseStats}
                 />
               ))}
@@ -235,6 +358,36 @@ class Compare extends React.Component<Props, State> {
       </Sheet>
     );
   }
+
+  private calculateUpdatedStats = ({
+    itemStats,
+    adjustedStats,
+    plugStats,
+    mode,
+  }: {
+    itemStats: DimStat[];
+    adjustedStats: DimAdjustedItemStat;
+    plugStats: DimPlug['stats'];
+    mode: string;
+  }): DimAdjustedItemStat | undefined => {
+    if (!plugStats) {
+      return adjustedStats;
+    }
+
+    const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+      for (const statHash in plugStats) {
+        const itemStatIndex = itemStats.findIndex((stat) => stat.statHash === parseInt(statHash));
+        const calcStat: number = draft?.[statHash] ?? itemStats[itemStatIndex]?.value;
+
+        if (calcStat) {
+          draft[statHash] =
+            mode === 'add' ? calcStat + plugStats[statHash] : calcStat - plugStats[statHash];
+        }
+      }
+    });
+
+    return updatedStats;
+  };
 
   // prevent touches from bubbling which blocks scrolling
   private stopTouches = (e: React.TouchEvent) => {
@@ -253,6 +406,8 @@ class Compare extends React.Component<Props, State> {
       comparisonItems: [],
       highlight: undefined,
       sortedHash: undefined,
+      adjustedPlugs: undefined,
+      adjustedStats: undefined,
     });
     CompareService.dialogOpen = false;
   };
@@ -554,7 +709,11 @@ class Compare extends React.Component<Props, State> {
   };
 }
 
-function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
+function getAllStats(
+  comparisonItems: DimItem[],
+  compareBaseStats: boolean,
+  adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
+) {
   const firstComparison = comparisonItems[0];
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
@@ -626,14 +785,19 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean) {
   for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
+      const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.enabled = stat.min !== stat.max;
         stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;

@@ -28,6 +28,7 @@ export default function Plug({
   isPhonePortrait,
   onClick,
   onShiftClick,
+  adjustedPlug,
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
@@ -40,6 +41,7 @@ export default function Plug({
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
+  adjustedPlug?: DimPlug;
 }) {
   // Support dragging over plugs items on mobile
   const [{ hovering }, drop] = useDrop({
@@ -94,6 +96,12 @@ export default function Plug({
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plugged,
+        selectable: socketInfo.plugOptions.length > 1 && socketInfo.socketIndex <= 2,
+        selected: plug.plugDef.hash === adjustedPlug?.plugDef.hash,
+        notSelected:
+          plug === socketInfo.plugged &&
+          adjustedPlug?.plugDef.hash &&
+          plug.plugDef.hash !== adjustedPlug?.plugDef.hash,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}
       onClick={handleShiftClick}

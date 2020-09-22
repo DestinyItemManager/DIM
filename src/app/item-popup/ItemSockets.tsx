@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { DimAdjustedItemPlug } from '../compare/types';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
@@ -20,6 +21,8 @@ interface ProvidedProps {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
+  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+  adjustedItemPlugs?: DimAdjustedItemPlug;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   onShiftClick?(lockedItem: LockedItemType): void;
@@ -52,8 +55,22 @@ function ItemSockets({
   classesByHash,
   isPhonePortrait,
   onShiftClick,
+  updateSocketComparePlug,
+  adjustedItemPlugs,
 }: Props) {
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+
+  const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
+    if (hasMenu) {
+      setSocketInMenu(socket);
+    } else if (updateSocketComparePlug) {
+      updateSocketComparePlug({
+        item,
+        socket,
+        plug,
+      });
+    }
+  };
 
   if (!item.sockets || !defs) {
     return null;
@@ -109,8 +126,9 @@ function ItemSockets({
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
                 classesByHash={classesByHash}
-                onClick={() => setSocketInMenu(socketInfo)}
+                onClick={handleSocketClick}
                 onShiftClick={onShiftClick}
+                adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
               />
             ))}
           </div>
@@ -205,6 +223,7 @@ function Socket({
   isPhonePortrait,
   onClick,
   onShiftClick,
+  adjustedPlug,
 }: {
   defs: D2ManifestDefinitions;
   item: DimItem;
@@ -214,8 +233,9 @@ function Socket({
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   isPhonePortrait: boolean;
-  onClick(plug: DimPlug): void;
+  onClick(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
   onShiftClick?(lockedItem: LockedItemType): void;
+  adjustedPlug?: DimPlug;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 
@@ -237,8 +257,11 @@ function Socket({
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}
-          onClick={hasMenu ? onClick : undefined}
+          onClick={() => {
+            onClick(item, socket, plug, hasMenu);
+          }}
           onShiftClick={onShiftClick}
+          adjustedPlug={adjustedPlug}
         />
       ))}
     </div>
