@@ -594,7 +594,7 @@ function PerksCell({
             >
               <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
                 <div className={styles.miniPerkContainer}>
-                  <DefItemIcon itemDef={p.plugDef} defs={defs} className={styles.miniPerk} />
+                  <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
                 </div>{' '}
                 {p.plugDef.displayProperties.name}
               </div>
