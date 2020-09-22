@@ -164,6 +164,23 @@ export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
     (isD1Item(item) ? factionItemAligns(store, item) : true)
   );
 }
+
+/** Can this item be equipped by the given (non-vault) store ID? */
+export function itemCanBeEquippedByStoreId(
+  item: DimItem,
+  storeId: string,
+  storeClassType: DestinyClass
+): boolean {
+  return (
+    item.equipment &&
+    // For the right class
+    (item.classType === DestinyClass.Unknown || item.classType === storeClassType) &&
+    // can be moved or is already here
+    (!item.notransfer || item.owner === storeId) &&
+    !item.location.inPostmaster
+  );
+}
+
 /** Could this be added to a loadout? */
 export function itemCanBeInLoadout(item: DimItem): boolean {
   return (

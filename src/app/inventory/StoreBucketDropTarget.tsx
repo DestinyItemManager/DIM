@@ -1,5 +1,6 @@
 import { ThunkDispatchProp } from 'app/store/types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import {
@@ -11,12 +12,12 @@ import {
 } from 'react-dnd';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
-import { moveItemTo } from './move-item';
-import { DimStore } from './store-types';
+import { dropItem } from './move-item';
 
 interface ExternalProps extends ThunkDispatchProp {
   bucket: InventoryBucket;
-  store: DimStore;
+  storeId: string;
+  storeClassType: DestinyClass;
   equip?: boolean;
   children?: React.ReactNode;
   className?: string;
@@ -34,7 +35,7 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return [props.bucket.type!, `${props.store.id}-${props.bucket.type!}`];
+  return [props.bucket.type!, `${props.storeId}-${props.bucket.type!}`];
 }
 
 // This determines the behavior of dropping on this target
@@ -43,7 +44,7 @@ const dropSpec: DropTargetSpec<Props> = {
     // https://github.com/react-dnd/react-dnd-html5-backend/issues/23
     const shiftPressed = (component as StoreBucketDropTarget).shiftKeyDown;
     const item = monitor.getItem().item as DimItem;
-    props.dispatch(moveItemTo(item, props.store, Boolean(props.equip), item.amount, shiftPressed));
+    props.dispatch(dropItem(item, props.storeId, Boolean(props.equip), shiftPressed));
   },
   canDrop(props, monitor) {
     // You can drop anything that can be transferred into a non-equipped bucket
@@ -52,7 +53,7 @@ const dropSpec: DropTargetSpec<Props> = {
     }
     // But equipping has requirements
     const item = monitor.getItem().item as DimItem;
-    return itemCanBeEquippedBy(item, props.store);
+    return itemCanBeEquippedByStoreId(item, props.storeId, props.storeClassType);
   },
 };
 
