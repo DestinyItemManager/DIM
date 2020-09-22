@@ -1,10 +1,10 @@
-import { getModCostInfo } from 'app/collections/Mod';
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { RootState } from 'app/store/types';
@@ -255,7 +255,6 @@ function SocketDetails({
 
 export default connect<StoreProps>(mapStateToProps)(SocketDetails);
 
-// TODO: use SVG! make a common icon component!
 export const SocketDetailsMod = React.memo(
   ({
     itemDef,
@@ -268,8 +267,6 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
-    const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
-
     const onClickFn = onClick && (() => onClick(itemDef));
 
     return (
@@ -281,16 +278,7 @@ export const SocketDetailsMod = React.memo(
         onFocus={onClickFn}
         tabIndex={0}
       >
-        <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
-        {energyCostElementOverlay && (
-          <>
-            <div
-              style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
-              className="energyCostOverlay"
-            />
-            <div className="energyCost">{energyCost}</div>
-          </>
-        )}
+        <DefItemIcon itemDef={itemDef} defs={defs} />
       </div>
     );
   }

@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';
 import React, { useState } from 'react';
-import BungieImage from '../dim-ui/BungieImage';
 import Sheet from '../dim-ui/Sheet';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
+import ItemIcon from './ItemIcon';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-item';
 import './MoveAmountPopupContainer.scss';
 import { amountOfItem } from './stores-helpers';
@@ -56,7 +56,7 @@ export default function MoveAmountPopupContainer() {
       header={
         <h1>
           <div className="item">
-            <BungieImage className="item-img" src={item.icon} />
+            <ItemIcon item={item} />
           </div>
           <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
         </h1>

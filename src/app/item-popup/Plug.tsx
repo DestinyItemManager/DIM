@@ -1,6 +1,6 @@
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { thumbsUpIcon } from 'app/shell/icons';
@@ -10,7 +10,6 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -55,13 +54,6 @@ export default function Plug({
     return null;
   }
 
-  const energyType =
-    (modDef?.plug?.energyCost?.energyTypeHash &&
-      defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash)) ||
-    undefined;
-  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat?.displayProperties.icon;
-
   const itemCategories = plug?.plugDef?.itemCategoryHashes || [];
 
   const handleShiftClick =
@@ -82,21 +74,7 @@ export default function Plug({
 
   const contents = (
     <div ref={drop}>
-      <BungieImageAndAmmo
-        hash={plug.plugDef.hash}
-        className="item-mod"
-        title={plug.plugDef.displayProperties.name}
-        src={plug.plugDef.displayProperties.icon}
-      />
-      {costElementIcon && (
-        <>
-          <div
-            style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
-            className="energyCostOverlay"
-          />
-          <div className="energyCost">{modDef.plug.energyCost!.energyCost}</div>
-        </>
-      )}
+      <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
     </div>
   );
 

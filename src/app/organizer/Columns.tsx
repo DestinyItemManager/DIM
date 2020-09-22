@@ -12,6 +12,7 @@ import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { D1Item, DimItem } from 'app/inventory/item-types';
+import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { storesSelector } from 'app/inventory/selectors';
@@ -206,16 +207,11 @@ export function getColumns(
       id: 'icon',
       header: t('Organizer.Columns.Icon'),
       value: (i) => i.icon,
-      cell: (value: string, item) => (
+      cell: (_, item) => (
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
-            <div ref={ref} onClick={onClick} className={styles.itemIcon}>
-              <BungieImage src={value} className={clsx({ [styles.masterwork]: item.masterwork })} />
-              {item.masterwork && (
-                <div
-                  className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })}
-                />
-              )}
+            <div ref={ref} onClick={onClick} className="item">
+              <ItemIcon item={item} className={styles.itemIcon} />
             </div>
           )}
         </ItemPopupTrigger>
@@ -395,7 +391,9 @@ export function getColumns(
                 tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
               >
                 <div className={styles.modPerk}>
-                  <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                  <div className={styles.miniPerkContainer}>
+                    <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                  </div>{' '}
                   {p.plugDef.displayProperties.name}
                 </div>
               </PressTip>
@@ -595,7 +593,9 @@ function PerksCell({
               tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
             >
               <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
-                <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
+                <div className={styles.miniPerkContainer}>
+                  <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                </div>{' '}
                 {p.plugDef.displayProperties.name}
               </div>
             </PressTip>
