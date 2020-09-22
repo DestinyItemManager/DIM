@@ -1,5 +1,7 @@
 ## Next
 
+## 6.31.2 <span className="changelog-date">(2020-09-22)</span>
+
 * Fix an issue where moving Exotic Cipher to vault with DIM would cause your characters to be filled up with items from your vault.
 
 ## 6.31.1 <span className="changelog-date">(2020-09-21)</span>
