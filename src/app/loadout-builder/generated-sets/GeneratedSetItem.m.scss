@@ -10,12 +10,6 @@
   align-items: start;
   justify-content: start;
 
-  @include phone-portrait {
-    grid-template-columns: min-content min-content 1fr;
-    grid-template-areas: 'item sockets button';
-    width: 100%;
-  }
-
   > *:first-child {
     grid-area: item;
   }
@@ -124,6 +118,5 @@
   justify-self: center;
   @include phone-portrait {
     padding: 8px 20px;
-    justify-self: end;
   }
 }

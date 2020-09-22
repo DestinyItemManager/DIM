@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { t } from 'app/i18next-t';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import React, { Dispatch } from 'react';
@@ -69,28 +68,14 @@ function GeneratedSet({
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
-        <div>
-          <SetStats
-            defs={defs}
-            stats={set.stats}
-            items={set.armor.map((items) => items[0])}
-            maxPower={set.maxPower}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
-          />
-          {existingLoadout ? (
-            <span className={styles.existingLoadout}>
-              {t('LoadoutBuilder.ExistingLoadout')}:{' '}
-              <span className={styles.loadoutName}>{existingLoadout.name}</span>
-            </span>
-          ) : null}
-        </div>
-        <GeneratedSetButtons
-          set={set}
-          store={selectedStore!}
-          canCompareLoadouts={canCompareLoadouts}
-          onLoadoutSet={setCreateLoadout}
-          onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
+        <SetStats
+          defs={defs}
+          stats={set.stats}
+          items={set.armor.map((items) => items[0])}
+          maxPower={set.maxPower}
+          statOrder={statOrder}
+          enabledStats={enabledStats}
+          existingLoadoutName={existingLoadout?.name}
         />
       </div>
       <div className={styles.items}>
@@ -107,6 +92,13 @@ function GeneratedSet({
             statOrder={statOrder}
           />
         ))}
+        <GeneratedSetButtons
+          set={set}
+          store={selectedStore!}
+          canCompareLoadouts={canCompareLoadouts}
+          onLoadoutSet={setCreateLoadout}
+          onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
+        />
       </div>
     </div>
   );

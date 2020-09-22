@@ -22,9 +22,19 @@ interface Props {
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
   className?: string;
+  existingLoadoutName?: string;
 }
 
-function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats, className }: Props) {
+function SetStats({
+  defs,
+  stats,
+  items,
+  maxPower,
+  statOrder,
+  enabledStats,
+  className,
+  existingLoadoutName,
+}: Props) {
   const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
@@ -35,35 +45,44 @@ function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats, class
 
   return (
     <div className={clsx(styles.container, className)}>
-      <span>
-        {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
-          <PressTip
-            elementType="span"
-            tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
-              stats: incorrectStats.join('/'),
+      {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+        <PressTip
+          elementType="span"
+          tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
+            stats: incorrectStats.join('/'),
+          })}
+        >
+          <AppIcon className={styles.warning} icon={faExclamationTriangle} />
+        </PressTip>
+      )}
+      <div className={styles.tierLightContainer}>
+        <span className={styles.tierLightSegment}>
+          <b>
+            {t('LoadoutBuilder.TierNumber', {
+              tier: enabledTier,
             })}
-          >
-            <AppIcon className={styles.warning} icon={faExclamationTriangle} />
-          </PressTip>
-        )}
-        <span className={styles.statSegment}>
-          <span>
+          </b>
+        </span>
+        {enabledTier !== totalTier && (
+          <span className={styles.nonActiveStat}>
             <b>
-              {t('LoadoutBuilder.TierNumber', {
-                tier: enabledTier,
-              })}
+              {` (${t('LoadoutBuilder.TierNumber', {
+                tier: totalTier,
+              })})`}
             </b>
           </span>
-          {enabledTier !== totalTier && (
-            <span className={styles.nonActiveStat}>
-              <b>
-                {` (${t('LoadoutBuilder.TierNumber', {
-                  tier: totalTier,
-                })})`}
-              </b>
-            </span>
-          )}
+        )}
+        <span className={styles.light}>
+          <AppIcon icon={powerIndicatorIcon} /> {maxPower}
         </span>
+        {existingLoadoutName ? (
+          <span className={styles.existingLoadout}>
+            {t('LoadoutBuilder.ExistingLoadout')}:{' '}
+            <span className={styles.loadoutName}>{existingLoadoutName}</span>
+          </span>
+        ) : null}
+      </div>
+      <div className={styles.statSegmentContainer}>
         {statOrder.map((stat) => (
           <Stat
             key={stat}
@@ -72,10 +91,7 @@ function SetStats({ defs, stats, items, maxPower, statOrder, enabledStats, class
             value={displayStats[stat]}
           />
         ))}
-      </span>
-      <span className={styles.light}>
-        <AppIcon icon={powerIndicatorIcon} /> {maxPower}
-      </span>
+      </div>
     </div>
   );
 }
