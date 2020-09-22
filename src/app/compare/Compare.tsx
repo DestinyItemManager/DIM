@@ -26,21 +26,14 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
-import {
-  DimAdjustedItemStat,
-  DimAdjustedPlugs,
-  DimAdjustedStats,
-  DimItem,
-  DimPlug,
-  DimSocket,
-  DimStat,
-} from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { Subscriptions } from '../utils/rx-utils';
 import './compare.scss';
 import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
+import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
 
 interface StoreProps {
   stores: DimStore[];

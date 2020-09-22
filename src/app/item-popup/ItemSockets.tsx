@@ -8,14 +8,9 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { DimAdjustedItemPlug } from '../compare/types';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import {
-  DimAdjustedItemPlug,
-  DimItem,
-  DimPlug,
-  DimSocket,
-  DimSocketCategory,
-} from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
