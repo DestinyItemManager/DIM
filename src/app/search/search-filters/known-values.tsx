@@ -116,7 +116,6 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: Object.keys(itemCategoryHashesByName),
     description: tl('Filter.WeaponType'),
-    destinyVersion: 2,
     filter: ({ filterValue }) => {
       const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
       if (!categoryHash) {
