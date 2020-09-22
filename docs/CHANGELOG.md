@@ -1,5 +1,11 @@
 ## Next
 
+* Loadout Optimizer highlights loadouts you've already saved.
+* Add new searches `kills:`, `kills:pvp:`, and `kills:pve:` for Masterwork kill trackers.
+* Fixed: "Source" was not being set for all items.
+* Fixed: Item type searches (e.g. is:pulserifle) not working for D1.
+* Fixed: Spreadsheets missing power cap.
+
 ## 6.31.0 <span className="changelog-date">(2020-09-20)</span>
 
 * Added a link to the DIM User Guide to the hamburger menu.
