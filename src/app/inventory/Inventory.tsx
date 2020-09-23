@@ -45,6 +45,7 @@ const components = [
   DestinyComponentType.CharacterInventories,
   DestinyComponentType.CharacterEquipment,
   DestinyComponentType.ItemInstances,
+  DestinyComponentType.ItemSockets, // TODO: remove ItemSockets - currently needed for wishlist perks
 ];
 
 function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
