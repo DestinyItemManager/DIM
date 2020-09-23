@@ -112,6 +112,9 @@
       grid-template-columns: repeat(10, 1fr);
       gap: 0;
       padding: 4px 0 0 0;
+      @include phone-portrait {
+        padding: 4px 0;
+      }
     }
 
     .item-drag-container,

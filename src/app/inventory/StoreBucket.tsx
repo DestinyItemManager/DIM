@@ -1,18 +1,21 @@
-import PullFromBucketButton from 'app/inventory/PullFromBucketButton';
+import { t } from 'app/i18next-t';
+import { moveItemTo } from 'app/inventory/item-move-service';
+import { showItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
-import { AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from '../shell/icons';
+import { addIcon, AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { sortedStoresSelector } from './selectors';
@@ -73,6 +76,21 @@ function StoreBucket({
 }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
+  const pickEquipItem = useCallback(async () => {
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item: DimItem) =>
+          item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name,
+        }),
+      });
+
+      dispatch(moveItemTo(item, store));
+    } catch (e) {}
+  }, [bucket.hash, bucket.name, dispatch, store]);
+
   // The vault divides armor by class
   if (store.isVault && bucket.inArmor) {
     const itemsByClass = _.groupBy(items, (item) => item.classType);
@@ -101,8 +119,6 @@ function StoreBucket({
     items.filter((i) => !i.equipped),
     itemSortOrder
   );
-  const hidePullFromBucket =
-    $featureFlags.movePullFromButton && $featureFlags.mobileCategoryStrip && isPhonePortrait;
 
   return (
     <>
@@ -115,8 +131,17 @@ function StoreBucket({
               isPhonePortrait={isPhonePortrait}
             />
           </div>
-          {!hidePullFromBucket && (
-            <PullFromBucketButton store={store} bucket={bucket} className="pull-item-button" />
+          {bucket.hasTransferDestination && (
+            <a
+              onClick={pickEquipItem}
+              className="pull-item-button"
+              title={t('MovePopup.PullItem', {
+                bucket: bucket.name,
+                store: store.name,
+              })}
+            >
+              <AppIcon icon={addIcon} />
+            </a>
           )}
         </StoreBucketDropTarget>
       )}
