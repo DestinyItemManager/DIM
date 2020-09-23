@@ -1,0 +1,15 @@
+.dropdownButton {
+  margin: 0 4px 0 8px;
+}
+
+.count {
+  color: #999;
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
+
+.storeIcon {
+  margin-right: 4px;
+}
