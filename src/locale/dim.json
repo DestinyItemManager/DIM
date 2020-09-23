@@ -269,7 +269,7 @@
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "Clear search filter",
-    "CompareMatching": "Compare filtered items",
+    "CompareMatching": "Compare Items",
     "DeleteSearch": "Delete Search",
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
@@ -287,6 +287,7 @@
     "ReportBug": "Report a Bug",
     "SaveSearch": "Save Search",
     "Shop": "Shop",
+    "TagAs": "Tag as '{{tag}}'",
     "UpgradeDIM": "Update DIM",
     "WhatsNew": "What's New"
   },
@@ -849,7 +850,7 @@
   },
   "Tags": {
     "Archive": "Archive",
-    "ClearTag": "Clear",
+    "ClearTag": "Clear Tag",
     "Favorite": "Favorite",
     "Infuse": "Infuse",
     "Junk": "Junk",

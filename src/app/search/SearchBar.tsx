@@ -201,7 +201,7 @@ function SearchBar(
     closeMenu,
   } = useCombobox<SearchItem>({
     items,
-    defaultIsOpen: isPhonePortrait && mainSearchBar,
+    initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
     onSelectedItemChange: ({ selectedItem }) => {
