@@ -1,3 +1,4 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
@@ -7,6 +8,7 @@ import {
   DestinyCharacterComponent,
   DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
+  DestinyComponentType,
   DestinyItemComponent,
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
@@ -38,6 +40,8 @@ import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
+
+let isFirstLoad = true;
 
 /**
  * Update the high level character information for all the stores
@@ -103,10 +107,10 @@ export function mergeCollectibles(
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
   const allCollectibles = {
-    ...profileCollectibles.data?.collectibles,
+    ...profileCollectibles?.data?.collectibles,
   };
 
-  _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
+  _.forIn(characterCollectibles?.data || {}, ({ collectibles }) => {
     Object.assign(allCollectibles, collectibles);
   });
 
@@ -116,7 +120,10 @@ export function mergeCollectibles(
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
-export function loadStores(): ThunkResult<DimStore[] | undefined> {
+
+export function loadStores(
+  components?: DestinyComponentType[]
+): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
       let account = currentAccountSelector(getState());
@@ -128,6 +135,29 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
           return;
         }
       }
+
+      const stores = await dispatch(loadStoresData(account, isFirstLoad ? components : undefined));
+
+      if (isFirstLoad) {
+        isFirstLoad = false;
+        if (components) {
+          // async load the rest (no await)
+          dispatch(loadStoresData(account));
+        }
+      }
+
+      return stores;
+    })();
+    return promise;
+  };
+}
+
+function loadStoresData(
+  account: DestinyAccount,
+  components?: DestinyComponentType[]
+): ThunkResult<DimStore[] | undefined> {
+  return async (dispatch, getState) => {
+    const promise = (async () => {
       resetItemIndexGenerator();
 
       // TODO: if we've already loaded profile recently, don't load it again
@@ -136,7 +166,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
         const [defs, , profileInfo] = await Promise.all([
           (dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
           dispatch(loadNewItems(account)),
-          getStores(account),
+          getStores(account, components),
         ]);
         if (!defs || !profileInfo) {
           return;
@@ -260,7 +290,7 @@ function processCharacter(
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
-    profileInfo.characterProgressions.data?.[characterId]?.uninstancedItemObjectives || [];
+    profileInfo.characterProgressions?.data?.[characterId]?.uninstancedItemObjectives || [];
 
   const store = makeCharacter(defs, character, lastPlayedDate);
 
