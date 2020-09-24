@@ -57,3 +57,13 @@
     background-color: rgba(151, 4, 1, 0.75) !important;
   }
 }
+
+@include phone-portrait {
+  .inventory-content .title.postmaster {
+    // TODO clean this up after we remove background colors based on emblem
+    background-color: none !important;
+    padding-top: 0;
+    min-height: 34px;
+    opacity: 0.8;
+  }
+}

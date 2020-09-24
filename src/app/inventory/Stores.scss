@@ -47,9 +47,9 @@
 
     .bucket-label {
       opacity: 0.8;
-      margin: 0px 0 5px;
+      margin: 0;
       z-index: inherit;
-      // background: none; // uncomment to remove transparent background
+      background: none; // comment out to add background background
 
       a {
         text-decoration: none;

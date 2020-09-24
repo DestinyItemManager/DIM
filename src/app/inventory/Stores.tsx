@@ -222,7 +222,12 @@ function CollapsibleContainer({
   currentStore,
   inventoryBucket,
   vault,
-}: { category: string; inventoryBucket: InventoryBucket[] } & InventoryContainerProps) {
+  isPhonePortrait,
+}: {
+  category: string;
+  inventoryBucket: InventoryBucket[];
+  isPhonePortrait?: boolean;
+} & InventoryContainerProps) {
   if (!categoryHasItems(buckets, category, stores, currentStore)) {
     return null;
   }
@@ -243,6 +248,7 @@ function CollapsibleContainer({
           stores={stores}
           vault={vault}
           currentStore={currentStore}
+          isPhonePortrait={isPhonePortrait}
         />
       ))}
     </InventoryCollapsibleTitle>
@@ -255,16 +261,19 @@ function StoresInventory(props: InventoryContainerProps) {
   if (selectedCategoryId) {
     return (
       <>
-        <CollapsibleContainer
-          {...props}
-          buckets={buckets}
-          category={'Postmaster'}
-          inventoryBucket={buckets.byCategory['Postmaster']}
-        />
         {$featureFlags.unstickyStats && selectedCategoryId === 'Armor' && (
           <StoreStats
             store={currentStore}
-            style={{ ...storeBackgroundColor(currentStore, 0, true), paddingBottom: 8 }}
+            style={{ ...storeBackgroundColor(currentStore, 0, true, true), paddingBottom: 8 }}
+          />
+        )}
+        {selectedCategoryId === 'Inventory' && (
+          <CollapsibleContainer
+            {...props}
+            buckets={buckets}
+            category={'Postmaster'}
+            inventoryBucket={buckets.byCategory['Postmaster']}
+            isPhonePortrait={true}
           />
         )}
         {buckets.byCategory[selectedCategoryId].map((bucket) => (
@@ -275,6 +284,7 @@ function StoresInventory(props: InventoryContainerProps) {
             vault={vault}
             currentStore={currentStore}
             labels={true}
+            isPhonePortrait={true}
           />
         ))}
       </>
