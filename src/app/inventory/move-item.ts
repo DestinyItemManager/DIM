@@ -1,5 +1,6 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
+import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -11,6 +12,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
 import { queueAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
+import { InventoryBucket } from './inventory-buckets';
 import { moveItemTo as moveTo } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
@@ -58,6 +60,41 @@ export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
     const equip = !item.equipped || item.owner !== active.id;
 
     return dispatch(moveItemTo(item, active, itemCanBeEquippedBy(item, active) ? equip : false));
+  };
+}
+
+/**
+ * Show an item picker dialog, and then pull the selected item to the current store.
+ */
+export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
+  return async (dispatch, getState) => {
+    const store = getStore(storesSelector(getState()), storeId)!;
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name,
+        }),
+      });
+
+      await dispatch(moveItemTo(item, store));
+    } catch (e) {}
+  };
+}
+
+/**
+ * Drop a dragged item
+ */
+export function dropItem(
+  item: DimItem,
+  storeId: string,
+  equip = false,
+  chooseAmount = false
+): ThunkResult<DimItem> {
+  return async (dispatch, getState) => {
+    const store = getStore(storesSelector(getState()), storeId)!;
+    return dispatch(moveItemTo(item, store, equip, item.amount, chooseAmount));
   };
 }
 

@@ -32,6 +32,7 @@ export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Un
  * properties instead of "| null".
  */
 // TODO: This interface is clearly too large - break out interfaces for common subsets
+// TODO: separate out "mutable" vs "immutable" data
 export interface DimItem {
   // Static data - this won't ever change for the lifetime of the item, because it's derived from the definition or is intrinsic to the item's identity. These would only change if the manifest updates.
 
