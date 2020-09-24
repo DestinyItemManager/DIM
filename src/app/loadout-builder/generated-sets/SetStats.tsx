@@ -45,17 +45,17 @@ function SetStats({
 
   return (
     <div className={clsx(styles.container, className)}>
-      {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
-        <PressTip
-          elementType="span"
-          tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
-            stats: incorrectStats.join('/'),
-          })}
-        >
-          <AppIcon className={styles.warning} icon={faExclamationTriangle} />
-        </PressTip>
-      )}
       <div className={styles.tierLightContainer}>
+        {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+          <PressTip
+            elementType="span"
+            tooltip={t('LoadoutBuilder.StatIncorrectWarning', {
+              stats: incorrectStats.join('/'),
+            })}
+          >
+            <AppIcon className={styles.warning} icon={faExclamationTriangle} />
+          </PressTip>
+        )}
         <span className={styles.tierLightSegment}>
           <b>
             {t('LoadoutBuilder.TierNumber', {
