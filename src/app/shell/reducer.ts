@@ -56,7 +56,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
 
       return {
         ...state,
-        searchQuery: newQuery.replace(/\s+/, ' '),
+        searchQuery: newQuery.replace(/\s+/, ' ').trim(),
         searchQueryVersion: state.searchQueryVersion + 1,
       };
     }

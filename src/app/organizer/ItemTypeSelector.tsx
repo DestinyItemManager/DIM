@@ -23,7 +23,7 @@ import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import React from 'react';
 import legs from '../../../destiny-icons/armor_types/boots.svg';
 import chest from '../../../destiny-icons/armor_types/chest.svg';
 import classItem from '../../../destiny-icons/armor_types/class.svg';
@@ -60,7 +60,7 @@ const armorHashes = {
  * Generate a tree of all the drilldown options for item filtering. This tree is
  * used to generate the list of selected subcategories.
  */
-export const getD2SelectionTree = (defs: D2ManifestDefinitions): ItemCategoryTreeNode => {
+const getD2SelectionTree = (defs: D2ManifestDefinitions): ItemCategoryTreeNode => {
   const armorCategory = defs.ItemCategory.get(ItemCategoryHashes.Armor);
 
   // Each class has the same armor
@@ -248,7 +248,7 @@ export const getD2SelectionTree = (defs: D2ManifestDefinitions): ItemCategoryTre
  * Generate a tree of all the drilldown options for item filtering. This tree is
  * used to generate the list of selected subcategories.
  */
-export const getD1SelectionTree = (): ItemCategoryTreeNode => {
+const getD1SelectionTree = (): ItemCategoryTreeNode => {
   // Each class has the same armor
   const armorCategories = [
     {
@@ -400,24 +400,26 @@ export const getD1SelectionTree = (): ItemCategoryTreeNode => {
   };
 };
 
+export function getSelectionTree(defs: D2ManifestDefinitions | D1ManifestDefinitions) {
+  return defs.isDestiny2() ? getD2SelectionTree(defs) : getD1SelectionTree();
+}
+
 /**
  * This component offers a means for narrowing down your selection to a single item type
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
  */
 export default function ItemTypeSelector({
   defs,
+  selectionTree,
   selection,
   onSelection,
 }: {
   defs: D2ManifestDefinitions | D1ManifestDefinitions;
+  selectionTree: ItemCategoryTreeNode;
   selection: ItemCategoryTreeNode[];
   onSelection(selection: ItemCategoryTreeNode[]): void;
 }) {
-  const types = useMemo(
-    () => (defs.isDestiny2() ? getD2SelectionTree(defs) : getD1SelectionTree()),
-    [defs]
-  );
-  selection = selection.length ? selection : [types];
+  selection = selection.length ? selection : [selectionTree];
 
   const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
     onSelection([..._.take(selection, depth + 1), subCategory]);

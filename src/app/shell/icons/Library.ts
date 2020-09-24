@@ -117,7 +117,7 @@ export {
   faCog as settingsIcon,
   faCopy as copyIcon,
   faDownload as downloadIcon,
-  faEllipsisV,
+  faEllipsisV as kebabIcon,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,

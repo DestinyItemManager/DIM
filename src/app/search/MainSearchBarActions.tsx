@@ -1,26 +1,34 @@
-import { t, tl } from 'app/i18next-t';
+import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { t } from 'app/i18next-t';
+import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
-import { querySelector } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
+import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { searchLoadout } from 'app/loadout/auto-loadouts';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
-import React, { useEffect, useMemo, useState } from 'react';
-import { connect, MapDispatchToPropsFunction } from 'react-redux';
+import React, { useMemo } from 'react';
+import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { CompareService } from '../compare/compare.service';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, faClone, tagIcon } from '../shell/icons';
+import {
+  AppIcon,
+  clearIcon,
+  faClone,
+  lockIcon,
+  stickyNoteIcon,
+  unlockedIcon,
+} from '../shell/icons';
 import { loadingTracker } from '../shell/loading-tracker';
 import { ItemFilter } from './filter-types';
+import styles from './MainSearchBarActions.m.scss';
 import { searchFilterSelector } from './search-filter';
 import './search-filter.scss';
-
-const bulkItemTags = Array.from(itemTagSelectorList);
-bulkItemTags.push({ type: 'clear', label: tl('Tags.ClearTag') });
-bulkItemTags.push({ type: 'lock', label: tl('Tags.LockAll') });
-bulkItemTags.push({ type: 'unlock', label: tl('Tags.UnlockAll') });
 
 interface ProvidedProps {
   onClear?(): void;
@@ -29,57 +37,43 @@ interface ProvidedProps {
 interface StoreProps {
   searchQuery: string;
   allItems: DimItem[];
+  stores: DimStore[];
   buckets?: InventoryBuckets;
   searchFilter: ItemFilter;
+  isPhonePortrait: boolean;
 }
 
-type DispatchProps = {
-  bulkTagItems(items: DimItem[], tag: TagValue): void;
-  bulkLockItems(items: DimItem[], locked: boolean): void;
-};
-
-const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
-  bulkTagItems: (items, tag) => dispatch(bulkTagItems(items, tag) as any),
-  bulkLockItems: (items, locked) => dispatch(bulkLockItems(items, locked) as any),
-});
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     searchQuery: querySelector(state),
+    stores: sortedStoresSelector(state),
     searchFilter: searchFilterSelector(state),
     allItems: allItemsSelector(state),
     buckets: bucketsSelector(state),
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
 /**
  * The extra buttons that appear in the main search bar when there are matched items.
- *
- * TODO: Replace with a dropdown of even more actions!
  */
 function MainSearchBarActions({
-  searchQuery,
   allItems,
+  stores,
   buckets,
   searchFilter,
-  bulkTagItems,
-  bulkLockItems,
+  isPhonePortrait,
+  dispatch,
 }: Props) {
   const location = useLocation();
-
-  // Re-hide the tagging dropdown when the query is cleared
-  const [showSelect, setShowSelect] = useState(false);
-  useEffect(() => {
-    if (!searchQuery && showSelect) {
-      setShowSelect(false);
-    }
-  }, [searchQuery, showSelect]);
-
+  const onProgress = location.pathname.endsWith('progress');
+  const onRecords = location.pathname.endsWith('records');
+  const onVendors = location.pathname.endsWith('vendors');
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
-  const onProgress = location.pathname.endsWith('progress');
+  const showSearchCount = !onProgress && !onRecords && !onVendors;
 
   const displayableBuckets = useMemo(
     () =>
@@ -95,12 +89,12 @@ function MainSearchBarActions({
 
   const filteredItems = useMemo(
     () =>
-      !onProgress && displayableBuckets.size
+      showSearchCount && displayableBuckets.size
         ? allItems.filter(
             (item: DimItem) => displayableBuckets.has(item.bucket.hash) && searchFilter(item)
           )
         : emptyArray<DimItem>(),
-    [displayableBuckets, onProgress, searchFilter, allItems]
+    [displayableBuckets, showSearchCount, searchFilter, allItems]
   );
 
   let isComparable = false;
@@ -109,69 +103,112 @@ function MainSearchBarActions({
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
 
-  const bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
-    async (e) => {
-      setShowSelect(false);
+  const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+    if (selectedTag === 'lock' || selectedTag === 'unlock') {
+      // Bulk locking/unlocking
+      const state = selectedTag === 'lock';
+      const lockables = filteredItems.filter((i) => i.lockable);
+      dispatch(bulkLockItems(lockables, state));
+    } else {
+      // Bulk tagging
+      const tagItems = filteredItems.filter((i) => i.taggable);
 
-      const selectedTag = e.currentTarget.value;
+      if (isTagValue(selectedTag)) {
+        dispatch(bulkTagItems(tagItems, selectedTag));
+      }
+    }
+  });
 
-      if (selectedTag === 'lock' || selectedTag === 'unlock') {
-        // Bulk locking/unlocking
-        const state = selectedTag === 'lock';
-        const lockables = filteredItems.filter((i) => i.lockable);
-        bulkLockItems(lockables, state);
-      } else {
-        // Bulk tagging
-        const tagItems = filteredItems.filter((i) => i.taggable);
-
-        if (isTagValue(selectedTag)) {
-          bulkTagItems(tagItems, selectedTag);
+  const bulkNote = () => {
+    const note = prompt(t('Organizer.NotePrompt'));
+    if (note !== null) {
+      if (filteredItems.length) {
+        for (const item of filteredItems) {
+          dispatch(setItemNote({ itemId: item.id, note: note || undefined }));
         }
       }
     }
-  );
+  };
 
   const compareMatching = () => {
     CompareService.addItemsToCompare(filteredItems, false);
   };
 
-  const onTagClicked = () => setShowSelect(true);
+  // Move items matching the current search. Max 9 per type.
+  const applySearchLoadout = async (store: DimStore) => {
+    const loadout = searchLoadout(allItems, store, searchFilter);
+    dispatch(applyLoadout(store, loadout, true));
+  };
+
+  const bulkItemTags = itemTagSelectorList
+    .filter((t) => t.type)
+    .map((tag) => ({
+      ...tag,
+      label: t('Header.TagAs', { tag: t(tag.label) }),
+    }));
+  bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
+  bulkItemTags.push({ type: 'lock', label: t('Tags.LockAll'), icon: lockIcon });
+  bulkItemTags.push({ type: 'unlock', label: t('Tags.UnlockAll'), icon: unlockedIcon });
+
+  const dropdownOptions: Option[] = [
+    ...bulkItemTags.map((tag) => ({
+      key: tag.type || 'default',
+      onSelected: () => tag.type && bulkTag(tag.type),
+      content: (
+        <>
+          {tag.icon && <AppIcon icon={tag.icon} />} {tag.label}
+        </>
+      ),
+    })),
+    {
+      key: 'note',
+      onSelected: () => bulkNote(),
+      content: (
+        <>
+          <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
+        </>
+      ),
+    },
+    {
+      key: 'compare',
+      onSelected: compareMatching,
+      disabled: !isComparable,
+      content: (
+        <>
+          <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
+        </>
+      ),
+    },
+    ...stores.map((store) => ({
+      key: `move-${store.id}`,
+      onSelected: () => applySearchLoadout(store),
+      content: (
+        <>
+          <img src={store.icon} width="16" height="16" alt="" className={styles.storeIcon} />{' '}
+          {store.isVault
+            ? t('MovePopup.SendToVault')
+            : t('MovePopup.StoreWithName', { character: store.name })}
+        </>
+      ),
+    })),
+  ];
 
   return (
     <>
-      {!onProgress && (
-        <span className="filter-match-count">
+      {showSearchCount && (
+        <span className={styles.count}>
           {t('Header.FilterMatchCount', { count: filteredItems.length })}
         </span>
       )}
-      {isComparable && (
-        <span
-          onClick={compareMatching}
-          className="filter-bar-button"
-          title={t('Header.CompareMatching')}
-        >
-          <AppIcon icon={faClone} />
-        </span>
-      )}
 
-      {showSelect ? (
-        <select className="bulk-tag-select filter-bar-button" onChange={bulkTag}>
-          {bulkItemTags.map((tag) => (
-            <option key={tag.type || 'default'} value={tag.type}>
-              {t(tag.label)}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <span className="filter-bar-button" onClick={onTagClicked} title={t('Header.BulkTag')}>
-          <AppIcon icon={tagIcon} />
-        </span>
-      )}
+      <Dropdown
+        options={dropdownOptions}
+        kebab={true}
+        className={styles.dropdownButton}
+        offset={isPhonePortrait ? 10 : 3}
+      />
     </>
   );
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(MainSearchBarActions);
+export default connect<StoreProps>(mapStateToProps)(MainSearchBarActions);

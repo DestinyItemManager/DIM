@@ -24,12 +24,14 @@ export const farming: Reducer<FarmingState, FarmingAction> = (
       return {
         ...state,
         storeId: action.payload,
+        numInterruptions: 0,
       };
 
     case getType(actions.stop):
       return {
         ...state,
         storeId: undefined,
+        numInterruptions: 0,
       };
 
     case getType(actions.interruptFarming):

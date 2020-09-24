@@ -86,6 +86,7 @@ function InventoryCollapsibleTitle({
                 collapsed,
                 vault: store.isVault,
                 postmasterFull: showPostmasterFull,
+                postmaster: checkPostmaster,
               })}
               style={storeBackgroundColor(store, index)}
             >

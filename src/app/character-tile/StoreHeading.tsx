@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import LoadoutPopup from '../loadout/LoadoutPopup';
-import { AppIcon, faEllipsisV } from '../shell/icons';
+import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';
@@ -49,7 +49,7 @@ const CharacterHeader = ({
         'loadout-open': loadoutMenuOpen,
       })}
     >
-      <AppIcon icon={faEllipsisV} title={t('Loadouts.Loadouts')} />
+      <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
     </div>
     {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
   </div>

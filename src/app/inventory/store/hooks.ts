@@ -2,6 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { refresh$ } from 'app/shell/refresh';
 import { ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { queueAction } from '../action-queue';
@@ -15,18 +16,22 @@ import { loadStores as d2LoadStores } from '../d2-stores';
  * in the same component. useDispatch() is cheap because it just listens to a
  * context that never changes.
  */
-export function useLoadStores(account: DestinyAccount | undefined, loaded: boolean) {
+export function useLoadStores(
+  account: DestinyAccount | undefined,
+  loaded: boolean,
+  components?: DestinyComponentType[]
+) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   useEffect(() => {
     if (account && !loaded) {
       if (account?.destinyVersion == 2) {
-        dispatch(d2LoadStores());
+        dispatch(d2LoadStores(components));
       } else {
         dispatch(d1LoadStores());
       }
     }
-  }, [account, dispatch, loaded]);
+  }, [account, dispatch, components, loaded]);
 
   useSubscription(() =>
     refresh$.subscribe(() => {

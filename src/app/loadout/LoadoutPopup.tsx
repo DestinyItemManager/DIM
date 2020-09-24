@@ -1,5 +1,4 @@
 import { startFarming } from 'app/farming/actions';
-import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -177,19 +176,14 @@ function LoadoutPopup({
 
   // TODO: move all these fancy loadouts to a new service
 
-  const onApplyLoadout = async (loadout: Loadout, e, filterToEquipped = false) => {
+  const onApplyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
     e.preventDefault();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    dispatch(interruptFarming());
-    try {
-      await dispatch(applyLoadout(dimStore, loadout, true));
-    } finally {
-      dispatch(resumeFarming());
-    }
+    dispatch(applyLoadout(dimStore, loadout, true));
   };
 
   // A dynamic loadout set up to level weapons and armor
