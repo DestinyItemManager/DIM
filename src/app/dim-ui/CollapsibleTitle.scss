@@ -40,7 +40,7 @@
   }
 
   .gradientBackground & {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
     &:hover,
     &.collapsed {
       background-color: rgba(0, 0, 0, 0.4);
