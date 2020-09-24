@@ -17,20 +17,9 @@ export function rangeStringToComparator(rangeString?: string) {
   const [, operator, comparisonValueString] = matchedRangeString;
   const comparisonValue = parseFloat(comparisonValueString);
 
-  switch (operator) {
-    case '=':
-    case '':
-      return (compare: number) => compare === comparisonValue;
-    case '<':
-      return (compare: number) => compare < comparisonValue;
-    case '<=':
-      return (compare: number) => compare <= comparisonValue;
-    case '>':
-      return (compare: number) => compare > comparisonValue;
-    case '>=':
-      return (compare: number) => compare >= comparisonValue;
-  }
-  throw new Error('Unknown range operator ' + operator);
+  const operation = stringToOperation(operator);
+
+  return (compare: number) => operation(compare, comparisonValue);
 }
 
 const simpleRangeFilters: FilterDefinition[] = [
@@ -88,27 +77,46 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
-    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'kills', format: 'range'}),
+    suggestionsGenerator: () =>
+      generateSuggestionsForFilter({ keywords: 'kills', format: 'range' }),
     filter: ({ filterValue }) => {
-        const parts = filterValue.split(':');
-        const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
+      const parts = filterValue.split(':');
+      const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
-        if (shouldntExist) {
-          throw new Error('Too many filter parameters.');
-        }
+      if (shouldntExist) {
+        throw new Error('Too many filter parameters.');
+      }
 
-        const numberComparisonFunction = rangeStringToComparator(count);
-        return (item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
-          return Boolean(
-            count &&
+      const numberComparisonFunction = rangeStringToComparator(count);
+      return (item) => {
+        const killTrackerInfo = getItemKillTrackerInfo(item);
+        return Boolean(
+          count &&
             killTrackerInfo &&
-              (!activityType || activityType === killTrackerInfo.type) &&
-              numberComparisonFunction(killTrackerInfo.count)
-          );
-        }
+            (!activityType || activityType === killTrackerInfo.type) &&
+            numberComparisonFunction(killTrackerInfo.count)
+        );
+      };
     },
   },
 ];
 
 export default simpleRangeFilters;
+
+// converts = < > etc into a corresponding comparison function
+export function stringToOperation(operator: string) {
+  switch (operator) {
+    case '=':
+    case '':
+      return (a: number, b: number) => a === b;
+    case '<':
+      return (a: number, b: number) => a < b;
+    case '<=':
+      return (a: number, b: number) => a <= b;
+    case '>':
+      return (a: number, b: number) => a > b;
+    case '>=':
+      return (a: number, b: number) => a >= b;
+  }
+  throw new Error('Unknown range operator ' + operator);
+}
