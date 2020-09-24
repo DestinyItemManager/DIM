@@ -44,16 +44,24 @@
   display: flex;
   flex-flow: row wrap;
 
+  @include phone-portrait {
+    justify-content: space-around;
+  }
+
   // Prevents odd number of columns messing up the layout
-  @media (min-width: 780px) and (max-width: 1079px) {
+  @media (max-width: 1079px) {
     max-width: 500px;
   }
 }
 
 .statSegment {
   white-space: nowrap;
-  min-width: 120px;
+  min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
   margin-right: 14px;
+
+  @include phone-portrait {
+    min-width: 120px;
+  }
 }
 
 .nonActiveStat {
