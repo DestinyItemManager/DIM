@@ -198,7 +198,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         ))}
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
-            <AppIcon icon={faClone} /> Compare
+            <AppIcon icon={faClone} /> {t('Compare.Button')}
           </div>
         )}
         {canConsolidate && (
