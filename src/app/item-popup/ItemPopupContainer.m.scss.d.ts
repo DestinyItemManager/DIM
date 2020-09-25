@@ -3,9 +3,13 @@
 interface CssExports {
   'arrow': string;
   'common': string;
+  'desktopActions': string;
+  'desktopPopup': string;
+  'desktopPopupBody': string;
   'exotic': string;
   'legendary': string;
   'movePopupDialog': string;
+  'popupBackground': string;
   'rare': string;
   'uncommon': string;
 }

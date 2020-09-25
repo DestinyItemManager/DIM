@@ -14,6 +14,7 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
+import DesktopItemActions from './DesktopItemActions';
 import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
 import ItemActions from './ItemActions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
@@ -114,6 +115,7 @@ function ItemPopupContainer({
 
   const popupRef = useRef<HTMLDivElement>(null);
   usePopper({
+    placement: 'right',
     contents: popupRef,
     reference: { current: currentItem?.element || null },
     boundarySelector,
@@ -152,31 +154,35 @@ function ItemPopupContainer({
     />
   );
 
-  const footer = <ItemActions key={item.index} item={item} />;
-
   return isPhonePortrait ? (
     <Sheet
       onClose={onClose}
       header={header}
-      sheetClassName={`item-popup is-${item.tier}`}
-      footer={footer}
+      sheetClassName={clsx('item-popup', 'is-item.tier', styles.popupBackground)}
+      footer={<ItemActions key={item.index} item={item} />}
     >
       {body}
     </Sheet>
   ) : (
     <div
-      className={clsx(styles.movePopupDialog, tierClasses[item.tier])}
+      className={clsx('item-popup', styles.movePopupDialog, tierClasses[item.tier])}
       ref={popupRef}
       role="dialog"
       aria-modal="false"
     >
       <ClickOutside onClickOutside={onClose}>
         <ItemTagHotkeys item={item} />
-        {header}
-        {body}
-        <div className="item-details">{footer}</div>
+        <div className={styles.desktopPopup}>
+          <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
+            {header}
+            {body}
+          </div>
+          <div className={clsx(styles.desktopActions)}>
+            <DesktopItemActions key={item.index} item={item} />
+          </div>
+        </div>
       </ClickOutside>
-      <div className={clsx(styles.arrow, tierClasses[item.tier])} />
+      <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
     </div>
   );
 }
