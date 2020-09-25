@@ -1,6 +1,20 @@
 .buttons {
+  width: min-content;
+  text-align: center;
+  margin-right: 14px;
+  margin-bottom: 14px;
+
+  @media (min-width: 1080px) {
+    margin-right: 0;
+  }
+
   > * {
-    margin-left: 4px;
+    // Matches three action buttons to the same height as two socket slots
+    min-height: calc((((0.59 * var(--item-size)) * 2) - 4px) / 3);
+    width: 100%;
+    // Matches GeneratedSetItem width
+    min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
+    margin-bottom: 4px;
   }
 }
 

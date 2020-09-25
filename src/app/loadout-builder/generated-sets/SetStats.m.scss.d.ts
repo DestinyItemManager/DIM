@@ -2,9 +2,14 @@
 // Please do not change this file!
 interface CssExports {
   'container': string;
+  'existingLoadout': string;
   'light': string;
+  'loadoutName': string;
   'nonActiveStat': string;
   'statSegment': string;
+  'statSegmentContainer': string;
+  'tierLightContainer': string;
+  'tierLightSegment': string;
   'warning': string;
 }
 export const cssExports: CssExports;
