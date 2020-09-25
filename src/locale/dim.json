@@ -844,7 +844,6 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
-    "Add": "Add",
     "FillStack": "Fill Stack ({{amount}})",
     "HowMuch": "How many {{itemname}} to move?",
     "Move": "Move"
