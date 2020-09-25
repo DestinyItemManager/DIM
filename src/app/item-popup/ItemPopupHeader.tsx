@@ -22,12 +22,14 @@ export default function ItemPopupHeader({
   expanded,
   showToggle,
   language,
+  isPhonePortrait,
   onToggleExpanded,
 }: {
   item: DimItem;
   expanded: boolean;
   showToggle: boolean;
   language: string;
+  isPhonePortrait: boolean;
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = item.trackable || item.lockable || item.element;
@@ -70,7 +72,7 @@ export default function ItemPopupHeader({
             {item.name}
           </ExternalLink>
         </div>
-        {!$featureFlags.newItemPopupActions && item.comparable && (
+        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={faClone} />
           </a>

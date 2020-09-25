@@ -138,6 +138,7 @@ function ItemPopupContainer({
       language={language}
       expanded={isPhonePortrait || itemDetails || $featureFlags.newItemPopupActions}
       showToggle={!isPhonePortrait}
+      isPhonePortrait={isPhonePortrait}
       onToggleExpanded={toggleItemDetails}
     />
   );
