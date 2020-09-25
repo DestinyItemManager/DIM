@@ -64,16 +64,19 @@ function MainSearchBarActions({
   stores,
   buckets,
   searchFilter,
+  searchQuery,
   isPhonePortrait,
   dispatch,
 }: Props) {
   const location = useLocation();
+  const onInventory = location.pathname.endsWith('inventory');
   const onProgress = location.pathname.endsWith('progress');
   const onRecords = location.pathname.endsWith('records');
   const onVendors = location.pathname.endsWith('vendors');
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
-  const showSearchCount = !onProgress && !onRecords && !onVendors;
+  const showSearchCount = searchQuery && !onProgress && !onRecords && !onVendors;
+  const showSearchActions = onInventory;
 
   const displayableBuckets = useMemo(
     () =>
@@ -150,48 +153,53 @@ function MainSearchBarActions({
   bulkItemTags.push({ type: 'lock', label: t('Tags.LockAll'), icon: lockIcon });
   bulkItemTags.push({ type: 'unlock', label: t('Tags.UnlockAll'), icon: unlockedIcon });
 
-  const dropdownOptions: Option[] = [
-    ...bulkItemTags.map((tag) => ({
-      key: tag.type || 'default',
-      onSelected: () => tag.type && bulkTag(tag.type),
-      content: (
-        <>
-          {tag.icon && <AppIcon icon={tag.icon} />} {tag.label}
-        </>
-      ),
-    })),
-    {
-      key: 'note',
-      onSelected: () => bulkNote(),
-      content: (
-        <>
-          <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
-        </>
-      ),
-    },
-    {
-      key: 'compare',
-      onSelected: compareMatching,
-      disabled: !isComparable,
-      content: (
-        <>
-          <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
-        </>
-      ),
-    },
-    ...stores.map((store) => ({
-      key: `move-${store.id}`,
-      onSelected: () => applySearchLoadout(store),
-      content: (
-        <>
-          <img src={store.icon} width="16" height="16" alt="" className={styles.storeIcon} />{' '}
-          {store.isVault
-            ? t('MovePopup.SendToVault')
-            : t('MovePopup.StoreWithName', { character: store.name })}
-        </>
-      ),
-    })),
-  ];
+  const dropdownOptions: Option[] = showSearchActions
+    ? [
+        ...bulkItemTags.map((tag) => ({
+          key: tag.type || 'default',
+          onSelected: () => tag.type && bulkTag(tag.type),
+          disabled: !showSearchCount,
+          content: (
+            <>
+              {tag.icon && <AppIcon icon={tag.icon} />} {tag.label}
+            </>
+          ),
+        })),
+        {
+          key: 'note',
+          onSelected: () => bulkNote(),
+          disabled: !showSearchCount,
+          content: (
+            <>
+              <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
+            </>
+          ),
+        },
+        {
+          key: 'compare',
+          onSelected: compareMatching,
+          disabled: !isComparable || !showSearchCount,
+          content: (
+            <>
+              <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
+            </>
+          ),
+        },
+        ...stores.map((store) => ({
+          key: `move-${store.id}`,
+          onSelected: () => applySearchLoadout(store),
+          disabled: !showSearchCount,
+          content: (
+            <>
+              <img src={store.icon} width="16" height="16" alt="" className={styles.storeIcon} />{' '}
+              {store.isVault
+                ? t('MovePopup.SendToVault')
+                : t('MovePopup.StoreWithName', { character: store.name })}
+            </>
+          ),
+        })),
+      ]
+    : emptyArray();
 
   return (
     <>
@@ -201,12 +209,14 @@ function MainSearchBarActions({
         </span>
       )}
 
-      <Dropdown
-        options={dropdownOptions}
-        kebab={true}
-        className={styles.dropdownButton}
-        offset={isPhonePortrait ? 10 : 3}
-      />
+      {showSearchActions && (
+        <Dropdown
+          options={dropdownOptions}
+          kebab={true}
+          className={styles.dropdownButton}
+          offset={isPhonePortrait ? 10 : 3}
+        />
+      )}
     </>
   );
 }
