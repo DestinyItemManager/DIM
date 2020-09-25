@@ -1,9 +1,10 @@
+@import '../variables.scss';
+
 .interaction {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: black;
-  padding: 0 4px;
 }
 
 .infusePerk {
@@ -33,4 +34,25 @@
 }
 .moveConsolidate {
   background-image: url('../../images/arrows-in.png');
+}
+
+.actionButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-transform: uppercase;
+  padding: 8px;
+  font-weight: bold;
+
+  img,
+  :global(.app-icon) {
+    margin-right: 8px;
+    height: 32px;
+    width: 32px;
+    font-size: 32px;
+  }
+  &:hover {
+    background: $orange;
+    color: black;
+  }
 }
