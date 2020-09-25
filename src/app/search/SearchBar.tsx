@@ -326,7 +326,7 @@ function SearchBar(
         })}
       />
 
-      {liveQuery.length > 0 && children}
+      {children}
 
       {liveQuery.length > 0 && (
         <button
