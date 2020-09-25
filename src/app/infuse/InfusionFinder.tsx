@@ -166,6 +166,10 @@ function InfusionFinder({
   const onQueryChanged = (filter: string) => stateDispatch({ type: 'setFilter', filter });
   const switchDirection = () => stateDispatch({ type: 'swapDirection' });
 
+  useEffect(() => {
+    ga('send', 'pageview', '/profileMembershipId/infuse');
+  }, []);
+
   // Listen for items coming in via showInfuse#
   useSubscription(() =>
     showInfuse$.subscribe(({ item }) => {
