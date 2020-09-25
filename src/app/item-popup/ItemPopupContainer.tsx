@@ -136,7 +136,7 @@ function ItemPopupContainer({
       item={item}
       key={`header${item.index}`}
       language={language}
-      expanded={isPhonePortrait || itemDetails}
+      expanded={isPhonePortrait || itemDetails || $featureFlags.newItemPopupActions}
       showToggle={!isPhonePortrait}
       onToggleExpanded={toggleItemDetails}
     />
@@ -148,7 +148,7 @@ function ItemPopupContainer({
       key={`body${item.index}`}
       extraInfo={currentItem.extraInfo}
       tab={tab}
-      expanded={isPhonePortrait || itemDetails}
+      expanded={isPhonePortrait || itemDetails || $featureFlags.newItemPopupActions}
       onTabChanged={onTabChanged}
       onToggleExpanded={toggleItemDetails}
     />
@@ -158,10 +158,10 @@ function ItemPopupContainer({
     <Sheet
       onClose={onClose}
       header={header}
-      sheetClassName={clsx('item-popup', 'is-item.tier', styles.popupBackground)}
+      sheetClassName={clsx('item-popup', `is-${item.tier}`)}
       footer={<ItemActions key={item.index} item={item} />}
     >
-      {body}
+      <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
     <div
@@ -172,15 +172,25 @@ function ItemPopupContainer({
     >
       <ClickOutside onClickOutside={onClose}>
         <ItemTagHotkeys item={item} />
-        <div className={styles.desktopPopup}>
+        {$featureFlags.newItemPopupActions ? (
+          <div className={styles.desktopPopup}>
+            <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
+              {header}
+              {body}
+            </div>
+            <div className={clsx(styles.desktopActions)}>
+              <DesktopItemActions key={item.index} item={item} />
+            </div>
+          </div>
+        ) : (
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
             {header}
             {body}
+            <div className="item-details">
+              <ItemActions key={item.index} item={item} />
+            </div>
           </div>
-          <div className={clsx(styles.desktopActions)}>
-            <DesktopItemActions key={item.index} item={item} />
-          </div>
-        </div>
+        )}
       </ClickOutside>
       <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
     </div>

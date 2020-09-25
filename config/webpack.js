@@ -391,6 +391,8 @@ module.exports = (env) => {
         '$featureFlags.mobileCategoryStrip': JSON.stringify(!env.release),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
+        // Move the item popup actions
+        '$featureFlags.newItemPopupActions': JSON.stringify(!env.release),
       }),
 
       new WorkerPlugin({

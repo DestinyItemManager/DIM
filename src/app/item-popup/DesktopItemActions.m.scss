@@ -51,6 +51,9 @@
     width: 32px;
     font-size: 32px;
   }
+  :global(.app-icon) {
+    color: #eee;
+  }
   &:hover {
     background: $orange;
     color: black;
