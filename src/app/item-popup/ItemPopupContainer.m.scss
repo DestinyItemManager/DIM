@@ -7,8 +7,6 @@
 @import '../variables.scss';
 
 .movePopupDialog {
-  min-height: 77px;
-  width: 375px;
   // Mod drawer has z-index of 12 and needs to sit over this
   z-index: 11;
 
@@ -29,12 +27,6 @@
   &.common {
     --backgroundColor: 0, 0%, 7%;
   }
-  > div:first-child {
-    height: 100%;
-    background-color: #{'hsl(var(--backgroundColor))'};
-    contain: content;
-  }
-  box-shadow: 0 -1px 24px 4px #222;
 
   &[data-popper-placement^='top'] .arrow {
     border-width: 5px 5px 0 5px;
@@ -94,4 +86,28 @@
   border-style: solid;
   position: absolute;
   border-color: black;
+}
+
+.popupBackground {
+  height: 100%;
+  background-color: #{'hsl(var(--backgroundColor))'};
+  contain: content;
+  box-shadow: 0 -1px 24px 4px #222;
+}
+
+.desktopPopup {
+  display: flex;
+  flex-direction: row;
+  .movePopupDialog[data-popper-placement^='right'] & {
+    flex-direction: row-reverse;
+  }
+}
+
+.desktopPopupBody {
+  width: 375px;
+  display: block;
+}
+
+.desktopActions {
+  display: block;
 }

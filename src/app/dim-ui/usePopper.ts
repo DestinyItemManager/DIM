@@ -32,10 +32,10 @@ const popperOptions = (
   const headerHeight = document.getElementById('header')!.clientHeight;
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
   const padding: Padding = {
-    left: 0,
+    left: 10,
     top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
-    right: 0,
-    bottom: 0,
+    right: 10,
+    bottom: 10,
   };
   const hasArrow = Boolean(arrowClassName);
   return {

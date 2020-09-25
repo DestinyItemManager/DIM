@@ -70,16 +70,19 @@ export default function ItemPopupHeader({
             {item.name}
           </ExternalLink>
         </div>
-        {item.comparable && (
+        {!$featureFlags.newItemPopupActions && item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={faClone} />
           </a>
         )}
-        {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
-          <div className="info" onClick={onToggleExpanded}>
-            <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
-          </div>
-        )}
+        {!$featureFlags.newItemPopupActions &&
+          showToggle &&
+          !showDetailsByDefault &&
+          (showDescription || hasDetails) && (
+            <div className="info" onClick={onToggleExpanded}>
+              <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
+            </div>
+          )}
       </div>
 
       <div className="item-subtitle">

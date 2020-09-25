@@ -47,6 +47,8 @@ export default function ItemActionButton({
         aria-label={title}
         onClick={onClick}
         className={className}
+        role="button"
+        tabIndex={-1}
         style={icon ? { backgroundImage: `url("${icon}")` } : undefined}
       >
         <span>{label}</span>
