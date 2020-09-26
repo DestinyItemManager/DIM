@@ -229,6 +229,14 @@ function getEnergyCosts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) 
   return [arcCount, solarCount, voidCount];
 }
 
+/**
+ * This figures out if all general and seasonal mods can be assigned to an armour set.
+ *
+ * The params generalModPermutations and seasonalModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of seasonal or general mods.
+ *
+ * assignments is mutated by this function to store any mods assignments that were made.
+ */
 export function canTakeGeneralAndSeasonalMods(
   generalModPermutations: (ProcessMod | null)[][],
   seasonalModPermutations: (ProcessMod | null)[][],
