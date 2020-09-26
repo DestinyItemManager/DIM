@@ -362,7 +362,6 @@ module.exports = (env) => {
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Debug Service Worker
@@ -384,11 +383,11 @@ module.exports = (env) => {
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(!env.release),
         // Rearrange buckets in categories
-        '$featureFlags.newArrangement': JSON.stringify(!env.release),
+        '$featureFlags.newArrangement': JSON.stringify(true),
         // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(env.dev),
+        '$featureFlags.gradientBackground': JSON.stringify(!env.release),
         // Use a category strip on mobile inventory instead of collapsable headers
-        '$featureFlags.mobileCategoryStrip': JSON.stringify(!env.release),
+        '$featureFlags.mobileCategoryStrip': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions
