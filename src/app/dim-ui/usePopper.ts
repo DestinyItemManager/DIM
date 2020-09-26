@@ -1,12 +1,17 @@
-import { Placement } from '@popperjs/core';
-import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
-import arrow from '@popperjs/core/lib/modifiers/arrow';
-import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import offset from '@popperjs/core/lib/modifiers/offset';
-import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import { Instance, Options, Padding, popperGenerator } from '@popperjs/core/lib/popper-lite';
+import {
+  applyStyles,
+  arrow,
+  computeStyles,
+  flip,
+  Instance,
+  offset,
+  Options,
+  Padding,
+  Placement,
+  popperGenerator,
+  popperOffsets,
+  preventOverflow,
+} from '@popperjs/core';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
