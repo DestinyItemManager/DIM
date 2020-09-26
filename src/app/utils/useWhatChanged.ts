@@ -15,7 +15,7 @@ export function useWhatChanged<T extends object>(name: string, params: T) {
   } else {
     for (const [key, val] of Object.entries(params)) {
       const previousVal = previousState.current[key];
-      if (val != previousVal) {
+      if (val !== previousVal) {
         console.log(`[useWhatChanged] ${name} ${key}`, previousVal, val);
       }
     }

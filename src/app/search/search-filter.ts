@@ -120,7 +120,7 @@ function makeSearchFilterFactory(
           const filterValue = ast.args;
 
           // "is:" filters are slightly special cased
-          if (filterName == 'is') {
+          if (filterName === 'is') {
             filterName = filterValue;
           }
 

@@ -91,7 +91,7 @@ function mapStateToProps() {
     // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
     // doesn't change, so we don't trigger an update.
     let manipulatedSearchQuery = prevSearchQuery;
-    if (searchQueryVersion != prevSearchQueryVersion) {
+    if (searchQueryVersion !== prevSearchQueryVersion) {
       manipulatedSearchQuery = searchQuery;
       prevSearchQuery = searchQuery;
       prevSearchQueryVersion = searchQueryVersion;
