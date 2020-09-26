@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPopup } from 'app/item-popup/item-popup';
 import { ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
@@ -13,7 +13,6 @@ import { DimStore } from '../inventory/store-types';
 import { hideItemPopup } from './item-popup';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import styles from './ItemActions.m.scss';
-import ItemMoveAmount from './ItemMoveAmount';
 import ItemMoveLocation from './ItemMoveLocation';
 
 export default function ItemActions({
@@ -23,22 +22,12 @@ export default function ItemActions({
   item: DimItem;
   mobileInspect?: boolean;
 }) {
-  const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const store = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
-  // If the item can't be transferred (or is unique) don't show the move amount slider
-  const maximum = useMemo(
-    () =>
-      !store || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-        ? 1
-        : amountOfItem(store, item),
-    [store, item]
-  );
-
   const onMoveItemTo = (store: DimStore, equip = false) => {
-    dispatch(moveItemTo(item, store, equip, amount));
+    dispatch(moveItemTo(item, store, equip));
     hideItemPopup();
   };
 
@@ -63,8 +52,6 @@ export default function ItemActions({
     hideItemPopup();
   };
 
-  const onAmountChanged = setAmount;
-
   if (!store) {
     return null;
   }
@@ -75,14 +62,6 @@ export default function ItemActions({
 
   return (
     <>
-      {maximum > 1 && !mobileInspect && (
-        <ItemMoveAmount
-          amount={amount}
-          maximum={maximum}
-          maxStackSize={item.maxStackSize}
-          onAmountChanged={onAmountChanged}
-        />
-      )}
       <div className={styles.interaction}>
         {stores.map((buttonStore) => (
           <ItemMoveLocation

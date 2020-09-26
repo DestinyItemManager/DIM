@@ -12,12 +12,10 @@ import { AccountCurrency, DimStore } from './store-types';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getStore } from './stores-helpers';
 
-// TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew
   // when stores reload or change, so they're safe for now.
   // Updates to items need to deeply modify their store though.
-  // TODO: ReadonlyArray<Readonly<DimStore>>
   readonly stores: DimStore[];
 
   /**
@@ -35,9 +33,6 @@ export interface InventoryState {
    */
   readonly newItems: Set<string>;
   readonly newItemsLoaded: boolean;
-
-  /** Are we currently dragging a stack? */
-  readonly isDraggingStack: boolean;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -47,7 +42,6 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
-  isDraggingStack: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -105,13 +99,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         newItems: new Set(),
       };
 
-    // Stack dragging
-    case getType(actions.stackableDrag):
-      return {
-        ...state,
-        isDraggingStack: action.payload,
-      };
-
+    // Reset everything on account switch
     case getType(setCurrentAccount):
       return initialState;
 

@@ -1,4 +1,3 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -6,7 +5,6 @@ import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
-import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
@@ -20,34 +18,6 @@ import { moveItemNotification } from './MoveNotifications';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
-
-export interface MoveAmountPopupOptions {
-  item: DimItem;
-  targetStore: DimStore;
-  amount: number;
-  maximum: number;
-  onAmountSelected(amount: number);
-  onCancel(): void;
-}
-
-export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
-
-function showMoveAmountPopup(
-  item: DimItem,
-  targetStore: DimStore,
-  maximum: number
-): Promise<number> {
-  return new Promise((resolve, reject) => {
-    showMoveAmountPopup$.next({
-      item,
-      targetStore,
-      amount: item.amount,
-      maximum,
-      onAmountSelected: resolve,
-      onCancel: reject,
-    });
-  });
-}
 
 /**
  * Move the item to the currently active store. Used for double-click action.
@@ -86,28 +56,17 @@ export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult 
 /**
  * Drop a dragged item
  */
-export function dropItem(
-  item: DimItem,
-  storeId: string,
-  equip = false,
-  chooseAmount = false
-): ThunkResult<DimItem> {
+export function dropItem(item: DimItem, storeId: string, equip = false): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    return dispatch(moveItemTo(item, store, equip, item.amount, chooseAmount));
+    return dispatch(moveItemTo(item, store, equip));
   };
 }
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
  */
-export function moveItemTo(
-  item: DimItem,
-  store: DimStore,
-  equip = false,
-  amount: number = item.amount,
-  chooseAmount = false
-): ThunkResult<DimItem> {
+export function moveItemTo(item: DimItem, store: DimStore, equip = false): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     hideItemPopup();
     if (item.notransfer && item.owner !== store.id) {
@@ -120,29 +79,10 @@ export function moveItemTo(
       }
     }
 
-    let moveAmount = amount || 1;
+    const moveAmount = item.amount || 1;
     const reload = item.equipped || equip;
     try {
       const stores = storesSelector(getState());
-
-      // Select how much of a stack to move
-      if (
-        chooseAmount &&
-        item.maxStackSize > 1 &&
-        item.amount > 1 &&
-        // https://github.com/DestinyItemManager/DIM/issues/3373
-        !item.uniqueStack
-      ) {
-        const maximum = amountOfItem(getStore(stores, item.owner)!, item);
-
-        try {
-          moveAmount = await showMoveAmountPopup(item, store, maximum);
-        } catch (e) {
-          const error: DimError = new Error('move-canceled');
-          error.code = 'move-canceled';
-          throw error;
-        }
-      }
 
       if ($featureFlags.debugMoves) {
         console.log(

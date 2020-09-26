@@ -16,7 +16,6 @@ import InfusionFinder from '../infuse/InfusionFinder';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import DragGhostItem from './DragGhostItem';
 import { storesLoadedSelector } from './selectors';
-import StackableDragHelp from './StackableDragHelp';
 import { useLoadStores } from './store/hooks';
 import Stores from './Stores';
 
@@ -60,7 +59,6 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
       <Stores />
       <LoadoutDrawer />
       <Compare />
-      <StackableDragHelp />
       <DragPerformanceFix />
       <Farming />
       {account.destinyVersion === 2 && <GearPower />}

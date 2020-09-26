@@ -118,6 +118,3 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
-
-/** Notify that a stackable stack has begun or ended dragging. A bit overkill to put this in redux but eh. */
-export const stackableDrag = createAction('stackable_drag/DRAG')<boolean>();

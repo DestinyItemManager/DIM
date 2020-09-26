@@ -8,7 +8,6 @@ import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
 import { BehaviorSubject } from 'rxjs';
 import store from '../store/store';
-import { stackableDrag } from './actions';
 import { showDragGhost } from './drag-ghost-item';
 import { DimItem } from './item-types';
 
@@ -48,10 +47,6 @@ let dragTimeout: number | null = null;
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(true));
-    }
-
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
       // The colorblind filters interact badly with this
@@ -66,13 +61,9 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
     return { item: props.item };
   },
 
-  endDrag(props) {
+  endDrag() {
     if (dragTimeout !== null) {
       cancelAnimationFrame(dragTimeout);
-    }
-
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(false));
     }
 
     document.body.classList.remove('drag-perf-show');

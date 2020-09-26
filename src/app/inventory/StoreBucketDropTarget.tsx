@@ -40,11 +40,9 @@ function dragType(props: ExternalProps) {
 
 // This determines the behavior of dropping on this target
 const dropSpec: DropTargetSpec<Props> = {
-  drop(props, monitor, component) {
-    // https://github.com/react-dnd/react-dnd-html5-backend/issues/23
-    const shiftPressed = (component as StoreBucketDropTarget).shiftKeyDown;
+  drop(props, monitor) {
     const item = monitor.getItem().item as DimItem;
-    props.dispatch(dropItem(item, props.storeId, Boolean(props.equip), shiftPressed));
+    props.dispatch(dropItem(item, props.storeId, Boolean(props.equip)));
   },
   canDrop(props, monitor) {
     // You can drop anything that can be transferred into a non-equipped bucket
@@ -73,8 +71,6 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
 
 class StoreBucketDropTarget extends React.Component<Props> {
   dragTimer?: number;
-  shiftKeyDown = false;
-  private element?: HTMLDivElement;
 
   render() {
     const { connectDropTarget, children, isOver, canDrop, equip, className, bucket } = this.props;
@@ -83,7 +79,6 @@ class StoreBucketDropTarget extends React.Component<Props> {
 
     return connectDropTarget(
       <div
-        ref={this.captureRef}
         className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop,
@@ -95,19 +90,6 @@ class StoreBucketDropTarget extends React.Component<Props> {
       </div>
     );
   }
-
-  private captureRef = (ref: HTMLDivElement) => {
-    if (ref) {
-      ref.addEventListener('dragover', this.onDrag);
-    } else {
-      this.element?.removeEventListener('dragover', this.onDrag);
-    }
-    this.element = ref;
-  };
-
-  private onDrag = (e: DragEvent) => {
-    this.shiftKeyDown = e.shiftKey;
-  };
 
   private onClick = () => {
     document.body.classList.remove('drag-perf-show');

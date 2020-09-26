@@ -1,10 +1,10 @@
 import { CompareService } from 'app/compare/compare.service';
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { AppIcon, faClone } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
@@ -15,26 +15,15 @@ import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import ItemActionButton from './ItemActionButton';
-import ItemMoveAmount from './ItemMoveAmount';
 import { canShowStore, canShowVault } from './ItemMoveLocation';
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
-  const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
-  // If the item can't be transferred (or is unique) don't show the move amount slider
-  const maximum = useMemo(
-    () =>
-      !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-        ? 1
-        : amountOfItem(itemOwner, item),
-    [itemOwner, item]
-  );
-
   const onMoveItemTo = (store: DimStore, equip = false) => {
-    dispatch(moveItemTo(item, store, equip, amount));
+    dispatch(moveItemTo(item, store, equip));
     hideItemPopup();
   };
 
@@ -99,8 +88,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     setTimeout(reposition, 10);
   });
 
-  const onAmountChanged = setAmount;
-
   if (!itemOwner) {
     return null;
   }
@@ -117,14 +104,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   // TODO: move itemMoveAmount... elsewhere?
   return (
     <>
-      {maximum > 1 && (
-        <ItemMoveAmount
-          amount={amount}
-          maximum={maximum}
-          maxStackSize={item.maxStackSize}
-          onAmountChanged={onAmountChanged}
-        />
-      )}
       <div className={styles.interaction} ref={containerRef}>
         {stores.map((store) => (
           <>
