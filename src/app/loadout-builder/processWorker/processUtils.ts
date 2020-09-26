@@ -61,102 +61,7 @@ export function sortForGeneralProcessMods(a: SortParam, b: SortParam) {
   return -1;
 }
 
-/**
- * See if we can slot all the locked seasonal mods.
- *
- * This function need to be kept inline with ../mod-utils#assignAllSeasonalMods.
- *
- * @param processedMods These mods must be sorted by sortProcessModsOrProcessItems.
- * @param items The process items to test for mod slotting.
- * @param assignments This is an optional object that tracks item ids to mod hashes so
- *  that mods can be displayed for items in the UI. If passed in it is mutated.
- */
-export function canTakeAllSeasonalMods(
-  processedMods: ProcessMod[],
-  items: ProcessItemSubset[],
-  assignments?: Record<string, number[]>
-) {
-  const sortedItems = Array.from(items).sort(sortForSeasonalProcessMods);
-
-  let modIndex = 0;
-  let itemIndex = 0;
-
-  // Loop over the items and mods in parallel and see if they can be slotted.
-  // due to Any energy mods needing to consider skipped items we reset item index after each splice.
-  while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
-    const { energy, tag, hash } = processedMods[modIndex];
-    const item = sortedItems[itemIndex];
-    if (!tag) {
-      // This should never happen but if it does we ignore seasonal requirements and log the warning.
-      console.warn('Optimiser: Found seasonal mod without season details.');
-      return true;
-    }
-    if (
-      item.energy &&
-      (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.val + energy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
-      item.compatibleModSeasons?.includes(tag)
-    ) {
-      if (assignments) {
-        assignments[item.id].push(hash);
-      }
-      sortedItems.splice(itemIndex, 1);
-      modIndex += 1;
-      itemIndex = 0;
-    } else {
-      itemIndex += 1;
-    }
-  }
-
-  // This will indicate we have iterated over all the mods, it will overshoot the length on success.
-  return processedMods.length === modIndex;
-}
-
-/**
- * See if we can slot all the locked general mods.
- *
- * This function need to be kept inline with ../mod-utils#assignAllGeneralMods.
- *
- * @param processedMods These mods must be sorted by sortGeneralModsOrProcessItem.
- * @param items The process items to test for mod slotting.
- * @param assignments This is an optional object that tracks item ids to mod hashes so
- *  that mods can be displayed for items in the UI. If passed in it is mutated.
- */
-export function canTakeAllGeneralMods(
-  processedMods: ProcessMod[],
-  items: ProcessItemSubset[],
-  assignments?: Record<string, number[]>
-) {
-  const sortedItems = Array.from(items).sort(sortForGeneralProcessMods);
-
-  let modIndex = 0;
-  let itemIndex = 0;
-
-  // Loop over the items and mods in parallel and see if they can be slotted.
-  // We need to reset the index after a match to ensure that mods with the Any energy type
-  // use up armour items that didn't match an energy type/season first.
-  while (modIndex < processedMods.length && itemIndex < sortedItems.length) {
-    const { energy, hash } = processedMods[modIndex];
-    const item = sortedItems[itemIndex];
-    if (
-      item.energy &&
-      (item.energy.type === energy.type || energy.type === DestinyEnergyType.Any) &&
-      item.energy.val + energy.val <= MAX_ARMOR_ENERGY_CAPACITY
-    ) {
-      if (assignments) {
-        assignments[item.id].push(hash);
-      }
-      sortedItems.splice(itemIndex, 1);
-      modIndex += 1;
-      itemIndex = 0;
-    } else {
-      itemIndex += 1;
-    }
-  }
-
-  // This will indicate we have iterated over all the mods, it will overshoot the length on success.
-  return processedMods.length === modIndex;
-}
+const noModsPermutations = [[null, null, null, null, null]];
 
 /**
  * This is heaps algorithm implemented for generating mod permutations.
@@ -166,6 +71,9 @@ export function canTakeAllGeneralMods(
  * with the 5 items.
  */
 export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)[][] {
+  if (!mods.length) {
+    return noModsPermutations;
+  }
   const cursorArray = [0, 0, 0, 0, 0];
   const modsCopy: (ProcessMod | null)[] = Array.from(mods);
 
@@ -268,34 +176,44 @@ export function canTakeGeneralAndSeasonalMods(
   const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
   for (const seasonalP of seasonalModPermutations) {
-    if (
-      !sortedItems.every((item, itemIndex) => {
-        const seasonTag = seasonalP[itemIndex]?.tag;
-        const seasonalEnergy = seasonalP[itemIndex]?.energy || defaultModEnergy;
-        return (
-          item.energy &&
+    let seasonalsFit = true;
+    for (let i = 0; i < sortedItems.length; i++) {
+      const item = sortedItems[i];
+      const seasonTag = seasonalP[i]?.tag;
+      const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+      seasonalsFit &&= Boolean(
+        item.energy &&
           item.energy.val + (seasonalEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
           (item.energy.type === seasonalEnergy.type ||
             seasonalEnergy.type === DestinyEnergyType.Any) &&
-          (!seasonalP[itemIndex] || (seasonTag && item.compatibleModSeasons?.includes(seasonTag)))
-        );
-      })
-    ) {
+          (!seasonalP[i] || (seasonTag && item.compatibleModSeasons?.includes(seasonTag)))
+      );
+
+      if (!seasonalsFit) {
+        break;
+      }
+    }
+    if (!seasonalsFit) {
       continue;
     }
     for (const generalP of generalModPermutations) {
-      if (
-        sortedItems.every((item, itemIndex) => {
-          const generalEnergy = generalP[itemIndex]?.energy || defaultModEnergy;
-          const seasonalEnergy = seasonalP[itemIndex]?.energy || defaultModEnergy;
-          return (
-            item.energy &&
+      let generalsFit = true;
+      for (let i = 0; i < sortedItems.length; i++) {
+        const item = sortedItems[i];
+        const generalEnergy = generalP[i]?.energy || defaultModEnergy;
+        const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+        generalsFit &&= Boolean(
+          item.energy &&
             item.energy.val + generalEnergy.val + seasonalEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any)
-          );
-        })
-      ) {
+        );
+
+        if (!generalsFit) {
+          break;
+        }
+      }
+      if (generalsFit) {
         if (assignments) {
           for (let i = 0; i < sortedItems.length; i++) {
             const generalMod = generalP[i];
