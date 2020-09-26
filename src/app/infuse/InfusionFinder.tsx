@@ -165,10 +165,13 @@ function InfusionFinder({
   const selectItem = (item: DimItem) => stateDispatch({ type: 'selectItem', item });
   const onQueryChanged = (filter: string) => stateDispatch({ type: 'setFilter', filter });
   const switchDirection = () => stateDispatch({ type: 'swapDirection' });
+  const show = query !== undefined;
 
   useEffect(() => {
-    ga('send', 'pageview', '/profileMembershipId/infuse');
-  }, []);
+    if (show) {
+      ga('send', 'pageview', `/profileMembershipId/${currentStore.destinyVersion}/infuse`);
+    }
+  }, [currentStore.destinyVersion, show]);
 
   // Listen for items coming in via showInfuse#
   useSubscription(() =>
