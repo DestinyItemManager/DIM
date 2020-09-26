@@ -1,5 +1,6 @@
 .buttons {
-  width: min-content;
+  display: flex;
+  flex-direction: column;
   text-align: center;
   margin-right: 14px;
   margin-bottom: 14px;
