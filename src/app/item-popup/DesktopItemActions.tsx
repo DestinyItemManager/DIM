@@ -6,6 +6,8 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import arrowsIn from '../../images/arrows-in.png';
+import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
@@ -14,7 +16,6 @@ import { sortedStoresSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
-import ItemActionButton from './ItemActionButton';
 import ItemMoveAmount from './ItemMoveAmount';
 import { canShowStore, canShowVault } from './ItemMoveLocation';
 
@@ -106,7 +107,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   }
 
   const canConsolidate =
-    !item.notransfer && item.location.hasTransferDestination && item.maxStackSize > 1;
+    !item.notransfer &&
+    item.location.hasTransferDestination &&
+    item.maxStackSize > 1 &&
+    stores.some((s) => s != itemOwner && amountOfItem(s, item) > 0);
   const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
   const openCompare = () => {
@@ -114,18 +118,17 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     CompareService.addItemsToCompare([item], true);
   };
 
-  // TODO: move itemMoveAmount... elsewhere?
   return (
     <>
-      {maximum > 1 && (
-        <ItemMoveAmount
-          amount={amount}
-          maximum={maximum}
-          maxStackSize={item.maxStackSize}
-          onAmountChanged={onAmountChanged}
-        />
-      )}
       <div className={styles.interaction} ref={containerRef}>
+        {item.destinyVersion === 1 && maximum > 1 && (
+          <ItemMoveAmount
+            amount={amount}
+            maximum={maximum}
+            maxStackSize={item.maxStackSize}
+            onAmountChanged={onAmountChanged}
+          />
+        )}
         {stores.map((store) => (
           <>
             {canShowVault(store, itemOwner, item) && (
@@ -202,20 +205,14 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           </div>
         )}
         {canConsolidate && (
-          <ItemActionButton
-            className={styles.moveConsolidate}
-            title={t('MovePopup.Consolidate')}
-            onClick={onConsolidate}
-            label={t('MovePopup.Take')}
-          />
+          <div className={styles.actionButton} onClick={onConsolidate} role="button" tabIndex={-1}>
+            <img src={arrowsIn} height="32" width="32" /> {t('MovePopup.Consolidate')}
+          </div>
         )}
         {canDistribute && (
-          <ItemActionButton
-            className={styles.moveDistribute}
-            title={t('MovePopup.DistributeEvenly')}
-            onClick={onDistribute}
-            label={t('MovePopup.Split')}
-          />
+          <div className={styles.actionButton} onClick={onDistribute} role="button" tabIndex={-1}>
+            <img src={arrowsOut} height="32" width="32" /> {t('MovePopup.DistributeEvenly')}
+          </div>
         )}
         {item.infusionFuel && (
           <div className={styles.actionButton} onClick={infuse} role="button" tabIndex={-1}>

@@ -2,13 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'actionButton': string;
-  'armor': string;
-  'destiny2': string;
-  'infusePerk': string;
   'interaction': string;
-  'moveConsolidate': string;
-  'moveDistribute': string;
-  'weapons': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
