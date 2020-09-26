@@ -82,17 +82,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           parent.clientHeight - containerHeight
         );
 
-        console.log({
-          arrowRect: arrowRect.top,
-          parentRect: parentRect.top,
-          parent,
-          arrow,
-          containerHeight,
-          offset,
-        });
-
         containerRef.current.style.transform = `translateY(${Math.round(top)}px)`;
-        console.log('transform', `translateY(${Math.round(top)}px)`);
       }
     };
 
@@ -130,7 +120,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           />
         )}
         {stores.map((store) => (
-          <>
+          <React.Fragment key={store.id}>
             {canShowVault(store, itemOwner, item) && (
               <div
                 className={styles.actionButton}
@@ -197,7 +187,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 {t('MovePopup.Store')}
               </div>
             )}
-          </>
+          </React.Fragment>
         ))}
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
