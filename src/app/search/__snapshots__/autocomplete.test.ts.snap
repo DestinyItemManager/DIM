@@ -64,6 +64,13 @@ Array [
 ]
 `;
 
+exports[`filterComplete autocomplete terms for |ote| 1`] = `
+Array [
+  "is:hasnotes",
+  "notes:",
+]
+`;
+
 exports[`filterComplete autocomplete terms for |sni| 1`] = `
 Array [
   "is:sniperrifle",
