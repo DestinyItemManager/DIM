@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -19,11 +20,15 @@ export interface CompareButton {
 /**
  * Generate possible comparisons for armor, given a reference item.
  */
-export function findSimilarArmors(allItems: DimItem[], exampleItem: DimItem): CompareButton[] {
+export function findSimilarArmors(
+  defs: D2ManifestDefinitions,
+  allItems: DimItem[],
+  exampleItem: DimItem
+): CompareButton[] {
   const exampleItemElementIcon = <ElementIcon key={exampleItem.id} element={exampleItem.element} />;
   const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
   const specialtyModSlotName =
-    (this.props.defs && getItemSpecialtyModSlotDisplayName(exampleItem, this.props.defs)) ?? '';
+    (defs && getItemSpecialtyModSlotDisplayName(exampleItem, defs)) ?? '';
 
   // helper functions for filtering items
   const matchesExample = (key: keyof DimItem) => (item: DimItem) => item[key] === exampleItem[key];
