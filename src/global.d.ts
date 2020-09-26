@@ -10,7 +10,6 @@ declare const $BROWSERS: string[];
 declare const $featureFlags: {
   /** Print debug info to console about item moves */
   debugMoves: boolean;
-  debugSync: boolean;
   /** Enable color-blind a11y */
   colorA11y: boolean;
   /** Debug Service Worker */
