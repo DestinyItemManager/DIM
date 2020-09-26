@@ -1,5 +1,18 @@
 ## Next
 
+* In Compare, you can click on perks to see what the new stats would look like if you chose another option.
+* Your subclass has been moved below weapons and armor (it's been this way in Beta for a while).
+* On mobile, instead of showing all your items at once, there's now a category selection bar that lets you quickly swap between weapons, armor, etc. The postmaster is under "inventory".
+* Transferring items is just a touch snappier.
+* The tag and compare button on the search bar have been replaced with a dropdown menu (three dots) with a lot more options for things you can do with the items that match your search.
+* On mobile, your equipped emblem no longer affects the color of your screen.
+* Loadout Optimizer has a nicer layout on mobile and narrower screens.
+
+### Beta Only
+
+* We're experimenting with moving the item action buttons to the side of the item popup on desktop - we call it the "sidecar". It moves the actions closer to the mouse, allows room to have clearer labels, and gives more room to add more commands. Plus generally people have screens that are wider than they are tall, so this reduces the height of the popup which could previously put buttons off screen. We'll be tweaking this for a while before it launches fully.
+* Beta now has an early preview of a new theme for DIM.
+
 ## 6.31.2 <span className="changelog-date">(2020-09-22)</span>
 
 * Fix an issue where moving Exotic Cipher to vault with DIM would cause your characters to be filled up with items from your vault.
