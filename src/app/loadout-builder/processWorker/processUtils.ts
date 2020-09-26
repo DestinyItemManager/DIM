@@ -1,4 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
 import { ProcessMod } from './types';
 
@@ -99,7 +100,6 @@ export function canTakeAllSeasonalMods(
       if (assignments) {
         assignments[item.id].push(hash);
       }
-      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;
@@ -146,7 +146,6 @@ export function canTakeAllGeneralMods(
       if (assignments) {
         assignments[item.id].push(hash);
       }
-      item.energy.val += energy.val;
       sortedItems.splice(itemIndex, 1);
       modIndex += 1;
       itemIndex = 0;
@@ -157,4 +156,163 @@ export function canTakeAllGeneralMods(
 
   // This will indicate we have iterated over all the mods, it will overshoot the length on success.
   return processedMods.length === modIndex;
+}
+
+/**
+ * This is heaps algorithm implemented for generating mod permutations.
+ * https://en.wikipedia.org/wiki/Heap%27s_algorithm
+ *
+ * Note that we ensure the array length is always 5 so mods are aligned
+ * with the 5 items.
+ */
+export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)[][] {
+  const cursorArray = [0, 0, 0, 0, 0];
+  const modsCopy: (ProcessMod | null)[] = Array.from(mods);
+
+  while (modsCopy.length < 5) {
+    modsCopy.push(null);
+  }
+
+  let i = 0;
+
+  const rtn = [Array.from(modsCopy)];
+
+  while (i < 5) {
+    if (cursorArray[i] < i) {
+      if (i % 2 === 0) {
+        [modsCopy[0], modsCopy[i]] = [modsCopy[i], modsCopy[0]];
+      } else {
+        [modsCopy[cursorArray[i]], modsCopy[i]] = [modsCopy[i], modsCopy[cursorArray[i]]];
+      }
+      rtn.push(Array.from(modsCopy));
+      cursorArray[i] += 1;
+      i = 0;
+    } else {
+      cursorArray[i] = 0;
+      i += 1;
+    }
+  }
+
+  const stringifyPerm = (perm: (ProcessMod | null)[]) => {
+    let permString = '';
+    for (const modOrNull of perm) {
+      if (modOrNull) {
+        permString += `(${modOrNull.energy.type},${modOrNull.energy.val},${modOrNull.tag || ''})`;
+      }
+      permString += ',';
+    }
+    return permString;
+  };
+
+  return _.uniqBy(rtn, stringifyPerm);
+}
+
+function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
+  let arcCount = 0;
+  let solarCount = 0;
+  let voidCount = 0;
+
+  for (const item of modsOrItems) {
+    switch (item?.energy?.type) {
+      case DestinyEnergyType.Arc:
+        arcCount += 1;
+        break;
+      case DestinyEnergyType.Thermal:
+        solarCount += 1;
+        break;
+      case DestinyEnergyType.Void:
+        voidCount += 1;
+        break;
+    }
+  }
+
+  return [arcCount, solarCount, voidCount];
+}
+
+/**
+ * This figures out if all general and seasonal mods can be assigned to an armour set.
+ *
+ * The params generalModPermutations and seasonalModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of seasonal or general mods.
+ *
+ * assignments is mutated by this function to store any mods assignments that were made.
+ */
+export function canTakeGeneralAndSeasonalMods(
+  generalModPermutations: (ProcessMod | null)[][],
+  seasonalModPermutations: (ProcessMod | null)[][],
+  items: ProcessItemSubset[],
+  assignments?: Record<string, number[]>
+) {
+  // Sort the items like the mods are to try and get a greedy result
+  const sortedItems = Array.from(items).sort(sortForGeneralProcessMods);
+
+  const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
+  const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
+    seasonalModPermutations[0]
+  );
+  const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCounts(
+    generalModPermutations[0]
+  );
+
+  if (
+    voidItems < voidGeneralMods ||
+    voidItems < voidSeasonalMods ||
+    solarItems < solarGeneralModsMods ||
+    solarItems < solarSeasonalMods ||
+    arcItems < arcGeneralMods ||
+    arcItems < arcSeasonalMods
+  ) {
+    return false;
+  }
+
+  const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
+
+  for (const seasonalP of seasonalModPermutations) {
+    if (
+      !sortedItems.every((item, itemIndex) => {
+        const seasonTag = seasonalP[itemIndex]?.tag;
+        const seasonalEnergy = seasonalP[itemIndex]?.energy || defaultModEnergy;
+        return (
+          item.energy &&
+          item.energy.val + (seasonalEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
+          (item.energy.type === seasonalEnergy.type ||
+            seasonalEnergy.type === DestinyEnergyType.Any) &&
+          (!seasonalP[itemIndex] || (seasonTag && item.compatibleModSeasons?.includes(seasonTag)))
+        );
+      })
+    ) {
+      continue;
+    }
+    for (const generalP of generalModPermutations) {
+      if (
+        sortedItems.every((item, itemIndex) => {
+          const generalEnergy = generalP[itemIndex]?.energy || defaultModEnergy;
+          const seasonalEnergy = seasonalP[itemIndex]?.energy || defaultModEnergy;
+          return (
+            item.energy &&
+            item.energy.val + generalEnergy.val + seasonalEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+            (item.energy.type === generalEnergy.type ||
+              generalEnergy.type === DestinyEnergyType.Any)
+          );
+        })
+      ) {
+        if (assignments) {
+          for (let i = 0; i < sortedItems.length; i++) {
+            const generalMod = generalP[i];
+            const seasonalMod = seasonalP[i];
+            if (generalMod) {
+              assignments[sortedItems[i].id].push(generalMod.hash);
+            }
+            if (seasonalMod) {
+              assignments[sortedItems[i].id].push(seasonalMod.hash);
+            }
+          }
+        }
+
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

@@ -6,6 +6,8 @@ import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWork
 import {
   canTakeAllGeneralMods,
   canTakeAllSeasonalMods,
+  canTakeGeneralAndSeasonalMods,
+  generateModPermutations,
   sortForSeasonalProcessMods,
 } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
@@ -74,6 +76,36 @@ function assignAllSeasonalMods(
   canTakeAllSeasonalMods(sortedMods, setToMatch, assignments);
 }
 
+/**
+ * Checks to see if the passed in general and seasonal mods can be assigned to the armour set.
+ *
+ * assignments is mutated in this function as it tracks assigned mods for a particular armour set
+ */
+function assignAllGenrealAndSeasonalMods(
+  setToMatch: ProcessItem[],
+  generalMods: LockedArmor2Mod[],
+  seasonalMods: readonly LockedArmor2Mod[],
+  assignments: Record<string, number[]>
+): void {
+  // Mods need to be sorted before being passed to the assignment function
+  const sortedGeneralMods = generalMods
+    .map(mapArmor2ModToProcessMod)
+    .sort(sortForSeasonalProcessMods);
+  const sortedSeasonalMods = seasonalMods
+    .map(mapArmor2ModToProcessMod)
+    .sort(sortForSeasonalProcessMods);
+
+  const generalModPermutations = generateModPermutations(sortedGeneralMods);
+  const seasonalModPermutations = generateModPermutations(sortedSeasonalMods);
+
+  canTakeGeneralAndSeasonalMods(
+    generalModPermutations,
+    seasonalModPermutations,
+    setToMatch,
+    assignments
+  );
+}
+
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
   lockedArmor2Mods: LockedArmor2ModMap
@@ -96,13 +128,25 @@ export function assignModsToArmorSet(
     }
   }
 
-  assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
-
-  assignGeneralMods(
-    processItems,
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-    assignments
-  );
+  if (
+    lockedArmor2Mods.seasonal.length &&
+    lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length
+  ) {
+    assignAllGenrealAndSeasonalMods(
+      processItems,
+      lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
+      lockedArmor2Mods.seasonal,
+      assignments
+    );
+  } else if (lockedArmor2Mods.seasonal.length) {
+    assignAllSeasonalMods(processItems, lockedArmor2Mods.seasonal, assignments);
+  } else if (lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
+    assignGeneralMods(
+      processItems,
+      lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
+      assignments
+    );
+  }
 
   const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
   const assignedMods = _.mapValues(assignments, (modHashes) =>

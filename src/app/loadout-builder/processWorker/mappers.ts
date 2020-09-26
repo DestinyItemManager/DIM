@@ -124,7 +124,6 @@ export function mapDimItemToProcessItem(
       dimItem.energy && costInitial !== null
         ? {
             type: dimItem.energy.energyType,
-            valInitial: costInitial, // this is needed to reset energy used after trying to slot mods
             val: costInitial,
           }
         : null,

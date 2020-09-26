@@ -216,10 +216,12 @@ function groupItems(
 
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
-    if (lockedArmor2ModMap[ModPickerCategories.seasonal].length) {
+    if (lockedArmor2ModMap.seasonal.length) {
       groupId += `${getSpecialtySocketMetadata(item)?.season}`;
-    } else if (
-      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.seasonal]) ||
+    }
+
+    if (
+      someModHasEnergyRequirement(lockedArmor2ModMap.seasonal) ||
       someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
     ) {
       groupId += `${item.energy?.energyType}`;
