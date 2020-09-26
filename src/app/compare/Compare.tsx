@@ -498,7 +498,7 @@ class Compare extends React.Component<Props, State> {
 
   private findSimilarArmors = (comparisonItems: DimItem[]) => {
     const exampleItem = comparisonItems[0];
-    return findSimilarArmors(this.props.allItems, exampleItem);
+    return findSimilarArmors(this.props.defs!, this.props.allItems, exampleItem);
   };
 
   private findSimilarWeapons = (comparisonItems: DimItem[]) => {
