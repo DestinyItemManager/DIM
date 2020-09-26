@@ -52,6 +52,7 @@
       margin: 0;
       z-index: inherit;
       background: none; // comment out to add background background
+      flex-direction: row !important;
 
       a {
         text-decoration: none;

@@ -267,15 +267,18 @@ function StoresInventory(props: InventoryContainerProps) {
             style={{ ...storeBackgroundColor(currentStore, 0, true, true), paddingBottom: 8 }}
           />
         )}
-        {selectedCategoryId === 'Inventory' && (
-          <CollapsibleContainer
-            {...props}
-            buckets={buckets}
-            category={'Postmaster'}
-            inventoryBucket={buckets.byCategory['Postmaster']}
-            isPhonePortrait={true}
-          />
-        )}
+        {selectedCategoryId === 'Inventory' &&
+          buckets.byCategory['Postmaster'].map((bucket) => (
+            <StoreBuckets
+              key={bucket.hash}
+              bucket={bucket}
+              stores={stores}
+              vault={vault}
+              currentStore={currentStore}
+              labels={true}
+              isPhonePortrait={true}
+            />
+          ))}
         {buckets.byCategory[selectedCategoryId].map((bucket) => (
           <StoreBuckets
             key={bucket.hash}
