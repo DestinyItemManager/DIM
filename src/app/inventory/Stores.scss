@@ -20,8 +20,10 @@
   );
   @include phone-portrait {
     min-width: auto;
-    // Give room for the category selector strip
-    padding-bottom: 50px;
+    // Give room for the category selector strip (height 53px)
+    padding-bottom: 53px + 10px;
+    padding-bottom: calc(53px + 10px + constant(safe-area-inset-bottom));
+    padding-bottom: calc(53px + 10px + env(safe-area-inset-bottom));
   }
 
   .body-scroll-lock & {
