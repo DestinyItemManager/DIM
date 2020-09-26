@@ -605,6 +605,7 @@
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AddToLoadout": "Loadout",
     "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
@@ -617,7 +618,9 @@
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
-      "Unlock": "Unlock {{itemType}}"
+      "Unlock": "Unlock {{itemType}}",
+      "Locked": "Locked",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "Notes": "Notes:",
@@ -640,7 +643,9 @@
     "Take": "Take",
     "TrackUntrack": {
       "Track": "Track {{itemType}}",
-      "Untrack": "Untrack {{itemType}}"
+      "Untrack": "Untrack {{itemType}}",
+      "Tracked": "Tracked",
+      "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
     "Vault": "Vault"

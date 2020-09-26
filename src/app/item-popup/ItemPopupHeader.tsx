@@ -107,7 +107,9 @@ export default function ItemPopupHeader({
         <div className="item-type-info">
           <ItemSubHeader item={item} />
         </div>
-        {item.taggable && <ItemTagSelector item={item} />}
+        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.taggable && (
+          <ItemTagSelector item={item} />
+        )}
       </div>
       {powerCapString && (
         <div className="item-subtitle">
