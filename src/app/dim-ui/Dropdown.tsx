@@ -84,7 +84,11 @@ export default function Dropdown({
               {...getItemProps({
                 item,
                 index,
-                onClick: !item.disabled ? item.onSelected : undefined,
+                onClick: !item.disabled
+                  ? item.onSelected
+                  : (e: any) => {
+                      e.nativeEvent.preventDownshiftDefault = true;
+                    },
               })}
             >
               {item.content}

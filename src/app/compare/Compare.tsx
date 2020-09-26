@@ -97,7 +97,11 @@ class Compare extends React.Component<Props, State> {
         this.setState({ show: true });
         if (CompareService.dialogOpen == false) {
           CompareService.dialogOpen = true;
-          ga('send', 'pageview', '/profileMembershipId/compare');
+          ga(
+            'send',
+            'pageview',
+            `/profileMembershipId/${args.additionalItems[0].destinyVersion}/compare`
+          );
         }
 
         this.add(args);

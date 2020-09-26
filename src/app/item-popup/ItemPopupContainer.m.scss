@@ -94,6 +94,10 @@
   box-shadow: 0 -1px 24px 4px #222;
 }
 
+.desktopPopupRoot {
+  pointer-events: none;
+}
+
 .desktopPopup {
   display: flex;
   flex-direction: row;
@@ -105,8 +109,12 @@
 .desktopPopupBody {
   width: 375px;
   display: block;
+  pointer-events: auto;
 }
 
 .desktopActions {
   display: block;
+  > div {
+    pointer-events: auto;
+  }
 }

@@ -14,13 +14,14 @@
   text-transform: uppercase;
   padding: 8px;
   font-weight: bold;
+  cursor: pointer;
 
   img,
   :global(.app-icon) {
     margin-right: 8px;
-    height: 32px;
-    width: 32px;
-    font-size: 32px;
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
   }
   :global(.app-icon) {
     color: #eee;
@@ -28,5 +29,8 @@
   &:hover {
     background: $orange;
     color: black;
+    :global(.app-icon) {
+      color: black;
+    }
   }
 }
