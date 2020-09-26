@@ -3,13 +3,19 @@ import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import { canTakeAllGeneralMods, canTakeAllSeasonalMods } from './processUtils';
+import {
+  canTakeAllGeneralMods,
+  canTakeAllSeasonalMods,
+  canTakeGeneralAndSeasonalMods,
+  generateModPermutations,
+} from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessMod,
 } from './types';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -170,6 +176,19 @@ export function process(
     statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
   }
 
+  let generalModsPermutations: (ProcessMod | null)[][] | undefined;
+  let seasonalModPermutations: (ProcessMod | null)[][] | undefined;
+
+  if (
+    lockedArmor2ModMap.seasonal.length &&
+    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length
+  ) {
+    generalModsPermutations = generateModPermutations(
+      lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
+    );
+    seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
+  }
+
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       for (const chest of chests) {
@@ -245,22 +264,25 @@ export function process(
                 }
               }
 
-              // Reset the used item energy of each item so we can add general and seasonal mod costs again.
-              for (const item of armor) {
-                if (item.energy) {
-                  item.energy.val = item.energy.valInitial;
-                }
-              }
-
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
-              // and we do seasonal first as its more likely to have energy specific mods.
-              // TODO Check validity of this with the energy contraints in.
               if (
+                //seasonal only
                 (lockedArmor2ModMap.seasonal.length &&
+                  !lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
-                (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
+                //general only
+                (!lockedArmor2ModMap.seasonal.length &&
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
                   !canTakeAllGeneralMods(
                     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
+                    armor
+                  )) ||
+                // both general and seasonal
+                (generalModsPermutations &&
+                  seasonalModPermutations &&
+                  !canTakeGeneralAndSeasonalMods(
+                    generalModsPermutations,
+                    seasonalModPermutations,
                     armor
                   ))
               ) {
