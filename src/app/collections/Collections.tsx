@@ -96,12 +96,12 @@ function Collections({
   }
 
   const badgesRootNodeHash =
-    profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
-  const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
+    profileResponse?.profileCollectibles?.data?.collectionBadgesRootNodeHash;
+  const metricsRootNodeHash = profileResponse?.metrics?.data?.metricsRootNodeHash;
   const collectionsRootHash =
-    profileResponse.profileCollectibles.data?.collectionCategoriesRootNodeHash;
-  const recordsRootHash = profileResponse.profileRecords.data?.recordCategoriesRootNodeHash;
-  const sealsRootHash = profileResponse.profileRecords.data?.recordSealsRootNodeHash;
+    profileResponse?.profileCollectibles?.data?.collectionCategoriesRootNodeHash;
+  const recordsRootHash = profileResponse?.profileRecords?.data?.recordCategoriesRootNodeHash;
+  const sealsRootHash = profileResponse?.profileRecords?.data?.recordSealsRootNodeHash;
 
   const badgesTitle =
     badgesRootNodeHash && defs.PresentationNode.get(badgesRootNodeHash).displayProperties.name;

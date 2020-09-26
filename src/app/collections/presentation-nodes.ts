@@ -381,12 +381,10 @@ export function getRecordComponent(
   profileResponse: DestinyProfileResponse
 ): DestinyRecordComponent | undefined {
   return recordDef.scope === DestinyScope.Character
-    ? profileResponse.characterRecords.data
+    ? profileResponse.characterRecords?.data
       ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
       : undefined
-    : profileResponse.profileRecords.data
-    ? profileResponse.profileRecords.data.records[recordDef.hash]
-    : undefined;
+    : profileResponse.profileRecords?.data?.records[recordDef.hash];
 }
 
 export function getCollectibleState(
@@ -394,7 +392,7 @@ export function getCollectibleState(
   profileResponse: DestinyProfileResponse
 ) {
   return collectibleDef.scope === DestinyScope.Character
-    ? profileResponse.characterCollectibles.data
+    ? profileResponse.characterCollectibles?.data
       ? _.minBy(
           // Find the version of the collectible that's unlocked, if any
           Object.values(profileResponse.characterCollectibles.data)
@@ -403,14 +401,12 @@ export function getCollectibleState(
           (state) => state & DestinyCollectibleState.NotAcquired
         )
       : undefined
-    : profileResponse.profileCollectibles.data
-    ? profileResponse.profileCollectibles.data.collectibles[collectibleDef.hash].state
-    : undefined;
+    : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }
 
 export function getMetricComponent(
   metricDef: DestinyMetricDefinition,
   profileResponse: DestinyProfileResponse
 ): DestinyMetricComponent | undefined {
-  return profileResponse.metrics.data?.metrics[metricDef.hash];
+  return profileResponse.metrics?.data?.metrics[metricDef.hash];
 }
