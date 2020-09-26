@@ -167,7 +167,7 @@ export function canTakeAllGeneralMods(
  */
 export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)[][] {
   const cursorArray = [0, 0, 0, 0, 0];
-  const modsCopy: (ProcessMod | null)[] = [...mods];
+  const modsCopy: (ProcessMod | null)[] = Array.from(mods);
 
   while (modsCopy.length < 5) {
     modsCopy.push(null);
