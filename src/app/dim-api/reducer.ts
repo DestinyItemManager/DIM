@@ -1111,6 +1111,7 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
     clearSpace: dimLoadout.clearSpace || false,
     equipped,
     unequipped,
+    parameters: dimLoadout.parameters,
   };
 }
 

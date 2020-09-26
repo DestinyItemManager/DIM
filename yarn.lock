@@ -992,9 +992,9 @@
     minimist "^1.2.0"
 
 "@destinyitemmanager/dim-api-types@^1.0.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.7.0.tgz#ab9233a32185a5878dba00df84b6c01f4632c0eb"
-  integrity sha512-pFcZWG3YY0BjqVfCADh/B5CTtnmGmyLEvJtNuqvgsXXT+qigT/mfmFHLsMp/ychXIZPYr19d7bEov3yXedk/tg==
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.7.1.tgz#5d5cecaa042b48f3d59e81a8812229b467cf3d66"
+  integrity sha512-GtTc5DjHG6+9lquj9ggfwOwBn6TmA23sLdjinBiEWkW0gPh1McaKJNk0JwT0100b2zAJyUO/9BR6my6iE5O6HA==
 
 "@eslint/eslintrc@^0.1.3":
   version "0.1.3"
