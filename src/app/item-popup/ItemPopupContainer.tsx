@@ -159,14 +159,24 @@ function ItemPopupContainer({
     <Sheet
       onClose={onClose}
       header={header}
-      sheetClassName={clsx('item-popup', `is-${item.tier}`)}
+      sheetClassName={clsx(
+        'item-popup',
+        `is-${item.tier}`,
+        tierClasses[item.tier],
+        styles.movePopupDialog
+      )}
       footer={<ItemActions key={item.index} item={item} />}
     >
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
     <div
-      className={clsx('item-popup', styles.movePopupDialog, tierClasses[item.tier])}
+      className={clsx(
+        'item-popup',
+        styles.movePopupDialog,
+        tierClasses[item.tier],
+        styles.desktopPopupRoot
+      )}
       ref={popupRef}
       role="dialog"
       aria-modal="false"

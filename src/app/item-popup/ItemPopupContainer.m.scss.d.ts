@@ -6,6 +6,7 @@ interface CssExports {
   'desktopActions': string;
   'desktopPopup': string;
   'desktopPopupBody': string;
+  'desktopPopupRoot': string;
   'exotic': string;
   'legendary': string;
   'movePopupDialog': string;
