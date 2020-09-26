@@ -1,5 +1,5 @@
 language: node_js
-node_js: 13
+node_js: 14
 os: linux
 dist: xenial
 script: build/travis_build.sh
