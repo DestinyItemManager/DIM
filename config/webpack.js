@@ -194,6 +194,7 @@ module.exports = (env) => {
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 sourceMap: true,
+                importLoaders: 2,
               },
             },
             'postcss-loader',
