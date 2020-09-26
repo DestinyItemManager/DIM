@@ -6,7 +6,6 @@ import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWork
 import {
   canTakeGeneralAndSeasonalMods,
   generateModPermutations,
-  sortForSeasonalProcessMods,
 } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
@@ -53,12 +52,8 @@ function assignAllGenrealAndSeasonalMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedGeneralMods = generalMods
-    .map(mapArmor2ModToProcessMod)
-    .sort(sortForSeasonalProcessMods);
-  const sortedSeasonalMods = seasonalMods
-    .map(mapArmor2ModToProcessMod)
-    .sort(sortForSeasonalProcessMods);
+  const sortedGeneralMods = generalMods.map(mapArmor2ModToProcessMod);
+  const sortedSeasonalMods = seasonalMods.map(mapArmor2ModToProcessMod);
 
   const generalModPermutations = generateModPermutations(sortedGeneralMods);
   const seasonalModPermutations = generateModPermutations(sortedSeasonalMods);

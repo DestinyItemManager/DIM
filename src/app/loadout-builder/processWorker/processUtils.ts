@@ -17,11 +17,16 @@ export interface ProcessItemSubset extends SortParam {
 }
 
 /**
- * This sorting function is pivitol in the algorithm to figure out it seasonal mods can be slotted into
- * a list of items. It sorts by season and then energyType in descending order. Both mods and items
- * should be sorted by this algorithms.
+ * This sorts process mods and items in the same manner as we try for greedy results.
+ *
+ * The first block with both seasons present is for seasonal mods and items.
+ * The second block is for general mods.
+ * After that is the cases for safety but they shouldn't happen.
+ *
+ * Some of this could be pulled into a common function but I have left it verbose for
+ * performance.
  */
-export function sortForSeasonalProcessMods(a: SortParam, b: SortParam) {
+export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   if (a.season && b.season) {
     if (a.season === b.season) {
       if (a.energy && b.energy) {
@@ -34,30 +39,22 @@ export function sortForSeasonalProcessMods(a: SortParam, b: SortParam) {
     } else {
       return b.season - a.season;
     }
+  } else if (!a.season && !b.season) {
+    if (a.energy && b.energy) {
+      if (a.energy.type === b.energy.type) {
+        return b.energy.val - a.energy.val;
+      } else {
+        return b.energy.type - a.energy.type;
+      }
+    } else if (!a.energy) {
+      return 1;
+    }
+
+    return -1;
     // I don't think the following cases will every happen but I have included them just incase.
   } else if (a.season === undefined) {
     return 1;
   }
-  return -1;
-}
-
-/**
- * This sorting function is pivitol in the algorithm to figure out it general mods can be slotted into
- * a list of items. It sorts by energyType in descending order. Both mods and items should be sorted
- * by this algorithms.
- */
-export function sortForGeneralProcessMods(a: SortParam, b: SortParam) {
-  // any energy is 0 so check undefined rather than falsey
-  if (a.energy && b.energy) {
-    if (a.energy.type === b.energy.type) {
-      return b.energy.val - a.energy.val;
-    } else {
-      return b.energy.type - a.energy.type;
-    }
-  } else if (!a.energy) {
-    return 1;
-  }
-
   return -1;
 }
 
@@ -75,7 +72,7 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
     return noModsPermutations;
   }
   const cursorArray = [0, 0, 0, 0, 0];
-  const modsCopy: (ProcessMod | null)[] = Array.from(mods);
+  const modsCopy: (ProcessMod | null)[] = Array.from(mods).sort(sortProcessModsOrItems);
 
   while (modsCopy.length < 5) {
     modsCopy.push(null);
@@ -152,7 +149,7 @@ export function canTakeGeneralAndSeasonalMods(
   assignments?: Record<string, number[]>
 ) {
   // Sort the items like the mods are to try and get a greedy result
-  const sortedItems = Array.from(items).sort(sortForGeneralProcessMods);
+  const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
   const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
