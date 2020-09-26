@@ -179,6 +179,7 @@ function PresentationNode({
       )}
       {childrenExpanded &&
         node.childPresentationNodes?.map((subNode) => (
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           <ConnectedPresentationNode
             key={subNode.nodeDef.hash}
             node={subNode}

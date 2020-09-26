@@ -108,6 +108,35 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 
+export const SocketDetailsMod = React.memo(
+  ({
+    itemDef,
+    defs,
+    className,
+    onClick,
+  }: {
+    itemDef: PluggableInventoryItemDefinition;
+    defs: D2ManifestDefinitions;
+    className?: string;
+    onClick?(mod: PluggableInventoryItemDefinition): void;
+  }) => {
+    const onClickFn = onClick && (() => onClick(itemDef));
+
+    return (
+      <div
+        role="button"
+        className={clsx('item', className)}
+        title={itemDef.displayProperties.name}
+        onClick={onClickFn}
+        onFocus={onClickFn}
+        tabIndex={0}
+      >
+        <DefItemIcon itemDef={itemDef} defs={defs} />
+      </div>
+    );
+  }
+);
+
 function SocketDetails({
   defs,
   item,
@@ -254,32 +283,3 @@ function SocketDetails({
 }
 
 export default connect<StoreProps>(mapStateToProps)(SocketDetails);
-
-export const SocketDetailsMod = React.memo(
-  ({
-    itemDef,
-    defs,
-    className,
-    onClick,
-  }: {
-    itemDef: PluggableInventoryItemDefinition;
-    defs: D2ManifestDefinitions;
-    className?: string;
-    onClick?(mod: PluggableInventoryItemDefinition): void;
-  }) => {
-    const onClickFn = onClick && (() => onClick(itemDef));
-
-    return (
-      <div
-        role="button"
-        className={clsx('item', className)}
-        title={itemDef.displayProperties.name}
-        onClick={onClickFn}
-        onFocus={onClickFn}
-        tabIndex={0}
-      >
-        <DefItemIcon itemDef={itemDef} defs={defs} />
-      </div>
-    );
-  }
-);

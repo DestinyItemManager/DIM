@@ -110,6 +110,57 @@ const LazyFilterHelp = React.lazy(
   () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
+const Row = React.memo(
+  ({
+    highlighted,
+    item,
+    isPhonePortrait,
+    isTabAutocompleteItem,
+    onClick,
+  }: {
+    highlighted: boolean;
+    item: SearchItem;
+    isPhonePortrait: boolean;
+    isTabAutocompleteItem: boolean;
+    onClick(e: React.MouseEvent, item: SearchItem);
+  }) => (
+    <>
+      <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+      <span className={styles.menuItemQuery}>
+        {item.type === SearchItemType.Help ? (
+          t('Header.FilterHelpMenuItem')
+        ) : item.highlightRange ? (
+          <HighlightedText
+            text={item.query}
+            startIndex={item.highlightRange[0]}
+            endIndex={item.highlightRange[1]}
+            className={styles.textHighlight}
+          />
+        ) : (
+          item.query
+        )}
+      </span>
+      <span className={styles.menuItemHelp} />
+      {!isPhonePortrait && isTabAutocompleteItem && (
+        <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
+      )}
+      {!isPhonePortrait && highlighted && (
+        <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
+      )}
+      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+        <button
+          type="button"
+          className={styles.deleteIcon}
+          onClick={(e) => onClick(e, item)}
+          title={t('Header.DeleteSearch')}
+        >
+          <AppIcon icon={closeIcon} />
+        </button>
+      )}
+    </>
+  )
+);
+
 // TODO: break filter autocomplete into its own object/helpers... with tests
 
 /** An interface for interacting with the search filter through a ref */
@@ -405,55 +456,4 @@ function SearchBar(
 
 export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
   React.forwardRef(SearchBar)
-);
-
-const Row = React.memo(
-  ({
-    highlighted,
-    item,
-    isPhonePortrait,
-    isTabAutocompleteItem,
-    onClick,
-  }: {
-    highlighted: boolean;
-    item: SearchItem;
-    isPhonePortrait: boolean;
-    isTabAutocompleteItem: boolean;
-    onClick(e: React.MouseEvent, item: SearchItem);
-  }) => (
-    <>
-      <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-      <span className={styles.menuItemQuery}>
-        {item.type === SearchItemType.Help ? (
-          t('Header.FilterHelpMenuItem')
-        ) : item.highlightRange ? (
-          <HighlightedText
-            text={item.query}
-            startIndex={item.highlightRange[0]}
-            endIndex={item.highlightRange[1]}
-            className={styles.textHighlight}
-          />
-        ) : (
-          item.query
-        )}
-      </span>
-      <span className={styles.menuItemHelp} />
-      {!isPhonePortrait && isTabAutocompleteItem && (
-        <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
-      )}
-      {!isPhonePortrait && highlighted && (
-        <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
-      )}
-      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-        <button
-          type="button"
-          className={styles.deleteIcon}
-          onClick={(e) => onClick(e, item)}
-          title={t('Header.DeleteSearch')}
-        >
-          <AppIcon icon={closeIcon} />
-        </button>
-      )}
-    </>
-  )
 );
