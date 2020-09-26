@@ -20,6 +20,7 @@ body {
   padding-top: calc(#{$header-height} + constant(safe-area-inset-top));
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
   box-sizing: border-box;
+  min-height: 100vh;
 }
 #header {
   padding: 0 0 0 2px;
