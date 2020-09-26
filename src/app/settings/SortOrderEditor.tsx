@@ -18,6 +18,14 @@ export interface SortProperty {
   // TODO, should we support up/down?
 }
 
+const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => (
+  <>
+    {order.map((item, index) => (
+      <SortEditorItem key={item.id} item={item} index={index} />
+    ))}
+  </>
+));
+
 interface Props {
   order: SortProperty[];
   onSortOrderChanged(order: SortProperty[]): void;
@@ -110,14 +118,6 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 
   return result;
 }
-
-const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => (
-  <>
-    {order.map((item, index) => (
-      <SortEditorItem key={item.id} item={item} index={index} />
-    ))}
-  </>
-));
 
 function SortEditorItem(props: { index: number; item: SortProperty }) {
   const { index, item } = props;

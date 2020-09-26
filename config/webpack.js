@@ -191,8 +191,8 @@ module.exports = (env) => {
                 modules: {
                   localIdentName:
                     env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
+                  exportLocalsConvention: 'camelCaseOnly',
                 },
-                localsConvention: 'camelCaseOnly',
                 sourceMap: true,
               },
             },
