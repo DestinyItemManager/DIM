@@ -207,7 +207,7 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
   return _.uniqBy(rtn, stringifyPerm);
 }
 
-function getEnergyCosts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
+function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
   let arcCount = 0;
   let solarCount = 0;
   let voidCount = 0;
@@ -246,11 +246,11 @@ export function canTakeGeneralAndSeasonalMods(
   // Sort the items like the mods are to try and get a greedy result
   const sortedItems = Array.from(items).sort(sortForGeneralProcessMods);
 
-  const [arcItems, solarItems, voidItems] = getEnergyCosts(sortedItems);
-  const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCosts(
+  const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
+  const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
     seasonalModPermutations[0]
   );
-  const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCosts(
+  const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
   );
 
