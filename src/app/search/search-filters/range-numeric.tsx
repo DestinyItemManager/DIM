@@ -88,25 +88,26 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
-    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'kills', format: 'range'}),
+    suggestionsGenerator: () =>
+      generateSuggestionsForFilter({ keywords: 'kills', format: 'range' }),
     filter: ({ filterValue }) => {
-        const parts = filterValue.split(':');
-        const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
+      const parts = filterValue.split(':');
+      const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
-        if (shouldntExist) {
-          throw new Error('Too many filter parameters.');
-        }
+      if (shouldntExist) {
+        throw new Error('Too many filter parameters.');
+      }
 
-        const numberComparisonFunction = rangeStringToComparator(count);
-        return (item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
-          return Boolean(
-            count &&
+      const numberComparisonFunction = rangeStringToComparator(count);
+      return (item) => {
+        const killTrackerInfo = getItemKillTrackerInfo(item);
+        return Boolean(
+          count &&
             killTrackerInfo &&
-              (!activityType || activityType === killTrackerInfo.type) &&
-              numberComparisonFunction(killTrackerInfo.count)
-          );
-        }
+            (!activityType || activityType === killTrackerInfo.type) &&
+            numberComparisonFunction(killTrackerInfo.count)
+        );
+      };
     },
   },
 ];

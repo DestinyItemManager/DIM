@@ -53,7 +53,10 @@ export default function PickerSectionMods({
 
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
-      if (item.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any || allLockedAreAnyEnergy) {
+      if (
+        item.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+        allLockedAreAnyEnergy
+      ) {
         return false;
       }
 
