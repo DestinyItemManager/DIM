@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
-import './Account.scss';
 import { DestinyAccount } from './destiny-account';
 import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
@@ -48,13 +47,13 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Pro
           to={`${accountRoute(account)}/inventory`}
         >
           <Account
-            className={account === currentAccount ? 'selected-account' : ''}
             account={account}
+            selected={account === currentAccount}
             onClick={closeDropdown}
           />
         </Link>
       ))}
-      <div className={clsx('account', styles.logout)} onClick={() => dispatch(logOut())}>
+      <div className={clsx(styles.logout)} onClick={() => dispatch(logOut())}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
