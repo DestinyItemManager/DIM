@@ -10,7 +10,8 @@
   cursor: pointer;
   width: 100%;
   text-align: center;
-  border-bottom: 2px solid transparent;
+  border-bottom: 2px solid #222;
+  background-color: black;
   &.selected {
     opacity: 1;
     border-bottom: 2px solid $orange;

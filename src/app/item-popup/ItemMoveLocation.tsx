@@ -66,7 +66,7 @@ export const canShowStore = (
     if (item.equipped && store.id === buttonStore.id) {
       return true;
     }
-  } else if (store.id !== buttonStore.id || item.equipped) {
+  } else {
     // Only show one store for account wide items
     if (item.bucket?.accountWide && !buttonStore.current) {
       return false;
@@ -118,14 +118,15 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Equip')}
         />
       )}
-      {canShowStore(store, itemOwnerStore, item) && (
-        <ItemActionButton
-          title={t('MovePopup.StoreWithName', { character: store.name })}
-          onClick={moveItem}
-          icon={store.icon}
-          label={t('MovePopup.Store')}
-        />
-      )}
+      {!(item.owner === store.id && !item.equipped) &&
+        canShowStore(store, itemOwnerStore, item) && (
+          <ItemActionButton
+            title={t('MovePopup.StoreWithName', { character: store.name })}
+            onClick={moveItem}
+            icon={store.icon}
+            label={t('MovePopup.Store')}
+          />
+        )}
     </ItemActionButtonGroup>
   );
 }

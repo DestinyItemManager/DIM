@@ -91,11 +91,17 @@
 .popupBackground {
   background-color: #{'hsl(var(--backgroundColor))'};
   contain: content;
-  box-shadow: 0 -1px 24px 4px #222;
+  box-shadow: 0 -1px 24px 4px #161626;
+  @include phone-portrait {
+    box-shadow: none;
+  }
 }
 
 .desktopPopupRoot {
   pointer-events: none;
+  .arrow {
+    border-color: #161626;
+  }
 }
 
 .desktopPopup {

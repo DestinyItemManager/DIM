@@ -29,7 +29,7 @@ import { updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import './loadout-drawer.scss';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { getItemsFromLoadoutItems } from './loadout-utils';
+import { getItemsFromLoadoutItems, newLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
@@ -89,7 +89,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Readonly<Loadout>;
-  show: boolean;
   showClass: boolean;
   isNew: boolean;
 }
@@ -121,7 +120,6 @@ function stateReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'reset':
       return {
-        show: false,
         showClass: true,
         isNew: false,
         loadout: undefined,
@@ -139,7 +137,6 @@ function stateReducer(state: State, action: Action): State {
         },
         isNew,
         showClass,
-        show: true,
       };
     }
 
@@ -158,12 +155,11 @@ function stateReducer(state: State, action: Action): State {
         return state;
       }
 
-      return loadout
-        ? {
-            ...state,
-            loadout: addItem(loadout, item, shift, items),
-          }
-        : state;
+      return {
+        ...state,
+        loadout: addItem(loadout || newLoadout('', []), item, shift, items),
+        isNew: !loadout,
+      };
     }
 
     case 'removeItem': {
@@ -375,8 +371,7 @@ function LoadoutDrawer({
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ show, loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
-    show: false,
+  const [{ loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
   });
@@ -478,7 +473,7 @@ function LoadoutDrawer({
     onSaveLoadout(e, newLoadout);
   };
 
-  if (!loadout || !show) {
+  if (!loadout) {
     return null;
   }
 

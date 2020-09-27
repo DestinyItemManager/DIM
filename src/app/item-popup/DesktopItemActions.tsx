@@ -1,9 +1,17 @@
 import { CompareService } from 'app/compare/compare.service';
 import { t } from 'app/i18next-t';
+import { getTag } from 'app/inventory/dim-item-info';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
-import { AppIcon, faClone } from 'app/shell/icons';
-import { ThunkDispatchProp } from 'app/store/types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import TagIcon from 'app/inventory/TagIcon';
+import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import { addIcon, AppIcon, faClone } from 'app/shell/icons';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import hunter from 'destiny-icons/general/class_hunter.svg';
+import titan from 'destiny-icons/general/class_titan.svg';
+import warlock from 'destiny-icons/general/class_warlock.svg';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
@@ -12,18 +20,33 @@ import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import { sortedStoresSelector } from '../inventory/selectors';
+import {
+  itemHashTagsSelector,
+  itemInfosSelector,
+  sortedStoresSelector,
+} from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import ItemMoveAmount from './ItemMoveAmount';
 import { canShowStore, canShowVault } from './ItemMoveLocation';
+import ItemTagSelector from './ItemTagSelector';
+import LockButton from './LockButton';
+
+const classIcons = {
+  [DestinyClass.Hunter]: hunter,
+  [DestinyClass.Warlock]: warlock,
+  [DestinyClass.Titan]: titan,
+} as const;
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const itemTag = useSelector((state: RootState) =>
+    getTag(item, itemInfosSelector(state), itemHashTagsSelector(state))
+  );
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
@@ -108,6 +131,11 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     CompareService.addItemsToCompare([item], true);
   };
 
+  const addToLoadout = (e) => {
+    hideItemPopup();
+    addItemToLoadout(item, e);
+  };
+
   return (
     <>
       <div className={styles.interaction} ref={containerRef}>
@@ -119,6 +147,21 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             onAmountChanged={onAmountChanged}
           />
         )}
+        {item.taggable && (
+          <div className={styles.itemTagSelector}>
+            {itemTag ? <TagIcon tag={itemTag} /> : <div className={styles.null} />}
+            <ItemTagSelector item={item} />
+          </div>
+        )}
+        {(item.lockable || item.trackable) && (
+          <LockButton
+            className={styles.actionButton}
+            item={item}
+            type={item.lockable ? 'lock' : 'track'}
+          >
+            {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
+          </LockButton>
+        )}
         {stores.map((store) => (
           <React.Fragment key={store.id}>
             {canShowVault(store, itemOwner, item) && (
@@ -128,63 +171,32 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 role="button"
                 tabIndex={-1}
               >
-                <img
-                  src={store.icon}
-                  height="32"
-                  width="32"
-                  style={{
-                    backgroundColor: store.color
-                      ? `rgb(${Math.round(store.color.red)}, ${Math.round(
-                          store.color.green
-                        )}, ${Math.round(store.color.blue)}`
-                      : 'black',
-                  }}
-                />{' '}
+                <StoreIcon store={store} />
                 {t('MovePopup.Vault')}
-              </div>
-            )}
-            {!(item.owner === store.id && item.equipped) && itemCanBeEquippedBy(item, store) && (
-              <div
-                className={styles.actionButton}
-                onClick={() => onMoveItemTo(store, true)}
-                role="button"
-                tabIndex={-1}
-              >
-                <img
-                  src={store.icon}
-                  height="32"
-                  width="32"
-                  style={{
-                    backgroundColor: store.color
-                      ? `rgb(${Math.round(store.color.red)}, ${Math.round(
-                          store.color.green
-                        )}, ${Math.round(store.color.blue)}`
-                      : 'black',
-                  }}
-                />{' '}
-                {t('MovePopup.Equip')}
               </div>
             )}
             {canShowStore(store, itemOwner, item) && (
               <div
-                className={styles.actionButton}
+                className={clsx(styles.actionButton, styles.move, {
+                  [styles.disabled]: item.owner === store.id && !item.equipped,
+                })}
                 onClick={() => onMoveItemTo(store)}
                 role="button"
                 tabIndex={-1}
               >
-                <img
-                  src={store.icon}
-                  height="32"
-                  width="32"
-                  style={{
-                    backgroundColor: store.color
-                      ? `rgb(${Math.round(store.color.red)}, ${Math.round(
-                          store.color.green
-                        )}, ${Math.round(store.color.blue)}`
-                      : 'black',
-                  }}
-                />{' '}
-                {t('MovePopup.Store')}
+                <StoreIcon store={store} /> {t('MovePopup.Store')}
+              </div>
+            )}
+            {itemCanBeEquippedBy(item, store) && (
+              <div
+                className={clsx(styles.actionButton, styles.equip, {
+                  [styles.disabled]: item.owner === store.id && item.equipped,
+                })}
+                onClick={() => onMoveItemTo(store, true)}
+                role="button"
+                tabIndex={-1}
+              >
+                <StoreIcon store={store} /> {t('MovePopup.Equip')}
               </div>
             )}
           </React.Fragment>
@@ -204,6 +216,11 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             <img src={arrowsOut} height="32" width="32" /> {t('MovePopup.DistributeEvenly')}
           </div>
         )}
+        {itemCanBeInLoadout(item) && (
+          <div className={styles.actionButton} onClick={addToLoadout} role="button" tabIndex={-1}>
+            <AppIcon icon={addIcon} /> {t('MovePopup.AddToLoadout')}
+          </div>
+        )}
         {item.infusionFuel && (
           <div className={styles.actionButton} onClick={infuse} role="button" tabIndex={-1}>
             <img src={d2Infuse} height="32" width="32" /> {t('MovePopup.Infuse')}
@@ -212,4 +229,34 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
       </div>
     </>
   );
+}
+
+function StoreIcon({ store }: { store: DimStore }) {
+  return (
+    <>
+      <img
+        src={store.icon}
+        height="32"
+        width="32"
+        style={{
+          backgroundColor: store.color
+            ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
+                store.color.blue
+              )}`
+            : 'black',
+        }}
+      />
+      {!store.isVault && <img src={classIcons[store.classType]} className={styles.classIcon} />}
+    </>
+  );
+}
+
+export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
+  return type === 'lock'
+    ? item.locked
+      ? t('MovePopup.LockUnlock.Locked')
+      : t('MovePopup.LockUnlock.Unlocked')
+    : item.tracked
+    ? t('MovePopup.TrackUntrack.Tracked')
+    : t('MovePopup.TrackUntrack.Untracked');
 }

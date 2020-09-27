@@ -4,33 +4,106 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: black;
+  background-color: #161626;
+
+  :global(.item-tag-selector) {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    outline: none;
+    font-size: 12px;
+
+    option {
+      color: white;
+      background: black;
+    }
+  }
 }
 
-.actionButton {
+.entry {
   display: flex;
   flex-direction: row;
   align-items: center;
-  text-transform: uppercase;
-  padding: 8px;
-  font-weight: bold;
-  cursor: pointer;
+  padding: 12px;
 
   img,
-  :global(.app-icon) {
+  :global(.app-icon),
+  .null {
+    display: block;
     margin-right: 8px;
-    height: 24px;
-    width: 24px;
-    font-size: 24px;
+    height: 16px;
+    width: 16px;
+    font-size: 16px;
+    text-align: center;
   }
   :global(.app-icon) {
     color: #eee;
   }
+
+  .classIcon {
+    filter: invert(1);
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+.itemTagSelector {
+  composes: entry;
+  padding-top: 12px;
+  padding-bottom: 6px;
+
+  :global(.app-icon) {
+    margin-top: 1px;
+  }
+}
+
+.null {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '';
+    display: block;
+    height: 6px;
+    width: 6px;
+    border-radius: 3px;
+    background-color: white;
+  }
+}
+
+.actionButton {
+  composes: entry;
+  cursor: pointer;
+
   &:hover {
     background: $orange;
     color: black;
     :global(.app-icon) {
       color: black;
     }
+    .classIcon {
+      filter: none;
+    }
   }
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+.move,
+.equip {
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.move {
+  margin-top: 6px;
+}
+
+.equip {
+  margin-bottom: 6px;
 }
