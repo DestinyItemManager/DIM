@@ -1,5 +1,4 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
 import { ProcessMod } from './types';
 
@@ -60,6 +59,17 @@ export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
 
 const noModsPermutations = [[null, null, null, null, null]];
 
+function stringifyModPermutation(perm: (ProcessMod | null)[]) {
+  let permString = '';
+  for (const modOrNull of perm) {
+    if (modOrNull) {
+      permString += `(${modOrNull.energy.type},${modOrNull.energy.val},${modOrNull.tag || ''})`;
+    }
+    permString += ',';
+  }
+  return permString;
+}
+
 /**
  * This is heaps algorithm implemented for generating mod permutations.
  * https://en.wikipedia.org/wiki/Heap%27s_algorithm
@@ -73,6 +83,7 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
   }
   const cursorArray = [0, 0, 0, 0, 0];
   const modsCopy: (ProcessMod | null)[] = Array.from(mods).sort(sortProcessModsOrItems);
+  const containsSet = new Set<string>();
 
   while (modsCopy.length < 5) {
     modsCopy.push(null);
@@ -89,7 +100,11 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
       } else {
         [modsCopy[cursorArray[i]], modsCopy[i]] = [modsCopy[i], modsCopy[cursorArray[i]]];
       }
-      rtn.push(Array.from(modsCopy));
+      const uniqueConstraint = stringifyModPermutation(modsCopy);
+      if (!containsSet.has(uniqueConstraint)) {
+        rtn.push(Array.from(modsCopy));
+        containsSet.add(uniqueConstraint);
+      }
       cursorArray[i] += 1;
       i = 0;
     } else {
@@ -98,18 +113,7 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
     }
   }
 
-  const stringifyPerm = (perm: (ProcessMod | null)[]) => {
-    let permString = '';
-    for (const modOrNull of perm) {
-      if (modOrNull) {
-        permString += `(${modOrNull.energy.type},${modOrNull.energy.val},${modOrNull.tag || ''})`;
-      }
-      permString += ',';
-    }
-    return permString;
-  };
-
-  return _.uniqBy(rtn, stringifyPerm);
+  return rtn;
 }
 
 function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
