@@ -3,19 +3,13 @@ import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import {
-  canTakeAllGeneralMods,
-  canTakeAllSeasonalMods,
-  canTakeGeneralAndSeasonalMods,
-  generateModPermutations,
-} from './processUtils';
+import { canTakeGeneralAndSeasonalMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
-  ProcessMod,
 } from './types';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -176,18 +170,10 @@ export function process(
     statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
   }
 
-  let generalModsPermutations: (ProcessMod | null)[][] | undefined;
-  let seasonalModPermutations: (ProcessMod | null)[][] | undefined;
-
-  if (
-    lockedArmor2ModMap.seasonal.length &&
-    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length
-  ) {
-    generalModsPermutations = generateModPermutations(
-      lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
-    );
-    seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
-  }
+  const generalModsPermutations = generateModPermutations(
+    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
+  );
+  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -267,24 +253,13 @@ export function process(
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
                 //seasonal only
-                (lockedArmor2ModMap.seasonal.length &&
-                  !lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
-                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
-                //general only
-                (!lockedArmor2ModMap.seasonal.length &&
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
-                  !canTakeAllGeneralMods(
-                    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
-                    armor
-                  )) ||
-                // both general and seasonal
-                (generalModsPermutations &&
-                  seasonalModPermutations &&
-                  !canTakeGeneralAndSeasonalMods(
-                    generalModsPermutations,
-                    seasonalModPermutations,
-                    armor
-                  ))
+                (lockedArmor2ModMap.seasonal.length ||
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
+                !canTakeGeneralAndSeasonalMods(
+                  generalModsPermutations,
+                  seasonalModPermutations,
+                  armor
+                )
               ) {
                 continue;
               }
