@@ -355,9 +355,11 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
           </span>
         )}
         <Refresh />
-        <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
-          <AppIcon icon={settingsIcon} />
-        </Link>
+        {!isPhonePortrait && (
+          <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
+            <AppIcon icon={settingsIcon} />
+          </Link>
+        )}
         <span className="link search-button menuItem" onClick={toggleSearch}>
           <AppIcon icon={searchIcon} />
         </span>
