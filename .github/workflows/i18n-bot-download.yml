@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.I18N_PAT }}
 
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
