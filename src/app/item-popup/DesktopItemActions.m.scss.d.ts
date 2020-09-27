@@ -5,8 +5,10 @@ interface CssExports {
   'classIcon': string;
   'disabled': string;
   'entry': string;
+  'equip': string;
   'interaction': string;
   'itemTagSelector': string;
+  'move': string;
   'null': string;
 }
 export const cssExports: CssExports;

@@ -93,3 +93,17 @@
   cursor: default;
   pointer-events: none;
 }
+
+.move,
+.equip {
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.move {
+  margin-top: 6px;
+}
+
+.equip {
+  margin-bottom: 6px;
+}

@@ -175,9 +175,9 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 {t('MovePopup.Vault')}
               </div>
             )}
-            {(itemOwner !== store || item.equipped) && canShowStore(store, itemOwner, item) && (
+            {canShowStore(store, itemOwner, item) && (
               <div
-                className={clsx(styles.actionButton, {
+                className={clsx(styles.actionButton, styles.move, {
                   [styles.disabled]: item.owner === store.id && !item.equipped,
                 })}
                 onClick={() => onMoveItemTo(store)}
@@ -187,19 +187,18 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 <StoreIcon store={store} /> {t('MovePopup.Store')}
               </div>
             )}
-            {((itemOwner === store && !item.equipped) || store.current) &&
-              itemCanBeEquippedBy(item, store) && (
-                <div
-                  className={clsx(styles.actionButton, {
-                    [styles.disabled]: item.owner === store.id && item.equipped,
-                  })}
-                  onClick={() => onMoveItemTo(store, true)}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcon store={store} /> {t('MovePopup.Equip')}
-                </div>
-              )}
+            {itemCanBeEquippedBy(item, store) && (
+              <div
+                className={clsx(styles.actionButton, styles.equip, {
+                  [styles.disabled]: item.owner === store.id && item.equipped,
+                })}
+                onClick={() => onMoveItemTo(store, true)}
+                role="button"
+                tabIndex={-1}
+              >
+                <StoreIcon store={store} /> {t('MovePopup.Equip')}
+              </div>
+            )}
           </React.Fragment>
         ))}
         {item.comparable && (
