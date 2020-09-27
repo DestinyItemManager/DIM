@@ -15,7 +15,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import vendorEngramSvg from '../../images/engram.svg';
@@ -135,8 +135,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     }
   }, [showSearch]);
 
-  const history = useHistory();
-
   const nodeRef = useRef<HTMLDivElement>(null);
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -168,7 +166,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   let links: {
     to: string;
     text: string;
-    hotkey?: string;
     badge?: React.ReactNode;
   }[] = [];
   if (account) {
@@ -177,17 +174,14 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       {
         to: `${path}/inventory`,
         text: t('Header.Inventory'),
-        hotkey: 'i',
       },
       account.destinyVersion === 2 && {
         to: `${path}/progress`,
         text: t('Progress.Progress'),
-        hotkey: 'p',
       },
       {
         to: `${path}/vendors`,
         text: t('Vendors.Vendors'),
-        hotkey: 'v',
         badge: vendorEngramDropActive && (
           <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
         ),
@@ -195,17 +189,14 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       account.destinyVersion === 2 && {
         to: `${path}/records`,
         text: t('Records.Title'),
-        hotkey: 'c',
       },
       {
         to: `${path}/optimizer`,
         text: t('LB.LB'),
-        hotkey: 'b',
       },
       {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),
-        hotkey: 'o',
       },
       account.destinyVersion === 1 && {
         to: `${path}/record-books`,
@@ -235,16 +226,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       description: t('Hotkey.Menu'),
       callback: toggleDropdown,
     },
-    ..._.compact(
-      links.map(
-        (link) =>
-          link.hotkey && {
-            combo: link.hotkey,
-            description: link.text,
-            callback: () => history.push(link.to),
-          }
-      )
-    ),
     {
       combo: 'f',
       description: t('Hotkey.StartSearch'),
