@@ -58,6 +58,20 @@
   }
 }
 
+.null {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: '';
+    display: block;
+    height: 6px;
+    width: 6px;
+    border-radius: 3px;
+    background-color: white;
+  }
+}
+
 .actionButton {
   composes: entry;
   cursor: pointer;

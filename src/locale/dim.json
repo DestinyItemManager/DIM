@@ -619,7 +619,7 @@
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
     "Split": "Split",
-    "Store": "Store",
+    "Store": "Move",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
