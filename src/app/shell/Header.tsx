@@ -202,7 +202,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
         text: t('LB.LB'),
         hotkey: 'b',
       },
-      !isPhonePortrait && {
+      {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),
         hotkey: 'o',

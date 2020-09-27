@@ -120,7 +120,7 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
   };
 
   if (isPhonePortrait) {
-    return <div>{t('Organizer.NoMobile')}</div>;
+    return <div className={styles.noMobile}>{t('Organizer.NoMobile')}</div>;
   }
 
   if (!stores.length) {
