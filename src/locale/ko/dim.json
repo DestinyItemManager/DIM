@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "아키타입",
     "Armor2": "방어구 2.0",
+    "Button": "비교",
     "ButtonHelp": "아이템 비교",
     "CompareBaseStats": "기본 능력치 표시",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "아이템 {{num}}개 잠김",
     "Locked": "잠금 여부에 따른 아이템 표시",
     "Masterwork": "걸작 능력치나 단계에 따른 아이템 표시",
+    "MasterworkKills": "걸작 처치 추적기 수치에 따른 아이템 표시",
     "MaxPower": "각 캐릭터 직업의 전투력을 최대화할 수 있는 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품 슬롯이 있는 방어구 표시",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
     "Clear": "검색 필터 초기화",
-    "CompareMatching": "필터링된 아이템 비교",
+    "CompareMatching": "아이템 비교",
     "DeleteSearch": "검색 삭제",
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
@@ -286,6 +288,7 @@
     "ReportBug": "버그 제보",
     "SaveSearch": "검색 저장",
     "Shop": "상점",
+    "TagAs": "'{{tag}}'로 태그",
     "UpgradeDIM": "DIM 업데이트",
     "WhatsNew": "새로운 기능"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
@@ -589,6 +591,7 @@
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
     "AcquiredMod": "이 개조 부품은 소지품의 아이템에 적용되어 있습니다.",
     "AddNote": "메모 추가",
+    "AddToLoadout": "로드아웃",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
     "Consolidate": "모으기",
     "Details": "팝업",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "아이템 세부정보 열기",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
-      "Unlock": "{{itemType}} 잠금 해제하기"
+      "Locked": "잠금",
+      "Unlock": "{{itemType}} 잠금 해제하기",
+      "Unlocked": "잠금 해제됨"
     },
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
     "Notes": "메모:",
@@ -623,7 +628,9 @@
     "Take": "모으기",
     "TrackUntrack": {
       "Track": "{{itemType}} 추적",
-      "Untrack": "{{itemType}} 추적 해제"
+      "Tracked": "추적됨",
+      "Untrack": "{{itemType}} 추적 해제",
+      "Untracked": "추적 안됨"
     },
     "TriageTab": "분류",
     "Vault": "금고"
@@ -653,6 +660,7 @@
       "Icon": "아이콘",
       "KillTracker": "처치 추적기",
       "Loadouts": "로드아웃",
+      "Location": "위치",
       "MasterworkStat": "걸작 능력치",
       "MasterworkTier": "걸작 단계",
       "ModSlot": "개조 부품 소켓",
@@ -678,7 +686,7 @@
     "EnabledColumns": "활성화된 열",
     "Lock": "잠금",
     "NoItems": "선택된 아이템 없음",
-    "NoMobile": "모바일에서는 보기 힘듭니다.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "메모 설정",
     "NotePrompt": "메모:",
     "Organizer": "정리 도구",
@@ -724,11 +732,11 @@
   },
   "SearchHistory": {
     "Date": "최근 사용",
-    "Description": "과거에 저장된 검색 기록입니다. 이곳에서 삭제할 수 있습니다.",
+    "Description": "이전에 저장된 검색 기록입니다. 이곳에서 삭제할 수 있습니다.",
     "Link": "검색 기록 보기 및 편집",
     "Query": "검색",
     "Title": "검색 기록",
-    "UsageCount": "# 사용됨"
+    "UsageCount": "사용 횟수"
   },
   "Settings": {
     "CharacterOrder": "캐릭터 정렬 방법",
@@ -766,7 +774,7 @@
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "전투력",
     "SortByRarity": "희귀도",
-    "SortByRating": "커뮤니티 평가나 방어구 품질",
+    "SortByRating": "방어구 품질 (D1)",
     "SortByTag": "태그 ({{taglist}})",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "보관",
-    "ClearTag": "지우기",
+    "ClearTag": "태그 삭제",
     "Favorite": "즐겨찾기",
     "Infuse": "주입",
     "Junk": "쓰레기",

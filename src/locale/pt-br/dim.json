@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Arquétipo",
     "Armor2": "Armadura 2.0",
+    "Button": "Comparar",
     "ButtonHelp": "Comparar itens",
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "{{num}} itens travados",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "Masterwork": "Exibe itens baseado em seu atributo ou nível de obra-prima.",
+    "MasterworkKills": "Exibe itens baseado no contador de mortes de obra-prima.",
     "MaxPower": "Exibe os itens que maximizariam o Nível de Poder para cada classe de personagem.",
     "ModSlot": "Exibe armaduras com um slot específico de Mod de Temporada.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Marcar itens em massa",
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
-    "CompareMatching": "Comparar itens filtrados",
+    "CompareMatching": "Comparar Itens",
     "DeleteSearch": "Apagar pesquisa",
     "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
@@ -286,6 +288,7 @@
     "ReportBug": "Relatar Falhas",
     "SaveSearch": "Salvar pesquisa",
     "Shop": "Loja",
+    "TagAs": "Marcar como '{{tag}}'",
     "UpgradeDIM": "Atualize o DIM",
     "WhatsNew": "Novidades"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
-    "StoreName": "{{className}} {{genderRace}}",
-    "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!"
+    "StoreName": "{{className}} {{genderRace}}"
   },
   "LB": {
     "AdvancedOptions": "Opções avançadas",
@@ -589,6 +591,7 @@
     "Acquired": "Este item está desbloqueado em coleções.",
     "AcquiredMod": "Este mod está aplicado a um item no seu inventário.",
     "AddNote": "Adicionar anotação",
+    "AddToLoadout": "Set",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
     "Details": "Popup",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "Abrir detalhes do item",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
-      "Unlock": "Destravar {{itemType}}"
+      "Locked": "Bloqueado",
+      "Unlock": "Destravar {{itemType}}",
+      "Unlocked": "Desbloqueado"
     },
     "MissingSockets": "Detalhes de perks e mods estão indisponíveis enquanto a Bungie está atualizando os seus servidores. Eles retornarão quando tiverem terminado de atualizar, geralmente em algumas horas.",
     "Notes": "Anotações:",
@@ -614,7 +619,7 @@
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar para o Cofre",
     "Split": "Dividir",
-    "Store": "Mover",
+    "Store": "Store",
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "Tomar",
     "TrackUntrack": {
       "Track": "Rastrear {{itemType}}",
-      "Untrack": "Não rastrear {{itemType}}"
+      "Tracked": "Rastreado",
+      "Untrack": "Não rastrear {{itemType}}",
+      "Untracked": "Não rastreado"
     },
     "TriageTab": "Triagem",
     "Vault": "Cofre"
@@ -653,6 +660,7 @@
       "Icon": "Ícone",
       "KillTracker": "Contador de baixas",
       "Loadouts": "Sets",
+      "Location": "Armazenado em",
       "MasterworkStat": "Atributo de obra-prima",
       "MasterworkTier": "Nível de obra-prima",
       "ModSlot": "Slot de mod",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Colunas Habilitadas",
     "Lock": "Travar",
     "NoItems": "Nenhum item selecionado",
-    "NoMobile": "Esta forma de exibir não é adequada para celulares.",
+    "NoMobile": "Vire seu celular de lado para usar o Organizador.",
     "Note": "Definir notas",
     "NotePrompt": "Notas:",
     "Organizer": "Organizador",
@@ -766,7 +774,7 @@
     "SortByClassType": "Classe Requerida",
     "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
-    "SortByRating": "Avaliação da Comunidade ou Qualidade da Armadura",
+    "SortByRating": "Qualidade da Armadura (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Arquivar",
-    "ClearTag": "Limpar",
+    "ClearTag": "Limpar Tag",
     "Favorite": "Favorito",
     "Infuse": "Infundir",
     "Junk": "Lixo",

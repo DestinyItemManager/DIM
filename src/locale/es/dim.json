@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Arquetipo",
     "Armor2": "Armadura 2.0",
+    "Button": "Comparar",
     "ButtonHelp": "Comparar objetos",
     "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "Bloqueados {{num}} objetos",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "Masterwork": "Muestra objetos basados en su nivel de estadística de obra maestra o nivel de obra maestra.",
+    "MasterworkKills": "Muestra objetos basados en su registro de contador de bajas de obra maestra.",
     "MaxPower": "Muestra objetos que maximizarían el Nivel de Poder para cada clase de personaje.",
     "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Grupos de etiquetas para objetos",
     "BungieNetAlert": "Alerta de Bungie",
     "Clear": "Limpiar filtro de búsqueda",
-    "CompareMatching": "Comparar objetos filtrados",
+    "CompareMatching": "Comparar Objetos",
     "DeleteSearch": "Borrar Búsqueda",
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
@@ -286,6 +288,7 @@
     "ReportBug": "Informar de un Error",
     "SaveSearch": "Guardar Búsqueda",
     "Shop": "Tienda",
+    "TagAs": "Etiquetar como '{{tag}}'",
     "UpgradeDIM": "Actualizar DIM",
     "WhatsNew": "¿Qué hay de nuevo?"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "Lleno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
-    "StoreName": "{{genderRace}}{{className}}",
-    "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!"
+    "StoreName": "{{genderRace}}{{className}}"
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
@@ -589,18 +591,21 @@
     "Acquired": "Este objeto está desbloqueado en colecciones.",
     "AcquiredMod": "Este modificador está actualmente aplicado a un objeto en tu inventario.",
     "AddNote": "Añadir una nota",
+    "AddToLoadout": "Equipación",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
     "Details": "Emergente",
     "DistributeEvenly": "Distribuye Equitativamente",
-    "Equip": "Poner",
+    "Equip": "Equipar",
     "EquipWithName": "Equipar en {{character}}",
     "Expand": "Expandir detalles del objeto",
     "Infuse": "Infundir",
     "ItemDetailSheet": "Abrir detalles del objeto",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
-      "Unlock": "Desbloquear {{itemType}}"
+      "Locked": "Bloqueado",
+      "Unlock": "Desbloquear {{itemType}}",
+      "Unlocked": "Desbloqueado"
     },
     "MissingSockets": "Los detalles de modificadores y ventajas no estarán disponibles mientras Bungie esté actualizando sus servicios. Volverán cuando etén listos, normalmente en unas pocas horas.",
     "Notes": "Notas:",
@@ -613,8 +618,8 @@
     "ReadLoreLink": "Leer historia",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar al depósito",
-    "Split": "Partir",
-    "Store": "Meter",
+    "Split": "Dividir",
+    "Store": "Almacenar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,10 +628,12 @@
     "Take": "Tomar",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",
-      "Untrack": "No seguir {{itemType}}"
+      "Tracked": "Seguido",
+      "Untrack": "No seguir {{itemType}}",
+      "Untracked": "No seguido"
     },
     "TriageTab": "Triaje",
-    "Vault": "Bóveda"
+    "Vault": "Depósito"
   },
   "Notes": {
     "Error": "¡Error! Máximo 120 caracteres por notas.",
@@ -653,6 +660,7 @@
       "Icon": "Icono",
       "KillTracker": "Contador de Bajas",
       "Loadouts": "Equipaciones",
+      "Location": "Localización",
       "MasterworkStat": "Estadística Obra Maestra",
       "MasterworkTier": "Nivel de Obra Maestra",
       "ModSlot": "Ranura para Modificador",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Columnas Habilitadas",
     "Lock": "Bloquear",
     "NoItems": "No hay objetos seleccionados",
-    "NoMobile": "Esta vista no es mejor en el móvil.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Establecer Nota",
     "NotePrompt": "Nota:",
     "Organizer": "Organizador",
@@ -766,7 +774,7 @@
     "SortByClassType": "Clase Requerida",
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
-    "SortByRating": "Calificación de la comunidad o calidad de armadura",
+    "SortByRating": "Calidad de la armadura (D1)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Archivo",
-    "ClearTag": "Limpiar",
+    "ClearTag": "Limpiar Etiqueta",
     "Favorite": "Favorito",
     "Infuse": "Infundir",
     "Junk": "Basura",

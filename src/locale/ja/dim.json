@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "原型",
     "Armor2": "アーマー2.0",
+    "Button": "比較",
     "ButtonHelp": "アイテムを比較する",
     "CompareBaseStats": "基本Statsを表示",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "ロックした {{num}} アイテム",
     "Locked": "アイテムの固定有無を基に表示",
     "Masterwork": "マスターワークのステータスまたはマスターワークレベルに基づいてアイテムを表示。",
+    "MasterworkKills": "マスターワークキルトラッカー数に基づいてアイテムを表示",
     "MaxPower": "各キャラクタークラスのパワーレベルを最大化するアイテムを表示します。",
     "ModSlot": "特定のシーズンMODスロットを持つ防具を表示します。",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "バルクタグアイテム",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "フィルターをクリア",
-    "CompareMatching": "アイテムのフィルタリングが完了",
+    "CompareMatching": "アイテムを比較",
     "DeleteSearch": "検索の削除",
     "FilterHelp": "検索　アイテム/パーク, {{example}},",
     "FilterHelpBrief": "商品の検索",
@@ -286,6 +288,7 @@
     "ReportBug": "バグの報告",
     "SaveSearch": "検索を保存",
     "Shop": "店",
+    "TagAs": "{{tag}} としてタグ",
     "UpgradeDIM": "DIMのアップデート",
     "WhatsNew": "新着情報"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "満杯! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
     "StackFull": "既に{{name}} の完全なスタックがあります",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "保有している数より多めに移動しようとしています。"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
@@ -589,6 +591,7 @@
     "Acquired": "このアイテムはコレクションでアンロックされています。",
     "AcquiredMod": "現在、このmodはインベントリ内のアイテムに適用されています。",
     "AddNote": "メモを追加",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
     "Details": "ポップアップ",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "アイテムの詳細を表示",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
-      "Unlock": "ロックを解除する {{itemType}}"
+      "Locked": "Locked",
+      "Unlock": "ロックを解除する {{itemType}}",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "Bungieがサービスを更新している間は、パークとMODの詳細は利用できません。通常は数時間で、それらが完了すると戻ります。",
     "Notes": "メモ：",
@@ -614,7 +619,7 @@
     "Rewards": "報酬:",
     "SendToVault": "保管庫に送る",
     "Split": "分割",
-    "Store": "保管する",
+    "Store": "Store",
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "取る",
     "TrackUntrack": {
       "Track": "{{itemType}} を追跡する",
-      "Untrack": "{{itemType}} を追跡しない"
+      "Tracked": "Tracked",
+      "Untrack": "{{itemType}} を追跡しない",
+      "Untracked": "Untracked"
     },
     "TriageTab": "トリアージ",
     "Vault": "保管庫"
@@ -653,6 +660,7 @@
       "Icon": "アイコン",
       "KillTracker": "キルトラッカー",
       "Loadouts": "ロードアウト",
+      "Location": "場所",
       "MasterworkStat": "マスターワークの種類",
       "MasterworkTier": "マスターワークの等級",
       "ModSlot": "Modスロット",
@@ -678,7 +686,7 @@
     "EnabledColumns": "有効な列",
     "Lock": "ロックする",
     "NoItems": "アイテムが選択されていません",
-    "NoMobile": "この機能はモバイル端末向けに最適化されていません。",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "備考を書く",
     "NotePrompt": "メモ：",
     "Organizer": "オーガナイザー",
@@ -766,7 +774,7 @@
     "SortByClassType": "必須クラス",
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
-    "SortByRating": "コミュニティの評価や鎧の品質",
+    "SortByRating": "防具の品質 (D1)",
     "SortByTag": "タグ ({{taglist}})",
     "SortByType": "種類",
     "SortCustom": "カスタムソート",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "アーカイブ",
-    "ClearTag": "クリア",
+    "ClearTag": "タグをクリア",
     "Favorite": "お気に入り",
     "Infuse": "融合する",
     "Junk": "不要",

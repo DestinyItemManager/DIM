@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Архетип",
     "Armor2": "Броня 2.0",
+    "Button": "Compare",
     "ButtonHelp": "Сравнить предметы",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "Показывает элементы, которые максимизируют уровень мощности света [лайта] для каждого класса персонажей.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Массовая маркировка предметов",
     "BungieNetAlert": "Оповещение Bungie",
     "Clear": "Сбросить поиск/фильтр",
-    "CompareMatching": "Сравнить найденные предметы",
+    "CompareMatching": "Compare Items",
     "DeleteSearch": "Delete Search",
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
@@ -286,6 +288,7 @@
     "ReportBug": "Сообщить об ошибке",
     "SaveSearch": "Save Search",
     "Shop": "Магазин",
+    "TagAs": "Tag as '{{tag}}'",
     "UpgradeDIM": "(!) Обновить DIM",
     "WhatsNew": "Свежие Изменения"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "У почтмейстера нет места! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
@@ -589,6 +591,7 @@
     "Acquired": "Предмет доступен в Коллекции.",
     "AcquiredMod": "Этот мод на данный момент уже применен к какому-то предмету в вашем инвентаре.",
     "AddNote": "Добавить заметку",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
     "Details": "Popup",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
-      "Unlock": "Разблокировать {{itemType}}"
+      "Locked": "Locked",
+      "Unlock": "Разблокировать {{itemType}}",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "Notes": "Заметки:",
@@ -614,7 +619,7 @@
     "Rewards": "Награды:",
     "SendToVault": "Send to Vault",
     "Split": "Делить",
-    "Store": "Дать",
+    "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "Взять",
     "TrackUntrack": {
       "Track": "Отслеживать {{itemType}}",
-      "Untrack": "Не отслеживать {{itemType}}"
+      "Tracked": "Tracked",
+      "Untrack": "Не отслеживать {{itemType}}",
+      "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
     "Vault": "Хран."
@@ -653,6 +660,7 @@
       "Icon": "Icon",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
+      "Location": "Location",
       "MasterworkStat": "Masterwork Stat",
       "MasterworkTier": "Masterwork Tier",
       "ModSlot": "Mod Slot",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Включенные столбцы",
     "Lock": "Lock",
     "NoItems": "No items selected",
-    "NoMobile": "This view isn't great on mobile.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Set Note",
     "NotePrompt": "Note:",
     "Organizer": "Органайзер",
@@ -766,7 +774,7 @@
     "SortByClassType": "Требуемый класс",
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
-    "SortByRating": "Рейтинги Сообщества или Качество Брони",
+    "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Тег ({{taglist}})",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Архив",
-    "ClearTag": "Очистить",
+    "ClearTag": "Clear Tag",
     "Favorite": "Избранное",
     "Infuse": "На синтез",
     "Junk": "Мусор",

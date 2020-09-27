@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
+    "Button": "Compare",
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "已經鎖定 {{num}} 件道具",
     "Locked": "根據物品鎖定狀態顯示.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "顯示每個職業的最大光等物品",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
-    "CompareMatching": "比較篩檢程式物品",
+    "CompareMatching": "Compare Items",
     "DeleteSearch": "Delete Search",
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
@@ -286,6 +288,7 @@
     "ReportBug": "報告錯誤",
     "SaveSearch": "Save Search",
     "Shop": "商店",
+    "TagAs": "Tag as '{{tag}}'",
     "UpgradeDIM": "更新DIM",
     "WhatsNew": "新增內容"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "全滿了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
-    "StoreName": "{{genderRace}} {{className}} 角色",
-    "TooMuch": "您請求移動的數量超過了您所擁有的物品數量!"
+    "StoreName": "{{genderRace}} {{className}} 角色"
   },
   "LB": {
     "AdvancedOptions": "高級選項",
@@ -589,6 +591,7 @@
     "Acquired": "此物品已经在收藏物中解锁",
     "AcquiredMod": "該模組已被應用於您物品欄中的一個物品。",
     "AddNote": "添加備註",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
     "Details": "Popup",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
-      "Unlock": "解鎖{{itemType}}"
+      "Locked": "Locked",
+      "Unlock": "解鎖{{itemType}}",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "備註：",
@@ -614,7 +619,7 @@
     "Rewards": "獎勵：",
     "SendToVault": "Send to Vault",
     "Split": "拆分",
-    "Store": "寄存",
+    "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}}{{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "收集",
     "TrackUntrack": {
       "Track": "跟蹤{{itemType}}",
-      "Untrack": "取消跟蹤{{itemType}}"
+      "Tracked": "Tracked",
+      "Untrack": "取消跟蹤{{itemType}}",
+      "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
     "Vault": "保險庫"
@@ -653,6 +660,7 @@
       "Icon": "圖示",
       "KillTracker": "Kill Tracker",
       "Loadouts": "配裝",
+      "Location": "Location",
       "MasterworkStat": "Masterwork Stat",
       "MasterworkTier": "Masterwork Tier",
       "ModSlot": "Mod Slot",
@@ -678,7 +686,7 @@
     "EnabledColumns": "已啟用的列",
     "Lock": "鎖定",
     "NoItems": "未選擇任何項目",
-    "NoMobile": "This view isn't great on mobile.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Set Note",
     "NotePrompt": "備註：",
     "Organizer": "管理器",
@@ -766,7 +774,7 @@
     "SortByClassType": "必要的類",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
-    "SortByRating": "社區評分或裝備品質指數",
+    "SortByRating": "Armor Quality (D1)",
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "歸檔",
-    "ClearTag": "清除",
+    "ClearTag": "Clear Tag",
     "Favorite": "青睞",
     "Infuse": "灌注",
     "Junk": "垃圾",

@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Archetyp",
     "Armor2": "Pancerz 2.0",
+    "Button": "Porównaj",
     "ButtonHelp": "Porównaj Przedmioty",
     "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
     "Masterwork": "Pokazuje przedmioty na podstawie ich mistrzowskich statystyk lub poziomu mistrzostwa.",
+    "MasterworkKills": "Pokazuje przedmioty na podstawie ich mistrzowskiej ilości zabójstw.",
     "MaxPower": "Pokazuje przedmioty, które maksymalizują Poziom Mocy dla każdej klasy postaci.",
     "ModSlot": "Pokazuje pancerz z określonym gniazdem sezonowym.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Masowo otaguj przedmioty",
     "BungieNetAlert": "Alarm od Bungie",
     "Clear": "Wyczyść filtry szukania",
-    "CompareMatching": "Porównaj filtrowane przedmioty",
+    "CompareMatching": "Porównaj Przedmioty",
     "DeleteSearch": "Usuń Wyszukiwanie",
     "FilterHelp": "Szukaj przedmiotu/atutu, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
@@ -286,6 +288,7 @@
     "ReportBug": "Zgłoś błąd",
     "SaveSearch": "Zapisz wyszukiwanie",
     "Shop": "Sklep",
+    "TagAs": "Otaguj jako '{{tag}}'",
     "UpgradeDIM": "Aktualizuj DIM",
     "WhatsNew": "Co nowego"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
     "StackFull": "Masz już pełny stos {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
-    "TooMuch": "Wygląda na to, że poprosiłeś o przeniesienie większej ilości tego przedmiotu niż jest u źródła!"
+    "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
@@ -589,6 +591,7 @@
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
     "AcquiredMod": "Ten mod jest obecnie zastosowany do przedmiotu w ekwipunku.",
     "AddNote": "Dodaj notatkę",
+    "AddToLoadout": "Uzbrojenie",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
     "Consolidate": "Połącz",
     "Details": "Wyskakujące okno",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "Pokaż szczegóły przedmiotu",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
-      "Unlock": "Odblokuj {{itemType}}"
+      "Locked": "Zablokowane",
+      "Unlock": "Odblokuj {{itemType}}",
+      "Unlocked": "Odblokowane"
     },
     "MissingSockets": "Szczegóły atutów i modyfikacji są niedostępne, gdy Bungie aktualizuje swoje usługi. Wrócą, gdy skończą, zwykle za kilka godzin.",
     "Notes": "Notatki:",
@@ -614,7 +619,7 @@
     "Rewards": "Nagrody:",
     "SendToVault": "Wyślij do schowka",
     "Split": "Podziel",
-    "Store": "Sklep",
+    "Store": "Umieść",
     "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}}{{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "Weź",
     "TrackUntrack": {
       "Track": "Śledź {{itemType}}",
-      "Untrack": "Nie śledź {{itemType}}"
+      "Tracked": "Śledzone",
+      "Untrack": "Nie śledź {{itemType}}",
+      "Untracked": "Nieśledzone"
     },
     "TriageTab": "Triaż",
     "Vault": "Schowek"
@@ -653,6 +660,7 @@
       "Icon": "Ikona",
       "KillTracker": "Śledzenie zabójstw",
       "Loadouts": "Uzbrojenia",
+      "Location": "Położenie",
       "MasterworkStat": "Statystyka Mistrzostwa",
       "MasterworkTier": "Poziom Mistrzostwa",
       "ModSlot": "Gniazdo modyfikacji",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Włączone kolumny",
     "Lock": "Zablokuj",
     "NoItems": "Nie wybrano przedmiotów",
-    "NoMobile": "Ten widok nie jest świetny na urządzeniu mobilnym.",
+    "NoMobile": "Obróć telefon na bok, aby użyć organizatora.",
     "Note": "Ustaw notatkę",
     "NotePrompt": "Notka:",
     "Organizer": "Organizator",
@@ -766,7 +774,7 @@
     "SortByClassType": "Wymagana klasa",
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
-    "SortByRating": "Ocena społeczności lub Jakość Pancerza",
+    "SortByRating": "Jakość pancerza (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Rodzaj",
     "SortCustom": "Sortowanie niestandardowe",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Archiwizuj",
-    "ClearTag": "Wyczyść",
+    "ClearTag": "Wyczyść tag",
     "Favorite": "Ulubione",
     "Infuse": "Nasyć",
     "Junk": "Śmieci",

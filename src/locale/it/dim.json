@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Archetipo",
     "Armor2": "Armatura 2.0",
+    "Button": "Confronta",
     "ButtonHelp": "Confronta Oggetti",
     "CompareBaseStats": "Mostra statistiche di base",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "Masterwork": "Mostra gli oggetti basandosi sulla loro statistica o livello di Prodigio.",
+    "MasterworkKills": "Mostra gli oggetti in base al loro contatore uccisioni prodigioso.",
     "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
     "ModSlot": "Mostra armature con uno specifico slot Modifica stagionale.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Etichetta oggetti in massa",
     "BungieNetAlert": "Avviso da Bungie",
     "Clear": "Cancella filtro di ricerca",
-    "CompareMatching": "Confronta oggetti filtrati",
+    "CompareMatching": "Confronta Oggetti",
     "DeleteSearch": "Elimina Ricerca",
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
@@ -286,6 +288,7 @@
     "ReportBug": "Segnala un bug",
     "SaveSearch": "Salva Ricerca",
     "Shop": "Negozio",
+    "TagAs": "Etichetta come '{{tag}}'",
     "UpgradeDIM": "Aggiorna DIM",
     "WhatsNew": "Cosa c'è di nuovo"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già uno stack pieno di {{name}}",
-    "StoreName": "{{className}} {{genderRace}}",
-    "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!"
+    "StoreName": "{{className}} {{genderRace}}"
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
@@ -589,6 +591,7 @@
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
     "AcquiredMod": "Questa Modifica è attualmente applicata ad un oggetto nel tuo inventario.",
     "AddNote": "Aggiungi una nota",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "Details": "Popup",
@@ -596,11 +599,13 @@
     "Equip": "Usa",
     "EquipWithName": "Equipaggia su {{character}}",
     "Expand": "Espandi dettagli oggetto",
-    "Infuse": "Infus",
+    "Infuse": "Infondi",
     "ItemDetailSheet": "Apri dettagli oggetto",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
-      "Unlock": "Sblocca {{itemType}}"
+      "Locked": "Bloccato",
+      "Unlock": "Sblocca {{itemType}}",
+      "Unlocked": "Sbloccato"
     },
     "MissingSockets": "I dettagli di Modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "Notes": "Note:",
@@ -614,7 +619,7 @@
     "Rewards": "Ricompense:",
     "SendToVault": "Invia al Deposito",
     "Split": "Dividi",
-    "Store": "Muovi",
+    "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "Consumable": "{{typeName}} {{classType}}",
@@ -623,10 +628,12 @@
     "Take": "Prendi",
     "TrackUntrack": {
       "Track": "Segui {{itemType}}",
-      "Untrack": "Non seguire {{itemType}}"
+      "Tracked": "Seguito",
+      "Untrack": "Non seguire {{itemType}}",
+      "Untracked": "Non seguito"
     },
     "TriageTab": "Triage",
-    "Vault": "Depos"
+    "Vault": "Deposito"
   },
   "Notes": {
     "Error": "Errore! Massimo 120 caratteri per nota.",
@@ -653,6 +660,7 @@
       "Icon": "Icona",
       "KillTracker": "Contatore Uccisioni",
       "Loadouts": "Loadouts",
+      "Location": "Ubicazione",
       "MasterworkStat": "Statistica Prodigio",
       "MasterworkTier": "Grado Prodigio",
       "ModSlot": "Slot Modifiche",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Colonne Abilitate",
     "Lock": "Blocca",
     "NoItems": "Nessun oggetto selezionato",
-    "NoMobile": "Questa funzionalità non è ottimizzata per dispositivi mobili.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Imposta Nota",
     "NotePrompt": "Nota:",
     "Organizer": "Gestione Deposito",
@@ -766,7 +774,7 @@
     "SortByClassType": "Classe Richiesta",
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
-    "SortByRating": "Giudizio della comunità o Qualità Armatura",
+    "SortByRating": "Qualità dell'armatura (D1)",
     "SortByTag": "Etichetta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Archivia",
-    "ClearTag": "Elimina",
+    "ClearTag": "Cancella Etichetta",
     "Favorite": "Preferito",
     "Infuse": "Infondi",
     "Junk": "Smantella",

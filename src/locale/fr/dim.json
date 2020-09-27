@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "Archétype",
     "Armor2": "Armure 2.0",
+    "Button": "Compare",
     "ButtonHelp": "Comparer des Objets",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "{{num}} objets verouillés",
     "Locked": "Affiche les objets selon leur verrouillage.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "Affiche les objets qui maximiseraient votre niveau de puissance pour chaque classes de personnage.",
     "ModSlot": "Affiche les armures avec un emplacement de Mod Saisonnier spécifique.",
     "Mods": {
@@ -268,7 +270,7 @@
     "BulkTag": "Balisage de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
-    "CompareMatching": "Comparer les éléments filtrés",
+    "CompareMatching": "Compare Items",
     "DeleteSearch": "Delete Search",
     "FilterHelp": "Rechercher objet/compétence, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
@@ -286,6 +288,7 @@
     "ReportBug": "Signaler un bug",
     "SaveSearch": "Save Search",
     "Shop": "Boutique",
+    "TagAs": "Tag as '{{tag}}'",
     "UpgradeDIM": "Mettre à jour DIM",
     "WhatsNew": "Quoi de neuf"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
-    "StoreName": "{{className}} {{genderRace}}",
-    "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!"
+    "StoreName": "{{className}} {{genderRace}}"
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
@@ -589,6 +591,7 @@
     "Acquired": "Cet élément est déverrouillé dans les collections.",
     "AcquiredMod": "Ce mod est actuellement appliqué à un objet de votre inventaire.",
     "AddNote": "Ajouter une note",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
     "Details": "Popup",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
-      "Unlock": "Débloquer {{itemType}}"
+      "Locked": "Locked",
+      "Unlock": "Débloquer {{itemType}}",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "Notes": "Notes:",
@@ -614,7 +619,7 @@
     "Rewards": "Récompenses:",
     "SendToVault": "Send to Vault",
     "Split": "Couper",
-    "Store": "Dépôt",
+    "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "Réunir",
     "TrackUntrack": {
       "Track": "Suivre {{itemType}}",
-      "Untrack": "Ne plus suivre {{itemType}}"
+      "Tracked": "Tracked",
+      "Untrack": "Ne plus suivre {{itemType}}",
+      "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
     "Vault": "Coffre"
@@ -653,6 +660,7 @@
       "Icon": "Icône",
       "KillTracker": "Compteur de Frags",
       "Loadouts": "Arsenaux",
+      "Location": "Location",
       "MasterworkStat": "Statistiques de Pièce Maîtresse",
       "MasterworkTier": "Niveau de Pièce Maîtresse",
       "ModSlot": "Emplacement de Mod",
@@ -678,7 +686,7 @@
     "EnabledColumns": "Colonnes activées",
     "Lock": "Vérouiller",
     "NoItems": "Aucun objet sélectionné",
-    "NoMobile": "Cette vue n'est pas excellente sur mobile.",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Définir la Note",
     "NotePrompt": "Note:",
     "Organizer": "Organisateur",
@@ -766,7 +774,7 @@
     "SortByClassType": "Classe requise",
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
-    "SortByRating": "Note de la communauté ou qualité de l'armure",
+    "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "Archive",
-    "ClearTag": "Vider",
+    "ClearTag": "Clear Tag",
     "Favorite": "Préféré",
     "Infuse": "Infuser",
     "Junk": "Camelote",

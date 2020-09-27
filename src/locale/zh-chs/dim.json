@@ -84,6 +84,7 @@
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
+    "Button": "Compare",
     "ButtonHelp": "对比物品",
     "CompareBaseStats": "显示基础属性",
     "Error": {
@@ -191,6 +192,7 @@
     "LockAllSuccess": "已经锁定 {{num}} 件道具",
     "Locked": "根据物品锁定状态显示.",
     "Masterwork": "按大师杰作属性或等级显示物品。",
+    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
     "MaxPower": "显示每个职业的最大光等物品",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
@@ -237,7 +239,7 @@
     "UnlockAllFailed": "锁定物品失败",
     "UnlockAllSuccess": "已经解锁{{num}} 物品",
     "Vendor": "物品可从特定的商贩获得。",
-    "Weapon": "Shows items that are weapons.",
+    "Weapon": "显示武器物品。",
     "WeaponType": "按照武器类型显示.",
     "Wishlist": "显示你愿望单中的物品",
     "WishlistDupe": "显示有至少一个复制品在你愿望单中的物品堆叠",
@@ -268,7 +270,7 @@
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
-    "CompareMatching": "比较过滤器物品",
+    "CompareMatching": "Compare Items",
     "DeleteSearch": "删除搜索",
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
@@ -286,6 +288,7 @@
     "ReportBug": "报告错误",
     "SaveSearch": "保存搜索",
     "Shop": "商店",
+    "TagAs": "Tag as '{{tag}}'",
     "UpgradeDIM": "更新DIM",
     "WhatsNew": "新增内容"
   },
@@ -352,8 +355,7 @@
     "PostmasterFull": "全满了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "预览 {{type}} 内容",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
-    "StoreName": "{{genderRace}} {{className}} 角色",
-    "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!"
+    "StoreName": "{{genderRace}} {{className}} 角色"
   },
   "LB": {
     "AdvancedOptions": "高级选项",
@@ -452,7 +454,7 @@
     "LimitedCombos": "你有 {{combosWithoutCaps, number}} 种可能的属性组合，但是我们只检索了 {{combos, number}} 个组合以避免 DIM 崩溃。因此，有些组合没有显示。锁定一些物品或特性或者拆除一些旧护甲来减少组合数目。锁定通用或赛季模组会增加组合数量。",
     "LockEquipped": "已装备",
     "LockItem": "锁定物品",
-    "LockPerk": "Select perk",
+    "LockPerk": "选择特性",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundExoticsAndMods": "你已锁定了一件异域装备与五个赛季模组。",
     "NoBuildsFoundModsAreTooExpensive": "所选模组的能量需求过高。",
@@ -589,6 +591,7 @@
     "Acquired": "此物品已经在收藏物中解锁",
     "AcquiredMod": "该模组已被应用于您物品栏中的一个物品。",
     "AddNote": "添加备注",
+    "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
     "Details": "弹出窗口",
@@ -600,7 +603,9 @@
     "ItemDetailSheet": "打开物品详细信息",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
-      "Unlock": "解锁{{itemType}}"
+      "Locked": "Locked",
+      "Unlock": "解锁{{itemType}}",
+      "Unlocked": "Unlocked"
     },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "备注：",
@@ -614,7 +619,7 @@
     "Rewards": "奖励：",
     "SendToVault": "发送到保险库",
     "Split": "拆分",
-    "Store": "寄存",
+    "Store": "Store",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -623,7 +628,9 @@
     "Take": "收集",
     "TrackUntrack": {
       "Track": "跟踪{{itemType}}",
-      "Untrack": "取消跟踪{{itemType}}"
+      "Tracked": "Tracked",
+      "Untrack": "取消跟踪{{itemType}}",
+      "Untracked": "Untracked"
     },
     "TriageTab": "分类",
     "Vault": "保险库"
@@ -653,6 +660,7 @@
       "Icon": "图标",
       "KillTracker": "击杀记录器",
       "Loadouts": "配装",
+      "Location": "位置",
       "MasterworkStat": "大师杰作属性",
       "MasterworkTier": "大师杰作等级",
       "ModSlot": "模组槽位",
@@ -678,7 +686,7 @@
     "EnabledColumns": "已启用的列",
     "Lock": "锁定",
     "NoItems": "未选择任何项目",
-    "NoMobile": "此视图在手机上不能正确显示。",
+    "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "添加备注",
     "NotePrompt": "备注：",
     "Organizer": "管理器",
@@ -724,11 +732,11 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
-    "Description": "These are all your past and saved searches. You can delete them from here.",
-    "Link": "View and edit search history",
-    "Query": "Search",
-    "Title": "Search History",
-    "UsageCount": "# Used"
+    "Description": "这些是你过去和保存的搜索。你可以在这里删除它们。",
+    "Link": "查看和编辑搜索历史",
+    "Query": "搜索​​​​",
+    "Title": "搜索历史",
+    "UsageCount": "使用次数"
   },
   "Settings": {
     "CharacterOrder": "排序方式",
@@ -766,7 +774,7 @@
     "SortByClassType": "必要的类",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
-    "SortByRating": "社区评分或装备品质指数",
+    "SortByRating": "护甲质量（D1）",
     "SortByTag": "标签{{taglist}}",
     "SortByType": "类型",
     "SortCustom": "自订排序",
@@ -848,7 +856,7 @@
   },
   "Tags": {
     "Archive": "归档",
-    "ClearTag": "清除",
+    "ClearTag": "Clear Tag",
     "Favorite": "青睐",
     "Infuse": "灌注",
     "Junk": "垃圾",
