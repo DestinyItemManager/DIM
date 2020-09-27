@@ -295,11 +295,11 @@ function enhanceOwnedItemsWithPlugSets(
     });
   };
 
-  if (profileResponse.profilePlugSets.data) {
+  if (profileResponse.profilePlugSets?.data) {
     processPlugSet(profileResponse.profilePlugSets.data.plugs);
   }
 
-  if (profileResponse.characterPlugSets.data) {
+  if (profileResponse.characterPlugSets?.data) {
     for (const plugSetData of Object.values(profileResponse.characterPlugSets.data)) {
       processPlugSet(plugSetData.plugs);
     }

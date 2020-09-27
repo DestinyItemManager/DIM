@@ -13,7 +13,7 @@ export default function Ranks({
   profileInfo: DestinyProfileResponse;
   defs: D2ManifestDefinitions;
 }) {
-  const firstCharacterProgression = profileInfo.characterProgressions.data
+  const firstCharacterProgression = profileInfo.characterProgressions?.data
     ? Object.values(profileInfo.characterProgressions.data)[0].progressions
     : {};
 
