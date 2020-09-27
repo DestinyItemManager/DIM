@@ -71,9 +71,13 @@ function buildMasterworkInfo(
     });
   }
 
-  // TODO: Tier is wrong. We need a table of masterwork mods from d2ai
+  const tier =
+    createdItem.isExotic && createdItem.bucket?.sort === 'Weapons'
+      ? 10
+      : Math.abs(socket.plugged?.plugDef.investmentStats[0].value);
+
   return {
-    tier: socket.plugged?.plugDef.investmentStats[0].value,
+    tier,
     stats,
   };
 }
