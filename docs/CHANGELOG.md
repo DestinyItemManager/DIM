@@ -8,6 +8,9 @@
 * On mobile, your equipped emblem no longer affects the color of your screen.
 * Loadout Optimizer has a nicer layout on mobile and narrower screens.
 * Fix some masterwork stats not showing.
+* Fix some issues with how mods got auto-assigned in Loadout Optimizer.
+* Fix masterwork stats not always highlighting.
+* Fix an issue where searching for "ote" wouldn't suggest "note:"q
 
 ### Beta Only
 
