@@ -1,6 +1,7 @@
 ## Next
 
 * In Compare, you can click on perks to see what the new stats would look like if you chose another option.
+* When the item popup is open, hitting the "c" key will open Compare.
 * Your subclass has been moved below weapons and armor (it's been this way in Beta for a while).
 * On mobile, instead of showing all your items at once, there's now a category selection bar that lets you quickly swap between weapons, armor, etc. The postmaster is under "inventory".
 * Transferring items is just a touch snappier.
@@ -10,7 +11,9 @@
 * Fix some masterwork stats not showing.
 * Fix some issues with how mods got auto-assigned in Loadout Optimizer.
 * Fix masterwork stats not always highlighting.
-* Fix an issue where searching for "ote" wouldn't suggest "note:"q
+* Fix masterwork tier for some items.
+* Fix an issue where searching for "ote" wouldn't suggest "note:"
+* The Organizer shows up in the mobile menu, but it just tells you to turn your phone.
 
 ### Beta Only
 
