@@ -3,6 +3,7 @@
 interface CssExports {
   'badPerk': string;
   'goodPerk': string;
+  'iconContainer': string;
   'lockedPerk': string;
   'perk': string;
   'perkDescription': string;
