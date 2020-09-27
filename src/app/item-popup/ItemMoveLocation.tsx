@@ -7,11 +7,7 @@ import { DimStore } from '../inventory/store-types';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import styles from './ItemMoveLocation.m.scss';
 
-export const canShowVault = (
-  buttonStore: DimStore,
-  itemOwnerStore: DimStore,
-  item: DimItem
-): boolean => {
+const canShowVault = (buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean => {
   const store = itemOwnerStore;
 
   // If my store is the vault, don't show a vault button.
@@ -37,11 +33,7 @@ export const canShowVault = (
   return true;
 };
 
-export const canShowStore = (
-  buttonStore: DimStore,
-  itemOwnerStore: DimStore,
-  item: DimItem
-): boolean => {
+const canShowStore = (buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean => {
   const store = itemOwnerStore;
 
   // Can't store into a vault
@@ -66,7 +58,7 @@ export const canShowStore = (
     if (item.equipped && store.id === buttonStore.id) {
       return true;
     }
-  } else {
+  } else if (store.id !== buttonStore.id || item.equipped) {
     // Only show one store for account wide items
     if (item.bucket?.accountWide && !buttonStore.current) {
       return false;
