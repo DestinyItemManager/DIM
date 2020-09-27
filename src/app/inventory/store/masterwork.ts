@@ -52,6 +52,12 @@ function buildMasterworkInfo(
   const investmentStats = socket.plugged.plugDef.investmentStats;
 
   if (!investmentStats?.length) {
+    if (createdItem.isExotic) {
+      return {
+        tier: 10,
+        stats: undefined,
+      };
+    }
     return null;
   }
 
@@ -71,13 +77,8 @@ function buildMasterworkInfo(
     });
   }
 
-  const tier =
-    createdItem.isExotic && createdItem.bucket?.sort === 'Weapons'
-      ? 10
-      : Math.abs(socket.plugged?.plugDef.investmentStats[0].value);
-
   return {
-    tier,
+    tier: createdItem.isExotic ? 10 : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
     stats,
   };
 }
