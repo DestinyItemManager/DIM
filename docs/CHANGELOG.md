@@ -7,6 +7,7 @@
 * The tag and compare button on the search bar have been replaced with a dropdown menu (three dots) with a lot more options for things you can do with the items that match your search.
 * On mobile, your equipped emblem no longer affects the color of your screen.
 * Loadout Optimizer has a nicer layout on mobile and narrower screens.
+* Fix some masterwork stats not showing.
 
 ### Beta Only
 
