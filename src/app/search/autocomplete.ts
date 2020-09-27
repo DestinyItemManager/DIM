@@ -216,7 +216,7 @@ function findFilter(term: string, searchConfig: SearchConfig) {
   let filterName = parts[0];
   const filterValue = parts[1];
   // "is:" filters are slightly special cased
-  if (filterName == 'is') {
+  if (filterName === 'is') {
     filterName = filterValue;
   }
 

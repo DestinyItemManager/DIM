@@ -78,7 +78,7 @@ export function validateQuery(query: QueryAST, searchConfig: SearchConfig) {
       const filterValue = query.args;
 
       // "is:" filters are slightly special cased
-      if (filterName == 'is') {
+      if (filterName === 'is') {
         filterName = filterValue;
       }
 

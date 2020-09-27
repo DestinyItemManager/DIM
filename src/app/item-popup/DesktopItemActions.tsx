@@ -100,7 +100,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     !item.notransfer &&
     item.location.hasTransferDestination &&
     item.maxStackSize > 1 &&
-    stores.some((s) => s != itemOwner && amountOfItem(s, item) > 0);
+    stores.some((s) => s !== itemOwner && amountOfItem(s, item) > 0);
   const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
   const openCompare = () => {

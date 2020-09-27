@@ -105,7 +105,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   // Poll for vendor engrams
   const engramRefreshTimer = useRef<number>();
   useEffect(() => {
-    if ($featureFlags.vendorEngrams && destinyVersion == 2) {
+    if ($featureFlags.vendorEngrams && destinyVersion === 2) {
       setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
       return () => {
         if (engramRefreshTimer.current) {

@@ -25,7 +25,7 @@ export function useLoadStores(
 
   useEffect(() => {
     if (account && !loaded) {
-      if (account?.destinyVersion == 2) {
+      if (account?.destinyVersion === 2) {
         dispatch(d2LoadStores(components));
       } else {
         dispatch(d1LoadStores());
@@ -37,7 +37,7 @@ export function useLoadStores(
     refresh$.subscribe(() => {
       if (account) {
         queueAction<any>(() => {
-          if (account?.destinyVersion == 2) {
+          if (account?.destinyVersion === 2) {
             return dispatch(d2LoadStores());
           } else {
             return dispatch(d1LoadStores());

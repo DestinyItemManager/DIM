@@ -188,7 +188,7 @@ function InfusionFinder({
 
   // Save direction to settings
   useEffect(() => {
-    if (direction != lastInfusionDirection) {
+    if (direction !== lastInfusionDirection) {
       dispatch(setSetting('infusionDirection', direction));
     }
   }, [direction, lastInfusionDirection, dispatch]);

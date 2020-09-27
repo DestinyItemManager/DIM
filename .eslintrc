@@ -73,6 +73,7 @@
     ],
     "arrow-body-style": ["error", "as-needed"],
     "curly": ["error", "all"],
+    "eqeqeq": ["error", "always"],
     "no-return-await": "off",
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
     "prefer-regex-literals": "error",

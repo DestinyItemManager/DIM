@@ -95,7 +95,7 @@ class Compare extends React.Component<Props, State> {
     this.subscriptions.add(
       CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
-        if (CompareService.dialogOpen == false) {
+        if (CompareService.dialogOpen === false) {
           CompareService.dialogOpen = true;
           ga(
             'send',
