@@ -244,7 +244,7 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     const includesAdvancedMath =
       typedToLower.endsWith(':') || typedToLower.endsWith('<') || typedToLower.endsWith('<');
     const filterLowPrioritySuggestions = (s: string) =>
-      (hasNotModifier || !s.startsWith('not')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
+      (hasNotModifier || !s.startsWith('not:')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
 
     // if there's already a colon typed, we are on a path, not wildly guessing,
     // so only match from beginning of the typed string

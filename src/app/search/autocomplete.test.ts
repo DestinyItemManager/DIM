@@ -88,7 +88,7 @@ describe('filterComplete', () => {
   const searchConfig = buildSearchConfig(2);
   const filterComplete = makeFilterComplete(searchConfig);
 
-  const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:']];
+  const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];
 
   test.each(terms)('autocomplete terms for |%s|', (term) => {
     const candidates = filterComplete(term);
