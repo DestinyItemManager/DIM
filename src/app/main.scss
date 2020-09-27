@@ -13,7 +13,7 @@
   // Margin on the bottom and right of an item
   --item-margin: 6px;
   // Padding at the ends of inventory column
-  --inventory-column-padding: 12px;
+  --inventory-column-padding: 24px;
   // ultimately user-determined. default values here
   --num-characters: 3;
   --tiles-per-char-column: 3;
@@ -221,6 +221,7 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
+  padding-top: 12px;
 }
 
 h2,
