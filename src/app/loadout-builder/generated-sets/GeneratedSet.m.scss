@@ -32,6 +32,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0;
+  max-width: 800px;
 
   @include phone-portrait {
     justify-content: space-around;
