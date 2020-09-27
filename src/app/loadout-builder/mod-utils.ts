@@ -52,11 +52,11 @@ function assignAllGenrealAndSeasonalMods(
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
-  const sortedGeneralMods = generalMods.map(mapArmor2ModToProcessMod);
-  const sortedSeasonalMods = seasonalMods.map(mapArmor2ModToProcessMod);
+  const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
+  const seasonalProcessMods = seasonalMods.map(mapArmor2ModToProcessMod);
 
-  const generalModPermutations = generateModPermutations(sortedGeneralMods);
-  const seasonalModPermutations = generateModPermutations(sortedSeasonalMods);
+  const generalModPermutations = generateModPermutations(generalProcessMods);
+  const seasonalModPermutations = generateModPermutations(seasonalProcessMods);
 
   canTakeGeneralAndSeasonalMods(
     generalModPermutations,
