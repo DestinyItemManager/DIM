@@ -120,6 +120,13 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
         // Empty - this gets redefined in dimMoveItemProperties
       },
     },
+    {
+      combo: 'c',
+      description: t('Compare.ButtonHelp'),
+      callback() {
+        // Empty
+      },
+    },
   ];
 
   itemTagList.forEach((tag) => {
