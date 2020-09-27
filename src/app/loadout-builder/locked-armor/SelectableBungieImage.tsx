@@ -59,7 +59,7 @@ export function SelectableArmor2Mod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod className={styles.iconContainer}itemDef={mod.modDef} defs={defs} />
+        <SocketDetailsMod className={styles.iconContainer} itemDef={mod.modDef} defs={defs} />
         <div className={styles.perkInfo}>
           <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
           <div className={styles.perkDescription}>{mod.modDef.displayProperties.description}</div>
