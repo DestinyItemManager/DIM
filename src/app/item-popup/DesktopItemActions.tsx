@@ -9,6 +9,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import hunter from 'destiny-icons/general/class_hunter.svg';
 import titan from 'destiny-icons/general/class_titan.svg';
 import warlock from 'destiny-icons/general/class_warlock.svg';
@@ -29,7 +30,6 @@ import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import ItemMoveAmount from './ItemMoveAmount';
-import { canShowStore, canShowVault } from './ItemMoveLocation';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
@@ -164,7 +164,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         )}
         {stores.map((store) => (
           <React.Fragment key={store.id}>
-            {canShowVault(store, itemOwner, item) && (
+            {store.isVault && canShowVault(store, itemOwner, item) && (
               <div
                 className={styles.actionButton}
                 onClick={() => onMoveItemTo(store)}
@@ -178,7 +178,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             {canShowStore(store, itemOwner, item) && (
               <div
                 className={clsx(styles.actionButton, styles.move, {
-                  [styles.disabled]: item.owner === store.id && !item.equipped,
+                  [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
                 })}
                 onClick={() => onMoveItemTo(store)}
                 role="button"
@@ -259,4 +259,93 @@ export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
     : item.tracked
     ? t('MovePopup.TrackUntrack.Tracked')
     : t('MovePopup.TrackUntrack.Untracked');
+}
+
+function canShowVault(buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean {
+  const store = itemOwnerStore;
+
+  // If my store is the vault, don't show a vault button.
+  // Can't vault a vaulted item.
+  if (!store || store.isVault) {
+    return false;
+  }
+
+  // If my buttonStore is not the vault, then show a vault button.
+  if (!buttonStore.isVault) {
+    return false;
+  }
+
+  // Can't move this item away from the current itemStore.
+  if (item.notransfer) {
+    return false;
+  }
+
+  if (item.location.inPostmaster && !item.canPullFromPostmaster) {
+    return false;
+  }
+
+  return true;
+}
+
+function storeButtonEnabled(
+  buttonStore: DimStore,
+  itemOwnerStore: DimStore,
+  item: DimItem
+): boolean {
+  const store = itemOwnerStore;
+
+  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
+    return item.canPullFromPostmaster;
+  } else if (item.notransfer) {
+    // Can store an equiped item in same itemStore
+    if (item.equipped && store.id === buttonStore.id) {
+      return true;
+    }
+  } else if (store.id !== buttonStore.id || item.equipped) {
+    // Only show one store for account wide items
+    if (item.bucket?.accountWide && !buttonStore.current) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean {
+  const store = itemOwnerStore;
+
+  // Can't store into a vault
+  if (buttonStore.isVault || !store) {
+    return false;
+  }
+
+  // Don't show "Store" for finishers, seasonal artifacts, or clan banners
+  if (
+    item.location.capacity === 1 ||
+    item.location.hash === BucketHashes.SeasonalArtifact ||
+    item.location.hash === BucketHashes.Finishers
+  ) {
+    return false;
+  }
+
+  // Can pull items from the postmaster.
+  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
+    return item.canPullFromPostmaster;
+  } else if (item.notransfer) {
+    // Can store an equiped item in same itemStore
+    if (item.equipped && store.id === buttonStore.id) {
+      return true;
+    }
+  } else {
+    // Only show one store for account wide items
+    if (item.bucket?.accountWide && !buttonStore.current) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  return false;
 }

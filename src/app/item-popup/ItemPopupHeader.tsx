@@ -62,7 +62,7 @@ export default function ItemPopupHeader({
       })}
     >
       <div className="item-title-container">
-        {hasLeftIcon && (
+        {(item.trackable || item.lockable) && (
           <div className="icon">
             {item.lockable && <LockButton item={item} type="lock" />}
             {item.trackable && <LockButton item={item} type="track" />}
