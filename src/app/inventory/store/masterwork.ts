@@ -8,6 +8,8 @@ import { DimItem, DimMasterwork, DimSockets } from '../item-types';
  * This is called from within d2-item-factory.service.ts
  */
 
+const maxTier = 10;
+
 const resistanceMods = {
   1546607977: DamageType.Kinetic,
   1546607980: DamageType.Void,
@@ -52,6 +54,12 @@ function buildMasterworkInfo(
   const investmentStats = socket.plugged.plugDef.investmentStats;
 
   if (!investmentStats?.length) {
+    if (createdItem.isExotic) {
+      return {
+        tier: maxTier,
+        stats: undefined,
+      };
+    }
     return null;
   }
 
@@ -71,9 +79,10 @@ function buildMasterworkInfo(
     });
   }
 
-  // TODO: Tier is wrong. We need a table of masterwork mods from d2ai
   return {
-    tier: socket.plugged?.plugDef.investmentStats[0].value,
+    tier: createdItem.isExotic
+      ? maxTier
+      : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
     stats,
   };
 }

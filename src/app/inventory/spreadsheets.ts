@@ -313,9 +313,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     }
     if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
-        ? Math.min(10, item.masterworkInfo.tier)
-        : undefined;
+      row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.destinyVersion === 1) {
@@ -422,9 +420,7 @@ function downloadWeapons(
     }
     if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier
-        ? Math.min(10, item.masterworkInfo.tier)
-        : undefined;
+      row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.destinyVersion === 1) {
