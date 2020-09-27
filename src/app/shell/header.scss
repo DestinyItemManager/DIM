@@ -45,6 +45,10 @@ body {
   padding-top: env(safe-area-inset-top);
   filter: var(--color-filter);
 
+  @include phone-portrait {
+    background: #000;
+  }
+
   #user {
     color: white;
   }
