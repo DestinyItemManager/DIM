@@ -122,7 +122,6 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
                       onTapped={setSelectedStoreId}
                       loadoutMenuRef={detachedLoadoutMenu}
                     />
-                    {!$featureFlags.unstickyStats && <StoreStats store={store} />}
                   </View>
                 ))}
               </Track>
@@ -261,10 +260,10 @@ function StoresInventory(props: InventoryContainerProps) {
   if (selectedCategoryId) {
     return (
       <>
-        {$featureFlags.unstickyStats && selectedCategoryId === 'Armor' && (
+        {selectedCategoryId === 'Armor' && (
           <StoreStats
-            store={currentStore}
-            style={{ ...storeBackgroundColor(currentStore, 0, true, true), paddingBottom: 8 }}
+            store={stores[0]}
+            style={{ ...storeBackgroundColor(stores[0], 0, true, true), paddingBottom: 8 }}
           />
         )}
         {selectedCategoryId === 'Inventory' &&

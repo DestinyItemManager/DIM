@@ -45,15 +45,13 @@ export default function CharacterTile({ store }: { store: DimStore }) {
                 <AppIcon icon={powerActionIcon} />
                 {store.powerLevel}
               </div>
-              {$featureFlags.unstickyStats && isPhonePortrait && (
-                <div className="maxTotalPower">/ {maxTotalPower}</div>
-              )}
+              {isPhonePortrait && <div className="maxTotalPower">/ {maxTotalPower}</div>}
             </>
           )}
         </div>
         <div className="bottom">
           {store.isVault ? (
-            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity />
+            isPhonePortrait && <VaultCapacity />
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>

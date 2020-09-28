@@ -9,13 +9,6 @@ import D1CharacterStats from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
 
-function shouldShowCapacity(isPhonePortrait: boolean) {
-  if (!isPhonePortrait) {
-    return true;
-  }
-  return !$featureFlags.unstickyStats;
-}
-
 /** Render the store stats for any store type (character or vault) */
 export default function StoreStats({
   store,
@@ -30,7 +23,7 @@ export default function StoreStats({
       {store.isVault ? (
         <div className={styles.vaultStats}>
           <AccountCurrencies />
-          {shouldShowCapacity(isPhonePortrait) && <VaultCapacity />}
+          {!isPhonePortrait && <VaultCapacity />}
         </div>
       ) : store.destinyVersion === 1 ? (
         <D1CharacterStats stats={store.stats} />
