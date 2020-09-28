@@ -34,6 +34,9 @@
     padding: 8px;
     margin: 0 0 4px 0;
     background-color: #222;
+    .gradientBackground & {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
     > .setting {
       padding: 0;
       margin: 0;
@@ -113,6 +116,10 @@
     border: none;
     ::placeholder {
       color: #999;
+    }
+    .gradientBackground & {
+      background-color: rgba(0, 0, 0, 0.4);
+      margin-bottom: 10px;
     }
   }
 
