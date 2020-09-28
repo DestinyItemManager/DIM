@@ -1,5 +1,7 @@
 ## Next
 
+## 6.32.0 <span className="changelog-date">(2020-09-27)</span>
+
 * In Compare, you can click on perks to see what the new stats would look like if you chose another option.
 * When the item popup is open, hitting the "c" key will open Compare.
 * Your subclass has been moved below weapons and armor (it's been this way in Beta for a while).
