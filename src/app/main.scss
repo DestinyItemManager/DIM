@@ -13,7 +13,7 @@
   // Margin on the bottom and right of an item
   --item-margin: 6px;
   // Padding at the ends of inventory column
-  --inventory-column-padding: 24px;
+  --inventory-column-padding: 12px;
   // ultimately user-determined. default values here
   --num-characters: 3;
   --tiles-per-char-column: 3;
@@ -221,7 +221,9 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
-  padding-top: 12px;
+  .gradientBackground & {
+    padding-top: 12px;
+  }
 }
 
 h2,
@@ -316,7 +318,7 @@ select {
 
 .dim-button {
   cursor: pointer;
-  background-color: #232323;
+  background-color: #555;
   padding: 4px 10px;
   display: inline-block;
   border: none;
@@ -419,5 +421,10 @@ a.dim-button {
     position: fixed;
     will-change: transform;
     z-index: -1;
+  }
+  --inventory-column-padding: 24px;
+  --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+  @include phone-portrait {
+    --inventory-column-padding: 12px;
   }
 }

@@ -30,10 +30,7 @@ body {
   left: 0;
   right: 0;
   height: $header-height;
-  background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 100vw 100vh;
+  background-color: #000;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -44,9 +41,14 @@ body {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   filter: var(--color-filter);
-
-  @include phone-portrait {
-    background: #000;
+  .gradientBackground & {
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
+    @include phone-portrait {
+      background: #000;
+    }
   }
 
   #user {

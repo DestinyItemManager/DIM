@@ -15,12 +15,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: #313233;
   padding-left: 5px;
   padding-right: 5px;
   height: 32px;
   border-radius: 4px;
   min-width: 350px;
+  .gradientBackground & {
+    background: rgba(0, 0, 0, 0.4);
+  }
   ::placeholder {
     color: #999;
   }
@@ -34,7 +37,9 @@
   @include phone-portrait {
     width: auto;
     height: 34px;
-    background: rgba(0, 0, 0, 1);
+    .gradientBackground & {
+      background: #000;
+    }
   }
 
   &:hover,
