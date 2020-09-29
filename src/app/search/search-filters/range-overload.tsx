@@ -39,10 +39,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item) =>
-          Boolean(
-            item.masterworkInfo?.tier &&
-              numberComparisonFunction(Math.min(item.masterworkInfo.tier, 10))
-          );
+          Boolean(item.masterworkInfo?.tier && numberComparisonFunction(item.masterworkInfo.tier));
       }
       // "masterwork:range" case
       const searchedMasterworkStatHash = statHashByName[filterValue];
