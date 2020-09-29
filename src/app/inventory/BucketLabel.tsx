@@ -28,7 +28,8 @@ function BucketLabel({
       {defs && (
         <div>
           {defs.InventoryBucket[bucket.hash]?.displayProperties?.name ||
-            defs.InventoryBucket[bucket.hash]?.title}
+            defs.InventoryBucket[bucket.hash]?.title ||
+            defs.InventoryBucket[bucket.hash]?.bucketName}
         </div>
       )}
     </div>

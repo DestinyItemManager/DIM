@@ -257,6 +257,10 @@ function CollapsibleContainer({
 function StoresInventory(props: InventoryContainerProps) {
   const { selectedCategoryId, buckets, stores, currentStore, vault } = props;
 
+  const showPostmaster =
+    (currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory') ||
+    (currentStore.destinyVersion === 1 && selectedCategoryId === 'General');
+
   if (selectedCategoryId) {
     return (
       <>
@@ -266,7 +270,7 @@ function StoresInventory(props: InventoryContainerProps) {
             style={{ ...storeBackgroundColor(stores[0], 0, true, true), paddingBottom: 8 }}
           />
         )}
-        {selectedCategoryId === 'Inventory' &&
+        {showPostmaster &&
           buckets.byCategory['Postmaster'].map((bucket) => (
             <StoreBuckets
               key={bucket.hash}
