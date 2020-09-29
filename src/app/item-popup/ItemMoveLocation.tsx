@@ -110,7 +110,7 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Equip')}
         />
       )}
-      {canShowStore(store) && (
+      {canShowStore(store, itemOwnerStore, item) && (
         <ItemActionButton
           title={t('MovePopup.StoreWithName', { character: store.name })}
           onClick={moveItem}
