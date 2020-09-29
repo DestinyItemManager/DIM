@@ -1,5 +1,7 @@
 ## Next
 
+## 6.32.2 <span className="changelog-date">(2020-09-29)</span>
+
 * Actually fixed "Store" buttons not showing for items in Postmaster.
 * Fix wishlists not highlighting the right rolls.
 
