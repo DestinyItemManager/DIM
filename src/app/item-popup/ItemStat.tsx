@@ -29,7 +29,6 @@ const modItemCategoryHashes = [
  * A single stat line.
  */
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
-  const value = stat.value;
   const armor2MasterworkSockets =
     item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
@@ -44,7 +43,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  const baseBar = item?.bucket.inArmor ? Math.min(stat.base, stat.value) : stat.value;
+  const baseBar = item?.bucket.inArmor
+    ? Math.min(stat.base, stat.value)
+    : stat.value - masterworkValue;
 
   const segments: [number, string?][] = [[baseBar]];
 
@@ -65,7 +66,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
-  const displayValue = Math.max(0, value);
+  const displayValue = Math.max(0, stat.value);
 
   // Get the values that contribute to the total stat value
   let totalDetails:
