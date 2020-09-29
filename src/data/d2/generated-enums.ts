@@ -706,6 +706,7 @@ export const enum ItemCategoryHashes {
   Hunter = 23,
   InfusionMaterials = 2266591099,
   Inventory = 52,
+  ItemCategoriesCategoryDummyRepeatableBountyTitle = 713159888,
   ItemSets = 2423200735,
   KineticWeapon = 2,
   Legs = 48,
