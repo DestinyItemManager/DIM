@@ -110,15 +110,14 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Equip')}
         />
       )}
-      {!(item.owner === store.id && !item.equipped) &&
-        canShowStore(store, itemOwnerStore, item) && (
-          <ItemActionButton
-            title={t('MovePopup.StoreWithName', { character: store.name })}
-            onClick={moveItem}
-            icon={store.icon}
-            label={t('MovePopup.Store')}
-          />
-        )}
+      {canShowStore(store) && (
+        <ItemActionButton
+          title={t('MovePopup.StoreWithName', { character: store.name })}
+          onClick={moveItem}
+          icon={store.icon}
+          label={t('MovePopup.Store')}
+        />
+      )}
     </ItemActionButtonGroup>
   );
 }
