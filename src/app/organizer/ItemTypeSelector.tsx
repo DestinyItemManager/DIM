@@ -427,7 +427,7 @@ export default function ItemTypeSelector({
 
   const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
     onSelection([..._.take(selection, depth + 1), subCategory]);
-  0;
+
   return (
     <div className={styles.selector}>
       {selection.map((currentSelection, depth) => {
