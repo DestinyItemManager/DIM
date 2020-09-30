@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'button': string;
+  'buttonItemCount': string;
   'checked': string;
   'level': string;
   'selector': string;

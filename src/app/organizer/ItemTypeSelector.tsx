@@ -458,13 +458,15 @@ export default function ItemTypeSelector({
                     {subCategory.icon && <img src={subCategory.icon} />}
                     {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties?.name ||
                       defs.ItemCategory.get(subCategory.itemCategoryHash).title}{' '}
-                    (
-                    {
-                      filteredItems.filter(
-                        (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
-                      ).length
-                    }
-                    )
+                    <span className={styles.buttonItemCount}>
+                      (
+                      {
+                        filteredItems.filter(
+                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
+                        ).length
+                      }
+                      )
+                    </span>
                   </label>
                 );
               })}
