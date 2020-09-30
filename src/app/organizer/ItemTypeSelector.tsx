@@ -1,5 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
@@ -24,6 +25,7 @@ import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import _ from 'lodash';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import legs from '../../../destiny-icons/armor_types/boots.svg';
 import chest from '../../../destiny-icons/armor_types/chest.svg';
 import classItem from '../../../destiny-icons/armor_types/class.svg';
@@ -32,6 +34,7 @@ import helmet from '../../../destiny-icons/armor_types/helmet.svg';
 import hunter from '../../../destiny-icons/general/class_hunter.svg';
 import titan from '../../../destiny-icons/general/class_titan.svg';
 import warlock from '../../../destiny-icons/general/class_warlock.svg';
+import { itemIncludesCategories } from './filtering-utils';
 import styles from './ItemTypeSelector.m.scss';
 
 /**
@@ -419,40 +422,56 @@ export default function ItemTypeSelector({
   selection: ItemCategoryTreeNode[];
   onSelection(selection: ItemCategoryTreeNode[]): void;
 }) {
+  const filteredItems = useSelector(filteredItemsSelector);
   selection = selection.length ? selection : [selectionTree];
 
   const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
     onSelection([..._.take(selection, depth + 1), subCategory]);
-
+  0;
   return (
     <div className={styles.selector}>
-      {selection.map(
-        (currentSelection, depth) =>
+      {selection.map((currentSelection, depth) => {
+        const upstreamCategories: number[] = [];
+        for (let i = 1; i < depth + 1; i++) {
+          selection[i].itemCategoryHash && upstreamCategories.push(selection[i].itemCategoryHash);
+        }
+        return (
           currentSelection.subCategories && (
             <div key={depth} className={styles.level}>
-              {currentSelection.subCategories?.map((subCategory) => (
-                <label
-                  key={subCategory.itemCategoryHash}
-                  className={clsx(styles.button, {
-                    [styles.checked]: selection[depth + 1] === subCategory,
-                  })}
-                >
-                  <input
-                    type="radio"
-                    name={subCategory.id}
-                    value={subCategory.id}
-                    checked={selection[depth + 1] === subCategory}
-                    readOnly={true}
-                    onClick={(_e) => handleSelection(depth, subCategory)}
-                  />
-                  {subCategory.icon && <img src={subCategory.icon} />}
-                  {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties?.name ||
-                    defs.ItemCategory.get(subCategory.itemCategoryHash).title}
-                </label>
-              ))}
+              {currentSelection.subCategories?.map((subCategory) => {
+                const categoryHashList = [...upstreamCategories, subCategory.itemCategoryHash];
+                return (
+                  <label
+                    key={subCategory.itemCategoryHash}
+                    className={clsx(styles.button, {
+                      [styles.checked]: selection[depth + 1] === subCategory,
+                    })}
+                  >
+                    <input
+                      type="radio"
+                      name={subCategory.id}
+                      value={subCategory.id}
+                      checked={selection[depth + 1] === subCategory}
+                      readOnly={true}
+                      onClick={(_e) => handleSelection(depth, subCategory)}
+                    />
+                    {subCategory.icon && <img src={subCategory.icon} />}
+                    {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties?.name ||
+                      defs.ItemCategory.get(subCategory.itemCategoryHash).title}{' '}
+                    (
+                    {
+                      filteredItems.filter(
+                        (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
+                      ).length
+                    }
+                    )
+                  </label>
+                );
+              })}
             </div>
           )
-      )}
+        );
+      })}
     </div>
   );
 }

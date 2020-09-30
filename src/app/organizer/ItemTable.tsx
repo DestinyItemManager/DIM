@@ -39,6 +39,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { getColumns, getColumnSelectionId } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
+import { itemIncludesCategories } from './filtering-utils';
 import ItemActions from './ItemActions';
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode } from './ItemTypeSelector';
@@ -92,10 +93,7 @@ function mapStateToProps() {
       }
       const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
       const items = allItems.filter(
-        (i) =>
-          i.comparable &&
-          categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
-          searchFilter(i)
+        (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
       );
       return items;
     }

@@ -51,6 +51,13 @@ export const searchFilterSelector = createSelector(
   (query, filterFactory) => filterFactory(query)
 );
 
+/** A selector for all items filtered by whatever's currently in the search box. */
+export const filteredItemsSelector = createSelector(
+  allItemsSelector,
+  searchFilterSelector,
+  (allItems, searchFilter) => allItems.filter((i) => searchFilter(i))
+);
+
 function makeSearchFilterFactory(
   { filters }: SearchConfig,
   stores: DimStore[],
