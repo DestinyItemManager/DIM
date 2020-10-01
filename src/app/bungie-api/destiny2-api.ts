@@ -1,43 +1,43 @@
+import { t } from 'app/i18next-t';
 import {
+  AwaAuthorizationResult,
+  awaGetActionToken,
+  awaInitializeRequest,
+  AwaType,
+  BungieMembershipType,
   DestinyComponentType,
   DestinyEquipItemResults,
+  DestinyItemResponse,
+  DestinyLinkedProfilesResponse,
   DestinyManifest,
   DestinyProfileResponse,
+  DestinyVendorResponse,
+  DestinyVendorsResponse,
   equipItem,
   equipItems as equipItemsApi,
   getDestinyManifest,
+  getItem,
+  getLinkedProfiles,
   getProfile as getProfileApi,
   getVendor as getVendorApi,
   getVendors as getVendorsApi,
   pullFromPostmaster,
   ServerResponse,
   setItemLockState,
-  transferItem,
-  DestinyVendorResponse,
-  DestinyVendorsResponse,
-  awaInitializeRequest,
-  AwaType,
-  awaGetActionToken,
-  AwaAuthorizationResult,
-  getLinkedProfiles,
-  DestinyLinkedProfilesResponse,
-  BungieMembershipType,
-  getItem,
-  DestinyItemResponse,
   setQuestTrackedState,
+  transferItem,
 } from 'bungie-api-ts/destiny2';
-import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import {
-  handleUniquenessViolation,
-  unauthenticatedHttpClient,
-  authenticatedHttpClient,
-} from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/get-active-platform';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { reportException } from '../utils/exceptions';
+import {
+  authenticatedHttpClient,
+  handleUniquenessViolation,
+  unauthenticatedHttpClient,
+} from './bungie-service-helper';
 
 /**
  * APIs for interacting with Destiny 2 game data.

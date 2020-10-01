@@ -1,22 +1,22 @@
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { needsDeveloper } from 'app/accounts/actions';
 import { t } from 'app/i18next-t';
-import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
-import { rateLimitedFetch } from './rate-limiter';
+import { showNotification } from 'app/notifications/notifications';
+import store from 'app/store/store';
+import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
+import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import store from 'app/store/store';
-import { needsDeveloper } from 'app/accounts/actions';
-import { showNotification } from 'app/notifications/notifications';
-import _ from 'lodash';
+import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
+import { API_KEY } from './bungie-api-utils';
 import {
   BungieError,
-  HttpStatusError,
-  createHttpClient,
   createFetchWithNonStoppingTimeout,
+  createHttpClient,
+  HttpStatusError,
   responsivelyThrottleHttpClient,
 } from './http-client';
-import { API_KEY } from './bungie-api-utils';
-import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
+import { rateLimitedFetch } from './rate-limiter';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -220,7 +220,7 @@ export function handleUniquenessViolation(
   item: DimItem,
   store: DimStore
 ): never {
-  if (error.code === 1648) {
+  if (error?.code === PlatformErrorCodes.DestinyUniquenessViolation) {
     throw dimError(
       t('BungieService.ItemUniquenessExplanation', {
         // t('BungieService.ItemUniquenessExplanation_female')
