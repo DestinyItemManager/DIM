@@ -16,7 +16,14 @@ import { useLocation } from 'react-router';
 import { CompareService } from '../compare/compare.service';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, clearIcon, faClone, stickyNoteIcon } from '../shell/icons';
+import {
+  AppIcon,
+  clearIcon,
+  faClone,
+  lockIcon,
+  stickyNoteIcon,
+  unlockedIcon,
+} from '../shell/icons';
 import { loadingTracker } from '../shell/loading-tracker';
 import { ItemFilter } from './filter-types';
 import styles from './MainSearchBarActions.m.scss';
@@ -186,7 +193,7 @@ function MainSearchBarActions({
           disabled: !showSearchCount,
           content: (
             <>
-              <AppIcon icon={stickyNoteIcon} /> {t('Tags.LockAll')}
+              <AppIcon icon={lockIcon} /> {t('Tags.LockAll')}
             </>
           ),
         },
@@ -197,7 +204,7 @@ function MainSearchBarActions({
           disabled: !showSearchCount,
           content: (
             <>
-              <AppIcon icon={stickyNoteIcon} /> {t('Tags.UnlockAll')}
+              <AppIcon icon={unlockedIcon} /> {t('Tags.UnlockAll')}
             </>
           ),
         },
