@@ -4,6 +4,10 @@
 .logo {
   height: 24px;
   width: 68px;
+  @include phone-portrait {
+    height: 24px * 1.2;
+    width: 68px * 1.2;
+  }
   color: $orange !important;
   font-size: 16px !important;
   font-weight: bold;
@@ -71,6 +75,9 @@ body {
 
   .app-icon {
     font-size: 1.33em;
+    @include phone-portrait {
+      font-size: 24px;
+    }
     &:hover {
       color: $orange;
       cursor: pointer;
@@ -84,6 +91,12 @@ body {
 
   .logoLink {
     height: 24px;
+    @include phone-portrait {
+      height: 44px;
+      margin: 0 4px !important;
+      display: flex;
+      align-items: center;
+    }
   }
 
   .menuItem {
@@ -94,6 +107,9 @@ body {
     user-select: none;
     outline: none;
     white-space: nowrap;
+    @include phone-portrait {
+      margin: 0 12px;
+    }
   }
 
   .link {
