@@ -48,7 +48,7 @@ import {
  * Get the information about the current manifest.
  */
 export async function getManifest(): Promise<DestinyManifest> {
-  const response = await getDestinyManifest((config) => unauthenticatedHttpClient(config));
+  const response = await getDestinyManifest(unauthenticatedHttpClient);
   return response.Response;
 }
 
@@ -236,7 +236,7 @@ export async function transfer(
     stackSize: amount || item.amount,
     transferToVault: store.isVault,
   };
-
+  console.log(request);
   const response = item.location.inPostmaster
     ? pullFromPostmaster(authenticatedHttpClient, request)
     : transferItem(authenticatedHttpClient, request);
