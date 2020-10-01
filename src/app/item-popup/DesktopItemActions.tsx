@@ -139,7 +139,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   return (
     <>
       <div className={styles.interaction} ref={containerRef}>
-        {item.destinyVersion === 1 && maximum > 1 && (
+        {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
           <ItemMoveAmount
             amount={amount}
             maximum={maximum}
