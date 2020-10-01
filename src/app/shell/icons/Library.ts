@@ -81,6 +81,7 @@ const faGripLinesVertical = 'fas fa-grip-lines-vertical';
 const faExternalLinkAlt = 'fas fa-external-link-alt';
 const faBookmarkSolid = 'fas fa-bookmark';
 const faBookmark = 'far fa-bookmark';
+const faBalanceScaleLeft = 'fas fa-balance-scale-left';
 
 const faXbox = 'fab fa-xbox';
 const faPlaystation = 'fab fa-playstation';
@@ -106,6 +107,7 @@ export {
   faBars as menuIcon,
   faBars as reorderIcon,
   faBolt as boltIcon,
+  faBalanceScaleLeft as compareIcon,
   faCheck,
   faCheckCircle as enabledIcon,
   faCheckCircle as redeemedIcon,
