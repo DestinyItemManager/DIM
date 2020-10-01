@@ -96,6 +96,7 @@
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^6.0.2",
     "cross-env": "^7.0.0",
+    "cross-fetch": "^3.0.6",
     "css-loader": "^4.3.0",
     "css-modules-typescript-loader": "^4.0.0",
     "eslint": "^7.0.0",

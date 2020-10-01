@@ -1,5 +1,5 @@
 import { bungieApiQuery } from './bungie-api-utils';
-import { httpAdapter } from './bungie-service-helper';
+import { unauthenticatedHttpClient } from './bungie-service-helper';
 
 export interface GlobalAlert {
   key: string;
@@ -20,7 +20,7 @@ const GlobalAlertLevelsToToastLevels = [
  * Get global alerts (like maintenance warnings) from Bungie.
  */
 export async function getGlobalAlerts(): Promise<GlobalAlert[]> {
-  const response = await httpAdapter(bungieApiQuery(`/Platform/GlobalAlerts/`), true);
+  const response = await unauthenticatedHttpClient(bungieApiQuery(`/Platform/GlobalAlerts/`));
   if (response?.Response) {
     return response.Response.map((alert) => ({
       key: alert.AlertKey,
