@@ -133,6 +133,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
+    document.body.classList.toggle('search-open', showSearch);
   }, [showSearch]);
 
   const nodeRef = useRef<HTMLDivElement>(null);

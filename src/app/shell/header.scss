@@ -21,6 +21,12 @@ body {
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
   box-sizing: border-box;
   min-height: 100vh;
+
+  &.search-open {
+    padding-top: 2 * $header-height;
+    padding-top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
+    padding-top: calc(#{2 * $header-height} + env(safe-area-inset-top));
+  }
 }
 #header {
   padding: 0 0 0 2px;
