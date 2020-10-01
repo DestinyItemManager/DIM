@@ -1,5 +1,13 @@
 ## Next
 
+* The Organizer's buttons now show you how many items you have in each category. These counts update when you use a search too!
+* On mobile, the search bar appears below the header, instead of on top of it.
+
+### Beta Only
+
+* Removed the ability to move a specific amount of a stacked consumable item.
+* Continued updates to our new background style and desktop item actions menu.
+
 ## 6.32.2 <span className="changelog-date">(2020-09-29)</span>
 
 * Actually fixed "Store" buttons not showing for items in Postmaster.
