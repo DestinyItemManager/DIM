@@ -221,9 +221,6 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
-  .gradientBackground & {
-    padding-top: 12px;
-  }
 }
 
 h2,

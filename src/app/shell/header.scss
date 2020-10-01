@@ -246,10 +246,14 @@ body {
       display: flex;
       align-items: center;
       direction: ltr;
+      border-bottom: 2px solid transparent;
+
+      .gradientBackground & {
+        height: 32px;
+      }
 
       &.active {
         border-bottom: 2px solid $orange;
-        border-top: 2px solid black;
         box-sizing: border-box;
       }
     }
