@@ -39,6 +39,9 @@
 
   &.collapsed {
     background-color: black;
+    .gradientBackground & {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
   }
 
   .collapse-handle {

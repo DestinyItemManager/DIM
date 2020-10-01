@@ -221,6 +221,9 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
+  .gradientBackground & {
+    padding-top: 12px;
+  }
 }
 
 h2,
@@ -418,5 +421,10 @@ a.dim-button {
     position: fixed;
     will-change: transform;
     z-index: -1;
+  }
+  --inventory-column-padding: 24px;
+  --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+  @include phone-portrait {
+    --inventory-column-padding: 12px;
   }
 }
