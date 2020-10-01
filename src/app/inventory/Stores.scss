@@ -211,6 +211,9 @@
   .store-cell {
     padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
     flex-direction: column;
+    .gradientBackground & {
+      padding-top: 16px;
+    }
     &:focus {
       outline: none;
     }
@@ -252,7 +255,7 @@
     background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
     background-position: center top;
     background-repeat: no-repeat;
-    background-size: 100vw 100vh;
+    background-size: 100% 100vh;
   }
 }
 
