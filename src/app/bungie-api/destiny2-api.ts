@@ -236,7 +236,7 @@ export async function transfer(
     stackSize: amount || item.amount,
     transferToVault: store.isVault,
   };
-  console.log(request);
+
   const response = item.location.inPostmaster
     ? pullFromPostmaster(authenticatedHttpClient, request)
     : transferItem(authenticatedHttpClient, request);
