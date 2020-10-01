@@ -6,7 +6,7 @@ import React, { ReactNode, useRef } from 'react';
 import styles from './Dropdown.m.scss';
 import { usePopper } from './usePopper';
 
-interface Seperator {
+interface Separator {
   key: string;
 }
 
@@ -17,7 +17,7 @@ interface DropdownOption {
   onSelected(): void;
 }
 
-export type Option = Seperator | DropdownOption;
+export type Option = Separator | DropdownOption;
 
 interface Props {
   /** The contents of the button */
@@ -30,7 +30,7 @@ interface Props {
   offset?: number;
 }
 
-function isOption(option: Option): option is DropdownOption {
+function isDropdownOption(option: Option): option is DropdownOption {
   return (option as DropdownOption).content !== undefined;
 }
 
@@ -86,8 +86,8 @@ export default function Dropdown({
         {isOpen &&
           items.map((item, index) => (
             <>
-              {!isOption(item) ? (
-                <div className={styles.seperator} />
+              {!isDropdownOption(item) ? (
+                <div key={item.key} className={styles.separator} />
               ) : (
                 <div
                   className={clsx(styles.menuItem, {
