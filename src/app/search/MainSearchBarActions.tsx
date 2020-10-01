@@ -16,14 +16,7 @@ import { useLocation } from 'react-router';
 import { CompareService } from '../compare/compare.service';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import {
-  AppIcon,
-  clearIcon,
-  faClone,
-  lockIcon,
-  stickyNoteIcon,
-  unlockedIcon,
-} from '../shell/icons';
+import { AppIcon, clearIcon, faClone, stickyNoteIcon } from '../shell/icons';
 import { loadingTracker } from '../shell/loading-tracker';
 import { ItemFilter } from './filter-types';
 import styles from './MainSearchBarActions.m.scss';
@@ -107,19 +100,19 @@ function MainSearchBarActions({
   }
 
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
-    if (selectedTag === 'lock' || selectedTag === 'unlock') {
-      // Bulk locking/unlocking
-      const state = selectedTag === 'lock';
-      const lockables = filteredItems.filter((i) => i.lockable);
-      dispatch(bulkLockItems(lockables, state));
-    } else {
-      // Bulk tagging
-      const tagItems = filteredItems.filter((i) => i.taggable);
+    // Bulk tagging
+    const tagItems = filteredItems.filter((i) => i.taggable);
 
-      if (isTagValue(selectedTag)) {
-        dispatch(bulkTagItems(tagItems, selectedTag));
-      }
+    if (isTagValue(selectedTag)) {
+      dispatch(bulkTagItems(tagItems, selectedTag));
     }
+  });
+
+  const bulkLock = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+    // Bulk locking/unlocking
+    const state = selectedTag === 'lock';
+    const lockables = filteredItems.filter((i) => i.lockable);
+    dispatch(bulkLockItems(lockables, state));
   });
 
   const bulkNote = () => {
@@ -150,21 +143,33 @@ function MainSearchBarActions({
       label: t('Header.TagAs', { tag: t(tag.label) }),
     }));
   bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
-  bulkItemTags.push({ type: 'lock', label: t('Tags.LockAll'), icon: lockIcon });
-  bulkItemTags.push({ type: 'unlock', label: t('Tags.UnlockAll'), icon: unlockedIcon });
 
   const dropdownOptions: Option[] = showSearchActions
     ? [
-        ...bulkItemTags.map((tag) => ({
-          key: tag.type || 'default',
-          onSelected: () => tag.type && bulkTag(tag.type),
+        ...stores.map((store) => ({
+          key: `move-${store.id}`,
+          onSelected: () => applySearchLoadout(store),
           disabled: !showSearchCount,
           content: (
             <>
-              {tag.icon && <AppIcon icon={tag.icon} />} {tag.label}
+              <img src={store.icon} width="16" height="16" alt="" className={styles.storeIcon} />{' '}
+              {store.isVault
+                ? t('MovePopup.SendToVault')
+                : t('MovePopup.StoreWithName', { character: store.name })}
             </>
           ),
         })),
+        { key: 'characters' },
+        {
+          key: 'compare',
+          onSelected: compareMatching,
+          disabled: !isComparable || !showSearchCount,
+          content: (
+            <>
+              <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
+            </>
+          ),
+        },
         {
           key: 'note',
           onSelected: () => bulkNote(),
@@ -176,25 +181,34 @@ function MainSearchBarActions({
           ),
         },
         {
-          key: 'compare',
-          onSelected: compareMatching,
-          disabled: !isComparable || !showSearchCount,
-          content: (
-            <>
-              <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
-            </>
-          ),
-        },
-        ...stores.map((store) => ({
-          key: `move-${store.id}`,
-          onSelected: () => applySearchLoadout(store),
+          key: 'lock',
+          onSelected: () => bulkLock('lock'),
           disabled: !showSearchCount,
           content: (
             <>
-              <img src={store.icon} width="16" height="16" alt="" className={styles.storeIcon} />{' '}
-              {store.isVault
-                ? t('MovePopup.SendToVault')
-                : t('MovePopup.StoreWithName', { character: store.name })}
+              <AppIcon icon={stickyNoteIcon} /> {t('Tags.LockAll')}
+            </>
+          ),
+        },
+
+        {
+          key: 'unlock',
+          onSelected: () => bulkLock('unlock'),
+          disabled: !showSearchCount,
+          content: (
+            <>
+              <AppIcon icon={stickyNoteIcon} /> {t('Tags.UnlockAll')}
+            </>
+          ),
+        },
+        { key: 'tags' },
+        ...bulkItemTags.map((tag) => ({
+          key: tag.type || 'default',
+          onSelected: () => tag.type && bulkTag(tag.type),
+          disabled: !showSearchCount,
+          content: (
+            <>
+              {tag.icon && <AppIcon icon={tag.icon} />} {tag.label}
             </>
           ),
         })),

@@ -6,12 +6,18 @@ import React, { ReactNode, useRef } from 'react';
 import styles from './Dropdown.m.scss';
 import { usePopper } from './usePopper';
 
-export interface Option {
+interface Seperator {
+  key: string;
+}
+
+interface DropdownOption {
   key: string;
   content: ReactNode;
   disabled?: boolean;
   onSelected(): void;
 }
+
+export type Option = Seperator | DropdownOption;
 
 interface Props {
   /** The contents of the button */
@@ -22,6 +28,10 @@ interface Props {
   disabled?: boolean;
   options: Option[];
   offset?: number;
+}
+
+function isOption(option: Option): option is DropdownOption {
+  return (option as DropdownOption).content !== undefined;
 }
 
 /**
@@ -75,24 +85,30 @@ export default function Dropdown({
       <div {...getMenuProps({ ref: menuRef })} className={styles.menu}>
         {isOpen &&
           items.map((item, index) => (
-            <div
-              className={clsx(styles.menuItem, {
-                [styles.highlighted]: highlightedIndex === index,
-                [styles.disabled]: item.disabled,
-              })}
-              key={item.key}
-              {...getItemProps({
-                item,
-                index,
-                onClick: !item.disabled
-                  ? item.onSelected
-                  : (e: any) => {
-                      e.nativeEvent.preventDownshiftDefault = true;
-                    },
-              })}
-            >
-              {item.content}
-            </div>
+            <>
+              {!isOption(item) ? (
+                <div className={styles.seperator} />
+              ) : (
+                <div
+                  className={clsx(styles.menuItem, {
+                    [styles.highlighted]: highlightedIndex === index,
+                    [styles.disabled]: item.disabled,
+                  })}
+                  key={item.key}
+                  {...getItemProps({
+                    item,
+                    index,
+                    onClick: !item.disabled
+                      ? item.onSelected
+                      : (e: any) => {
+                          e.nativeEvent.preventDownshiftDefault = true;
+                        },
+                  })}
+                >
+                  {item.content}
+                </div>
+              )}
+            </>
           ))}
       </div>
     </div>
