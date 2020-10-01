@@ -4,7 +4,7 @@ import { getTag } from 'app/inventory/dim-item-info';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
-import { addIcon, AppIcon, faClone } from 'app/shell/icons';
+import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -203,7 +203,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         ))}
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
-            <AppIcon icon={faClone} /> {t('Compare.Button')}
+            <AppIcon icon={compareIcon} /> {t('Compare.Button')}
           </div>
         )}
         {canConsolidate && (
