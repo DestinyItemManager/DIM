@@ -1,33 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { DimSocket, D2Item, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import Sheet from 'app/dim-ui/Sheet';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import Sheet from 'app/dim-ui/Sheet';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptySet } from 'app/utils/empty';
 import {
-  SocketPlugSources,
-  TierType,
-  DestinyInventoryItemDefinition,
   DestinyEnergyType,
+  DestinyInventoryItemDefinition,
   DestinyItemPlug,
   DestinyItemPlugBase,
+  SocketPlugSources,
+  TierType,
 } from 'bungie-api-ts/destiny2';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/types';
-import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { connect } from 'react-redux';
 import clsx from 'clsx';
-import styles from './SocketDetails.m.scss';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
+import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import _ from 'lodash';
+import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
-import { emptySet } from 'app/utils/empty';
-import { getModCostInfo } from 'app/collections/Mod';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 
 interface ProvidedProps {
-  item: D2Item;
+  item: DimItem;
   socket: DimSocket;
   initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;
@@ -62,10 +61,10 @@ function mapStateToProps() {
   );
 
   const inventoryPlugs = createSelector(
-    storesSelector,
+    allItemsSelector,
     (_: RootState, props: ProvidedProps) => props.socket,
     (state: RootState) => state.manifest.d2Manifest!,
-    (stores, socket, defs) => {
+    (allItems, socket, defs) => {
       const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
       if (
         !(
@@ -79,12 +78,10 @@ function mapStateToProps() {
       const modHashes = new Set<number>();
 
       const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
-      for (const store of stores) {
-        for (const item of store.items) {
-          const itemDef = defs.InventoryItem.get(item.hash);
-          if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
-            modHashes.add(item.hash);
-          }
+      for (const item of allItems) {
+        const itemDef = defs.InventoryItem.get(item.hash);
+        if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
+          modHashes.add(item.hash);
         }
       }
 
@@ -110,6 +107,35 @@ type Props = ProvidedProps & StoreProps;
 export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
+
+export const SocketDetailsMod = React.memo(
+  ({
+    itemDef,
+    defs,
+    className,
+    onClick,
+  }: {
+    itemDef: PluggableInventoryItemDefinition;
+    defs: D2ManifestDefinitions;
+    className?: string;
+    onClick?(mod: PluggableInventoryItemDefinition): void;
+  }) => {
+    const onClickFn = onClick && (() => onClick(itemDef));
+
+    return (
+      <div
+        role="button"
+        className={clsx('item', className)}
+        title={itemDef.displayProperties.name}
+        onClick={onClickFn}
+        onFocus={onClickFn}
+        tabIndex={0}
+      >
+        <DefItemIcon itemDef={itemDef} defs={defs} />
+      </div>
+    );
+  }
+);
 
 function SocketDetails({
   defs,
@@ -193,7 +219,7 @@ function SocketDetails({
 
   const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
   const initialItem =
-    socket.socketDefinition.singleInitialItemHash &&
+    socket.socketDefinition.singleInitialItemHash > 0 &&
     defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>
@@ -257,44 +283,3 @@ function SocketDetails({
 }
 
 export default connect<StoreProps>(mapStateToProps)(SocketDetails);
-
-// TODO: use SVG! make a common icon component!
-export const SocketDetailsMod = React.memo(
-  ({
-    itemDef,
-    defs,
-    className,
-    onClick,
-  }: {
-    itemDef: PluggableInventoryItemDefinition;
-    defs: D2ManifestDefinitions;
-    className?: string;
-    onClick?(mod: PluggableInventoryItemDefinition): void;
-  }) => {
-    const { energyCost, energyCostElementOverlay } = getModCostInfo(itemDef, defs);
-
-    const onClickFn = onClick && (() => onClick(itemDef));
-
-    return (
-      <div
-        role="button"
-        className={clsx('item', className)}
-        title={itemDef.displayProperties.name}
-        onClick={onClickFn}
-        onFocus={onClickFn}
-        tabIndex={0}
-      >
-        <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
-        {energyCostElementOverlay && (
-          <>
-            <div
-              style={{ backgroundImage: `url("${bungieNetPath(energyCostElementOverlay)}")` }}
-              className="energyCostOverlay"
-            />
-            <div className="energyCost">{energyCost}</div>
-          </>
-        )}
-      </div>
-    );
-  }
-);

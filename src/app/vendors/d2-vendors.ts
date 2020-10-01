@@ -1,25 +1,25 @@
-import {
-  DestinyVendorsResponse,
-  DestinyVendorComponent,
-  DestinyItemComponentSetOfint32,
-  DestinyVendorSaleItemComponent,
-  DestinyCollectibleComponent,
-  DestinyVendorDefinition,
-  BungieMembershipType,
-  DestinyDestinationDefinition,
-  DestinyPlaceDefinition,
-  DestinyVendorGroupDefinition,
-  DestinyInventoryItemDefinition,
-  DestinyCollectibleState,
-} from 'bungie-api-ts/destiny2';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { VendorItem } from './vendor-item';
-import _ from 'lodash';
-import { DimItem } from 'app/inventory/item-types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { VENDORS } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
+import {
+  BungieMembershipType,
+  DestinyCollectibleComponent,
+  DestinyCollectibleState,
+  DestinyDestinationDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemComponentSetOfint32,
+  DestinyPlaceDefinition,
+  DestinyVendorComponent,
+  DestinyVendorDefinition,
+  DestinyVendorGroupDefinition,
+  DestinyVendorSaleItemComponent,
+  DestinyVendorsResponse,
+} from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { VendorItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -187,7 +187,10 @@ export function getVendorItems(
   }
 }
 
-export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGroup[]) {
+export function filterVendorGroupsToUnacquired(
+  vendorGroups: readonly D2VendorGroup[],
+  ownedItemHashes: Set<number>
+) {
   return vendorGroups
     .map((group) => ({
       ...group,
@@ -196,9 +199,11 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
           ...vendor,
           items: vendor.items.filter(
             (item) =>
-              item.item?.isDestiny2() &&
-              item.item.collectibleState !== null &&
-              item.item.collectibleState & DestinyCollectibleState.NotAcquired
+              item.item &&
+              (item.item.collectibleState !== undefined
+                ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
+                : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+                  !ownedItemHashes.has(item.item.hash))
           ),
         }))
         .filter((v) => v.items.length),
@@ -209,7 +214,7 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
 export function filterVendorGroupsToSearch(
   vendorGroups: readonly D2VendorGroup[],
   searchQuery: string,
-  filterItems: (item: DimItem) => boolean
+  filterItems: ItemFilter
 ) {
   return vendorGroups
     .map((group) => ({

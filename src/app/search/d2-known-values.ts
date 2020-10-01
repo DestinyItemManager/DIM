@@ -1,5 +1,11 @@
-import { DestinyEnergyType, DamageType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import {
+  BreakerTypeHashes,
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 
 // ✨ magic values ✨
 // this file has non-programatically decided information
@@ -69,6 +75,16 @@ export const armor2PlugCategoryHashesByName = {
 
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
+export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
+  74070459: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[38912240] "Crucible Tracker"
+  1501870536: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[2285636663] "Crucible Tracker"
+  2439952408: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[3244015567] "Crucible Tracker"
+  73837075: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[905869860] "Kill Tracker"
+  90275515: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2240097604] "Kill Tracker"
+  2579044636: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2302094943] "Kill Tracker"
+};
+export const killTrackerSocketTypeHash = 1282012138;
+
 //
 // STATS KNOWN VALUES
 //
@@ -89,6 +105,9 @@ export const D2ArmorStatHashByName = {
   intellect: StatHashes.Intellect,
   strength: StatHashes.Strength,
 };
+
+/** Stats that all (D2) armor should have. */
+export const armorStats = Object.values(D2ArmorStatHashByName);
 
 export const D2WeaponStatHashByName = {
   rpm: StatHashes.RoundsPerMinute,
@@ -111,12 +130,12 @@ export const D2WeaponStatHashByName = {
 };
 
 export const swordStatsByName = {
-  swingSpeed: StatHashes.SwingSpeed,
-  guardEfficiency: StatHashes.GuardEfficiency,
-  guardResistance: StatHashes.GuardResistance,
-  chargeRate: StatHashes.ChargeRate,
-  guardEndurance: StatHashes.GuardEndurance,
-  ammoCapacity: StatHashes.AmmoCapacity,
+  swingspeed: StatHashes.SwingSpeed,
+  guardefficiency: StatHashes.GuardEfficiency,
+  guardresistance: StatHashes.GuardResistance,
+  chargerate: StatHashes.ChargeRate,
+  guardendurance: StatHashes.GuardEndurance,
+  ammocapacity: StatHashes.AmmoCapacity,
 };
 
 //
@@ -167,29 +186,18 @@ export const powerfulSources = [
 /** a weird bucket for holding dummies, which items show up in only temporarily */
 export const THE_FORBIDDEN_BUCKET = 2422292810;
 
-export const SHADERS_BUCKET = 2973005342;
-export const SUBCLASS_BUCKET = 3284755031;
-export const ENGRAMS_BUCKET = 375726501;
-export const MODIFICATIONS_BUCKET = 3313201758;
-export const CONSUMABLES_BUCKET = 1469714392;
-export const MATERIALS_BUCKET = 3865314626;
-export const SEASONAL_ARTIFACT_BUCKET = 1506418338;
-export const FINISHERS_BUCKET = 3683254069;
-
 export const armorBuckets = {
-  helmet: 3448274439,
-  gauntlets: 3551918588,
-  chest: 14239492,
-  leg: 20886954,
-  classitem: 1585787867,
+  helmet: BucketHashes.Helmet,
+  gauntlets: BucketHashes.Gauntlets,
+  chest: BucketHashes.ChestArmor,
+  leg: BucketHashes.LegArmor,
+  classitem: BucketHashes.ClassArmor,
 };
 
 //
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const TRIUMPHS_ROOT_NODE = 1024788583;
-export const SEALS_ROOT_NODE = 1652422747;
 export const CATALYSTS_ROOT_NODE = 1111248994;
 export const RAID_NODE = 2975760062;
 
@@ -253,13 +261,13 @@ export const damageNamesByEnum: Record<DamageType, string | null> = {
 };
 
 export const breakerTypes = {
-  barrier: 485622768,
-  antibarrier: 485622768,
-  shieldpiercing: 485622768,
-  overload: 2611060930,
-  disruption: 2611060930,
-  unstoppable: 3178805705,
-  stagger: 3178805705,
+  barrier: BreakerTypeHashes.ShieldPiercing,
+  antibarrier: BreakerTypeHashes.ShieldPiercing,
+  shieldpiercing: BreakerTypeHashes.ShieldPiercing,
+  overload: BreakerTypeHashes.Disruption,
+  disruption: BreakerTypeHashes.Disruption,
+  unstoppable: BreakerTypeHashes.Stagger,
+  stagger: BreakerTypeHashes.Stagger,
 };
 
 export const powerCapPlugSetHash = 573;

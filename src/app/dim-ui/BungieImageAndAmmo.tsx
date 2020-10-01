@@ -1,7 +1,7 @@
-import React from 'react';
-import styles from './BungieImageAndAmmo.m.scss';
-import BungieImage, { BungieImageProps } from './BungieImage';
 import clsx from 'clsx';
+import React from 'react';
+import BungieImage, { BungieImageProps } from './BungieImage';
+import styles from './BungieImageAndAmmo.m.scss';
 
 type BungieImageAndAmmoProps = BungieImageProps & {
   hash: number;

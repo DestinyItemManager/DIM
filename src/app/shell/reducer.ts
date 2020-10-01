@@ -1,12 +1,8 @@
+import _ from 'lodash';
 import { Reducer } from 'redux';
-import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { isPhonePortraitFromMediaQuery } from '../utils/media-queries';
-import { RootState } from 'app/store/types';
-import _ from 'lodash';
-
-export const querySelector = (state: RootState) => state.shell.searchQuery;
-export const searchQueryVersionSelector = (state: RootState) => state.shell.searchQueryVersion;
+import * as actions from './actions';
 
 export interface ShellState {
   readonly isPhonePortrait: boolean;
@@ -55,12 +51,12 @@ export const shell: Reducer<ShellState, ShellAction> = (
       const existingQuery = state.searchQuery;
       const queryComponent = action.payload.trim();
       const newQuery = existingQuery.includes(queryComponent)
-        ? existingQuery.replace(queryComponent, '').replace(/\s+/, ' ')
+        ? existingQuery.replace(queryComponent, '')
         : `${existingQuery} ${queryComponent}`;
 
       return {
         ...state,
-        searchQuery: newQuery,
+        searchQuery: newQuery.replace(/\s+/, ' ').trim(),
         searchQueryVersion: state.searchQueryVersion + 1,
       };
     }

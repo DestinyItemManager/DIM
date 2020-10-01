@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
-import './Sheet.scss';
-import { AppIcon, disabledIcon } from '../shell/icons';
-import { config, animated, useSpring } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import clsx from 'clsx';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import clsx from 'clsx';
 import _ from 'lodash';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { animated, config, useSpring } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
+import { AppIcon, disabledIcon } from '../shell/icons';
+import './Sheet.scss';
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
@@ -59,7 +59,13 @@ export default function Sheet({
 
   useEffect(() => {
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
-      setFrozenHeight(sheetContents.current.clientHeight);
+      if (sheetContents.current.clientHeight > 0) {
+        setFrozenHeight(sheetContents.current.clientHeight);
+      } else {
+        setTimeout(() => {
+          sheetContents.current && setFrozenHeight(sheetContents.current.clientHeight);
+        }, 500);
+      }
     }
   }, [freezeInitialHeight, frozenHeight]);
 
@@ -175,7 +181,7 @@ export default function Sheet({
 
         <div
           className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
-          style={frozenHeight ? { flexBasis: frozenHeight, flexShrink: 0 } : undefined}
+          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContentsRefFn}
         >
           {_.isFunction(children) ? children({ onClose }) : children}

@@ -10,50 +10,11 @@
   align-items: start;
   justify-content: start;
 
-  @include phone-portrait {
-    grid-template-columns: min-content min-content 1fr;
-    grid-template-areas: 'item sockets button';
-    width: 100%;
-  }
-
   > *:first-child {
     grid-area: item;
   }
 
   :global {
-    .socket-container {
-      img {
-        width: calc(var(--item-size) / 2);
-        height: calc(var(--item-size) / 2);
-      }
-      .energyCostOverlay {
-        height: calc(0.5 * var(--item-size) - #{2 * $item-border-width});
-        width: calc(0.5 * var(--item-size) - #{2 * $item-border-width});
-        background-size: calc(0.5 * var(--item-size));
-      }
-      .energyCost {
-        top: calc(#{$item-border-width} + ((0.5 * var(--item-size)) / 13));
-        right: calc(#{$item-border-width} + ((0.5 * var(--item-size)) / 10.5));
-        font-size: calc((0.5 * var(--item-size)) / 5.5);
-      }
-      @include phone-portrait {
-        img {
-          width: calc(var(--item-size) / 1.6);
-          height: calc(var(--item-size) / 1.6);
-        }
-        .energyCostOverlay {
-          height: calc(0.625 * var(--item-size) - #{2 * $item-border-width});
-          width: calc(0.625 * var(--item-size) - #{2 * $item-border-width});
-          background-size: calc(0.625 * var(--item-size));
-        }
-        .energyCost {
-          top: calc(#{$item-border-width} + ((0.625 * var(--item-size)) / 13));
-          right: calc(#{$item-border-width} + ((0.625 * var(--item-size)) / 10.5));
-          font-size: calc((0.625 * var(--item-size)) / 5.5);
-        }
-      }
-    }
-
     .item-socket-category {
       margin-right: 0;
       margin-bottom: 8px;
@@ -124,6 +85,5 @@
   justify-self: center;
   @include phone-portrait {
     padding: 8px 20px;
-    justify-self: end;
   }
 }

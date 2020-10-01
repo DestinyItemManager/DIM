@@ -1,6 +1,19 @@
+@import '../../variables';
+
+.container {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+
+  img {
+    vertical-align: middle;
+    height: 16px;
+    width: 16px;
+  }
+}
+
 .light {
-  composes: light from global;
-  float: none;
+  color: $gold;
+  margin-right: 14px;
 
   :global(.app-icon) {
     font-size: 10px;
@@ -9,9 +22,45 @@
   }
 }
 
+.tierLightContainer {
+  margin-bottom: 5px;
+}
+
+.tierLightSegment {
+  margin-right: 5px;
+}
+
+.existingLoadout {
+  margin: 0;
+  color: #e8a534;
+  font-size: 0.9em;
+}
+
+.loadoutName {
+  font-weight: bold;
+}
+
+.statSegmentContainer {
+  display: flex;
+  flex-flow: row wrap;
+
+  @include phone-portrait {
+    justify-content: space-around;
+  }
+
+  // Prevents odd number of columns messing up the layout
+  @media (max-width: 1079px) {
+    max-width: 500px;
+  }
+}
+
 .statSegment {
-  &::after {
-    content: ' | ';
+  white-space: nowrap;
+  min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
+  margin-right: 14px;
+
+  @include phone-portrait {
+    min-width: 120px;
   }
 }
 

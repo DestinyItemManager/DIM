@@ -1,9 +1,7 @@
-import { DimStore } from '../inventory/store-types';
-import { DimWishList, WishListRoll } from './types';
-import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { MODIFICATIONS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { DimItem, DimPlug } from '../inventory/item-types';
+import { DimWishList, WishListRoll } from './types';
 
 export const enum UiWishListRoll {
   Good = 1,
@@ -38,14 +36,14 @@ let inventoryRolls: { [key: string]: InventoryWishListRoll } = {};
 
 /** Get InventoryWishListRolls for every item in the stores. */
 export function getInventoryWishListRolls(
-  stores: DimStore[],
+  allItems: DimItem[],
   rollsByHash: { [itemHash: number]: WishListRoll[] }
 ): { [key: string]: InventoryWishListRoll } {
   if (
     !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
-    !stores.length ||
-    !stores[0].isDestiny2()
+    !allItems.length ||
+    allItems[0].destinyVersion === 1
   ) {
     return {};
   }
@@ -56,15 +54,13 @@ export function getInventoryWishListRolls(
     inventoryRolls = {};
   }
 
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (item.isDestiny2() && item.sockets && !seenItemIds.has(item.id)) {
-        const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
-        if (wishListRoll) {
-          inventoryRolls[item.id] = wishListRoll;
-        }
-        seenItemIds.add(item.id);
+  for (const item of allItems) {
+    if (item.sockets && !seenItemIds.has(item.id)) {
+      const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
+      if (wishListRoll) {
+        inventoryRolls[item.id] = wishListRoll;
       }
+      seenItemIds.add(item.id);
     }
   }
 
@@ -89,7 +85,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   }
 
   // if it's a modification, ignore it
-  if (plug.plugDef.inventory!.bucketTypeHash === MODIFICATIONS_BUCKET) {
+  if (plug.plugDef.inventory!.bucketTypeHash === BucketHashes.Modifications) {
     return false;
   }
 
@@ -110,7 +106,7 @@ function isWishListPlug(plug: DimPlug, wishListRoll: WishListRoll): boolean {
 }
 
 /** Get all of the plugs for this item that match the wish list roll. */
-function getWishListPlugs(item: D2Item, wishListRoll: WishListRoll): Set<number> {
+function getWishListPlugs(item: DimItem, wishListRoll: WishListRoll): Set<number> {
   if (!item.sockets) {
     return new Set();
   }
@@ -134,7 +130,7 @@ function getWishListPlugs(item: D2Item, wishListRoll: WishListRoll): Set<number>
  * Do all desired perks from the wish list roll exist on this item?
  * Disregards cosmetics and some other socket types.
  */
-function allDesiredPerksExist(item: D2Item, wishListRoll: WishListRoll): boolean {
+function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolean {
   if (!item.sockets) {
     return false;
   }
@@ -174,7 +170,7 @@ function getInventoryWishListRoll(
   item: DimItem,
   wishListRolls: { [itemHash: number]: WishListRoll[] }
 ): InventoryWishListRoll | undefined {
-  if (!wishListRolls || !item || !item.isDestiny2() || !item.sockets) {
+  if (!wishListRolls || !item || !item.sockets) {
     return undefined;
   }
 

@@ -1,25 +1,24 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { D2StoresService } from 'app/inventory/d2-stores';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { useSubscription } from 'app/utils/hooks';
-import { queueAction } from 'app/inventory/action-queue';
-import { refresh$ } from 'app/shell/refresh';
-import { storesSelector } from 'app/inventory/selectors';
-import ItemTypeSelector, { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { destinyVersionSelector } from 'app/accounts/selectors';
+import Compare from 'app/compare/Compare';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import ItemTable from './ItemTable';
-import { DimStore } from 'app/inventory/store-types';
-import Compare from 'app/compare/Compare';
-import styles from './Organizer.m.scss';
-import { t } from 'app/i18next-t';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { destinyVersionSelector } from 'app/accounts/selectors';
-import { D1StoresService } from 'app/inventory/d1-stores';
+import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import { setSearchQuery } from 'app/shell/actions';
+import { querySelector } from 'app/shell/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import ItemTable from './ItemTable';
+import ItemTypeSelector, { getSelectionTree, ItemCategoryTreeNode } from './ItemTypeSelector';
+import styles from './Organizer.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -29,6 +28,7 @@ interface StoreProps {
   stores: DimStore[];
   defs: D2ManifestDefinitions | D1ManifestDefinitions;
   isPhonePortrait: boolean;
+  searchQuery: string;
 }
 
 function mapStateToProps() {
@@ -37,30 +37,90 @@ function mapStateToProps() {
       destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
+    searchQuery: querySelector(state),
   });
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function getStoresService(account: DestinyAccount) {
-  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
-}
+/**
+ * Given a list of item category hashes and a tree of categories, translate the hashes
+ * into a list of ItemCategoryTreeNodes.
+ */
+function drillToSelection(
+  selectionTree: ItemCategoryTreeNode | undefined,
+  selectedItemCategoryHashes: number[]
+): ItemCategoryTreeNode[] {
+  const selectedItemCategoryHash = selectedItemCategoryHashes[0];
 
-function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
-  useEffect(() => {
-    if (!stores.length) {
-      getStoresService(account).getStoresStream(account);
+  if (
+    !selectionTree ||
+    selectedItemCategoryHash === undefined ||
+    selectionTree.itemCategoryHash !== selectedItemCategoryHash
+  ) {
+    return [];
+  }
+
+  if (selectionTree.subCategories && selectedItemCategoryHashes.length) {
+    for (const category of selectionTree.subCategories) {
+      const subselection = drillToSelection(category, selectedItemCategoryHashes.slice(1));
+      if (subselection.length) {
+        return [selectionTree, ...subselection];
+      }
     }
-  });
+  }
 
-  useSubscription(() =>
-    refresh$.subscribe(() => queueAction(() => getStoresService(account).reloadStores()))
-  );
+  return [selectionTree];
+}
 
-  const [selection, onSelection] = useState<ItemCategoryTreeNode[]>([]);
+function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispatch }: Props) {
+  useLoadStores(account, stores.length > 0);
+
+  const history = useHistory();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const selectedItemCategoryHashes = [
+    0,
+    ...(params.get('category') || '').split('~').map((s) => parseInt(s, 10) || 0),
+  ];
+  const types = useMemo(() => defs && getSelectionTree(defs), [defs]);
+  const selection = drillToSelection(types, selectedItemCategoryHashes);
+
+  // On the first render, apply the search from the query params if possible. Otherwise,
+  // update the query params with the current search.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (!firstRender.current) {
+      searchQuery ? params.set('search', searchQuery) : params.delete('search');
+      history.replace({
+        ...location,
+        search: params.toString(),
+      });
+    } else if (params.has('search') && searchQuery !== params.get('search')) {
+      dispatch(setSearchQuery(params.get('search')!));
+    }
+    firstRender.current = false;
+
+    // We only want to do this when the search query changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  const onSelection = (selection: ItemCategoryTreeNode[]) => {
+    params.set(
+      'category',
+      selection
+        .slice(1)
+        .map((s) => s.itemCategoryHash)
+        .join('~')
+    );
+    history.replace({
+      ...location,
+      search: params.toString(),
+    });
+  };
 
   if (isPhonePortrait) {
-    return <div>{t('Organizer.NoMobile')}</div>;
+    return <div className={styles.noMobile}>{t('Organizer.NoMobile')}</div>;
   }
 
   if (!stores.length) {
@@ -70,7 +130,12 @@ function Organizer({ account, defs, stores, isPhonePortrait }: Props) {
   return (
     <div className={styles.organizer}>
       <ErrorBoundary name="Organizer">
-        <ItemTypeSelector defs={defs} selection={selection} onSelection={onSelection} />
+        <ItemTypeSelector
+          defs={defs}
+          selection={selection}
+          selectionTree={types}
+          onSelection={onSelection}
+        />
         <ItemTable categories={selection} />
         <Compare />
       </ErrorBoundary>

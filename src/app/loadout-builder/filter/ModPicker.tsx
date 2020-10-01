@@ -1,36 +1,40 @@
-import React, { Dispatch, useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import Sheet from '../../dim-ui/Sheet';
-import '../../item-picker/ItemPicker.scss';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
+  allItemsSelector,
+  bucketsSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { escapeRegExp } from 'app/search/search-filters/freeform';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { RootState } from 'app/store/types';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import copy from 'fast-copy';
+import _ from 'lodash';
+import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import Sheet from '../../dim-ui/Sheet';
+import '../../item-picker/ItemPicker.scss';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import {
+  isModPickerCategory,
   LockedArmor2Mod,
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
-  isModPickerCategory,
 } from '../types';
-import _ from 'lodash';
-import { isLoadoutBuilderItem, armor2ModPlugCategoriesTitles } from '../utils';
-import copy from 'fast-copy';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector, bucketsSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import { escapeRegExp } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { settingsSelector } from 'app/settings/reducer';
-import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
-import ModPickerSection from './ModPickerSection';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import ModPickerHeader from './ModPickerHeader';
+import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import { t } from 'app/i18next-t';
+import ModPickerHeader from './ModPickerHeader';
+import PickerSectionMods from './PickerSectionMods';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
@@ -38,9 +42,9 @@ let modKey = 0;
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => (l.season ? -l.season : 0)),
-  compareBy((l) => l.mod.plug.energyCost?.energyType),
-  compareBy((l) => l.mod.plug.energyCost?.energyCost),
-  compareBy((l) => l.mod.displayProperties.name)
+  compareBy((l) => l.modDef.plug.energyCost?.energyType),
+  compareBy((l) => l.modDef.plug.energyCost?.energyCost),
+  compareBy((l) => l.modDef.displayProperties.name)
 );
 
 interface ProvidedProps {
@@ -65,42 +69,39 @@ function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedModsSelector = createSelector(
     profileResponseSelector,
-    storesSelector,
+    allItemsSelector,
     (state: RootState) => state.manifest.d2Manifest!,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (profileResponse, stores, defs, classType): StoreProps['mods'] => {
+    (profileResponse, allItems, defs, classType): StoreProps['mods'] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse) {
         return [];
       }
 
       // 1. loop through all items, build up a map of mod sockets by bucket
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (
-            !item ||
-            !item.isDestiny2() ||
-            !item.sockets ||
-            !isLoadoutBuilderItem(item) ||
-            !(item.classType === DestinyClass.Unknown || item.classType === classType)
-          ) {
-            continue;
-          }
-          if (!plugSets[item.bucket.hash]) {
-            plugSets[item.bucket.hash] = new Set<number>();
-          }
-          // build the filtered unique perks item picker
-          item.sockets.allSockets
-            .filter((s) => !s.isPerk)
-            .forEach((socket) => {
-              if (socket.socketDefinition.reusablePlugSetHash) {
-                plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
-              } else if (socket.socketDefinition.randomizedPlugSetHash) {
-                plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
-              }
-              // TODO: potentially also add inventory-based mods
-            });
+      for (const item of allItems) {
+        if (
+          !item ||
+          !item.sockets ||
+          !isLoadoutBuilderItem(item) ||
+          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+        ) {
+          continue;
         }
+        if (!plugSets[item.bucket.hash]) {
+          plugSets[item.bucket.hash] = new Set<number>();
+        }
+        // build the filtered unique perks item picker
+        item.sockets.allSockets
+          .filter((s) => !s.isPerk)
+          .forEach((socket) => {
+            if (socket.socketDefinition.reusablePlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+            } else if (socket.socketDefinition.randomizedPlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
+            }
+            // TODO: potentially also add inventory-based mods
+          });
       }
 
       // 2. for each unique socket (type?) get a list of unlocked mods
@@ -135,7 +136,7 @@ function mapStateToProps() {
               undefined;
 
             if (category) {
-              transformedMods.push({ mod: def, category, season: metadata?.season });
+              transformedMods.push({ modDef: def, category, season: metadata?.season });
             }
           }
         }
@@ -143,7 +144,7 @@ function mapStateToProps() {
         return transformedMods.sort(sortMods);
       });
 
-      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.mod.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.modDef.hash);
     }
   );
 
@@ -180,26 +181,28 @@ function ModPicker({
   }, [isPhonePortrait, filterInput]);
 
   const onModSelected = useCallback(
-    (item: LockedArmor2Mod) => {
+    (mod: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => ({
         ...oldState,
-        [item.category]: [...oldState[item.category], { ...item, key: modKey++ }],
+        [mod.category]: [...oldState[mod.category], { ...mod, key: modKey++ }],
       }));
     },
     [setLockedArmor2ModsInternal]
   );
 
   const onModRemoved = useCallback(
-    (item: LockedArmor2Mod) => {
+    (mod: LockedArmor2Mod) => {
       setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[item.category].findIndex((li) => li.mod.hash === item.mod.hash);
+        const firstIndex = oldState[mod.category].findIndex(
+          (li) => li.modDef.hash === mod.modDef.hash
+        );
 
         if (firstIndex >= 0) {
-          const newState = [...oldState[item.category]];
+          const newState = [...oldState[mod.category]];
           newState.splice(firstIndex, 1);
           return {
             ...oldState,
-            [item.category]: newState,
+            [mod.category]: newState,
           };
         }
 
@@ -237,8 +240,8 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.mod.displayProperties.name) ||
-            regexp.test(mod.mod.displayProperties.description) ||
+            regexp.test(mod.modDef.displayProperties.name) ||
+            regexp.test(mod.modDef.displayProperties.description) ||
             (mod.season && regexp.test(mod.season.toString())) ||
             regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
         )
@@ -293,15 +296,17 @@ function ModPicker({
       }
       footer={footer}
       sheetClassName="item-picker"
+      freezeInitialHeight={true}
     >
       {Object.values(ModPickerCategories).map((category) => (
-        <ModPickerSection
+        <PickerSectionMods
           key={category}
           mods={modsByCategory[category]}
           defs={defs}
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
+          splitBySeason={category === ModPickerCategories.seasonal}
           maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
           energyMustMatch={!isGeneralOrSeasonal(category)}
           onModSelected={onModSelected}

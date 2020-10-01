@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import { observeStore } from 'app/utils/redux-utils';
-import { RootState } from 'app/store/types';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { RootState } from 'app/store/types';
+import { observeStore } from 'app/utils/redux-utils';
 import { set } from 'idb-keyval';
+import _ from 'lodash';
 
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).

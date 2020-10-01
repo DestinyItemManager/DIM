@@ -23,6 +23,10 @@
   &:global(.on-drag-hover) {
     background-color: rgba(128, 128, 128, 0.2);
   }
+
+  :global(.gradientBackground) & {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 }
 
 .buttons {

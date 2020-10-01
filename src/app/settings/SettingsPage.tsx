@@ -1,47 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { t } from 'app/i18next-t';
-import i18next from 'i18next';
-import { setSetting, setCharacterOrder } from './actions';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import InventoryItem from '../inventory/InventoryItem';
-import SortOrderEditor, { SortProperty } from './SortOrderEditor';
-import CharacterOrderEditor from './CharacterOrderEditor';
-import { connect } from 'react-redux';
-import exampleWeaponImage from 'images/example-weapon.jpg';
-import exampleArmorImage from 'images/example-armor.jpg';
-import './settings.scss';
-import { DimItem } from '../inventory/item-types';
-import _ from 'lodash';
-import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
-import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { D2StoresService } from '../inventory/d2-stores';
-import { D1StoresService } from '../inventory/d1-stores';
-import Checkbox from './Checkbox';
-import Select, { mapToOptions, listToOptions } from './Select';
-import { getPlatforms } from '../accounts/platforms';
-import { getActivePlatform } from '../accounts/get-active-platform';
-import { itemSortOrder } from './item-sort';
-import { Settings } from './initial-settings';
-import { settingsSelector } from './reducer';
-import { AppIcon, refreshIcon } from '../shell/icons';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import RatingsKey from '../item-review/RatingsKey';
-import { getDefinitions } from '../destiny2/d2-definitions';
-import { reviewModesSelector } from '../item-review/reducer';
-import WishListSettings from 'app/settings/WishListSettings';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { itemTagList } from 'app/inventory/dim-item-info';
-import Spreadsheets from './Spreadsheets';
-import DimApiSettings from 'app/storage/DimApiSettings';
-import { clearRatings } from 'app/item-review/actions';
-import { fetchRatings } from 'app/item-review/destiny-tracker.service';
-import { emptyArray } from 'app/utils/empty';
-import { storesLoadedSelector, sortedStoresSelector } from 'app/inventory/selectors';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { dimHunterIcon, dimWarlockIcon, dimTitanIcon } from 'app/shell/icons/custom';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { clearAllNewItems } from 'app/inventory/actions';
+import { itemTagList } from 'app/inventory/dim-item-info';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import WishListSettings from 'app/settings/WishListSettings';
+import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
+import DimApiSettings from 'app/storage/DimApiSettings';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import i18next from 'i18next';
+import exampleArmorImage from 'images/example-armor.jpg';
+import exampleWeaponImage from 'images/example-weapon.jpg';
+import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { getPlatforms } from '../accounts/platforms';
+import { getDefinitions } from '../destiny2/d2-definitions';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import InventoryItem from '../inventory/InventoryItem';
+import { DimItem } from '../inventory/item-types';
+import { AppIcon, refreshIcon } from '../shell/icons';
+import { setCharacterOrder, setSetting } from './actions';
+import CharacterOrderEditor from './CharacterOrderEditor';
+import Checkbox from './Checkbox';
+import { Settings } from './initial-settings';
+import { itemSortOrder } from './item-sort';
+import Select, { listToOptions, mapToOptions } from './Select';
+import './settings.scss';
+import SortOrderEditor, { SortProperty } from './SortOrderEditor';
+import Spreadsheets from './Spreadsheets';
 
 const classIcons = {
   [DestinyClass.Hunter]: dimHunterIcon,
@@ -50,11 +45,11 @@ const classIcons = {
 };
 
 interface StoreProps {
+  currentAccount?: DestinyAccount;
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
   stores: DimStore[];
-  reviewModeOptions: D2ReviewMode[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -63,7 +58,7 @@ function mapStateToProps(state: RootState): StoreProps {
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    reviewModeOptions: $featureFlags.reviewsEnabled ? reviewModesSelector(state) : emptyArray(),
+    currentAccount: currentAccountSelector(state),
   };
 }
 
@@ -71,8 +66,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
-  dtrRating: 4.9,
-  dtrRatingCount: 100,
   element: {
     displayProperties: {
       icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
@@ -89,12 +82,8 @@ const fakeWeapon = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return true;
-  },
-  isDestiny1() {
-    return false;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 2,
 };
 
 const fakeArmor = {
@@ -113,12 +102,8 @@ const fakeArmor = {
   primStat: {
     value: 300,
   },
-  isDestiny2() {
-    return false;
-  },
-  isDestiny1() {
-    return true;
-  },
+  itemCategoryHashes: [],
+  destinyVersion: 1,
 };
 
 const languageOptions = mapToOptions({
@@ -157,22 +142,17 @@ const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 function SettingsPage({
   settings,
   isPhonePortrait,
-  reviewModeOptions,
   storesLoaded,
   stores,
+  currentAccount,
   dispatch,
 }: Props) {
   useEffect(() => {
     dispatch(getDefinitions());
-    dispatch(getPlatforms()).then(() => {
-      const account = getActivePlatform();
-      if (account) {
-        account.destinyVersion === 2
-          ? D2StoresService.getStoresStream(account)
-          : D1StoresService.getStoresStream(account);
-      }
-    });
+    dispatch(getPlatforms());
   }, [dispatch]);
+
+  useLoadStores(currentAccount, storesLoaded);
 
   const [languageChanged, setLanguageChanged] = useState(false);
 
@@ -200,18 +180,6 @@ function SettingsPage({
   const resetItemSize = (e) => {
     e.preventDefault();
     dispatch(setSetting('itemSize', 50));
-    return false;
-  };
-
-  const saveAndReloadReviews = (e) => {
-    e.preventDefault();
-    onChange(e);
-
-    if ($featureFlags.reviewsEnabled) {
-      dispatch(clearRatings());
-      dispatch(fetchRatings());
-    }
-
     return false;
   };
 
@@ -340,12 +308,7 @@ function SettingsPage({
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem
-                item={(fakeWeapon as any) as DimItem}
-                isNew={true}
-                rating={4.6}
-                tag="favorite"
-              />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} tag="favorite" />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
@@ -368,13 +331,24 @@ function SettingsPage({
                 <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
-
-            <Checkbox
-              label={t('Settings.ShowNewItems')}
-              name="showNewItems"
-              value={settings.showNewItems}
-              onChange={onChange}
-            />
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.ShowNewItems')}
+                name="showNewItems"
+                value={settings.showNewItems}
+                onChange={onChange}
+              />
+              <div className="subSetting">
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => dispatch(clearAllNewItems())}
+                  title={t('Hotkey.ClearNewItemsTitle')}
+                >
+                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+                </button>
+              </div>
+            </div>
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
@@ -480,7 +454,7 @@ function SettingsPage({
           <section id="ratings">
             <h2>{t('Settings.Ratings')}</h2>
             <div className="examples sub-bucket">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} />
               <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
             </div>
 
@@ -490,57 +464,6 @@ function SettingsPage({
               value={settings.itemQuality}
               onChange={onChange}
             />
-
-            {$featureFlags.reviewsEnabled && (
-              <>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.ShowReviews')}
-                    name="showReviews"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
-                    value={settings.showReviews}
-                    onChange={onChange}
-                  />
-                  <RatingsKey />
-                </div>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.AllowIdPostToDtr')}
-                    name="allowIdPostToDtr"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
-                    value={settings.allowIdPostToDtr}
-                    onChange={onChange}
-                  />
-                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
-                </div>
-
-                {settings.allowIdPostToDtr && (
-                  <>
-                    <Select
-                      label={t('Settings.ReviewsPlatformSelection')}
-                      name="reviewsPlatformSelectionV2"
-                      value={settings.reviewsPlatformSelectionV2}
-                      options={reviewPlatformOptions.map((o) => ({
-                        name: t(o.description),
-                        value: o.platform,
-                      }))}
-                      onChange={saveAndReloadReviews}
-                    />
-
-                    <Select
-                      label={t('Settings.ReviewsModeSelection')}
-                      name="reviewsModeSelection"
-                      value={settings.reviewsModeSelection}
-                      options={reviewModeOptions.map((m) => ({
-                        name: m.description,
-                        value: m.mode,
-                      }))}
-                      onChange={saveAndReloadReviews}
-                    />
-                  </>
-                )}
-              </>
-            )}
           </section>
 
           <ErrorBoundary name="StorageSettings">

@@ -1,40 +1,8 @@
-import { Reducer } from 'redux';
-import * as actions from './actions';
-import { ActionType, getType } from 'typesafe-actions';
-import { currentAccountSelector } from 'app/accounts/selectors';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { RootState } from 'app/store/types';
 import _ from 'lodash';
-import { createSelector } from 'reselect';
-import {
-  Loadout as DimApiLoadout,
-  LoadoutItem as DimApiLoadoutItem,
-  DestinyVersion,
-} from '@destinyitemmanager/dim-api-types';
-import { currentProfileSelector } from 'app/dim-api/selectors';
-import { emptyArray } from 'app/utils/empty';
-
-/** All loadouts relevant to the current account */
-export const loadoutsSelector = createSelector(
-  currentAccountSelector,
-  currentProfileSelector,
-  (currentAccount, profile) =>
-    profile
-      ? Object.values(profile.loadouts).map((loadout) =>
-          convertDimApiLoadoutToLoadout(
-            currentAccount!.membershipId,
-            currentAccount!.destinyVersion,
-            loadout
-          )
-        )
-      : emptyArray<Loadout>()
-);
-export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
-  if (state.loadouts.previousLoadouts[storeId]) {
-    return _.last(state.loadouts.previousLoadouts[storeId]);
-  }
-  return undefined;
-};
+import { Reducer } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions';
+import { Loadout } from './loadout-types';
 
 export interface LoadoutsState {
   /** A stack of previous loadouts by character ID, for undo loadout. */
@@ -75,41 +43,3 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
       return state;
   }
 };
-
-/**
- * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. This converts the API
- * storage format to the old loadout format.
- */
-function convertDimApiLoadoutToLoadout(
-  platformMembershipId: string,
-  destinyVersion: DestinyVersion,
-  loadout: DimApiLoadout
-): Loadout {
-  return {
-    id: loadout.id,
-    classType: loadout.classType,
-    name: loadout.name,
-    clearSpace: loadout.clearSpace || false,
-    membershipId: platformMembershipId,
-    destinyVersion,
-    items: [
-      ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
-      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
-    ],
-  };
-}
-
-/**
- * Converts DimApiLoadoutItem to real loadout items.
- */
-export function convertDimApiLoadoutItemToLoadoutItem(
-  item: DimApiLoadoutItem,
-  equipped: boolean
-): LoadoutItem {
-  return {
-    id: item.id || '0',
-    hash: item.hash,
-    amount: item.amount || 1,
-    equipped,
-  };
-}

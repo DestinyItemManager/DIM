@@ -1,6 +1,8 @@
 @import '../../variables.scss';
 
 .build {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   padding: 10px 0 4px 0;
   border-bottom: 1px solid #555;
@@ -14,9 +16,9 @@
 .header {
   color: #ddd;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   padding-bottom: 8px;
-  align-items: center;
 
   img {
     vertical-align: middle;
@@ -29,18 +31,20 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
   padding: 0;
+  max-width: 800px;
 
   @include phone-portrait {
-    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  // Prevents odd number of columns messing up the layout
+  @media (max-width: 1079px) {
+    max-width: 500px;
   }
 
   > * {
     margin-right: 14px;
     margin-bottom: 14px;
-    &:last-child {
-      margin-right: 0;
-    }
   }
 }

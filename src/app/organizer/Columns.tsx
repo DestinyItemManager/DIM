@@ -1,3 +1,34 @@
+import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
+import { StatInfo } from 'app/compare/Compare';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
+import PressTip from 'app/dim-ui/PressTip';
+import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import { t } from 'app/i18next-t';
+import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
+import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { D1Item, DimItem } from 'app/inventory/item-types';
+import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import { storesSelector } from 'app/inventory/selectors';
+import { source } from 'app/inventory/spreadsheets';
+import { getEvent, getSeason } from 'app/inventory/store/season';
+import { statAllowList } from 'app/inventory/store/stats';
+import { getStore } from 'app/inventory/stores-helpers';
+import TagIcon from 'app/inventory/TagIcon';
+import { ItemStatValue } from 'app/item-popup/ItemStat';
+import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
+import NotesArea from 'app/item-popup/NotesArea';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { Loadout } from 'app/loadout/loadout-types';
+import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { statHashByName } from 'app/search/search-filter-values';
+import { getColor, percent } from 'app/shell/filters';
 import {
   AppIcon,
   lockIcon,
@@ -5,56 +36,30 @@ import {
   thumbsDownIcon,
   thumbsUpIcon,
 } from 'app/shell/icons';
-import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { ItemInfos, getNotes, getTag, tagConfig } from 'app/inventory/dim-item-info';
+import { RootState } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
 import {
   getItemDamageShortName,
-  getItemSpecialtyModSlotDisplayName,
-  getSpecialtySocketMetadata,
+  getItemKillTrackerInfo,
   getItemPowerCapFinalSeason,
+  getItemYear,
   getMasterworkStatNames,
+  getSpecialtySocketMetadata,
+  isD1Item,
+  modMetadataByTag,
 } from 'app/utils/item-utils';
-
-import BungieImage from 'app/dim-ui/BungieImage';
-import { D2EventInfo } from 'data/d2/d2-event-info';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
-import { DimItem, D1Item } from 'app/inventory/item-types';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import ElementIcon from 'app/inventory/ElementIcon';
+import { isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { ItemStatValue } from 'app/item-popup/ItemStat';
-import { Loadout } from 'app/loadout/loadout-types';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
-import PressTip from 'app/dim-ui/PressTip';
-import RatingIcon from 'app/inventory/RatingIcon';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { D2EventInfo } from 'data/d2/d2-event-info';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
-import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
-import { StatInfo } from 'app/compare/Compare';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-import TagIcon from 'app/inventory/TagIcon';
-import { TagValue, DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import _ from 'lodash';
-import clsx from 'clsx';
-import { compareBy } from 'app/utils/comparators';
-import { getRating } from 'app/item-review/reducer';
-import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
-import { source } from 'app/inventory/spreadsheets';
-import { statHashByName } from 'app/search/search-filter-values';
-import { statAllowList } from 'app/inventory/store/stats';
+import { useSelector } from 'react-redux';
 import styles from './ItemTable.m.scss';
-import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
-import { t } from 'app/i18next-t';
-import { percent, getColor } from 'app/shell/filters';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import { isUsedModSocket } from 'app/utils/socket-utils';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import NotesArea from 'app/item-popup/NotesArea';
+import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -76,7 +81,6 @@ export function getColumns(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
-  ratings: { [key: string]: DtrRating },
   wishList: {
     [key: string]: InventoryWishListRoll;
   },
@@ -203,16 +207,11 @@ export function getColumns(
       id: 'icon',
       header: t('Organizer.Columns.Icon'),
       value: (i) => i.icon,
-      cell: (value: string, item) => (
+      cell: (_, item) => (
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
-            <div ref={ref} onClick={onClick} className={styles.itemIcon}>
-              <BungieImage src={value} className={clsx({ [styles.masterwork]: item.masterwork })} />
-              {item.masterwork && (
-                <div
-                  className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })}
-                />
-              )}
+            <div ref={ref} onClick={onClick} className="item">
+              <ItemIcon item={item} className={styles.itemIcon} />
             </div>
           )}
         </ItemPopupTrigger>
@@ -237,7 +236,7 @@ export function getColumns(
       destinyVersion === 2 && {
         id: 'maxpower',
         header: t('Stats.PowerCap'),
-        value: (item) => item.isDestiny2() && item.powerCap,
+        value: (item) => item.powerCap,
         cell: (value, item) =>
           value && (
             <>
@@ -263,7 +262,7 @@ export function getColumns(
       destinyVersion === 2 && {
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
-        value: (item) => item.isDestiny2() && item.energy?.energyCapacity,
+        value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity>=:${value}`,
       },
@@ -311,20 +310,6 @@ export function getColumns(
         filter: (value) =>
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
       },
-    $featureFlags.reviewsEnabled && {
-      id: 'rating',
-      header: t('Organizer.Columns.Rating'),
-      value: (item) => ratings && getRating(item, ratings)?.overallScore,
-      cell: (overallScore: number, item) =>
-        overallScore > 0 ? (
-          <>
-            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-            {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
-          </>
-        ) : undefined,
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `rating:>=${value}`,
-    },
     {
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
@@ -340,24 +325,22 @@ export function getColumns(
     {
       id: 'year',
       header: t('Organizer.Columns.Year'),
-      value: (item) =>
-        item.isDestiny1()
-          ? item.year
-          : item.isDestiny2()
-          ? D2SeasonInfo[item.season].year
-          : undefined,
+      value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
     },
     destinyVersion === 2 && {
       id: 'season',
       header: t('Organizer.Columns.Season'),
-      value: (i) => i.isDestiny2() && i.season,
+      value: (i) => getSeason(i),
       filter: (value) => `season:${value}`,
     },
     destinyVersion === 2 && {
       id: 'event',
       header: t('Organizer.Columns.Event'),
-      value: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : undefined),
+      value: (item) => {
+        const event = getEvent(item);
+        return event ? D2EventInfo[event].name : undefined;
+      },
       filter: (value) => `event:${value}`,
     },
     destinyVersion === 2 &&
@@ -371,9 +354,18 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getItemSpecialtyModSlotDisplayName(item, defs),
+        value: (item) => getSpecialtySocketMetadata(item)?.tag,
         cell: (value, item) =>
-          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
+          value && (
+            <SpecialtyModSlotIcon
+              className={styles.modslotIcon}
+              item={item}
+              showAllSupportedSeasons={true}
+            />
+          ),
+        sort: compareBy((tag) =>
+          typeof tag === 'string' ? modMetadataByTag[tag]?.season ?? 99 : 99
+        ),
         filter: (_, item) => {
           const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
           return `modslot:${modSocketTypeHash?.tag || 'none'}`;
@@ -390,32 +382,31 @@ export function getColumns(
       isWeapon && {
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
-        value: (item) =>
-          item.isDestiny2() ? getWeaponArchetype(item)?.displayProperties.name : undefined,
-        cell: (_val, item) =>
-          item.isDestiny2() ? (
-            <div>
-              {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
-                <PressTip
-                  key={p.plugDef.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk}>
-                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </div>
-                </PressTip>
-              ))}
-            </div>
-          ) : undefined,
+        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        cell: (_val, item) => (
+          <div>
+            {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
+              <PressTip
+                key={p.plugDef.hash}
+                tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+              >
+                <div className={styles.modPerk}>
+                  <div className={styles.miniPerkContainer}>
+                    <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                  </div>{' '}
+                  {p.plugDef.displayProperties.name}
+                </div>
+              </PressTip>
+            ))}
+          </div>
+        ),
         filter: (value) => `perkname:"${value}"`,
       },
     (destinyVersion === 2 || isWeapon) && {
       id: 'breaker',
       header: t('Organizer.Columns.Breaker'),
-      value: (item) => item.isDestiny2() && item.breakerType?.displayProperties.name,
+      value: (item) => item.breakerType?.displayProperties.name,
       cell: (value, item) =>
-        item.isDestiny2() &&
         value && (
           <BungieImage
             className={styles.inlineIcon}
@@ -430,7 +421,7 @@ export function getColumns(
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_, item) =>
-        item.isDestiny1() ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
+        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -452,7 +443,7 @@ export function getColumns(
       isArmor && {
         id: 'quality',
         header: t('Organizer.Columns.Quality'),
-        value: (item) => (item.isDestiny1() && item.quality ? item.quality.min : 0),
+        value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
         cell: (value: number) => <span style={getColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       },
@@ -474,7 +465,7 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
-        value: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : undefined),
+        value: (item) => item.masterworkInfo?.tier,
         defaultSort: SortDirection.DESC,
         filter: (value) => `masterwork:>=${value}`,
       },
@@ -482,30 +473,32 @@ export function getColumns(
       isWeapon && {
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
-        value: (item) =>
-          item.isDestiny2() ? getMasterworkStatNames(item.masterworkInfo) : undefined,
+        value: (item) => getMasterworkStatNames(item.masterworkInfo),
       },
     destinyVersion === 2 &&
       isWeapon && {
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
-        value: (item) =>
-          (item.isDestiny2() &&
-            item.masterworkInfo &&
-            Boolean(item.masterwork || item.masterworkInfo.progress) &&
-            item.masterworkInfo.typeName &&
-            (item.masterworkInfo.progress || 0)) ||
-          undefined,
-        cell: (value, item) =>
-          item.isDestiny2() &&
-          (value || value === 0) && (
-            <div title={item.masterworkInfo!.typeDesc ?? undefined} className={styles.modPerk}>
-              {item.masterworkInfo!.typeIcon && <BungieImage src={item.masterworkInfo!.typeIcon} />}{' '}
-              {value}
-            </div>
-          ),
+        value: (item) => {
+          const killTrackerInfo = getItemKillTrackerInfo(item);
+          return killTrackerInfo?.count;
+        },
+        cell: (_, item) => {
+          const killTrackerInfo = getItemKillTrackerInfo(item);
+          return (
+            killTrackerInfo && (
+              <KillTrackerInfo tracker={killTrackerInfo} defs={defs} className={styles.modPerk} />
+            )
+          );
+        },
         defaultSort: SortDirection.DESC,
       },
+    {
+      id: 'location',
+      header: t('Organizer.Columns.Location'),
+      value: (item) => item.owner,
+      cell: (_, item) => <StoreLocation storeId={item.owner} />,
+    },
     {
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
@@ -554,7 +547,7 @@ function PerksCell({
   item: DimItem;
   traitsOnly?: boolean;
 }) {
-  if (!item.isDestiny2() || !item.sockets) {
+  if (!item.sockets) {
     return null;
   }
 
@@ -564,7 +557,7 @@ function PerksCell({
         s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-        isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
               !s.plugged.plugDef.itemCategoryHashes?.includes(
@@ -594,20 +587,19 @@ function PerksCell({
             [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
           })}
         >
-          {socket.plugOptions.map(
-            (p) =>
-              item.isDestiny2() && (
-                <PressTip
-                  key={p.plugDef.hash}
-                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-                >
-                  <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
-                    <BungieImage src={p.plugDef.displayProperties.icon} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </div>
-                </PressTip>
-              )
-          )}
+          {socket.plugOptions.map((p) => (
+            <PressTip
+              key={p.plugDef.hash}
+              tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+            >
+              <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
+                <div className={styles.miniPerkContainer}>
+                  <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                </div>{' '}
+                {p.plugDef.displayProperties.name}
+              </div>
+            </PressTip>
+          ))}
         </div>
       ))}
     </>
@@ -615,7 +607,7 @@ function PerksCell({
 }
 
 function D1PerksCell({ item }: { item: D1Item }) {
-  if (!item.isDestiny1() || !item.talentGrid) {
+  if (!isD1Item(item) || !item.talentGrid) {
     return null;
   }
   const sockets = Object.values(
@@ -639,7 +631,7 @@ function D1PerksCell({ item }: { item: D1Item }) {
         >
           {socket.map(
             (p) =>
-              item.isDestiny1() && (
+              isD1Item(item) && (
                 <PressTip
                   key={p.hash}
                   tooltip={
@@ -659,5 +651,15 @@ function D1PerksCell({ item }: { item: D1Item }) {
         </div>
       ))}
     </>
+  );
+}
+
+function StoreLocation({ storeId }: { storeId: string }) {
+  const store = useSelector((state: RootState) => getStore(storesSelector(state), storeId)!);
+
+  return (
+    <div className={styles.locationCell}>
+      <img src={store.icon} width="16" height="16" alt="" /> {store.name}
+    </div>
   );
 }

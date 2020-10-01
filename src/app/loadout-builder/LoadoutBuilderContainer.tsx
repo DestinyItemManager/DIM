@@ -1,21 +1,17 @@
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { D2StoresService } from '../inventory/d2-stores';
-import { DimStore } from '../inventory/store-types';
-import { RootState } from 'app/store/types';
-import { sortedStoresSelector } from '../inventory/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { refresh$ } from 'app/shell/refresh';
-import { queueAction } from 'app/inventory/action-queue';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { RouteComponentProps, withRouter, StaticContext } from 'react-router';
+import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout/loadout-types';
-import { useSubscription } from 'app/utils/hooks';
-import LoadoutBuilder from './LoadoutBuilder';
+import { RootState } from 'app/store/types';
 import { Location } from 'history';
+import React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
+import { DestinyAccount } from '../accounts/destiny-account';
+import { sortedStoresSelector } from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import LoadoutBuilder from './LoadoutBuilder';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -46,24 +42,7 @@ function mapStateToProps() {
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 function LoadoutBuilderContainer({ account, stores, defs, location }: Props) {
-  useSubscription(
-    useCallback(
-      () =>
-        D2StoresService.getStoresStream(account).subscribe((stores) => {
-          if (!stores || !stores.length) {
-            return;
-          }
-        }),
-      [account]
-    )
-  );
-
-  useSubscription(
-    useCallback(
-      () => refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
-      []
-    )
-  );
+  useLoadStores(account, stores.length > 0);
 
   if (!stores || !stores.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

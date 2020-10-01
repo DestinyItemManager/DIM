@@ -1,10 +1,10 @@
-import React, { useRef, useCallback } from 'react';
-import { DimItem } from './item-types';
-import { CompareService } from '../compare/compare.service';
-import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
-import { loadoutDialogOpen, addItemToLoadout } from 'app/loadout/LoadoutDrawer';
-import { clearNewItem } from './actions';
+import { addItemToLoadout, loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import React, { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { CompareService } from '../compare/compare.service';
+import { ItemPopupExtraInfo, showItemPopup } from '../item-popup/item-popup';
+import { clearNewItem } from './actions';
+import { DimItem } from './item-types';
 
 interface Props {
   item: DimItem;

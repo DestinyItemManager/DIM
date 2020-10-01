@@ -10,7 +10,7 @@ export enum D2SeasonEnum {
   SHADOWKEEP,
   DAWN,
   WORTHY,
-  REDACTED_11, // TODO: Update on verification
+  ARRIVAL,
   REDACTED_12, // TODO: Update on verification
 
   __LENGTH__, // This always needs to be last
@@ -180,9 +180,9 @@ export const D2SeasonInfo = {
     season: 12,
     year: 4,
     maxLevel: 50,
-    maxPower: 1110, // TODO: Update on verification
+    maxPower: 1260, // TODO: Update on verification
     softCap: 1050, // TODO: Update on verification
-    releaseDate: '2020-09-22',
+    releaseDate: '2020-11-10',
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },

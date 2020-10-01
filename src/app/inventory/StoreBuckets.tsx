@@ -1,11 +1,13 @@
-import React from 'react';
-import { DimStore, DimVault } from './store-types';
-import StoreBucket from './StoreBucket';
-import { InventoryBucket } from './inventory-buckets';
-import clsx from 'clsx';
-import { PullFromPostmaster } from './PullFromPostmaster';
-import { storeBackgroundColor } from '../shell/filters';
+import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
+import clsx from 'clsx';
+import React from 'react';
+import { storeBackgroundColor } from '../shell/filters';
+import { InventoryBucket } from './inventory-buckets';
+import { PullFromPostmaster } from './PullFromPostmaster';
+import { DimStore } from './store-types';
+import StoreBucket from './StoreBucket';
+import { findItemsByBucket } from './stores-helpers';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -13,18 +15,22 @@ export function StoreBuckets({
   stores,
   vault,
   currentStore,
+  labels,
+  isPhonePortrait,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
-  vault: DimVault;
+  vault: DimStore;
   currentStore: DimStore;
+  isPhonePortrait?: boolean;
+  labels?: boolean;
 }) {
   let content: React.ReactNode;
 
   // Don't show buckets with no items
   if (
     (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
-    !stores.some((s) => s.buckets[bucket.hash].length > 0)
+    !stores.some((s) => findItemsByBucket(s, bucket.hash).length > 0)
   ) {
     return null;
   }
@@ -53,17 +59,24 @@ export function StoreBuckets({
         className={clsx('store-cell', {
           vault: store.isVault,
           postmasterFull:
-            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store),
+            bucket.sort === 'Postmaster' &&
+            store.destinyVersion === 2 &&
+            postmasterAlmostFull(store),
         })}
-        style={storeBackgroundColor(store, index)}
+        style={storeBackgroundColor(store, index, false, isPhonePortrait)}
       >
         {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
         {bucket.type === 'LostItems' &&
-          store.isDestiny2() &&
-          store.buckets[bucket.hash].length > 0 && <PullFromPostmaster store={store} />}
+          store.destinyVersion === 2 &&
+          findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
       </div>
     ));
   }
 
-  return <div className={`store-row bucket-${bucket.hash}`}>{content}</div>;
+  return (
+    <div className={`store-row bucket-${bucket.hash}`}>
+      {labels && <BucketLabel bucket={bucket} />}
+      {content}
+    </div>
+  );
 }

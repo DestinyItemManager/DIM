@@ -1,32 +1,36 @@
-import * as actions from './basic-actions';
-import * as settingsActions from '../settings/actions';
-import * as loadoutActions from '../loadout/actions';
-import * as inventoryActions from '../inventory/actions';
-import { clearWishLists } from 'app/wishlists/actions';
-import { ActionType, getType } from 'typesafe-actions';
-import _ from 'lodash';
-import { ProfileUpdateWithRollback, DeleteLoadoutUpdateWithRollback } from './api-types';
-import { initialSettingsState, Settings } from '../settings/initial-settings';
 import {
-  TagValue,
-  GlobalSettings,
   defaultGlobalSettings,
-  ProfileUpdateResult,
-  Loadout,
   DestinyVersion,
-  LoadoutItem,
+  GlobalSettings,
   ItemAnnotation,
-  Search,
   ItemHashTag,
+  Loadout,
+  LoadoutItem,
+  ProfileUpdateResult,
+  Search,
+  TagValue,
 } from '@destinyitemmanager/dim-api-types';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
-import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
+import { searchConfigSelector } from 'app/search/search-config';
+import { validateQuery } from 'app/search/search-utils';
+import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { parseQuery, canonicalizeQuery } from 'app/search/query-parser';
+import { clearWishLists } from 'app/wishlists/actions';
+import produce, { Draft } from 'immer';
+import _ from 'lodash';
+import { ActionType, getType } from 'typesafe-actions';
+import * as inventoryActions from '../inventory/actions';
+import * as loadoutActions from '../loadout/actions';
+import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
+import * as settingsActions from '../settings/actions';
+import { initialSettingsState, Settings } from '../settings/initial-settings';
+import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
+import * as actions from './basic-actions';
+import { makeProfileKey, makeProfileKeyFromAccount } from './selectors';
 
 export interface DimApiState {
-  globalSettings: GlobalSettings & { showIssueBanner: boolean };
+  globalSettings: GlobalSettings;
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
@@ -111,7 +115,7 @@ export const initialState: DimApiState = {
     ...defaultGlobalSettings,
     // 2019-12-17 we've been asked to disable auto-refresh
     autoRefresh: false,
-    showIssueBanner: true,
+    showIssueBanner: false,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
@@ -208,7 +212,7 @@ export const dimApi = (
               [makeProfileKeyFromAccount(account)]: {
                 loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
                 tags: _.keyBy(profileResponse.tags || [], (t) => t.id),
-                triumphs: profileResponse.triumphs || [],
+                triumphs: (profileResponse.triumphs || []).map((t) => parseInt(t.toString(), 10)),
               },
             }
           : state.profiles,
@@ -344,7 +348,7 @@ export const dimApi = (
 
     case getType(actions.saveSearch):
       return produce(state, (draft) => {
-        saveSearch(draft, account!.destinyVersion, action.payload.query, action.payload.saved);
+        saveSearch(account!, draft, action.payload.query, action.payload.saved);
       });
 
     case getType(actions.searchDeleted):
@@ -1012,14 +1016,29 @@ function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, q
 }
 
 function saveSearch(
+  account: DestinyAccount,
   draft: Draft<DimApiState>,
-  destinyVersion: DestinyVersion,
   query: string,
   saved: boolean
 ) {
+  const destinyVersion = account.destinyVersion;
+
+  // Real hack to fake out enough store to select out the search configs
+  const searchConfigs = searchConfigSelector(({
+    accounts: {
+      accounts: [account],
+      currentAccount: 0,
+    },
+  } as any) as RootState);
+
   // Canonicalize the query so we always save it the same way
   try {
-    query = canonicalizeQuery(parseQuery(query));
+    const ast = parseQuery(query);
+    if (!validateQuery(ast, searchConfigs)) {
+      console.error('Query not valid - not saving', query);
+      return;
+    }
+    query = canonicalizeQuery(ast);
   } catch (e) {
     console.error('Query not parseable - not saving', query, e);
     return;
@@ -1064,13 +1083,6 @@ function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion,
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
   // TODO: put things back the way they were
   console.log('TODO: Reversing', draft, update);
-}
-
-export function makeProfileKeyFromAccount(account: DestinyAccount) {
-  return makeProfileKey(account.membershipId, account.destinyVersion);
-}
-export function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
-  return `${platformMembershipId}-d${destinyVersion}`;
 }
 
 export function parseProfileKey(profileKey: string): [string, DestinyVersion] {

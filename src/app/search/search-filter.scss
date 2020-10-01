@@ -18,10 +18,12 @@
   background: #313233;
   padding-left: 5px;
   padding-right: 5px;
-  margin-left: -3px;
   height: 32px;
   border-radius: 4px;
-  min-width: 275px;
+  min-width: 350px;
+  .gradientBackground & {
+    background: rgba(0, 0, 0, 0.4);
+  }
   ::placeholder {
     color: #999;
   }
@@ -35,6 +37,9 @@
   @include phone-portrait {
     width: auto;
     height: 34px;
+    .gradientBackground & {
+      background: #000;
+    }
   }
 
   &:hover,
@@ -63,7 +68,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: $header-height;
     height: $header-height;
     padding-left: constant(safe-area-inset-left);
     padding-left: env(safe-area-inset-left);
@@ -155,14 +160,6 @@
   span,
   a {
     margin: 0 !important;
-  }
-}
-
-.filter-match-count {
-  color: #999;
-
-  @media (max-width: 1000px) {
-    display: none;
   }
 }
 

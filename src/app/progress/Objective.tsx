@@ -1,19 +1,18 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { t } from 'app/i18next-t';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
 import {
+  DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
-  DestinyObjectiveDefinition,
 } from 'bungie-api-ts/destiny2';
-import ObjectiveDescription from './ObjectiveDescription';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
-
 import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import { percent } from '../shell/filters';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import React from 'react';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import '../item-popup/ItemObjectives.scss';
+import { percent } from '../shell/filters';
+import ObjectiveDescription from './ObjectiveDescription';
 
 export default function Objective({
   defs,

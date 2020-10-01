@@ -95,10 +95,6 @@ span:focus {
   outline-width: 0;
 }
 
-#DTRTooltip {
-  display: none;
-}
-
 @keyframes browser-warning {
   to {
     opacity: 0;
@@ -224,12 +220,9 @@ input[type='search'] {
   padding-left: env(safe-area-inset-left);
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
-  &::before {
-    clear: both;
-    content: '';
-    display: table;
-    margin-top: -1px;
-    height: 0;
+  scroll-margin-top: $header-height;
+  .gradientBackground & {
+    padding-top: 12px;
   }
 }
 
@@ -428,5 +421,10 @@ a.dim-button {
     position: fixed;
     will-change: transform;
     z-index: -1;
+  }
+  --inventory-column-padding: 24px;
+  --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+  @include phone-portrait {
+    --inventory-column-padding: 12px;
   }
 }

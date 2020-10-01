@@ -1,26 +1,26 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
+import { compareBy } from 'app/utils/comparators';
 import {
-  DestinyItemComponent,
   DestinyInventoryItemDefinition,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemSocketState,
-  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemPlugBase,
+  DestinyItemSocketEntryDefinition,
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyItemSocketState,
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import {
-  DimSockets,
-  DimSocketCategory,
-  DimSocket,
   DimPlug,
+  DimSocket,
+  DimSocketCategory,
+  DimSockets,
   PluggableInventoryItemDefinition,
 } from '../item-types';
-import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
-import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 //
 // These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
@@ -129,14 +129,14 @@ export function buildInstancedSockets(
     }
 
     categories.push({
-      category: defs.SocketCategory.get(category.socketCategoryHash),
+      category: defs.SocketCategory.get(category.socketCategoryHash, itemDef),
       sockets,
     });
   }
 
   return {
     allSockets: _.compact(realSockets), // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category?.index)), // Sockets organized by category
   };
 }
 

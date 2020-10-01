@@ -1,37 +1,39 @@
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import React, { useMemo, useRef } from 'react';
-import { connect } from 'react-redux';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import CharacterSelect from '../dim-ui/CharacterSelect';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { Loadout } from 'app/loadout/loadout-types';
+import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { loadoutsSelector } from 'app/loadout/selectors';
+import { ItemFilter } from 'app/search/filter-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import React, { useMemo, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { createSelector } from 'reselect';
+import CharacterSelect from '../dim-ui/CharacterSelect';
+import { allItemsSelector } from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import FilterBuilds from './filter/FilterBuilds';
+import LockArmorAndPerks from './filter/LockArmorAndPerks';
+import ModPicker from './filter/ModPicker';
+import PerkPicker from './filter/PerkPicker';
+import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
-import { isLoadoutBuilderItem } from './utils';
-import { filterItems } from './preProcessFilter';
-import { StatTypes, ItemsByBucket, statKeys, statHashToType } from './types';
-import { storesSelector } from '../inventory/selectors';
-import { createSelector } from 'reselect';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import FilterBuilds from './filter/FilterBuilds';
-import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { searchFilterSelector } from 'app/search/search-filter';
-import styles from './LoadoutBuilder.m.scss';
-import LockArmorAndPerks from './filter/LockArmorAndPerks';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { DimItem } from 'app/inventory/item-types';
 import { useProcess } from './hooks/useProcess';
-import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { Loadout } from 'app/loadout/loadout-types';
+import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
-import { settingsSelector } from 'app/settings/reducer';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import ModPicker from './filter/ModPicker';
-import ReactDOM from 'react-dom';
-import PerkPicker from './filter/PerkPicker';
+import { filterItems } from './preProcessFilter';
+import { ItemsByBucket, statHashToType, statKeys, StatTypes } from './types';
+import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -49,38 +51,37 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  filter(item: DimItem): boolean;
+  loadouts: Loadout[];
+  filter: ItemFilter;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     (
-      stores
+      allItems
     ): Readonly<{
       [classType: number]: ItemsByBucket;
     }> => {
       const items: {
         [classType: number]: { [bucketHash: number]: DimItem[] };
       } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
-            continue;
+      for (const item of allItems) {
+        if (!item || !isLoadoutBuilderItem(item)) {
+          continue;
+        }
+        for (const classType of item.classType === DestinyClass.Unknown
+          ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+          : [item.classType]) {
+          if (!items[classType]) {
+            items[classType] = {};
           }
-          for (const classType of item.classType === DestinyClass.Unknown
-            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
-            : [item.classType]) {
-            if (!items[classType]) {
-              items[classType] = {};
-            }
-            if (!items[classType][item.bucket.hash]) {
-              items[classType][item.bucket.hash] = [];
-            }
-            items[classType][item.bucket.hash].push(item);
+          if (!items[classType][item.bucket.hash]) {
+            items[classType][item.bucket.hash] = [];
           }
+          items[classType][item.bucket.hash].push(item);
         }
       }
 
@@ -102,6 +103,7 @@ function mapStateToProps() {
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
+      loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
     };
   };
@@ -119,18 +121,19 @@ function LoadoutBuilder({
   isPhonePortrait,
   items,
   defs,
+  loadouts,
   filter,
   preloadedLoadout,
 }: Props) {
   const [
     {
       lockedMap,
-      lockedSeasonalMods,
       lockedArmor2Mods,
       selectedStoreId,
       statFilters,
       modPicker,
       perkPicker,
+      compareSet,
     },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
@@ -160,7 +163,6 @@ function LoadoutBuilder({
   const { result, processing } = useProcess(
     filteredItems,
     lockedMap,
-    lockedSeasonalMods,
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
@@ -170,11 +172,14 @@ function LoadoutBuilder({
 
   const combos = result?.combos || 0;
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
+  const sets = result?.sets;
 
-  const filteredSets = useMemo(
-    () => sortGeneratedSets(lockedMap, statOrder, enabledStats, result?.sets),
-    [lockedMap, statOrder, enabledStats, result?.sets]
-  );
+  const filteredSets = useMemo(() => sortGeneratedSets(lockedMap, statOrder, enabledStats, sets), [
+    lockedMap,
+    statOrder,
+    enabledStats,
+    sets,
+  ]);
 
   const loadingNodeRef = useRef<HTMLDivElement>(null);
 
@@ -187,7 +192,7 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore as D2Store}
+        selectedStore={selectedStore}
         minimumPower={minimumPower}
         minimumStatTotal={minimumStatTotal}
         stats={statFilters}
@@ -202,7 +207,6 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedSeasonalMods={lockedSeasonalMods}
         lockedArmor2Mods={lockedArmor2Mods}
         lbDispatch={lbDispatch}
       />
@@ -261,7 +265,7 @@ function LoadoutBuilder({
             statOrder={statOrder}
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
-            lockedSeasonalMods={lockedSeasonalMods}
+            loadouts={loadouts}
           />
         )}
         {modPicker.open &&
@@ -281,10 +285,24 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               items={filteredItems}
               lockedMap={lockedMap}
-              lockedSeasonalMods={lockedSeasonalMods}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
               lbDispatch={lbDispatch}
+            />,
+            document.body
+          )}
+        {compareSet &&
+          ReactDOM.createPortal(
+            <CompareDrawer
+              set={compareSet}
+              loadouts={loadouts}
+              lockedArmor2Mods={lockedArmor2Mods}
+              defs={defs}
+              classType={selectedStore.classType}
+              statOrder={statOrder}
+              enabledStats={enabledStats}
+              assumeMasterwork={assumeMasterwork}
+              onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
           )}

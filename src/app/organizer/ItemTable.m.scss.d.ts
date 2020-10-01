@@ -6,7 +6,6 @@ interface CssExports {
   'customstat': string;
   'dmg': string;
   'energy': string;
-  'exotic': string;
   'guideLink': string;
   'hasFilter': string;
   'header': string;
@@ -16,9 +15,9 @@ interface CssExports {
   'isPerk': string;
   'itemIcon': string;
   'loadouts': string;
+  'locationCell': string;
   'locked': string;
-  'masterwork': string;
-  'masterworkOverlay': string;
+  'miniPerkContainer': string;
   'modPerk': string;
   'modPerks': string;
   'modslot': string;

@@ -175,3 +175,12 @@
   animation: 0.25s linear 2 alternate pop;
   z-index: 1;
 }
+
+.horizontal {
+  display: inline-block;
+  margin-right: 5px;
+  cursor: default;
+  input {
+    vertical-align: middle;
+  }
+}

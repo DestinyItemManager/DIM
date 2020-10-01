@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
-import styles from './LockButton.m.scss';
-import clsx from 'clsx';
-import { lockIcon, unlockedIcon, AppIcon, trackedIcon, unTrackedIcon } from '../shell/icons';
 import { setItemLockState } from 'app/inventory/item-move-service';
-import { touchItem } from 'app/inventory/actions';
+import { ThunkDispatchProp } from 'app/store/types';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { DimItem } from '../inventory/item-types';
+import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
+import styles from './LockButton.m.scss';
 
 interface Props {
   item: DimItem;
   type: 'lock' | 'track';
+  children?: React.ReactNode;
+  className?: string;
 }
 
-export default function LockButton({ type, item }: Props) {
+export default function LockButton({ type, item, className, children }: Props) {
   const [locking, setLocking] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   const lockUnlock = async () => {
     if (locking) {
@@ -32,28 +34,13 @@ export default function LockButton({ type, item }: Props) {
     }
 
     try {
-      await setItemLockState(item, state, type);
-      if (type === 'lock') {
-        item.locked = state;
-      } else if (type === 'track') {
-        item.tracked = state;
-      }
+      await dispatch(setItemLockState(item, state, type));
     } finally {
       setLocking(false);
-      dispatch(touchItem(item.id));
     }
   };
 
-  const data = { itemType: item.typeName };
-
-  const title =
-    type === 'lock'
-      ? !item.locked
-        ? t('MovePopup.LockUnlock.Lock', data)
-        : t('MovePopup.LockUnlock.Unlock', data)
-      : !item.tracked
-      ? t('MovePopup.TrackUntrack.Track', data)
-      : t('MovePopup.TrackUntrack.Untrack', data);
+  const title = lockButtonTitle(item, type);
 
   const icon =
     type === 'lock'
@@ -64,9 +51,28 @@ export default function LockButton({ type, item }: Props) {
       ? trackedIcon
       : unTrackedIcon;
 
+  const iconElem = <AppIcon className={clsx({ [styles.inProgress]: locking })} icon={icon} />;
+
   return (
-    <div onClick={lockUnlock} title={title}>
-      <AppIcon className={clsx({ [styles.inProgress]: locking })} icon={icon} />
+    <div onClick={lockUnlock} title={title} className={className}>
+      {children ? (
+        <>
+          {iconElem} {children}
+        </>
+      ) : (
+        iconElem
+      )}
     </div>
   );
+}
+
+export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
+  const data = { itemType: item.typeName };
+  return type === 'lock'
+    ? !item.locked
+      ? t('MovePopup.LockUnlock.Lock', data)
+      : t('MovePopup.LockUnlock.Unlock', data)
+    : !item.tracked
+    ? t('MovePopup.TrackUntrack.Track', data)
+    : t('MovePopup.TrackUntrack.Untrack', data);
 }

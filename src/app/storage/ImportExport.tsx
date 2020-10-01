@@ -1,12 +1,10 @@
-import React from 'react';
-import './storage.scss';
+import { ExportResponse } from '@destinyitemmanager/dim-api-types';
+import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
-import FileUpload from 'app/dim-ui/FileUpload';
+import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
-import _ from 'lodash';
-import { ExportResponse } from '@destinyitemmanager/dim-api-types';
-import { DimData } from './sync.service';
+import './storage.scss';
 
 declare global {
   interface Window {
@@ -22,7 +20,7 @@ export default function ImportExport({
   onImportData,
 }: {
   onExportData(): void;
-  onImportData(data: DimData | ExportResponse): Promise<any>;
+  onImportData(data: ExportResponse): Promise<any>;
 }) {
   if (!supportsExport) {
     return null;

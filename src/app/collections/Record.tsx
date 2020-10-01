@@ -1,30 +1,37 @@
-import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { trackTriumph } from 'app/dim-api/basic-actions';
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
+import { Reward } from 'app/progress/Reward';
+import { percent } from 'app/shell/filters';
+import { RootState } from 'app/store/types';
 import {
-  DestinyProfileResponse,
-  DestinyScope,
+  DestinyObjectiveProgress,
+  DestinyRecordComponent,
   DestinyRecordDefinition,
   DestinyRecordState,
-  DestinyRecordComponent,
   DestinyUnlockValueUIStyle,
-  DestinyObjectiveProgress,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import './Record.scss';
-import Objective from '../progress/Objective';
-import BungieImage from '../dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
-import ishtarIcon from '../../images/ishtar-collective.svg';
-import ExternalLink from '../dim-ui/ExternalLink';
-import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
-import { percent } from 'app/shell/filters';
+import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
+import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import pursuitExpired from 'images/pursuitExpired.svg';
+import trackedIcon from 'images/trackedIcon.svg';
 import _ from 'lodash';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ishtarIcon from '../../images/ishtar-collective.svg';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import BungieImage from '../dim-ui/BungieImage';
+import ExternalLink from '../dim-ui/ExternalLink';
+import Objective from '../progress/Objective';
+import { DimRecord } from './presentation-nodes';
+import styles from './Record.m.scss';
 
 interface Props {
-  recordHash: number;
+  record: DimRecord;
   defs: D2ManifestDefinitions;
-  profileResponse: DestinyProfileResponse;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }
@@ -39,30 +46,26 @@ interface RecordInterval {
 const overrideIcons = Object.keys(catalystIcons).map(Number);
 
 export default function Record({
-  recordHash,
+  record,
   defs,
-  profileResponse,
   completedRecordsHidden,
   redactedRecordsRevealed,
 }: Props) {
-  const recordDef = defs.Record.get(recordHash);
-  if (!recordDef) {
-    return null;
-  }
-  const record = getRecordComponent(recordDef, profileResponse);
+  const { recordDef, trackedInGame, recordComponent } = record;
+  const state = recordComponent.state;
+  const recordHash = recordDef.hash;
+  const dispatch = useDispatch();
 
-  if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
-    return null;
-  }
-
-  const acquired = Boolean(record.state & DestinyRecordState.RecordRedeemed);
-  const unlocked = !acquired && !(record.state & DestinyRecordState.ObjectiveNotCompleted);
+  const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
+  const unlocked = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
   const obscured =
     !redactedRecordsRevealed &&
     !unlocked &&
     !acquired &&
-    Boolean(record.state & DestinyRecordState.Obscured);
-  const tracked = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
+    Boolean(state & DestinyRecordState.Obscured);
+  const trackedInDim = useSelector((state: RootState) =>
+    trackedTriumphsSelector(state).includes(recordHash)
+  );
   const loreLink =
     !obscured &&
     recordDef.loreHash &&
@@ -81,15 +84,15 @@ export default function Record({
     return null;
   }
 
-  const intervals = getIntervals(recordDef, record);
+  const intervals = getIntervals(recordDef, recordComponent);
   const intervalBarStyle = {
     width: `calc((100% / ${intervals.length}) - 2px)`,
   };
   const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
   const intervalProgressBar = !obscured && intervals.length > 0 && (
     <div
-      className={clsx('record-interval-container', {
-        complete: allIntervalsCompleted,
+      className={clsx(styles.intervalContainer, {
+        [styles.complete]: allIntervalsCompleted,
       })}
     >
       {!allIntervalsCompleted &&
@@ -99,15 +102,15 @@ export default function Record({
           return (
             <div
               key={i.objective.objectiveHash}
-              className={clsx('record-interval', {
-                redeemed,
-                unlocked: unlocked && !redeemed,
+              className={clsx(styles.interval, {
+                [styles.intervalRedeemed]: redeemed,
+                [styles.intervalRedeemed]: unlocked && !redeemed,
               })}
               style={intervalBarStyle}
             >
               {!(redeemed || unlocked) && (
                 <div
-                  className="record-interval unlocked"
+                  className={clsx(styles.interval, styles.intervalUnlocked)}
                   style={{ width: percent(i.percentCompleted) }}
                 />
               )}
@@ -119,11 +122,14 @@ export default function Record({
 
   let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
   if (intervals.length > 1) {
-    const currentScore = _.sumBy(_.take(intervals, record.intervalsRedeemedCount), (i) => i.score);
+    const currentScore = _.sumBy(
+      _.take(intervals, recordComponent.intervalsRedeemedCount),
+      (i) => i.score
+    );
     const totalScore = _.sumBy(intervals, (i) => i.score);
     scoreValue = (
       <>
-        <span className="current">{currentScore}</span> /{' '}
+        <span className={styles.currentScore}>{currentScore}</span> /{' '}
         {t('Progress.RecordValue', { value: totalScore })}
       </>
     );
@@ -131,8 +137,11 @@ export default function Record({
 
   const objectives =
     intervals.length > 0
-      ? [intervals[Math.min(record.intervalsRedeemedCount, intervals.length - 1)].objective]
-      : record.objectives;
+      ? [
+          intervals[Math.min(recordComponent.intervalsRedeemedCount, intervals.length - 1)]
+            .objective,
+        ]
+      : recordComponent.objectives;
   const showObjectives =
     !obscured &&
     objectives &&
@@ -145,54 +154,67 @@ export default function Record({
             !defs.Objective.get(objectives[0].objectiveHash).allowOvercompletion)
         )));
 
+  // TODO: show track badge greyed out / on hover
+  // TODO: track on click
+  const toggleTracked = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch(trackTriumph({ recordHash, tracked: !trackedInDim }));
+  };
+
+  const legacy = legacyTriumphHashes.includes(recordHash);
+
   return (
     <div
-      className={clsx('triumph-record', {
-        redeemed: acquired,
-        unlocked,
-        obscured,
-        tracked,
-        multistep: intervals.length > 0,
+      className={clsx(styles.triumphRecord, {
+        [styles.redeemed]: acquired,
+        [styles.unlocked]: unlocked,
+        [styles.obscured]: obscured,
+        [styles.tracked]: trackedInGame,
+        [styles.trackedInDim]: trackedInDim,
+        [styles.multistep]: intervals.length > 0,
       })}
     >
-      {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
-      <div className="record-info">
-        {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
+      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      <div className={styles.info}>
+        {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
         {description && <p>{description}</p>}
         {showObjectives && (
-          <div className="record-objectives">
+          <div className={styles.objectives}>
             {objectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
             ))}
           </div>
         )}
         {loreLink && (
-          <div className="record-lore">
+          <div className={styles.recordLore}>
             <ExternalLink href={loreLink}>
               <img src={ishtarIcon} height="16" width="16" />
             </ExternalLink>
             <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
           </div>
         )}
-        {tracked && <img className="trackedIcon" src={trackedIcon} />}
+        {recordDef.rewardItems?.length > 0 &&
+          !acquired &&
+          !obscured &&
+          recordDef.rewardItems.map((reward) => (
+            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
+        {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
+        {(!acquired || trackedInDim) && (
+          <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
+            <img src={dimTrackedIcon} />
+          </div>
+        )}
       </div>
       {intervalProgressBar}
+      {legacy && (
+        <PressTip tooltip={t('Progress.LegacyRecord')} className={styles.legacyRecord}>
+          <img src={pursuitExpired} />
+        </PressTip>
+      )}
     </div>
   );
-}
-
-export function getRecordComponent(
-  recordDef: DestinyRecordDefinition,
-  profileResponse: DestinyProfileResponse
-): DestinyRecordComponent | undefined {
-  return recordDef.scope === DestinyScope.Character
-    ? profileResponse.characterRecords.data
-      ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
-      : undefined
-    : profileResponse.profileRecords.data
-    ? profileResponse.profileRecords.data.records[recordDef.hash]
-    : undefined;
 }
 
 function getIntervals(

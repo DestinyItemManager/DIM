@@ -1,10 +1,10 @@
-import { buildSearchConfig } from './search-config';
+import { Search } from '@destinyitemmanager/dim-api-types';
 import {
-  makeFilterComplete,
   autocompleteTermSuggestions,
   filterSortRecentSearches,
+  makeFilterComplete,
 } from './autocomplete';
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { buildSearchConfig } from './search-config';
 
 describe('autocompleteTermSuggestions', () => {
   const searchConfig = buildSearchConfig(2);
@@ -19,7 +19,12 @@ describe('autocompleteTermSuggestions', () => {
   test.each(cases)(
     'autocomplete within query for |%s| with caret at position %d',
     (query: string, caretIndex: number) => {
-      const candidates = autocompleteTermSuggestions(query, caretIndex, filterComplete);
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        filterComplete,
+        searchConfig
+      );
       expect(candidates).toMatchSnapshot();
     }
   );
@@ -83,7 +88,7 @@ describe('filterComplete', () => {
   const searchConfig = buildSearchConfig(2);
   const filterComplete = makeFilterComplete(searchConfig);
 
-  const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:']];
+  const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];
 
   test.each(terms)('autocomplete terms for |%s|', (term) => {
     const candidates = filterComplete(term);

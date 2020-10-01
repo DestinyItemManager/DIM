@@ -5,7 +5,6 @@ interface CssExports {
   'destiny2': string;
   'infusePerk': string;
   'interaction': string;
-  'interactionV': string;
   'moveConsolidate': string;
   'moveDistribute': string;
   'weapons': string;

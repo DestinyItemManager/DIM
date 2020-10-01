@@ -1,30 +1,32 @@
-import React from 'react';
-import { DimItem } from '../inventory/item-types';
-import { t } from 'app/i18next-t';
-import BungieImage from '../dim-ui/BungieImage';
-import EnergyMeter from './EnergyMeter';
-import ItemSockets from './ItemSockets';
-import { ItemPopupExtraInfo } from './item-popup';
-import ItemStats from './ItemStats';
-import ItemTalentGrid from './ItemTalentGrid';
-import { AppIcon, faCheck } from '../shell/icons';
-import ItemDescription from './ItemDescription';
-import ItemExpiration from './ItemExpiration';
-import { Reward } from 'app/progress/Reward';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { RootState } from 'app/store/types';
-import { connect } from 'react-redux';
-import { ActivityModifier } from 'app/progress/ActivityModifier';
-import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import modificationIcon from 'destiny-icons/general/modifications.svg';
-import MetricCategories from './MetricCategories';
-import EmblemPreview from './EmblemPreview';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
+import { t } from 'app/i18next-t';
+import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
-import { Link, useParams } from 'react-router-dom';
+import { Reward } from 'app/progress/Reward';
+import { RootState } from 'app/store/types';
+import { getItemKillTrackerInfo } from 'app/utils/item-utils';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import modificationIcon from 'destiny-icons/general/modifications.svg';
+import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import BungieImage from '../dim-ui/BungieImage';
+import { DimItem } from '../inventory/item-types';
+import { AppIcon, faCheck } from '../shell/icons';
+import EmblemPreview from './EmblemPreview';
+import EnergyMeter from './EnergyMeter';
+import { ItemPopupExtraInfo } from './item-popup';
+import ItemDescription from './ItemDescription';
+import ItemExpiration from './ItemExpiration';
+import ItemSockets from './ItemSockets';
+import ItemStats from './ItemStats';
+import ItemTalentGrid from './ItemTalentGrid';
+import MetricCategories from './MetricCategories';
 
 interface ProvidedProps {
   item: DimItem;
@@ -58,6 +60,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
 
+  const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -68,9 +71,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {!item.stats && item.isDestiny2() && item.collectibleHash !== null && isD2Manifest(defs) && (
+      {!item.stats && Boolean(item.collectibleHash) && isD2Manifest(defs) && (
         <div className="item-details">
-          {defs.Collectible.get(item.collectibleHash).sourceString}
+          {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
 
@@ -89,23 +92,14 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() &&
-        item.masterworkInfo &&
-        Boolean(item.masterwork || item.masterworkInfo.progress) &&
-        item.masterworkInfo.typeName && (
-          <div className="masterwork-progress">
-            {item.masterworkInfo.typeIcon && (
-              <BungieImage
-                src={item.masterworkInfo.typeIcon}
-                title={item.masterworkInfo.typeName || undefined}
-              />
-            )}{' '}
-            <span>
-              {item.masterworkInfo.typeDesc}{' '}
-              <strong>{(item.masterworkInfo.progress || 0).toLocaleString()}</strong>
-            </span>
-          </div>
-        )}
+      {killTrackerInfo && isD2Manifest(defs) && (
+        <KillTrackerInfo
+          tracker={killTrackerInfo}
+          defs={defs}
+          textLabel={true}
+          className="masterwork-progress"
+        />
+      )}
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
@@ -121,10 +115,8 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {item.isDestiny2() && isD2Manifest(defs) && item.energy && defs && (
-        <EnergyMeter item={item} defs={defs} />
-      )}
-      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
+      {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
+      {item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
         <div className="item-details item-perks">
@@ -148,19 +140,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {item.isDestiny2() && item.flavorObjective && (
-        <div className="item-details">
-          <div className="flavor-objective">
-            <BungieImage src={item.flavorObjective.icon} />
-            <span>
-              {' '}
-              {item.flavorObjective.progress} {'//'} {item.flavorObjective.description}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
+      {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <Link
             to={`/${urlParams.membershipId}/d${urlParams.destinyVersion}/vendors/${item.previewVendor}`}
@@ -170,48 +150,25 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.rewards.length !== 0 && (
-          <div className="item-details">
-            <div>{t('MovePopup.Rewards')}</div>
-            {item.pursuit.rewards.map((reward) => (
-              <Reward key={reward.itemHash} reward={reward} defs={defs} />
-            ))}
-          </div>
-        )}
-
-      {isD2Manifest(defs) &&
-        item.isDestiny2() &&
-        item.pursuit &&
-        item.pursuit.modifierHashes.length !== 0 && (
-          <div className="item-details">
-            {item.pursuit.modifierHashes.map((modifierHash) => (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
-            ))}
-          </div>
-        )}
-
-      {!extraInfo.mod && extraInfo.collectible && (
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
-          <div>{extraInfo.collectible.sourceString}</div>
-          {extraInfo.owned && (
-            <div>
-              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
-            </div>
-          )}
-          {extraInfo.acquired && (
-            <div>
-              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
-            </div>
-          )}
+          <div>{t('MovePopup.Rewards')}</div>
+          {item.pursuit.rewards.map((reward) => (
+            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
         </div>
       )}
 
-      {extraInfo.mod && (
+      {isD2Manifest(defs) && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+        <div className="item-details">
+          {item.pursuit.modifierHashes.map((modifierHash) => (
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+          ))}
+        </div>
+      )}
+
+      {extraInfo.mod ? (
         <div className="item-details mods">
-          {extraInfo.collectible && <div>{extraInfo.collectible.sourceString}</div>}
           {extraInfo.owned && (
             <div>
               <img className="owned-icon" src={modificationIcon} /> {t('MovePopup.OwnedMod')}
@@ -220,6 +177,19 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           {extraInfo.acquired && (
             <div>
               <img className="acquired-icon" src={modTypeIcon} /> {t('MovePopup.AcquiredMod')}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="item-details">
+          {extraInfo.owned && (
+            <div>
+              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
+            </div>
+          )}
+          {extraInfo.acquired && (
+            <div>
+              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
             </div>
           )}
         </div>

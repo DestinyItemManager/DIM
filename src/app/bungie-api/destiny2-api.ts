@@ -29,7 +29,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { reportException } from '../utils/exceptions';
@@ -67,9 +66,11 @@ export async function getLinkedAccounts(
 /**
  * Get the user's stores on this platform. This includes characters, vault, and item information.
  */
-export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
+export function getStores(
+  platform: DestinyAccount,
+  components?: DestinyComponentType[]
+): Promise<DestinyProfileResponse> {
+  const defaultComponents = [
     DestinyComponentType.Profiles,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
@@ -91,8 +92,10 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemPlugObjectives,
     // TODO: we should defer this unless you're on the collections screen
     DestinyComponentType.Records,
-    DestinyComponentType.Metrics
-  );
+    DestinyComponentType.Metrics,
+  ];
+
+  return getProfile(platform, ...(components || defaultComponents));
 }
 
 /**
@@ -220,14 +223,14 @@ export async function getVendorsMinimal(
  * Transfer an item to another store.
  */
 export async function transfer(
+  account: DestinyAccount,
   item: DimItem,
   store: DimStore,
   amount: number
 ): Promise<ServerResponse<number>> {
-  const platform = getActivePlatform();
   const request = {
     characterId: store.isVault || item.location.inPostmaster ? item.owner : store.id,
-    membershipType: platform!.originalPlatformType,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
@@ -238,15 +241,13 @@ export async function transfer(
     ? pullFromPostmaster(authenticatedHttpClient, request)
     : transferItem(authenticatedHttpClient, request);
   try {
-    return response;
+    return await response;
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
   }
 }
 
-export function equip(item: DimItem): Promise<ServerResponse<number>> {
-  const platform = getActivePlatform();
-
+export function equip(account: DestinyAccount, item: DimItem): Promise<ServerResponse<number>> {
   if (item.owner === 'vault') {
     // TODO: trying to track down https://sentry.io/destiny-item-manager/dim/issues/541412672/?query=is:unresolved
     console.error('Cannot equip to vault!');
@@ -256,7 +257,7 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
 
   return equipItem(authenticatedHttpClient, {
     characterId: item.owner,
-    membershipType: platform!.originalPlatformType,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
   });
 }
@@ -265,15 +266,18 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
  * Equip multiple items at once.
  * @returns a list of items that were successfully equipped
  */
-export async function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
+export async function equipItems(
+  account: DestinyAccount,
+  store: DimStore,
+  items: DimItem[]
+): Promise<DimItem[]> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
-  const platform = getActivePlatform();
   const response = await equipItemsApi(authenticatedHttpClient, {
     characterId: store.id,
-    membershipType: platform!.originalPlatformType,
+    membershipType: account.originalPlatformType,
     itemIds: items.map((i) => i.id),
   });
   const data: DestinyEquipItemResults = response.Response;
@@ -287,15 +291,14 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
  * Set the lock state of an item.
  */
 export function setLockState(
-  store: DimStore,
+  account: DestinyAccount,
+  storeId: string,
   item: DimItem,
   lockState: boolean
 ): Promise<ServerResponse<number>> {
-  const account = getActivePlatform();
-
   return setItemLockState(authenticatedHttpClient, {
-    characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.originalPlatformType,
+    characterId: storeId,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
     state: lockState,
   });
@@ -305,19 +308,18 @@ export function setLockState(
  * Set the tracked state of an item.
  */
 export function setTrackedState(
-  store: DimStore,
+  account: DestinyAccount,
+  storeId: string,
   item: DimItem,
   trackedState: boolean
 ): Promise<ServerResponse<number>> {
-  const account = getActivePlatform();
-
   if (item.id === '0') {
     throw new Error("Can't track non-instanced items");
   }
 
   return setQuestTrackedState(authenticatedHttpClient, {
-    characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.originalPlatformType,
+    characterId: storeId,
+    membershipType: account.originalPlatformType,
     itemId: item.id,
     state: trackedState,
   });

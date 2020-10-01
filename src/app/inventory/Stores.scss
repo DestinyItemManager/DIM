@@ -20,6 +20,10 @@
   );
   @include phone-portrait {
     min-width: auto;
+    // Give room for the category selector strip (height 53px)
+    padding-bottom: 53px + 10px;
+    padding-bottom: calc(53px + 10px + constant(safe-area-inset-bottom));
+    padding-bottom: calc(53px + 10px + env(safe-area-inset-bottom));
   }
 
   .body-scroll-lock & {
@@ -42,6 +46,23 @@
   @include phone-portrait {
     // Full-width, single column
     grid-template-columns: 1fr;
+
+    .bucket-label {
+      opacity: 0.8;
+      margin: 0;
+      z-index: inherit;
+      background: none; // comment out to add background background
+      flex-direction: row !important;
+
+      a {
+        text-decoration: none;
+        font-size: 0.8em;
+        opacity: 0.8;
+        span {
+          margin-right: 2px;
+        }
+      }
+    }
   }
 }
 
@@ -54,6 +75,9 @@
   &.vault {
     min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
     background: rgba(0, 0, 0, 0.12);
+    .gradientBackground & {
+      background: transparent;
+    }
     .phone-portrait & {
       background: transparent;
     }
@@ -94,6 +118,9 @@
       grid-template-columns: repeat(10, 1fr);
       gap: 0;
       padding: 4px 0 0 0;
+      @include phone-portrait {
+        padding: 4px 0;
+      }
     }
 
     .item-drag-container,
@@ -103,6 +130,11 @@
         --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
     }
+  }
+
+  .item-drag-container.touch-active {
+    opacity: 0.5;
+    transition: opacity 150ms ease-in 50ms; // delay <= to delayTouchStart in Root.tsx
   }
 
   .item-type-Engrams.item-drag-container:hover {
@@ -124,7 +156,7 @@
   }
 
   // Subclasses
-  .bucket-3284755031 & {
+  .destiny2 .bucket-3284755031 & {
     // hide normal "equipped" effects
     .equipped-item {
       border: $item-border-width solid transparent;
@@ -230,5 +262,35 @@
   background-color: black;
   &:hover {
     background-color: #666;
+  }
+}
+
+.category-options {
+  display: flex;
+  background-color: black;
+  position: fixed;
+  align-items: center;
+  bottom: 0;
+  top: inherit;
+  left: 0;
+  right: 0;
+  $vpadding: 15px;
+  justify-content: space-around;
+  padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
+  padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    border-bottom: 2px solid transparent;
+    padding: $vpadding 0 5px;
+  }
+  .selected {
+    color: $orange;
+    border-bottom: 2px solid $orange;
   }
 }

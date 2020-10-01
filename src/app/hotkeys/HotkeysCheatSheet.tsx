@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-
-import './HotkeysCheatSheet.scss';
 import { t } from 'app/i18next-t';
-import hotkeys from './hotkeys';
 import _ from 'lodash';
+import React, { useState } from 'react';
 import GlobalHotkeys from './GlobalHotkeys';
+import hotkeys from './hotkeys';
+import './HotkeysCheatSheet.scss';
 import { useHotkey } from './useHotkey';
 
 export default function HotkeysCheatSheet() {

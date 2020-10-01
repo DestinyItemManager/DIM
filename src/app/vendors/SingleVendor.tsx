@@ -1,35 +1,36 @@
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ErrorPanel from 'app/shell/ErrorPanel';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
-import VendorItems from './VendorItems';
-import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh';
+import { mergeCollectibles } from '../inventory/d2-stores';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { connect } from 'react-redux';
 import {
-  storesSelector,
+  bucketsSelector,
   ownedItemsSelector,
   profileResponseSelector,
-  bucketsSelector,
+  storesSelector,
 } from '../inventory/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DimStore } from '../inventory/store-types';
+import { loadingTracker } from '../shell/loading-tracker';
+import { refresh$ } from '../shell/refresh';
+import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
+import type { VendorsState } from './reducer';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { useLocation } from 'react-router';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { t } from 'app/i18next-t';
-import { useSubscription } from 'app/utils/hooks';
-import clsx from 'clsx';
-import { VendorsState } from './reducer';
-import { loadAllVendors } from './actions';
-import ErrorPanel from 'app/shell/ErrorPanel';
+import VendorItems from './VendorItems';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -77,12 +78,13 @@ function SingleVendor({
 
   // TODO: get for all characters, or let people select a character? This is a hack
   // we at least need to display that character!
-  let characterId = new URL(search).searchParams.get('characterId')!;
+  const characterId =
+    (search && new URLSearchParams(search).get('characterId')) ||
+    (stores.length && getCurrentStore(stores)?.id);
   if (!characterId) {
-    if (stores.length) {
-      characterId = getCurrentStore(stores)!.id;
-    }
+    throw new Error('no characters chosen or found to use for vendor API call');
   }
+
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
 
@@ -100,9 +102,7 @@ function SingleVendor({
     }
   }, [account, characterId, defs, dispatch, vendorHash]);
 
-  useEffect(() => {
-    D2StoresService.getStoresStream(account);
-  }, [account]);
+  useLoadStores(account, stores.length > 0);
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;

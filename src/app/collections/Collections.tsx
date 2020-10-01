@@ -1,23 +1,33 @@
+import { settingsSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
+import CheckButton from 'app/dim-ui/CheckButton';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
+import { ItemFilter } from 'app/search/filter-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { setSetting } from 'app/settings/actions';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React, { useEffect } from 'react';
-import _ from 'lodash';
+import React from 'react';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import './collections.scss';
-import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores';
-import Catalysts from './Catalysts';
-import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { RootState } from 'app/store/types';
-import { createSelector } from 'reselect';
-import { storesSelector, profileResponseSelector, bucketsSelector } from '../inventory/selectors';
-import { refresh$ } from '../shell/refresh';
+import {
+  bucketsSelector,
+  ownedItemsSelector,
+  profileResponseSelector,
+} from '../inventory/selectors';
+import Catalysts from './Catalysts';
+import './collections.scss';
+import LegacyTriumphs from './LegacyTriumphs';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import { useSubscription } from 'app/utils/hooks';
-import { useParams } from 'react-router';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -28,47 +38,55 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
+  searchQuery?: string;
+  isPhonePortrait: boolean;
+  trackedTriumphs: number[];
+  completedRecordsHidden: boolean;
+  redactedRecordsRevealed: boolean;
+  searchFilter?: ItemFilter;
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
-  const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
-    const ownedItemHashes = new Set<number>();
-    if (stores) {
-      for (const store of stores) {
-        for (const item of store.items) {
-          ownedItemHashes.add(item.hash);
-        }
-      }
-    }
-    return ownedItemHashes;
-  });
-
-  return (state: RootState): StoreProps => ({
-    buckets: bucketsSelector(state),
-    defs: state.manifest.d2Manifest,
-    ownedItemHashes: ownedItemHashesSelector(state),
-    profileResponse: profileResponseSelector(state),
-  });
+  const ownedItemsSelectorInstance = ownedItemsSelector();
+  return (state: RootState): StoreProps => {
+    const settings = settingsSelector(state);
+    return {
+      buckets: bucketsSelector(state),
+      defs: state.manifest.d2Manifest,
+      ownedItemHashes: ownedItemsSelectorInstance(state),
+      profileResponse: profileResponseSelector(state),
+      searchQuery: querySelector(state),
+      searchFilter: searchFilterSelector(state),
+      isPhonePortrait: isPhonePortraitSelector(state),
+      trackedTriumphs: trackedTriumphsSelector(state),
+      completedRecordsHidden: settings.completedRecordsHidden,
+      redactedRecordsRevealed: settings.redactedRecordsRevealed,
+    };
+  };
 }
-
-const refreshStores = () =>
-  refresh$.subscribe(() => {
-    D2StoresService.reloadStores();
-  });
 
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-function Collections({ account, buckets, ownedItemHashes, defs, profileResponse }: Props) {
-  useEffect(() => {
-    D2StoresService.getStoresStream(account);
-  }, [account]);
+function Collections({
+  account,
+  buckets,
+  ownedItemHashes,
+  defs,
+  profileResponse,
+  searchQuery,
+  searchFilter,
+  isPhonePortrait,
+  trackedTriumphs,
+  completedRecordsHidden,
+  redactedRecordsRevealed,
+  dispatch,
+}: Props) {
+  useLoadStores(account, Boolean(profileResponse));
 
-  useSubscription(refreshStores);
-
-  const { presentationNodeHashStr } = useParams();
+  const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;
@@ -78,46 +96,191 @@ function Collections({ account, buckets, ownedItemHashes, defs, profileResponse 
   }
 
   const badgesRootNodeHash =
-    profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
-  const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
+    profileResponse?.profileCollectibles?.data?.collectionBadgesRootNodeHash;
+  const metricsRootNodeHash = profileResponse?.metrics?.data?.metricsRootNodeHash;
+  const collectionsRootHash =
+    profileResponse?.profileCollectibles?.data?.collectionCategoriesRootNodeHash;
+  const recordsRootHash = profileResponse?.profileRecords?.data?.recordCategoriesRootNodeHash;
+  const sealsRootHash = profileResponse?.profileRecords?.data?.recordSealsRootNodeHash;
+
+  const badgesTitle =
+    badgesRootNodeHash && defs.PresentationNode.get(badgesRootNodeHash).displayProperties.name;
+  const triumphTitle =
+    recordsRootHash && defs.PresentationNode.get(recordsRootHash).displayProperties.name;
+  const sealsTitle =
+    sealsRootHash && defs.PresentationNode.get(sealsRootHash).displayProperties.name;
+
+  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
+
+  const menuItems = [
+    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
+    { id: 'catalysts', title: t('Vendors.Catalysts') },
+    { id: 'legacyTriumphs', title: t('Progress.LegacyTriumphs') },
+    { id: 'triumphs', title: triumphTitle },
+    { id: 'seals', title: sealsTitle },
+    { id: 'collections', title: t('Vendors.Collections') },
+    { id: 'badges', title: badgesTitle },
+    { id: 'metrics', title: t('Progress.StatTrackers') },
+  ];
+
+  const onToggleCompletedRecordsHidden = (checked: boolean) =>
+    dispatch(setSetting('completedRecordsHidden', checked));
+  const onToggleRedactedRecordsRevealed = (checked: boolean) =>
+    dispatch(setSetting('redactedRecordsRevealed', checked));
 
   return (
-    <div className="collections-page d2-vendors dim-page">
-      <ErrorBoundary name="Catalysts">
-        <Catalysts defs={defs} profileResponse={profileResponse} />
-      </ErrorBoundary>
-      <ErrorBoundary name="Collections">
-        <PresentationNodeRoot
-          presentationNodeHash={3790247699}
-          defs={defs}
-          profileResponse={profileResponse}
-          buckets={buckets}
-          ownedItemHashes={ownedItemHashes}
-          openedPresentationHash={presentationNodeHash}
-          showPlugSets={true}
-        />
+    <PageWithMenu className="d2-vendors">
+      <PageWithMenu.Menu>
+        {!isPhonePortrait && (
+          <div className="progress-menu">
+            {menuItems.map((menuItem) => (
+              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+                <span>{menuItem.title}</span>
+              </PageWithMenu.MenuButton>
+            ))}
+          </div>
+        )}
+        <div className="presentationNodeOptions">
+          <CheckButton checked={completedRecordsHidden} onChange={onToggleCompletedRecordsHidden}>
+            {t('Triumphs.HideCompleted')}
+          </CheckButton>
+          <CheckButton checked={redactedRecordsRevealed} onChange={onToggleRedactedRecordsRevealed}>
+            {t('Triumphs.RevealRedacted')}
+          </CheckButton>
+        </div>
+      </PageWithMenu.Menu>
+
+      <PageWithMenu.Contents className="collections-page">
+        <section id="trackedTriumphs">
+          <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+            <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
+              <TrackedTriumphs
+                trackedTriumphs={trackedTriumphs}
+                trackedRecordHash={trackedRecordHash}
+                defs={defs}
+                profileResponse={profileResponse}
+                searchQuery={searchQuery}
+              />
+            </ErrorBoundary>
+          </CollapsibleTitle>
+        </section>
+        {!searchQuery && (
+          <section id="catalysts">
+            <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId="catalysts">
+              <ErrorBoundary name="Catalysts">
+                <Catalysts defs={defs} profileResponse={profileResponse} />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
+        {recordsRootHash && (
+          <section id="legacyTriumphs">
+            <CollapsibleTitle title={t('Progress.LegacyTriumphs')} sectionId="legacyTriumphs">
+              <ErrorBoundary name="Legacy Triumphs">
+                <LegacyTriumphs
+                  presentationNodeHash={recordsRootHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  searchQuery={searchQuery}
+                  completedRecordsHidden={completedRecordsHidden}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
+        {recordsRootHash && (
+          <section id="triumphs">
+            <CollapsibleTitle title={triumphTitle} sectionId="triumphs">
+              <ErrorBoundary name="Triumphs">
+                <PresentationNodeRoot
+                  presentationNodeHash={recordsRootHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  isTriumphs={true}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                  completedRecordsHidden={completedRecordsHidden}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
+
+        {sealsRootHash && (
+          <section id="seals">
+            <CollapsibleTitle title={sealsTitle} sectionId="seals">
+              <ErrorBoundary name="Seals">
+                <PresentationNodeRoot
+                  presentationNodeHash={sealsRootHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                  completedRecordsHidden={completedRecordsHidden}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
+        {collectionsRootHash && (
+          <section id="collections">
+            <CollapsibleTitle title={t('Vendors.Collections')} sectionId="collections">
+              <ErrorBoundary name={t('Vendors.Collections')}>
+                <PresentationNodeRoot
+                  presentationNodeHash={collectionsRootHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  buckets={buckets}
+                  ownedItemHashes={ownedItemHashes}
+                  openedPresentationHash={presentationNodeHash}
+                  showPlugSets={true}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                  overrideName={t('Vendors.Collections')}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
         {badgesRootNodeHash && (
-          <PresentationNodeRoot
-            presentationNodeHash={badgesRootNodeHash}
-            defs={defs}
-            profileResponse={profileResponse}
-            buckets={buckets}
-            ownedItemHashes={ownedItemHashes}
-            openedPresentationHash={presentationNodeHash}
-          />
+          <section id="badges">
+            <CollapsibleTitle title={badgesTitle} sectionId="badges">
+              <ErrorBoundary name="Badges">
+                <PresentationNodeRoot
+                  presentationNodeHash={badgesRootNodeHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  buckets={buckets}
+                  ownedItemHashes={ownedItemHashes}
+                  openedPresentationHash={presentationNodeHash}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
         )}
         {metricsRootNodeHash && (
-          <PresentationNodeRoot
-            presentationNodeHash={metricsRootNodeHash}
-            defs={defs}
-            profileResponse={profileResponse}
-            buckets={buckets}
-            ownedItemHashes={ownedItemHashes}
-            openedPresentationHash={presentationNodeHash}
-          />
+          <section id="metrics">
+            <CollapsibleTitle title={t('Progress.StatTrackers')} sectionId="metrics">
+              <ErrorBoundary name={t('Progress.StatTrackers')}>
+                <PresentationNodeRoot
+                  presentationNodeHash={metricsRootNodeHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  buckets={buckets}
+                  ownedItemHashes={ownedItemHashes}
+                  openedPresentationHash={presentationNodeHash}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                  overrideName={t('Progress.StatTrackers')}
+                />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
         )}
-      </ErrorBoundary>
-    </div>
+      </PageWithMenu.Contents>
+    </PageWithMenu>
   );
 }
 

@@ -1,0 +1,59 @@
+@import '../variables.scss';
+
+.account {
+  display: block;
+  cursor: pointer;
+  line-height: 15px;
+  text-align: left;
+  padding-left: 1rem;
+  padding-right: 2rem;
+  position: relative;
+  padding-top: 6px;
+  padding-bottom: 4px;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+  &:hover,
+  &:focus {
+    background-color: #3f3f3f;
+  }
+}
+
+.selectedAccount {
+  border-left: 4px solid $orange;
+  padding-left: calc(1rem - 4px);
+  margin: 0 0 0 2px;
+  padding-right: 24px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.accountDetails {
+  font-size: 12px !important;
+  color: #aaa;
+  margin: 1px 0 0 0 !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* Match the "D2" branding */
+  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+
+  :global(.app-icon) {
+    font-size: 14px !important;
+    margin: 0 0 0 2px;
+    &.first {
+      border-left: 1px solid #666;
+      padding-left: 4px;
+      margin-left: 6px;
+    }
+    &:hover {
+      color: #aaa !important;
+    }
+  }
+}
+
+.accountName span {
+  margin: 0 !important;
+}

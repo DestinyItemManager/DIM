@@ -34,6 +34,9 @@
     padding: 8px;
     margin: 0 0 4px 0;
     background-color: #222;
+    .gradientBackground & {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
     > .setting {
       padding: 0;
       margin: 0;
@@ -114,6 +117,10 @@
     ::placeholder {
       color: #999;
     }
+    .gradientBackground & {
+      background-color: rgba(0, 0, 0, 0.4);
+      margin-bottom: 10px;
+    }
   }
 
   .customStats {
@@ -121,5 +128,16 @@
     grid-template-columns: max-content 1fr;
     margin: 8px 0 0 0;
     gap: 4px 8px;
+  }
+
+  .new-item {
+    position: static;
+    display: inline-block;
+    transform: scale(1.5);
+    margin-right: 8px;
+  }
+
+  .subSetting {
+    margin-top: 8px;
   }
 }

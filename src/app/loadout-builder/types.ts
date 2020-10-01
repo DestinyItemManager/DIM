@@ -1,11 +1,11 @@
-import _ from 'lodash';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
   armor2PlugCategoryHashesByName,
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
+import _ from 'lodash';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
 // todo: get this from d2-known-values
 export type StatTypes =
@@ -30,14 +30,6 @@ export interface MinMaxIgnored {
   ignored: boolean;
 }
 
-export interface BurnItem {
-  dmg: BurnTypes;
-  displayProperties: {
-    name: string;
-    icon: string;
-  };
-}
-
 export interface LockedItemCase {
   type: 'item';
   item: DimItem;
@@ -48,26 +40,14 @@ export interface LockedPerk {
   perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
 }
-export interface LockedModBase {
-  mod: PluggableInventoryItemDefinition;
-  plugSetHash: number;
-}
-export interface LockedMod extends LockedModBase {
-  type: 'mod';
-  bucket: InventoryBucket;
-}
-export interface LockedBurn {
-  type: 'burn';
-  burn: BurnItem;
-  bucket: InventoryBucket;
-}
+
 export interface LockedExclude {
   type: 'exclude';
   item: DimItem;
   bucket: InventoryBucket;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedMod | LockedBurn | LockedExclude;
+export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
 
 /** A map from bucketHash or seasonal to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{
@@ -98,7 +78,7 @@ export function isModPickerCategory(value: unknown): value is ModPickerCategory 
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
-  mod: PluggableInventoryItemDefinition;
+  modDef: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
   season?: number;
 }
@@ -135,6 +115,8 @@ export const LockableBuckets = {
   leg: armorBuckets.leg,
   classitem: armorBuckets.classitem,
 };
+
+export const LockableBucketHashes = Object.values(LockableBuckets);
 
 export const bucketsToCategories = {
   [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,

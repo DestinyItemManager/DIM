@@ -9,7 +9,7 @@
   align-items: center;
   @include vertical-space-children(8px);
   :global(.gradientBackground) & {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0);
   }
 }
 
@@ -32,4 +32,8 @@
 
 .checked {
   background-color: $orange;
+}
+
+.buttonItemCount {
+  opacity: 0.5;
 }

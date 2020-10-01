@@ -1,36 +1,36 @@
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './header.scss';
-import logo from 'images/logo-type-right-light.svg';
-import ClickOutside from '../dim-ui/ClickOutside';
-import Refresh from './refresh';
-import WhatsNewLink from '../whats-new/WhatsNewLink';
-import MenuBadge from './MenuBadge';
-import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
-import { default as SearchFilter } from '../search/SearchFilter';
-import { installPrompt$ } from './app-install';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { connect } from 'react-redux';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { currentAccountSelector } from 'app/accounts/selectors';
 import MenuAccounts from 'app/accounts/MenuAccounts';
-import ReactDOM from 'react-dom';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import { Link, NavLink } from 'react-router-dom';
-import _ from 'lodash';
-import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
-import { accountRoute } from 'app/routes';
-import { useLocation, useHistory } from 'react-router';
-import styles from './Header.m.scss';
-import { useSubscription } from 'app/utils/hooks';
-import { SearchFilterRef } from 'app/search/SearchFilterInput';
 import { Hotkey } from 'app/hotkeys/hotkeys';
-import { setSearchQuery } from './actions';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import { accountRoute } from 'app/routes';
+import { SearchFilterRef } from 'app/search/SearchBar';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import clsx from 'clsx';
+import logo from 'images/logo-type-right-light.svg';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import vendorEngramSvg from '../../images/engram.svg';
+import { DestinyAccount } from '../accounts/destiny-account';
+import ClickOutside from '../dim-ui/ClickOutside';
+import ExternalLink from '../dim-ui/ExternalLink';
+import { default as SearchFilter } from '../search/SearchFilter';
+import WhatsNewLink from '../whats-new/WhatsNewLink';
+import { setSearchQuery } from './actions';
+import { installPrompt$ } from './app-install';
+import styles from './Header.m.scss';
+import './header.scss';
+import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import MenuBadge from './MenuBadge';
+import Refresh from './refresh';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -100,10 +100,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     }
   };
 
+  const destinyVersion = account?.destinyVersion;
+
   // Poll for vendor engrams
   const engramRefreshTimer = useRef<number>();
   useEffect(() => {
-    if ($featureFlags.vendorEngrams && account?.destinyVersion == 2) {
+    if ($featureFlags.vendorEngrams && destinyVersion === 2) {
       setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
       return () => {
         if (engramRefreshTimer.current) {
@@ -114,7 +116,7 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     } else {
       return;
     }
-  }, [account?.destinyVersion, dispatch]);
+  }, [destinyVersion, dispatch]);
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);
@@ -131,9 +133,8 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
     if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
+    document.body.classList.toggle('search-open', showSearch);
   }, [showSearch]);
-
-  const history = useHistory();
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -166,7 +167,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   let links: {
     to: string;
     text: string;
-    hotkey?: string;
     badge?: React.ReactNode;
   }[] = [];
   if (account) {
@@ -175,35 +175,29 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       {
         to: `${path}/inventory`,
         text: t('Header.Inventory'),
-        hotkey: 'i',
       },
       account.destinyVersion === 2 && {
         to: `${path}/progress`,
         text: t('Progress.Progress'),
-        hotkey: 'p',
       },
       {
         to: `${path}/vendors`,
         text: t('Vendors.Vendors'),
-        hotkey: 'v',
         badge: vendorEngramDropActive && (
           <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
         ),
       },
       account.destinyVersion === 2 && {
-        to: `${path}/collections`,
-        text: t('Vendors.Collections'),
-        hotkey: 'c',
+        to: `${path}/records`,
+        text: t('Records.Title'),
       },
       {
         to: `${path}/optimizer`,
         text: t('LB.LB'),
-        hotkey: 'b',
       },
-      !isPhonePortrait && {
+      {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),
-        hotkey: 'o',
       },
       account.destinyVersion === 1 && {
         to: `${path}/record-books`,
@@ -233,16 +227,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       description: t('Hotkey.Menu'),
       callback: toggleDropdown,
     },
-    ..._.compact(
-      links.map(
-        (link) =>
-          link.hotkey && {
-            combo: link.hotkey,
-            description: link.text,
-            callback: () => history.push(link.to),
-          }
-      )
-    ),
     {
       combo: 'f',
       description: t('Hotkey.StartSearch'),
@@ -313,6 +297,12 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
               <NavLink className="link menuItem" to="/settings">
                 {t('Settings.Settings')}
               </NavLink>
+              <ExternalLink
+                className="link menuItem"
+                href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
+              >
+                {t('General.UserGuideLink')}
+              </ExternalLink>
               {installPromptEvent ? (
                 <a className="link menuItem" onClick={installDim}>
                   {t('Header.InstallDIM')}
@@ -347,9 +337,11 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
           </span>
         )}
         <Refresh />
-        <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
-          <AppIcon icon={settingsIcon} />
-        </Link>
+        {!isPhonePortrait && (
+          <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
+            <AppIcon icon={settingsIcon} />
+          </Link>
+        )}
         <span className="link search-button menuItem" onClick={toggleSearch}>
           <AppIcon icon={searchIcon} />
         </span>

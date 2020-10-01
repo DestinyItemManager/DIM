@@ -4,6 +4,10 @@
 .logo {
   height: 24px;
   width: 68px;
+  @include phone-portrait {
+    height: 24px * 1.2;
+    width: 68px * 1.2;
+  }
   color: $orange !important;
   font-size: 16px !important;
   font-weight: bold;
@@ -20,11 +24,18 @@ body {
   padding-top: calc(#{$header-height} + constant(safe-area-inset-top));
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
   box-sizing: border-box;
+  min-height: 100vh;
+
+  &.search-open {
+    padding-top: 2 * $header-height;
+    padding-top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
+    padding-top: calc(#{2 * $header-height} + env(safe-area-inset-top));
+  }
 }
 #header {
   padding: 0 0 0 2px;
   position: fixed;
-  z-index: 15;
+  z-index: 1001;
   top: 0;
   left: 0;
   right: 0;
@@ -40,6 +51,15 @@ body {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   filter: var(--color-filter);
+  .gradientBackground & {
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
+    @include phone-portrait {
+      background: #000;
+    }
+  }
 
   #user {
     color: white;
@@ -55,6 +75,9 @@ body {
 
   .app-icon {
     font-size: 1.33em;
+    @include phone-portrait {
+      font-size: 24px;
+    }
     &:hover {
       color: $orange;
       cursor: pointer;
@@ -68,6 +91,12 @@ body {
 
   .logoLink {
     height: 24px;
+    @include phone-portrait {
+      height: 44px;
+      margin: 0 4px !important;
+      display: flex;
+      align-items: center;
+    }
   }
 
   .menuItem {
@@ -78,6 +107,9 @@ body {
     user-select: none;
     outline: none;
     white-space: nowrap;
+    @include phone-portrait {
+      margin: 0 12px;
+    }
   }
 
   .link {
@@ -140,6 +172,12 @@ body {
       border-top: 1px solid #333;
     }
 
+    h3 {
+      margin: 16px 2rem 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
     .link {
       display: block;
       padding: 4px 2rem 4px 1rem;
@@ -199,7 +237,7 @@ body {
     @include phone-portrait {
       display: none;
     }
-    @media (max-width: 700px) {
+    @media (max-width: 1080px) {
       display: none;
     }
 

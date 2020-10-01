@@ -4,18 +4,12 @@ declare const $DIM_BUILD_DATE: string;
 declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;
 declare const $DIM_WEB_CLIENT_SECRET: string;
-declare const $GOOGLE_DRIVE_CLIENT_ID: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
   /** Print debug info to console about item moves */
   debugMoves: boolean;
-  /** Enable item reviews */
-  reviewsEnabled: boolean;
-  /** Sync data over gdrive */
-  gdrive: boolean;
-  debugSync: boolean;
   /** Enable color-blind a11y */
   colorA11y: boolean;
   /** Debug Service Worker */
@@ -36,16 +30,16 @@ declare const $featureFlags: {
   issueBanner: boolean;
   /** Show the triage tab in the item popup */
   triage: boolean;
-  /** Enable detached stats from sticky header on mobile */
-  unstickyStats: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** New search bar */
-  newSearch: boolean;
   /** Move subclass out of weapons */
   newArrangement: boolean;
   /** New background */
   gradientBackground: boolean;
+  /** Use mobile category strip on inventory page */
+  mobileCategoryStrip: boolean;
+  /** Move the item popup actions */
+  newItemPopupActions: boolean;
 };
 
 declare namespace React {
@@ -62,8 +56,6 @@ interface Window {
   };
   BroadcastChannel?: BroadcastChannel;
   OC?: any;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  gapi_onload(): void;
 
   // Service worker stuff
   __precacheManifest: string[];

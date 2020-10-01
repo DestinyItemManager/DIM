@@ -1,10 +1,10 @@
+import type { DimStore } from 'app/inventory/store-types';
+import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
+import VaultCapacity from 'app/store-stats/VaultCapacity';
+import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { isPhonePortraitSelector } from 'app/inventory/selectors';
-import type { DimStore, DimVault } from 'app/inventory/store-types';
-import VaultCapacity from 'app/store-stats/VaultCapacity';
 import './CharacterTile.scss';
 
 const CharacterEmblem = ({ store }: { store: DimStore }) => (
@@ -13,10 +13,6 @@ const CharacterEmblem = ({ store }: { store: DimStore }) => (
     style={{ backgroundImage: `url("${store.icon}")` }}
   />
 );
-
-function isVault(store: DimStore): store is DimVault {
-  return store.isVault;
-}
 
 /**
  * Render a basic character tile without any event handlers
@@ -32,7 +28,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         className="background"
         style={{
           backgroundImage: `url("${store.background}")`,
-          backgroundColor: store.isDestiny2()
+          backgroundColor: store.color
             ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
                 store.color.blue
               )}`
@@ -49,19 +45,19 @@ export default function CharacterTile({ store }: { store: DimStore }) {
                 <AppIcon icon={powerActionIcon} />
                 {store.powerLevel}
               </div>
-              {$featureFlags.unstickyStats && isPhonePortrait && (
-                <div className="maxTotalPower">/ {maxTotalPower}</div>
-              )}
+              {isPhonePortrait && <div className="maxTotalPower">/ {maxTotalPower}</div>}
             </>
           )}
         </div>
         <div className="bottom">
-          {isVault(store) ? (
-            $featureFlags.unstickyStats && isPhonePortrait && <VaultCapacity store={store} />
+          {store.isVault ? (
+            isPhonePortrait && <VaultCapacity />
           ) : (
             <>
               <div className="race-gender">{store.genderRace}</div>
-              {store.isDestiny1() && store.level < 40 && <div className="level">{store.level}</div>}
+              {store.destinyVersion === 1 && store.level < 40 && (
+                <div className="level">{store.level}</div>
+              )}
             </>
           )}
         </div>

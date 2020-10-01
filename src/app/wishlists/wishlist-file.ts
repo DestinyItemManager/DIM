@@ -1,5 +1,5 @@
-import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import { emptySet } from 'app/utils/empty';
+import { DimWishList, WishListAndInfo, WishListRoll } from './types';
 
 /**
  * The title should follow the following format:
@@ -37,7 +37,7 @@ export function toWishList(fileText: string): WishListAndInfo {
     for (const line of lines) {
       if (line.startsWith(notesLabel)) {
         blockNotes = parseBlockNoteLine(line);
-      } else if (line.length == 0 || line.startsWith('//')) {
+      } else if (line.length === 0 || line.startsWith('//')) {
         // Empty lines and comments reset the block note
         blockNotes = undefined;
       } else if (!wishList.title && line.startsWith(titleLabel)) {

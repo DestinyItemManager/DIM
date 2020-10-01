@@ -1,9 +1,9 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import { DimStore } from '../inventory/store-types';
-import _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { settingsSelector } from './reducer';
+import { DimStore } from '../inventory/store-types';
 
 export const characterOrderSelector = (state: RootState) => settingsSelector(state).characterOrder;
 const customCharacterSortSelector = (state: RootState) =>

@@ -1,5 +1,5 @@
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
-import { Tokens, Token } from './oauth-tokens';
+import { Token, Tokens } from './oauth-tokens';
 
 // all these api url params don't match our variable naming conventions
 /* eslint-disable @typescript-eslint/naming-convention */

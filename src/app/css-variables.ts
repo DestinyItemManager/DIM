@@ -1,5 +1,5 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { observeStore } from './utils/redux-utils';
-import { settingsSelector } from './settings/reducer';
 
 function setCSSVariable(property: string, value: any) {
   if (value) {

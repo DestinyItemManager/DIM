@@ -1,12 +1,12 @@
 import {
+  battleNetIcon,
   dimEngramIcon,
-  dimPowerIcon,
-  dimPowerAltIcon,
   dimHunterIcon,
+  dimPowerAltIcon,
+  dimPowerIcon,
   dimTitanIcon,
   dimWarlockIcon,
   stadiaIcon,
-  battleNetIcon,
 } from './custom';
 
 const faArchive = 'fas fa-archive';
@@ -117,7 +117,7 @@ export {
   faCog as settingsIcon,
   faCopy as copyIcon,
   faDownload as downloadIcon,
-  faEllipsisV,
+  faEllipsisV as kebabIcon,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,

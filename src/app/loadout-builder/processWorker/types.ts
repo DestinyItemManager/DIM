@@ -1,5 +1,5 @@
-import { StatTypes, ModPickerCategory } from '../types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { ModPickerCategory, StatTypes } from '../types';
 
 export interface ProcessPlug {
   stats: {
@@ -32,12 +32,9 @@ export interface ProcessItem {
   sockets: ProcessSockets | null;
   energy: {
     type: DestinyEnergyType;
-    /** This is used to track the energy used by mods in a build. Using the name cost so that we can use the same sorting
+    /** This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
      * function for ProcessItems and ProcessMods. */
     val: number;
-    /** This contains the energy usage by slot specific mods in the mod picker. Those mods are preprocessed so we don't
-     * need to recalculate them over and over. */
-    valInitial: number;
   } | null;
   basePower: number;
   stats: { [statHash: number]: number };

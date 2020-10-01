@@ -2,9 +2,8 @@ import { t } from 'app/i18next-t';
 import { DestinyManifest, PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getActivePlatform } from '../accounts/get-active-platform';
 import { D1Item, DimItem } from '../inventory/item-types';
-import { D1Store, DimStore } from '../inventory/store-types';
+import { D1Store } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import {
   authenticatedHttpClient,
@@ -47,7 +46,7 @@ export async function getCharacters(platform: DestinyAccount) {
   });
 }
 
-export async function getStores(platform: DestinyAccount): Promise<any> {
+export async function getStores(platform: DestinyAccount): Promise<any[]> {
   const characters = await getCharacters(platform);
   const data = await Promise.all([
     getDestinyInventories(platform, characters),
@@ -144,12 +143,11 @@ export async function getVendorForCharacter(
   return response.Response.data;
 }
 
-export function transfer(item: D1Item, store: D1Store, amount: number) {
-  const platform = getActivePlatform();
+export function transfer(account: DestinyAccount, item: D1Item, store: D1Store, amount: number) {
   const promise = authenticatedHttpClient(
     bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
       characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform!.originalPlatformType,
+      membershipType: account.originalPlatformType,
       itemId: item.id,
       itemReferenceHash: item.hash,
       stackSize: amount || item.amount,
@@ -160,27 +158,25 @@ export function transfer(item: D1Item, store: D1Store, amount: number) {
   return promise;
 }
 
-export function equip(item: DimItem) {
-  const platform = getActivePlatform();
+export function equip(account: DestinyAccount, item: DimItem) {
   return authenticatedHttpClient(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItem/', {
       characterId: item.owner,
-      membershipType: platform!.originalPlatformType,
+      membershipType: account.originalPlatformType,
       itemId: item.id,
     })
   );
 }
 
 // Returns a list of items that were successfully equipped
-export async function equipItems(store: D1Store, items: D1Item[]) {
+export async function equipItems(account: DestinyAccount, store: D1Store, items: D1Item[]) {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
-  const platform = getActivePlatform();
   const response = await authenticatedHttpClient(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
-      membershipType: platform!.originalPlatformType,
+      membershipType: account.originalPlatformType,
       itemIds: items.map((i) => i.id),
     })
   );
@@ -192,8 +188,9 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
 }
 
 export function setItemState(
+  account: DestinyAccount,
   item: DimItem,
-  store: DimStore,
+  storeId: string,
   lockState: boolean,
   type: 'lock' | 'track'
 ) {
@@ -207,11 +204,10 @@ export function setItemState(
       break;
   }
 
-  const platform = getActivePlatform();
   return authenticatedHttpClient(
     bungieApiUpdate(`/D1/Platform/Destiny/${method}/`, {
-      characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform!.originalPlatformType,
+      characterId: storeId,
+      membershipType: account.originalPlatformType,
       itemId: item.id,
       state: lockState,
     })

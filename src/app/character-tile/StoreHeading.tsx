@@ -1,14 +1,15 @@
-import React, { useRef, useState } from 'react';
-import clsx from 'clsx';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
-import './StoreHeading.scss';
-import LoadoutPopup from '../loadout/LoadoutPopup';
-import ClickOutside from '../dim-ui/ClickOutside';
+import { isD1Store } from 'app/inventory/stores-helpers';
+import clsx from 'clsx';
+import React, { useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { AppIcon, faEllipsisV } from '../shell/icons';
+import ClickOutside from '../dim-ui/ClickOutside';
+import { DimStore } from '../inventory/store-types';
+import LoadoutPopup from '../loadout/LoadoutPopup';
+import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';
+import './StoreHeading.scss';
 
 interface Props {
   store: DimStore;
@@ -35,8 +36,8 @@ const CharacterHeader = ({
   <div
     className={clsx('character', {
       current: store.current,
-      destiny1: store.isDestiny1(),
-      destiny2: store.isDestiny2(),
+      destiny1: store.destinyVersion === 1,
+      destiny2: store.destinyVersion === 2,
       vault: store.isVault,
     })}
     ref={menuRef}
@@ -48,9 +49,9 @@ const CharacterHeader = ({
         'loadout-open': loadoutMenuOpen,
       })}
     >
-      <AppIcon icon={faEllipsisV} title={t('Loadouts.Loadouts')} />
+      <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
     </div>
-    {!store.isVault && store.isDestiny1() && <CharacterHeaderXPBar store={store} />}
+    {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
   </div>
 );
 

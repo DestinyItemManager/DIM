@@ -1,22 +1,16 @@
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { LockableBuckets, StatTypes, MinMaxIgnored, MinMax } from '../types';
+import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
+import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import { statHashes } from '../types';
+import { canTakeGeneralAndSeasonalMods, generateModPermutations } from './processUtils';
 import {
-  ProcessItemsByBucket,
-  ProcessItem,
-  ProcessArmorSet,
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
-  ProcessMod,
+  ProcessArmorSet,
+  ProcessItem,
+  ProcessItemsByBucket,
 } from './types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import {
-  canTakeAllSeasonalMods,
-  sortProcessModsOrProcessItems,
-  canTakeAllGeneralMods,
-} from './processUtils';
-import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 
 const RETURNED_ARMOR_SETS = 200;
 
@@ -91,7 +85,6 @@ function insertIntoSetTracker(
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
-  processedSeasonalMods: ProcessMod[],
   modStatTotals: { [stat in StatTypes]: number },
   lockedArmor2ModMap: LockedArmor2ProcessMods,
   assumeMasterwork: boolean,
@@ -105,8 +98,6 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
-
-  processedSeasonalMods.sort(sortProcessModsOrProcessItems);
 
   const orderedStatValues = statOrder.map((statType) => statHashes[statType]);
   const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
@@ -178,6 +169,11 @@ export function process(
   for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
     statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
   }
+
+  const generalModsPermutations = generateModPermutations(
+    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
+  );
+  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -254,26 +250,16 @@ export function process(
                 }
               }
 
-              // Reset the used item energy of each item so we can add general and seasonal mod costs again.
-              for (const item of armor) {
-                if (item.energy) {
-                  item.energy.val = item.energy.valInitial;
-                }
-              }
-
-              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements.
-              // For mod armour 2 mods we do seasonal first as its more likely to have energy specific mods.
-              // TODO Check validity of this with the energy contraints in.
+              // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                (processedSeasonalMods.length &&
-                  !canTakeAllSeasonalMods(processedSeasonalMods, armor)) ||
-                (lockedArmor2ModMap.seasonal.length &&
-                  !canTakeAllSeasonalMods(lockedArmor2ModMap.seasonal, armor)) ||
-                (lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length &&
-                  !canTakeAllGeneralMods(
-                    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general],
-                    armor
-                  ))
+                //seasonal only
+                (lockedArmor2ModMap.seasonal.length ||
+                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
+                !canTakeGeneralAndSeasonalMods(
+                  generalModsPermutations,
+                  seasonalModPermutations,
+                  armor
+                )
               ) {
                 continue;
               }

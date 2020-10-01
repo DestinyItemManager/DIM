@@ -1,32 +1,33 @@
-import {
-  DestinyInventoryItemDefinition,
-  DestinyStatDisplayDefinition,
-  DestinyStatGroupDefinition,
-  DestinyItemInvestmentStatDefinition,
-  DestinyStatDefinition,
-  DestinyItemStatsComponent,
-  DestinyDisplayPropertiesDefinition,
-  DestinyStatAggregationType,
-  DestinyStatCategory,
-  DestinySocketCategoryStyle,
-  DestinyClass,
-} from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { getSocketsWithStyle, getSocketsWithPlugCategoryHash } from '../../utils/socket-utils';
+import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   armorBuckets,
+  armorStats,
   ARMOR_STAT_CAP,
-  TOTAL_STAT_HASH,
   CUSTOM_TOTAL_STAT_HASH,
+  TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
-import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
+import { compareBy } from 'app/utils/comparators';
+import {
+  DestinyClass,
+  DestinyDisplayPropertiesDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemInvestmentStatDefinition,
+  DestinyItemStatsComponent,
+  DestinySocketCategoryStyle,
+  DestinyStatAggregationType,
+  DestinyStatCategory,
+  DestinyStatDefinition,
+  DestinyStatDisplayDefinition,
+  DestinyStatGroupDefinition,
+} from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import reduxStore from '../../store/store';
-import { settingsSelector } from 'app/settings/reducer';
+import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
+import { DimItem, DimPlug, DimSocket, DimSockets, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -43,16 +44,6 @@ import { settingsSelector } from 'app/settings/reducer';
  *  if (is armor) stats.push(total)
  * }
  */
-
-/** Stats that all armor should have. */
-export const armorStats = [
-  StatHashes.Mobility,
-  StatHashes.Resilience,
-  StatHashes.Recovery,
-  StatHashes.Discipline,
-  StatHashes.Intellect,
-  StatHashes.Strength,
-];
 
 /**
  * Which stats to display, and in which order.
@@ -106,7 +97,7 @@ const hiddenStatsAllowList = [
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
-  createdItem: D2Item,
+  createdItem: DimItem,
   stats: {
     [key: string]: DestinyItemStatsComponent;
   } | null,
@@ -158,12 +149,7 @@ export function buildStats(
         investmentStats.push(cStat);
       }
     }
-  } else if (
-    createdItem.isDestiny2() &&
-    createdItem.type === 'ClassItem' &&
-    createdItem.energy &&
-    createdItem.sockets
-  ) {
+  } else if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
     investmentStats = buildStatsFromMods(createdItem.sockets, defs, statGroup, statDisplays);
   }
 
@@ -474,7 +460,7 @@ function buildLiveStats(
 function buildBaseStats(
   stats: DimStat[], //mutated
   statsByHash: { [k: number]: DimStat }, // mutated, same as above but keyed by hash
-  item: D2Item
+  item: DimItem
 ) {
   // Class Items always have a base stat of 0;
   if (item.bucket.hash === armorBuckets.classitem) {

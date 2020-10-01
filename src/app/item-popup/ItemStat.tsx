@@ -1,22 +1,22 @@
-import React from 'react';
-import { DimStat, DimItem, D1Stat, D1Item, DimSocket } from 'app/inventory/item-types';
-import { statsMs, armorStats } from 'app/inventory/store/stats';
-import RecoilStat from './RecoilStat';
-import { percent, getColor } from 'app/shell/filters';
-import clsx from 'clsx';
 import BungieImage from 'app/dim-ui/BungieImage';
-import _ from 'lodash';
-import { t } from 'app/i18next-t';
-import styles from './ItemStat.m.scss';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { AppIcon, helpIcon, faExclamationTriangle } from 'app/shell/icons';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getSocketsWithStyle } from '../utils/socket-utils';
-import PressTip from 'app/dim-ui/PressTip';
-import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import { TOTAL_STAT_HASH, CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
+import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
+import { statsMs } from 'app/inventory/store/stats';
+import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { getColor, percent } from 'app/shell/filters';
+import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
+import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import { getSocketsWithStyle } from '../utils/socket-utils';
+import styles from './ItemStat.m.scss';
+import RecoilStat from './RecoilStat';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -29,28 +29,23 @@ const modItemCategoryHashes = [
  * A single stat line.
  */
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
-  const value = stat.value;
   const armor2MasterworkSockets =
-    item?.isDestiny2() &&
-    item.sockets &&
-    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
+    item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
     armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-  const masterworkValue =
-    (item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.value) || 0;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const masterworkValue = item?.masterworkInfo?.stats?.[masterworkIndex]?.value || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
-  const baseBar = item?.bucket.inArmor ? Math.min(stat.base, stat.value) : stat.value;
+  const baseBar = item?.bucket.inArmor
+    ? Math.min(stat.base, stat.value)
+    : stat.value - masterworkValue;
 
   const segments: [number, string?][] = [[baseBar]];
 
@@ -71,14 +66,14 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
-  const displayValue = Math.max(0, value);
+  const displayValue = Math.max(0, stat.value);
 
   // Get the values that contribute to the total stat value
   let totalDetails:
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
   }
 
@@ -108,7 +103,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         {displayValue}
       </div>
 
-      {item?.isDestiny2() && statsMs.includes(stat.statHash) && (
+      {item?.destinyVersion === 2 && statsMs.includes(stat.statHash) && (
         <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
       )}
 
@@ -200,12 +195,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
  */
 export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const masterworkIndex =
-    (item?.isDestiny2() &&
-      item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash)) ||
-    0;
+    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
 
-  const isMasterworkedStat =
-    item?.isDestiny2() && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
+  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
 
@@ -253,7 +245,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
  * The reusable socket category is used in armor 1.0 for perks and stats.
  */
 function getNonReuseableModSockets(item: DimItem) {
-  if (!item.isDestiny2() || !item.sockets) {
+  if (!item.sockets) {
     return [];
   }
 
@@ -278,7 +270,7 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
-  return item.isDestiny1();
+  return item.destinyVersion === 1;
 }
 
 /**

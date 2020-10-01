@@ -1,5 +1,5 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import { settingsSelector } from './reducer';
 import { Settings } from './initial-settings';
 
 const itemSortPresets = {

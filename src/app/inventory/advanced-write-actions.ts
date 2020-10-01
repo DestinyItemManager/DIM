@@ -11,7 +11,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
-import { D2Item, DimSocket } from './item-types';
+import { DimItem, DimSocket } from './item-types';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -21,7 +21,7 @@ let awaCache: {
 // TODO: owner can't be "vault" I bet
 export async function insertPlug(
   account: DestinyAccount,
-  item: D2Item,
+  item: DimItem,
   socket: DimSocket,
   plugItemHash: number
 ) {
@@ -55,7 +55,7 @@ export async function insertPlug(
 export async function getAwaToken(
   account: DestinyAccount,
   action: AwaType,
-  item?: D2Item
+  item?: DimItem
 ): Promise<string> {
   if (!awaCache) {
     // load from cache first time

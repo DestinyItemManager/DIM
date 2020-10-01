@@ -1,11 +1,10 @@
-import React from 'react';
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { Loadout } from './loadout-types';
+import { getClass } from 'app/inventory/store/character-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import React from 'react';
 import { Prompt } from 'react-router';
 import { Link } from 'react-router-dom';
-import { getClass } from 'app/inventory/store/character-utils';
+import { Loadout } from './loadout-types';
 
 export default function LoadoutDrawerOptions({
   loadout,

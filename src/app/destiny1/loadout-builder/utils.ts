@@ -1,17 +1,16 @@
-import {
-  D1ItemWithNormalStats,
-  ArmorTypes,
-  ItemBucket,
-  SetType,
-  ArmorSet,
-  LockedPerkHash,
-} from './types';
-
-import { D1Item } from '../../inventory/item-types';
-
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
-import { DimStore, D1Store } from '../../inventory/store-types';
+import { D1Item } from '../../inventory/item-types';
+import { D1Store, DimStore } from '../../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
+import {
+  ArmorSet,
+  ArmorTypes,
+  D1ItemWithNormalStats,
+  ItemBucket,
+  LockedPerkHash,
+  SetType,
+} from './types';
 
 function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   if (!armorpiece.normalStats) {
@@ -277,7 +276,7 @@ export function loadVendorsBucket(
           (i) =>
             i.item.stats &&
             i.item.primStat?.statHash === 3897883278 &&
-            i.item.canBeEquippedBy(currentStore)
+            itemCanBeEquippedBy(i.item, currentStore)
         )
         .map((i) => i.item)
     )
@@ -289,7 +288,8 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
     .map((store) =>
       getBuckets(
         store.items.filter(
-          (i) => i.stats && i.primStat?.statHash === 3897883278 && i.canBeEquippedBy(currentStore)
+          (i) =>
+            i.stats && i.primStat?.statHash === 3897883278 && itemCanBeEquippedBy(i, currentStore)
         )
       )
     )

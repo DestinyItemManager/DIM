@@ -1,20 +1,19 @@
-import _ from 'lodash';
-import { get, set, del } from 'idb-keyval';
-
-import { reportException } from '../utils/exceptions';
-import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
-import { settingsReady } from '../settings/settings';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { deepEqual } from 'fast-equals';
-import { showNotification } from '../notifications/notifications';
-import { settingsSelector } from 'app/settings/reducer';
-import { emptyObject, emptyArray } from 'app/utils/empty';
-import { loadingStart, loadingEnd } from 'app/shell/actions';
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
+import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
+import { emptyArray, emptyObject } from 'app/utils/empty';
 import { dedupePromise } from 'app/utils/util';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
+import { deepEqual } from 'fast-equals';
+import { del, get, set } from 'idb-keyval';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
+import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
+import { showNotification } from '../notifications/notifications';
+import { settingsReady } from '../settings/settings';
+import { reportException } from '../utils/exceptions';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -44,7 +43,7 @@ const tableTrimmers = {
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory!.bucketTypeHash !== SUBCLASS_BUCKET) {
+      if (def.inventory!.bucketTypeHash !== BucketHashes.Subclass) {
         def.talentGrid! = emptyObject();
       }
 
@@ -164,7 +163,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<any> {
       // If we can't get info about the current manifest, try to just use whatever's already saved.
       version = localStorage.getItem(localStorageKey);
       if (version) {
-        return loadManifestFromCache(version, tableAllowList);
+        return await loadManifestFromCache(version, tableAllowList);
       } else {
         throw e;
       }
@@ -173,7 +172,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<any> {
     try {
       return await loadManifestFromCache(version, tableAllowList);
     } catch (e) {
-      return dispatch(loadManifestRemote(version, components, tableAllowList));
+      return await dispatch(loadManifestRemote(version, components, tableAllowList));
     }
   };
 }

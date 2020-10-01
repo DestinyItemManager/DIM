@@ -1,17 +1,11 @@
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { compareBy, reverseComparator, chainComparator, Comparator } from '../utils/comparators';
+import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
-import { getTag, tagConfig } from '../inventory/dim-item-info';
-import { getRating } from '../item-review/reducer';
-import { itemInfosSelector, itemHashTagsSelector } from 'app/inventory/selectors';
-import {
-  CONSUMABLES_BUCKET,
-  MATERIALS_BUCKET,
-  MODIFICATIONS_BUCKET,
-} from 'app/search/d2-known-values';
+import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -34,13 +28,6 @@ export function rarity(item: DimItem) {
     default:
       return 5;
   }
-}
-
-/**
- * Sort the stores according to the user's preferences (via the order parameter).
- */
-export function sortStores(stores: DimStore[]) {
-  return characterSortSelector(store.getState())(stores);
 }
 
 const D1_CONSUMABLE_SORT_ORDER = [
@@ -116,7 +103,7 @@ const ITEM_SORT_DENYLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
-  215593132, // LostItems
+  BucketHashes.LostItems, // LostItems
 ]);
 
 // TODO: pass in state
@@ -127,15 +114,13 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || item.primStat?.value)
   ),
+  // This only sorts by D1 item quality
   rating: reverseComparator(
     compareBy((item: DimItem & { quality: { min: number } }) => {
       if (item.quality?.min) {
         return item.quality.min;
       }
-      const dtrRating = $featureFlags.reviewsEnabled
-        ? getRating(item, store.getState().reviews.ratings)
-        : undefined;
-      return dtrRating?.overallScore;
+      return undefined;
     })
   ),
   classType: compareBy((item: DimItem) => item.classType),
@@ -171,12 +156,12 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === CONSUMABLES_BUCKET) {
+  if (itemLocationId === BucketHashes.Consumables) {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === MATERIALS_BUCKET) {
+  if (itemLocationId === BucketHashes.Materials) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
@@ -189,7 +174,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort mods
-  if (itemLocationId === MODIFICATIONS_BUCKET) {
+  if (itemLocationId === BucketHashes.Modifications) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
     if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
@@ -198,7 +183,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   }
 
   // Re-sort consumables
-  if (itemLocationId === CONSUMABLES_BUCKET) {
+  if (itemLocationId === BucketHashes.Consumables) {
     return items.sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,
@@ -239,32 +224,13 @@ export function getColor(value: number, property = 'background-color') {
   };
 }
 
-export function dtrRatingColor(value: number, property = 'color') {
-  if (!value) {
-    return {};
-  }
-
-  let color;
-  if (value < 2) {
-    color = 'hsl(0,45%,45%)';
-  } else if (value <= 3) {
-    color = 'hsl(15,65%,40%)';
-  } else if (value <= 4) {
-    color = 'hsl(30,75%,45%)';
-  } else if (value <= 4.4) {
-    color = 'hsl(60,100%,30%)';
-  } else if (value <= 4.8) {
-    color = 'hsl(120,65%,40%)';
-  } else if (value >= 4.9) {
-    color = 'hsl(190,90%,45%)';
-  }
-  return {
-    [property]: color,
-  };
-}
-
-export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
-  if ($featureFlags.gradientBackground || !store.isDestiny2() || !store.color) {
+export function storeBackgroundColor(
+  store: DimStore,
+  index = 0,
+  header = false,
+  isPhonePortrait = false
+) {
+  if ($featureFlags.gradientBackground || !store.color || isPhonePortrait) {
     return undefined;
   }
 

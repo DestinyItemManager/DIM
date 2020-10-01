@@ -1,20 +1,20 @@
+import { t } from 'app/i18next-t';
+import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LockedItemType } from 'app/loadout-builder/types';
+import { thumbsUpIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import PressTip from '../dim-ui/PressTip';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
+import PressTip from '../dim-ui/PressTip';
+import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
-import BestRatedIcon from './BestRatedIcon';
-import PlugTooltip from './PlugTooltip';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { LockedItemType } from 'app/loadout-builder/types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
-
 import './ItemSockets.scss';
+import PlugTooltip from './PlugTooltip';
 
 export default function Plug({
   defs,
@@ -24,24 +24,24 @@ export default function Plug({
   wishListsEnabled,
   inventoryWishListRoll,
   className,
-  bestPerks,
   hasMenu,
   isPhonePortrait,
   onClick,
   onShiftClick,
+  adjustedPlug,
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
-  item: D2Item;
+  item: DimItem;
   socketInfo: DimSocket;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
-  bestPerks: Set<number>;
   className?: string;
   hasMenu: boolean;
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
   onShiftClick?(lockedItem: LockedItemType): void;
+  adjustedPlug?: DimPlug;
 }) {
   // Support dragging over plugs items on mobile
   const [{ hovering }, drop] = useDrop({
@@ -56,13 +56,6 @@ export default function Plug({
     return null;
   }
 
-  const energyType =
-    (modDef?.plug?.energyCost?.energyTypeHash &&
-      defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash)) ||
-    undefined;
-  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat?.displayProperties.icon;
-
   const itemCategories = plug?.plugDef?.itemCategoryHashes || [];
 
   const handleShiftClick =
@@ -70,11 +63,11 @@ export default function Plug({
     ((e: React.MouseEvent<HTMLDivElement>) => {
       if (onShiftClick && e.shiftKey) {
         e.stopPropagation();
-        const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
-        const lockedItem: LockedItemType =
-          energyType && plugSetHash
-            ? { type: 'mod', mod: plug.plugDef, plugSetHash, bucket: item.bucket }
-            : { type: 'perk', perk: plug.plugDef, bucket: item.bucket };
+        const lockedItem: LockedItemType = {
+          type: 'perk',
+          perk: plug.plugDef,
+          bucket: item.bucket,
+        };
         onShiftClick(lockedItem);
       } else {
         onClick?.(plug);
@@ -83,21 +76,7 @@ export default function Plug({
 
   const contents = (
     <div ref={drop}>
-      <BungieImageAndAmmo
-        hash={plug.plugDef.hash}
-        className="item-mod"
-        title={plug.plugDef.displayProperties.name}
-        src={plug.plugDef.displayProperties.icon}
-      />
-      {costElementIcon && (
-        <>
-          <div
-            style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
-            className="energyCostOverlay"
-          />
-          <div className="energyCost">{modDef.plug.energyCost!.energyCost}</div>
-        </>
-      )}
+      <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
     </div>
   );
 
@@ -107,7 +86,6 @@ export default function Plug({
       plug={plug}
       defs={defs}
       wishListsEnabled={wishListsEnabled}
-      bestPerks={bestPerks}
       inventoryWishListRoll={inventoryWishListRoll}
     />
   );
@@ -118,6 +96,12 @@ export default function Plug({
       className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plugged,
+        selectable: socketInfo.plugOptions.length > 1 && socketInfo.socketIndex <= 2,
+        selected: plug.plugDef.hash === adjustedPlug?.plugDef.hash,
+        notSelected:
+          plug === socketInfo.plugged &&
+          adjustedPlug?.plugDef.hash &&
+          plug.plugDef.hash !== adjustedPlug?.plugDef.hash,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}
       onClick={handleShiftClick}
@@ -133,13 +117,14 @@ export default function Plug({
       ) : (
         contents
       )}
-      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugDef.hash) && (
-        <BestRatedIcon wishListsEnabled={wishListsEnabled} />
-      )}
       {wishListsEnabled &&
         inventoryWishListRoll &&
         inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
-          <BestRatedIcon wishListsEnabled={wishListsEnabled} />
+          <AppIcon
+            className="thumbs-up"
+            icon={thumbsUpIcon}
+            title={t('WishListRoll.BestRatedTip')}
+          />
         )}
     </div>
   );

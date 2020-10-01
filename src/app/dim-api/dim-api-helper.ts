@@ -1,11 +1,11 @@
-import { HttpClientConfig } from 'bungie-api-ts/http';
-import {
-  getActiveToken as getBungieToken,
-  FatalTokenError,
-} from 'app/bungie-api/authenticated-fetch';
-import { dedupePromise } from 'app/utils/util';
-import store from 'app/store/store';
 import { needsDeveloper } from 'app/accounts/actions';
+import {
+  FatalTokenError,
+  getActiveToken as getBungieToken,
+} from 'app/bungie-api/authenticated-fetch';
+import store from 'app/store/store';
+import { dedupePromise } from 'app/utils/util';
+import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =

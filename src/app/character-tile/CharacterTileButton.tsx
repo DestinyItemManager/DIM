@@ -1,5 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
 import { DimStore } from '../inventory/store-types';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';
@@ -19,7 +19,7 @@ export default function CharacterTileButton({
       onClick={handleClick}
       className={clsx('character', {
         current: character.current,
-        destiny2: character.isDestiny2(),
+        destiny2: character.destinyVersion === 2,
       })}
     >
       <CharacterTile store={character} />

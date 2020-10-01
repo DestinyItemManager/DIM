@@ -1,26 +1,17 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
-import { DimItem } from './item-types';
-import { TagValue } from './dim-item-info';
-import BadgeInfo from './BadgeInfo';
-import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
+import React, { useMemo } from 'react';
+import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
+import BadgeInfo from './BadgeInfo';
+import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
+import { DimItem } from './item-types';
+import ItemIcon from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
-import TagIcon from './TagIcon';
 import { selectedSubclassPath } from './subclass';
-import { SUBCLASS_BUCKET } from 'app/search/d2-known-values';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
-
-const itemTierStyles = {
-  Legendary: styles.legendary,
-  Exotic: styles.exotic,
-  Common: styles.basic,
-  Rare: styles.rare,
-  Uncommon: styles.common,
-};
+import TagIcon from './TagIcon';
 
 interface Props {
   item: DimItem;
@@ -30,8 +21,6 @@ interface Props {
   tag?: TagValue;
   /**  */
   notes?: boolean;
-  /** Rating value */
-  rating?: number;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishListsEnabled?: boolean;
@@ -41,7 +30,6 @@ interface Props {
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e);
-  onTouch?(e);
   onShiftClick?(e): void;
   onDoubleClick?(e);
 }
@@ -51,20 +39,15 @@ export default function InventoryItem({
   isNew,
   tag,
   notes,
-  rating,
   searchHidden,
   wishListsEnabled,
   inventoryWishListRoll,
   ignoreSelectedPerks,
   onClick,
-  onTouch,
   onShiftClick,
   onDoubleClick,
   innerRef,
 }: Props) {
-  const [touchActive, setTouchActive] = useState(false);
-  const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-
   const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
 
   let enhancedOnClick = onClick;
@@ -80,97 +63,63 @@ export default function InventoryItem({
 
   const subclassPath =
     (!ignoreSelectedPerks &&
-      item.isDestiny2 &&
-      item.isDestiny2() &&
+      item?.destinyVersion === 2 &&
       item.talentGrid &&
       selectedSubclassPath(item.talentGrid)) ||
     null;
-  const noBorder = borderless(item);
-  const itemStyles = {
-    [styles.touchActive]: touchActive,
+  const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
-    [itemTierStyles[item.tier]]: !noBorder && !(item.isDestiny2?.() && item.plug),
-  };
-  const itemImageStyles = clsx('item-img', {
-    [styles.complete]: item.complete || isCapped,
-    [styles.borderless]: noBorder,
-    [styles.masterwork]: item.masterwork,
   });
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchActive(true);
-    onTouch?.(e);
-  };
+  // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
+  const contents = useMemo(() => {
+    // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.
+    if (subclassPath) {
+      return (
+        <>
+          <img src={subclassPath.base} className={clsx('item-img', styles.subclassBase)} alt="" />
+          {subclassPath.super && (
+            <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
+          )}
+        </>
+      );
+    }
 
-  const onTouchEnd = (e: React.TouchEvent) => {
-    setTouchActive(false);
-    onTouch?.(e);
-  };
+    const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
+    return (
+      <>
+        {item.percentComplete > 0 && !item.complete && (
+          <div className={styles.xpBar}>
+            <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
+          </div>
+        )}
+        <ItemIcon item={item} />
+        <BadgeInfo item={item} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
+        {(tag || item.locked || notes) && (
+          <div className={styles.icons}>
+            {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
+            {tag && <TagIcon className={styles.icon} tag={tag} />}
+            {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
+          </div>
+        )}
+        {isNew && <NewItemIndicator />}
+      </>
+    );
+  }, [isNew, item, notes, subclassPath, tag, uiWishListRoll]);
 
   return (
     <div
       id={item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchEnd}
-      onTouchEnd={onTouchEnd}
-      onTouchCancel={onTouchEnd}
       title={`${item.name}\n${item.typeName}`}
-      className={clsx('item', itemStyles)}
+      className={itemStyles}
       ref={innerRef}
     >
-      {item.percentComplete > 0 && !item.complete && (
-        <div className={styles.xpBar}>
-          <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
-        </div>
-      )}
-      {(subclassPath?.base && <img src={subclassPath.base} className={itemImageStyles} />) || (
-        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
-      )}
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
-      {item.masterwork && (
-        <div
-          className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
-        />
-      )}
-      {item.iconOverlay && (
-        <div className={clsx(styles.iconOverlay)}>
-          <BungieImage src={item.iconOverlay} />
-        </div>
-      )}
-      {(tag || item.locked || notes) && (
-        <div className={styles.icons}>
-          {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
-          {tag && <TagIcon className={styles.icon} tag={tag} />}
-          {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
-        </div>
-      )}
-      {isNew && <NewItemIndicator />}
-      {subclassPath?.super && (
-        <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
-      )}
-      {item.isDestiny2?.() && item.plug?.costElementIcon && (
-        <>
-          <div
-            style={{ backgroundImage: `url("${bungieNetPath(item.plug.costElementIcon)}")` }}
-            className="energyCostOverlay"
-          />
-          <div className="energyCost">{item.plug.energyCost}</div>
-        </>
-      )}
+      {contents}
     </div>
-  );
-}
-
-export function borderless(item: DimItem) {
-  return (
-    (item.isDestiny2?.() &&
-      (item.bucket.hash === SUBCLASS_BUCKET ||
-        item.itemCategoryHashes?.includes(ItemCategoryHashes.Packages))) ||
-    item.isEngram
   );
 }

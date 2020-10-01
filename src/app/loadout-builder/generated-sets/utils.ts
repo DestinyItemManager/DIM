@@ -1,8 +1,7 @@
+import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import { ArmorSet, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
-import { statKeys } from '../types';
+import { ArmorSet, LockedMap, statKeys, StatTypes } from '../types';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
@@ -63,7 +62,7 @@ function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: Lock
       (set) =>
         -_.sumBy(set.armor, (items) => {
           const item = items?.[0];
-          if (!item || !item.isDestiny2() || !item.sockets) {
+          if (!item || !item.sockets) {
             return 0;
           }
 

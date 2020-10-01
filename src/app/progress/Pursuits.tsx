@@ -1,12 +1,13 @@
-import React from 'react';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import Pursuit, { showPursuitAsExpired } from './Pursuit';
-import _ from 'lodash';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
 const defaultExpirationDate = new Date(8640000000000000);
 
@@ -14,7 +15,7 @@ export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) => (item.isDestiny2() && item.pursuit?.expirationDate) || defaultExpirationDate),
+  compareBy((item) => item.pursuit?.expirationDate || defaultExpirationDate),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name)
@@ -39,9 +40,9 @@ export default function Pursuits({
   // Get all items in this character's inventory that represent quests - some are actual items that take
   // up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
   // that represent milestones.
-  const filteredItems = store.buckets[1345459588].concat(
+  const filteredItems = findItemsByBucket(store, BucketHashes.Quests).concat(
     // Include prophecy tablets, which are in consumables
-    store.buckets[1469714392].filter((item) =>
+    findItemsByBucket(store, BucketHashes.Consumables).filter((item) =>
       item.itemCategoryHashes.includes(ItemCategoryHashes.ProphecyTablets)
     )
   );
@@ -55,7 +56,7 @@ export default function Pursuits({
     ) {
       return 'Quests';
     }
-    if (!item.objectives || item.objectives.length === 0 || (item.isDestiny2() && item.sockets)) {
+    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
       return 'Items';
     }
 

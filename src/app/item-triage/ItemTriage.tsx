@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { D2Item } from '../inventory/item-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import SpecialtyModSlotIcon, {
-  getArmorSlotSpecificModSocketDisplayName,
-  ArmorSlotSpecificModSocketIcon,
-} from 'app/dim-ui/SpecialtyModSlotIcon';
-import ElementIcon from 'app/inventory/ElementIcon';
-import styles from './ItemTriage.m.scss';
-import _ from 'lodash';
-import { KeepJunkDial, getValueColors } from './ValueDial';
+import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { getAllItems } from 'app/inventory/stores-helpers';
-import { classIcons } from 'app/inventory/StoreBucket';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
-import PressTip from 'app/dim-ui/PressTip';
-import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
-import { RootState } from 'app/store/types';
-import { useSelector } from 'react-redux';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import PressTip from 'app/dim-ui/PressTip';
+import SpecialtyModSlotIcon, {
+  ArmorSlotSpecificModSocketIcon,
+  getArmorSlotSpecificModSocketDisplayName,
+} from 'app/dim-ui/SpecialtyModSlotIcon';
+import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { allItemsSelector } from 'app/inventory/selectors';
+import { classIcons } from 'app/inventory/StoreBucket';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { RootState } from 'app/store/types';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { DimItem } from '../inventory/item-types';
+import styles from './ItemTriage.m.scss';
+import { getValueColors, KeepJunkDial } from './ValueDial';
 
 /** a factor of interest */
 interface Factor {
   id: string;
   /** bother checking this factor, if the seed item returns truthy */
-  runIf(item: D2Item): any;
-  render(item: D2Item): React.ReactElement;
-  value(item: D2Item): string | number;
+  runIf(item: DimItem): any;
+  render(item: DimItem): React.ReactElement;
+  value(item: DimItem): string | number;
 }
 
 // factors someone might value in an item, like its mod slot or its element
@@ -140,9 +139,10 @@ const factorCombos = {
 type factorComboCategory = keyof typeof factorCombos;
 const factorComboCategories = Object.keys(factorCombos);
 
-export function ItemTriage({ item }: { item: D2Item }) {
+export function ItemTriage({ item }: { item: DimItem }) {
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
+  const allItems = useSelector(allItemsSelector);
 
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
@@ -156,10 +156,10 @@ export function ItemTriage({ item }: { item: D2Item }) {
   // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {
-      setNotableStats(getNotableStats(item, customTotalStatsByClass));
+      setNotableStats(getNotableStats(item, customTotalStatsByClass, allItems));
     }
-    setItemFactors(getSimilarItems(item));
-  }, [item, customTotalStatsByClass]);
+    setItemFactors(getSimilarItems(item, allItems));
+  }, [item, customTotalStatsByClass, allItems]);
 
   // this lets us lay out the factor categories before we have their calculated numbers
   // useEffect fills those in later for us
@@ -178,9 +178,9 @@ export function ItemTriage({ item }: { item: D2Item }) {
           factorCombosLabels.map((comboDisplay, i) => (
             <React.Fragment key={i}>
               {comboDisplay}
-              <div className={styles.comboCount}>{itemFactors?.[i].count}</div>
+              <div className={styles.comboCount}>{itemFactors?.[i]?.count}</div>
               <div className={styles.keepMeter}>
-                {itemFactors && <KeepJunkDial value={itemFactors[i].quality} />}
+                {itemFactors && <KeepJunkDial value={itemFactors[i]?.quality} />}
               </div>
             </React.Fragment>
           ))}
@@ -255,9 +255,9 @@ export function ItemTriage({ item }: { item: D2Item }) {
  * keyed by item factor combination i.e. "arcwarlockopulent"
  * with values representing how many of that type you own
  */
-function collectRelevantItemFactors(exampleItem: D2Item) {
+function collectRelevantItemFactors(exampleItem: DimItem, allItems: DimItem[]) {
   const combinationCounts: { [key: string]: number } = {};
-  getAllItems(exampleItem.getStoresService().getStores())
+  allItems
     .filter(
       (i) =>
         // compare only items with the same canonical bucket.
@@ -268,7 +268,7 @@ function collectRelevantItemFactors(exampleItem: D2Item) {
           i.classType === DestinyClass.Unknown ||
           i.classType === exampleItem.classType)
     )
-    .forEach((item: D2Item) => {
+    .forEach((item: DimItem) => {
       factorCombos[exampleItem.bucket.sort as factorComboCategory].forEach((factorCombo) => {
         const combination = applyFactorCombo(item, factorCombo);
         combinationCounts[combination] = (combinationCounts[combination] ?? 0) + 1;
@@ -276,11 +276,12 @@ function collectRelevantItemFactors(exampleItem: D2Item) {
     });
   return combinationCounts;
 }
-function getSimilarItems(exampleItem: D2Item) {
+
+function getSimilarItems(exampleItem: DimItem, allItems: DimItem[]) {
   if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
     return [];
   }
-  const relevantFactors = collectRelevantItemFactors(exampleItem);
+  const relevantFactors = collectRelevantItemFactors(exampleItem, allItems);
   return factorCombos[exampleItem.bucket.sort as factorComboCategory]
     .filter((factorCombo) => factorCombo.every((factor) => factor.runIf(exampleItem)))
     .map((factorCombo) => {
@@ -293,7 +294,7 @@ function getSimilarItems(exampleItem: D2Item) {
       };
     });
 }
-function getItemFactorComboDisplays(exampleItem: D2Item) {
+function getItemFactorComboDisplays(exampleItem: DimItem) {
   if (!factorComboCategories.includes(exampleItem.bucket.sort ?? '')) {
     return [];
   }
@@ -306,10 +307,14 @@ function getItemFactorComboDisplays(exampleItem: D2Item) {
  * given a seed item (one that all items will be compared to),
  * derives all items from stores, then gathers stat maxes for items worth comparing
  */
-function collectRelevantStatMaxes(exampleItem: D2Item, customStatTotalHashes: number[]) {
+function collectRelevantStatMaxes(
+  exampleItem: DimItem,
+  customStatTotalHashes: number[],
+  allItems: DimItem[]
+) {
   // highest values found in relevant items, keyed by stat hash
   const statMaxes: Record<number | string, number> = { custom: 0 };
-  getAllItems(exampleItem.getStoresService().getStores())
+  allItems
     .filter(
       (i) =>
         // compare only items with the same canonical bucket.
@@ -350,11 +355,12 @@ const notabilityThreshold = 0.8;
  * returns an entry for each notable stat found on the seed item
  */
 function getNotableStats(
-  exampleItem: D2Item,
-  customTotalStatsByClass: StatHashListsKeyedByDestinyClass
+  exampleItem: DimItem,
+  customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
+  allItems: DimItem[]
 ) {
   const customStatTotalHashes = customTotalStatsByClass[exampleItem.classType] ?? [];
-  const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes);
+  const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes, allItems);
 
   const customTotal =
     exampleItem.stats?.reduce(
@@ -395,7 +401,7 @@ function getNotableStats(
  * for factorCombo [class, element]
  * and an item that's a warlock void armor
  */
-function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
+function applyFactorCombo(item: DimItem, factorCombo: Factor[]) {
   return factorCombo.map((factor) => factor.id + factor.value(item)).join();
 }
 
@@ -405,7 +411,7 @@ function applyFactorCombo(item: D2Item, factorCombo: Factor[]) {
  * for factorCombo [class, element]
  * and an exampleItem that's a warlock void armor
  */
-function renderFactorCombo(exampleItem: D2Item, factorCombo: Factor[]) {
+function renderFactorCombo(exampleItem: DimItem, factorCombo: Factor[]) {
   return (
     <div className={styles.factorCombo}>
       {factorCombo.map((factor) => (

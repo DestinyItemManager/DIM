@@ -1,14 +1,14 @@
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import clsx from 'clsx';
 import React from 'react';
 import {
+  ConnectDropTarget,
   DropTarget,
-  DropTargetSpec,
   DropTargetConnector,
   DropTargetMonitor,
-  ConnectDropTarget,
+  DropTargetSpec,
 } from 'react-dnd';
-import clsx from 'clsx';
 import { DimItem } from '../inventory/item-types';
-import _ from 'lodash';
 
 interface ExternalProps {
   bucketTypes: string[];
@@ -41,7 +41,7 @@ const dropSpec: DropTargetSpec<Props> = {
   canDrop(_, monitor) {
     // But equipping has requirements
     const item = monitor.getItem().item as DimItem;
-    return item.canBeInLoadout();
+    return itemCanBeInLoadout(item);
   },
 };
 

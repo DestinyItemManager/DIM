@@ -1,35 +1,35 @@
-import React from 'react';
-import { DimItem, D2Item } from '../inventory/item-types';
-import ItemTagSelector from './ItemTagSelector';
-import clsx from 'clsx';
-import { t } from 'app/i18next-t';
-import LockButton from './LockButton';
-import ExternalLink from '../dim-ui/ExternalLink';
-import { AppIcon, faClone, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
-import { CompareService } from '../compare/compare.service';
-import { ammoTypeClass } from './ammo-type';
-import ExpandedRating from './ExpandedRating';
-import { ItemSubHeader } from './ItemSubHeader';
-import './ItemPopupHeader.scss';
-import { hideItemPopup } from './item-popup';
-import { DamageType } from 'bungie-api-ts/destiny2';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { getItemDamageShortName } from 'app/utils/item-utils';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { getItemDamageShortName, getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { DamageType } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React from 'react';
+import { CompareService } from '../compare/compare.service';
+import ExternalLink from '../dim-ui/ExternalLink';
+import { DimItem } from '../inventory/item-types';
+import { AppIcon, faChevronCircleUp, faClone, openDropdownIcon } from '../shell/icons';
+import { ammoTypeClass } from './ammo-type';
+import { hideItemPopup } from './item-popup';
+import './ItemPopupHeader.scss';
+import { ItemSubHeader } from './ItemSubHeader';
+import ItemTagSelector from './ItemTagSelector';
+import LockButton from './LockButton';
 
 export default function ItemPopupHeader({
   item,
   expanded,
   showToggle,
   language,
+  isPhonePortrait,
   onToggleExpanded,
 }: {
   item: DimItem;
   expanded: boolean;
   showToggle: boolean;
   language: string;
+  isPhonePortrait: boolean;
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = item.trackable || item.lockable || item.element;
@@ -39,35 +39,30 @@ export default function ItemPopupHeader({
   };
 
   const hasDetails = Boolean(
-    item.stats?.length ||
-      item.talentGrid ||
-      item.objectives ||
-      (item.isDestiny2() && item.flavorObjective) ||
-      item.secondaryIcon
+    item.stats?.length || item.talentGrid || item.objectives || item.secondaryIcon
   );
   const showDescription = Boolean(item.description?.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
-  const maxLight = item.isDestiny2() && item.powerCap;
 
   useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
+  useHotkey('c', t('Compare.ButtonHelp'), openCompare);
 
-  const finalSeason = item.isDestiny2() && item.powerCap && getItemPowerCapFinalSeason(item);
+  const finalSeason = getItemPowerCapFinalSeason(item);
   const powerCapString =
-    light &&
-    maxLight &&
+    (light || item.powerCap) &&
     (finalSeason
-      ? t('Stats.PowerCapWithSeason', { powerCap: maxLight, finalSeason })
-      : t('MovePopup.PowerCap', { powerCap: maxLight }));
+      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
+      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
       className={clsx('item-header', `is-${item.tier}`, {
-        masterwork: item.isDestiny2() && item.masterwork,
+        masterwork: item.masterwork,
       })}
     >
       <div className="item-title-container">
-        {hasLeftIcon && (
+        {(item.trackable || item.lockable) && (
           <div className="icon">
             {item.lockable && <LockButton item={item} type="lock" />}
             {item.trackable && <LockButton item={item} type="track" />}
@@ -78,16 +73,19 @@ export default function ItemPopupHeader({
             {item.name}
           </ExternalLink>
         </div>
-        {item.comparable && (
+        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={faClone} />
           </a>
         )}
-        {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
-          <div className="info" onClick={onToggleExpanded}>
-            <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
-          </div>
-        )}
+        {!$featureFlags.newItemPopupActions &&
+          showToggle &&
+          !showDetailsByDefault &&
+          (showDescription || hasDetails) && (
+            <div className="info" onClick={onToggleExpanded}>
+              <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
+            </div>
+          )}
       </div>
 
       <div className="item-subtitle">
@@ -101,23 +99,24 @@ export default function ItemPopupHeader({
               />
             </div>
           )}
-        {item.isDestiny2() && item.ammoType > 0 && (
+        {item.destinyVersion === 2 && item.ammoType > 0 && (
           <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
-        {item.isDestiny2() && item.breakerType && (
+        {item.breakerType && (
           <BungieImage className="small-icon" src={item.breakerType.displayProperties.icon} />
         )}
         <div className="item-type-info">
           <ItemSubHeader item={item} />
         </div>
-        {item.taggable && <ItemTagSelector item={item} />}
+        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.taggable && (
+          <ItemTagSelector item={item} />
+        )}
       </div>
       {powerCapString && (
         <div className="item-subtitle">
           <div>{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
         </div>
       )}
-      {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );
 }
@@ -140,11 +139,11 @@ function destinyDBLink(item: DimItem, language: string) {
     return `http://db.destinytracker.com/d${item.destinyVersion}/${language}/items/${item.hash}`;
   }
 
-  const d2Item = item as D2Item;
+  const DimItem = item;
   let perkQueryString = '';
 
-  if (d2Item) {
-    const perkCsv = buildPerksCsv(d2Item);
+  if (DimItem) {
+    const perkCsv = buildPerksCsv(DimItem);
     // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
     if (perkCsv?.length) {
       perkQueryString = `?perks=${perkCsv}`;
@@ -161,7 +160,7 @@ function destinyDBLink(item: DimItem, language: string) {
  * (and other sockets), as we build our definition of sockets we care about, so
  * I look for gaps in the index and drop a zero in where I see them.
  */
-function buildPerksCsv(item: D2Item): string {
+function buildPerksCsv(item: DimItem): string {
   const perkValues: number[] = [];
 
   if (item.sockets) {

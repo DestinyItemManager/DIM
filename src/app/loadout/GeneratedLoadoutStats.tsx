@@ -1,21 +1,21 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-import _ from 'lodash';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { SEASONAL_ARTIFACT_BUCKET } from 'app/search/d2-known-values';
-import AppIcon from 'app/shell/icons/AppIcon';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
-import type { DimItem } from '../inventory/item-types';
-import type { InventoryBuckets } from '../inventory/inventory-buckets';
-import type { DimStore } from '../inventory/store-types';
-import type { Loadout } from './loadout-types';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
-import { getArmorStats, getLight } from './loadout-utils';
-import { powerActionIcon } from 'app/shell/icons';
+import { t } from 'app/i18next-t';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { powerActionIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React from 'react';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import type { InventoryBuckets } from '../inventory/inventory-buckets';
+import type { DimItem } from '../inventory/item-types';
+import type { DimStore } from '../inventory/store-types';
 import { maxLightItemSet } from './auto-loadouts';
+import type { Loadout } from './loadout-types';
+import { getArmorStats, getLight } from './loadout-utils';
 
 function getItemsInListByCategory({
   buckets,
@@ -29,7 +29,7 @@ function getItemsInListByCategory({
   const itemSet: DimItem[] = [];
   const categoryBuckets = buckets.byCategory[category];
   const missingBuckets = categoryBuckets.filter((bucket) => {
-    if (bucket.hash === SEASONAL_ARTIFACT_BUCKET) {
+    if (bucket.hash === BucketHashes.SeasonalArtifact) {
       return;
     }
     const item = items.find((item) => bucket.type === item.type);
@@ -49,12 +49,14 @@ function getItemsInListByCategory({
 export function GeneratedLoadoutStats({
   defs,
   stores,
+  allItems,
   buckets,
   items,
   loadout,
 }: {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   stores: DimStore[];
+  allItems: DimItem[];
   buckets: InventoryBuckets;
   items: DimItem[];
   loadout: Loadout;
@@ -74,7 +76,7 @@ export function GeneratedLoadoutStats({
   if (weaponItems.missingBuckets) {
     // If any weapon types are missing, fill them in with max weapons to assume light level
     const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
-    const maxPowerItems = maxLightItemSet(stores, subclass).unrestricted;
+    const maxPowerItems = maxLightItemSet(allItems, subclass).unrestricted;
     const maxWeapons = _.compact(
       weaponItems.missingBuckets.map(
         (bucket) => maxPowerItems.find((item) => bucket.type === item.type)!

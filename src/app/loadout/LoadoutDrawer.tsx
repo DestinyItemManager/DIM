@@ -1,38 +1,39 @@
+import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import React, { useEffect, useReducer, useMemo } from 'react';
-import InventoryItem from '../inventory/InventoryItem';
-import _ from 'lodash';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSubscription } from 'app/utils/hooks';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
+import produce from 'immer';
+import _ from 'lodash';
+import React, { useEffect, useMemo, useReducer } from 'react';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
+import { createSelector } from 'reselect';
+import { Subject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { DimItem } from '../inventory/item-types';
-import { v4 as uuidv4 } from 'uuid';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { itemSortOrderSelector } from '../settings/item-sort';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import { destinyVersionSelector, currentAccountSelector } from 'app/accounts/selectors';
-import { storesSelector, bucketsSelector } from '../inventory/selectors';
-import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import './loadout-drawer.scss';
-import { DestinyAccount } from '../accounts/destiny-account';
 import Sheet from '../dim-ui/Sheet';
-import { showNotification } from '../notifications/notifications';
-import { showItemPicker } from '../item-picker/item-picker';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import InventoryItem from '../inventory/InventoryItem';
+import { DimItem } from '../inventory/item-types';
+import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import LoadoutDrawerContents from './LoadoutDrawerContents';
-import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import { Subject } from 'rxjs';
-import { Loadout, LoadoutItem } from './loadout-types';
-import produce from 'immer';
-import { useSubscription } from 'app/utils/hooks';
-import { useLocation } from 'react-router';
-import { emptyArray } from 'app/utils/empty';
-import { loadoutsSelector } from './reducer';
+import { showItemPicker } from '../item-picker/item-picker';
+import { showNotification } from '../notifications/notifications';
+import { itemSortOrderSelector } from '../settings/item-sort';
 import { updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
+import './loadout-drawer.scss';
+import { Loadout, LoadoutItem } from './loadout-types';
+import { getItemsFromLoadoutItems, newLoadout } from './loadout-utils';
+import LoadoutDrawerContents from './LoadoutDrawerContents';
+import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import LoadoutDrawerOptions from './LoadoutDrawerOptions';
+import { loadoutsSelector } from './selectors';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 
@@ -78,6 +79,7 @@ interface StoreProps {
     value: number;
   }[];
   stores: DimStore[];
+  allItems: DimItem[];
   buckets: InventoryBuckets;
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   loadouts: Loadout[];
@@ -87,7 +89,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Readonly<Loadout>;
-  show: boolean;
   showClass: boolean;
   isNew: boolean;
 }
@@ -119,7 +120,6 @@ function stateReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'reset':
       return {
-        show: false,
         showClass: true,
         isNew: false,
         loadout: undefined,
@@ -137,7 +137,6 @@ function stateReducer(state: State, action: Action): State {
         },
         isNew,
         showClass,
-        show: true,
       };
     }
 
@@ -151,17 +150,16 @@ function stateReducer(state: State, action: Action): State {
       const { loadout } = state;
       const { item, shift, items } = action;
 
-      if (!item.canBeInLoadout()) {
+      if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
 
-      return loadout
-        ? {
-            ...state,
-            loadout: addItem(loadout, item, shift, items),
-          }
-        : state;
+      return {
+        ...state,
+        loadout: addItem(loadout || newLoadout('', []), item, shift, items),
+        isNew: !loadout,
+      };
     }
 
     case 'removeItem': {
@@ -332,54 +330,6 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
   });
 }
 
-/**
- * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
- * are returned as warnitems.
- */
-function findItems(
-  loadoutItems: LoadoutItem[] | undefined,
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  stores: DimStore[]
-): [DimItem[], DimItem[]] {
-  if (!loadoutItems) {
-    return [emptyArray(), emptyArray()];
-  }
-
-  const findItem = (loadoutItem: LoadoutItem) => {
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-          return item;
-        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
-          return item;
-        }
-      }
-    }
-    return undefined;
-  };
-
-  const items: DimItem[] = [];
-  const warnitems: DimItem[] = [];
-  for (const loadoutItem of loadoutItems) {
-    const item = findItem(loadoutItem);
-    if (item) {
-      items.push(item);
-    } else {
-      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-      if (itemDef) {
-        // TODO: makeFakeItem
-        warnitems.push({
-          ...loadoutItem,
-          icon: itemDef.displayProperties?.icon || itemDef.icon,
-          name: itemDef.displayProperties?.name || itemDef.itemName,
-        } as DimItem);
-      }
-    }
-  }
-
-  return [items, warnitems];
-}
-
 function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
@@ -397,6 +347,7 @@ function mapStateToProps() {
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     buckets: bucketsSelector(state)!,
     defs:
       destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
@@ -413,14 +364,14 @@ function LoadoutDrawer({
   buckets,
   classTypeOptions,
   stores,
+  allItems,
   itemSortOrder,
   defs,
   loadouts,
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ show, loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
-    show: false,
+  const [{ loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
   });
@@ -436,10 +387,12 @@ function LoadoutDrawer({
   };
   useSubscription(() => editLoadout$.subscribe(editLoadout));
 
+  const loadoutItems = loadout?.items;
+
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => findItems(loadout?.items, defs, stores), [
+  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, stores), [
     defs,
-    loadout?.items,
+    loadoutItems,
     stores,
   ]);
 
@@ -477,7 +430,7 @@ function LoadoutDrawer({
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
           item.hash === warnItem.hash &&
-          item.canBeInLoadout() &&
+          itemCanBeInLoadout(item) &&
           (!loadout ||
             loadout.classType === DestinyClass.Unknown ||
             item.classType === loadoutClassType ||
@@ -520,7 +473,7 @@ function LoadoutDrawer({
     onSaveLoadout(e, newLoadout);
   };
 
-  if (!loadout || !show) {
+  if (!loadout) {
     return null;
   }
 
@@ -555,6 +508,7 @@ function LoadoutDrawer({
         buckets={buckets}
         items={items}
         loadout={loadout}
+        allItems={allItems}
       />
     </div>
   );

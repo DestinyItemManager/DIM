@@ -1,80 +1,17 @@
+import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { popperGenerator, Instance, Options, Padding } from '@popperjs/core/lib/popper-lite';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import applyStyles from '@popperjs/core/lib/modifiers/applyStyles';
-import computeStyles from '@popperjs/core/lib/modifiers/computeStyles';
-import popperOffsets from '@popperjs/core/lib/modifiers/popperOffsets';
-import offset from '@popperjs/core/lib/modifiers/offset';
-import arrow from '@popperjs/core/lib/modifiers/arrow';
 import styles from './PressTip.m.scss';
-import _ from 'lodash';
+import { usePopper } from './usePopper';
 
 interface Props {
   tooltip: React.ReactNode;
   children: React.ReactElement<any, any>;
   allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
-  elementType?: React.ReactType;
+  elementType?: React.ElementType;
+  className?: string;
 }
-
-/** Makes a custom popper that doesn't have the event listeners modifier */
-const createPopper = popperGenerator({
-  defaultModifiers: [
-    popperOffsets,
-    offset,
-    computeStyles,
-    applyStyles,
-    flip,
-    preventOverflow,
-    arrow,
-  ],
-});
-
-const popperOptions = (): Partial<Options> => {
-  const headerHeight = document.getElementById('header')!.clientHeight;
-  const padding: Padding = {
-    left: 0,
-    top: headerHeight + 5,
-    right: 0,
-    bottom: 0,
-  };
-
-  return {
-    placement: 'top',
-    modifiers: [
-      {
-        name: 'preventOverflow',
-        options: {
-          priority: ['bottom', 'top', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'flip',
-        options: {
-          behavior: ['top', 'bottom', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'offset',
-        options: {
-          offset: [0, 5],
-        },
-      },
-      {
-        name: 'arrow',
-        options: {
-          element: '.' + styles.arrow,
-        },
-      },
-    ],
-  };
-};
 
 type ControlProps = Props &
   React.HTMLAttributes<HTMLDivElement> & {
@@ -107,40 +44,14 @@ function Control({
   elementType: Component = 'div',
   ...rest
 }: ControlProps) {
-  const popper = useRef<Instance | undefined>();
   const tooltipContents = useRef<HTMLDivElement>(null);
 
-  const destroy = () => {
-    if (popper.current) {
-      popper.current.destroy();
-      popper.current = undefined;
-    }
-  };
-
-  useEffect(() => {
-    // Reposition the popup as it is shown or if its size changes
-    if (!open) {
-      return destroy();
-    }
-
-    if (!tooltipContents.current || !triggerRef.current) {
-      return;
-    } else {
-      if (popper.current) {
-        popper.current.update();
-      } else {
-        const options = popperOptions();
-
-        popper.current = createPopper(triggerRef.current, tooltipContents.current, options);
-        popper.current.update();
-        setTimeout(() => popper.current?.update(), 0); // helps fix arrow position
-      }
-    }
-
-    return () => {
-      destroy();
-    };
-  }, [open, triggerRef]);
+  usePopper({
+    contents: tooltipContents,
+    reference: triggerRef,
+    arrowClassName: styles.arrow,
+    placement: 'top',
+  });
 
   if (!tooltip) {
     return <Component>{children}</Component>;

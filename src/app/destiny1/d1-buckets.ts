@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import { D1ManifestDefinitions } from './d1-definitions';
-import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { D1Categories } from './d1-bucket-categories';
+import { D1ManifestDefinitions } from './d1-definitions';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType = {

@@ -1,19 +1,19 @@
-import { VendorDrop, VendorDropType, VendorDropXyz, toVendorDrop } from './vendorDrops';
 import { t } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
 import { loadVendorDrops } from './actions';
 import { VendorDropsState } from './reducer';
+import { toVendorDrop, VendorDrop, VendorDropType, VendorDropXyz } from './vendorDrops';
 
 export function isDroppingHigh(vendorDrop: VendorDrop): boolean {
   return vendorDrop.drop === VendorDropType.DroppingHigh && vendorDrop.display;
 }
 
-function handleVendorEngramsErrors(response: Response): Promise<VendorDropXyz[]> {
+async function handleVendorEngramsErrors(response: Response): Promise<VendorDropXyz[]> {
   if (response.status !== 200) {
     throw new Error(t('VendorEngramsXyz.ServiceCallFailed'));
   }
 
-  return response.json() || [];
+  return (await response.json()) || [];
 }
 
 // at most, request once every 30 minutes

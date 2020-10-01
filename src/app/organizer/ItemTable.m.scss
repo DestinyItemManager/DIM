@@ -20,6 +20,9 @@ $content-cells: 5;
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
     background-color: #313233;
+    :global(.gradientBackground) & {
+      background-color: #27263a;
+    }
     border-bottom: 1px solid #3c3c3e;
   }
 }
@@ -161,15 +164,9 @@ $toolbarHeight: 41px - 16px + 8px;
     padding-top: 0;
   }
   z-index: 1;
-  > div {
-    position: relative;
-  }
-  img {
-    width: calc(var(--item-size) * 0.75);
-    height: calc(var(--item-size) * 0.75);
-    display: block;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
+  --icon-item-size: calc(var(--item-size) * 0.75);
+  > :global(.item) {
+    --item-size: var(--icon-item-size) !important;
   }
 }
 
@@ -224,16 +221,31 @@ $toolbarHeight: 41px - 16px + 8px;
   padding-left: 3px;
 }
 
+// Perks in the perk/mod columns
 .modPerk {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+}
+.miniPerkContainer {
+  position: relative;
+  contain: layout paint style;
+  box-sizing: border-box;
+  height: 18px;
+  width: 18px;
+  --item-size: 18px;
+  margin-right: 3px;
+  margin-left: -1px;
+  flex-shrink: 0;
+}
+
+.locationCell {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  white-space: nowrap;
   img {
     margin-right: 4px;
-    margin-top: 1px;
-    height: 16px;
-    width: 16px;
-    flex-shrink: 0;
   }
 }
 
@@ -246,6 +258,7 @@ $modslotSize: 30px;
 .modslotIcon {
   height: $modslotSize;
   width: $modslotSize;
+  margin: 0 1px;
 }
 
 .loadouts {
@@ -270,33 +283,6 @@ $modslotSize: 30px;
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
-}
-
-// TODO: extract into a common component
-
-// Masterwork item image
-.masterwork {
-  border-color: $masterwork-border-color !important;
-}
-
-// The overlay image for masterworks
-.masterworkOverlay {
-  box-sizing: border-box;
-  top: $item-border-width;
-  left: $item-border-width;
-  border-width: 0px;
-  height: calc(var(--item-size) * 0.75 - #{2 * $item-border-width});
-  width: calc(var(--item-size) * 0.75 - #{2 * $item-border-width});
-  position: absolute;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc((var(--item-size) * 0.75 - #{2 * $item-border-width}) * (96 / 90))
-    calc((var(--item-size) * 0.75 - #{2 * $item-border-width}) * (96 / 90));
-
-  background-image: url('../../images/masterwork.png');
-}
-.exotic {
-  background-image: url('../../images/exotic-masterwork.png');
 }
 
 .itemIcon {

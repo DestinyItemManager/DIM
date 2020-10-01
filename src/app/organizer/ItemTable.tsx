@@ -1,47 +1,49 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useRef, useCallback, useEffect, ReactNode } from 'react';
-import { DimItem } from 'app/inventory/item-types';
-import { AppIcon, faCaretUp, faCaretDown, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
-import styles from './ItemTable.m.scss';
-import { ItemCategoryTreeNode } from './ItemTypeSelector';
-import _ from 'lodash';
-import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
-import { DtrRating } from 'app/item-review/dtr-api-types';
-import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { loadingTracker } from 'app/shell/loading-tracker';
-import { t, tl } from 'app/i18next-t';
+import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import ItemActions from './ItemActions';
+import { settingsSelector } from 'app/dim-api/selectors';
+import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { t, tl } from 'app/i18next-t';
+import { setItemNote } from 'app/inventory/actions';
+import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
+import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, itemInfosSelector, storesSelector } from 'app/inventory/selectors';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import EnabledColumnsSelector from './EnabledColumnsSelector';
-import { bulkTagItems, bulkLockItems } from 'app/inventory/bulk-actions';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { Loadout } from 'app/loadout/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
+import { loadoutsSelector } from 'app/loadout/selectors';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { setSetting } from 'app/settings/actions';
+import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { useShiftHeld } from 'app/utils/hooks';
+import { inventoryWishListsSelector } from 'app/wishlists/selectors';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { storesSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { inventoryWishListsSelector } from 'app/wishlists/reducer';
-import { toggleSearchQueryComponent } from 'app/shell/actions';
-import clsx from 'clsx';
-import { useShiftHeld } from 'app/utils/hooks';
-import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
-import { applyLoadout } from 'app/loadout/loadout-apply';
 import { getColumns, getColumnSelectionId } from './Columns';
-import { ratingsSelector } from 'app/item-review/reducer';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { emptyObject, emptyArray } from 'app/utils/empty';
-import { Row, ColumnDefinition, SortDirection, ColumnSort } from './table-types';
-import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
-import { setItemNote } from 'app/inventory/actions';
-import { settingsSelector } from 'app/settings/reducer';
-import { setSetting } from 'app/settings/actions';
-import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
-import { Loadout } from 'app/loadout/loadout-types';
-import { loadoutsSelector } from 'app/loadout/reducer';
-import { StatInfo } from 'app/compare/Compare';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import Dropzone, { DropzoneOptions } from 'react-dropzone';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import EnabledColumnsSelector from './EnabledColumnsSelector';
+import { itemIncludesCategories } from './filtering-utils';
+import ItemActions from './ItemActions';
+import styles from './ItemTable.m.scss';
+import { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
 const categoryToClass = {
   23: DestinyClass.Hunter,
@@ -68,7 +70,6 @@ interface StoreProps {
   items: DimItem[];
   defs: D2ManifestDefinitions;
   itemInfos: ItemInfos;
-  ratings: { [key: string]: DtrRating };
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
@@ -77,26 +78,22 @@ interface StoreProps {
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
   loadouts: Loadout[];
   newItems: Set<string>;
+  destinyVersion: DestinyVersion;
 }
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     searchFilterSelector,
     (_, props: ProvidedProps) => props.categories,
-    (stores, searchFilter, categories) => {
+    (allItems, searchFilter, categories) => {
       const terminal = Boolean(_.last(categories)?.terminal);
       if (!terminal) {
         return emptyArray<DimItem>();
       }
       const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-      const items = stores.flatMap((s) =>
-        s.items.filter(
-          (i) =>
-            i.comparable &&
-            categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
-            searchFilter(i)
-        )
+      const items = allItems.filter(
+        (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
       );
       return items;
     }
@@ -112,13 +109,13 @@ function mapStateToProps() {
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
-      ratings: $featureFlags.reviewsEnabled ? ratingsSelector(state) : emptyObject(),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
       newItems: state.inventory.newItems,
+      destinyVersion: destinyVersionSelector(state),
     };
   };
 }
@@ -131,7 +128,6 @@ function ItemTable({
   items,
   categories,
   itemInfos,
-  ratings,
   wishList,
   defs,
   stores,
@@ -139,6 +135,7 @@ function ItemTable({
   customTotalStatsByClass,
   loadouts,
   newItems,
+  destinyVersion,
   dispatch,
 }: Props) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -169,20 +166,26 @@ function ItemTable({
     }
   });
 
+  // Are we at a item category that can show items?
+  const terminal = Boolean(_.last(categories)?.terminal);
+
   // Build a list of all the stats relevant to this set of items
   const statHashes = useMemo(
-    () => buildStatInfo(items, categories),
-    // We happen to know that we only need to recalculate this when the categories change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [categories]
+    () =>
+      terminal
+        ? buildStatInfo(items)
+        : emptyObject<{
+            [statHash: number]: StatInfo;
+          }>(),
+    [terminal, items]
   );
 
-  const firstItem = items[0];
-  const isWeapon = Boolean(firstItem?.bucket.inWeapons);
-  const isArmor = Boolean(firstItem?.bucket.inArmor);
+  const firstCategory = categories[1];
+  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
+  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
+  const isArmor = !isWeapon && !isGhost;
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
   const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
-  const destinyVersion = firstItem?.destinyVersion || 2;
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
@@ -192,7 +195,6 @@ function ItemTable({
         classIfAny,
         defs,
         itemInfos,
-        ratings,
         wishList,
         customStatTotal,
         loadouts,
@@ -204,7 +206,6 @@ function ItemTable({
       statHashes,
       itemType,
       itemInfos,
-      ratings,
       defs,
       customStatTotal,
       classIfAny,
@@ -317,7 +318,7 @@ function ItemTable({
         selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
-      applyLoadout(store, loadout, true);
+      dispatch(applyLoadout(store, loadout, true));
     }
   };
 
@@ -482,18 +483,21 @@ function ItemTable({
         </div>
       </div>
       <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-        <input
-          name="selectAll"
-          title={t('Organizer.SelectAll')}
-          type="checkbox"
-          checked={selectedItemIds.length === rows.length}
-          ref={(el) =>
-            el &&
-            (el.indeterminate =
-              selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
-          }
-          onChange={selectAllItems}
-        />
+        <div>
+          <input
+            name="selectAll"
+            title={t('Organizer.SelectAll')}
+            type="checkbox"
+            checked={selectedItemIds.length === rows.length}
+            ref={(el) =>
+              el &&
+              (el.indeterminate =
+                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+            }
+            onChange={selectAllItems}
+          />
+          {selectedItemIds.length}
+        </div>
       </div>
       {filteredColumns.map((column: ColumnDefinition) => (
         <div
@@ -582,15 +586,10 @@ function sortRows(
  * It will return the same result for the same category, since all items in a category share stats.
  */
 function buildStatInfo(
-  items: DimItem[],
-  categories: ItemCategoryTreeNode[]
+  items: DimItem[]
 ): {
   [statHash: number]: StatInfo;
 } {
-  const terminal = Boolean(_.last(categories)?.terminal);
-  if (!terminal) {
-    return emptyObject();
-  }
   const statHashes: {
     [statHash: number]: StatInfo;
   } = {};

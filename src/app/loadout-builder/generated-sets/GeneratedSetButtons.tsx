@@ -1,14 +1,15 @@
 import { t } from 'app/i18next-t';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { Loadout } from 'app/loadout/loadout-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
-import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
+import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
 import { ArmorSet } from '../types';
-import styles from './GeneratedSetButtons.m.scss';
-import { Loadout } from 'app/loadout/loadout-types';
-import { applyLoadout } from 'app/loadout/loadout-apply';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { statTier } from '../utils';
+import styles from './GeneratedSetButtons.m.scss';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -16,12 +17,18 @@ import { statTier } from '../utils';
 export default function GeneratedSetButtons({
   store,
   set,
+  canCompareLoadouts,
   onLoadoutSet,
+  onCompareSet,
 }: {
   store: DimStore;
   set: ArmorSet;
+  canCompareLoadouts: boolean;
   onLoadoutSet(loadout: Loadout): void;
+  onCompareSet(): void;
 }) {
+  const dispatch = useDispatch();
+
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
     onLoadoutSet(createLoadout(store.classType, set));
@@ -30,11 +37,16 @@ export default function GeneratedSetButtons({
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
     const loadout = createLoadout(store.classType, set);
-    return applyLoadout(store, loadout, true);
+    return dispatch(applyLoadout(store, loadout, true));
   };
 
   return (
     <div className={styles.buttons}>
+      {canCompareLoadouts && (
+        <button type="button" className="dim-button" onClick={onCompareSet}>
+          {t('LoadoutBuilder.CompareLoadout')}
+        </button>
+      )}
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>

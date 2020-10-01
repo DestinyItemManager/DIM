@@ -1,18 +1,18 @@
-import React from 'react';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
-import PursuitItem from './PursuitItem';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { connect } from 'react-redux';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
+import React from 'react';
+import { connect } from 'react-redux';
 import { ObjectiveValue } from './Objective';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import PursuitItem from './PursuitItem';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -105,13 +105,10 @@ export default connect<StoreProps>(mapStateToProps)(Pursuit);
 export function showPursuitAsExpired(item: DimItem) {
   // Suppress description when expiration is shown
   const suppressExpiration =
-    item.isDestiny2() &&
-    item.pursuit &&
-    item.pursuit.suppressExpirationWhenObjectivesComplete &&
-    item.complete;
+    item.pursuit?.suppressExpirationWhenObjectivesComplete && item.complete;
 
   const expired =
-    !suppressExpiration && item.isDestiny2() && item.pursuit?.expirationDate
+    !suppressExpiration && item.pursuit?.expirationDate
       ? item.pursuit.expirationDate.getTime() < Date.now()
       : false;
 

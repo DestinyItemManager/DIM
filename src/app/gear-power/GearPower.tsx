@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import { showGearPower$ } from './gear-power';
-import Sheet from '../dim-ui/Sheet';
-import { storesSelector } from '../inventory/selectors';
-import { D2Store } from '../inventory/store-types';
-import { RootState } from 'app/store/types';
-import styles from './GearPower.m.scss';
-import { useSelector } from 'react-redux';
+import BungieImage from 'app/dim-ui/BungieImage';
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import { itemPop } from 'app/dim-ui/scroll';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
-import { useSubscription } from 'app/utils/hooks';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { itemPop } from 'app/dim-ui/scroll';
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Sheet from '../dim-ui/Sheet';
+import { allItemsSelector, storesSelector } from '../inventory/selectors';
+import { DimStore } from '../inventory/store-types';
+import { showGearPower$ } from './gear-power';
+import styles from './GearPower.m.scss';
 
 const bucketClassNames = {
   Kinetic: styles.kinetic,
@@ -28,8 +27,9 @@ const bucketClassNames = {
 };
 
 export default function GearPower() {
-  const stores = useSelector<RootState, D2Store[]>((state) => storesSelector(state) as D2Store[]);
-  const [selectedStore, setSelectedStore] = useState<D2Store | undefined>();
+  const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+  const [selectedStore, setSelectedStore] = useState<DimStore | undefined>();
   const reset = () => {
     setSelectedStore(undefined);
   };
@@ -44,7 +44,7 @@ export default function GearPower() {
     return null;
   }
 
-  const { unrestricted, equippable } = maxLightItemSet(stores, selectedStore);
+  const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
   const maxBasePower = getLight(selectedStore, unrestricted);
   const equippableMaxBasePower = getLight(selectedStore, equippable);
   const powerFloor = Math.floor(maxBasePower);

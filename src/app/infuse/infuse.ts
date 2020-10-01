@@ -1,5 +1,5 @@
-import { DimItem } from '../inventory/item-types';
 import { Subject } from 'rxjs';
+import { DimItem } from '../inventory/item-types';
 
 export interface InfuseOptions {
   item: DimItem;

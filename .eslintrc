@@ -22,7 +22,6 @@
     "$DIM_FLAVOR": "readonly",
     "$DIM_VERSION": "readonly",
     "$DIM_BUILD_DATE": "readonly",
-    "$GOOGLE_DRIVE_CLIENT_ID": "readonly",
     "$DIM_WEB_API_KEY": "readonly",
     "$DIM_WEB_CLIENT_ID": "readonly",
     "$DIM_WEB_CLIENT_SECRET": "readonly",
@@ -74,7 +73,9 @@
     ],
     "arrow-body-style": ["error", "as-needed"],
     "curly": ["error", "all"],
-    "no-return-await": "error",
+    "eqeqeq": ["error", "always"],
+    "no-return-await": "off",
+    "@typescript-eslint/return-await": ["error", "in-try-catch"],
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",
     "require-atomic-updates": "off",
@@ -88,6 +89,7 @@
     "react/no-this-in-sfc": "error",
     "react/no-unused-state": "error",
     "react/button-has-type": "error",
+    "react/prop-types": "off",
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",
@@ -117,6 +119,13 @@
     "lodash/prefer-reject": "error",
     "lodash/prefer-times": "error",
     "lodash/preferred-alias": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

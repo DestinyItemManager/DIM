@@ -1,9 +1,8 @@
-import React from 'react';
-import './Account.scss';
-import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';
 import clsx from 'clsx';
-import { AppIcon, collapseIcon } from '../shell/icons';
-import _ from 'lodash';
+import React from 'react';
+import { AppIcon } from '../shell/icons';
+import styles from './Account.m.scss';
+import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';
 
 function Account(
   {
@@ -21,22 +20,21 @@ function Account(
   return (
     <div
       ref={ref}
-      className={clsx('account', className, { 'selected-account': selected })}
+      className={clsx(styles.account, className, { [styles.selectedAccount]: selected })}
       {...other}
       role="menuitem"
     >
-      <div className="account-name">{account.displayName}</div>
-      <div className="account-details">
+      <div className={styles.accountName}>{account.displayName}</div>
+      <div className={styles.accountDetails}>
         <b>{account.destinyVersion === 1 ? 'D1' : 'D2'}</b>
         {account.platforms.map((platformType, index) => (
           <AppIcon
             key={platformType}
-            className={index === 0 ? 'first' : ''}
+            className={clsx({ [styles.first]: index === 0 })}
             icon={PLATFORM_ICONS[platformType]}
           />
         ))}
       </div>
-      {selected && <AppIcon className="collapse" icon={collapseIcon} />}
     </div>
   );
 }

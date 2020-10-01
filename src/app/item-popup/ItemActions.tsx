@@ -1,19 +1,20 @@
-import React, { useState, useMemo } from 'react';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
+import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { showItemPopup } from 'app/item-popup/item-popup';
+import { ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
-import styles from './ItemActions.m.scss';
-import { hideItemPopup } from './item-popup';
-import { moveItemTo, consolidate, distribute } from '../inventory/move-item';
+import React, { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { showInfuse } from '../infuse/infuse';
+import { DimItem } from '../inventory/item-types';
+import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
 import { sortedStoresSelector } from '../inventory/selectors';
-import { useSelector } from 'react-redux';
+import { DimStore } from '../inventory/store-types';
+import { hideItemPopup } from './item-popup';
+import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
+import styles from './ItemActions.m.scss';
 import ItemMoveAmount from './ItemMoveAmount';
 import ItemMoveLocation from './ItemMoveLocation';
-import { showInfuse } from '../infuse/infuse';
-import { showItemPopup } from 'app/item-popup/item-popup';
-import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
-import { getStore } from 'app/inventory/stores-helpers';
 
 export default function ItemActions({
   item,
@@ -25,18 +26,19 @@ export default function ItemActions({
   const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const store = getStore(stores, item.owner);
+  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
     () =>
       !store || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
         ? 1
-        : store.amountOfItem(item),
+        : amountOfItem(store, item),
     [store, item]
   );
 
   const onMoveItemTo = (store: DimStore, equip = false) => {
-    moveItemTo(item, store, equip, amount);
+    dispatch(moveItemTo(item, store, equip, amount));
     hideItemPopup();
   };
 
@@ -51,13 +53,13 @@ export default function ItemActions({
 
   const onConsolidate = () => {
     if (store) {
-      consolidate(item, store);
+      dispatch(consolidate(item, store));
       hideItemPopup();
     }
   };
 
   const onDistribute = () => {
-    distribute(item);
+    dispatch(distribute(item));
     hideItemPopup();
   };
 
@@ -69,7 +71,7 @@ export default function ItemActions({
 
   const canConsolidate =
     !item.notransfer && item.location.hasTransferDestination && item.maxStackSize > 1;
-  const canDistribute = item.isDestiny1() && !item.notransfer && item.maxStackSize > 1;
+  const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
   return (
     <>
@@ -81,20 +83,21 @@ export default function ItemActions({
           onAmountChanged={onAmountChanged}
         />
       )}
-      <div className={mobileInspect ? styles.interactionV : styles.interaction}>
+      <div className={styles.interaction}>
         {stores.map((buttonStore) => (
           <ItemMoveLocation
             key={buttonStore.id}
             item={item}
             store={buttonStore}
             itemOwnerStore={store}
+            vertical={Boolean(mobileInspect)}
             moveItemTo={onMoveItemTo}
           />
         ))}
 
         {canConsolidate && (
           <ItemActionButton
-            className={styles.moveDistribute}
+            className={styles.moveConsolidate}
             title={t('MovePopup.Consolidate')}
             onClick={onConsolidate}
             label={t('MovePopup.Take')}
@@ -109,17 +112,10 @@ export default function ItemActions({
           />
         )}
         {item.infusionFuel && (
-          <ItemActionButtonGroup>
-            {mobileInspect && (
-              <ItemActionButton
-                onClick={() => showItemPopup(item)}
-                title={t('MovePopup.ItemDetailSheet')}
-                label={t('MovePopup.Details')}
-              />
-            )}
+          <ItemActionButtonGroup vertical={Boolean(mobileInspect)}>
             <ItemActionButton
               className={clsx(styles.infusePerk, {
-                [styles.destiny2]: item.isDestiny2(),
+                [styles.destiny2]: item.destinyVersion === 2,
                 [styles.weapons]: item.bucket.sort === 'Weapons',
                 [styles.armor]: item.bucket.sort === 'Armor',
               })}
@@ -127,6 +123,13 @@ export default function ItemActions({
               title={t('Infusion.Infusion')}
               label={t('MovePopup.Infuse')}
             />
+            {mobileInspect && (
+              <ItemActionButton
+                onClick={() => showItemPopup(item)}
+                title={t('MovePopup.ItemDetailSheet')}
+                label={t('MovePopup.Details')}
+              />
+            )}
           </ItemActionButtonGroup>
         )}
       </div>

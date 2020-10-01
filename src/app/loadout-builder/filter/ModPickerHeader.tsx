@@ -1,6 +1,6 @@
-import React, { ChangeEvent } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, searchIcon } from 'app/shell/icons';
+import React, { ChangeEvent } from 'react';
 import styles from './ModPickerHeader.m.scss';
 
 interface Props {

@@ -1,28 +1,23 @@
-import React, { useEffect } from 'react';
-import { DestinyAccount } from '../accounts/destiny-account';
-import Stores from './Stores';
-import { D1StoresService } from './d1-stores';
-import { D2StoresService } from './d2-stores';
-import { connect } from 'react-redux';
-import { RootState } from 'app/store/types';
-import ClearNewItems from './ClearNewItems';
-import StackableDragHelp from './StackableDragHelp';
-import LoadoutDrawer from '../loadout/LoadoutDrawer';
-import { refresh$ } from '../shell/refresh';
-import Compare from '../compare/Compare';
-import D2Farming from '../farming/D2Farming';
-import D1Farming from '../farming/D1Farming';
-import InfusionFinder from '../infuse/InfusionFinder';
-import GearPower from '../gear-power/GearPower';
-import { queueAction } from './action-queue';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
-import { storesLoadedSelector, isPhonePortraitSelector } from './selectors';
-import { useSubscription } from 'app/utils/hooks';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import DragGhostItem from './DragGhostItem';
+import Farming from 'app/farming/Farming';
 import { t } from 'app/i18next-t';
+import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { DestinyAccount } from '../accounts/destiny-account';
+import Compare from '../compare/Compare';
+import GearPower from '../gear-power/GearPower';
+import InfusionFinder from '../infuse/InfusionFinder';
+import LoadoutDrawer from '../loadout/LoadoutDrawer';
+import DragGhostItem from './DragGhostItem';
+import { storesLoadedSelector } from './selectors';
+import StackableDragHelp from './StackableDragHelp';
+import { useLoadStores } from './store/hooks';
+import Stores from './Stores';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -42,23 +37,20 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-function getStoresService(account: DestinyAccount) {
-  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
-}
+/*
+const components = [
+  DestinyComponentType.ProfileInventories,
+  DestinyComponentType.ProfileCurrencies,
+  DestinyComponentType.Characters,
+  DestinyComponentType.CharacterInventories,
+  DestinyComponentType.CharacterEquipment,
+  DestinyComponentType.ItemInstances,
+  DestinyComponentType.ItemSockets, // TODO: remove ItemSockets - currently needed for wishlist perks
+];
+*/
 
 function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
-  useSubscription(() => {
-    const storesService = getStoresService(account);
-    return refresh$.subscribe(() => queueAction(() => storesService.reloadStores()));
-  });
-
-  useEffect(() => {
-    const storesService = getStoresService(account);
-    if (!storesLoaded) {
-      // TODO: Dispatch an action to load stores instead
-      storesService.getStoresStream(account);
-    }
-  }, [account, storesLoaded]);
+  useLoadStores(account, storesLoaded);
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -71,12 +63,11 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
       <Compare />
       <StackableDragHelp />
       <DragPerformanceFix />
-      {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+      <Farming />
       {account.destinyVersion === 2 && <GearPower />}
       {$featureFlags.mobileInspect && isPhonePortrait && <MobileInspect />}
       <DragGhostItem />
       <InfusionFinder destinyVersion={account.destinyVersion} />
-      <ClearNewItems account={account} />
     </ErrorBoundary>
   );
 }

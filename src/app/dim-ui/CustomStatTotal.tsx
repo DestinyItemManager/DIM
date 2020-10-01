@@ -1,14 +1,14 @@
-import React, { ReactElement, ReactNode } from 'react';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { RootState } from 'app/store/types';
-import { useDispatch, useSelector } from 'react-redux';
-import styles from './CustomStatTotal.m.scss';
-import { armorStats } from 'app/inventory/store/stats';
-import { DestinyStatDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
-import { setSetting } from '../settings/actions';
-import clsx from 'clsx';
-import { settingsSelector } from 'app/settings/reducer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { armorStats } from 'app/search/d2-known-values';
+import { RootState } from 'app/store/types';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import React, { ReactElement, ReactNode } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSetting } from '../settings/actions';
+import styles from './CustomStatTotal.m.scss';
 
 export type StatHashListsKeyedByDestinyClass = Record<number, number[]>;
 
@@ -21,7 +21,9 @@ export function StatTotalToggle({
   forClass?: DestinyClass;
   readOnly?: boolean;
 }) {
-  const defs = useSelector<RootState, D2ManifestDefinitions>((state) => state.manifest.d2Manifest!);
+  const defs = useSelector<RootState, D2ManifestDefinitions | undefined>(
+    (state) => state.manifest.d2Manifest
+  );
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
   );
@@ -42,6 +44,9 @@ export function StatTotalToggle({
     ? customTotalStatsByClass[forClass]
     : [];
 
+  if (!defs) {
+    return null;
+  }
   return (
     <div className={clsx(className)}>
       {addDividers(

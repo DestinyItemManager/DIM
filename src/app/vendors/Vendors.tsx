@@ -1,50 +1,51 @@
+import CheckButton from 'app/dim-ui/CheckButton';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { ItemFilter } from 'app/search/filter-types';
+import { searchFilterSelector } from 'app/search/search-filter';
+import ErrorPanel from 'app/shell/ErrorPanel';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { useSubscription } from 'app/utils/hooks';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import {
-  DestinyProfileResponse,
+  DestinyCollectibleComponent,
   DestinyCurrenciesComponent,
   DestinyItemPlug,
-  DestinyCollectibleComponent,
+  DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
-import React, { useState, useEffect, useMemo } from 'react';
+import _ from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
+import Hammer from 'react-hammerjs';
+import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { loadingTracker } from '../shell/loading-tracker';
-import { DimStore } from '../inventory/store-types';
-import Vendor from './Vendor';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { t } from 'app/i18next-t';
-import { refresh$ } from '../shell/refresh';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { mergeCollectibles } from '../inventory/d2-stores';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
-  ownedItemsSelector,
-  sortedStoresSelector,
-  profileResponseSelector,
   bucketsSelector,
+  ownedItemsSelector,
+  profileResponseSelector,
+  sortedStoresSelector,
 } from '../inventory/selectors';
-import { connect } from 'react-redux';
+import { DimStore } from '../inventory/store-types';
+import { loadingTracker } from '../shell/loading-tracker';
+import { refresh$ } from '../shell/refresh';
+import { loadAllVendors } from './actions';
 import {
   D2VendorGroup,
-  toVendorGroups,
-  filterVendorGroupsToUnacquired,
   filterVendorGroupsToSearch,
+  filterVendorGroupsToUnacquired,
+  toVendorGroups,
 } from './d2-vendors';
-import styles from './Vendors.m.scss';
-import { searchFilterSelector } from 'app/search/search-filter';
-import { DimItem } from 'app/inventory/item-types';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import VendorsMenu from './VendorsMenu';
-import Hammer from 'react-hammerjs';
-import _ from 'lodash';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
-import { emptyArray, emptyObject } from 'app/utils/empty';
-import ErrorPanel from 'app/shell/ErrorPanel';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { loadAllVendors } from './actions';
-import { useSubscription } from 'app/utils/hooks';
 import { VendorsState } from './reducer';
+import Vendor from './Vendor';
+import VendorsMenu from './VendorsMenu';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -59,7 +60,7 @@ interface StoreProps {
   profileResponse?: DestinyProfileResponse;
   vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
-  filterItems(item: DimItem): boolean;
+  filterItems: ItemFilter;
 }
 
 function mapStateToProps() {
@@ -103,8 +104,9 @@ function Vendors({
 
   const selectedStoreId = characterId || getCurrentStore(stores)?.id;
 
+  useLoadStores(account, stores.length > 0);
+
   useEffect(() => {
-    D2StoresService.getStoresStream(account);
     if (selectedStoreId) {
       dispatch(loadAllVendors(account, selectedStoreId));
     }
@@ -119,9 +121,6 @@ function Vendors({
   );
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
-
-  const onSetFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFilterToUnacquired(e.currentTarget.checked);
 
   const handleSwipe: HammerListener = (e) => {
     const characters = stores.filter((s) => !s.isVault);
@@ -181,7 +180,7 @@ function Vendors({
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
   if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
   }
   if (vendorGroups && searchQuery.length) {
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
@@ -202,10 +201,9 @@ function Vendors({
           />
         )}
         {selectedStore && (
-          <label className={styles.checkButton}>
-            {t('Vendors.FilterToUnacquired')}{' '}
-            <input type="checkbox" onChange={onSetFilterToUnacquired} />
-          </label>
+          <CheckButton checked={filterToUnacquired} onChange={setFilterToUnacquired}>
+            {t('Vendors.FilterToUnacquired')}
+          </CheckButton>
         )}
         {!isPhonePortrait && vendorGroups && (
           <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
@@ -297,11 +295,11 @@ function enhanceOwnedItemsWithPlugSets(
     });
   };
 
-  if (profileResponse.profilePlugSets.data) {
+  if (profileResponse.profilePlugSets?.data) {
     processPlugSet(profileResponse.profilePlugSets.data.plugs);
   }
 
-  if (profileResponse.characterPlugSets.data) {
+  if (profileResponse.characterPlugSets?.data) {
     for (const plugSetData of Object.values(profileResponse.characterPlugSets.data)) {
       processPlugSet(plugSetData.plugs);
     }

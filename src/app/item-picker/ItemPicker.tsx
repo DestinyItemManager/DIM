@@ -1,21 +1,21 @@
-import React, { useState, useMemo } from 'react';
-import { DimItem } from '../inventory/item-types';
-import { ItemPickerState } from './item-picker';
+import { t } from 'app/i18next-t';
+import { ItemFilter } from 'app/search/filter-types';
+import SearchBar from 'app/search/SearchBar';
+import { RootState } from 'app/store/types';
+import _ from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { connect, MapStateToProps } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { connect, MapStateToProps } from 'react-redux';
-import { RootState } from 'app/store/types';
-import { createSelector } from 'reselect';
+import { DimItem } from '../inventory/item-types';
 import { storesSelector } from '../inventory/selectors';
-import { SearchFilters, searchFiltersConfigSelector } from '../search/search-filter';
-import SearchFilterInput from '../search/SearchFilterInput';
-import { sortItems } from '../shell/filters';
-import { itemSortOrderSelector } from '../settings/item-sort';
-import { t } from 'app/i18next-t';
-import './ItemPicker.scss';
+import { searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
-import _ from 'lodash';
-import SearchBar from 'app/search/SearchBar';
+import { itemSortOrderSelector } from '../settings/item-sort';
+import { sortItems } from '../shell/filters';
+import { ItemPickerState } from './item-picker';
+import './ItemPicker.scss';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -23,9 +23,9 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  filters: SearchFilters;
   itemSortOrder: string[];
   isPhonePortrait: boolean;
+  filters(query: string): ItemFilter;
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
@@ -83,24 +83,16 @@ function ItemPicker({
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        {$featureFlags.newSearch ? (
-          <SearchBar
-            placeholder={t('ItemPicker.SearchPlaceholder')}
-            autoFocus={autoFocus}
-            onQueryChanged={setQuery}
-          />
-        ) : (
-          <SearchFilterInput
-            placeholder={t('ItemPicker.SearchPlaceholder')}
-            autoFocus={autoFocus}
-            onQueryChanged={setQuery}
-          />
-        )}
+        <SearchBar
+          placeholder={t('ItemPicker.SearchPlaceholder')}
+          autoFocus={autoFocus}
+          onQueryChanged={setQuery}
+        />
       </div>
     </div>
   );
 
-  const filter = useMemo(() => filters.filterFunction(query), [filters, query]);
+  const filter = useMemo(() => filters(query), [filters, query]);
   const items = useMemo(() => {
     let items = sortItems(allItems.filter(filter), itemSortOrder);
     if (sortBy) {

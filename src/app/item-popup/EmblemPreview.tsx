@@ -1,8 +1,8 @@
-import React from 'react';
-import { DimItem } from 'app/inventory/item-types';
 import MetricBanner from 'app/collections/MetricBanner';
-import BungieImage from 'app/dim-ui/BungieImage';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { DimItem } from 'app/inventory/item-types';
+import React from 'react';
 import styles from './EmblemPreview.m.scss';
 
 export default function EmblemPreview({
@@ -20,7 +20,7 @@ export default function EmblemPreview({
 
   return (
     <div className={styles.container}>
-      {item.metricObjective && item.metricHash && (
+      {item.metricObjective && item.metricHash !== undefined && (
         <MetricBanner
           className={styles.banner}
           defs={defs}
@@ -31,7 +31,7 @@ export default function EmblemPreview({
       {item.metricObjective && (
         <div className={styles.value}>{(item.metricObjective.progress || 0).toLocaleString()}</div>
       )}
-      <BungieImage src={item.secondaryIcon} width="237" height="48" />
+      {item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="237" height="48" />}
       {parentPresentationNode && metricDef && trait && (
         <div>
           {trait.displayProperties.name}

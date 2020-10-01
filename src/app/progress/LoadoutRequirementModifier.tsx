@@ -1,10 +1,10 @@
-import React from 'react';
-import { DestinyMilestoneChallengeActivity, DestinyItemSubType } from 'bungie-api-ts/destiny2';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import './ActivityModifier.scss';
 import { ARMSMASTER_ACTIVITY_MODIFIER } from 'app/search/d2-known-values';
+import { DestinyItemSubType, DestinyMilestoneChallengeActivity } from 'bungie-api-ts/destiny2';
+import React from 'react';
+import './ActivityModifier.scss';
 
 /**
  * This table lets us use localized names for ItemSubTypes, since they only exist as enum values.EquipmentSlot definitions.

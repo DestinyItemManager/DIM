@@ -1,11 +1,12 @@
+import { t } from 'app/i18next-t';
+import { useSubscription } from 'app/utils/hooks';
 import React, { useState } from 'react';
 import Sheet from '../dim-ui/Sheet';
-import './MoveAmountPopupContainer.scss';
-import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
-import { t } from 'app/i18next-t';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
-import BungieImage from '../dim-ui/BungieImage';
-import { useSubscription } from 'app/utils/hooks';
+import ItemIcon from './ItemIcon';
+import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-item';
+import './MoveAmountPopupContainer.scss';
+import { amountOfItem } from './stores-helpers';
 
 /**
  * A container that can show a single move amount popup. This is a
@@ -43,7 +44,7 @@ export default function MoveAmountPopupContainer() {
 
   const { item, maximum, targetStore } = options;
 
-  let targetAmount = targetStore.amountOfItem(item);
+  let targetAmount = amountOfItem(targetStore, item);
   while (targetAmount > 0) {
     targetAmount -= item.maxStackSize;
   }
@@ -55,7 +56,7 @@ export default function MoveAmountPopupContainer() {
       header={
         <h1>
           <div className="item">
-            <BungieImage className="item-img" src={item.icon} />
+            <ItemIcon item={item} />
           </div>
           <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
         </h1>

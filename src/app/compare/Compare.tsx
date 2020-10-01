@@ -1,49 +1,49 @@
-import React from 'react';
-import { t } from 'app/i18next-t';
-import clsx from 'clsx';
-import { DimItem, DimStat } from '../inventory/item-types';
-import _ from 'lodash';
-import { CompareService } from './compare.service';
-import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
-import { createSelector } from 'reselect';
-import CompareItem from './CompareItem';
-import './compare.scss';
-import { Subscriptions } from '../utils/rx-utils';
-import { connect } from 'react-redux';
-import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
-import { RootState } from 'app/store/types';
-import Sheet from '../dim-ui/Sheet';
-import { showNotification } from '../notifications/notifications';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import { makeDupeID } from 'app/search/search-filter';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import {
-  getItemSpecialtyModSlotDisplayName,
-  getSpecialtySocketMetadata,
-} from 'app/utils/item-utils';
-import ElementIcon from 'app/inventory/ElementIcon';
-import { DimStore } from 'app/inventory/store-types';
-import { storesSelector } from 'app/inventory/selectors';
-import { getAllItems } from 'app/inventory/stores-helpers';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
-import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { t } from 'app/i18next-t';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
+import { setSetting } from 'app/settings/actions';
+import Checkbox from 'app/settings/Checkbox';
+import { RootState } from 'app/store/types';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import produce from 'immer';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { createSelector } from 'reselect';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import Sheet from '../dim-ui/Sheet';
+import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
+import { showNotification } from '../notifications/notifications';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { Subscriptions } from '../utils/rx-utils';
+import { CompareButton, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
+import './compare.scss';
+import { CompareService } from './compare.service';
+import CompareItem from './CompareItem';
+import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
 
 interface StoreProps {
-  ratings: ReviewsState['ratings'];
-  stores: DimStore[];
+  allItems: DimItem[];
   defs?: D2ManifestDefinitions;
+  compareBaseStats: boolean;
 }
 
-type Props = StoreProps & RouteComponentProps;
+const mapDispatchToProps = {
+  setSetting,
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: ratingsSelector(state),
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     defs: state.manifest.d2Manifest,
+    compareBaseStats: settingsSelector(state).compareBaseStats,
   };
 }
 
@@ -55,7 +55,9 @@ interface State {
   highlight?: string | number;
   sortedHash?: string | number;
   sortBetterFirst: boolean;
-  comparisonSets: { buttonLabel: React.ReactNode; items: DimItem[] }[];
+  comparisonSets: CompareButton[];
+  adjustedPlugs?: DimAdjustedPlugs;
+  adjustedStats?: DimAdjustedStats;
 }
 
 export interface StatInfo {
@@ -67,7 +69,10 @@ export interface StatInfo {
   lowerBetter: boolean;
   getStat: StatGetter;
 }
-type StatGetter = (item: DimItem) => DimStat | { value?: number; statHash: number } | undefined;
+
+/** a DimStat with, at minimum, a statHash */
+export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
+type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 class Compare extends React.Component<Props, State> {
   state: State = {
@@ -81,7 +86,8 @@ class Compare extends React.Component<Props, State> {
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
     (state: State) => state.comparisonItems,
-    (_state: State, props: Props) => props.ratings,
+    (_state: State, props: Props) => props.compareBaseStats,
+    (state: State) => state.adjustedStats,
     getAllStats
   );
 
@@ -89,7 +95,14 @@ class Compare extends React.Component<Props, State> {
     this.subscriptions.add(
       CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
-        CompareService.dialogOpen = true;
+        if (CompareService.dialogOpen === false) {
+          CompareService.dialogOpen = true;
+          ga(
+            'send',
+            'pageview',
+            `/profileMembershipId/${args.additionalItems[0].destinyVersion}/compare`
+          );
+        }
 
         this.add(args);
       })
@@ -108,13 +121,15 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { ratings } = this.props;
+    const { compareBaseStats, setSetting } = this.props;
     const {
       show,
       comparisonItems: unsortedComparisonItems,
       sortedHash,
       highlight,
       comparisonSets,
+      adjustedPlugs,
+      adjustedStats,
     } = this.state;
 
     if (!show || unsortedComparisonItems.length === 0) {
@@ -122,31 +137,28 @@ class Compare extends React.Component<Props, State> {
       return null;
     }
 
+    const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+      setSetting(e.target.name as any, e.target.checked);
+    };
+
     const comparisonItems = !sortedHash
       ? unsortedComparisonItems
       : Array.from(unsortedComparisonItems).sort(
           reverseComparator(
             chainComparator(
               compareBy((item: DimItem) => {
-                const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
-                const showRating =
-                  $featureFlags.reviewsEnabled &&
-                  dtrRating &&
-                  shouldShowRating(dtrRating) &&
-                  dtrRating.overallScore;
-
                 const stat =
                   item.primStat && sortedHash === item.primStat.statHash
-                    ? item.primStat
-                    : sortedHash === 'Rating'
-                    ? { value: showRating || 0 }
+                    ? (item.primStat as MinimalStat)
                     : sortedHash === 'EnergyCapacity'
                     ? {
-                        value: (item.isDestiny2() && item.energy?.energyCapacity) || 0,
+                        value: item.energy?.energyCapacity || 0,
+                        base: undefined,
                       }
                     : sortedHash === 'PowerCap'
                     ? {
-                        value: (item.isDestiny2() && item.powerCap) || 99999999,
+                        value: item.powerCap || 99999999,
+                        base: undefined,
                       }
                     : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -158,7 +170,9 @@ class Compare extends React.Component<Props, State> {
                   isDimStat(stat) && stat.smallerIsBetter
                     ? this.state.sortBetterFirst
                     : !this.state.sortBetterFirst;
-                return shouldReverse ? -stat.value : stat.value;
+
+                const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+                return shouldReverse ? -statValue : statValue;
               }),
               compareBy((i) => i.index),
               compareBy((i) => i.name)
@@ -168,11 +182,129 @@ class Compare extends React.Component<Props, State> {
 
     const stats = this.getAllStatsSelector(this.state, this.props);
 
+    const updateSocketComparePlug = ({
+      item,
+      socket,
+      plug: clickedPlug,
+    }: {
+      item: DimItem;
+      socket: DimSocket;
+      plug: DimPlug;
+    }) => {
+      const { socketIndex } = socket;
+      const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
+      const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
+
+      /**
+       * Exit early if this plug / socket isn't a clickable target
+       * TODO: check the socket index detail
+       * */
+      if (
+        item.destinyVersion === 1 ||
+        !item.sockets ||
+        !item.stats ||
+        socketIndex > 2 ||
+        !pluggedPlug ||
+        (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash &&
+          currentAdjustedPlug === undefined)
+      ) {
+        return;
+      }
+
+      /**
+       * Determine the next plug
+       * If the clicked plug is the currently adjusted plug,
+       * the next should be the original plug in the socket
+       */
+      const nextPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash ? pluggedPlug : clickedPlug;
+
+      /**
+       * Determine the previous plug
+       * If the clicked plug is the currently adjusted plug,
+       * the previous should be the clicked plug
+       */
+      const prevPlug =
+        clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
+          ? clickedPlug
+          : currentAdjustedPlug ?? pluggedPlug;
+
+      /**
+       * Update the adjustedPlugs object
+       * If the next plug is the original plug, delete the adjustedPlug entry
+       * Else add the next plug to the item socket entry
+       */
+      const updatedPlugs =
+        nextPlug.plugDef.hash === pluggedPlug.plugDef.hash
+          ? produce(adjustedPlugs, (draft) => {
+              delete draft?.[item.id]?.[socketIndex];
+            })
+          : adjustedPlugs?.[item.id] !== undefined
+          ? produce(adjustedPlugs, (draft) => {
+              draft[item.id][socketIndex] = nextPlug;
+            })
+          : produce(adjustedPlugs ?? {}, (draft) => {
+              draft[item.id] = { [socketIndex]: nextPlug };
+            });
+
+      /**
+       * If there are no more adjustedPlugs for the item
+       * delete the associated adjustedPlugs and adjustedStats entries and exit
+       */
+      if (isEmpty(updatedPlugs?.[item.id])) {
+        const emptiedPlugs = produce(updatedPlugs, (draft) => {
+          delete draft?.[item.id];
+        });
+        const emptiedStats = produce(adjustedStats, (draft) => {
+          delete draft?.[item.id];
+        });
+        this.setState({
+          adjustedPlugs: emptiedPlugs,
+          adjustedStats: emptiedStats,
+        });
+        return;
+      }
+
+      // Remove the stats listed on the previous plug from adjustedStats
+      const itemStatsAfterRemoval: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: adjustedStats?.[item.id] ?? {},
+        plugStats: prevPlug.stats,
+        mode: 'remove',
+      });
+
+      // Add the stats listed on the next plug to adjustedStats
+      const itemStatsAfterAddition: DimAdjustedItemStat | undefined = this.calculateUpdatedStats({
+        itemStats: item.stats,
+        adjustedStats: itemStatsAfterRemoval ?? adjustedStats?.[item.id] ?? {},
+        plugStats: nextPlug.stats,
+        mode: 'add',
+      });
+
+      // Update the adjustedStats object
+      const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+        if (itemStatsAfterAddition) {
+          draft[item.id] = itemStatsAfterAddition;
+        }
+      });
+
+      this.setState({
+        adjustedPlugs: updatedPlugs,
+        adjustedStats: updatedStats,
+      });
+    };
+
     return (
       <Sheet
         onClose={this.cancel}
         header={
           <div className="compare-options">
+            <Checkbox
+              label={t('Compare.CompareBaseStats')}
+              name="compareBaseStats"
+              value={compareBaseStats}
+              onChange={onChange}
+            />
             {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
                 type="button"
@@ -214,6 +346,10 @@ class Compare extends React.Component<Props, State> {
                   remove={this.remove}
                   setHighlight={this.setHighlight}
                   highlight={highlight}
+                  updateSocketComparePlug={updateSocketComparePlug}
+                  adjustedItemPlugs={adjustedPlugs?.[item.id]}
+                  adjustedItemStats={adjustedStats?.[item.id]}
+                  compareBaseStats={compareBaseStats}
                 />
               ))}
             </div>
@@ -222,6 +358,36 @@ class Compare extends React.Component<Props, State> {
       </Sheet>
     );
   }
+
+  private calculateUpdatedStats = ({
+    itemStats,
+    adjustedStats,
+    plugStats,
+    mode,
+  }: {
+    itemStats: DimStat[];
+    adjustedStats: DimAdjustedItemStat;
+    plugStats: DimPlug['stats'];
+    mode: string;
+  }): DimAdjustedItemStat | undefined => {
+    if (!plugStats) {
+      return adjustedStats;
+    }
+
+    const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+      for (const statHash in plugStats) {
+        const itemStatIndex = itemStats.findIndex((stat) => stat.statHash === parseInt(statHash));
+        const calcStat: number = draft?.[statHash] ?? itemStats[itemStatIndex]?.value;
+
+        if (calcStat) {
+          draft[statHash] =
+            mode === 'add' ? calcStat + plugStats[statHash] : calcStat - plugStats[statHash];
+        }
+      }
+    });
+
+    return updatedStats;
+  };
 
   // prevent touches from bubbling which blocks scrolling
   private stopTouches = (e: React.TouchEvent) => {
@@ -240,6 +406,8 @@ class Compare extends React.Component<Props, State> {
       comparisonItems: [],
       highlight: undefined,
       sortedHash: undefined,
+      adjustedPlugs: undefined,
+      adjustedStats: undefined,
     });
     CompareService.dialogOpen = false;
   };
@@ -295,12 +463,11 @@ class Compare extends React.Component<Props, State> {
 
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
     else {
-      const allItems = getAllItems(this.props.stores);
       // comparisonSets is an array so that it has order, filled with {label, setOfItems} objects
       const comparisonSets = exampleItem.bucket.inArmor
-        ? this.findSimilarArmors(allItems, additionalItems)
+        ? this.findSimilarArmors(additionalItems)
         : exampleItem.bucket.inWeapons
-        ? this.findSimilarWeapons(allItems, additionalItems)
+        ? this.findSimilarWeapons(additionalItems)
         : [];
 
       // if this was spawned from an item, and not from a search,
@@ -329,230 +496,25 @@ class Compare extends React.Component<Props, State> {
     }
   };
 
-  private findSimilarArmors = (
-    allArmors: DimItem[],
-    comparisonItems = this.state.comparisonItems
-  ) => {
+  private findSimilarArmors = (comparisonItems: DimItem[]) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemElementIcon = (
-      <ElementIcon key={exampleItem.id} element={exampleItem.element} />
-    );
-    const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
-    const specialtyModSlotName =
-      (this.props.defs && getItemSpecialtyModSlotDisplayName(exampleItem, this.props.defs)) ?? '';
-
-    // helper functions for filtering items
-    const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
-      item[key] === exampleItem[key];
-    const matchingModSlot = (item: DimItem) =>
-      exampleItemModSlot === getSpecialtySocketMetadata(item);
-    const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
-
-    // minimum filter: make sure it's all armor, and can go in the same slot on the same class
-    allArmors = allArmors
-      .filter((i) => i.bucket.inArmor)
-      .filter(matchesExample('typeName'))
-      .filter(matchesExample('classType'));
-
-    let comparisonSets = [
-      // same slot on the same class
-      {
-        buttonLabel: exampleItem.typeName,
-        items: allArmors,
-      },
-
-      // above but also has to be armor 2.0
-      {
-        buttonLabel: [t('Compare.Armor2'), exampleItem.typeName].join(' + '),
-        items: hasEnergy(exampleItem) ? allArmors.filter(hasEnergy) : [],
-      },
-
-      // above but also the same seasonal mod slot, if it has one
-      {
-        buttonLabel: [specialtyModSlotName].join(' + '),
-        items:
-          hasEnergy(exampleItem) && exampleItemModSlot
-            ? allArmors.filter(hasEnergy).filter(matchingModSlot)
-            : [],
-      },
-
-      // armor 2.0 and needs to match energy capacity element
-      {
-        buttonLabel: [exampleItemElementIcon, exampleItem.typeName],
-        items: hasEnergy(exampleItem)
-          ? allArmors.filter(hasEnergy).filter(matchesExample('element'))
-          : [],
-      },
-      // above but also the same seasonal mod slot, if it has one
-      {
-        buttonLabel: [exampleItemElementIcon, specialtyModSlotName],
-        items:
-          hasEnergy(exampleItem) && exampleItemModSlot
-            ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
-            : [],
-      },
-
-      // basically stuff with the same name & categories
-      {
-        buttonLabel: exampleItem.name,
-        items: allArmors.filter((i) => makeDupeID(i) === makeDupeID(exampleItem)),
-      },
-
-      // above, but also needs to match energy capacity element
-      {
-        buttonLabel: [exampleItemElementIcon, exampleItem.name],
-        items: hasEnergy(exampleItem)
-          ? allArmors
-              .filter(hasEnergy)
-              .filter(matchesExample('element'))
-              .filter((i) => makeDupeID(i) === makeDupeID(exampleItem))
-          : [],
-      },
-    ];
-
-    // here, we dump some buttons if they aren't worth displaying
-
-    comparisonSets = comparisonSets.reverse();
-    comparisonSets = comparisonSets.filter((comparisonSet, index) => {
-      const nextComparisonSet = comparisonSets[index + 1];
-      // always print the final button
-      if (!nextComparisonSet) {
-        return true;
-      }
-      // skip empty buttons
-      if (!comparisonSet.items.length) {
-        return false;
-      }
-      // skip if the next button has [all of, & only] the exact same items in it
-      if (
-        comparisonSet.items.length === nextComparisonSet.items.length &&
-        comparisonSet.items.every((setItem) =>
-          nextComparisonSet.items.some((nextSetItem) => nextSetItem === setItem)
-        )
-      ) {
-        return false;
-      }
-      return true;
-    });
-
-    return comparisonSets;
+    return findSimilarArmors(this.props.defs!, this.props.allItems, exampleItem);
   };
 
-  private findSimilarWeapons = (
-    allWeapons: DimItem[],
-    comparisonItems = this.state.comparisonItems
-  ) => {
+  private findSimilarWeapons = (comparisonItems: DimItem[]) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemElementIcon = (
-      <ElementIcon key={exampleItem.id} element={exampleItem.element} />
-    );
-
-    const matchesExample = (key: keyof DimItem) => (item: DimItem) =>
-      item[key] === exampleItem[key];
-    // stuff for looking up weapon archetypes
-    const getRpm = (i: DimItem) => {
-      const itemRpmStat = i.stats?.find(
-        (s) =>
-          s.statHash ===
-          (exampleItem.isDestiny1() ? exampleItem.stats![0].statHash : StatHashes.RoundsPerMinute)
-      );
-      return itemRpmStat?.value || -99999999;
-    };
-
-    const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() ? getWeaponArchetype(exampleItem) : undefined;
-    const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
-    const intrinsicHash = intrinsic?.hash;
-
-    // minimum filter: make sure it's all weapons and the same weapon type
-    allWeapons = allWeapons
-      .filter((i) => i.bucket.inWeapons)
-      .filter(matchesExample('typeName'))
-      .filter(
-        (i) =>
-          // specifically for destiny 2 grenade launchers, let's not compare special with heavy.
-          // all other weapon types with multiple ammos, are novelty exotic exceptions
-          !exampleItem.isDestiny2() ||
-          !i.isDestiny2() ||
-          !exampleItem.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
-          exampleItem.ammoType === i.ammoType
-      );
-
-    let comparisonSets = [
-      // same weapon type
-      {
-        buttonLabel: exampleItem.typeName,
-        items: allWeapons,
-      },
-
-      // above, but also same (kinetic/energy/heavy) slot
-      {
-        buttonLabel: [exampleItem.bucket.name, exampleItem.typeName].join(' + '),
-        items: allWeapons.filter((i) => i.bucket.name === exampleItem.bucket.name),
-      },
-
-      // same weapon type plus matching intrinsic (rpm+impact..... ish)
-      {
-        buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
-        items: exampleItem.isDestiny2()
-          ? allWeapons.filter(
-              (i) => i.isDestiny2() && i.sockets && getWeaponArchetype(i)?.hash === intrinsicHash
-            )
-          : allWeapons.filter((i) => exampleItemRpm === getRpm(i)),
-      },
-
-      // same weapon type and also matching element (& usually same-slot because same element)
-      {
-        buttonLabel: [exampleItemElementIcon, exampleItem.typeName],
-        items: allWeapons.filter(matchesExample('element')),
-      },
-
-      // exact same weapon, judging by name. might span multiple expansions.
-      {
-        buttonLabel: exampleItem.name,
-        items: allWeapons.filter(matchesExample('name')),
-      },
-    ];
-    comparisonSets = comparisonSets.reverse();
-    comparisonSets = comparisonSets.filter((comparisonSet, index) => {
-      const nextComparisonSet = comparisonSets[index + 1];
-      // always print the final button
-      if (!nextComparisonSet) {
-        return true;
-      }
-      // skip empty buttons
-      if (!comparisonSet.items.length) {
-        return false;
-      }
-      // skip if the next button has [all of, & only] the exact same items in it
-      if (
-        comparisonSet.items.length === nextComparisonSet.items.length &&
-        comparisonSet.items.every((setItem) =>
-          nextComparisonSet.items.some((nextSetItem) => nextSetItem === setItem)
-        )
-      ) {
-        return false;
-      }
-      return true;
-    });
-
-    return comparisonSets;
+    return findSimilarWeapons(this.props.allItems, exampleItem);
   };
 }
 
-function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings']) {
+function getAllStats(
+  comparisonItems: DimItem[],
+  compareBaseStats: boolean,
+  adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
+) {
   const firstComparison = comparisonItems[0];
+  compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
-
-  if ($featureFlags.reviewsEnabled) {
-    stats.push(
-      makeFakeStat('Rating', t('Compare.Rating'), (item: DimItem) => {
-        const dtrRating = getRating(item, ratings);
-        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return { statHash: 0, value: showRating || undefined };
-      })
-    );
-  }
 
   if (firstComparison.primStat) {
     stats.push(
@@ -564,32 +526,29 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
     );
   }
   if (
-    firstComparison.isDestiny2() &&
+    firstComparison.destinyVersion === 2 &&
     (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
   ) {
     stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) =>
-        item.isDestiny2()
-          ? {
-              statHash: powerCapPlugSetHash,
-              value: item.powerCap ?? undefined,
-            }
-          : undefined
-      )
+      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
+        statHash: powerCapPlugSetHash,
+        value: item.powerCap ?? undefined,
+        base: undefined,
+      }))
     );
   }
 
-  if (firstComparison.isDestiny2() && firstComparison.bucket.inArmor) {
+  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
     stats.push(
       makeFakeStat(
         'EnergyCapacity',
         t('EnergyMeter.Energy'),
         (item: DimItem) =>
-          (item.isDestiny2() &&
-            item.energy && {
-              statHash: item.energy.energyType,
-              value: item.energy.energyCapacity,
-            }) ||
+          (item.energy && {
+            statHash: item.energy.energyType,
+            value: item.energy.energyCapacity,
+            base: undefined,
+          }) ||
           undefined
       )
     );
@@ -624,9 +583,20 @@ function getAllStats(comparisonItems: DimItem[], ratings: ReviewsState['ratings'
   for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
+      const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
-        stat.min = Math.min(stat.min, itemStat.value || 0);
-        stat.max = Math.max(stat.max, itemStat.value || 0);
+        stat.min = Math.min(
+          stat.min,
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
+        );
+        stat.max = Math.max(
+          stat.max,
+          (compareBaseStats
+            ? itemStat.base ?? adjustedStatValue ?? itemStat.value
+            : adjustedStatValue ?? itemStat.value) || 0
+        );
         stat.enabled = stat.min !== stat.max;
         stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
@@ -660,4 +630,6 @@ function makeFakeStat(
   };
 }
 
-export default withRouter(connect<StoreProps>(mapStateToProps)(Compare));
+export default withRouter(
+  connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(Compare)
+);
