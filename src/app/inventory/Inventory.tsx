@@ -61,7 +61,7 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
       <Stores />
       <LoadoutDrawer />
       <Compare />
-      <StackableDragHelp />
+      {$featureFlags.moveAmounts && <StackableDragHelp />}
       <DragPerformanceFix />
       <Farming />
       {account.destinyVersion === 2 && <GearPower />}

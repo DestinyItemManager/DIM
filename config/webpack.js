@@ -391,6 +391,8 @@ module.exports = (env) => {
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions
         '$featureFlags.newItemPopupActions': JSON.stringify(!env.release),
+        // Enable move amounts
+        '$featureFlags.moveAmounts': JSON.stringify(env.release),
       }),
 
       new WorkerPlugin({

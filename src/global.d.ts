@@ -40,6 +40,8 @@ declare const $featureFlags: {
   mobileCategoryStrip: boolean;
   /** Move the item popup actions */
   newItemPopupActions: boolean;
+  /** Enable move amounts */
+  moveAmounts: boolean;
 };
 
 declare namespace React {
