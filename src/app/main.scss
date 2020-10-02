@@ -419,7 +419,7 @@ a.dim-button {
     will-change: transform;
     z-index: -1;
   }
-  @media (min-width: 1079px) {
+  @media (min-width: 1440px) {
     --inventory-column-padding: 24px;
     --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
   }
