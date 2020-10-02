@@ -8,7 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { get, set } from 'idb-keyval';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { httpAdapter } from '../bungie-api/bungie-service-helper';
+import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { DimItem, DimSocket } from './item-types';
@@ -29,7 +29,7 @@ export async function insertPlug(
 
   // TODO: if the plug costs resources to insert, add a confirmation
 
-  return insertSocketPlug(httpAdapter, {
+  return insertSocketPlug(authenticatedHttpClient, {
     actionToken,
     itemInstanceId: item.id,
     plug: {

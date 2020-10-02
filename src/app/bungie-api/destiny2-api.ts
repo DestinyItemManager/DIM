@@ -32,7 +32,11 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { reportException } from '../utils/exceptions';
-import { handleUniquenessViolation, httpAdapter } from './bungie-service-helper';
+import {
+  authenticatedHttpClient,
+  handleUniquenessViolation,
+  unauthenticatedHttpClient,
+} from './bungie-service-helper';
 
 /**
  * APIs for interacting with Destiny 2 game data.
@@ -44,14 +48,14 @@ import { handleUniquenessViolation, httpAdapter } from './bungie-service-helper'
  * Get the information about the current manifest.
  */
 export async function getManifest(): Promise<DestinyManifest> {
-  const response = await getDestinyManifest((config) => httpAdapter(config, true));
+  const response = await getDestinyManifest(unauthenticatedHttpClient);
   return response.Response;
 }
 
 export async function getLinkedAccounts(
   bungieMembershipId: string
 ): Promise<DestinyLinkedProfilesResponse> {
-  const response = await getLinkedProfiles(httpAdapter, {
+  const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext,
     getAllMemberships: true,
@@ -109,7 +113,7 @@ async function getProfile(
   platform: DestinyAccount,
   ...components: DestinyComponentType[]
 ): Promise<DestinyProfileResponse> {
-  const response = await getProfileApi(httpAdapter, {
+  const response = await getProfileApi(authenticatedHttpClient, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.originalPlatformType,
     components,
@@ -133,7 +137,7 @@ export async function getItemDetails(
   itemInstanceId: string,
   account: DestinyAccount
 ): Promise<DestinyItemResponse> {
-  const response = await getItem(httpAdapter, {
+  const response = await getItem(authenticatedHttpClient, {
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
     itemInstanceId,
@@ -150,7 +154,7 @@ export async function getVendor(
   characterId: string,
   vendorHash: number
 ): Promise<DestinyVendorResponse> {
-  const response = await getVendorApi(httpAdapter, {
+  const response = await getVendorApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
@@ -178,7 +182,7 @@ export async function getVendors(
   account: DestinyAccount,
   characterId: string
 ): Promise<DestinyVendorsResponse> {
-  const response = await getVendorsApi(httpAdapter, {
+  const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
@@ -206,7 +210,7 @@ export async function getVendorsMinimal(
   account: DestinyAccount,
   characterId: string
 ): Promise<DestinyVendorsResponse> {
-  const response = await getVendorsApi(httpAdapter, {
+  const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.originalPlatformType,
@@ -234,8 +238,8 @@ export async function transfer(
   };
 
   const response = item.location.inPostmaster
-    ? pullFromPostmaster(httpAdapter, request)
-    : transferItem(httpAdapter, request);
+    ? pullFromPostmaster(authenticatedHttpClient, request)
+    : transferItem(authenticatedHttpClient, request);
   try {
     return await response;
   } catch (e) {
@@ -251,7 +255,7 @@ export function equip(account: DestinyAccount, item: DimItem): Promise<ServerRes
     return Promise.resolve({}) as Promise<ServerResponse<number>>;
   }
 
-  return equipItem(httpAdapter, {
+  return equipItem(authenticatedHttpClient, {
     characterId: item.owner,
     membershipType: account.originalPlatformType,
     itemId: item.id,
@@ -271,7 +275,7 @@ export async function equipItems(
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
-  const response = await equipItemsApi(httpAdapter, {
+  const response = await equipItemsApi(authenticatedHttpClient, {
     characterId: store.id,
     membershipType: account.originalPlatformType,
     itemIds: items.map((i) => i.id),
@@ -292,7 +296,7 @@ export function setLockState(
   item: DimItem,
   lockState: boolean
 ): Promise<ServerResponse<number>> {
-  return setItemLockState(httpAdapter, {
+  return setItemLockState(authenticatedHttpClient, {
     characterId: storeId,
     membershipType: account.originalPlatformType,
     itemId: item.id,
@@ -313,7 +317,7 @@ export function setTrackedState(
     throw new Error("Can't track non-instanced items");
   }
 
-  return setQuestTrackedState(httpAdapter, {
+  return setQuestTrackedState(authenticatedHttpClient, {
     characterId: storeId,
     membershipType: account.originalPlatformType,
     itemId: item.id,
@@ -327,13 +331,13 @@ export async function requestAdvancedWriteActionToken(
   action: AwaType,
   item?: DimItem
 ): Promise<AwaAuthorizationResult> {
-  const awaInitResult = await awaInitializeRequest(httpAdapter, {
+  const awaInitResult = await awaInitializeRequest(authenticatedHttpClient, {
     type: action,
     membershipType: account.originalPlatformType,
     affectedItemId: item ? item.id : undefined,
     characterId: item ? item.owner : undefined,
   });
-  const awaTokenResult = await awaGetActionToken(httpAdapter, {
+  const awaTokenResult = await awaGetActionToken(authenticatedHttpClient, {
     correlationId: awaInitResult.Response.correlationId,
   });
   return awaTokenResult.Response;

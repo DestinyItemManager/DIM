@@ -1,18 +1,20 @@
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
 import { Token, Tokens } from './oauth-tokens';
 
+// all these api url params don't match our variable naming conventions
+/* eslint-disable @typescript-eslint/naming-convention */
+
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
-// https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
-
 export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tokens> {
-  // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
   const body = new URLSearchParams({
-    grant_type: 'refresh_token', // eslint-disable-line @typescript-eslint/naming-convention
-    refresh_token: refreshToken.value, // eslint-disable-line @typescript-eslint/naming-convention
-    client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
-    client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken.value,
+    client_id: oauthClientId(),
+    client_secret: oauthClientSecret(),
   });
+  // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
+  // ↑ we return fetch wrapped in an extra Promise.resolve so it has proper followup methods
   return Promise.resolve(
     fetch(TOKEN_URL, {
       method: 'POST',
@@ -28,10 +30,10 @@ export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tok
 
 export function getAccessTokenFromCode(code: string): Promise<Tokens> {
   const body = new URLSearchParams({
-    grant_type: 'authorization_code', // eslint-disable-line @typescript-eslint/naming-convention
+    grant_type: 'authorization_code',
     code,
-    client_id: oauthClientId(), // eslint-disable-line @typescript-eslint/naming-convention
-    client_secret: oauthClientSecret(), // eslint-disable-line @typescript-eslint/naming-convention
+    client_id: oauthClientId(),
+    client_secret: oauthClientSecret(),
   });
   return Promise.resolve(
     fetch(TOKEN_URL, {
@@ -47,7 +49,6 @@ export function getAccessTokenFromCode(code: string): Promise<Tokens> {
 }
 
 function handleAccessToken(response): Tokens {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   if (response?.access_token) {
     const data = response;
     const inception = Date.now();

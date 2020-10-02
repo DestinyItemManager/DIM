@@ -1,0 +1,218 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test http request formation check generic bungieApiQuery function 1`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/LinkedProfiles/?getAllMemberships=true",
+}
+`;
+
+exports[`test http request formation check generic bungieApiQuery function 2`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/?components=1%2C2%2C3",
+}
+`;
+
+exports[`test http request formation check generic bungieApiQuery function 3`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/Item/0987654321/?components=7",
+}
+`;
+
+exports[`test http request formation check generic bungieApiQuery function 4`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/Character/1234658790/Vendors/45674576/?components=400%2C402%2C300%2C301%2C304%2C305%2C306%2C307%2C600%2C308%2C310%2C309",
+}
+`;
+
+exports[`test http request formation check generic bungieApiQuery function 5`] = `
+Object {
+  "body": Object {
+    "data": Array [
+      123,
+      34,
+      99,
+      104,
+      97,
+      114,
+      97,
+      99,
+      116,
+      101,
+      114,
+      73,
+      100,
+      34,
+      58,
+      34,
+      49,
+      50,
+      51,
+      52,
+      54,
+      53,
+      56,
+      55,
+      57,
+      48,
+      34,
+      44,
+      34,
+      109,
+      101,
+      109,
+      98,
+      101,
+      114,
+      115,
+      104,
+      105,
+      112,
+      84,
+      121,
+      112,
+      101,
+      34,
+      58,
+      51,
+      44,
+      34,
+      105,
+      116,
+      101,
+      109,
+      73,
+      100,
+      34,
+      58,
+      34,
+      48,
+      57,
+      56,
+      55,
+      54,
+      53,
+      52,
+      51,
+      50,
+      49,
+      34,
+      44,
+      34,
+      105,
+      116,
+      101,
+      109,
+      82,
+      101,
+      102,
+      101,
+      114,
+      101,
+      110,
+      99,
+      101,
+      72,
+      97,
+      115,
+      104,
+      34,
+      58,
+      52,
+      53,
+      54,
+      55,
+      52,
+      53,
+      55,
+      54,
+      44,
+      34,
+      115,
+      116,
+      97,
+      99,
+      107,
+      83,
+      105,
+      122,
+      101,
+      34,
+      58,
+      55,
+      44,
+      34,
+      116,
+      114,
+      97,
+      110,
+      115,
+      102,
+      101,
+      114,
+      84,
+      111,
+      86,
+      97,
+      117,
+      108,
+      116,
+      34,
+      58,
+      116,
+      114,
+      117,
+      101,
+      125,
+    ],
+    "type": "Buffer",
+  },
+  "headers": Headers {
+    Symbol(map): Object {
+      "Content-Type": Array [
+        "application/json",
+      ],
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "POST",
+  "url": "https://www.bungie.net/Platform/Destiny2/Actions/Items/PullFromPostmaster/",
+}
+`;
