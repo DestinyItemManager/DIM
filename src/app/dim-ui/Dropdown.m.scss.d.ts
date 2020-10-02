@@ -7,6 +7,7 @@ interface CssExports {
   'kebabButton': string;
   'menu': string;
   'menuItem': string;
+  'separator': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
