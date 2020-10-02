@@ -13,8 +13,12 @@
     min-height: calc((((0.59 * var(--item-size)) * 2) - 4px) / 3);
     width: 100%;
     // Matches GeneratedSetItem width
-    min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
+    min-width: calc(
+      var(--item-size) + ((((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px) * 2) +
+        8px
+    );
     margin-bottom: 4px;
+    padding: 5px;
   }
 }
 
