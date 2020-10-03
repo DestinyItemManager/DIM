@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import { ItemTriage } from 'app/item-triage/ItemTriage';
 import clsx from 'clsx';
 import React from 'react';
-import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
 import { AppIcon, openDropdownIcon } from '../shell/icons';
@@ -14,8 +13,6 @@ export const enum ItemPopupTab {
   Overview,
   Triage,
 }
-
-const spring = { stiffness: 200, damping: 22 };
 
 /** The main portion of the item popup, with pages of info (Actions, Details, Reviews) */
 export default function ItemPopupBody({
@@ -70,12 +67,6 @@ export default function ItemPopupBody({
     });
   }
 
-  const onViewChange = (indices) => {
-    onTabChanged(tabs[indices[0]].tab);
-  };
-
-  const onRest = () => onTabChanged(tab);
-
   return (
     <div>
       {/* TODO: Should these be in the details? Or in the header? */}
@@ -107,22 +98,7 @@ export default function ItemPopupBody({
                   </span>
                 ))}
               </div>
-              <ViewPager>
-                <Frame className="frame" autoSize="height">
-                  <Track
-                    currentView={tab}
-                    contain={false}
-                    className="track"
-                    onViewChange={onViewChange}
-                    onRest={onRest}
-                    springConfig={spring}
-                  >
-                    {tabs.map((ta) => (
-                      <View key={ta.tab}>{ta.component}</View>
-                    ))}
-                  </Track>
-                </Frame>
-              </ViewPager>
+              <div>{tabs.find((t) => t.tab === tab)?.component}</div>
             </>
           ) : (
             tabs[0].component
