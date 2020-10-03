@@ -619,7 +619,7 @@
     "Rewards": "奖励：",
     "SendToVault": "发送到保险库",
     "Split": "拆分",
-    "Store": "Store",
+    "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -628,9 +628,9 @@
     "Take": "收集",
     "TrackUntrack": {
       "Track": "跟踪{{itemType}}",
-      "Tracked": "Tracked",
+      "Tracked": "已跟踪",
       "Untrack": "取消跟踪{{itemType}}",
-      "Untracked": "Untracked"
+      "Untracked": "未跟踪"
     },
     "TriageTab": "分类",
     "Vault": "保险库"
@@ -686,7 +686,7 @@
     "EnabledColumns": "已启用的列",
     "Lock": "锁定",
     "NoItems": "未选择任何项目",
-    "NoMobile": "Turn your phone sideways to use the Organizer.",
+    "NoMobile": "将手机横放来使用管理器。",
     "Note": "添加备注",
     "NotePrompt": "备注：",
     "Organizer": "管理器",
@@ -731,7 +731,7 @@
     "Title": "记录"
   },
   "SearchHistory": {
-    "Date": "Last Used",
+    "Date": "最近使用",
     "Description": "这些是你过去和保存的搜索。你可以在这里删除它们。",
     "Link": "查看和编辑搜索历史",
     "Query": "搜索​​​​",
@@ -856,7 +856,7 @@
   },
   "Tags": {
     "Archive": "归档",
-    "ClearTag": "Clear Tag",
+    "ClearTag": "清除标签",
     "Favorite": "青睐",
     "Infuse": "灌注",
     "Junk": "垃圾",

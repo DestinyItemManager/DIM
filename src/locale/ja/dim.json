@@ -591,7 +591,7 @@
     "Acquired": "このアイテムはコレクションでアンロックされています。",
     "AcquiredMod": "現在、このmodはインベントリ内のアイテムに適用されています。",
     "AddNote": "メモを追加",
-    "AddToLoadout": "Loadout",
+    "AddToLoadout": "ロードアウト",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
     "Details": "ポップアップ",
@@ -603,9 +603,9 @@
     "ItemDetailSheet": "アイテムの詳細を表示",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
-      "Locked": "Locked",
+      "Locked": "ロック",
       "Unlock": "ロックを解除する {{itemType}}",
-      "Unlocked": "Unlocked"
+      "Unlocked": "ロックを解除"
     },
     "MissingSockets": "Bungieがサービスを更新している間は、パークとMODの詳細は利用できません。通常は数時間で、それらが完了すると戻ります。",
     "Notes": "メモ：",
@@ -619,7 +619,7 @@
     "Rewards": "報酬:",
     "SendToVault": "保管庫に送る",
     "Split": "分割",
-    "Store": "Store",
+    "Store": "保存",
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -628,9 +628,9 @@
     "Take": "取る",
     "TrackUntrack": {
       "Track": "{{itemType}} を追跡する",
-      "Tracked": "Tracked",
+      "Tracked": "追跡",
       "Untrack": "{{itemType}} を追跡しない",
-      "Untracked": "Untracked"
+      "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
     "Vault": "保管庫"
@@ -686,7 +686,7 @@
     "EnabledColumns": "有効な列",
     "Lock": "ロックする",
     "NoItems": "アイテムが選択されていません",
-    "NoMobile": "Turn your phone sideways to use the Organizer.",
+    "NoMobile": "携帯電話を横向きにしてオーガナイザーを使用する。",
     "Note": "備考を書く",
     "NotePrompt": "メモ：",
     "Organizer": "オーガナイザー",
