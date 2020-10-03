@@ -25,7 +25,7 @@ import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { showNotification } from '../notifications/notifications';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import { updateLoadout } from './actions';
+import { deleteLoadout, updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import './loadout-drawer.scss';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -477,6 +477,12 @@ function LoadoutDrawer({
     return null;
   }
 
+  const onDeleteLoadout = () => {
+    if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
+      dispatch(deleteLoadout(loadout.id));
+    }
+  };
+
   const bucketTypes = Object.keys(buckets.byType);
 
   // Find a loadout with the same name that could overlap with this one
@@ -501,6 +507,7 @@ function LoadoutDrawer({
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
+        deleteLoadout={onDeleteLoadout}
       />
       <GeneratedLoadoutStats
         defs={defs}

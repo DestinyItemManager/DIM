@@ -24,7 +24,6 @@ import {
   addIcon,
   AppIcon,
   banIcon,
-  deleteIcon,
   editIcon,
   engramIcon,
   faRandom,
@@ -40,7 +39,6 @@ import {
   warlockIcon,
 } from '../shell/icons';
 import { querySelector } from '../shell/selectors';
-import { deleteLoadout } from './actions';
 import {
   gatherEngramsLoadout,
   itemLevelingLoadout,
@@ -166,12 +164,6 @@ function LoadoutPopup({
     );
     loadout.classType = classTypeId;
     editLoadout(loadout, { isNew: true });
-  };
-
-  const deleteExistingLoadout = async (loadout: Loadout) => {
-    if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      dispatch(deleteLoadout(loadout.id));
-    }
   };
 
   // TODO: move all these fancy loadouts to a new service
@@ -404,13 +396,6 @@ function LoadoutPopup({
             <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
               <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
               {loadout.name}
-            </span>
-            <span
-              className="delete"
-              title={t('Loadouts.Delete')}
-              onClick={() => deleteExistingLoadout(loadout)}
-            >
-              <AppIcon icon={deleteIcon} />
             </span>
             <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>
               <AppIcon icon={editIcon} />

@@ -69,12 +69,17 @@
   display: block;
 }
 
-.loadout-content {
-  .dim-select {
-    height: 23px;
-    padding: 4px 0;
-    vertical-align: top;
-  }
+.dim-select {
+  vertical-align: top;
+  background-color: #555;
+  padding: 3px 0px;
+  display: inline-block;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
 }
 
 .loadout-options {
@@ -85,9 +90,7 @@
   }
 
   .loadout-name {
-    flex: 1;
-    max-width: 20em;
-    min-width: 10em;
+    width: 26em;
   }
 
   .dim-input {
@@ -129,6 +132,7 @@
 .loadout-warn-items {
   display: flex;
   flex-direction: row;
+  @include horizontal-space-children(4px);
 }
 
 .loadout-contents {
