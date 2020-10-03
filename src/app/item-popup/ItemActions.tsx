@@ -75,7 +75,7 @@ export default function ItemActions({
 
   return (
     <>
-      {maximum > 1 && !mobileInspect && (
+      {$featureFlags.moveAmounts && maximum > 1 && !mobileInspect && (
         <ItemMoveAmount
           amount={amount}
           maximum={maximum}
