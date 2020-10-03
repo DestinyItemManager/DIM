@@ -165,6 +165,7 @@ body {
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     flex-direction: column;
+    z-index: 1000;
 
     hr {
       margin: 4px 0 2px 0;
