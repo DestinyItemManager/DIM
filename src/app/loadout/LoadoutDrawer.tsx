@@ -376,12 +376,14 @@ function LoadoutDrawer({
     isNew: false,
   });
 
+  // Sync this global variable with our actual state. TODO: move to redux
+  loadoutDialogOpen = Boolean(loadout);
+
   // The loadout to edit comes in from the editLoadout$ rx observable
   const editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
     const loadout = args.loadout;
     const isNew = Boolean(args.isNew);
     const showClass = Boolean(args.showClass);
-    loadoutDialogOpen = true;
 
     stateDispatch({ type: 'editLoadout', loadout, showClass, isNew, account });
   };
@@ -415,7 +417,6 @@ function LoadoutDrawer({
 
   const close = () => {
     stateDispatch({ type: 'reset' });
-    loadoutDialogOpen = false;
   };
 
   // Close the sheet on navigation

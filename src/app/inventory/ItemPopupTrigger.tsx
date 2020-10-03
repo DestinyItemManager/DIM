@@ -26,7 +26,7 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
       dispatch(clearNewItem(item.id));
 
       // TODO: a dispatcher based on store state?
-      if (loadoutDialogOpen) {
+      if (!$featureFlags.newItemPopupActions && loadoutDialogOpen) {
         addItemToLoadout(item, e);
       } else if (CompareService.dialogOpen) {
         CompareService.addItemsToCompare([item]);
