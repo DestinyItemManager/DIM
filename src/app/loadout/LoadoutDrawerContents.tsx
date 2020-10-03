@@ -29,7 +29,6 @@ const loadoutTypes = [
   'Artifact',
   'Ghost',
   'Consumable',
-  'Consumables',
   'Material',
   'Emblem',
   'Emblems',

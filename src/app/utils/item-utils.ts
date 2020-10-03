@@ -189,9 +189,10 @@ export function itemCanBeEquippedByStoreId(
 export function itemCanBeInLoadout(item: DimItem): boolean {
   return (
     item.equipment ||
-    item.type === 'Consumables' ||
-    // D1 had a "Material" type
-    item.type === 'Material'
+    (item.destinyVersion === 1 &&
+      (item.type === 'Consumables' ||
+        // D1 had a "Material" type
+        item.type === 'Material'))
   );
 }
 
