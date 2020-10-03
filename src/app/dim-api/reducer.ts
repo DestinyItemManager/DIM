@@ -305,7 +305,7 @@ export const dimApi = (
       return deleteLoadout(state, action.payload);
 
     case getType(loadoutActions.updateLoadout):
-      return updateLoadout(state, action.payload);
+      return updateLoadout(state, action.payload, account!);
 
     // *** Tags/Notes ***
 
@@ -719,11 +719,10 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
   });
 }
 
-function updateLoadout(state: DimApiState, loadout: DimLoadout) {
+function updateLoadout(state: DimApiState, loadout: DimLoadout, account: DestinyAccount) {
   return produce(state, (draft) => {
-    if (!loadout.membershipId) {
-      throw new Error('Invalid old loadout missing membership ID');
-    }
+    loadout.membershipId = account.membershipId;
+    loadout.destinyVersion = account.destinyVersion;
     const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion);
     const profile = ensureProfile(draft, profileKey);
     const loadouts = profile.loadouts;
@@ -732,7 +731,7 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout) {
       action: 'loadout',
       payload: newLoadout,
       platformMembershipId: loadout.membershipId,
-      destinyVersion: loadout.destinyVersion || 2,
+      destinyVersion: loadout.destinyVersion,
     };
 
     if (loadouts[loadout.id]) {

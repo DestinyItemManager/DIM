@@ -1,4 +1,4 @@
-import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
@@ -13,7 +13,6 @@ import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { DestinyAccount } from '../accounts/destiny-account';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
@@ -73,7 +72,6 @@ export function addItemToLoadout(item: DimItem, $event) {
 
 interface StoreProps {
   itemSortOrder: string[];
-  account: DestinyAccount;
   classTypeOptions: {
     label: string;
     value: number;
@@ -102,7 +100,6 @@ type Action =
       loadout: Loadout;
       isNew: boolean;
       showClass: boolean;
-      account: DestinyAccount;
     }
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
@@ -126,15 +123,11 @@ function stateReducer(state: State, action: Action): State {
       };
 
     case 'editLoadout': {
-      const { loadout, isNew, showClass, account } = action;
+      const { loadout, isNew, showClass } = action;
 
       return {
         ...state,
-        loadout: {
-          ...loadout,
-          destinyVersion: account.destinyVersion,
-          membershipId: account.membershipId,
-        },
+        loadout,
         isNew,
         showClass,
       };
@@ -344,7 +337,6 @@ function mapStateToProps() {
 
   return (state: RootState): StoreProps => ({
     itemSortOrder: itemSortOrderSelector(state),
-    account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
     allItems: allItemsSelector(state),
@@ -360,7 +352,6 @@ function mapStateToProps() {
  * loadouts from this interface.
  */
 function LoadoutDrawer({
-  account,
   buckets,
   classTypeOptions,
   stores,
@@ -385,7 +376,7 @@ function LoadoutDrawer({
     const isNew = Boolean(args.isNew);
     const showClass = Boolean(args.showClass);
 
-    stateDispatch({ type: 'editLoadout', loadout, showClass, isNew, account });
+    stateDispatch({ type: 'editLoadout', loadout, showClass, isNew });
   };
   useSubscription(() => editLoadout$.subscribe(editLoadout));
 
