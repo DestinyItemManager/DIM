@@ -110,7 +110,7 @@ function LockArmorAndPerks({
         filterItems: (item: DimItem) =>
           Boolean(
             isLoadoutBuilderItem(item) &&
-              itemCanBeEquippedBy(item, selectedStore) &&
+              itemCanBeEquippedBy(item, selectedStore, true) &&
               (!filter || filter(item))
           ),
         sortBy: (item) => order.indexOf(item.bucket.hash),
