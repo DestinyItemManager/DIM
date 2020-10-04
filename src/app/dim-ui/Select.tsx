@@ -15,6 +15,8 @@ export interface Option<T> {
 
 interface Props<T> {
   className?: string;
+  /** Hide the selected option from the dropdown */
+  hideSelected?: boolean;
   disabled?: boolean;
   value?: T;
   options: Option<T>[];
@@ -35,6 +37,7 @@ export default function Select<T>({
   options: items,
   onChange,
   value,
+  hideSelected,
 }: Props<T>) {
   const {
     isOpen,
@@ -60,7 +63,9 @@ export default function Select<T>({
     offset: 2,
   });
 
-  console.log({ isOpen });
+  if (!selectedItem) {
+    throw new Error('value must correspond to one of the provided options');
+  }
 
   return (
     <div className={className}>
@@ -70,7 +75,7 @@ export default function Select<T>({
         className={styles.button}
         disabled={disabled}
       >
-        {selectedItem?.content}{' '}
+        {selectedItem.content}{' '}
         <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
       </button>
       <div
@@ -78,25 +83,28 @@ export default function Select<T>({
         className={clsx(styles.menu, { [styles.open]: isOpen })}
       >
         {isOpen &&
-          items.map((item, index) => (
-            <div
-              className={clsx(styles.menuItem, {
-                [styles.highlighted]: highlightedIndex === index,
-                highlighted: highlightedIndex === index,
-                [styles.disabled]: item.disabled,
-              })}
-              key={item.key}
-              {...getItemProps({
-                item,
-                index,
-                onClick: (e: any) => {
-                  e.nativeEvent.preventDownshiftDefault = item.disabled;
-                },
-              })}
-            >
-              {item.content}
-            </div>
-          ))}
+          items.map(
+            (item, index) =>
+              !(hideSelected && item.value === value) && (
+                <div
+                  className={clsx(styles.menuItem, {
+                    [styles.highlighted]: highlightedIndex === index,
+                    highlighted: highlightedIndex === index,
+                    [styles.disabled]: item.disabled,
+                  })}
+                  key={item.key}
+                  {...getItemProps({
+                    item,
+                    index,
+                    onClick: (e: any) => {
+                      e.nativeEvent.preventDownshiftDefault = item.disabled;
+                    },
+                  })}
+                >
+                  {item.content}
+                </div>
+              )
+          )}
       </div>
     </div>
   );

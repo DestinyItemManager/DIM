@@ -3,15 +3,14 @@ import Select, { Option } from 'app/dim-ui/Select';
 import { t, tl } from 'app/i18next-t';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
-import TagIcon from 'app/inventory/TagIcon';
-import { clearIcon } from 'app/shell/icons';
+import { AppIcon, clearIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getTag, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
+import { getTag, itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemTagSelector.m.scss';
 
@@ -59,13 +58,7 @@ function ItemTagSelector({ item, className, tag, dispatch }: Props) {
     (t) => t.sortOrder
   ).map((tagOption) => ({
     key: tagOption.type || 'none',
-    content: (
-      <div className={styles.item}>
-        {tagOption.type ? <TagIcon tag={tagOption.type} /> : <div className={styles.null} />}
-        <span>{t(tagOption.label)}</span>
-        {tagOption.hotkey && <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />}
-      </div>
-    ),
+    content: <TagOption tagOption={tagOption} />,
     value: tagOption.type,
   }));
 
@@ -74,9 +67,20 @@ function ItemTagSelector({ item, className, tag, dispatch }: Props) {
       options={dropdownOptions}
       value={tag}
       onChange={onChange}
+      hideSelected={true}
       className={clsx(className, 'item-tag-selector')}
     />
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemTagSelector);
+
+function TagOption({ tagOption }: { tagOption: TagInfo }) {
+  return (
+    <div className={styles.item}>
+      {tagOption.icon ? <AppIcon icon={tagOption.icon} /> : <div className={styles.null} />}
+      <span>{t(tagOption.label)}</span>
+      {tagOption.hotkey && <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />}
+    </div>
+  );
+}
