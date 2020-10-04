@@ -250,6 +250,10 @@ body {
       border-bottom: 2px solid transparent;
       box-sizing: border-box;
 
+      .gradientBackground & {
+        height: 26px;
+      }
+
       &.active {
         border-bottom: 2px solid $orange;
       }

@@ -7,6 +7,9 @@
   flex-direction: row;
   justify-content: space-around;
   margin-top: 8px;
+  .gradientBackground & {
+    opacity: 1;
+  }
 
   .phone-portrait & {
     margin-left: auto;
@@ -58,6 +61,9 @@
       width: 14px;
       margin-right: 2px;
       opacity: 0.8;
+      .gradientBackground & {
+        opacity: 1;
+      }
     }
   }
 
@@ -111,6 +117,9 @@
       color: #aaa;
       &.pointerCursor {
         cursor: pointer;
+      }
+      .gradientBackground & {
+        color: #ccc;
       }
     }
   }
