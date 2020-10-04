@@ -350,6 +350,11 @@ select {
     margin: 0 0.3em;
     filter: drop-shadow(0 0 1px black);
   }
+  &.danger {
+    &:hover {
+      background-color: $red;
+    }
+  }
 }
 
 a.dim-button {

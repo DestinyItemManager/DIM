@@ -22,7 +22,11 @@
   }
 
   &:hover {
-    background-color: #151515;
+    background-color: $orange;
+    color: black !important;
+    > span:first-child > .app-icon {
+      color: black !important;
+    }
   }
 
   > span:first-child {
@@ -58,7 +62,8 @@
       color: #222;
 
       &.delete {
-        background-color: #ff9294;
+        background-color: $red;
+        color: white;
       }
     }
   }
@@ -108,7 +113,7 @@
     var(--item-margin)
   );
   box-sizing: border-box;
-  max-height: 90vh;
+  max-height: calc(100vh - 125px);
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);

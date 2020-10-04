@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { getClass } from 'app/inventory/store/character-utils';
+import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { Prompt } from 'react-router';
@@ -15,6 +16,7 @@ export default function LoadoutDrawerOptions({
   clashingLoadout,
   saveLoadout,
   saveAsNew,
+  deleteLoadout,
 }: {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
@@ -27,6 +29,7 @@ export default function LoadoutDrawerOptions({
   updateLoadout(loadout: Loadout);
   saveLoadout(e);
   saveAsNew(e);
+  deleteLoadout(e);
 }) {
   if (!loadout) {
     return null;
@@ -121,6 +124,18 @@ export default function LoadoutDrawerOptions({
             </button>
           )}
         </div>
+        {!isNew && (
+          <div className="input-group">
+            <button
+              className="dim-button danger"
+              onClick={deleteLoadout}
+              type="button"
+              title={t('Loadouts.Delete')}
+            >
+              <AppIcon icon={deleteIcon} />
+            </button>
+          </div>
+        )}
         <div className="input-group">
           <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
             {t('Loadouts.OpenInOptimizer')}
