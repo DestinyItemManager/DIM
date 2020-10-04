@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
 import _ from 'lodash';
@@ -88,11 +87,7 @@ export function maxLightItemSet(
   const applicableItems: DimItem[] = [];
   for (const i of allItems) {
     if (
-      (itemCanBeEquippedBy(i, store) ||
-        (i.location.inPostmaster &&
-          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-          // nothing we are too low-level to equip
-          i.equipRequiredLevel <= store.level)) &&
+      itemCanBeEquippedBy(i, store, true) &&
       i.primStat?.value && // has a primary stat (sanity check)
       powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
     ) {
@@ -130,11 +125,7 @@ export function maxLightItemSet(
 export function maxStatLoadout(statHash: number, allItems: DimItem[], store: DimStore): Loadout {
   const applicableItems = allItems.filter(
     (i) =>
-      (itemCanBeEquippedBy(i, store) ||
-        (i.location.inPostmaster &&
-          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-          // nothing we are too low-level to equip
-          i.equipRequiredLevel <= store.level)) &&
+      itemCanBeEquippedBy(i, store, true) &&
       i.primStat?.value && // has a primary stat (sanity check)
       i.stats &&
       i.stats.some((stat) => stat.statHash === statHash) // contains our selected stat
