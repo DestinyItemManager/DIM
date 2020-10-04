@@ -100,7 +100,7 @@ class Compare extends React.Component<Props, State> {
           ga(
             'send',
             'pageview',
-            `/profileMembershipId/${args.additionalItems[0].destinyVersion}/compare`
+            `/profileMembershipId/d${args.additionalItems[0].destinyVersion}/compare`
           );
         }
 

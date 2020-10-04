@@ -40,6 +40,7 @@
     > .setting {
       padding: 0;
       margin: 0;
+      background-color: transparent;
     }
   }
 
@@ -128,6 +129,9 @@
     grid-template-columns: max-content 1fr;
     margin: 8px 0 0 0;
     gap: 4px 8px;
+    > div {
+      white-space: nowrap;
+    }
   }
 
   .new-item {

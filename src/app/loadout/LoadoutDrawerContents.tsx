@@ -29,7 +29,6 @@ const loadoutTypes = [
   'Artifact',
   'Ghost',
   'Consumable',
-  'Consumables',
   'Material',
   'Emblem',
   'Emblems',
@@ -144,7 +143,7 @@ async function pickLoadoutItem(
   const loadoutClassType = loadout?.classType;
 
   function loadoutHasItem(item: DimItem) {
-    return loadout?.items.some((i) => i.id === item.id && i.hash === i.hash);
+    return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
 
   try {

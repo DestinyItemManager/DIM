@@ -169,7 +169,7 @@ function InfusionFinder({
 
   useEffect(() => {
     if (show) {
-      ga('send', 'pageview', `/profileMembershipId/${currentStore.destinyVersion}/infuse`);
+      ga('send', 'pageview', `/profileMembershipId/d${currentStore.destinyVersion}/infuse`);
     }
   }, [currentStore.destinyVersion, show]);
 

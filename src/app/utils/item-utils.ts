@@ -147,7 +147,11 @@ export function itemIsInstanced(item: DimItem): boolean {
 }
 
 /** Can this item be equipped by the given store? */
-export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
+export function itemCanBeEquippedBy(
+  item: DimItem,
+  store: DimStore,
+  allowPostmaster = false
+): boolean {
   if (store.isVault) {
     return false;
   }
@@ -160,7 +164,7 @@ export function itemCanBeEquippedBy(item: DimItem, store: DimStore): boolean {
     item.equipRequiredLevel <= store.level &&
     // can be moved or is already here
     (!item.notransfer || item.owner === store.id) &&
-    !item.location.inPostmaster &&
+    (allowPostmaster || !item.location.inPostmaster) &&
     (isD1Item(item) ? factionItemAligns(store, item) : true)
   );
 }
@@ -185,9 +189,10 @@ export function itemCanBeEquippedByStoreId(
 export function itemCanBeInLoadout(item: DimItem): boolean {
   return (
     item.equipment ||
-    item.type === 'Consumables' ||
-    // D1 had a "Material" type
-    item.type === 'Material'
+    (item.destinyVersion === 1 &&
+      (item.type === 'Consumables' ||
+        // D1 had a "Material" type
+        item.type === 'Material'))
   );
 }
 

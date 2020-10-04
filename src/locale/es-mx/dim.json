@@ -619,7 +619,7 @@
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar al depósito",
     "Split": "Partir",
-    "Store": "Almacenar",
+    "Store": "Guardar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
@@ -628,9 +628,9 @@
     "Take": "Toma",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",
-      "Tracked": "Seguido",
+      "Tracked": "Con Seguimiento",
       "Untrack": "No seguir {{itemType}}",
-      "Untracked": "No seguido"
+      "Untracked": "Sin Seguimiento"
     },
     "TriageTab": "Triaje",
     "Vault": "Bóveda"
@@ -686,7 +686,7 @@
     "EnabledColumns": "Columnas Habilitadas",
     "Lock": "Bloquear",
     "NoItems": "No hay objetos seleccionados",
-    "NoMobile": "Turn your phone sideways to use the Organizer.",
+    "NoMobile": "Gira tu teléfono en forma horizontal para usar el Organizador.",
     "Note": "Establecer Nota",
     "NotePrompt": "Nota:",
     "Organizer": "Organizador",
