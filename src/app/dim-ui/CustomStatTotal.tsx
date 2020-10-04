@@ -102,6 +102,7 @@ function StatToggleButton({
             }
           : undefined
       }
+      role="button"
     >
       {stat.displayProperties.hasIcon ? (
         <span title={stat.displayProperties.name} className={styles.inlineStatIcon}>
