@@ -3,11 +3,15 @@
   display: grid;
   grid-template-columns: repeat(4, 16px minmax(min-content, 1fr));
   grid-auto-rows: 16px;
-  gap: 3px 2px;
+  gap: 4px 2px;
   align-items: center;
   font-size: 11px;
   color: #aaa;
-  margin-top: 8px;
+  margin-top: 9px;
+
+  :global(.gradientBackground) & {
+    color: #ccc;
+  }
 
   img,
   .bucketTag {
