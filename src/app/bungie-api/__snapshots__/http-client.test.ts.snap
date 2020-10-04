@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`check Request build for function getItem(http, params) {
+exports[`check Request builder for function getItem(http, params) {
     return http({
         method: 'GET',
         url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Item/\${params.itemInstanceId}/\`,
@@ -23,7 +23,7 @@ Object {
 }
 `;
 
-exports[`check Request build for function getLinkedProfiles(http, params) {
+exports[`check Request builder for function getLinkedProfiles(http, params) {
     return http({
         method: 'GET',
         url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.membershipId}/LinkedProfiles/\`,
@@ -46,7 +46,7 @@ Object {
 }
 `;
 
-exports[`check Request build for function getProfile(http, params) {
+exports[`check Request builder for function getProfile(http, params) {
     return http({
         method: 'GET',
         url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/\`,
@@ -69,7 +69,7 @@ Object {
 }
 `;
 
-exports[`check Request build for function getVendor(http, params) {
+exports[`check Request builder for function getVendor(http, params) {
     return http({
         method: 'GET',
         url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Character/\${params.characterId}/Vendors/\${params.vendorHash}/\`,
@@ -92,7 +92,7 @@ Object {
 }
 `;
 
-exports[`check Request build for function pullFromPostmaster(http, body) {
+exports[`check Request builder for function pullFromPostmaster(http, body) {
     return http({
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny2/Actions/Items/PullFromPostmaster/',

@@ -34,7 +34,10 @@ require('cross-fetch/polyfill');
 type TroubleshootingResponse = { req: Request; ErrorCode: number };
 
 const makePretendFetch = (response?: any) => (req: any) => ({
-  json: () => ({ req: req as Request, ErrorCode: 1, ...response }),
+  json: () => {
+    console.log({ ErrorCode: 1, ...response });
+    return { req: req as Request, ErrorCode: 1, ...response };
+  },
 });
 const pretendHttpClient = (response?: any) =>
   createHttpClient((makePretendFetch(response) as any) as typeof fetch, '123', false);
@@ -104,14 +107,15 @@ const cases: [(...params: any) => any, object | undefined][] = [
   ],
 ];
 
-test.each(cases)('check Request build for %s', async (apiFunc, apiFuncParams) => {
+test.each(cases)('check Request builder for %s', async (apiFunc, apiFuncParams) => {
   const request: TroubleshootingResponse = await apiFunc(pretendHttpClient(), apiFuncParams);
   const { headers, method, url, body } = request.req;
   expect({ headers, method, url, body }).toMatchSnapshot();
 });
 
-test('should throw an error if called without an arg', async () => {
-  expect(async () => {
+test('should throw an error if there is no room in the destination', async () => {
+  expect.assertions(1);
+  await expect(async () => {
     (await pullFromPostmaster(pretendHttpClient(errors.DestinyNoRoomInDestination), {
       characterId: '1234658790',
       membershipType: 3,
@@ -119,11 +123,22 @@ test('should throw an error if called without an arg', async () => {
       itemReferenceHash: 45674576,
       stackSize: 7,
     })) as any;
-  }).toThrow('You must provide a number');
+  }).rejects.toMatchInlineSnapshot(
+    `[BungieError: There are no item slots available to transfer this item.]`
+  );
 });
 
-// test('should throw an error if called without a number', () => {
-//   expect(() => {
-//     calculateSquare('45'));
-//   }.toThrow('You must provide a number');
-// }
+test('should throw an error if API is down for maintenance', async () => {
+  expect.assertions(1);
+  await expect(async () => {
+    (await pullFromPostmaster(pretendHttpClient(errors.SystemDisabled), {
+      characterId: '1234658790',
+      membershipType: 3,
+      itemId: '0987654321',
+      itemReferenceHash: 45674576,
+      stackSize: 7,
+    })) as any;
+  }).rejects.toMatchInlineSnapshot(
+    `[BungieError: This system is temporarily disabled for maintenance.]`
+  );
+});

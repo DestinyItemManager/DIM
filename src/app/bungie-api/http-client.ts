@@ -1,6 +1,6 @@
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
-import { HttpClientConfig, HttpClient } from 'bungie-api-ts/http';
 import { delay } from 'app/utils/util';
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
+import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
 /**
  * an error indicating a non-200 response code
