@@ -2,6 +2,11 @@
 
 * The Organizer's buttons now show you how many items you have in each category. These counts update when you use a search too!
 * On mobile, the search bar appears below the header, instead of on top of it.
+* Changed the effect when hovering over character headers.
+* Hitting Tab while in the search bar will only autocomplete when the menu is open.
+* Fixed the "custom stat" setting not being editable from Safari.
+* Consumables may no longer be added to loadouts for D2.
+* The Loadout Optimizer lock item picker will show items that are in the Postmaster.
 
 ### Beta Only
 
