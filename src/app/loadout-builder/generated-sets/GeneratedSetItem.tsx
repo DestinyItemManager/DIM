@@ -107,27 +107,29 @@ export default function GeneratedSetItem({
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
 
-      {itemOptions.length > 1 ? (
-        <button
-          type="button"
-          className={styles.swapButton}
-          title={t('LoadoutBuilder.ChooseAlternateTitle')}
-          onClick={chooseReplacement}
-        >
-          <AppIcon icon={faRandom} />
-        </button>
-      ) : (
-        locked?.some((li) => li.type === 'item') && (
+      <div className={styles.swapButtonContainer}>
+        {itemOptions.length > 1 ? (
           <button
             type="button"
             className={styles.swapButton}
-            title={t('LoadoutBuilder.UnlockItem')}
-            onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
+            title={t('LoadoutBuilder.ChooseAlternateTitle')}
+            onClick={chooseReplacement}
           >
-            <AppIcon icon={lockIcon} />
+            <AppIcon icon={faRandom} />
           </button>
-        )
-      )}
+        ) : (
+          locked?.some((li) => li.type === 'item') && (
+            <button
+              type="button"
+              className={styles.swapButton}
+              title={t('LoadoutBuilder.UnlockItem')}
+              onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
+            >
+              <AppIcon icon={lockIcon} />
+            </button>
+          )
+        )}
+      </div>
       <div className={styles.lockedSockets}>
         <Sockets item={item} lockedMods={lockedMods} defs={defs} onSocketClick={onSocketClick} />
       </div>

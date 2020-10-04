@@ -7,6 +7,7 @@ interface CssExports {
   'lockedSocketsRow': string;
   'selectedPerk': string;
   'swapButton': string;
+  'swapButtonContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

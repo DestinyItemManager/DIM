@@ -3,6 +3,7 @@
 .container {
   font-size: 1.2em;
   margin-bottom: 5px;
+  flex-wrap: wrap;
 
   img {
     vertical-align: middle;
@@ -14,6 +15,7 @@
 .light {
   color: $gold;
   margin-right: 14px;
+  white-space: nowrap;
 
   :global(.app-icon) {
     font-size: 10px;

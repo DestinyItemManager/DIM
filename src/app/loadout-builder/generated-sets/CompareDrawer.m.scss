@@ -6,8 +6,14 @@
 }
 
 .content {
+  // max-width: 100%;
   margin: 16px;
   display: inline-block;
+
+  @include phone-portrait {
+    display: flex;
+    flex-flow: row nowrap;
+  }
 }
 
 .fillRow {
@@ -18,6 +24,10 @@
 
 .setHeader {
   margin: 0 4px 4px 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 }
 
 .setTitle {
@@ -27,14 +37,20 @@
 }
 
 .loadoutSelect {
-  padding: 1px;
-  margin: 4px 0;
+  padding: 4px;
+  border-radius: 2px;
+  font-size: 12px;
+  height: 24px;
 }
 
 .set {
-  display: grid;
-  grid-template-columns: repeat(5, 123px);
-  justify-content: space-between;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 }
 
 .item {
