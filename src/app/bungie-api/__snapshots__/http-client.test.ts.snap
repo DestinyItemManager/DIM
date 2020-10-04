@@ -1,36 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test http request formation check generic bungieApiQuery function 1`] = `
-Object {
-  "body": null,
-  "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
-        "123",
-      ],
-    },
-  },
-  "method": "GET",
-  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/LinkedProfiles/?getAllMemberships=true",
-}
-`;
-
-exports[`test http request formation check generic bungieApiQuery function 2`] = `
-Object {
-  "body": null,
-  "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
-        "123",
-      ],
-    },
-  },
-  "method": "GET",
-  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/?components=1%2C2%2C3",
-}
-`;
-
-exports[`test http request formation check generic bungieApiQuery function 3`] = `
+exports[`check Request build for function getItem(http, params) {
+    return http({
+        method: 'GET',
+        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Item/\${params.itemInstanceId}/\`,
+        params: {
+            components: params.components ? params.components.join(',') : undefined,
+        },
+    });
+} 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -45,7 +23,61 @@ Object {
 }
 `;
 
-exports[`test http request formation check generic bungieApiQuery function 4`] = `
+exports[`check Request build for function getLinkedProfiles(http, params) {
+    return http({
+        method: 'GET',
+        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.membershipId}/LinkedProfiles/\`,
+        params: {
+            getAllMemberships: params.getAllMemberships,
+        },
+    });
+} 1`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/LinkedProfiles/?getAllMemberships=true",
+}
+`;
+
+exports[`check Request build for function getProfile(http, params) {
+    return http({
+        method: 'GET',
+        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/\`,
+        params: {
+            components: params.components ? params.components.join(',') : undefined,
+        },
+    });
+} 1`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/?components=1%2C2%2C3",
+}
+`;
+
+exports[`check Request build for function getVendor(http, params) {
+    return http({
+        method: 'GET',
+        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Character/\${params.characterId}/Vendors/\${params.vendorHash}/\`,
+        params: {
+            components: params.components ? params.components.join(',') : undefined,
+        },
+    });
+} 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -60,7 +92,13 @@ Object {
 }
 `;
 
-exports[`test http request formation check generic bungieApiQuery function 5`] = `
+exports[`check Request build for function pullFromPostmaster(http, body) {
+    return http({
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny2/Actions/Items/PullFromPostmaster/',
+        body,
+    });
+} 1`] = `
 Object {
   "body": Object {
     "data": Array [
