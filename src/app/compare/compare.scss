@@ -31,6 +31,7 @@
 .compare-item-header {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .compare-options {
@@ -57,6 +58,7 @@
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
+  max-width: 165px;
 
   .comp-lock-icon .app-icon {
     font-size: 12px;
@@ -102,13 +104,11 @@
   .range {
     font-size: 0.9em;
   }
-  .item-tag-selector {
+  .tagSelector {
     flex: 1;
-    height: 18px;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 120px;
+    > button {
+      width: 100%;
+    }
   }
   .spacer {
     height: 39px;

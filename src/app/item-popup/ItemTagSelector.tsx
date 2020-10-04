@@ -1,16 +1,23 @@
-import { t } from 'app/i18next-t';
+import KeyHelp from 'app/dim-ui/KeyHelp';
+import Select, { Option } from 'app/dim-ui/Select';
+import { t, tl } from 'app/i18next-t';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import TagIcon from 'app/inventory/TagIcon';
+import { clearIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
+import clsx from 'clsx';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { getTag, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import './ItemTagSelector.scss';
+import styles from './ItemTagSelector.m.scss';
 
 interface ProvidedProps {
   item: DimItem;
+  className?: string;
 }
 
 interface StoreProps {
@@ -23,24 +30,52 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function ItemTagSelector({ item, tag, dispatch }: Props) {
-  const onTagUpdated = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const tag = e.currentTarget.value as TagValue;
+function ItemTagSelector({ item, className, tag, dispatch }: Props) {
+  const onChange = (tag?: TagValue) => {
     dispatch(
       itemIsInstanced(item)
-        ? setItemTag({ itemId: item.id, tag: tag === 'clear' ? undefined : tag })
-        : setItemHashTag({ itemHash: item.hash, tag: tag === 'clear' ? undefined : tag })
+        ? setItemTag({
+            itemId: item.id,
+            tag: tag === 'clear' ? undefined : tag,
+          })
+        : setItemHashTag({
+            itemHash: item.hash,
+            tag: tag === 'clear' ? undefined : tag,
+          })
     );
   };
 
+  const dropdownOptions: Option<TagValue>[] = _.sortBy(
+    itemTagSelectorList.map((t) =>
+      tag && !t.type
+        ? {
+            label: tl('Tags.ClearTag'),
+            icon: clearIcon,
+            hotkey: itemTagSelectorList.find((t) => t.type === tag)!.hotkey!,
+            sortOrder: -1,
+          }
+        : t
+    ),
+    (t) => t.sortOrder
+  ).map((tagOption) => ({
+    key: tagOption.type || 'none',
+    content: (
+      <div className={styles.item}>
+        {tagOption.type ? <TagIcon tag={tagOption.type} /> : <div className={styles.null} />}
+        <span>{t(tagOption.label)}</span>
+        {tagOption.hotkey && <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />}
+      </div>
+    ),
+    value: tagOption.type,
+  }));
+
   return (
-    <select className="item-tag-selector" onChange={onTagUpdated} value={tag || 'none'}>
-      {itemTagSelectorList.map((tagOption) => (
-        <option key={tagOption.type || 'clear'} value={tagOption.type || 'clear'}>
-          {t(tagOption.label)}
-        </option>
-      ))}
-    </select>
+    <Select<TagValue>
+      options={dropdownOptions}
+      value={tag}
+      onChange={onChange}
+      className={clsx(className, 'item-tag-selector')}
+    />
   );
 }
 

@@ -19,7 +19,7 @@ import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
   clearIcon,
-  faClone,
+  compareIcon,
   lockIcon,
   stickyNoteIcon,
   unlockedIcon,
@@ -173,7 +173,7 @@ function MainSearchBarActions({
           disabled: !isComparable || !showSearchCount,
           content: (
             <>
-              <AppIcon icon={faClone} /> {t('Header.CompareMatching')}
+              <AppIcon icon={compareIcon} /> {t('Header.CompareMatching')}
             </>
           ),
         },

@@ -1,11 +1,9 @@
 import { CompareService } from 'app/compare/compare.service';
 import { t } from 'app/i18next-t';
-import { getTag } from 'app/inventory/dim-item-info';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
-import TagIcon from 'app/inventory/TagIcon';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -21,11 +19,7 @@ import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import {
-  itemHashTagsSelector,
-  itemInfosSelector,
-  sortedStoresSelector,
-} from '../inventory/selectors';
+import { sortedStoresSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
@@ -44,9 +38,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
-  const itemTag = useSelector((state: RootState) =>
-    getTag(item, itemInfosSelector(state), itemHashTagsSelector(state))
-  );
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
@@ -149,7 +140,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         )}
         {item.taggable && (
           <div className={styles.itemTagSelector}>
-            {itemTag ? <TagIcon tag={itemTag} /> : <div className={styles.null} />}
             <ItemTagSelector item={item} />
           </div>
         )}

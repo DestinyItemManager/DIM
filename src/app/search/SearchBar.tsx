@@ -1,6 +1,7 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
+import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
@@ -142,11 +143,9 @@ const Row = React.memo(
       </span>
       <span className={styles.menuItemHelp} />
       {!isPhonePortrait && isTabAutocompleteItem && (
-        <span className={styles.keyHelp}>{t('Hotkey.Tab')}</span>
+        <KeyHelp className={styles.keyHelp} combo="tab" />
       )}
-      {!isPhonePortrait && highlighted && (
-        <span className={styles.keyHelp}>{t('Hotkey.Enter')}</span>
-      )}
+      {!isPhonePortrait && highlighted && <KeyHelp className={styles.keyHelp} combo="enter" />}
       {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
         <button
           type="button"

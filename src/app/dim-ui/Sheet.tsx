@@ -132,7 +132,7 @@ export default function Sheet({
   const dragHandleDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
       // prevent item-tag-selector dropdown from triggering drag (Safari)
-      if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
+      if (isInside(e.target as HTMLElement, 'item-tag-selector')) {
         return;
       }
 
@@ -260,4 +260,14 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   );
 
   return sheetContentsRefFn;
+}
+
+function isInside(element: HTMLElement, className: string) {
+  while (element?.classList) {
+    if (element.classList.contains(className)) {
+      return true;
+    }
+    element = element.parentNode as HTMLElement;
+  }
+  return false;
 }

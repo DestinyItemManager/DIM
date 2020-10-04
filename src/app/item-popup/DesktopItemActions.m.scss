@@ -5,19 +5,6 @@
   flex-direction: column;
   justify-content: space-between;
   background-color: #161626;
-
-  :global(.item-tag-selector) {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    outline: none;
-    font-size: 12px;
-
-    option {
-      color: white;
-      background: black;
-    }
-  }
 }
 
 .entry {

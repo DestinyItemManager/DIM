@@ -2,15 +2,29 @@
 
 .button {
   composes: dim-button from global;
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 4px;
+  :global(.app-icon) {
+    color: white !important;
+    width: 16px;
+    text-align: center;
+    margin-right: 4px;
+    font-size: 12px !important;
+    height: 12px;
+  }
 }
 
 .menu {
-  position: absolute;
   background: black;
   color: white;
   font-size: 12px;
   z-index: 100;
+  &.open {
+    outline: 2px solid change-color($orange, $alpha: 0.4) !important;
+    margin: 2px;
+  }
 }
 
 .menuItem {
@@ -21,7 +35,6 @@
   padding: 6px 9px;
   @include phone-portrait {
     padding: 8px 10px;
-    width: 100vw;
   }
 
   :global(.app-icon) {
@@ -52,13 +65,9 @@
   }
 }
 
-.kebabButton {
-  composes: resetButton from './common.m.scss';
-  padding: 4px 8px;
-  color: #999;
-}
-
-.separator {
-  height: 1px;
-  background-color: #555;
+.arrow {
+  font-size: 10px !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: 10px;
 }

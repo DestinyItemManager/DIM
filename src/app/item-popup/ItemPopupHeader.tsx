@@ -9,7 +9,7 @@ import React from 'react';
 import { CompareService } from '../compare/compare.service';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, faChevronCircleUp, faClone, openDropdownIcon } from '../shell/icons';
+import { AppIcon, compareIcon, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
 import { ammoTypeClass } from './ammo-type';
 import { hideItemPopup } from './item-popup';
 import './ItemPopupHeader.scss';
@@ -75,7 +75,7 @@ export default function ItemPopupHeader({
         </div>
         {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
-            <AppIcon icon={faClone} />
+            <AppIcon icon={compareIcon} />
           </a>
         )}
         {!$featureFlags.newItemPopupActions &&
