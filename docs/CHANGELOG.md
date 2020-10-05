@@ -1,5 +1,7 @@
 ## Next
 
+## 6.33.0 <span className="changelog-date">(2020-10-04)</span>
+
 * The Organizer's buttons now show you how many items you have in each category. These counts update when you use a search too!
 * On mobile, the search bar appears below the header, instead of on top of it.
 * Changed the effect when hovering over character headers.
