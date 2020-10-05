@@ -1,14 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`check Request builder for function getItem(http, params) {
-    return http({
-        method: 'GET',
-        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Item/\${params.itemInstanceId}/\`,
-        params: {
-            components: params.components ? params.components.join(',') : undefined,
-        },
-    });
-} 1`] = `
+exports[`check Request builder for [Function getItem] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -23,15 +15,7 @@ Object {
 }
 `;
 
-exports[`check Request builder for function getLinkedProfiles(http, params) {
-    return http({
-        method: 'GET',
-        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.membershipId}/LinkedProfiles/\`,
-        params: {
-            getAllMemberships: params.getAllMemberships,
-        },
-    });
-} 1`] = `
+exports[`check Request builder for [Function getLinkedProfiles] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -46,15 +30,7 @@ Object {
 }
 `;
 
-exports[`check Request builder for function getProfile(http, params) {
-    return http({
-        method: 'GET',
-        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/\`,
-        params: {
-            components: params.components ? params.components.join(',') : undefined,
-        },
-    });
-} 1`] = `
+exports[`check Request builder for [Function getProfile] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -69,15 +45,7 @@ Object {
 }
 `;
 
-exports[`check Request builder for function getVendor(http, params) {
-    return http({
-        method: 'GET',
-        url: \`https://www.bungie.net/Platform/Destiny2/\${params.membershipType}/Profile/\${params.destinyMembershipId}/Character/\${params.characterId}/Vendors/\${params.vendorHash}/\`,
-        params: {
-            components: params.components ? params.components.join(',') : undefined,
-        },
-    });
-} 1`] = `
+exports[`check Request builder for [Function getVendor] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -92,13 +60,7 @@ Object {
 }
 `;
 
-exports[`check Request builder for function pullFromPostmaster(http, body) {
-    return http({
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny2/Actions/Items/PullFromPostmaster/',
-        body,
-    });
-} 1`] = `
+exports[`check Request builder for [Function pullFromPostmaster] 1`] = `
 Object {
   "body": Object {
     "data": Array [

@@ -107,7 +107,7 @@ const cases: [(...params: any) => any, object | undefined][] = [
   ],
 ];
 
-test.each(cases)('check Request builder for %s', async (apiFunc, apiFuncParams) => {
+test.each(cases)('check Request builder for %p', async (apiFunc, apiFuncParams) => {
   const request: TroubleshootingResponse = await apiFunc(pretendHttpClient(), apiFuncParams);
   const { headers, method, url, body } = request.req;
   expect({ headers, method, url, body }).toMatchSnapshot();
