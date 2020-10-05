@@ -34,10 +34,7 @@ require('cross-fetch/polyfill');
 type TroubleshootingResponse = { req: Request; ErrorCode: number };
 
 const makePretendFetch = (response?: any) => (req: any) => ({
-  json: () => {
-    console.log({ ErrorCode: 1, ...response });
-    return { req: req as Request, ErrorCode: 1, ...response };
-  },
+  json: () => ({ req: req as Request, ErrorCode: 1, ...response }),
 });
 const pretendHttpClient = (response?: any) =>
   createHttpClient((makePretendFetch(response) as any) as typeof fetch, '123', false);
@@ -46,11 +43,12 @@ const pretendHttpClient = (response?: any) =>
 
 const cases: [(...params: any) => any, object | undefined][] = [
   [
-    getLinkedProfiles,
+    getItem,
     {
-      membershipId: '123456',
+      destinyMembershipId: '123456',
       membershipType: 3,
-      getAllMemberships: true,
+      itemInstanceId: '0987654321',
+      components: [7],
     },
   ],
   [
@@ -62,14 +60,14 @@ const cases: [(...params: any) => any, object | undefined][] = [
     },
   ],
   [
-    getItem,
+    getLinkedProfiles,
     {
-      destinyMembershipId: '123456',
+      membershipId: '123456',
       membershipType: 3,
-      itemInstanceId: '0987654321',
-      components: [7],
+      getAllMemberships: true,
     },
   ],
+
   [
     getVendor,
     {
