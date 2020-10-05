@@ -49,6 +49,7 @@
 
     .search-filter {
       width: 100%;
+      cursor: default;
     }
 
     @include phone-portrait {
