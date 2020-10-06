@@ -10,6 +10,7 @@ import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -137,6 +138,7 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
           onSelection={onSelection}
         />
         <ItemTable categories={selection} />
+        <LoadoutDrawer />
         <Compare />
       </ErrorBoundary>
     </div>
