@@ -26,19 +26,19 @@ export const tagConfig = {
     hotkey: 'shift+2',
     icon: tagIcon,
   },
-  infuse: {
-    type: 'infuse' as const,
-    label: tl('Tags.Infuse'),
-    sortOrder: 2,
-    hotkey: 'shift+4',
-    icon: boltIcon,
-  },
   junk: {
     type: 'junk' as const,
     label: tl('Tags.Junk'),
-    sortOrder: 3,
+    sortOrder: 2,
     hotkey: 'shift+3',
     icon: banIcon,
+  },
+  infuse: {
+    type: 'infuse' as const,
+    label: tl('Tags.Infuse'),
+    sortOrder: 3,
+    hotkey: 'shift+4',
+    icon: boltIcon,
   },
   archive: {
     type: 'archive' as const,

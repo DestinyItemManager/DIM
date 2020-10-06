@@ -1,3 +1,4 @@
+import { t, tl } from 'app/i18next-t';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 
@@ -16,10 +17,15 @@ const map = {
   backspace: '\u232B', // ⌫
 };
 
+const keyi18n = {
+  tab: tl('Hotkey.Tab'),
+  enter: tl('Hotkey.Enter'),
+};
+
 /**
  * Convert strings like cmd into symbols like ⌘
  */
-function symbolize(combo: string) {
+export function symbolize(combo: string) {
   const parts = combo.split('+');
 
   return parts
@@ -29,7 +35,7 @@ function symbolize(combo: string) {
         part = window.navigator?.platform.indexOf('Mac') >= 0 ? 'command' : 'ctrl';
       }
 
-      return map[part] || part;
+      return keyi18n[part] ? t(keyi18n[part]) : map[part] || part;
     })
     .join(' + ');
 }

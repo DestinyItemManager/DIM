@@ -68,7 +68,6 @@ export default function Dropdown({
   return (
     <div className={className}>
       <button
-        ref={buttonRef}
         type="button"
         {...getToggleButtonProps({ ref: buttonRef })}
         className={kebab ? styles.kebabButton : styles.button}
