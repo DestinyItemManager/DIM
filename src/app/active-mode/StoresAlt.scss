@@ -1,0 +1,141 @@
+@import '../variables.scss';
+
+.activity-column {
+  margin-top: 0;
+
+  .store-row {
+    display: block;
+  }
+
+  .inventory-title {
+    margin-bottom: 10px;
+    &.collapsed {
+      margin-bottom: 0;
+    }
+  }
+
+  .store-cell {
+    padding: 0;
+  }
+
+  .collapse-handle {
+    padding-left: 12px;
+    padding-top: 2px;
+  }
+  .activity-items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > div {
+      margin-right: 0;
+    }
+  }
+
+  .dim-button.bucket-button {
+    border-radius: 5px;
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .badge {
+      margin: 0 5px;
+    }
+  }
+}
+
+.acivity-inventory {
+  .store-row {
+    grid-template-columns:
+      repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
+      1fr;
+  }
+}
+
+.current-location {
+  padding: 10px;
+  margin: 10px 0 15px 0;
+  opacity: 0.8;
+  font-size: 1.1em;
+
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.current-acivity {
+  display: flex;
+  align-items: center;
+  padding-top: 5px;
+
+  img {
+    height: 18px;
+    margin-left: 3px;
+  }
+}
+
+.loadout-popup-content {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.loadout-set {
+  background: transparent;
+}
+
+.no-quests,
+.active-pursuits,
+.new-items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  & > div {
+    padding-bottom: 7px;
+  }
+}
+
+.no-quests {
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  background-color: rgba(50, 0, 0, 0.8);
+  opacity: 0.8;
+}
+
+.milestone-quest .milestone-icon {
+  margin-right: 0px;
+}
+
+.inventory-toggle {
+  position: fixed;
+  top: 60px;
+  right: 12px;
+  z-index: 100;
+
+  &.alt {
+    position: absolute;
+    top: 45px;
+  }
+
+  input {
+    display: none;
+  }
+
+  label {
+    display: flex;
+  }
+
+  .beta {
+    margin-left: 6px;
+    font-size: 0.8em;
+    background-color: lightseagreen;
+    color: black;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+}
