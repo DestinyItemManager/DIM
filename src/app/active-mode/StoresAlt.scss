@@ -3,6 +3,21 @@
 .activity-column {
   margin-top: 0;
 
+  & > *:nth-child(2) {
+    margin-top: 10px;
+  }
+
+  .no-quests,
+  .active-pursuits,
+  .new-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+
+    & > div {
+      padding-bottom: 7px;
+    }
+  }
+
   .store-row {
     display: block;
   }
@@ -22,16 +37,8 @@
     padding-left: 12px;
     padding-top: 2px;
   }
-  .activity-items {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 
-    > div {
-      margin-right: 0;
-    }
-  }
-
+  // Different looking button styles (collect postmaster/farming mode)
   .dim-button.bucket-button {
     border-radius: 5px;
     padding: 5px 0;
@@ -39,10 +46,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.4);
 
     &:hover {
-      background: rgba(0, 0, 0, 0.6);
+      background: $orange;
+      color: black;
     }
     .badge {
       margin: 0 5px;
@@ -50,72 +58,13 @@
   }
 }
 
-.acivity-inventory {
-  .store-row {
-    grid-template-columns:
-      repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
-      1fr;
-  }
-}
-
-.current-location {
-  padding: 10px;
-  margin: 10px 0 15px 0;
-  opacity: 0.8;
-  font-size: 1.1em;
-
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.current-acivity {
-  display: flex;
-  align-items: center;
-  padding-top: 5px;
-
-  img {
-    height: 18px;
-    margin-left: 3px;
-  }
-}
-
-.loadout-popup-content {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-.loadout-set {
-  background: transparent;
-}
-
-.no-quests,
-.active-pursuits,
-.new-items {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  & > div {
-    padding-bottom: 7px;
-  }
-}
-
-.no-quests {
-  padding: 8px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  width: 100%;
-  background-color: rgba(50, 0, 0, 0.8);
-  opacity: 0.8;
-}
-
-.milestone-quest .milestone-icon {
-  margin-right: 0px;
-}
-
-.inventory-toggle {
+// Mode toggle
+.dim-button.inventory-toggle {
   position: fixed;
   top: 60px;
   right: 12px;
   z-index: 100;
+  padding: 0;
 
   &.alt {
     position: absolute;
@@ -127,6 +76,7 @@
   }
 
   label {
+    padding: 4px 10px;
     display: flex;
   }
 
@@ -137,5 +87,80 @@
     color: black;
     padding: 2px 4px;
     border-radius: 4px;
+  }
+}
+
+// The character select / options side
+.activity-column {
+  // Loadout tab
+  .loadout-popup-content {
+    background-color: transparent;
+
+    .loadout-set {
+      background: rgba(0, 0, 0, 0.4);
+      margin-bottom: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: $orange;
+      }
+    }
+  }
+
+  // Triumphs tab
+  .records {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+
+  // Persuits View
+  .no-quests {
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+    background-color: rgba(50, 0, 0, 0.8);
+    opacity: 0.8;
+  }
+
+  .milestone-quest .milestone-icon {
+    margin-right: 0px;
+  }
+
+  // Current Activity
+  .current-location {
+    padding: 10px;
+    margin: 10px 0 15px 0;
+    opacity: 0.8;
+    font-size: 1.1em;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    .current-acivity {
+      display: flex;
+      align-items: center;
+      padding-top: 5px;
+
+      img {
+        height: 18px;
+        margin-left: 3px;
+      }
+    }
+  }
+  .activity-items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > div {
+      margin-right: 0;
+    }
+  }
+}
+
+// The inventory side
+.acivity-inventory {
+  .store-row {
+    grid-template-columns:
+      repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
+      1fr;
   }
 }

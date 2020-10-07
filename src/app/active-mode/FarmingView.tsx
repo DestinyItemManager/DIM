@@ -53,6 +53,9 @@ function FarmingView({ store, newItems, dispatch }: Props) {
       stores={[store]}
       defaultCollapsed={true}
     >
+      <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
+        {!isFarming ? 'Start Farming' : 'Stop Farming'}
+      </div>
       <div className={'new-items'}>
         {newItems.map((item) => (
           <ItemPopupTrigger key={item.id} item={item} keepNew={true}>
@@ -66,9 +69,6 @@ function FarmingView({ store, newItems, dispatch }: Props) {
             )}
           </ItemPopupTrigger>
         ))}
-      </div>
-      <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
-        {!isFarming ? 'Start Farming' : 'Stop Farming'}
       </div>
     </InventoryCollapsibleTitle>
   );
