@@ -960,8 +960,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
+    "BestRatedKey": " = wishlist perk",
+    "BestRatedTip": "This perk is part of a weapon roll that was was selected by the author of your wishlist.",
     "Clear": "Clear Wish List",
     "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",

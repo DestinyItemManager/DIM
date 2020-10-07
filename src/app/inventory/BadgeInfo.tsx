@@ -67,12 +67,6 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
     return null;
   }
 
-  const badgeclsx = {
-    [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
-    [styles.capped]: isCapped,
-    [styles.masterwork]: item.masterwork,
-  };
-
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
@@ -80,19 +74,25 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
     (isGeneric && item.primStat?.value.toString()) ||
     (item.classified && '???');
 
-  const reviewclsx = {
-    [styles.wishlistRoll]: uiWishListRoll,
-  };
-
   return (
-    <div className={clsx(styles.badge, badgeclsx)}>
+    <div
+      className={clsx(styles.badge, {
+        [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
+        [styles.capped]: isCapped,
+        [styles.masterwork]: item.masterwork,
+      })}
+    >
       {isD1Item(item) && item.quality && (
         <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
           {item.quality.min}%
         </div>
       )}
       {uiWishListRoll && (
-        <div className={clsx(reviewclsx)}>
+        <div
+          className={clsx({
+            [styles.wishlistRoll]: uiWishListRoll,
+          })}
+        >
           <RatingIcon uiWishListRoll={uiWishListRoll} />
         </div>
       )}
