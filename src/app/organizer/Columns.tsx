@@ -296,7 +296,7 @@ export function getColumns(
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
-          const roll = wishList?.[item.id];
+          const roll = wishList[item.id];
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>
@@ -592,7 +592,13 @@ function PerksCell({
               key={p.plugDef.hash}
               tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
             >
-              <div className={styles.modPerk} data-perk-name={p.plugDef.displayProperties.name}>
+              <div
+                className={clsx(styles.modPerk, {
+                  [styles.perkSelected]:
+                    socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
+                })}
+                data-perk-name={p.plugDef.displayProperties.name}
+              >
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
                 </div>{' '}
