@@ -86,7 +86,7 @@
     background-color: lightseagreen;
     color: black;
     padding: 2px 4px;
-    border-radius: 4px;
+    border-radius: 5px;
   }
 }
 
@@ -99,7 +99,7 @@
     .loadout-set {
       background: rgba(0, 0, 0, 0.4);
       margin-bottom: 4px;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
       &:hover {
         background-color: $orange;
@@ -133,6 +133,7 @@
     opacity: 0.8;
     font-size: 1.1em;
     background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
 
     .current-acivity {
       display: flex;

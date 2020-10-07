@@ -1,6 +1,6 @@
 import { startFarming, stopFarming } from 'app/farming/actions';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import InventoryItem from 'app/inventory/InventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector } from 'app/inventory/selectors';
@@ -59,14 +59,7 @@ function FarmingView({ store, newItems, dispatch }: Props) {
       <div className={'new-items'}>
         {newItems.map((item) => (
           <ItemPopupTrigger key={item.id} item={item} keepNew={true}>
-            {(ref, onClick) => (
-              <ConnectedInventoryItem
-                item={item}
-                allowFilter={true}
-                innerRef={ref}
-                onClick={onClick}
-              />
-            )}
+            {(ref, onClick) => <InventoryItem item={item} innerRef={ref} onClick={onClick} />}
           </ItemPopupTrigger>
         ))}
       </div>

@@ -1,3 +1,4 @@
+import RestBucket from 'app/active-mode/RestBucket';
 import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
@@ -17,6 +18,7 @@ export function StoreBuckets({
   currentStore,
   labels,
   isPhonePortrait,
+  altMode,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
@@ -24,6 +26,7 @@ export function StoreBuckets({
   currentStore: DimStore;
   isPhonePortrait?: boolean;
   labels?: boolean;
+  altMode?: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -35,7 +38,18 @@ export function StoreBuckets({
     return null;
   }
 
-  if (bucket.accountWide) {
+  if (altMode) {
+    content = (
+      <>
+        <div className={'store-cell'}>
+          <StoreBucket bucket={bucket} store={currentStore} />
+        </div>
+        <div className={'store-cell'}>
+          <RestBucket bucket={bucket} currentStore={currentStore} />
+        </div>
+      </>
+    );
+  } else if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
     content = (

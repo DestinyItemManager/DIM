@@ -133,7 +133,9 @@ export default function CurrentActivity({
 
     const activity = defs.Activity.get(hash);
     const vendorHashes =
-      vendorsByActivityHash[activity.placeHash] || vendorsByDestinationHash[activity.placeHash];
+      vendorsByActivityHash[activity.placeHash] ||
+      vendorsByDestinationHash[activity.placeHash] ||
+      [];
 
     vendorHashes.forEach((vendorHash) => {
       const vendor = vendorsResponse?.vendors.data?.[vendorHash];

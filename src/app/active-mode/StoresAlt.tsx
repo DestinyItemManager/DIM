@@ -1,16 +1,15 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import CurrentActivity from 'app/active-mode/CurrentActivity';
 import FarmingView from 'app/active-mode/FarmingView';
+import LoadoutView from 'app/active-mode/LoadoutView';
 import PursuitsView from 'app/active-mode/PursuitsView';
+import TriumphView from 'app/active-mode/TriumphView';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { t } from 'app/i18next-t';
 import CollapsibleItemCategoryContainer from 'app/inventory/CollapsibleItemCategoryContainer';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import {
   bucketsSelector,
   currentStoreSelector,
@@ -19,8 +18,6 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
-import LoadoutPopup from 'app/loadout/LoadoutPopup';
-import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadAllVendors } from 'app/vendors/actions';
 import { VendorsState } from 'app/vendors/reducer';
@@ -90,8 +87,6 @@ function StoresAlt(
     return null;
   }
 
-  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
-
   return (
     <PageWithMenu
       className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
@@ -122,31 +117,14 @@ function StoresAlt(
           account={account}
           store={selectedStore}
         />
-        <PursuitsView store={selectedStore} defs={defs} />
-        <InventoryCollapsibleTitle
-          title={t('Progress.TrackedTriumphs')}
-          sectionId="trackedTriumphs"
+        <PursuitsView defs={defs} store={selectedStore} />
+        <TriumphView
+          defs={defs}
           stores={[selectedStore]}
-          defaultCollapsed={true}
-        >
-          <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-            <TrackedTriumphs
-              trackedTriumphs={trackedTriumphs}
-              trackedRecordHash={trackedRecordHash}
-              defs={defs!}
-              profileResponse={profileResponse!}
-              hideRecordIcon={true}
-            />
-          </ErrorBoundary>
-        </InventoryCollapsibleTitle>
-        <InventoryCollapsibleTitle
-          title={'Loadouts'}
-          sectionId={'Loadout'}
-          stores={[selectedStore]}
-          defaultCollapsed={true}
-        >
-          <LoadoutPopup dimStore={selectedStore} hideFarming={true} />
-        </InventoryCollapsibleTitle>
+          trackedTriumphs={trackedTriumphs}
+          profileResponse={profileResponse}
+        />
+        <LoadoutView store={selectedStore} />
         <FarmingView store={selectedStore} />
       </PageWithMenu.Menu>
       <PageWithMenu.Contents className="acivity-inventory">
@@ -155,12 +133,13 @@ function StoresAlt(
             category === 'Postmaster' ? null : (
               <CollapsibleItemCategoryContainer
                 key={category}
-                stores={[selectedStore, vault]}
+                stores={stores}
                 currentStore={selectedStore}
                 vault={vault}
                 category={category}
                 buckets={buckets}
                 inventoryBucket={inventoryBucket}
+                altMode={true}
               />
             )
           )}
