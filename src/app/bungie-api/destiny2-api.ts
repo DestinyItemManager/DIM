@@ -106,6 +106,13 @@ export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileR
 }
 
 /**
+ * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
+ */
+export function getCurrentActivity(platform: DestinyAccount): Promise<DestinyProfileResponse> {
+  return getProfile(platform, DestinyComponentType.CharacterActivities);
+}
+
+/**
  * Get parameterized profile information for the whole account. Pass in components to select what
  * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
  */

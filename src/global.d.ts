@@ -42,6 +42,8 @@ declare const $featureFlags: {
   newItemPopupActions: boolean;
   /** Enable move amounts */
   moveAmounts: boolean;
+  /** Enable alt inv mode */
+  altInventoryMode: boolean;
 };
 
 declare namespace React {

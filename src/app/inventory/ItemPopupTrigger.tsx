@@ -8,6 +8,7 @@ import { DimItem } from './item-types';
 
 interface Props {
   item: DimItem;
+  keepNew?: boolean;
   extraData?: ItemPopupExtraInfo;
   children(ref: React.Ref<HTMLDivElement>, onClick: (e: React.MouseEvent) => void): React.ReactNode;
 }
@@ -15,7 +16,12 @@ interface Props {
 /**
  * This wraps its children in a div which, when clicked, will show the move popup for the provided item.
  */
-export default function ItemPopupTrigger({ item, extraData, children }: Props): JSX.Element {
+export default function ItemPopupTrigger({
+  item,
+  keepNew,
+  extraData,
+  children,
+}: Props): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
@@ -23,7 +29,9 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
     (e: React.MouseEvent) => {
       e.stopPropagation();
 
-      dispatch(clearNewItem(item.id));
+      if (!keepNew) {
+        dispatch(clearNewItem(item.id));
+      }
 
       // TODO: a dispatcher based on store state?
       if (!$featureFlags.newItemPopupActions && loadoutDialogOpen) {
@@ -35,7 +43,7 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
         return false;
       }
     },
-    [dispatch, extraData, item]
+    [dispatch, keepNew, extraData, item]
   );
 
   return children(ref, clicked) as JSX.Element;
