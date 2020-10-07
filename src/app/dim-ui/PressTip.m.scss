@@ -30,6 +30,10 @@
     border-color: #888;
   }
 
+  p {
+    margin-bottom: 0;
+  }
+
   &[data-popper-placement='top'] .arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
