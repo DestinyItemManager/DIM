@@ -19,7 +19,6 @@ interface ProvidedProps {
   children?: React.ReactNode;
   className?: string;
   stores: DimStore[];
-  defaultCollapsed?: boolean;
 }
 
 interface StoreProps {
@@ -31,9 +30,8 @@ interface DispatchProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
   return {
-    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed,
+    collapsed: settingsSelector(state).collapsedSections[props.sectionId],
   };
 }
 
@@ -47,9 +45,6 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
 
 type Props = StoreProps & ProvidedProps & DispatchProps;
 
-/**
- * This Collapsible title is specifically for the inventory page, consider using CollapsibleTitle for other needs.
- */
 function InventoryCollapsibleTitle({
   sectionId,
   title,
