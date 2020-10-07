@@ -51,6 +51,7 @@ function FarmingView({ store, newItems, dispatch }: Props) {
       title={'Recent Items'}
       sectionId={'Farming'}
       stores={[store]}
+      defaultCollapsed={true}
     >
       <div className={'new-items'}>
         {newItems.map((item) => (

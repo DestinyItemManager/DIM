@@ -14,6 +14,7 @@ interface Props {
   isPhonePortrait?: boolean;
   stores: DimStore[];
   vault: DimStore;
+  defaultCollapsed?: boolean;
 }
 
 /** Is there any store that has an item in any of the buckets in this category? */
@@ -38,13 +39,19 @@ export default function CollapsibleItemCategoryContainer({
   isPhonePortrait,
   stores,
   vault,
+  defaultCollapsed,
 }: Props) {
   if (!categoryHasItems(buckets, category, stores, currentStore)) {
     return null;
   }
 
   return (
-    <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
+    <InventoryCollapsibleTitle
+      title={t(`Bucket.${category}`)}
+      sectionId={category}
+      stores={stores}
+      defaultCollapsed={defaultCollapsed}
+    >
       {/*
           t('Bucket.Inventory')
           t('Bucket.Postmaster')

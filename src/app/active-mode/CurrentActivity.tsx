@@ -126,7 +126,7 @@ export default function CurrentActivity({
     return null;
   }
 
-  let bounties;
+  const bounties: VendorItem[] = [];
   if (vendors) {
     const vendorData = store.id ? vendors[store.id] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
@@ -149,12 +149,13 @@ export default function CurrentActivity({
         {}
       );
 
-      bounties = [
-        ...bounties,
-        ...(d2Vendor?.items.filter(({ item }: VendorItem) =>
-          item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
-        ) || []),
-      ];
+      const things = d2Vendor?.items.filter(({ item }: VendorItem) =>
+        item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
+      );
+
+      if (things) {
+        bounties.push(...things);
+      }
     });
   }
 
@@ -189,7 +190,12 @@ export default function CurrentActivity({
   });
 
   return (
-    <InventoryCollapsibleTitle title={'Current Activity'} sectionId={'Activity'} stores={[store]}>
+    <InventoryCollapsibleTitle
+      title={'Current Activity'}
+      sectionId={'Activity'}
+      stores={[store]}
+      defaultCollapsed={true}
+    >
       <div className="current-location">
         {location}
         <div className="current-acivity">

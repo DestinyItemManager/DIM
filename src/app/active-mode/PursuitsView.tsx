@@ -48,10 +48,14 @@ export default function PursuitsView({
   });
 
   const trackingQuests = pursuits.some((item) => item.tracked);
-  console.log('heyee', trackingQuests);
 
   return (
-    <InventoryCollapsibleTitle title={`Pursuits`} sectionId={'pursuits'} stores={[store]}>
+    <InventoryCollapsibleTitle
+      title={`Pursuits`}
+      sectionId={'pursuits'}
+      stores={[store]}
+      defaultCollapsed={true}
+    >
       <div className="active-pursuits">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit item={item} key={item.index} defs={defs} hideDescription={true} />

@@ -13,12 +13,14 @@ export function TrackedTriumphs({
   defs,
   profileResponse,
   searchQuery,
+  hideRecordIcon,
 }: {
   trackedTriumphs: number[];
   trackedRecordHash: number;
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
   searchQuery?: string;
+  hideRecordIcon?: boolean;
 }) {
   const recordHashes = trackedRecordHash
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
@@ -48,6 +50,7 @@ export function TrackedTriumphs({
           key={record.recordDef.hash}
           record={record}
           defs={defs}
+          hideRecordIcon={hideRecordIcon}
           completedRecordsHidden={false}
           redactedRecordsRevealed={true}
         />

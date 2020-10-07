@@ -19,6 +19,7 @@ interface ProvidedProps {
   children?: React.ReactNode;
   className?: string;
   stores: DimStore[];
+  defaultCollapsed?: boolean;
 }
 
 interface StoreProps {
@@ -30,8 +31,9 @@ interface DispatchProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+  const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
   return {
-    collapsed: settingsSelector(state).collapsedSections[props.sectionId],
+    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed,
   };
 }
 
