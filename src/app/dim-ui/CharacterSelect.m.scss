@@ -28,7 +28,7 @@
   align-items: center;
 
   .tile {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     &:last-child {
       margin-bottom: 0;
     }
@@ -38,6 +38,7 @@
 .tile {
   height: 46px;
   width: 100%;
+
   @include phone-portrait {
     min-width: 260px;
     margin-bottom: 6px;
