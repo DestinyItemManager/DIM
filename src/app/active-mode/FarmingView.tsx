@@ -1,5 +1,5 @@
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { startFarming, stopFarming } from 'app/farming/actions';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import InventoryItem from 'app/inventory/InventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -46,11 +46,10 @@ function FarmingView({ store, newItems, dispatch }: Props) {
   }, [dispatch, store, isFarming]);
 
   return (
-    <InventoryCollapsibleTitle
+    <CollapsibleTitle
       className="farming-view"
       title={'Recent Items'}
-      sectionId={'Farming'}
-      stores={[store]}
+      sectionId={'active-farming'}
       defaultCollapsed={true}
     >
       <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
@@ -63,7 +62,7 @@ function FarmingView({ store, newItems, dispatch }: Props) {
           </ItemPopupTrigger>
         ))}
       </div>
-    </InventoryCollapsibleTitle>
+    </CollapsibleTitle>
   );
 }
 

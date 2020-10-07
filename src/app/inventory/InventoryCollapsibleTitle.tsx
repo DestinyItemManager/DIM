@@ -47,6 +47,9 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
 
 type Props = StoreProps & ProvidedProps & DispatchProps;
 
+/**
+ * This Collapsible title is specifically for the inventory page, consider using CollapsibleTitle for other needs.
+ */
 function InventoryCollapsibleTitle({
   sectionId,
   title,

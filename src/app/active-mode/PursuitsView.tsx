@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import Pursuit from 'app/progress/Pursuit';
@@ -50,18 +50,13 @@ export default function PursuitsView({
   const trackingQuests = pursuits.some((item) => item.tracked);
 
   return (
-    <InventoryCollapsibleTitle
-      title={`Pursuits`}
-      sectionId={'pursuits'}
-      stores={[store]}
-      defaultCollapsed={true}
-    >
+    <CollapsibleTitle title={`Pursuits`} sectionId={'active-pursuits'} defaultCollapsed={true}>
       <div className="active-pursuits">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit item={item} key={item.index} defs={defs} hideDescription={true} />
         ))}
         {!trackingQuests && <div className="no-quests">You're not tracking any quests</div>}
       </div>
-    </InventoryCollapsibleTitle>
+    </CollapsibleTitle>
   );
 }

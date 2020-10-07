@@ -1,30 +1,26 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import { t } from 'app/i18next-t';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
-import { DimStore } from 'app/inventory/store-types';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
 export default function TriumphView({
   defs,
-  stores,
   trackedTriumphs,
   profileResponse,
 }: {
   defs?: D2ManifestDefinitions;
-  stores: DimStore[];
   trackedTriumphs: number[];
   profileResponse?: DestinyProfileResponse;
 }) {
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
-    <InventoryCollapsibleTitle
+    <CollapsibleTitle
       title={t('Progress.TrackedTriumphs')}
-      sectionId="trackedTriumphs"
-      stores={stores}
+      sectionId="active-triumphs"
       defaultCollapsed={true}
     >
       <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
@@ -36,6 +32,6 @@ export default function TriumphView({
           hideRecordIcon={true}
         />
       </ErrorBoundary>
-    </InventoryCollapsibleTitle>
+    </CollapsibleTitle>
   );
 }

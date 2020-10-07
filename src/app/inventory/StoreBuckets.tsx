@@ -44,9 +44,11 @@ export function StoreBuckets({
         <div className={'store-cell'}>
           <StoreBucket bucket={bucket} store={currentStore} />
         </div>
-        <div className={'store-cell'}>
-          <RestBucket bucket={bucket} currentStore={currentStore} />
-        </div>
+        {!isPhonePortrait && (
+          <div className={'store-cell'}>
+            <RestBucket bucket={bucket} currentStore={currentStore} />
+          </div>
+        )}
       </>
     );
   } else if (bucket.accountWide) {

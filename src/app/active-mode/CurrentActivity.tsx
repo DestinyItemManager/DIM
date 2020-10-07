@@ -2,9 +2,9 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import StoreInventoryItem from 'app/inventory/StoreInventoryItem';
@@ -192,10 +192,9 @@ export default function CurrentActivity({
   });
 
   return (
-    <InventoryCollapsibleTitle
+    <CollapsibleTitle
       title={'Current Activity'}
-      sectionId={'Activity'}
-      stores={[store]}
+      sectionId={'active-activity'}
       defaultCollapsed={true}
     >
       <div className="current-location">
@@ -219,6 +218,6 @@ export default function CurrentActivity({
           />
         ))}
       </div>
-    </InventoryCollapsibleTitle>
+    </CollapsibleTitle>
   );
 }

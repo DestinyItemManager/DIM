@@ -1,6 +1,6 @@
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import CollapsibleItemCategoryContainer from 'app/inventory/CollapsibleItemCategoryContainer';
+import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import StoreStats from 'app/store-stats/StoreStats';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -13,11 +13,11 @@ import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
-import { InventoryBuckets } from './inventory-buckets';
+import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import { bucketsSelector, sortedStoresSelector } from './selectors';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
-import { getCurrentStore, getStore, getVault } from './stores-helpers';
+import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface StoreProps {
@@ -190,6 +190,20 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   );
 }
 
+/** Is there any store that has an item in any of the buckets in this category? */
+function categoryHasItems(
+  allBuckets: InventoryBuckets,
+  category: string,
+  stores: DimStore[],
+  currentStore: DimStore
+): boolean {
+  const buckets = allBuckets.byCategory[category];
+  return buckets.some((bucket) => {
+    const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
+    return storesToSearch.some((s) => findItemsByBucket(s, bucket.hash).length > 0);
+  });
+}
+
 export default connect<StoreProps>(mapStateToProps)(Stores);
 
 interface InventoryContainerProps {
@@ -198,6 +212,46 @@ interface InventoryContainerProps {
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimStore;
+}
+
+function CollapsibleContainer({
+  buckets,
+  category,
+  stores,
+  currentStore,
+  inventoryBucket,
+  vault,
+  isPhonePortrait,
+}: {
+  category: string;
+  inventoryBucket: InventoryBucket[];
+  isPhonePortrait?: boolean;
+} & InventoryContainerProps) {
+  if (!categoryHasItems(buckets, category, stores, currentStore)) {
+    return null;
+  }
+
+  return (
+    <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
+      {/*
+          t('Bucket.Inventory')
+          t('Bucket.Postmaster')
+          t('Bucket.General')
+          t('Bucket.Progress')
+          t('Bucket.Unknown')
+        */}
+      {inventoryBucket.map((bucket) => (
+        <StoreBuckets
+          key={bucket.hash}
+          bucket={bucket}
+          stores={stores}
+          vault={vault}
+          currentStore={currentStore}
+          isPhonePortrait={isPhonePortrait}
+        />
+      ))}
+    </InventoryCollapsibleTitle>
+  );
 }
 
 function StoresInventory(props: InventoryContainerProps) {
@@ -246,7 +300,7 @@ function StoresInventory(props: InventoryContainerProps) {
   return (
     <>
       {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
-        <CollapsibleItemCategoryContainer
+        <CollapsibleContainer
           key={category}
           {...props}
           category={category}

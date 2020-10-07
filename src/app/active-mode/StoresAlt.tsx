@@ -2,13 +2,15 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import CurrentActivity from 'app/active-mode/CurrentActivity';
 import FarmingView from 'app/active-mode/FarmingView';
 import LoadoutView from 'app/active-mode/LoadoutView';
+import PostmasterView from 'app/active-mode/PostmasterView';
 import PursuitsView from 'app/active-mode/PursuitsView';
 import TriumphView from 'app/active-mode/TriumphView';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import CollapsibleItemCategoryContainer from 'app/inventory/CollapsibleItemCategoryContainer';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   bucketsSelector,
@@ -17,6 +19,7 @@ import {
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { StoreBuckets } from 'app/inventory/StoreBuckets';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadAllVendors } from 'app/vendors/actions';
@@ -101,15 +104,7 @@ function StoresAlt(
             onCharacterChanged={setSelectedStoreId}
           />
         )}
-        <CollapsibleItemCategoryContainer
-          key={'Postmaster'}
-          stores={[selectedStore]}
-          currentStore={selectedStore}
-          vault={vault}
-          category={'Postmaster'}
-          buckets={buckets}
-          inventoryBucket={buckets.byCategory['Postmaster']}
-        />
+        <PostmasterView store={selectedStore} vault={vault} buckets={buckets} />
         <CurrentActivity
           defs={defs}
           vendors={vendors}
@@ -120,7 +115,6 @@ function StoresAlt(
         <PursuitsView defs={defs} store={selectedStore} />
         <TriumphView
           defs={defs}
-          stores={[selectedStore]}
           trackedTriumphs={trackedTriumphs}
           profileResponse={profileResponse}
         />
@@ -131,16 +125,24 @@ function StoresAlt(
         <>
           {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) =>
             category === 'Postmaster' ? null : (
-              <CollapsibleItemCategoryContainer
-                key={category}
-                stores={stores}
-                currentStore={selectedStore}
-                vault={vault}
-                category={category}
-                buckets={buckets}
-                inventoryBucket={inventoryBucket}
-                altMode={true}
-              />
+              <CollapsibleTitle
+                className={'store-row inventory-title'}
+                title={t(`Bucket.${category}`)}
+                sectionId={category}
+                defaultCollapsed={true}
+              >
+                {inventoryBucket.map((bucket) => (
+                  <StoreBuckets
+                    key={bucket.hash}
+                    bucket={bucket}
+                    stores={stores}
+                    vault={vault}
+                    currentStore={selectedStore}
+                    isPhonePortrait={isPhonePortrait}
+                    altMode={true}
+                  />
+                ))}
+              </CollapsibleTitle>
             )
           )}
         </>

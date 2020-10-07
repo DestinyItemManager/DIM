@@ -3,6 +3,10 @@
 .activity-column {
   margin-top: 0;
 
+  @include phone-portrait {
+    margin-top: 15px;
+  }
+
   & > *:nth-child(2) {
     margin-top: 10px;
   }
@@ -17,12 +21,11 @@
       padding-bottom: 7px;
     }
   }
-
   .store-row {
     display: block;
   }
 
-  .inventory-title {
+  .title {
     margin-bottom: 10px;
     &.collapsed {
       margin-bottom: 0;
@@ -33,15 +36,11 @@
     padding: 0;
   }
 
-  .collapse-handle {
-    padding-left: 12px;
-    padding-top: 2px;
-  }
-
   // Different looking button styles (collect postmaster/farming mode)
   .dim-button.bucket-button {
     border-radius: 5px;
-    padding: 5px 0;
+    padding: 8px 0;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,6 +68,13 @@
   &.alt {
     position: absolute;
     top: 45px;
+
+    @include phone-portrait {
+      top: inherit;
+      right: 7px;
+      position: fixed;
+      bottom: 7px;
+    }
   }
 
   input {
@@ -87,6 +93,12 @@
     color: black;
     padding: 2px 4px;
     border-radius: 5px;
+  }
+
+  @include phone-portrait {
+    bottom: 58px;
+    top: inherit;
+    right: 7px;
   }
 }
 
@@ -163,5 +175,17 @@
     grid-template-columns:
       repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
       1fr;
+
+    @include phone-portrait {
+      grid-template-columns: 1fr;
+
+      .bucket-label {
+        position: sticky;
+        top: 44px;
+        background: #29293d;
+        z-index: 1;
+        opacity: 1;
+      }
+    }
   }
 }
