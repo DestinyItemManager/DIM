@@ -53,8 +53,10 @@ function buildMasterworkInfo(
   }
   const investmentStats = socket.plugged.plugDef.investmentStats;
 
+  const exoticWeapon = createdItem.isExotic && createdItem.bucket?.sort === 'Weapons';
+
   if (!investmentStats?.length) {
-    if (createdItem.isExotic) {
+    if (exoticWeapon) {
       return {
         tier: maxTier,
         stats: undefined,
@@ -80,9 +82,7 @@ function buildMasterworkInfo(
   }
 
   return {
-    tier: createdItem.isExotic
-      ? maxTier
-      : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
+    tier: exoticWeapon ? maxTier : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
     stats,
   };
 }
