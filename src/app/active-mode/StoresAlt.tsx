@@ -4,9 +4,6 @@ import FarmingView from 'app/active-mode/FarmingView';
 import LoadoutView from 'app/active-mode/LoadoutView';
 import PostmasterView from 'app/active-mode/PostmasterView';
 import PursuitsView from 'app/active-mode/PursuitsView';
-import TriumphView from 'app/active-mode/TriumphView';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -15,7 +12,6 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   bucketsSelector,
   currentStoreSelector,
-  profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -23,34 +19,24 @@ import { StoreBuckets } from 'app/inventory/StoreBuckets';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadAllVendors } from 'app/vendors/actions';
-import { VendorsState } from 'app/vendors/reducer';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import '../inventory/Stores.scss';
 import './StoresAlt.scss';
 
 interface StoreProps {
-  stores: DimStore[];
-  currentStore: DimStore;
-  defs?: D2ManifestDefinitions;
   buckets: InventoryBuckets;
+  currentStore: DimStore;
   isPhonePortrait: boolean;
-  trackedTriumphs: number[];
-  profileResponse?: DestinyProfileResponse;
-  vendors: VendorsState['vendorsByCharacter'];
+  stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    defs: state.manifest.d2Manifest,
-    stores: sortedStoresSelector(state),
     buckets: bucketsSelector(state)!,
-    vendors: state.vendors.vendorsByCharacter,
-    trackedTriumphs: trackedTriumphsSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
     currentStore: currentStoreSelector(state)!,
-    profileResponse: profileResponseSelector(state),
+    isPhonePortrait: state.shell.isPhonePortrait,
+    stores: sortedStoresSelector(state),
   };
 }
 
@@ -61,18 +47,7 @@ type Props = { account: DestinyAccount } & StoreProps & ThunkDispatchProp;
  */
 function StoresAlt(
   this: void,
-  {
-    defs,
-    dispatch,
-    account,
-    trackedTriumphs,
-    vendors,
-    stores,
-    profileResponse,
-    currentStore,
-    buckets,
-    isPhonePortrait,
-  }: Props
+  { dispatch, account, stores, currentStore, buckets, isPhonePortrait }: Props
 ) {
   const vault = getVault(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
@@ -104,20 +79,9 @@ function StoresAlt(
             onCharacterChanged={setSelectedStoreId}
           />
         )}
+        <CurrentActivity account={account} store={selectedStore} buckets={buckets} />
         <PostmasterView store={selectedStore} vault={vault} buckets={buckets} />
-        <CurrentActivity
-          defs={defs}
-          vendors={vendors}
-          buckets={buckets}
-          account={account}
-          store={selectedStore}
-        />
-        <PursuitsView defs={defs} store={selectedStore} />
-        <TriumphView
-          defs={defs}
-          trackedTriumphs={trackedTriumphs}
-          profileResponse={profileResponse}
-        />
+        <PursuitsView store={selectedStore} />
         <LoadoutView store={selectedStore} />
         <FarmingView store={selectedStore} />
       </PageWithMenu.Menu>

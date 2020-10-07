@@ -2,16 +2,13 @@
 
 .activity-column {
   margin-top: 0;
+  top: $header-height;
 
   @include phone-portrait {
     margin-top: 15px;
   }
 
-  & > *:nth-child(2) {
-    margin-top: 10px;
-  }
-
-  .no-quests,
+  .activity-items,
   .active-pursuits,
   .new-items {
     display: grid;
@@ -21,6 +18,7 @@
       padding-bottom: 7px;
     }
   }
+
   .store-row {
     display: block;
   }
@@ -61,7 +59,7 @@
 .dim-button.inventory-toggle {
   position: fixed;
   top: 60px;
-  right: 12px;
+  right: 15px;
   z-index: 100;
   padding: 0;
 
@@ -121,17 +119,27 @@
 
   // Triumphs tab
   .records {
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    display: block;
+    grid-column: 1 / -1;
+
+    & > div {
+      margin-bottom: 5px;
+    }
+    // grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   }
 
   // Persuits View
   .no-quests {
-    padding: 8px;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    width: 100%;
-    background-color: rgba(50, 0, 0, 0.8);
-    opacity: 0.8;
+    grid-column: 1 / -1;
+    margin: 10px 0;
+
+    & > div {
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(50, 0, 0, 0.8);
+      opacity: 0.6;
+    }
   }
 
   .milestone-quest .milestone-icon {
@@ -141,7 +149,7 @@
   // Current Activity
   .current-location {
     padding: 10px;
-    margin: 10px 0 15px 0;
+    margin: 10px 0;
     opacity: 0.8;
     font-size: 1.1em;
     background-color: rgba(0, 0, 0, 0.4);
@@ -158,15 +166,15 @@
       }
     }
   }
-  .activity-items {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  // .activity-items {
+  //   display: flex;
+  //   flex-direction: row;
+  //   justify-content: space-between;
 
-    > div {
-      margin-right: 0;
-    }
-  }
+  //   > div {
+  //     margin-right: 0;
+  //   }
+  // }
 }
 
 // The inventory side
@@ -175,6 +183,14 @@
     grid-template-columns:
       repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
       1fr;
+
+    &.title {
+      background-color: transparent;
+
+      &.collapsed {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
 
     @include phone-portrait {
       grid-template-columns: 1fr;
