@@ -1,3 +1,4 @@
+import RestStoresBucket from 'app/active-mode/RestStoresBucket';
 import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';

@@ -21,15 +21,7 @@ interface StoreProps {
 const newItemsToShow = 8;
 
 function mapStateToProps(state: RootState): StoreProps {
-  const allItems = allItemsSelector(state);
-  const items = Array.from(state.inventory.newItems);
-  items.length = newItemsToShow;
-
-  const newItems: DimItem[] = [];
-  items.forEach((id) => {
-    const newItem = allItems.find((item) => item.id === id);
-    newItem && newItems.push(newItem);
-  });
+  const newItems = allItemsSelector(state).sort((a, b) => (a.id > b.id ? -1 : 1));
   newItems.length = newItemsToShow;
 
   return {
@@ -58,7 +50,7 @@ function FarmingView({ store, newItems, dispatch }: Props) {
       </div>
       <div className={'new-items'}>
         {newItems.map((item) => (
-          <ItemPopupTrigger key={item.id} item={item} keepNew={true}>
+          <ItemPopupTrigger key={item.id} item={item}>
             {(ref, onClick) => <InventoryItem item={item} innerRef={ref} onClick={onClick} />}
           </ItemPopupTrigger>
         ))}
