@@ -982,6 +982,8 @@
     "ButtonOff": "Inventory Mode",
     "Beta": "BETA",
     "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests"
+    "NoQuests": "You're not tracking any quests",
+    "Loadouts": "Loadouts",
+    "Farming": "Recent Items"
   }
 }
