@@ -22,7 +22,7 @@ import { loadAllVendors } from 'app/vendors/actions';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import '../inventory/Stores.scss';
-import './StoresAlt.scss';
+import './ActiveMode.scss';
 
 interface StoreProps {
   buckets: InventoryBuckets;
@@ -45,7 +45,7 @@ type Props = { account: DestinyAccount } & StoreProps & ThunkDispatchProp;
 /**
  * Display current activity, selected character, and entire inventory
  */
-function StoresAlt(
+function ActiveMode(
   this: void,
   { dispatch, account, stores, currentStore, buckets, isPhonePortrait }: Props
 ) {
@@ -115,4 +115,4 @@ function StoresAlt(
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(StoresAlt);
+export default connect<StoreProps>(mapStateToProps)(ActiveMode);

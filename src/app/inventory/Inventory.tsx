@@ -1,5 +1,5 @@
+import ActiveMode from 'app/active-mode/ActiveMode';
 import InventoryToggle from 'app/active-mode/InventoryModeToggle';
-import StoresAlt from 'app/active-mode/StoresAlt';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -63,7 +63,7 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
   return (
     <ErrorBoundary name="Inventory">
       {$featureFlags.altInventoryMode && <InventoryToggle mode={altMode} onClick={setAltMode} />}
-      {altMode ? <StoresAlt account={account} /> : <Stores />}
+      {altMode ? <ActiveMode account={account} /> : <Stores />}
       <LoadoutDrawer />
       <Compare />
       {$featureFlags.moveAmounts && <StackableDragHelp />}
