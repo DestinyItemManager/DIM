@@ -1,5 +1,6 @@
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { startFarming, stopFarming } from 'app/farming/actions';
+import { t } from 'app/i18next-t';
 import InventoryItem from 'app/inventory/InventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -48,7 +49,7 @@ function FarmingView({ store, newItems, dispatch }: Props) {
   return (
     <CollapsibleTitle
       className="farming-view"
-      title={'Recent Items'}
+      title={t('ActiveMode.Farming')}
       sectionId={'active-farming'}
       defaultCollapsed={true}
     >

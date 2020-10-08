@@ -1,7 +1,7 @@
 import {
   ghostTypeToActivityHash,
   ghostTypeToPlaceHash,
-} from 'app/active-mode/current-activity/util';
+} from 'app/active-mode/Views/current-activity/util';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';

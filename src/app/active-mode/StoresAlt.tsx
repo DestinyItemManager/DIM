@@ -1,9 +1,9 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import CurrentActivity from 'app/active-mode/CurrentActivity';
-import FarmingView from 'app/active-mode/FarmingView';
-import LoadoutView from 'app/active-mode/LoadoutView';
-import PostmasterView from 'app/active-mode/PostmasterView';
-import PursuitsView from 'app/active-mode/PursuitsView';
+import CurrentActivity from 'app/active-mode/Views/CurrentActivity';
+import FarmingView from 'app/active-mode/Views/FarmingView';
+import LoadoutView from 'app/active-mode/Views/LoadoutView';
+import PostmasterView from 'app/active-mode/Views/PostmasterView';
+import PursuitsView from 'app/active-mode/Views/PursuitsView';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';

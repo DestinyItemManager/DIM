@@ -1,4 +1,3 @@
-import RestBucket from 'app/active-mode/RestBucket';
 import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
@@ -46,7 +45,7 @@ export function StoreBuckets({
         </div>
         {!isPhonePortrait && (
           <div className={'store-cell'}>
-            <RestBucket bucket={bucket} currentStore={currentStore} />
+            <RestStoresBucket bucket={bucket} currentStore={currentStore} />
           </div>
         )}
       </>

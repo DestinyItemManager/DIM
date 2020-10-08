@@ -1,4 +1,4 @@
-import InventoryToggle from 'app/active-mode/InventoryToggle';
+import InventoryToggle from 'app/active-mode/InventoryModeToggle';
 import StoresAlt from 'app/active-mode/StoresAlt';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';

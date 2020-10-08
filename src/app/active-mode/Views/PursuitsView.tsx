@@ -66,7 +66,11 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
-    <CollapsibleTitle title={`Pursuits`} sectionId={'active-pursuits'} defaultCollapsed={true}>
+    <CollapsibleTitle
+      title={t('ActiveMode.Pursuits')}
+      sectionId={'active-pursuits'}
+      defaultCollapsed={true}
+    >
       <div className="active-pursuits">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
@@ -83,7 +87,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
 
         {!trackingQuests && (
           <div className="no-quests">
-            <div className="message">You're not tracking any quests</div>
+            <div className="message">{t('ActiveMode.NoQuests')}</div>
           </div>
         )}
       </div>

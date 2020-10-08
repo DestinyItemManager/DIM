@@ -3,7 +3,7 @@ import {
   Vendors,
   vendorsByActivityModeType,
   vendorsByDestinationHash,
-} from 'app/active-mode/current-activity/util';
+} from 'app/active-mode/Views/current-activity/util';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { ownedItemsSelector } from 'app/inventory/selectors';

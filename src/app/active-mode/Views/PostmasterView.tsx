@@ -1,4 +1,5 @@
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { StoreBuckets } from 'app/inventory/StoreBuckets';
@@ -23,7 +24,11 @@ export default function PostmasterView({
   }
 
   return (
-    <CollapsibleTitle title={'Postmaster'} sectionId={'active-postmaster'} defaultCollapsed={true}>
+    <CollapsibleTitle
+      title={t('Bucket.Postmaster')}
+      sectionId={'active-postmaster'}
+      defaultCollapsed={true}
+    >
       {postmasterBuckets.map((bucket) => (
         <StoreBuckets
           key={bucket.hash}

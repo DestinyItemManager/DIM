@@ -44,7 +44,8 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
 
 type Props = ProvidedProps & StoreProps;
 
-function RestBucket({ restItems, bucket, itemSortOrder }: Props) {
+/** a `StoreBucket` for items not on the currently selected store */
+function RestStoresBucket({ restItems, bucket, itemSortOrder }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
   const items = useMemo(() => sortItems(restItems, itemSortOrder), [restItems, itemSortOrder]);
 
@@ -63,4 +64,4 @@ function RestBucket({ restItems, bucket, itemSortOrder }: Props) {
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(RestBucket);
+export default connect<StoreProps>(mapStateToProps)(RestStoresBucket);

@@ -106,7 +106,7 @@ export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileR
 }
 
 /**
- * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
+ * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh activity.
  */
 export function getCurrentActivity(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform, DestinyComponentType.CharacterActivities);

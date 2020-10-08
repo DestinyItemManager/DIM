@@ -1,6 +1,7 @@
+import { t } from 'app/i18next-t';
 import React from 'react';
 
-export default function InventoryToggle({
+export default function InventoryModeToggle({
   mode,
   onClick,
 }: {
@@ -17,7 +18,8 @@ export default function InventoryToggle({
         }}
       />
       <label htmlFor="inventory-toggle">
-        {mode ? 'Active Mode' : 'Inventory Mode'} <div className="beta">BETA</div>
+        {mode ? t(`ActiveMode.ButtonOn`) : t(`ActiveMode.ButtonOff`)}{' '}
+        <div className="beta">{t(`ActiveMode.Beta`)}</div>
       </label>
     </div>
   );

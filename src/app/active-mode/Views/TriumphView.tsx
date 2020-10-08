@@ -6,6 +6,7 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
+// This is currently un-used in favor of the PursuitsView.tsx
 export default function TriumphView({
   defs,
   trackedTriumphs,

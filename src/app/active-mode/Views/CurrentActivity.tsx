@@ -1,7 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import SuggestedGhosts from 'app/active-mode/current-activity/SuggestedGhost';
-import { Destinations } from 'app/active-mode/current-activity/util';
-import VendorBounties from 'app/active-mode/current-activity/VendorBounties';
+import SuggestedGhosts from 'app/active-mode/Views/current-activity/SuggestedGhost';
+import { Destinations } from 'app/active-mode/Views/current-activity/util';
+import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
 import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
