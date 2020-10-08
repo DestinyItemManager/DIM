@@ -1,36 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test http request formation check generic bungieApiQuery function 1`] = `
-Object {
-  "body": null,
-  "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
-        "123",
-      ],
-    },
-  },
-  "method": "GET",
-  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/LinkedProfiles/?getAllMemberships=true",
-}
-`;
-
-exports[`test http request formation check generic bungieApiQuery function 2`] = `
-Object {
-  "body": null,
-  "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
-        "123",
-      ],
-    },
-  },
-  "method": "GET",
-  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/?components=1%2C2%2C3",
-}
-`;
-
-exports[`test http request formation check generic bungieApiQuery function 3`] = `
+exports[`check Request builder for [Function getItem] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -45,7 +15,37 @@ Object {
 }
 `;
 
-exports[`test http request formation check generic bungieApiQuery function 4`] = `
+exports[`check Request builder for [Function getLinkedProfiles] 1`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/LinkedProfiles/?getAllMemberships=true",
+}
+`;
+
+exports[`check Request builder for [Function getProfile] 1`] = `
+Object {
+  "body": null,
+  "headers": Headers {
+    Symbol(map): Object {
+      "X-API-Key": Array [
+        "123",
+      ],
+    },
+  },
+  "method": "GET",
+  "url": "https://www.bungie.net/Platform/Destiny2/3/Profile/123456/?components=1%2C2%2C3",
+}
+`;
+
+exports[`check Request builder for [Function getVendor] 1`] = `
 Object {
   "body": null,
   "headers": Headers {
@@ -60,7 +60,7 @@ Object {
 }
 `;
 
-exports[`test http request formation check generic bungieApiQuery function 5`] = `
+exports[`check Request builder for [Function pullFromPostmaster] 1`] = `
 Object {
   "body": Object {
     "data": Array [

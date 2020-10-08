@@ -117,15 +117,9 @@ export default function Plug({
       ) : (
         contents
       )}
-      {wishListsEnabled &&
-        inventoryWishListRoll &&
-        inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
-          <AppIcon
-            className="thumbs-up"
-            icon={thumbsUpIcon}
-            title={t('WishListRoll.BestRatedTip')}
-          />
-        )}
+      {wishListsEnabled && inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) && (
+        <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
+      )}
     </div>
   );
 }

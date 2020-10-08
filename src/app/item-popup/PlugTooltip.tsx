@@ -84,14 +84,14 @@ export default function PlugTooltip({
       {wishListsEnabled &&
         inventoryWishListRoll &&
         inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
-          <>
+          <p>
             <AppIcon
               className="thumbs-up"
               icon={thumbsUpIcon}
               title={t('WishListRoll.BestRatedTip')}
             />{' '}
             = {t('WishListRoll.BestRatedTip')}
-          </>
+          </p>
         )}
     </>
   );

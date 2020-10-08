@@ -106,12 +106,15 @@
 }
 
 .thumbs-up {
-  color: #6dcc66;
+  background: #ddd;
+  border-radius: 50%;
+  color: #0b486b;
+  padding: 3px;
   font-size: calc(var(--item-size) / 5) !important;
   .socket-container & {
     position: absolute;
-    top: -3px;
-    right: -3px;
+    top: -6px;
+    right: -6px;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }

@@ -1,7 +1,5 @@
-import { t } from 'app/i18next-t';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
-import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -10,7 +8,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
@@ -112,7 +110,6 @@ function ItemSockets({
           {!minimal && (
             <div className="item-socket-category-name">
               {category.category.displayProperties.name}
-              {bestRatedIcon(category, wishListsEnabled, inventoryWishListRoll)}
             </div>
           )}
           <div className="item-sockets">
@@ -150,36 +147,6 @@ function ItemSockets({
 
 export default connect<StoreProps>(mapStateToProps)(ItemSockets);
 
-/** returns BestRatedIcon with appropriate label if this is the recommended perk */
-function bestRatedIcon(
-  category: DimSocketCategory,
-  wishlistEnabled?: boolean,
-  inventoryWishListRoll?: InventoryWishListRoll
-) {
-  const returnAsWishlisted =
-    wishlistEnabled &&
-    inventoryWishListRoll &&
-    !inventoryWishListRoll.isUndesirable &&
-    anyWishListRolls(category, inventoryWishListRoll)
-      ? true // true for a wishlisted perk
-      : null; // don't give a thumbs up at all
-
-  return (
-    returnAsWishlisted !== null && (
-      <div className="best-rated-key">
-        <div className="tip-text">
-          <AppIcon
-            className="thumbs-up"
-            icon={thumbsUpIcon}
-            title={t('WishListRoll.BestRatedTip')}
-          />{' '}
-          {t('WishListRoll.BestRatedKey')}
-        </div>
-      </div>
-    )
-  );
-}
-
 /** converts a socket category to a valid css class name */
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
@@ -198,19 +165,6 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
     default:
       return null;
   }
-}
-
-function anyWishListRolls(
-  category: DimSocketCategory,
-  inventoryWishListRoll: InventoryWishListRoll
-) {
-  return category.sockets.some((socket) =>
-    socket.plugOptions.some(
-      (plugOption) =>
-        plugOption !== socket.plugged &&
-        inventoryWishListRoll.wishListPerks.has(plugOption.plugDef.hash)
-    )
-  );
 }
 
 function Socket({
