@@ -33,6 +33,11 @@ export default function PlugTooltip({
     plug.plugDef.collectibleHash &&
     defs.Collectible.get(plug.plugDef.collectibleHash).sourceString;
 
+  const wishListTip =
+    wishListsEnabled &&
+    inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) &&
+    t('WishListRoll.BestRatedTip', { count: inventoryWishListRoll.wishListPerks.size });
+
   return (
     <>
       <h2>{plug.plugDef.displayProperties.name}</h2>
@@ -81,18 +86,11 @@ export default function PlugTooltip({
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
 
-      {wishListsEnabled &&
-        inventoryWishListRoll &&
-        inventoryWishListRoll.wishListPerks.has(plug.plugDef.hash) && (
-          <p>
-            <AppIcon
-              className="thumbs-up"
-              icon={thumbsUpIcon}
-              title={t('WishListRoll.BestRatedTip')}
-            />{' '}
-            = {t('WishListRoll.BestRatedTip')}
-          </p>
-        )}
+      {wishListTip && (
+        <p>
+          <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
+        </p>
+      )}
     </>
   );
 }
