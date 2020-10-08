@@ -18,7 +18,10 @@ export default function SuggestedGhosts({
   store: DimStore;
   activity: DestinyActivityDefinition;
 }) {
-  if (!activity.activityModeTypes.length) {
+  if (
+    !activity.activityModeTypes.length ||
+    activity.activityModeTypes.includes(DestinyActivityModeType.Social)
+  ) {
     return null;
   }
 

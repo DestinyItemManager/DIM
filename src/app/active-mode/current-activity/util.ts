@@ -11,7 +11,6 @@ export const enum Destinations {
   Nessus = 3526908984,
   TangledShore = 975684424,
   Titan = 386951460,
-  Tower = 0,
 }
 
 export const enum Vendors {
@@ -20,17 +19,18 @@ export const enum Vendors {
   Banshee = 672118013,
   BrotherVance = 2398407866,
   DevrimKay = 396892126,
-  TheDrifter = 248695599,
   ErisMorn = 1616085565,
   EvaLevante = 919809084,
   Failsafe = 1576276905,
   Hawthorne = 3347378076,
-  Petra = 1841717884, // or 1454616762
-  Saint14 = 765357505,
   LordSaladin = 895295461,
+  Petra = 1841717884, // or 1454616762
+  PrismaticRecaster = 3993978686,
+  Saint14 = 765357505,
   Shaxx = 3603221665,
   Sloane = 1062861569,
   Spider = 863940356,
+  TheDrifter = 248695599,
   Zavala = 69482069,
 }
 
@@ -55,6 +55,11 @@ export const ghostTypeToActivityHash = {
 };
 
 export const vendorsByActivityModeType = {
+  [DestinyActivityModeType.Social]: [
+    Vendors.EvaLevante,
+    Vendors.PrismaticRecaster,
+    Vendors.Banshee,
+  ],
   [DestinyActivityModeType.AllPvP]: [Vendors.Shaxx],
   [DestinyActivityModeType.IronBanner]: [Vendors.LordSaladin],
   [DestinyActivityModeType.TrialsOfOsiris]: [Vendors.Saint14],
@@ -65,7 +70,6 @@ export const vendorsByActivityModeType = {
 };
 
 export const vendorsByDestinationHash = {
-  [Destinations.Tower]: [Vendors.EvaLevante, Vendors.Banshee],
   [Destinations.DreamingCity]: [Vendors.Petra],
   [Destinations.EDZ]: [Vendors.DevrimKay],
   [Destinations.IO]: [Vendors.AsherMir],
