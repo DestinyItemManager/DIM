@@ -79,6 +79,7 @@ function ActiveMode(
             onCharacterChanged={setSelectedStoreId}
           />
         )}
+        <div className="activity-split"></div>
         <CurrentActivity account={account} store={selectedStore} buckets={buckets} />
         <PostmasterView store={selectedStore} vault={vault} buckets={buckets} />
         <PursuitsView store={selectedStore} />
@@ -90,6 +91,7 @@ function ActiveMode(
           {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) =>
             category === 'Postmaster' ? null : (
               <CollapsibleTitle
+                key={category}
                 className={'store-row inventory-title'}
                 title={t(`Bucket.${category}`)}
                 sectionId={category}

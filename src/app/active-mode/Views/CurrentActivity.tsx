@@ -1,4 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import ActivityInformation from 'app/active-mode/Views/current-activity/ActivityInformation';
 import SuggestedGhosts from 'app/active-mode/Views/current-activity/SuggestedGhost';
 import { Destinations } from 'app/active-mode/Views/current-activity/util';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
@@ -52,23 +53,27 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
   }
 
   const place = defs.Place.get(activity.placeHash);
-  const placeName = place.displayProperties.name; // "Earth"
-  const activityName = activity.displayProperties.name; // "Adventure activity quest name"
+  const placeName = place.displayProperties.name; // "Earth" "The Crucible"
+  const activityName = activity.displayProperties.name; // "Adventure activity quest name" "Rusted Lands"
   const activityType = defs.ActivityMode[activity.activityTypeHash];
-  const gameType = activityType?.displayProperties.name; // "Explore"
+  const gameType = activityType?.displayProperties.name; // "Explore" (nothing for crucible)
   // Consider showing rewards for current activity?
 
   return (
     <>
-      <div className="current-location">
-        <div className="current-acivity">
-          {gameType}
-          <BungieImage src={activity.displayProperties.icon} />
-        </div>
-        {activityName}
-      </div>
-      <CollapsibleTitle title={placeName} sectionId={'active-activity'} defaultCollapsed={true}>
+      <CollapsibleTitle
+        title={
+          <>
+            <BungieImage className="activity-icon" src={activity.displayProperties.icon} />{' '}
+            {gameType || placeName}
+          </>
+        }
+        sectionId={'active-activity'}
+        defaultCollapsed={true}
+      >
+        <div className="current-location">{activityName}</div>
         <div className="activity-items">
+          <ActivityInformation defs={defs} store={store} activity={activity} />
           <SuggestedGhosts store={store} activity={activity} />
           <VendorBounties
             account={account}

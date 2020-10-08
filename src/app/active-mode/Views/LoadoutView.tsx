@@ -7,7 +7,7 @@ import React from 'react';
 export default function LoadoutView({ store }: { store: DimStore }) {
   return (
     <CollapsibleTitle
-      title={t('ActiveMode.Postmaster')}
+      title={t('ActiveMode.Loadouts')}
       sectionId={'active-loadouts'}
       defaultCollapsed={true}
     >

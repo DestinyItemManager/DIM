@@ -47,10 +47,12 @@ export function RaidActivity({
   defs,
   activity,
   displayName,
+  hideName,
 }: {
   defs: D2ManifestDefinitions;
   activity: DestinyMilestoneChallengeActivity;
   displayName: string;
+  hideName?: boolean;
 }) {
   // a manifest-localized string describing raid segments with loot. "Encounters completed"
   const encountersString = defs.Objective.get(ENCOUNTERS_COMPLETED_OBJECTIVE).progressDescription;
@@ -63,7 +65,7 @@ export function RaidActivity({
 
   return (
     <div className="raid-tier">
-      <span className="milestone-name">{activityName}</span>
+      {!hideName && <span className="milestone-name">{activityName}</span>}
       <div className="quest-modifiers">
         {activity.modifierHashes?.map(
           (modifierHash) =>

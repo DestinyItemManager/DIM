@@ -135,7 +135,7 @@
 
     & > div {
       text-align: center;
-      padding: 10px;
+      padding: 10px 0;
       border-radius: 5px;
       background-color: rgba(50, 0, 0, 0.8);
       opacity: 0.6;
@@ -147,34 +147,18 @@
   }
 
   // Current Activity
+  .activity-icon {
+    height: 18px;
+    vertical-align: bottom;
+  }
   .current-location {
     padding: 10px;
-    margin: 10px 0;
+    margin-top: -10px;
+    margin-bottom: 10px;
     opacity: 0.8;
     font-size: 1.1em;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 5px;
-
-    .current-acivity {
-      display: flex;
-      align-items: center;
-      padding-top: 5px;
-
-      img {
-        height: 18px;
-        margin-left: 3px;
-      }
-    }
+    background-color: rgba(0, 0, 0, 0.2);
   }
-  // .activity-items {
-  //   display: flex;
-  //   flex-direction: row;
-  //   justify-content: space-between;
-
-  //   > div {
-  //     margin-right: 0;
-  //   }
-  // }
 }
 
 // The inventory side
@@ -204,4 +188,12 @@
       }
     }
   }
+}
+
+.activity-split {
+  height: 4px;
+}
+
+.activity-raid {
+  grid-column: 1 / -1;
 }
