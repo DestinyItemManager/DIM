@@ -21,9 +21,6 @@
   height: 32px;
   border-radius: 4px;
   min-width: 350px;
-  .gradientBackground & {
-    background: rgba(0, 0, 0, 0.4);
-  }
   ::placeholder {
     color: #999;
   }
@@ -85,6 +82,9 @@
       margin: 0;
       border-radius: 0;
       border-bottom: 1px solid #999;
+      .gradientBackground & {
+        background: rgba(0, 0, 0, 0.4);
+      }
     }
 
     .filter-input {

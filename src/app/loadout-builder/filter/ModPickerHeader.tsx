@@ -22,7 +22,7 @@ function ModPickerHeader(props: Props) {
       <h1>{t('LB.ChooseAMod')}</h1>
       <div className="item-picker-search">
         <div className="search-filter" role="search">
-          <AppIcon icon={searchIcon} />
+          <AppIcon icon={searchIcon} className="search-bar-icon" />
           <input
             className="filter-input"
             autoComplete="off"
