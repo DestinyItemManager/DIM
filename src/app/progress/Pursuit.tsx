@@ -18,6 +18,7 @@ import PursuitItem from './PursuitItem';
 interface ProvidedProps {
   item: DimItem;
   defs: D2ManifestDefinitions;
+  hideDescription?: boolean;
 }
 
 // Props from Redux via mapStateToProps
@@ -43,7 +44,7 @@ type Props = ProvidedProps & StoreProps;
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
-function Pursuit({ item, isNew, searchHidden, defs }: Props) {
+function Pursuit({ item, hideDescription, isNew, searchHidden, defs }: Props) {
   const expired = showPursuitAsExpired(item);
 
   const objectives = item.objectives || [];
@@ -82,15 +83,17 @@ function Pursuit({ item, isNew, searchHidden, defs }: Props) {
               </span>
             )}
           </div>
-          <div className="milestone-info">
-            <span className="milestone-name">
-              <ItemExpiration item={item} compact={true} />
-              {item.name}
-            </span>
-            <div className="milestone-description">
-              <RichDestinyText text={item.description} defs={defs} />
+          {!hideDescription && (
+            <div className="milestone-info">
+              <span className="milestone-name">
+                <ItemExpiration item={item} compact={true} />
+                {item.name}
+              </span>
+              <div className="milestone-description">
+                <RichDestinyText text={item.description} defs={defs} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </ItemPopupTrigger>

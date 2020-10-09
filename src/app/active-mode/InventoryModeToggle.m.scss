@@ -1,0 +1,46 @@
+@import '../variables.scss';
+
+// Mode toggle
+.inventoryToggle {
+  position: fixed;
+  top: 60px;
+  right: 15px;
+  z-index: 100;
+  padding: 0;
+
+  input {
+    display: none;
+  }
+
+  label {
+    padding: 4px 10px;
+    display: flex;
+  }
+
+  @include phone-portrait {
+    bottom: 58px;
+    top: inherit;
+    right: 7px;
+  }
+}
+
+.alt {
+  position: absolute;
+  top: 48px;
+
+  @include phone-portrait {
+    top: inherit;
+    right: 7px;
+    position: fixed;
+    bottom: 7px;
+  }
+}
+
+.beta {
+  margin-left: 6px;
+  font-size: 0.8em;
+  background-color: lightseagreen;
+  color: black;
+  padding: 2px 4px;
+  border-radius: 5px;
+}

@@ -34,6 +34,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  hideRecordIcon?: boolean;
 }
 
 interface RecordInterval {
@@ -50,6 +51,7 @@ export default function Record({
   defs,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  hideRecordIcon,
 }: Props) {
   const { recordDef, trackedInGame, recordComponent } = record;
   const state = recordComponent.state;
@@ -174,7 +176,7 @@ export default function Record({
         [styles.multistep]: intervals.length > 0,
       })}
     >
-      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>

@@ -69,7 +69,8 @@ const loadoutIcon = {
 
 interface ProvidedProps {
   dimStore: DimStore;
-  onClick(e): void;
+  hideFarming?: boolean;
+  onClick?(e): void;
 }
 
 interface StoreProps {
@@ -130,6 +131,7 @@ function mapStateToProps() {
 
 function LoadoutPopup({
   dimStore,
+  hideFarming,
   stores,
   previousLoadout,
   loadouts,
@@ -367,7 +369,7 @@ function LoadoutPopup({
           )}
         </li>
 
-        {!dimStore.isVault && (
+        {!dimStore.isVault && !hideFarming && (
           <li className="loadout-set">
             <span onClick={onStartFarming}>
               <AppIcon icon={engramIcon} />

@@ -1,12 +1,15 @@
+import ActiveMode from 'app/active-mode/ActiveMode';
+import InventoryToggle from 'app/active-mode/InventoryModeToggle';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { t } from 'app/i18next-t';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
+import Stores from 'app/inventory/Stores';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Compare from '../compare/Compare';
@@ -17,7 +20,6 @@ import DragGhostItem from './DragGhostItem';
 import { storesLoadedSelector } from './selectors';
 import StackableDragHelp from './StackableDragHelp';
 import { useLoadStores } from './store/hooks';
-import Stores from './Stores';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -52,13 +54,16 @@ const components = [
 function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
   useLoadStores(account, storesLoaded);
 
+  const [altMode, setAltMode] = useState(false);
+
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   return (
     <ErrorBoundary name="Inventory">
-      <Stores />
+      {$featureFlags.altInventoryMode && <InventoryToggle mode={altMode} onClick={setAltMode} />}
+      {altMode ? <ActiveMode account={account} /> : <Stores />}
       <LoadoutDrawer />
       <Compare />
       {$featureFlags.moveAmounts && <StackableDragHelp />}

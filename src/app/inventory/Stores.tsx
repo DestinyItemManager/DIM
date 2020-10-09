@@ -1,5 +1,6 @@
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
+import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import StoreStats from 'app/store-stats/StoreStats';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -13,7 +14,6 @@ import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
-import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import { bucketsSelector, sortedStoresSelector } from './selectors';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
