@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventory Mode",
+    "ButtonOn": "Active Mode",
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "Loadouts": "Loadouts",
+    "NoQuests": "You're not tracking any quests",
+    "Pursuits": "Pursuits"
+  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",
@@ -952,16 +962,5 @@
     "Num": "{{num, number}} rolls in your wish list",
     "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  },
-  "ActiveMode": {
-    "ButtonOn": "Active Mode",
-    "ButtonOff": "Inventory Mode",
-    "Beta": "BETA",
-    "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests",
-    "Loadouts": "Loadouts",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming"
   }
 }
