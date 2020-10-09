@@ -1,19 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { DimItem } from '../inventory/item-types';
-import Sheet from '../dim-ui/Sheet';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { connect, MapStateToProps } from 'react-redux';
-import { RootState } from '../store/reducers';
-import { createSelector } from 'reselect';
-import { storesSelector } from '../inventory/selectors';
-import { searchFilterSelector } from '../search/search-filter';
-import { sortItems } from '../shell/filters';
-import { itemSortOrderSelector } from '../settings/item-sort';
 import { t } from 'app/i18next-t';
-import './ItemPicker.scss';
-import _ from 'lodash';
-import { emptySet, emptyArray } from 'app/utils/empty';
-import { getAllItems } from 'app/inventory/stores-helpers';
+import StoreInventoryItem from 'app/inventory/StoreInventoryItem';
+import { RootState } from 'app/store/types';
+import { emptyArray, emptySet } from 'app/utils/empty';
+import clsx from 'clsx';
+import React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
+import { createSelector } from 'reselect';
+import Sheet from '../dim-ui/Sheet';
+import { DimItem } from '../inventory/item-types';
+import { allItemsSelector, bucketsSelector } from '../inventory/selectors';
+import { searchFilterSelector } from '../search/search-filter';
+import { itemSortOrderSelector } from '../settings/item-sort';
+import { sortItems } from '../shell/filters';
+import styles from './SearchResults.m.scss';
 
 interface StoreProps {
   items: DimItem[];
@@ -22,28 +21,23 @@ interface StoreProps {
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, RootState> {
-  const displayableBucketsSelector = createSelector(
-    (state: RootState) => state.inventory.buckets,
-    (buckets) =>
-      buckets
-        ? new Set(
-            Object.keys(buckets.byCategory).flatMap((category) =>
-              buckets.byCategory[category].map((b) => b.hash)
-            )
+  const displayableBucketsSelector = createSelector(bucketsSelector, (buckets) =>
+    buckets
+      ? new Set(
+          Object.keys(buckets.byCategory).flatMap((category) =>
+            buckets.byCategory[category].map((b) => b.hash)
           )
-        : emptySet<number>()
+        )
+      : emptySet<number>()
   );
 
   const filteredItemsSelector = createSelector(
-    storesSelector,
     displayableBucketsSelector,
     searchFilterSelector,
-    (stores, displayableBuckets, searchFilter) =>
-      !displayableBuckets.size
-        ? getAllItems(
-            stores,
-            (item: DimItem) => displayableBuckets.has(item.bucket.hash) && searchFilter(item)
-          )
+    allItemsSelector,
+    (displayableBuckets, searchFilter, allItems) =>
+      displayableBuckets.size
+        ? allItems.filter((item) => displayableBuckets.has(item.bucket.hash) && searchFilter(item))
         : emptyArray<DimItem>()
   );
 
@@ -61,21 +55,13 @@ type Props = StoreProps;
  * on mobile, and as a sheet when you hit "enter" on desktop.
  */
 function SearchResults({ items, itemSortOrder }: Props) {
-  const [height, setHeight] = useState<number | undefined>(undefined);
-
-  const itemContainer = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (itemContainer.current && !height) {
-      setHeight(itemContainer.current.clientHeight);
-    }
-  }, [height]);
-
   const header = (
     <div>
       <h1 className="destiny">{t('Header.FilterMatchCount', { count: items.length })}</h1>
     </div>
   );
+
+  console.log(items);
 
   // TODO: close
   const onSheetClosedFn = () => {
@@ -83,10 +69,14 @@ function SearchResults({ items, itemSortOrder }: Props) {
   };
 
   return (
-    <Sheet onClose={onSheetClosedFn} header={header} sheetClassName="item-picker">
-      <div className="sub-bucket" ref={itemContainer} style={{ height }}>
+    <Sheet
+      onClose={onSheetClosedFn}
+      header={header}
+      sheetClassName={clsx('item-picker', styles.searchResults)}
+    >
+      <div className="sub-bucket">
         {sortItems(items, itemSortOrder).map((item) => (
-          <ConnectedInventoryItem key={item.index} item={item} />
+          <StoreInventoryItem key={item.index} item={item} />
         ))}
       </div>
     </Sheet>

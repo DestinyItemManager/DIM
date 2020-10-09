@@ -6,6 +6,7 @@ import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import SearchResults from 'app/search/SearchResults';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
@@ -238,6 +239,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           </Route>
         </Switch>
       </div>
+      <SearchResults />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <MoveAmountPopupContainer />
