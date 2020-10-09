@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
