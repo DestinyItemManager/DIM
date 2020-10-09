@@ -1,0 +1,21 @@
+@import '../../variables.scss';
+
+.activityIcon {
+  height: 18px;
+  vertical-align: bottom;
+}
+.currentLocation {
+  padding: 10px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  font-size: 1.1em;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.activityItems {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  & > div {
+    padding-bottom: 7px;
+  }
+}

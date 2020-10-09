@@ -3,6 +3,7 @@ import ActivityInformation from 'app/active-mode/Views/current-activity/Activity
 import SuggestedGhosts from 'app/active-mode/Views/current-activity/SuggestedGhost';
 import { Destinations } from 'app/active-mode/Views/current-activity/util';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
+import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
 import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -64,15 +65,15 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
       <CollapsibleTitle
         title={
           <>
-            <BungieImage className="activity-icon" src={activity.displayProperties.icon} />{' '}
+            <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />{' '}
             {gameType || placeName}
           </>
         }
         sectionId={'active-activity'}
         defaultCollapsed={true}
       >
-        <div className="current-location">{activityName}</div>
-        <div className="activity-items">
+        <div className={styles.currentLocation}>{activityName}</div>
+        <div className={styles.activityItems}>
           <ActivityInformation defs={defs} store={store} activity={activity} />
           <SuggestedGhosts store={store} activity={activity} />
           <VendorBounties

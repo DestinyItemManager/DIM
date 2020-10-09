@@ -1,3 +1,4 @@
+import styles from 'app/active-mode/Views/PursuitsView.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -71,7 +72,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
       sectionId={'active-pursuits'}
       defaultCollapsed={true}
     >
-      <div className="active-pursuits">
+      <div className={styles.activePursuits}>
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
         ))}
@@ -84,10 +85,9 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
             hideRecordIcon={true}
           />
         </ErrorBoundary>
-
         {!trackingQuests && (
-          <div className="no-quests">
-            <div className="message">{t('ActiveMode.NoQuests')}</div>
+          <div className={styles.noQuests}>
+            <div className={styles.message}>{t('ActiveMode.NoQuests')}</div>
           </div>
         )}
       </div>

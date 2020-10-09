@@ -22,7 +22,7 @@ import { loadAllVendors } from 'app/vendors/actions';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import '../inventory/Stores.scss';
-import './ActiveMode.scss';
+import styles from './ActiveMode.m.scss';
 
 interface StoreProps {
   buckets: InventoryBuckets;
@@ -69,7 +69,7 @@ function ActiveMode(
     <PageWithMenu
       className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
     >
-      <PageWithMenu.Menu className="activity-column">
+      <PageWithMenu.Menu className={styles.activityColumn}>
         {selectedStore && (
           <CharacterSelect
             stores={stores}
@@ -79,20 +79,20 @@ function ActiveMode(
             onCharacterChanged={setSelectedStoreId}
           />
         )}
-        <div className="activity-split"></div>
+        <div className={styles.activitySplit}></div>
         <CurrentActivity account={account} store={selectedStore} buckets={buckets} />
         <PostmasterView store={selectedStore} vault={vault} buckets={buckets} />
         <PursuitsView store={selectedStore} />
         <LoadoutView store={selectedStore} />
         <FarmingView store={selectedStore} />
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className="acivity-inventory">
+      <PageWithMenu.Contents className={styles.activityInventory}>
         <>
           {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) =>
             category === 'Postmaster' ? null : (
               <CollapsibleTitle
                 key={category}
-                className={'store-row inventory-title'}
+                className="store-row inventory-title"
                 title={t(`Bucket.${category}`)}
                 sectionId={category}
                 defaultCollapsed={true}

@@ -1,4 +1,6 @@
+import styles from 'app/active-mode/InventoryModeToggle.m.scss';
 import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 import React from 'react';
 
 export default function InventoryModeToggle({
@@ -9,7 +11,7 @@ export default function InventoryModeToggle({
   onClick: (mode: boolean) => void;
 }) {
   return (
-    <div className={`dim-button inventory-toggle ${mode ? 'alt' : ''}`}>
+    <div className={clsx(`dim-button`, styles.inventoryToggle, { [styles.alt]: mode })}>
       <input
         id="inventory-toggle"
         type="checkbox"
@@ -19,7 +21,7 @@ export default function InventoryModeToggle({
       />
       <label htmlFor="inventory-toggle">
         {mode ? t(`ActiveMode.ButtonOn`) : t(`ActiveMode.ButtonOff`)}{' '}
-        <div className="beta">{t(`ActiveMode.Beta`)}</div>
+        <div className={styles.beta}>{t(`ActiveMode.Beta`)}</div>
       </label>
     </div>
   );

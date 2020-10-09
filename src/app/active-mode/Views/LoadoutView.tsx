@@ -1,3 +1,4 @@
+import styles from 'app/active-mode/Views/LoadoutView.m.scss';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
@@ -11,7 +12,9 @@ export default function LoadoutView({ store }: { store: DimStore }) {
       sectionId={'active-loadouts'}
       defaultCollapsed={true}
     >
-      <LoadoutPopup dimStore={store} hideFarming={true} />
+      <div className={styles.loadoutView}>
+        <LoadoutPopup dimStore={store} hideFarming={true} />
+      </div>
     </CollapsibleTitle>
   );
 }

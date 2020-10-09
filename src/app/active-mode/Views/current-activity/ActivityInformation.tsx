@@ -1,3 +1,4 @@
+import styles from 'app/active-mode/Views/current-activity/ActivityInformation.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -61,7 +62,7 @@ function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
   return (
     <>
       {raid && (
-        <div className="activity-raid">
+        <div className={styles.activityRaid}>
           {activities.map((raidActivity) => (
             <RaidActivity
               activity={raidActivity}

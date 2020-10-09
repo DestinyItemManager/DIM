@@ -984,6 +984,8 @@
     "Pursuits": "Pursuits",
     "NoQuests": "You're not tracking any quests",
     "Loadouts": "Loadouts",
-    "Farming": "Recent Items"
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "FarmingStop": "Stop Farming"
   }
 }

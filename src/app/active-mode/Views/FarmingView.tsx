@@ -1,3 +1,4 @@
+import styles from 'app/active-mode/Views/FarmingView.m.scss';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
@@ -40,15 +41,14 @@ function FarmingView({ store, newItems, dispatch }: Props) {
 
   return (
     <CollapsibleTitle
-      className="farming-view"
       title={t('ActiveMode.Farming')}
       sectionId={'active-farming'}
       defaultCollapsed={true}
     >
       <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
-        {!isFarming ? 'Start Farming' : 'Stop Farming'}
+        {!isFarming ? t('ActiveMode.FarmingStart') : t('ActiveMode.FarmingStart')}
       </div>
-      <div className={'new-items'}>
+      <div className={styles.newItems}>
         {newItems.map((item) => (
           <ItemPopupTrigger key={item.id} item={item}>
             {(ref, onClick) => <InventoryItem item={item} innerRef={ref} onClick={onClick} />}
