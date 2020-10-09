@@ -14,6 +14,7 @@ interface Props {
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
+  allowClickThrough?: boolean;
   onClose(): void;
 }
 
@@ -40,6 +41,7 @@ export default function Sheet({
   children,
   sheetClassName,
   freezeInitialHeight,
+  allowClickThrough,
   onClose: onCloseCallback,
 }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
@@ -159,7 +161,7 @@ export default function Sheet({
       onKeyDown={stopPropagation}
       onKeyUp={stopPropagation}
       onKeyPress={stopPropagation}
-      onClick={stopPropagation}
+      onClick={allowClickThrough ? undefined : stopPropagation}
     >
       <a href="#" className="sheet-close" onClick={onClose}>
         <AppIcon icon={disabledIcon} />

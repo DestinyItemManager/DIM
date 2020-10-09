@@ -1,5 +1,7 @@
+import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
-import StoreInventoryItem from 'app/inventory/StoreInventoryItem';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
 import clsx from 'clsx';
@@ -73,12 +75,19 @@ function SearchResults({ items, itemSortOrder }: Props) {
       onClose={onSheetClosedFn}
       header={header}
       sheetClassName={clsx('item-picker', styles.searchResults)}
+      allowClickThrough={true}
     >
-      <div className="sub-bucket">
-        {sortItems(items, itemSortOrder).map((item) => (
-          <StoreInventoryItem key={item.index} item={item} />
-        ))}
-      </div>
+      <ClickOutsideRoot>
+        <div className="sub-bucket">
+          {sortItems(items, itemSortOrder).map((item) => (
+            <ItemPopupTrigger item={item} key={item.index}>
+              {(ref, onClick) => (
+                <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+              )}
+            </ItemPopupTrigger>
+          ))}
+        </div>
+      </ClickOutsideRoot>
     </Sheet>
   );
 }
