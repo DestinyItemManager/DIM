@@ -223,8 +223,6 @@ export function handleUniquenessViolation(
   if (error?.code === PlatformErrorCodes.DestinyUniquenessViolation) {
     throw dimError(
       t('BungieService.ItemUniquenessExplanation', {
-        // t('BungieService.ItemUniquenessExplanation_female')
-        // t('BungieService.ItemUniquenessExplanation_male')
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,

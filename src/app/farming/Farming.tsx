@@ -27,11 +27,6 @@ function mapStateToProps() {
 type Props = StoreProps & ThunkDispatchProp;
 
 function Farming({ store, makeRoomForItems, dispatch }: Props) {
-  const i18nData = {
-    store: store?.name,
-    context: store?.genderName,
-  };
-
   const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked;
     dispatch(setSetting('farmingMakeRoomForItems', value));
@@ -59,24 +54,20 @@ function Farming({ store, makeRoomForItems, dispatch }: Props) {
                     store: store.name,
                     context: store.genderName,
                   })}
-                  {/*
-                    t('FarmingMode.D2Desc_male')
-                    t('FarmingMode.D2Desc_female')
-                  */}
                 </p>
               </div>
             ) : (
               <div>
                 <p>
                   {makeRoomForItems
-                    ? t('FarmingMode.Desc', i18nData)
-                    : t('FarmingMode.MakeRoom.Desc', i18nData)}
-                  {/*
-                    t('FarmingMode.Desc_male')
-                    t('FarmingMode.Desc_female')
-                    t('FarmingMode.MakeRoom.Desc_male')
-                    t('FarmingMode.MakeRoom.Desc_female')
-                  */}
+                    ? t('FarmingMode.Desc', {
+                        store: store.name,
+                        context: store.genderName,
+                      })
+                    : t('FarmingMode.MakeRoom.Desc', {
+                        store: store.name,
+                        context: store.genderName,
+                      })}
                 </p>
                 <p>
                   <input

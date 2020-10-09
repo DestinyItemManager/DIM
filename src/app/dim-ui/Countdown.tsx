@@ -49,6 +49,9 @@ function dhm(seconds: number, compact = false) {
   seconds %= 3600; // seconds with full hours taken out
   const minutes = Math.floor(seconds / 60);
   const hhMM = `${hours}:${pad(minutes, 2)}`;
-  const context = compact ? 'compact' : ''; // t('Countdown.Days_compact')
-  return days ? `${t('Countdown.Days', { count: days, context })} ${hhMM}` : `${hhMM}`;
+  return days
+    ? compact
+      ? `${t('Countdown.Days_compact')} ${hhMM}`
+      : `${t('Countdown.Days', { count: days })} ${hhMM}`
+    : `${hhMM}`;
 }

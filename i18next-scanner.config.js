@@ -18,6 +18,7 @@ module.exports = {
       jsonIndent: 2,
       lineEnding: '\n',
     },
-    context: false,
+    context: true,
+    contextDefaultValues: ['male', 'female'],
   },
 };
