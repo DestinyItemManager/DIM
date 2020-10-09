@@ -10,7 +10,8 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { CompareService } from '../compare/compare.service';
@@ -29,6 +30,7 @@ import { ItemFilter } from './filter-types';
 import styles from './MainSearchBarActions.m.scss';
 import { searchFilterSelector } from './search-filter';
 import './search-filter.scss';
+import SearchResults from './SearchResults';
 
 interface ProvidedProps {
   onClear?(): void;
@@ -68,6 +70,10 @@ function MainSearchBarActions({
   isPhonePortrait,
   dispatch,
 }: Props) {
+  // TODO: how to wire "enter" on a closed menu to this?
+  // TODO: default open on mobile
+  const [searchResultsOpen, setSearchResultsOpen] = useState(false);
+
   const location = useLocation();
   const onInventory = location.pathname.endsWith('inventory');
   const onProgress = location.pathname.endsWith('progress');
@@ -225,6 +231,12 @@ function MainSearchBarActions({
   return (
     <>
       {showSearchCount && (
+        <button type="button" onClick={() => setSearchResultsOpen((s) => !s)}>
+          Results
+        </button>
+      )}
+
+      {showSearchCount && (
         <span className={styles.count}>
           {t('Header.FilterMatchCount', { count: filteredItems.length })}
         </span>
@@ -238,6 +250,8 @@ function MainSearchBarActions({
           offset={isPhonePortrait ? 10 : 3}
         />
       )}
+
+      {searchResultsOpen && ReactDOM.createPortal(<SearchResults />, document.body)}
     </>
   );
 }

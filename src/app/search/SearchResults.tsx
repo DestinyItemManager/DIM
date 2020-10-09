@@ -1,6 +1,7 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
@@ -70,6 +71,9 @@ function SearchResults({ items, itemSortOrder }: Props) {
     console.log('closed');
   };
 
+  // TODO: actions footer?
+  // TODO: categories?
+  // TODO: move sheet outside
   return (
     <Sheet
       onClose={onSheetClosedFn}
@@ -80,11 +84,13 @@ function SearchResults({ items, itemSortOrder }: Props) {
       <ClickOutsideRoot>
         <div className="sub-bucket">
           {sortItems(items, itemSortOrder).map((item) => (
-            <ItemPopupTrigger item={item} key={item.index}>
-              {(ref, onClick) => (
-                <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-              )}
-            </ItemPopupTrigger>
+            <DraggableInventoryItem key={item.index} item={item}>
+              <ItemPopupTrigger item={item} key={item.index}>
+                {(ref, onClick) => (
+                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                )}
+              </ItemPopupTrigger>
+            </DraggableInventoryItem>
           ))}
         </div>
       </ClickOutsideRoot>
