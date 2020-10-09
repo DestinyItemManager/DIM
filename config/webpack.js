@@ -393,6 +393,8 @@ module.exports = (env) => {
         '$featureFlags.newItemPopupActions': JSON.stringify(!env.release),
         // Enable move amounts
         '$featureFlags.moveAmounts': JSON.stringify(env.release),
+        // Enable search results
+        '$featureFlags.searchResults': JSON.stringify(env.dev),
       }),
 
       new WorkerPlugin({

@@ -42,6 +42,8 @@ declare const $featureFlags: {
   newItemPopupActions: boolean;
   /** Enable move amounts */
   moveAmounts: boolean;
+  /** Enable search results */
+  searchResults: boolean;
 };
 
 declare namespace React {

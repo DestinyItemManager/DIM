@@ -86,6 +86,9 @@ function MainSearchBarActions({
 
   const hasQuery = searchQuery.length !== 0;
   useEffect(() => {
+    if (!$featureFlags.searchResults) {
+      return;
+    }
     if (!hasQuery && searchResultsOpen) {
       setSearchResultsOpen(false);
     } else if (hasQuery && isPhonePortrait) {
@@ -245,7 +248,7 @@ function MainSearchBarActions({
         </span>
       )}
 
-      {showSearchCount && (
+      {$featureFlags.searchResults && showSearchCount && (
         <button
           type="button"
           className={styles.resultButton}
@@ -264,7 +267,9 @@ function MainSearchBarActions({
         />
       )}
 
-      {searchResultsOpen && ReactDOM.createPortal(<SearchResults />, document.body)}
+      {$featureFlags.searchResults &&
+        searchResultsOpen &&
+        ReactDOM.createPortal(<SearchResults />, document.body)}
     </>
   );
 }
