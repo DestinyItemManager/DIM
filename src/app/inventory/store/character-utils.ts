@@ -1,4 +1,5 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { warnLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import disciplineIcon from 'images/discipline.png';
@@ -75,7 +76,7 @@ export function getBonus(light: number, type: string): number {
         ? 42
         : 43;
   }
-  console.warn('item bonus not found', type);
+  warnLog('getBonus', 'item bonus not found', type);
   return 0;
 }
 

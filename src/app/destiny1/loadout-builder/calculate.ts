@@ -1,3 +1,4 @@
+import { infoLog } from 'app/utils/log';
 import disciplineIcon from 'images/discipline.png';
 import intellectIcon from 'images/intellect.png';
 import strengthIcon from 'images/strength.png';
@@ -187,11 +188,11 @@ export function getSetBucketsStep(
 
                     processedCount++;
                     if (cancelToken.cancelled) {
-                      console.log('cancelled processing');
+                      infoLog('loadout optimizer', 'cancelled processing');
                       return;
                     }
                     if (processedCount % 50000 === 0) {
-                      console.log('50,000 combinations processed, still going...');
+                      infoLog('loadout optimizer', '50,000 combinations processed, still going...');
                       setTimeout(() =>
                         step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount)
                       );
@@ -248,12 +249,12 @@ export function getSetBucketsStep(
       ];
 
       if (cancelToken.cancelled) {
-        console.log('cancelled processing');
+        infoLog('loadout optimizer', 'cancelled processing');
         return;
       }
 
       // Finish progress
-      console.log('processed', combos, 'combinations.');
+      infoLog('loadout optimizer', 'processed', combos, 'combinations.');
 
       resolve({
         activeGuardian,

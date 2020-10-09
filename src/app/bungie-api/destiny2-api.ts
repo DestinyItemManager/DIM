@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
   awaGetActionToken,
@@ -257,7 +258,7 @@ export async function transfer(
 export function equip(account: DestinyAccount, item: DimItem): Promise<ServerResponse<number>> {
   if (item.owner === 'vault') {
     // TODO: trying to track down https://sentry.io/destiny-item-manager/dim/issues/541412672/?query=is:unresolved
-    console.error('Cannot equip to vault!');
+    errorLog('bungie api', 'Cannot equip to vault!');
     reportException('equipVault', new Error('Cannot equip to vault'));
     return Promise.resolve({}) as Promise<ServerResponse<number>>;
   }

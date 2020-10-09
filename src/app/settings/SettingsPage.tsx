@@ -15,6 +15,7 @@ import WishListSettings from 'app/settings/WishListSettings';
 import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
@@ -158,7 +159,7 @@ function SettingsPage({
 
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      console.error(new Error('You need to have a name on the form input'));
+      errorLog('settings', new Error('You need to have a name on the form input'));
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {

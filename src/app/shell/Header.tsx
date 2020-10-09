@@ -8,6 +8,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { infoLog } from 'app/utils/log';
 import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
@@ -91,9 +92,9 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       installPromptEvent.prompt();
       installPromptEvent.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('User installed DIM to desktop/home screen');
+          infoLog('install', 'User installed DIM to desktop/home screen');
         } else {
-          console.log('User dismissed the install prompt');
+          infoLog('install', 'User dismissed the install prompt');
         }
         installPrompt$.next(undefined);
       });

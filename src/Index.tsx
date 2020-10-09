@@ -3,6 +3,7 @@ import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import store from 'app/store/store';
+import { infoLog } from 'app/utils/log';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/observers';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -41,7 +42,8 @@ initi18n().then(() => {
   // Settings depends on i18n
   watchLanguageChanges();
 
-  console.log(
+  infoLog(
+    'app',
     `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
   );
 

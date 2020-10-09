@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
@@ -105,7 +106,10 @@ export function useProcess(
         minimumPower
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
-        console.log(`useProcess: worker time ${performance.now() - workerStart}ms`);
+        infoLog(
+          'loadout optimizer',
+          `useProcess: worker time ${performance.now() - workerStart}ms`
+        );
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
 
         setState({
@@ -119,7 +123,7 @@ export function useProcess(
           currentCleanup: null,
         });
 
-        console.log(`useProcess ${performance.now() - processStart}ms`);
+        infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */

@@ -4,6 +4,7 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
@@ -146,7 +147,8 @@ export function moveItemTo(
       }
 
       if ($featureFlags.debugMoves) {
-        console.log(
+        infoLog(
+          'move',
           'User initiated move:',
           moveAmount,
           item.name,
@@ -173,7 +175,7 @@ export function moveItemTo(
 
       updateManualMoveTimestamp(item);
     } catch (e) {
-      console.error('error moving item', item.name, 'to', store.name, e);
+      errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
         e.code !== 'wrong-level' &&
@@ -235,7 +237,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
             });
           } catch (a) {
             showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            console.error('error consolidating', actionableItem, a);
+            errorLog('move', 'error consolidating', actionableItem, a);
           }
         })()
       )
@@ -317,7 +319,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
             });
           } catch (a) {
             showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            console.error('error distributing', actionableItem, a);
+            errorLog('move', 'error distributing', actionableItem, a);
           }
         })()
       )

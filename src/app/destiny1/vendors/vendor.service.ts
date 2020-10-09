@@ -3,6 +3,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import copy from 'fast-copy';
 import { get, set } from 'idb-keyval';
 import _ from 'lodash';
@@ -215,7 +216,11 @@ async function loadVendorForCharacter(
   } catch (e) {
     if (vendorDef.hash !== 2796397637 && vendorDef.hash !== 2610555297) {
       // Xur, IB
-      console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
+      errorLog(
+        'vendors',
+        `Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`,
+        e
+      );
     }
     return null;
   }
@@ -264,13 +269,13 @@ function loadVendor(
   return get<Vendor>(key)
     .then((vendor) => {
       if (cachedVendorUpToDate(vendor, store, vendorDef)) {
-        // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
+        // log("loaded local", vendorDef.summary.vendorName, key, vendor);
         if (vendor.failed) {
           throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
         }
         return vendor;
       } else {
-        // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor?.nextRefreshDate);
+        // log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor?.nextRefreshDate);
         return getVendorForCharacter(account, store, vendorHash)
           .then((vendor: Vendor) => {
             vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
@@ -279,7 +284,7 @@ function loadVendor(
             return set(key, vendor).then(() => vendor);
           })
           .catch((e) => {
-            // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
+            // log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
             if (e.status === 'DestinyVendorNotFound') {
               const vendor = {
                 failed: true,
@@ -302,7 +307,7 @@ function loadVendor(
       if (vendor?.enabled) {
         return processVendor(vendor, vendorDef, defs, store, buckets);
       }
-      // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
+      // log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
       return Promise.resolve(null);
     });
 }

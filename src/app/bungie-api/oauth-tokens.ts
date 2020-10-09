@@ -109,7 +109,7 @@ export function hasTokenExpired(token?: Token) {
   const now = Date.now();
 
   // if (token)
-  //   { console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60)); }
+  //   { log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60)); }
 
   return now > expires;
 }

@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
@@ -48,7 +49,7 @@ function GeneratedSet({
   };
 
   if (set.armor.some((items) => !items.length)) {
-    console.error('No valid sets!');
+    errorLog('loadout optimizer', 'No valid sets!');
     return null;
   }
 

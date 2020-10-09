@@ -3,6 +3,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
@@ -265,7 +266,7 @@ function equipItem(item: DimItem): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), item.owner)!;
     if ($featureFlags.debugMoves) {
-      console.log('Equip', item.name, item.type, 'to', store.name);
+      infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
     }
     await equipApi(item)(currentAccountSelector(getState())!, item);
     return dispatch(updateItemModel(item, store, store, true));
@@ -304,8 +305,9 @@ function moveToStore(
 
     if ($featureFlags.debugMoves) {
       item.location.inPostmaster
-        ? console.log('Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
-        : console.log(
+        ? infoLog('move', 'Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        : infoLog(
+            'move',
             'Move',
             amount,
             item.name,
@@ -337,7 +339,7 @@ function moveToStore(
         // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
         // reload the profile or load just that item, but API caching means we aren't guaranteed to
         // get the current view. So instead, we just pretend the move succeeded.
-        console.warn('Item', item.name, 'was not found - pretending the move succeeded');
+        warnLog('move', 'Item', item.name, 'was not found - pretending the move succeeded');
       } else {
         throw e;
       }
@@ -349,7 +351,8 @@ function moveToStore(
     if (overrideLockState !== undefined) {
       // Run this async, without waiting for the result
       (async () => {
-        console.log(
+        infoLog(
+          'move',
           'Resetting lock status of',
           item.name,
           'to',
@@ -361,7 +364,7 @@ function moveToStore(
         try {
           await dispatch(setItemLockState(item, overrideLockState));
         } catch (e) {
-          console.error('Lock state override failed', e);
+          errorLog('move', 'Lock state override failed', e);
         }
       })();
     }
@@ -471,13 +474,15 @@ function chooseMoveAsideItem(
       : findItemsByBucket(target, item.bucket.hash);
   } catch (e) {
     if (target.isVault && !item.bucket.vaultBucket) {
-      console.error(
+      errorLog(
+        'move',
         'Item',
         item.name,
         "has no vault bucket, but we're trying to move aside room in the vault for it"
       );
     } else if (target.items.some((i) => !i.bucket.vaultBucket)) {
-      console.error(
+      errorLog(
+        'move',
         'The vault has items with no vault bucket: ',
         target.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name)
       );
@@ -756,7 +761,8 @@ function canMoveToStore(
             excludes.push(moveAsideItem);
             options.excludes = excludes;
             options.numRetries = numRetries + 1;
-            console.error(
+            errorLog(
+              'move',
               `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
               e
             );
@@ -852,11 +858,12 @@ export function moveItemTo(
     const timeSinceCurrentStoreWasReallyFull = Date.now() - lastTimeCurrentStoreWasReallyFull;
     if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
       try {
-        console.log('Try blind move of', item.name, 'to', target.name);
+        infoLog('move', 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount));
       } catch (e) {
         if (e.code === PlatformErrorCodes.DestinyNoRoomInDestination) {
-          console.warn(
+          warnLog(
+            'move',
             'Tried blindly moving',
             item.name,
             'to',

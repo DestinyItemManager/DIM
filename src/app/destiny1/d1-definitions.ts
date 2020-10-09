@@ -60,57 +60,52 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
  */
 export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
   return async (dispatch, getState) => {
-    try {
-      let existingManifest = getState().manifest.d1Manifest;
-      if (existingManifest) {
-        return existingManifest;
-      }
-      const db = await dispatch(getManifest());
-      existingManifest = getState().manifest.d1Manifest;
-      if (existingManifest) {
-        return existingManifest;
-      }
-      const defs = {
-        isDestiny1: () => true,
-        isDestiny2: () => false,
-      };
-      // Load objects that lazily load their properties from the sqlite DB.
-      lazyTables.forEach((tableShort) => {
-        const table = `Destiny${tableShort}Definition`;
-        defs[tableShort] = {
-          get(id: number, requestor?: any) {
-            const dbTable = db[table];
-            if (!dbTable) {
-              throw new Error(`Table ${table} does not exist in the manifest`);
-            }
-            const dbEntry = dbTable[id];
-            if (!dbEntry) {
-              const requestingEntryInfo =
-                typeof requestor === 'object' ? requestor.hash : String(requestor);
-              reportException(
-                `hashLookupFailureD1: ${table}[${id}]`,
-                new Error(`hashLookupFailureD1: ${table}[${id}]`),
-                {
-                  requestingEntryInfo,
-                  failedHash: id,
-                  failedComponent: table,
-                }
-              );
-            }
-            return dbEntry;
-          },
-        };
-      });
-      // Resources that need to be fully loaded (because they're iterated over)
-      eagerTables.forEach((tableShort) => {
-        const table = `Destiny${tableShort}Definition`;
-        defs[tableShort] = db[table];
-      });
-      dispatch(setD1Manifest(defs as D1ManifestDefinitions));
-      return defs as D1ManifestDefinitions;
-    } catch (e) {
-      console.error(e);
-      throw e;
+    let existingManifest = getState().manifest.d1Manifest;
+    if (existingManifest) {
+      return existingManifest;
     }
+    const db = await dispatch(getManifest());
+    existingManifest = getState().manifest.d1Manifest;
+    if (existingManifest) {
+      return existingManifest;
+    }
+    const defs = {
+      isDestiny1: () => true,
+      isDestiny2: () => false,
+    };
+    // Load objects that lazily load their properties from the sqlite DB.
+    lazyTables.forEach((tableShort) => {
+      const table = `Destiny${tableShort}Definition`;
+      defs[tableShort] = {
+        get(id: number, requestor?: any) {
+          const dbTable = db[table];
+          if (!dbTable) {
+            throw new Error(`Table ${table} does not exist in the manifest`);
+          }
+          const dbEntry = dbTable[id];
+          if (!dbEntry) {
+            const requestingEntryInfo =
+              typeof requestor === 'object' ? requestor.hash : String(requestor);
+            reportException(
+              `hashLookupFailureD1: ${table}[${id}]`,
+              new Error(`hashLookupFailureD1: ${table}[${id}]`),
+              {
+                requestingEntryInfo,
+                failedHash: id,
+                failedComponent: table,
+              }
+            );
+          }
+          return dbEntry;
+        },
+      };
+    });
+    // Resources that need to be fully loaded (because they're iterated over)
+    eagerTables.forEach((tableShort) => {
+      const table = `Destiny${tableShort}Definition`;
+      defs[tableShort] = db[table];
+    });
+    dispatch(setD1Manifest(defs as D1ManifestDefinitions));
+    return defs as D1ManifestDefinitions;
   };
 }

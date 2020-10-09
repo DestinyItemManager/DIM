@@ -27,7 +27,6 @@ export default function WellRestedPerkIcon({
   }
   const wellRestedPerk = defs.SandboxPerk.get(WELL_RESTED_PERK);
   if (!wellRestedPerk) {
-    console.error("Couldn't find Well Rested perk in manifest");
     return null;
   }
   const perkDisplay = wellRestedPerk.displayProperties;

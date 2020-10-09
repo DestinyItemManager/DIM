@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import _ from 'lodash';
@@ -642,7 +643,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
   private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      console.error(new Error('You need to have a name on the form input'));
+      errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {

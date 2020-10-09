@@ -1,4 +1,5 @@
 import { registerApp } from 'app/dim-api/register-app';
+import { errorLog } from 'app/utils/log';
 import React from 'react';
 
 interface State {
@@ -180,7 +181,7 @@ export default class Developer extends React.Component<{}, State> {
 
   private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      console.error(new Error('You need to have a name on the form input'));
+      errorLog('developer', new Error('You need to have a name on the form input'));
     }
 
     this.setState({ [e.target.name]: e.target.value });

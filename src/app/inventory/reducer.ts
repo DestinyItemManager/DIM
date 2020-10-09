@@ -1,4 +1,5 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { warnLog } from 'app/utils/log';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
@@ -285,7 +286,7 @@ function itemMoved(
   const source = getStore(stores, sourceStoreId);
   const target = getStore(stores, targetStoreId);
   if (!source || !target) {
-    console.warn('Either source or target store not found', source, target);
+    warnLog('move', 'Either source or target store not found', source, target);
     return;
   }
 
@@ -293,7 +294,7 @@ function itemMoved(
     (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash
   )!;
   if (!item) {
-    console.warn('Moved item not found', item);
+    warnLog('move', 'Moved item not found', item);
     return;
   }
 
@@ -338,7 +339,7 @@ function itemMoved(
     while (removeAmount > 0) {
       const sourceItem = sourceItems.shift();
       if (!sourceItem) {
-        console.warn('Source item missing', item);
+        warnLog('move', 'Source item missing', item);
         return;
       }
 
@@ -399,14 +400,14 @@ function itemLockStateChanged(
 ) {
   const source = getStore(draft.stores, item.owner);
   if (!source) {
-    console.warn('Store', item.owner, 'not found');
+    warnLog('move', 'Store', item.owner, 'not found');
     return;
   }
 
   // Only instanced items can be locked/tracked
   item = source.items.find((i) => i.id === item.id)!;
   if (!item) {
-    console.warn('Item not found in stores', item);
+    warnLog('move', 'Item not found in stores', item);
     return;
   }
 

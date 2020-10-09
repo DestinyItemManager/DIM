@@ -25,6 +25,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { errorLog, infoLog } from 'app/utils/log';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
@@ -62,7 +63,7 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
     }
 
     if ($featureFlags.debugMoves) {
-      console.log('LoadoutService: Apply loadout', loadout.name, 'to', store.name);
+      infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
     }
 
     const loadoutPromise = queueAction(() => dispatch(doApplyLoadout(store, loadout, allowUndo)));
@@ -320,7 +321,7 @@ function applyLoadoutItems(
     } catch (e) {
       const level = e.level || 'error';
       if (level === 'error') {
-        console.error('Failed to apply loadout item', item?.name, e);
+        errorLog('loadout', 'Failed to apply loadout item', item?.name, e);
         scope.failed++;
       }
       scope.errors.push({
@@ -431,7 +432,8 @@ export function clearItemsOffCharacter(
 
           if (otherStoresWithSpace.length) {
             if ($featureFlags.debugMoves) {
-              console.log(
+              infoLog(
+                'loadout',
                 'clearItemsOffCharacter initiated move:',
                 item.amount,
                 item.name,
@@ -452,7 +454,8 @@ export function clearItemsOffCharacter(
           }
         }
         if ($featureFlags.debugMoves) {
-          console.log(
+          infoLog(
+            'loadout',
             'clearItemsOffCharacter initiated move:',
             item.amount,
             item.name,
