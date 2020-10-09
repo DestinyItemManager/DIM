@@ -16,7 +16,7 @@ export function infoLog(tag: string, ...args: any[]) {
  * Otherwise, we'll prevent warnLog from getting submitted via a lint rule.
  *
  * @param tag an informative label for categorizing this log
- * @example warn("Manifest", "The manifest loaded")
+ * @example warn("Manifest", "The manifest is out of date")
  */
 export function warnLog(tag: string, ...args: any[]) {
   console.warn(`[${tag}]`, ...args);
@@ -27,7 +27,7 @@ export function warnLog(tag: string, ...args: any[]) {
  * Otherwise, we'll prevent errorLog from getting submitted via a lint rule.
  *
  * @param tag an informative label for categorizing this log
- * @example error("Manifest", "The manifest loaded")
+ * @example error("Manifest", "The manifest failed to load")
  */
 export function errorLog(tag: string, ...args: any[]) {
   console.error(`[${tag}]`, ...args);
