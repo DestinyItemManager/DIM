@@ -961,7 +961,8 @@
   },
   "WishListRoll": {
     "BestRatedKey": " = wishlist perk",
-    "BestRatedTip": "This perk is part of a weapon roll that was was selected by the author of your wishlist.",
+    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
+    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
     "Clear": "Clear Wish List",
     "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",
