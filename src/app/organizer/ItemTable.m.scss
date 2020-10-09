@@ -238,6 +238,9 @@ $toolbarHeight: 41px - 16px + 8px;
   margin-left: -1px;
   flex-shrink: 0;
 }
+.perkSelected {
+  font-weight: bold;
+}
 
 .locationCell {
   display: flex;
