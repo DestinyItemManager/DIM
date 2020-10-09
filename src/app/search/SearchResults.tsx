@@ -64,8 +64,6 @@ function SearchResults({ items, itemSortOrder }: Props) {
     </div>
   );
 
-  console.log(items);
-
   // TODO: close
   const onSheetClosedFn = () => {
     console.log('closed');
