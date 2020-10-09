@@ -49,6 +49,12 @@
 }
 
 .activityInventory {
+  padding-top: 4px;
+  
+  @include phone-portrait {
+    padding-top: 0;
+  }
+  
   :global(.store-row) {
     grid-template-columns:
       repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
