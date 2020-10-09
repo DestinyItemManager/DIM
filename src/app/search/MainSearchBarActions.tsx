@@ -10,7 +10,7 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptySet } from 'app/utils/empty';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -83,6 +83,15 @@ function MainSearchBarActions({
   // Just suppress the count for now
   const showSearchCount = searchQuery && !onProgress && !onRecords && !onVendors;
   const showSearchActions = onInventory;
+
+  const hasQuery = searchQuery.length !== 0;
+  useEffect(() => {
+    if (!hasQuery && searchResultsOpen) {
+      setSearchResultsOpen(false);
+    } else if (hasQuery && isPhonePortrait) {
+      setSearchResultsOpen(true);
+    }
+  }, [hasQuery, searchResultsOpen, isPhonePortrait]);
 
   const displayableBuckets = useMemo(
     () =>
@@ -231,15 +240,19 @@ function MainSearchBarActions({
   return (
     <>
       {showSearchCount && (
-        <button type="button" onClick={() => setSearchResultsOpen((s) => !s)}>
-          Results
-        </button>
-      )}
-
-      {showSearchCount && (
         <span className={styles.count}>
           {t('Header.FilterMatchCount', { count: filteredItems.length })}
         </span>
+      )}
+
+      {showSearchCount && (
+        <button
+          type="button"
+          className={styles.resultButton}
+          onClick={() => setSearchResultsOpen((s) => !s)}
+        >
+          {t('Header.SearchResults')}
+        </button>
       )}
 
       {showSearchActions && (
