@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventory Mode",
+    "ButtonOn": "Active Mode",
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "Loadouts": "Loadouts",
+    "NoQuests": "You're not tracking any quests",
+    "Pursuits": "Pursuits"
+  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",

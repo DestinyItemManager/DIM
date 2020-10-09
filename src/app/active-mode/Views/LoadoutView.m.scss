@@ -1,0 +1,16 @@
+@import '../../variables.scss';
+
+.loadoutView {
+  :global(.loadout-popup-content) {
+    background-color: transparent;
+  }
+  :global(.loadout-set) {
+    background: rgba(0, 0, 0, 0.4);
+    margin-bottom: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: $orange;
+    }
+  }
+}

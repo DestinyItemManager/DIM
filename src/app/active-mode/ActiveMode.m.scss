@@ -1,0 +1,87 @@
+@import '../variables.scss';
+
+.activitySplit {
+  height: 4px;
+}
+
+.activityColumn {
+  margin-top: 0;
+  top: $header-height;
+
+  :global(.store-cell) {
+    padding: 0;
+  }
+
+  :global(.store-row) {
+    display: block;
+  }
+
+  :global(.title) {
+    margin-bottom: 10px;
+  }
+
+  :global(.title.collapsed) {
+    margin-bottom: 0;
+  }
+
+  :global(.dim-button.bucket-button) {
+    border-radius: 5px;
+    padding: 8px 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+
+    &:hover {
+      background: $orange;
+      color: black;
+    }
+    :global(.badge) {
+      margin: 0 5px;
+    }
+  }
+
+  @include phone-portrait {
+    margin-top: 15px;
+  }
+}
+
+.activityInventory {
+  padding-top: 4px;
+  
+  @include phone-portrait {
+    padding-top: 0;
+  }
+  
+  :global(.store-row) {
+    grid-template-columns:
+      repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
+      1fr;
+
+    @include phone-portrait {
+      grid-template-columns: 1fr;
+
+      .bucket-label {
+        position: sticky;
+        top: 44px;
+        background: #29293d;
+        z-index: 1;
+        opacity: 1;
+      }
+    }
+  }
+
+  :global(.store-row.title) {
+    background-color: transparent;
+
+    &.collapsed {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  :global(.store-row.title.collapsed) {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}

@@ -56,10 +56,8 @@ export function loadoutNotification(
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
     body: t('Loadouts.NotificationMessage', {
-      // t('Loadouts.NotificationMessage_male')
-      // t('Loadouts.NotificationMessage_female')
-      // t('Loadouts.NotificationMessage_male_plural')
-      // t('Loadouts.NotificationMessage_female_plural')
+      // t('Loadouts.NotificationMessage_male', { count })
+      // t('Loadouts.NotificationMessage_female', { count })
       count,
       store: store.name,
       context: store.genderName,
@@ -83,10 +81,8 @@ export function postmasterNotification(
     title: t('Loadouts.PullFromPostmasterPopupTitle'),
     trailer: <MoveItemNotificationIcon completion={promise} />,
     body: t('Loadouts.PullFromPostmasterNotification', {
-      // t('Loadouts.PullFromPostmasterNotification_male')
-      // t('Loadouts.PullFromPostmasterNotification_female')
-      // t('Loadouts.PullFromPostmasterNotification_male_plural')
-      // t('Loadouts.PullFromPostmasterNotification_female_plural')
+      // t('Loadouts.PullFromPostmasterNotification_male', { count })
+      // t('Loadouts.PullFromPostmasterNotification_female', { count })
       count,
       store: store.name,
       context: store.genderName,
