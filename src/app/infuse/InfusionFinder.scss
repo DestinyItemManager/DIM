@@ -13,10 +13,6 @@
       margin-bottom: 0;
     }
 
-    .search-filter {
-      margin: 0 !important;
-    }
-
     @include phone-portrait {
       flex-direction: column;
 
