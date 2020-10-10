@@ -50,8 +50,10 @@ function dhm(seconds: number, compact = false) {
   const minutes = Math.floor(seconds / 60);
   const hhMM = `${hours}:${pad(minutes, 2)}`;
   return days
-    ? compact
-      ? `${t('Countdown.Days_compact')} ${hhMM}`
-      : `${t('Countdown.Days', { count: days })} ${hhMM}`
+    ? `${t('Countdown.Days', {
+        count: days,
+        context: compact ? 'compact' : '',
+        contextList: 'compact',
+      })} ${hhMM}`
     : `${hhMM}`;
 }

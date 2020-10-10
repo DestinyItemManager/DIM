@@ -6234,10 +6234,9 @@ husky@^4.0.6:
     slash "^3.0.0"
     which-pm-runs "^1.0.0"
 
-i18next-scanner@^2.10.2:
+"i18next-scanner@https://github.com/delphiactual/i18next-scanner#custom-context-lists":
   version "2.11.0"
-  resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-2.11.0.tgz#58c7ffadd5192cdb2b1b2a6c743b1314050ccb4c"
-  integrity sha512-/QqbSnUj9v6EwndaWeHp8NkHqLKAIHSlI1HXSyLdIPKWYM+Fnpk2tjnyjP8qn7L0rLT7HLH4bvyiw61wOIxf0A==
+  resolved "https://github.com/delphiactual/i18next-scanner#7580201a65352871ed196191e4f6dabb3c554cb2"
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"

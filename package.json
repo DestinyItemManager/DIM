@@ -118,7 +118,7 @@
     "html-loader": "^1.0.0",
     "html-webpack-plugin": "^4.0.1",
     "husky": "^4.0.6",
-    "i18next-scanner": "^2.10.2",
+    "i18next-scanner": "https://github.com/delphiactual/i18next-scanner#custom-context-lists",
     "identity-obj-proxy": "^3.0.0",
     "imports-loader": "^1.1.0",
     "jest": "^26.0.1",

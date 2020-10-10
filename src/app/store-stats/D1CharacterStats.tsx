@@ -16,21 +16,22 @@ export default function D1CharacterStats({ stats }: Props) {
   const tooltips = statList.map((stat) => {
     if (stat) {
       const tier = Math.floor(Math.min(300, stat.value) / 60);
-      // t('Stats.TierProgress_Max')
-      const i18nData = {
+      const next = t('Stats.TierProgress', {
+        context: tier === 5 ? 'Max' : '',
+        contextList: 'max',
         progress: tier === 5 ? stat.value : stat.value % 60,
         tier,
         nextTier: tier + 1,
         statName: stat.name,
-      };
-      const next =
-        tier === 5 ? t('Stats.TierProgress_Max', i18nData) : t('Stats.TierProgress', i18nData);
+      });
+
       let cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = t(`Cooldown.${stat.effect}`, { cooldown });
-        // t('Cooldown.Grenade')
-        // t('Cooldown.Melee')
-        // t('Cooldown.Super')
+        cooldown = t('Cooldown.', {
+          context: stat.effect,
+          contextList: 'cooldowns',
+          cooldown,
+        });
       }
       return next + cooldown;
     }
