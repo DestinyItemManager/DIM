@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Tryb ekwipunku",
+    "ButtonOn": "Tryb aktywny",
+    "Farming": "Ostatnie przedmioty",
+    "FarmingStart": "Rozpocznij farmienie",
+    "Loadouts": "Uzbrojenia",
+    "NoQuests": "Nie śledzisz żadnych zadań",
+    "Pursuits": "Zadania"
+  },
   "Activities": {
     "Activities": "Aktywności",
     "Hard": "Trudne",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1 Dzień",
     "Days_compact": "{{count}}d",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} Dni"
   },
   "Csv": {
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = sugerowany atut kuratora",
-    "BestRatedTip": "Ten atut był wybrany przez kuratora.",
+    "BestRatedTip": "Ten atut dokładnie odpowiada rollu broni na twojej liście życzeń.",
+    "BestRatedTip_plural": "Te atuty dokładnie odpowiadają rollu broni na twojej liście życzeń.",
     "Clear": "Wyczyść Listę Życzeń",
     "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
     "Header": "Lista Życzeń",

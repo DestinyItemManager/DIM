@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventory Mode",
+    "ButtonOn": "Active Mode",
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "Loadouts": "Loadouts",
+    "NoQuests": "You're not tracking any quests",
+    "Pursuits": "Pursuits"
+  },
   "Activities": {
     "Activities": "アクティビティ",
     "Hard": "ハード",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "１日",
     "Days_compact": "{{count}}d",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} 日間"
   },
   "Csv": {
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " =キュレーターが提案するパーク",
-    "BestRatedTip": "このパークはキュレーターが選んだものです。",
+    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
+    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
     "Clear": "欲しい物リストをクリア",
     "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定します",
     "Header": "欲しい物リスト",

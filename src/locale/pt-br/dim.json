@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Modo Inventário",
+    "ButtonOn": "Modo Ativo",
+    "Farming": "Itens Recentes",
+    "FarmingStart": "Iniciar Farm",
+    "Loadouts": "Sets",
+    "NoQuests": "Você não está rastreando nenhuma jornada",
+    "Pursuits": "Empreitadas"
+  },
   "Activities": {
     "Activities": "Atividades",
     "Hard": "Difícil",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1 Dia",
     "Days_compact": "{{count}}d",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} Dias"
   },
   "Csv": {
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = perk sugerido pelo curador",
-    "BestRatedTip": "Este perk foi selecionado pelo curador.",
+    "BestRatedTip": "Este perk combina exatamente com um valor de arma em sua lista de desejos.",
+    "BestRatedTip_plural": "Estes perks combinam exatamente com um valor de arma em sua lista de desejos.",
     "Clear": "Limpar Lista de Desejos",
     "ExternalSource": "Opcionalmente, forneça a URL para uma lista de desejos",
     "Header": "Lista de Desejos",

@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Modalità Inventario",
+    "ButtonOn": "Modalità Attiva",
+    "Farming": "Oggetti Recenti",
+    "FarmingStart": "Attiva Farming",
+    "Loadouts": "Loadout",
+    "NoQuests": "Non stai seguendo nessuna impresa",
+    "Pursuits": "Incarichi"
+  },
   "Activities": {
     "Activities": "Attività",
     "Hard": "Difficile",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1 Giorno",
     "Days_compact": "{{count}}g",
+    "Days_compact_plural": "{{count}}g",
     "Days_plural": "{{count}} Giorni"
   },
   "Csv": {
@@ -233,7 +244,7 @@
     },
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
-    "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua lista desideri.",
+    "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua Lista Desideri.",
     "Unascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" che non sono stati ascesi.",
     "Undo": "Annulla",
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
@@ -241,14 +252,14 @@
     "Vendor": "Articolo disponibile da un mercante specifico.",
     "Weapon": "Mostra gli oggetti che sono armi.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
-    "Wishlist": "Mostra gli oggetti che corrispondono alla tua lista desideri.",
-    "WishlistDupe": "Mostra gli oggetti duplicati dove almeno un duplicato è nella tua lista desideri.",
-    "WishlistNotes": "Mostra oggetti della lista desideri con le note corrispondenti alla ricerca.",
+    "Wishlist": "Mostra gli oggetti che corrispondono alla tua Lista Desideri.",
+    "WishlistDupe": "Mostra gli oggetti duplicati dove almeno un duplicato è nella tua Lista Desideri.",
+    "WishlistNotes": "Mostra oggetti della Lista Desideri con le note corrispondenti alla ricerca.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
   },
   "General": {
     "ClickForDetails": "Clicca per dettagli",
-    "UserGuideLink": "Guida Utente"
+    "UserGuideLink": "Guida utente"
   },
   "Ghost": {
     "crucible": "Crogiolo",
@@ -290,7 +301,7 @@
     "Shop": "Negozio",
     "TagAs": "Etichetta come '{{tag}}'",
     "UpgradeDIM": "Aggiorna DIM",
-    "WhatsNew": "Cosa c'è di nuovo"
+    "WhatsNew": "Novità"
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
@@ -913,7 +924,7 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
       "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{date}}",
-      "Wiki": "Wiki Guida Utente DIM",
+      "Wiki": "Wiki Guida utente DIM",
       "WikiHelp": "Impara ad utilizzare DIM e contribuisci alla nostra guida utenti sviluppata dalla comunità.",
       "YouTube": "YouTube",
       "YouTubeHelp": "Impara ad usare DIM sul nostro canale YouTube."
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = perk suggerito dal curatore",
-    "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
+    "BestRatedTip": "Questo perk corrisponde esattamente ad un roll della tua Lista Desideri.",
+    "BestRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua Lista Desideri.",
     "Clear": "Cancella Lista Desideri",
     "ExternalSource": "Oppure, inserisci un URL di una Lista Desideri",
     "Header": "Lista Desideri",
@@ -945,11 +956,11 @@
     "ImportError": "Errore nel caricamento della Lista Desideri: {{error}}",
     "ImportFailed": "Nessuna informazione trovata nella Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",
+    "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count, number}} rolls. {{titleAndDescription}}",
     "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con uno dei seguenti:",
     "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
-    "Num": "{{num, number}} roll nella tua lista desideri",
+    "Num": "{{num, number}} roll nella tua Lista Desideri",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
   }
