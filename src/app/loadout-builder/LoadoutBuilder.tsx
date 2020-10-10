@@ -6,6 +6,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout/selectors';
 import { ItemFilter } from 'app/search/filter-types';
@@ -146,6 +147,9 @@ function LoadoutBuilder({
   );
 
   const characterItems: ItemsByBucket | undefined = selectedStore && items[selectedStore.classType];
+
+  const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
+  loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
     () =>

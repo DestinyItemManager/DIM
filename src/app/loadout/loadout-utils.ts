@@ -234,3 +234,18 @@ export function getItemsFromLoadoutItems(
 
   return [items, warnitems];
 }
+
+/**
+ * Returns a Loadout object containing currently equipped items
+ */
+export function loadoutFromEquipped(store: DimStore): Loadout {
+  const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));
+
+  const loadout = newLoadout(
+    'Currently Equipped',
+    items.map((i) => convertToLoadoutItem(i, true))
+  );
+  loadout.classType = store.classType;
+
+  return loadout;
+}
