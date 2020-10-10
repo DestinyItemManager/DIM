@@ -728,18 +728,17 @@ function canMoveToStore(
             : ''
           : moveAsideItem.type;
 
-        const errorData = {
-          itemtype,
-          store: moveAsideTarget.name,
-          context: moveAsideTarget.genderName,
-        };
-
         const error: DimError = new Error(
-          // t('ItemService.BucketFull.Guardian_male')
-          // t('ItemService.BucketFull.Guardian_female')
           moveAsideTarget.isVault
-            ? t('ItemService.BucketFull.Vault', errorData)
-            : t('ItemService.BucketFull.Guardian', errorData)
+            ? t('ItemService.BucketFull.Vault', {
+                itemtype,
+                store: moveAsideTarget.name,
+              })
+            : t('ItemService.BucketFull.Guardian', {
+                itemtype,
+                store: moveAsideTarget.name,
+                context: moveAsideTarget.genderName,
+              })
         );
         error.code = 'no-space';
         throw error;

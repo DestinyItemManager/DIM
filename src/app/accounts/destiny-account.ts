@@ -24,30 +24,22 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
-  // t('Accounts.Xbox')
+  // t('Accounts.', {context: platform, contextList:'platforms'})
   [BungieMembershipType.TigerXbox]: 'Xbox',
-  // t('Accounts.PlayStation')
   [BungieMembershipType.TigerPsn]: 'PlayStation',
-  // t('Accounts.Blizzard')
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
-  // t('Accounts.Steam')
   [BungieMembershipType.TigerSteam]: 'Steam',
-  // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
   Xbox: BungieMembershipType.TigerXbox,
-  // t('Accounts.PlayStation')
   PlayStation: BungieMembershipType.TigerPsn,
-  // t('Accounts.Blizzard')
   Blizzard: BungieMembershipType.TigerBlizzard,
   Demon: BungieMembershipType.TigerDemon,
-  // t('Accounts.Steam')
   Steam: BungieMembershipType.TigerSteam,
-  // t('Accounts.Stadia')
   Stadia: BungieMembershipType.TigerStadia,
   'Bungie.net': BungieMembershipType.BungieNext,
 };

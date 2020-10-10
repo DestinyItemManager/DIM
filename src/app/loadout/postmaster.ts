@@ -57,8 +57,6 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
       await dispatch(moveItemsToVault(store, itemsToMove));
       showNotification({
         type: 'success',
-        // t('Loadouts.MakeRoomDone_male', { count })
-        // t('Loadouts.MakeRoomDone_female', { count })
         title: t('Loadouts.MakeRoom'),
         body: t('Loadouts.MakeRoomDone', {
           count: postmasterItems.length,

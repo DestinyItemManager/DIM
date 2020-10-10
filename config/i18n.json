@@ -104,6 +104,7 @@
   "Countdown": {
     "Days": "1 Day",
     "Days_compact": "{{count}}d",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
