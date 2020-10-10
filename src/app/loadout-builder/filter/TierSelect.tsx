@@ -59,42 +59,44 @@ export default function TierSelect({
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
-            {_.sortBy(Object.keys(stats), (s: StatTypes) => order.indexOf(s)).map((stat, index) => (
-              <DraggableItem
-                key={stat}
-                id={stat}
-                index={index}
-                className={rowClassName}
-                name={
-                  <span className={stats[stat].ignored ? styles.ignored : ''}>
-                    <BungieImage
-                      className={styles.iconStat}
-                      src={statDefs[stat].displayProperties.icon}
-                    />
-                    {statDefs[stat].displayProperties.name}
-                  </span>
-                }
-              >
-                <MinMaxSelect
-                  stat={stat}
-                  stats={stats}
-                  type="Min"
-                  min={statRanges[stat].min}
-                  max={statRanges[stat].max}
-                  ignored={stats[stat].ignored}
-                  handleTierChange={handleTierChange}
-                />
-                <MinMaxSelect
-                  stat={stat}
-                  stats={stats}
-                  type="Max"
-                  min={statRanges[stat].min}
-                  max={statRanges[stat].max}
-                  ignored={stats[stat].ignored}
-                  handleTierChange={handleTierChange}
-                />
-              </DraggableItem>
-            ))}
+            {_.sortBy(Object.keys(stats), (s: StatTypes) => order.indexOf(s)).map(
+              (stat: StatTypes, index) => (
+                <DraggableItem
+                  key={stat}
+                  id={stat}
+                  index={index}
+                  className={rowClassName}
+                  name={
+                    <span className={stats[stat].ignored ? styles.ignored : ''}>
+                      <BungieImage
+                        className={styles.iconStat}
+                        src={statDefs[stat].displayProperties.icon}
+                      />
+                      {statDefs[stat].displayProperties.name}
+                    </span>
+                  }
+                >
+                  <MinMaxSelect
+                    stat={stat}
+                    stats={stats}
+                    type="Min"
+                    min={statRanges[stat].min}
+                    max={statRanges[stat].max}
+                    ignored={stats[stat].ignored}
+                    handleTierChange={handleTierChange}
+                  />
+                  <MinMaxSelect
+                    stat={stat}
+                    stats={stats}
+                    type="Max"
+                    min={statRanges[stat].min}
+                    max={statRanges[stat].max}
+                    ignored={stats[stat].ignored}
+                    handleTierChange={handleTierChange}
+                  />
+                </DraggableItem>
+              )
+            )}
 
             {provided.placeholder}
           </div>
@@ -146,7 +148,7 @@ function MinMaxSelectInner({
   stats,
   handleTierChange,
 }: {
-  stat: string;
+  stat: StatTypes;
   type: 'Min' | 'Max';
   min: number;
   max: number;
