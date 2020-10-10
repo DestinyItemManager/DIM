@@ -230,6 +230,10 @@
   &.sticky {
     box-shadow: 0 1px 4px 0px black;
   }
+  &.hide {
+    position: inherit;
+    box-shadow: none;
+  }
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;

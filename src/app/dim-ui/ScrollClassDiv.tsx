@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from 'react';
 
 export default React.memo(function ScrollClassDiv({
   scrollClass,
+  hideClass,
   children,
   ...divProps
 }: React.HTMLAttributes<HTMLDivElement> & {
   scrollClass: string;
+  hideClass?: string;
 }) {
   const rafTimer = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -17,6 +19,10 @@ export default React.memo(function ScrollClassDiv({
       );
       if (ref.current) {
         ref.current.classList.toggle(scrollClass, scrolled);
+
+        if (hideClass) {
+          ref.current.classList.toggle(hideClass, window.innerHeight < 500);
+        }
       }
     };
 
@@ -27,7 +33,7 @@ export default React.memo(function ScrollClassDiv({
 
     document.addEventListener('scroll', scrollHandler, false);
     return () => document.removeEventListener('scroll', scrollHandler);
-  }, [scrollClass]);
+  }, [scrollClass, hideClass]);
 
   return (
     <div ref={ref} {...divProps}>
