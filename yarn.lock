@@ -6236,7 +6236,7 @@ husky@^4.0.6:
 
 "i18next-scanner@https://github.com/delphiactual/i18next-scanner#custom-context-lists":
   version "2.11.0"
-  resolved "https://github.com/delphiactual/i18next-scanner#7580201a65352871ed196191e4f6dabb3c554cb2"
+  resolved "https://github.com/delphiactual/i18next-scanner#667fc4d274e6ab2865ea208672dbc84d551b1cdf"
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
