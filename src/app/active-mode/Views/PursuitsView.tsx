@@ -65,6 +65,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
 
   const trackingQuests = pursuits.some((item) => item.tracked);
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
+  const trackingRecords = Boolean(trackedTriumphs.length > 0 || trackedRecordHash > 0);
 
   return (
     <CollapsibleTitle
@@ -77,7 +78,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
         ))}
         <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-          {trackedRecordHash > 0 && (
+          {trackingRecords && (
             <TrackedTriumphs
               trackedTriumphs={trackedTriumphs}
               trackedRecordHash={trackedRecordHash}
@@ -86,7 +87,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
               hideRecordIcon={true}
             />
           )}
-          {!trackedRecordHash && (
+          {!trackingRecords && (
             <div className={styles.noQuests}>
               <div className={styles.message}>{t('Progress.NoTrackedTriumph')}</div>
             </div>
