@@ -77,13 +77,20 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
         ))}
         <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-          <TrackedTriumphs
-            trackedTriumphs={trackedTriumphs}
-            trackedRecordHash={trackedRecordHash}
-            defs={defs!}
-            profileResponse={profileResponse!}
-            hideRecordIcon={true}
-          />
+          {trackedRecordHash > 0 && (
+            <TrackedTriumphs
+              trackedTriumphs={trackedTriumphs}
+              trackedRecordHash={trackedRecordHash}
+              defs={defs!}
+              profileResponse={profileResponse!}
+              hideRecordIcon={true}
+            />
+          )}
+          {!trackedRecordHash && (
+            <div className={styles.noQuests}>
+              <div className={styles.message}>{t('Progress.NoTrackedTriumph')}</div>
+            </div>
+          )}
         </ErrorBoundary>
         {!trackingQuests && (
           <div className={styles.noQuests}>
