@@ -88,7 +88,7 @@ function Activities({ account, defs, stores }: Props) {
       tier.activityData.recommendedLight === 390
         ? 390
         : tier.tierDisplayName
-        ? t('Activities.', { context: tier.tierDisplayName, contextList: 'difficulty' })
+        ? t(`Activities.${tier.tierDisplayName}`, { context: null, contextList: 'difficulty' })
         : tierDef.activityName;
 
     const characters =
