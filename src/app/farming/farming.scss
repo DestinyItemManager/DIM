@@ -57,4 +57,19 @@
     transform: translateY(250px) translateX(-50%);
     transition: transform 200ms $easeInCubic;
   }
+
+  @include phone-portrait {
+    width: auto;
+    right: 0px;
+    bottom: 50px;
+    left: inherit;
+    transform: none;
+
+    button {
+      margin: 0;
+    }
+    p {
+      display: none;
+    }
+  }
 }
