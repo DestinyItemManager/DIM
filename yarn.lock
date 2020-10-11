@@ -6234,9 +6234,9 @@ husky@^4.0.6:
     slash "^3.0.0"
     which-pm-runs "^1.0.0"
 
-"i18next-scanner@https://github.com/delphiactual/i18next-scanner#custom-context-lists":
+i18next-scanner@delphiactual/i18next-scanner:
   version "2.11.0"
-  resolved "https://github.com/delphiactual/i18next-scanner#667fc4d274e6ab2865ea208672dbc84d551b1cdf"
+  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/802c9fab44740577b4ab85c5919ee4edb960046a"
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
@@ -6249,7 +6249,7 @@ husky@^4.0.6:
     deepmerge "^4.0.0"
     ensure-array "^1.0.0"
     eol "^0.9.1"
-    esprima "^4.0.0"
+    esprima "^4.0.1"
     gulp-sort "^2.0.0"
     i18next "*"
     lodash "^4.0.0"
