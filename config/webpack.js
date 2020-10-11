@@ -14,7 +14,7 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const SizePlugin = require('size-plugin');
 const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -496,21 +496,15 @@ module.exports = (env) => {
       })
     );
 
-    if (process.env.PT_PROJECT_TOKEN) {
-      const packOptions = {
-        upload: true,
-        fail_build: true,
-      };
+    const sizeOptions = {};
 
-      if (process.env.TRAVIS === 'true') {
-        Object.assign(packOptions, {
-          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
-          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
-        });
-      }
-
-      config.plugins.push(new PacktrackerPlugin(packOptions));
+    if (process.env.TRAVIS === 'true') {
+      Object.assign(sizeOptions, {
+        publish: true,
+      });
     }
+
+    config.plugins.push(new SizePlugin(sizeOptions));
   }
 
   return config;
