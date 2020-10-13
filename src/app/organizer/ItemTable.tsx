@@ -496,7 +496,7 @@ function ItemTable({
             }
             onChange={selectAllItems}
           />
-          {selectedItemIds.length}
+          {selectedItemIds.length || null}
         </div>
       </div>
       {filteredColumns.map((column: ColumnDefinition) => (
