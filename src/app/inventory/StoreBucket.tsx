@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
@@ -14,7 +15,7 @@ import React, { useCallback } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
-import { addIcon, AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from '../shell/icons';
+import { addIcon, AppIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { pullItem } from './move-item';
@@ -92,13 +93,6 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps;
 
-export const classIcons = {
-  [DestinyClass.Unknown]: globeIcon,
-  [DestinyClass.Hunter]: hunterIcon,
-  [DestinyClass.Warlock]: warlockIcon,
-  [DestinyClass.Titan]: titanIcon,
-};
-
 /**
  * A single bucket of items (for a single store).
  */
@@ -128,7 +122,7 @@ function StoreBucket({
       const classTypeNum = parseInt(classType, 10);
       const index = storeClassList.findIndex((s) => s === classTypeNum);
       return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-    });
+    }).map((c) => parseInt(c, 10) as DestinyClass);
 
     return (
       <StoreBucketDropTarget
@@ -140,7 +134,7 @@ function StoreBucket({
       >
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
-            <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
+            <ClassIcon classType={classType} className="armor-class-icon" />
             {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
               <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
             ))}

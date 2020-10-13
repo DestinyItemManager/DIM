@@ -1,4 +1,5 @@
 import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
+import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -665,7 +666,7 @@ function StoreLocation({ storeId }: { storeId: string }) {
 
   return (
     <div className={styles.locationCell}>
-      <img src={store.icon} width="16" height="16" alt="" /> {store.name}
+      <StoreIcons store={store} /> {store.className}
     </div>
   );
 }

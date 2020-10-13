@@ -1,6 +1,5 @@
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { classIcons } from 'app/inventory/StoreBucket';
-import AppIcon from 'app/shell/icons/AppIcon';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 
@@ -23,7 +22,7 @@ export default function LoadoutDrawerItem({
       <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
       <div className="close" onClick={onClose} />
       {item.type === 'Class' && (
-        <AppIcon icon={classIcons[item.classType]} className="loadout-item-class-icon" />
+        <ClassIcon classType={item.classType} className="loadout-item-class-icon" />
       )}
     </div>
   );
