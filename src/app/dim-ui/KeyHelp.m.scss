@@ -9,6 +9,8 @@
   color: #ddd;
   border: 1px solid #ddd;
   white-space: nowrap;
+  text-align: center;
+  min-width: 1em;
 
   @include phone-portrait {
     display: none;
