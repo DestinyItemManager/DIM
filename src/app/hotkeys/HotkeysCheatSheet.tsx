@@ -1,3 +1,4 @@
+import KeyHelp from 'app/dim-ui/KeyHelp';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -40,7 +41,7 @@ export default function HotkeysCheatSheet() {
               description.length > 0 && (
                 <React.Fragment key={combo}>
                   <div className="cfp-hotkeys-keys">
-                    <span className="cfp-hotkeys-key">{combo}</span>
+                    <KeyHelp combo={combo} className="cfp-hotkeys-key" />
                   </div>
                   <div className="cfp-hotkeys-text">{description}</div>
                 </React.Fragment>
