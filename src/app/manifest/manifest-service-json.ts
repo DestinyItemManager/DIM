@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
+import { errorLog, infoLog, timer } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -104,8 +105,8 @@ export function getManifest(tableAllowList: string[]): ThunkResult<object> {
 function doGetManifest(tableAllowList: string[]): ThunkResult<object> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
+    const stopTimer = timer('Load manifest');
     try {
-      console.time('Load manifest');
       const manifest = await dispatch(loadManifest(tableAllowList));
       if (!manifest.DestinyVendorDefinition) {
         throw new Error('Manifest corrupted, please reload');
@@ -131,14 +132,14 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<object> {
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      console.error('Manifest loading error', { error: e }, e);
+      errorLog('manifest', 'Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
       const error = new Error(statusText);
       error.name = 'ManifestError';
       throw error;
     } finally {
       dispatch(loadingEnd(t('Manifest.Load')));
-      console.timeEnd('Load manifest');
+      stopTimer();
     }
   };
 }
@@ -240,11 +241,11 @@ async function saveManifestToIndexedDB(
 ) {
   try {
     await set(idbKey, typedArray);
-    console.log(`Sucessfully stored manifest file.`);
+    infoLog('manifest', `Sucessfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
   } catch (e) {
-    console.error('Error saving manifest file', e);
+    errorLog('manifest', 'Error saving manifest file', e);
     showNotification({
       title: t('Help.NoStorage'),
       body: t('Help.NoStorageMessage'),

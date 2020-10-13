@@ -13,6 +13,7 @@ import {
 } from 'app/inventory/stores-helpers';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
+import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -67,7 +68,7 @@ export function startFarming(storeId: string): ThunkResult {
       return;
     }
 
-    console.log('Started farming', farmingStore.name);
+    infoLog('farming', 'Started farming', farmingStore.name);
 
     let unsubscribe = _.noop;
 
@@ -78,7 +79,7 @@ export function startFarming(storeId: string): ThunkResult {
       }
 
       if (farmingInterruptedSelector(getState())) {
-        console.log('Farming interrupted, will resume when tasks are complete');
+        infoLog('farming', 'Farming interrupted, will resume when tasks are complete');
       } else {
         if (isD1Store(farmingStore)) {
           dispatch(farmD1(farmingStore));

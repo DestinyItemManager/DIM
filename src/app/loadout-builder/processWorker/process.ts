@@ -1,6 +1,7 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
+import { infoLog } from '../../utils/log';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
 import { canTakeGeneralAndSeasonalMods, generateModPermutations } from './processUtils';
@@ -152,7 +153,13 @@ export function process(
   }
 
   if (combos < combosWithoutCaps) {
-    console.log('Reduced armor combinations from', combosWithoutCaps, 'to', combos);
+    infoLog(
+      'loadout optimizer',
+      'Reduced armor combinations from',
+      combosWithoutCaps,
+      'to',
+      combos
+    );
   }
 
   if (combos === 0) {
@@ -302,7 +309,8 @@ export function process(
 
   const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
 
-  console.log(
+  infoLog(
+    'loadout optimizer',
     'found',
     finalSets.length,
     'stat mixes after processing',

@@ -2,6 +2,7 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
   DestinyGameVersions,
@@ -205,7 +206,7 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     ) {
       return null;
     }
-    console.error('Error getting D1 characters for', account, e);
+    errorLog('accounts', 'Error getting D1 characters for', account, e);
     reportException('findD1Characters', e);
 
     // Return the account as if it had succeeded so it shows up in the menu

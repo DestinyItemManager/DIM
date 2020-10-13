@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -187,7 +188,6 @@ function fillLoadoutFromEquipped(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
 
-  console.log({ items, loadout, dimStore });
   for (const item of items) {
     if (
       !itemsByBucket[item.bucket.hash] ||
@@ -195,7 +195,7 @@ function fillLoadoutFromEquipped(
     ) {
       add(item, undefined, true);
     } else {
-      console.log('Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
+      infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
     }
   }
 }

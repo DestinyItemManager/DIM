@@ -1,6 +1,7 @@
 import { loggedOut } from 'app/accounts/actions';
 import { t } from 'app/i18next-t';
 import store from 'app/store/store';
+import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
 import {
@@ -34,7 +35,11 @@ export async function fetchWithBungieOAuth(
   } catch (e) {
     // Note: instanceof doesn't work due to a babel bug:
     if (e.name === 'FatalTokenError') {
-      console.warn('Unable to get auth token, clearing auth tokens & going to login: ', e);
+      warnLog(
+        'bungie auth',
+        'Unable to get auth token, clearing auth tokens & going to login: ',
+        e
+      );
       removeToken();
       goToLoginPage();
     }
@@ -52,7 +57,7 @@ export async function fetchWithBungieOAuth(
     }
     // OK, Bungie has told us our access token is expired or
     // invalid. Refresh it and try again.
-    console.log(`Access token expired, removing access token and trying again`);
+    infoLog('bungie auth', 'Access token expired, removing access token and trying again');
     removeAccessToken();
     return fetchWithBungieOAuth(request, options, true);
   }
@@ -118,7 +123,7 @@ export async function getActiveToken(): Promise<Tokens> {
   try {
     token = await (cache || getAccessTokenFromRefreshToken(token.refreshToken!));
     setToken(token);
-    console.log('Successfully updated auth token from refresh token.');
+    infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
     return token;
   } catch (e) {
     return await handleRefreshTokenError(e);
@@ -129,14 +134,16 @@ export async function getActiveToken(): Promise<Tokens> {
 
 async function handleRefreshTokenError(response: Error | Response): Promise<Tokens> {
   if (response instanceof TypeError) {
-    console.warn(
+    warnLog(
+      'bungie auth',
       "Error getting auth token from refresh token because there's no internet connection (or a permissions issue). Not clearing token.",
       response
     );
     throw response;
   }
   if (response instanceof Error) {
-    console.warn(
+    warnLog(
+      'bungie auth',
       'Other error getting auth token from refresh token. Not clearing auth tokens',
       response
     );

@@ -1,6 +1,7 @@
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { ThunkResult } from 'app/store/types';
+import { errorLog, infoLog } from 'app/utils/log';
 import _ from 'lodash';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -60,7 +61,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         return stores;
       } catch (e) {
-        console.error('Error loading stores', e);
+        errorLog('d1-stores', 'Error loading stores', e);
         reportException('D1StoresService', e);
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
@@ -96,7 +97,7 @@ function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
       };
     });
   } catch (e) {
-    console.log('error', e);
+    infoLog('d1-stores', 'error processing currencies', e);
   }
   return [];
 }

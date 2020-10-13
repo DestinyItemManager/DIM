@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
+import { errorLog, warnLog } from 'app/utils/log';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -73,7 +74,7 @@ export function processItems(
         uninstancedItemObjectives
       );
     } catch (e) {
-      console.error('Error processing item', item, e);
+      errorLog('d2-stores', 'Error processing item', item, e);
       reportException('Processing Dim item', e);
     }
     if (createdItem !== null) {
@@ -164,7 +165,8 @@ export function makeItem(
   }
 
   if (itemDef.redacted) {
-    console.warn(
+    warnLog(
+      'd2-stores',
       'Missing Item Definition:\n\n',
       { item, itemDef, instanceDef },
       '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
@@ -390,7 +392,7 @@ export function makeItem(
     createdItem.sockets = socketInfo.sockets;
     createdItem.missingSockets = socketInfo.missingSockets;
   } catch (e) {
-    console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d2-stores', `Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
@@ -398,7 +400,7 @@ export function makeItem(
     const stats = itemComponents?.stats?.data;
     createdItem.stats = buildStats(createdItem, stats || null, itemDef, defs);
   } catch (e) {
-    console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
   }
 
@@ -408,7 +410,7 @@ export function makeItem(
       createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
     }
   } catch (e) {
-    console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d2-stores', `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
@@ -423,7 +425,7 @@ export function makeItem(
       );
     }
   } catch (e) {
-    console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
     reportException('Objectives', e, { itemHash: item.itemHash });
   }
 
@@ -507,14 +509,20 @@ export function makeItem(
   try {
     createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
   } catch (e) {
-    console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+    errorLog(
+      'd2-stores',
+      `Error building masterwork info for ${createdItem.name}`,
+      item,
+      itemDef,
+      e
+    );
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
-    console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d2-stores', `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
     reportException('Quest', e, { itemHash: item.itemHash });
   }
 

@@ -8,6 +8,7 @@ import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh';
 import { RootState, ThunkResult } from 'app/store/types';
+import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/util';
 import { deepEqual } from 'fast-equals';
 import { get, set } from 'idb-keyval';
@@ -73,7 +74,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
           itemHashTags: nextState.itemHashTags,
           searches: nextState.searches,
         };
-        console.log('Saving profile data to IDB');
+        infoLog('dim sync', 'Saving profile data to IDB');
         set('dim-api-profile', savedState);
       }
     }, 1000)
@@ -111,10 +112,10 @@ export function loadGlobalSettings(): ThunkResult {
     if (!getState().dimApi.globalSettingsLoaded) {
       try {
         const globalSettings = await getGlobalSettings();
-        console.log('globalSettings', globalSettings);
+        infoLog('dim sync', 'globalSettings', globalSettings);
         dispatch(globalSettingsLoaded(globalSettings));
       } catch (e) {
-        console.error('Failed to load global settings from DIM API', e);
+        errorLog('dim sync', 'Failed to load global settings from DIM API', e);
       }
     }
   };
@@ -218,17 +219,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
         }
         dispatch(profileLoadError(e));
 
-        console.error('[loadDimApiData] Unable to get profile from DIM API', e);
+        errorLog('loadDimApiData', 'Unable to get profile from DIM API', e);
 
         if (e.name !== 'FatalTokenError') {
           // Wait, with exponential backoff
           getProfileBackoff++;
           const waitTime = getBackoffWaitTime(getProfileBackoff);
-          console.log(
-            '[loadDimApiData] Waiting',
-            waitTime,
-            'ms before re-attempting profile fetch'
-          );
+          infoLog('loadDimApiData', 'Waiting', waitTime, 'ms before re-attempting profile fetch');
           await delay(waitTime);
 
           // Retry
@@ -269,8 +266,9 @@ export function flushUpdates(): ThunkResult<any> {
         return;
       }
 
-      console.log(
-        '[flushUpdates] Flushing queue of',
+      infoLog(
+        'flushUpdates',
+        'Flushing queue of',
         dimApiState.updateInProgressWatermark,
         'updates'
       );
@@ -287,7 +285,7 @@ export function flushUpdates(): ThunkResult<any> {
           firstWithAccount.destinyVersion,
           updates
         );
-        console.log('[flushUpdates] got results', updates, results);
+        infoLog('flushUpdates', 'got results', updates, results);
 
         // Quickly heal from being failure backoff
         flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
@@ -297,12 +295,12 @@ export function flushUpdates(): ThunkResult<any> {
         if (flushUpdatesBackoff === 0) {
           showUpdateErrorNotification(e);
         }
-        console.error('[flushUpdates] Unable to save updates to DIM API', e);
+        errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
 
         // Wait, with exponential backoff
         flushUpdatesBackoff++;
         const waitTime = getBackoffWaitTime(getProfileBackoff);
-        console.log('[flushUpdates] Waiting', waitTime, 'ms before re-attempting updates');
+        infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
         // Now mark the queue failed so it can be retried. Until

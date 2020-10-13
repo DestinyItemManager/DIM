@@ -55,7 +55,8 @@
     "react-redux"
   ],
   "rules": {
-    "no-console": "off",
+    "no-console": "error",
+    "no-debugger": "error",
     "no-empty": "off",
     "no-implicit-coercion": "error",
     "no-restricted-properties": [

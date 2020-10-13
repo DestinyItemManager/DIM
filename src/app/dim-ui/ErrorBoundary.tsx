@@ -1,4 +1,5 @@
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { errorLog } from 'app/utils/log';
 import React from 'react';
 import { reportException } from '../utils/exceptions';
 
@@ -18,7 +19,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo) {
     this.setState({ error });
-    console.error(error, errorInfo);
+    errorLog(this.props.name, error, errorInfo);
     reportException(this.props.name, error, errorInfo);
   }
 

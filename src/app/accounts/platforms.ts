@@ -1,5 +1,6 @@
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { del, get } from 'idb-keyval';
 import _ from 'lodash';
@@ -16,9 +17,7 @@ import {
 import { accountsLoadedSelector, accountsSelector, currentAccountSelector } from './selectors';
 
 const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
-  console.log('Load accounts from IDB');
   const accounts = await get<DestinyAccount[] | undefined>('accounts');
-
   dispatch(actions.loadFromIDB(accounts || []));
 });
 
@@ -34,7 +33,7 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
       try {
         await dispatch(loadAccountsFromIndexedDBAction);
       } catch (e) {
-        console.error('Unable to load accounts from IDB', e);
+        errorLog('accounts', 'Unable to load accounts from IDB', e);
       }
     }
 
@@ -44,7 +43,7 @@ const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise
         await realAccountsPromise;
       } catch (e) {
         dispatch(actions.error(e));
-        console.error('Unable to load accounts from Bungie.net', e);
+        errorLog('accounts', 'Unable to load accounts from Bungie.net', e);
       }
     }
 

@@ -2,6 +2,7 @@ import { needsDeveloper } from 'app/accounts/actions';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import store from 'app/store/store';
+import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
@@ -42,7 +43,15 @@ const notifyTimeout = _.throttle(
 );
 
 const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
-  console.log('Throttled', timesThrottled, 'times, waiting', waitTime, 'ms before calling', url);
+  infoLog(
+    'bungie api',
+    'Throttled',
+    timesThrottled,
+    'times, waiting',
+    waitTime,
+    'ms before calling',
+    url
+  );
 
 // it would be really great if they implemented the pipeline operator soon
 /** used for most Bungie API requests */
@@ -104,7 +113,7 @@ export function handleErrors(error: Error) {
   }
 
   if (error instanceof SyntaxError) {
-    console.error('Error parsing Bungie.net response', error);
+    errorLog('bungie api', 'Error parsing Bungie.net response', error);
     throw new Error(t('BungieService.Difficulties'));
   }
 
@@ -210,7 +219,7 @@ export function handleErrors(error: Error) {
   }
 
   // Any other error
-  console.error('No response data:', error);
+  errorLog('bungie api', 'No response data:', error);
   throw new Error(t('BungieService.Difficulties'));
 }
 
