@@ -53,6 +53,10 @@
 .plug {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  margin-right: 0.5em;
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .perkIcon {

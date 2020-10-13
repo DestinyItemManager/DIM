@@ -7,6 +7,7 @@ import { LockedItemType } from 'app/loadout-builder/types';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { default as React, useRef, useState } from 'react';
@@ -124,16 +125,19 @@ function ItemSockets({
           />
         ))}
       </div>
-      {perks?.sockets.map((socketInfo) => (
-        <div key={socketInfo.socketIndex} className={styles.row}>
-          <PerkSocket
-            key={socketInfo.socketIndex}
-            defs={defs}
-            socket={socketInfo}
-            inventoryWishListRoll={inventoryWishListRoll}
-          />
-        </div>
-      ))}
+      {perks?.sockets.map(
+        (socketInfo) =>
+          !isKillTrackerSocket(socketInfo) && (
+            <div key={socketInfo.socketIndex} className={styles.row}>
+              <PerkSocket
+                key={socketInfo.socketIndex}
+                defs={defs}
+                socket={socketInfo}
+                inventoryWishListRoll={inventoryWishListRoll}
+              />
+            </div>
+          )
+      )}
       {socketInMenu &&
         ReactDOM.createPortal(
           <SocketDetails
