@@ -143,15 +143,18 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   }
 
   &.masterwork {
-    background-image: url('../../images/masterworkHeader.png');
+    background-image: linear-gradient(0deg, #c4b03b 0%, #c4b03b 100%);
+    background-size: 4px 4px;
     background-repeat: repeat-x;
-    background-size: cover;
     background-position: top center;
     &.is-Exotic {
-      background-image: url('../../images/exoticMasterworkHeader.png');
-    }
-    &.is-Legendary .item-title {
-      text-shadow: 0 0 3px black;
+      background-size: 8px 8px;
+      background-image: linear-gradient(
+        180deg,
+        #ddce39 4px,
+        rgba(0, 0, 0, 0.1) 4px,
+        rgba(0, 0, 0, 0) 8px
+      );
     }
   }
 }
