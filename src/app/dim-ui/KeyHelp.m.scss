@@ -8,6 +8,7 @@
   font-size: 10px;
   color: #ddd;
   border: 1px solid #ddd;
+  white-space: nowrap;
 
   @include phone-portrait {
     display: none;
