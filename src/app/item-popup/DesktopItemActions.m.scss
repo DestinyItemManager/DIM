@@ -11,7 +11,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px;
+  padding: 16px 12px;
+
+  @media (pointer: fine) {
+    padding: 12px;
+  }
 
   img,
   :global(.app-icon),
@@ -83,8 +87,13 @@
 
 .move,
 .equip {
-  padding-bottom: 6px;
-  padding-top: 6px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+
+  @media (pointer: fine) {
+    padding-bottom: 6px;
+    padding-top: 6px;
+  }
 }
 
 .move {
