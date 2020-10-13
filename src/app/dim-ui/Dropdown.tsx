@@ -77,7 +77,7 @@ export default function Dropdown({
           <AppIcon icon={kebabIcon} />
         ) : (
           <>
-            {children} <AppIcon icon={moveDownIcon} />
+            {children} <AppIcon icon={moveDownIcon} className={styles.arrow} />
           </>
         )}
       </button>

@@ -32,6 +32,12 @@
     font-size: 12px !important;
     height: 12px;
   }
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
 }
 
 .highlighted {
@@ -61,4 +67,11 @@
 .separator {
   height: 1px;
   background-color: #555;
+}
+
+.arrow {
+  font-size: 10px !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: 6px;
 }
