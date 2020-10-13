@@ -1,6 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/dim-api/selectors';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -12,11 +13,9 @@ import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/select
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
-import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
@@ -38,12 +37,6 @@ import Select, { listToOptions, mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
-
-const classIcons = {
-  [DestinyClass.Hunter]: dimHunterIcon,
-  [DestinyClass.Titan]: dimTitanIcon,
-  [DestinyClass.Warlock]: dimWarlockIcon,
-};
 
 interface StoreProps {
   currentAccount?: DestinyAccount;
@@ -366,7 +359,7 @@ function SettingsPage({
                     !store.isVault && (
                       <React.Fragment key={store.classType}>
                         <div>
-                          <AppIcon icon={classIcons[store.classType]} /> {store.className}:{' '}
+                          <ClassIcon classType={store.classType} /> {store.className}:{' '}
                         </div>
                         <StatTotalToggle forClass={store.classType} />
                       </React.Fragment>

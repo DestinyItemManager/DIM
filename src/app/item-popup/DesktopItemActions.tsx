@@ -1,3 +1,4 @@
+import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { CompareService } from 'app/compare/compare.service';
 import { t } from 'app/i18next-t';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
@@ -5,12 +6,8 @@ import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import hunter from 'destiny-icons/general/class_hunter.svg';
-import titan from 'destiny-icons/general/class_titan.svg';
-import warlock from 'destiny-icons/general/class_warlock.svg';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
@@ -26,12 +23,6 @@ import { hideItemPopup } from './item-popup';
 import ItemMoveAmount from './ItemMoveAmount';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
-
-const classIcons = {
-  [DestinyClass.Hunter]: hunter,
-  [DestinyClass.Warlock]: warlock,
-  [DestinyClass.Titan]: titan,
-} as const;
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const [amount, setAmount] = useState(item.amount);
@@ -161,7 +152,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 role="button"
                 tabIndex={-1}
               >
-                <StoreIcon store={store} />
+                <StoreIcons store={store} />
                 {t('MovePopup.Vault')}
               </div>
             )}
@@ -174,7 +165,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 role="button"
                 tabIndex={-1}
               >
-                <StoreIcon store={store} /> {t('MovePopup.Store')}
+                <StoreIcons store={store} /> {t('MovePopup.Store')}
               </div>
             )}
             {itemCanBeEquippedBy(item, store) && (
@@ -186,7 +177,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 role="button"
                 tabIndex={-1}
               >
-                <StoreIcon store={store} /> {t('MovePopup.Equip')}
+                <StoreIcons store={store} /> {t('MovePopup.Equip')}
               </div>
             )}
           </React.Fragment>
@@ -217,26 +208,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           </div>
         )}
       </div>
-    </>
-  );
-}
-
-function StoreIcon({ store }: { store: DimStore }) {
-  return (
-    <>
-      <img
-        src={store.icon}
-        height="32"
-        width="32"
-        style={{
-          backgroundColor: store.color
-            ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
-                store.color.blue
-              )}`
-            : 'black',
-        }}
-      />
-      {!store.isVault && <img src={classIcons[store.classType]} className={styles.classIcon} />}
     </>
   );
 }

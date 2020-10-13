@@ -30,13 +30,6 @@
   :global(.app-icon) {
     color: #eee;
   }
-
-  .classIcon {
-    filter: invert(1);
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-  }
 }
 
 .itemTagSelector {
@@ -72,9 +65,6 @@
     color: black;
     :global(.app-icon) {
       color: black;
-    }
-    .classIcon {
-      filter: none;
     }
   }
 }
