@@ -3,7 +3,7 @@ import { ItemFilter } from 'app/search/filter-types';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { doEnergiesMatch } from './mod-utils';
+import { doEnergiesMatch, isEnergyLower } from './mod-utils';
 import {
   bucketsToCategories,
   ItemsByBucket,
@@ -23,6 +23,8 @@ export function filterItems(
   lockedArmor2ModMap: LockedArmor2ModMap,
   minimumStatTotal: number,
   assumeMasterwork: boolean,
+  ignoreAffinity: boolean,
+  maximumEnergy: number,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -52,7 +54,7 @@ export function filterItems(
     }
   });
 
-  // filter to only include items that are in the locked map and items that have the correct energy
+  // filter to only include items that are in the locked map and items that have the correct energy unless we're ignoring armor element
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
@@ -62,7 +64,9 @@ export function filterItems(
         (item) =>
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
-          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
+          (!lockedMods ||
+            (ignoreAffinity && isEnergyLower(item, maximumEnergy)) ||
+            lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
           // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
           (bucket === LockableBuckets.classitem ||
             locked?.length ||

@@ -44,6 +44,8 @@ export function useProcess(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
+  ignoreAffinity: boolean,
+  maximumEnergy: number,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
   minimumPower: number
@@ -59,6 +61,8 @@ export function useProcess(
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
+    ignoreAffinity,
+    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower
@@ -78,7 +82,13 @@ export function useProcess(
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      const groupedItems = groupItems(items, lockedArmor2ModMap, statOrder, assumeMasterwork);
+      const groupedItems = groupItems(
+        items,
+        lockedArmor2ModMap,
+        statOrder,
+        assumeMasterwork,
+        ignoreAffinity
+      );
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
         if (item) {
@@ -152,6 +162,8 @@ function useWorkerAndCleanup(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
+  ignoreAffinity: boolean,
+  maximumEnergy: number,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
   minimumPower: number
@@ -161,6 +173,8 @@ function useWorkerAndCleanup(
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
+    ignoreAffinity,
+    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower,
@@ -194,13 +208,14 @@ function createWorker() {
  * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
  * - If no general or seasonal mods are locked it groups by (stats, masterworked).
  *
- * Note that assumedMasterwork effects this.
+ * Note that assumedMasterwork and ignoreAffinity effects this.
  */
 function groupItems(
   items: readonly DimItem[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   statOrder: StatTypes[],
-  assumeMasterwork: boolean
+  assumeMasterwork: boolean,
+  ignoreAffinity: boolean
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
@@ -219,8 +234,9 @@ function groupItems(
     }
 
     if (
-      someModHasEnergyRequirement(lockedArmor2ModMap.seasonal) ||
-      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+      !ignoreAffinity &&
+      (someModHasEnergyRequirement(lockedArmor2ModMap.seasonal) ||
+        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general]))
     ) {
       groupId += `${item.energy?.energyType}`;
     }

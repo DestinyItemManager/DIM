@@ -21,6 +21,8 @@ export default function FilterBuilds({
   defs,
   order,
   assumeMasterwork,
+  ignoreAffinity,
+  maximumEnergy,
   onStatFiltersChanged,
 }: {
   statRanges?: { [statType in StatTypes]: MinMax };
@@ -31,6 +33,8 @@ export default function FilterBuilds({
   defs: D2ManifestDefinitions;
   order: StatTypes[];
   assumeMasterwork: boolean;
+  ignoreAffinity: boolean;
+  maximumEnergy: number;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
   const dispatch = useDispatch();
@@ -59,10 +63,7 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
-        <div
-          className={styles.assumeMasterwork}
-          title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
-        >
+        <div className={styles.filterCheckbox} title={t('LoadoutBuilder.AssumeMasterworkDetailed')}>
           <input
             type="checkbox"
             checked={assumeMasterwork}
@@ -70,7 +71,28 @@ export default function FilterBuilds({
           />
           <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
         </div>
-        <div className={styles.powerSelect}>
+        <div className={styles.filterCheckbox} title={t('LoadoutBuilder.IgnoreAffinityDetailed')}>
+          <input
+            type="checkbox"
+            checked={ignoreAffinity}
+            onChange={(e) => dispatch(setSetting('loIgnoreAffinity', e.target.checked))}
+          />
+          <span>{t('LoadoutBuilder.IgnoreAffinity')}</span>
+        </div>
+        {ignoreAffinity && (
+          <div className={styles.filterRange}>
+            <label id="maxEnergy" title={t('LoadoutBuilder.SelectMaxEnergyDescription')}>
+              {t('LoadoutBuilder.SelectMaxEnergy')}
+            </label>
+            <RangeSelector
+              min={1}
+              max={10}
+              initialValue={maximumEnergy}
+              onChange={(maxEnergy: number) => dispatch(setSetting('loMaxEnergy', maxEnergy))}
+            />
+          </div>
+        )}
+        <div className={styles.filterRange}>
           <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
             {t('LoadoutBuilder.SelectPower')}
           </label>
@@ -81,7 +103,7 @@ export default function FilterBuilds({
             onChange={(minPower: number) => dispatch(setSetting('loMinPower', minPower))}
           />
         </div>
-        <div className={styles.powerSelect}>
+        <div className={styles.filterRange}>
           <label id="minStatTotal" title={t('LoadoutBuilder.SelectMinStatTotalDescription')}>
             {t('LoadoutBuilder.SelectMinStatTotal')}
           </label>

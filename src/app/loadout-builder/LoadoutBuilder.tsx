@@ -49,6 +49,8 @@ interface ProvidedProps {
 interface StoreProps {
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
+  ignoreAffinity: boolean;
+  maximumEnergy: number;
   minimumPower: number;
   minimumStatTotal: number;
   isPhonePortrait: boolean;
@@ -100,10 +102,18 @@ function mapStateToProps() {
   );
 
   return (state: RootState): StoreProps => {
-    const { loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(state);
+    const {
+      loAssumeMasterwork,
+      loIgnoreAffinity,
+      loMaxEnergy,
+      loMinPower,
+      loMinStatTotal,
+    } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
+      ignoreAffinity: loIgnoreAffinity,
+      maximumEnergy: loMaxEnergy,
       minimumPower: loMinPower,
       minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
@@ -122,6 +132,8 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
+  ignoreAffinity,
+  maximumEnergy,
   minimumPower,
   minimumStatTotal,
   isPhonePortrait,
@@ -165,9 +177,20 @@ function LoadoutBuilder({
         lockedArmor2Mods,
         minimumStatTotal,
         assumeMasterwork,
+        ignoreAffinity,
+        maximumEnergy,
         filter
       ),
-    [characterItems, lockedMap, lockedArmor2Mods, minimumStatTotal, assumeMasterwork, filter]
+    [
+      characterItems,
+      lockedMap,
+      lockedArmor2Mods,
+      minimumStatTotal,
+      assumeMasterwork,
+      ignoreAffinity,
+      maximumEnergy,
+      filter,
+    ]
   );
 
   const { result, processing } = useProcess(
@@ -175,6 +198,8 @@ function LoadoutBuilder({
     lockedMap,
     lockedArmor2Mods,
     assumeMasterwork,
+    ignoreAffinity,
+    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower
@@ -244,6 +269,8 @@ function LoadoutBuilder({
         defs={defs}
         order={statOrder}
         assumeMasterwork={assumeMasterwork}
+        ignoreAffinity={ignoreAffinity}
+        maximumEnergy={maximumEnergy}
       />
 
       <LockArmorAndPerks

@@ -26,6 +26,12 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
     mod.modDef.plug.energyCost!.energyType === item.energy?.energyType);
 
 /**
+ * Checks that the armour energy capacity is less than the maximum limit provided
+ */
+export const isEnergyLower = (item: DimItem, limit: number) =>
+  item.energy && item.energy.energyCapacity <= limit;
+
+/**
  * If the energies match, this will assign the mods to the item in assignments.
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
