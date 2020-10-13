@@ -26,6 +26,11 @@ export function isValidWishListUrlDomain(url: string) {
   return isUri(url) && wishListAllowedPrefixes.some((p) => url.startsWith(p));
 }
 
+const voltronLocation =
+  'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt';
+const choosyVoltronLocation =
+  'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/choosy_voltron.txt';
+
 interface StoreProps {
   wishListsEnabled: boolean;
   numWishListRolls: number;
@@ -83,6 +88,10 @@ function WishListSettings({
     }
   };
 
+  const voltronNotSelected = () => wishListSource !== voltronLocation;
+
+  const choosyVoltronNotSelected = () => wishListSource !== choosyVoltronLocation;
+
   const loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     dispatch(clearWishLists());
 
@@ -107,6 +116,18 @@ function WishListSettings({
   const clearWishListEvent = () => {
     ga('send', 'event', 'WishList', 'Clear');
     dispatch(clearWishLists());
+  };
+
+  const resetToChoosyVoltron = async () => {
+    ga('send', 'event', 'WishList', 'Reset to choosy voltron');
+    setLiveWishListSource(choosyVoltronLocation);
+    await wishListUpdateEvent();
+  };
+
+  const resetToVoltron = async () => {
+    ga('send', 'event', 'WishList', 'Reset to voltron');
+    setLiveWishListSource(voltronLocation);
+    await wishListUpdateEvent();
   };
 
   const updateWishListSourceState = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +163,7 @@ function WishListSettings({
             onClick={wishListUpdateEvent}
           />
         </div>
+
         {wishListLastUpdated && (
           <div className="fineprint">
             {t('WishListRoll.LastUpdated', {
@@ -151,6 +173,32 @@ function WishListSettings({
           </div>
         )}
       </div>
+
+      {(voltronNotSelected || choosyVoltronNotSelected) && (
+        <div className="setting">
+          <div className="horizontal">
+            <label>{t('WishListRoll.SuggestedFiles')}</label>
+            <div>
+              {voltronNotSelected && (
+                <input
+                  type="button"
+                  className="dim-button"
+                  onClick={resetToVoltron}
+                  value={t('WishListRoll.Voltron')}
+                />
+              )}{' '}
+              {choosyVoltronNotSelected && (
+                <input
+                  type="button"
+                  className="dim-button"
+                  onClick={resetToChoosyVoltron}
+                  value={t('WishListRoll.ChoosyVoltron')}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {wishListsEnabled && (
         <div className="setting">

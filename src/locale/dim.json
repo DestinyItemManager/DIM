@@ -961,7 +961,10 @@
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
+    "SuggestedFiles": "Suggested Files",
     "UpdateExternalSource": "Update Wish List Source",
+    "ChoosyVoltron": "choosy_voltron",
+    "Voltron": "voltron",
     "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

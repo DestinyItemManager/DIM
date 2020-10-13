@@ -977,6 +977,9 @@
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
     "UpdateExternalSource": "Update Wish List Source",
+    "Suggested Files": "Suggested Files",
+    "ChoosyVoltron": "choosy voltron",
+    "Voltron": "voltron",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
   "ActiveMode": {
