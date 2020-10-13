@@ -1,0 +1,93 @@
+@import '../variables.scss';
+
+.sockets {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 6px 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.archetype {
+  background-color: #333;
+}
+
+.archetypeMod {
+  flex: 1;
+  img {
+    width: calc(2px + 0.5 * var(--item-size));
+    height: calc(2px + 0.5 * var(--item-size));
+    margin-right: 0.5em;
+    transform: scale(1.3);
+  }
+}
+
+.socket {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  flex: 1;
+}
+
+.mod {
+  margin-left: 4px;
+  cursor: pointer;
+  &:hover {
+    outline: 1px solid $orange;
+  }
+}
+
+.plug {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.perkIcon {
+  position: relative;
+  width: calc(0.4 * var(--item-size));
+  height: calc(0.4 * var(--item-size));
+  display: block;
+  border: 1px solid white;
+  border-radius: 50%;
+  padding: calc(0.05 * var(--item-size));
+
+  > img {
+    height: 100%;
+    width: 100%;
+  }
+
+  .plugged & {
+    background-color: #4887ba;
+  }
+  :global(.thumbs-up) {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
+  }
+}
+
+.plugged {
+  flex: 1;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.plugLabel {
+  margin-left: 0.5em;
+}
