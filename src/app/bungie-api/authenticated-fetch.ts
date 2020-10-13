@@ -123,7 +123,7 @@ export async function getActiveToken(): Promise<Tokens> {
   try {
     token = await (cache || getAccessTokenFromRefreshToken(token.refreshToken!));
     setToken(token);
-    infoLog('Successfully updated auth token from refresh token.');
+    infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
     return token;
   } catch (e) {
     return await handleRefreshTokenError(e);

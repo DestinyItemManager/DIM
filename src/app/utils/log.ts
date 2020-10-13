@@ -7,8 +7,8 @@
  * @param tag an informative label for categorizing this log
  * @example infoLog("Manifest", "The manifest loaded")
  */
-export function infoLog(tag: string, ...args: any[]) {
-  console.log(`[${tag}]`, ...args);
+export function infoLog(tag: string, message: any, ...args: any[]) {
+  console.log(`[${tag}]`, message, ...args);
 }
 
 /**
@@ -18,8 +18,8 @@ export function infoLog(tag: string, ...args: any[]) {
  * @param tag an informative label for categorizing this log
  * @example warn("Manifest", "The manifest is out of date")
  */
-export function warnLog(tag: string, ...args: any[]) {
-  console.warn(`[${tag}]`, ...args);
+export function warnLog(tag: string, message: any, ...args: any[]) {
+  console.warn(`[${tag}]`, message, ...args);
 }
 
 /**
@@ -29,8 +29,8 @@ export function warnLog(tag: string, ...args: any[]) {
  * @param tag an informative label for categorizing this log
  * @example error("Manifest", "The manifest failed to load")
  */
-export function errorLog(tag: string, ...args: any[]) {
-  console.error(`[${tag}]`, ...args);
+export function errorLog(tag: string, message: any, ...args: any[]) {
+  console.error(`[${tag}]`, message, ...args);
 }
 
 /**
