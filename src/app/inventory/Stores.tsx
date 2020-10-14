@@ -44,9 +44,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   const currentStore = getCurrentStore(stores)!;
 
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(
-    $featureFlags.mobileCategoryStrip ? 'Weapons' : undefined
-  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -142,21 +140,19 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
           </div>
         </Hammer>
 
-        {$featureFlags.mobileCategoryStrip && (
-          <div className="category-options">
-            {Object.keys(buckets.byCategory)
-              .filter((category) => category !== 'Postmaster')
-              .map((category) => (
-                <div
-                  key={category}
-                  onClick={() => handleCategoryChange(category)}
-                  className={clsx({ selected: category === selectedCategoryId })}
-                >
-                  {t(`Bucket.${category}`)}
-                </div>
-              ))}
-          </div>
-        )}
+        <div className="category-options">
+          {Object.keys(buckets.byCategory)
+            .filter((category) => category !== 'Postmaster')
+            .map((category) => (
+              <div
+                key={category}
+                onClick={() => handleCategoryChange(category)}
+                className={clsx({ selected: category === selectedCategoryId })}
+              >
+                {t(`Bucket.${category}`)}
+              </div>
+            ))}
+        </div>
       </div>
     );
   }
