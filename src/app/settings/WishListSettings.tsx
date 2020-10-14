@@ -38,6 +38,8 @@ interface StoreProps {
   description?: string;
   wishListSource: string;
   wishListLastUpdated?: Date;
+  voltronNotSelected: boolean;
+  choosyVoltronNotSelected: boolean;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
@@ -52,6 +54,8 @@ function mapStateToProps(state: RootState): StoreProps {
     description: wishList.description,
     wishListSource: settingsSelector(state).wishListSource,
     wishListLastUpdated: wishListsLastFetchedSelector(state),
+    voltronNotSelected: settingsSelector(state).wishListSource !== voltronLocation,
+    choosyVoltronNotSelected: settingsSelector(state).wishListSource !== choosyVoltronLocation,
   };
 }
 
@@ -62,6 +66,8 @@ function WishListSettings({
   title,
   description,
   wishListLastUpdated,
+  voltronNotSelected,
+  choosyVoltronNotSelected,
   dispatch,
 }: Props) {
   const [liveWishListSource, setLiveWishListSource] = useState(wishListSource);
@@ -73,11 +79,9 @@ function WishListSettings({
     setLiveWishListSource(wishListSource);
   }, [wishListSource]);
 
-  const wishListUpdateEvent = async () => {
-    const newWishListSource = liveWishListSource?.trim();
-
+  const reloadWishList = async (reloadWishListSource) => {
     try {
-      await dispatch(fetchWishList(newWishListSource));
+      await dispatch(fetchWishList(reloadWishListSource));
       ga('send', 'event', 'WishList', 'From URL');
     } catch (e) {
       showNotification({
@@ -88,9 +92,11 @@ function WishListSettings({
     }
   };
 
-  const voltronNotSelected = () => wishListSource !== voltronLocation;
+  const wishListUpdateEvent = async () => {
+    const newWishListSource = liveWishListSource?.trim();
 
-  const choosyVoltronNotSelected = () => wishListSource !== choosyVoltronLocation;
+    await reloadWishList(newWishListSource);
+  };
 
   const loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     dispatch(clearWishLists());
@@ -118,16 +124,16 @@ function WishListSettings({
     dispatch(clearWishLists());
   };
 
-  const resetToChoosyVoltron = async () => {
+  const resetToChoosyVoltron = () => {
     ga('send', 'event', 'WishList', 'Reset to choosy voltron');
     setLiveWishListSource(choosyVoltronLocation);
-    await wishListUpdateEvent();
+    reloadWishList(choosyVoltronLocation);
   };
 
-  const resetToVoltron = async () => {
+  const resetToVoltron = () => {
     ga('send', 'event', 'WishList', 'Reset to voltron');
     setLiveWishListSource(voltronLocation);
-    await wishListUpdateEvent();
+    reloadWishList(voltronLocation);
   };
 
   const updateWishListSourceState = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,31 +180,29 @@ function WishListSettings({
         )}
       </div>
 
-      {(voltronNotSelected || choosyVoltronNotSelected) && (
-        <div className="setting">
-          <div className="horizontal">
-            <label>{t('WishListRoll.SuggestedFiles')}</label>
-            <div>
-              {voltronNotSelected && (
-                <input
-                  type="button"
-                  className="dim-button"
-                  onClick={resetToVoltron}
-                  value={t('WishListRoll.Voltron')}
-                />
-              )}{' '}
-              {choosyVoltronNotSelected && (
-                <input
-                  type="button"
-                  className="dim-button"
-                  onClick={resetToChoosyVoltron}
-                  value={t('WishListRoll.ChoosyVoltron')}
-                />
-              )}
-            </div>
+      <div className="setting">
+        <div className="horizontal">
+          <label>{t('WishListRoll.SuggestedFiles')}</label>
+          <div>
+            {voltronNotSelected && (
+              <input
+                type="button"
+                className="dim-button"
+                onClick={resetToVoltron}
+                value={t('WishListRoll.Voltron')}
+              />
+            )}{' '}
+            {choosyVoltronNotSelected && (
+              <input
+                type="button"
+                className="dim-button"
+                onClick={resetToChoosyVoltron}
+                value={t('WishListRoll.ChoosyVoltron')}
+              />
+            )}
           </div>
         </div>
-      )}
+      </div>
 
       {wishListsEnabled && (
         <div className="setting">
