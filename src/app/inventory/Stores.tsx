@@ -102,6 +102,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
       >
         <ScrollClassDiv
           className="store-row store-header"
+          scrollClass="sticky"
           style={storeBackgroundColor(selectedStore, 0, true, isPhonePortrait)}
           onTouchStart={(e) => e.stopPropagation()}
         >
@@ -167,7 +168,7 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <ScrollClassDiv className="store-row store-header">
+      <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
         {stores.map((store, index) => (
           <div
             className={clsx('store-cell', { vault: store.isVault })}

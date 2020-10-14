@@ -227,6 +227,9 @@
   .body-scroll-lock & {
     position: fixed;
   }
+  &.sticky {
+    box-shadow: 0 1px 4px 0px black;
+  }
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
@@ -249,7 +252,7 @@
     }
   }
   .gradientBackground & {
-    background: radial-gradient(circle at 50% 125px, #454568 0%, #161626 100%);
+    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
     background-position: center top;
     background-repeat: no-repeat;
     background-size: 100% 100vh;
