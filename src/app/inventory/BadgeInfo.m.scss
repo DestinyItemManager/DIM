@@ -80,3 +80,8 @@
   /* #915ec8 rgb(145, 94, 200) */
   background-color: #915ec8;
 }
+
+.lightBackgroundElement {
+  filter: brightness(75%) saturate(200%);
+  background-color: transparent !important;
+}

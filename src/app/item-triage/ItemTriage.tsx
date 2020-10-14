@@ -2,6 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon, {
   ArmorSlotSpecificModSocketIcon,
@@ -9,7 +10,6 @@ import SpecialtyModSlotIcon, {
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { RootState } from 'app/store/types';

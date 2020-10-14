@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { makeDupeID } from 'app/search/search-filters/dupes';
 import {
