@@ -150,6 +150,32 @@ function WishListSettings({
       <div className="setting">
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />
       </div>
+
+      <div className="setting">
+        <div>{t('WishListRoll.PreMadeFiles')}</div>
+        {voltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToVoltron}>
+                <span>{t('WishListRoll.Voltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.VoltronDescription')}</div>
+            {choosyVoltronNotSelected && <p className="fineprint"></p>}
+          </>
+        )}
+        {choosyVoltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToChoosyVoltron}>
+                <span>{t('WishListRoll.ChoosyVoltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.ChoosyVoltronDescription')}</div>
+          </>
+        )}
+      </div>
+
       <div className="setting">
         <div>{t('WishListRoll.ExternalSource')}</div>
         <div>
@@ -177,31 +203,6 @@ function WishListSettings({
               lastUpdatedTime: wishListLastUpdated.toLocaleTimeString(),
             })}
           </div>
-        )}
-      </div>
-
-      <div className="setting">
-        <div>{t('WishListRoll.PreMadeFiles')}</div>
-        {voltronNotSelected && (
-          <>
-            <div>
-              <button type="button" className="dim-button" onClick={resetToVoltron}>
-                <span>{t('WishListRoll.Voltron')}</span>
-              </button>
-            </div>
-            <div className="fineprint">{t('WishListRoll.VoltronDescription')}</div>
-            {choosyVoltronNotSelected && <p className="fineprint"></p>}
-          </>
-        )}
-        {choosyVoltronNotSelected && (
-          <>
-            <div>
-              <button type="button" className="dim-button" onClick={resetToChoosyVoltron}>
-                <span>{t('WishListRoll.ChoosyVoltron')}</span>
-              </button>
-            </div>
-            <div className="fineprint">{t('WishListRoll.ChoosyVoltronDescription')}</div>
-          </>
         )}
       </div>
 
