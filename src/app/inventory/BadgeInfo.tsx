@@ -116,7 +116,8 @@ export function ghostBadgeContent(item: DimItem) {
   const infos = getGhostInfos(item);
 
   const planet = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false))
-    .map((location) => t(`Ghost.${location}`, { context: null, contextList: 'ghost_locations' }))
+    // t('Ghost.', { context: '', contextList: 'ghost_locations' })
+    .map((location) => t(`Ghost.${location}`))
     .join(',');
   const improved = infos.some((i) => i.type.improved) ? '+' : '';
 
