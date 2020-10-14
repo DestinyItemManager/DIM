@@ -36,8 +36,6 @@ declare const $featureFlags: {
   newArrangement: boolean;
   /** New background */
   gradientBackground: boolean;
-  /** Use mobile category strip on inventory page */
-  mobileCategoryStrip: boolean;
   /** Move the item popup actions */
   newItemPopupActions: boolean;
   /** Enable move amounts */

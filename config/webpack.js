@@ -385,8 +385,6 @@ module.exports = (env) => {
         '$featureFlags.newArrangement': JSON.stringify(true),
         // New background design
         '$featureFlags.gradientBackground': JSON.stringify(!env.release),
-        // Use a category strip on mobile inventory instead of collapsable headers
-        '$featureFlags.mobileCategoryStrip': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions
