@@ -7,6 +7,7 @@
 
 .track {
   display: block;
+  touch-action: pan-x;
 
   > * {
     display: inline-block;
