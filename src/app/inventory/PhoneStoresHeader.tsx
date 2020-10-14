@@ -24,11 +24,18 @@ export default function PhoneStoresHeader({
   };
   */
 
+  // TODO: carousel
+  // TODO: wrap StoreHeading in a div?
+
   return (
     <div className={styles.frame}>
-      <div className={styles.track}>
+      <div className={styles.track} style={{ width: `${100 * stores.length}%` }}>
         {stores.map((store) => (
-          <div className="store-cell" key={store.id}>
+          <div
+            className="store-cell"
+            key={store.id}
+            style={{ width: `${Math.floor(100 / stores.length)}%` }}
+          >
             <StoreHeading
               store={store}
               selectedStore={selectedStore}

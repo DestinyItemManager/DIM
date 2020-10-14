@@ -1,7 +1,15 @@
 .frame {
-  display: block;
+  max-width: calc(100% - 100px);
+  margin: 0 auto;
+  overflow: visible !important;
+  position: relative;
 }
 
 .track {
   display: block;
+
+  > * {
+    display: inline-block;
+    vertical-align: top;
+  }
 }
