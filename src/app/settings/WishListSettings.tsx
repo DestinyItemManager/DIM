@@ -181,27 +181,28 @@ function WishListSettings({
       </div>
 
       <div className="setting">
-        <div className="horizontal">
-          <label>{t('WishListRoll.SuggestedFiles')}</label>
-          <div>
-            {voltronNotSelected && (
-              <input
-                type="button"
-                className="dim-button"
-                onClick={resetToVoltron}
-                value={t('WishListRoll.Voltron')}
-              />
-            )}{' '}
-            {choosyVoltronNotSelected && (
-              <input
-                type="button"
-                className="dim-button"
-                onClick={resetToChoosyVoltron}
-                value={t('WishListRoll.ChoosyVoltron')}
-              />
-            )}
-          </div>
-        </div>
+        <div>{t('WishListRoll.PreMadeFiles')}</div>
+        {voltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToVoltron}>
+                <span>{t('WishListRoll.Voltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.VoltronDescription')}</div>
+            {choosyVoltronNotSelected && <p className="fineprint"></p>}
+          </>
+        )}
+        {choosyVoltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToChoosyVoltron}>
+                <span>{t('WishListRoll.ChoosyVoltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.ChoosyVoltronDescription')}</div>
+          </>
+        )}
       </div>
 
       {wishListsEnabled && (

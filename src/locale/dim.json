@@ -961,10 +961,12 @@
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
-    "SuggestedFiles": "Suggested Files",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "Update Wish List Source",
     "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is a collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Voltron": "voltron",
+    "VoltronDescription": "voltron is a collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }
