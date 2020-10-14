@@ -92,19 +92,37 @@ export default function PhoneStores({ stores, buckets }: Props) {
         </div>
       </Hammer>
 
-      <div className="category-options">
-        {Object.keys(buckets.byCategory)
-          .filter((category) => category !== 'Postmaster')
-          .map((category) => (
-            <div
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={clsx({ selected: category === selectedCategoryId })}
-            >
-              {t(`Bucket.${category}`)}
-            </div>
-          ))}
-      </div>
+      <CategoryStrip
+        category={selectedCategoryId}
+        buckets={buckets}
+        onCategorySelected={handleCategoryChange}
+      />
+    </div>
+  );
+}
+
+function CategoryStrip({
+  buckets,
+  category: selectedCategoryId,
+  onCategorySelected,
+}: {
+  buckets: InventoryBuckets;
+  category: string;
+  onCategorySelected(category: string): void;
+}) {
+  return (
+    <div className="category-options">
+      {Object.keys(buckets.byCategory)
+        .filter((category) => category !== 'Postmaster')
+        .map((category) => (
+          <div
+            key={category}
+            onClick={() => onCategorySelected(category)}
+            className={clsx({ selected: category === selectedCategoryId })}
+          >
+            {t(`Bucket.${category}`)}
+          </div>
+        ))}
     </div>
   );
 }
