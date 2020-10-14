@@ -17,7 +17,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import PressTip from '../dim-ui/PressTip';
-import { queueAction } from '../inventory/action-queue';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
 import { searchFilterSelector } from '../search/search-filter';
@@ -36,6 +35,7 @@ import {
   undoIcon,
 } from '../shell/icons';
 import { querySelector } from '../shell/selectors';
+import { queueAction } from '../utils/action-queue';
 import {
   gatherEngramsLoadout,
   itemLevelingLoadout,
