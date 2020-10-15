@@ -26,9 +26,11 @@ import ItemMoveAmount from './ItemMoveAmount';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
+const sidecarCollapsedSelector = (state) => settingsSelector(state).sidecarCollapsed;
+
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
-  const sidecarCollapsed = useSelector((state) => settingsSelector(state).sidecarCollapsed)
+  const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
