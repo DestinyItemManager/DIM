@@ -7,6 +7,11 @@
   background-color: #161626;
 }
 
+.hideLabel,
+.collapsed svg {
+  display: none;
+}
+
 .entry {
   display: flex;
   flex-direction: row;
@@ -26,6 +31,10 @@
     width: 16px;
     font-size: 16px;
     text-align: center;
+
+    .collapsed & {
+      margin-right: 0;
+    }
   }
   :global(.app-icon) {
     color: #eee;
@@ -39,6 +48,19 @@
 
   :global(.app-icon) {
     margin-top: 1px;
+  }
+
+  .collapsed & {
+    padding: 0;
+    :global(.app-icon) {
+      margin-right: 8px;
+    }
+    button {
+      padding: 12px;
+      :global(.app-icon) {
+        margin-right: 0px;
+      }
+    }
   }
 }
 
@@ -92,4 +114,27 @@
 
 .equip {
   margin-bottom: 6px;
+}
+
+.collapseButton {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  &:hover :global(.app-icon) {
+    color: $orange;
+  }
+
+  .collapsed & {
+    padding: 5px 0 15px;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  :global(.app-icon) {
+    margin: 7px 10px 0;
+    display: block;
+    width: 16px;
+    font-size: 16px;
+  }
 }

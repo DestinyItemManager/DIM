@@ -2,9 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'actionButton': string;
+  'collapseButton': string;
+  'collapsed': string;
   'disabled': string;
   'entry': string;
   'equip': string;
+  'hideLabel': string;
   'interaction': string;
   'itemTagSelector': string;
   'move': string;

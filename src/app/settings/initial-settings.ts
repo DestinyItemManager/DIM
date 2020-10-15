@@ -7,6 +7,8 @@ export interface Settings extends DimApiSettings {
   readonly loMinPower: number;
   readonly loMinStatTotal: number;
   compareBaseStats: boolean;
+  /** Item popup sidecar collapsed just shows icon and no character locations */
+  sidecarCollapsed: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -17,4 +19,5 @@ export const initialSettingsState: Settings = {
   loMinStatTotal: 55,
   organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'ghost', 'perks', 'notes'],
   compareBaseStats: false,
+  sidecarCollapsed: false,
 };

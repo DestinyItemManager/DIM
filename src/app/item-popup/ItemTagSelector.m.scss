@@ -29,3 +29,16 @@
     display: none;
   }
 }
+
+.minimized {
+  button {
+    padding: 0;
+    background: none;
+  }
+  button .item > *:nth-child(2) {
+    display: none;
+  }
+  button > *:nth-child(2) {
+    display: none;
+  }
+}

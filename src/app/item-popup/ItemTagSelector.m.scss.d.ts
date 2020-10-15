@@ -3,6 +3,7 @@
 interface CssExports {
   'item': string;
   'keyHelp': string;
+  'minimized': string;
   'null': string;
 }
 export const cssExports: CssExports;
