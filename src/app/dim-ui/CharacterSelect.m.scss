@@ -5,43 +5,29 @@
   justify-content: space-between;
 }
 
-.horizontal {
-  composes: select;
-  flex-direction: row;
-  flex-wrap: wrap;
-
-  .tile {
-    margin-right: 8px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  @include phone-portrait {
-    justify-content: center;
-  }
-}
-
 .vertical {
   composes: select;
   flex-direction: column;
   align-items: center;
 
   .tile {
+    width: 100%;
     margin-bottom: 8px;
     &:last-child {
       margin-bottom: 0;
     }
   }
+
+  .unselected {
+    opacity: 0.4;
+  }
 }
 
 .tile {
   height: 46px;
-  width: 100%;
 
   @include phone-portrait {
     min-width: 260px;
-    margin-bottom: 6px;
 
     > div {
       margin: 0 5px;
@@ -49,27 +35,22 @@
   }
 }
 
-.unselected {
-  opacity: 0.4;
-}
-
-.pager {
-  overflow: hidden;
-  > div {
-    max-width: 250px;
-    @include phone-portrait {
-      max-width: 260px;
-    }
-
-    margin: 0 auto;
-    overflow: visible !important;
-  }
-}
-
 .frame {
+  max-width: 250px;
+  @include phone-portrait {
+    max-width: 260px;
+  }
+  margin: 16px auto;
   overflow: visible !important;
+  position: relative;
 }
 
 .track {
-  overflow: visible !important;
+  display: block;
+  touch-action: pan-x;
+
+  > * {
+    display: inline-block;
+    vertical-align: top;
+  }
 }
