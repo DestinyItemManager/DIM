@@ -269,7 +269,10 @@ function MainSearchBarActions({
 
       {$featureFlags.searchResults &&
         searchResultsOpen &&
-        ReactDOM.createPortal(<SearchResults />, document.body)}
+        ReactDOM.createPortal(
+          <SearchResults items={filteredItems} onClose={() => setSearchResultsOpen(false)} />,
+          document.body
+        )}
     </>
   );
 }

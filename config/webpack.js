@@ -394,7 +394,7 @@ module.exports = (env) => {
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(env.dev),
         // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(env.dev),
+        '$featureFlags.searchResults': JSON.stringify(!env.release),
       }),
 
       new WorkerPlugin({
