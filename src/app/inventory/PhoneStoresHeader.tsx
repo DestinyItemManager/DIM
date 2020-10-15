@@ -1,11 +1,20 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { infoLog } from 'app/utils/log';
-import { animate, motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
+import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import _ from 'lodash';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import styles from './PhoneStoresHeader.m.scss';
 import { DimStore } from './store-types';
+
+const spring: Spring = {
+  type: 'spring',
+  stiffness: 100,
+  damping: 20,
+  mass: 1,
+  restSpeed: 0.01,
+  restDelta: 0.01,
+};
 
 /**
  * The swipable header for the mobile (phone portrait) Inventory view.
@@ -32,8 +41,6 @@ export default function PhoneStoresHeader({
 
   const index = stores.indexOf(selectedStore);
 
-  // TODO: this seems a bit too low level
-  const frameRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   // The track is divided into "segments", with one item per segment
@@ -43,11 +50,10 @@ export default function PhoneStoresHeader({
   // Keep track of the starting point when we begin a gesture
   const startOffset = useRef<number>(0);
 
-  const onSetSelectedStoreId = (id: string) => {
-    const index = stores.findIndex((s) => s.id === id);
-    animate(offset, index);
-    setSelectedStoreId(id);
-  };
+  useEffect(() => {
+    const index = stores.indexOf(selectedStore);
+    animate(offset, index, spring);
+  }, [selectedStore, offset, stores]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
@@ -89,7 +95,7 @@ export default function PhoneStoresHeader({
       }
     }
 
-    animate(offset, newIndex, { velocity: 0 });
+    animate(offset, newIndex, spring);
 
     if (index !== newIndex) {
       onIndexChanged(newIndex);
@@ -102,7 +108,7 @@ export default function PhoneStoresHeader({
   );
 
   return (
-    <div className={styles.frame} ref={frameRef}>
+    <div className={styles.frame}>
       <motion.div
         ref={trackRef}
         className={styles.track}
@@ -120,7 +126,7 @@ export default function PhoneStoresHeader({
             <StoreHeading
               store={store}
               selectedStore={selectedStore}
-              onTapped={onSetSelectedStoreId}
+              onTapped={setSelectedStoreId}
               loadoutMenuRef={loadoutMenuRef}
             />
           </div>
