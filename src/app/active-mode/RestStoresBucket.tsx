@@ -49,6 +49,10 @@ function RestStoresBucket({ restItems, bucket, itemSortOrder }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
   const items = useMemo(() => sortItems(restItems, itemSortOrder), [restItems, itemSortOrder]);
 
+  if (!bucket.hasTransferDestination) {
+    return null;
+  }
+
   return (
     <StoreBucketDropTarget
       equip={false}

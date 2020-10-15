@@ -26,6 +26,11 @@ export function isValidWishListUrlDomain(url: string) {
   return isUri(url) && wishListAllowedPrefixes.some((p) => url.startsWith(p));
 }
 
+const voltronLocation =
+  'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt';
+const choosyVoltronLocation =
+  'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/choosy_voltron.txt';
+
 interface StoreProps {
   wishListsEnabled: boolean;
   numWishListRolls: number;
@@ -33,6 +38,8 @@ interface StoreProps {
   description?: string;
   wishListSource: string;
   wishListLastUpdated?: Date;
+  voltronNotSelected: boolean;
+  choosyVoltronNotSelected: boolean;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
@@ -47,6 +54,8 @@ function mapStateToProps(state: RootState): StoreProps {
     description: wishList.description,
     wishListSource: settingsSelector(state).wishListSource,
     wishListLastUpdated: wishListsLastFetchedSelector(state),
+    voltronNotSelected: settingsSelector(state).wishListSource !== voltronLocation,
+    choosyVoltronNotSelected: settingsSelector(state).wishListSource !== choosyVoltronLocation,
   };
 }
 
@@ -57,6 +66,8 @@ function WishListSettings({
   title,
   description,
   wishListLastUpdated,
+  voltronNotSelected,
+  choosyVoltronNotSelected,
   dispatch,
 }: Props) {
   const [liveWishListSource, setLiveWishListSource] = useState(wishListSource);
@@ -68,11 +79,9 @@ function WishListSettings({
     setLiveWishListSource(wishListSource);
   }, [wishListSource]);
 
-  const wishListUpdateEvent = async () => {
-    const newWishListSource = liveWishListSource?.trim();
-
+  const reloadWishList = async (reloadWishListSource) => {
     try {
-      await dispatch(fetchWishList(newWishListSource));
+      await dispatch(fetchWishList(reloadWishListSource));
       ga('send', 'event', 'WishList', 'From URL');
     } catch (e) {
       showNotification({
@@ -81,6 +90,12 @@ function WishListSettings({
         body: t('WishListRoll.ImportError', { error: e.message }),
       });
     }
+  };
+
+  const wishListUpdateEvent = async () => {
+    const newWishListSource = liveWishListSource?.trim();
+
+    await reloadWishList(newWishListSource);
   };
 
   const loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
@@ -109,6 +124,18 @@ function WishListSettings({
     dispatch(clearWishLists());
   };
 
+  const resetToChoosyVoltron = () => {
+    ga('send', 'event', 'WishList', 'Reset to choosy voltron');
+    setLiveWishListSource(choosyVoltronLocation);
+    reloadWishList(choosyVoltronLocation);
+  };
+
+  const resetToVoltron = () => {
+    ga('send', 'event', 'WishList', 'Reset to voltron');
+    setLiveWishListSource(voltronLocation);
+    reloadWishList(voltronLocation);
+  };
+
   const updateWishListSourceState = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSource = e.target.value;
     setLiveWishListSource(newSource);
@@ -123,6 +150,32 @@ function WishListSettings({
       <div className="setting">
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />
       </div>
+
+      <div className="setting">
+        <div>{t('WishListRoll.PreMadeFiles')}</div>
+        {voltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToVoltron}>
+                <span>{t('WishListRoll.Voltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.VoltronDescription')}</div>
+            {choosyVoltronNotSelected && <p className="fineprint"></p>}
+          </>
+        )}
+        {choosyVoltronNotSelected && (
+          <>
+            <div>
+              <button type="button" className="dim-button" onClick={resetToChoosyVoltron}>
+                <span>{t('WishListRoll.ChoosyVoltron')}</span>
+              </button>
+            </div>
+            <div className="fineprint">{t('WishListRoll.ChoosyVoltronDescription')}</div>
+          </>
+        )}
+      </div>
+
       <div className="setting">
         <div>{t('WishListRoll.ExternalSource')}</div>
         <div>
@@ -142,6 +195,7 @@ function WishListSettings({
             onClick={wishListUpdateEvent}
           />
         </div>
+
         {wishListLastUpdated && (
           <div className="fineprint">
             {t('WishListRoll.LastUpdated', {

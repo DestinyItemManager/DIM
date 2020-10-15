@@ -1,5 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon, {
@@ -10,9 +11,7 @@ import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { classIcons } from 'app/inventory/StoreBucket';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -39,7 +38,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: () => true,
     render: (item) => (
       <PressTip elementType="span" tooltip={item.classTypeNameLocalized}>
-        <AppIcon icon={classIcons[item.classType]} className={styles.classIcon} />
+        <ClassIcon classType={item.classType} className={styles.classIcon} />
       </PressTip>
     ),
     value: (item) => item.classType.toString(),

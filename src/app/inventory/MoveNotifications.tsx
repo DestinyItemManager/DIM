@@ -26,10 +26,6 @@ export function moveItemNotification(
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
-    /*
-      t('ItemMove.MovingItem_male')
-      t('ItemMove.MovingItem_female')
-    */
     body: t('ItemMove.MovingItem', {
       name: item.name,
       target: target.name,
@@ -56,8 +52,6 @@ export function loadoutNotification(
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
     body: t('Loadouts.NotificationMessage', {
-      // t('Loadouts.NotificationMessage_male', { count })
-      // t('Loadouts.NotificationMessage_female', { count })
       count,
       store: store.name,
       context: store.genderName,
@@ -81,8 +75,6 @@ export function postmasterNotification(
     title: t('Loadouts.PullFromPostmasterPopupTitle'),
     trailer: <MoveItemNotificationIcon completion={promise} />,
     body: t('Loadouts.PullFromPostmasterNotification', {
-      // t('Loadouts.PullFromPostmasterNotification_male', { count })
-      // t('Loadouts.PullFromPostmasterNotification_female', { count })
       count,
       store: store.name,
       context: store.genderName,

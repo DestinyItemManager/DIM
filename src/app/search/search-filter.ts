@@ -1,6 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { createSelector } from 'reselect';
 import { getTag, ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
@@ -137,7 +138,7 @@ function makeSearchFilterFactory(
             try {
               return filterDef.filter({ filterValue, ...filterContext });
             } catch (e) {
-              console.error('Invalid query term', filterName, filterValue, e);
+              errorLog('search', 'Invalid query term', filterName, filterValue, e);
               return () => true;
             }
           }

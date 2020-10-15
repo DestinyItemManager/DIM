@@ -53,6 +53,7 @@ function convertDimApiLoadoutToLoadout(
       ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
       ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
     ],
+    parameters: loadout.parameters,
   };
 }
 

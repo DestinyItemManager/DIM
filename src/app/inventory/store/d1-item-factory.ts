@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { getItemYear } from 'app/utils/item-utils';
+import { errorLog, warnLog } from 'app/utils/log';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -39,7 +40,7 @@ export async function processItems(
     try {
       createdItem = makeItem(defs, buckets, item, owner);
     } catch (e) {
-      console.error('Error processing item', item, e);
+      errorLog('d1-stores', 'Error processing item', item, e);
       reportException('Processing D1 item', e);
     }
     if (createdItem !== null) {
@@ -150,7 +151,8 @@ function makeItem(
   }
 
   if (itemDef.redacted) {
-    console.warn(
+    warnLog(
+      'd1-stores',
       'Missing Item Definition:\n\n',
       item,
       '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
@@ -341,7 +343,7 @@ function makeItem(
   try {
     createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
   } catch (e) {
-    console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d1-stores', `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
   }
 
   createdItem.infusable = Boolean(createdItem.talentGrid?.infusable);
@@ -358,7 +360,7 @@ function makeItem(
       createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
     }
   } catch (e) {
-    console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
+    errorLog('d1-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
   }
 
   createdItem.objectives = item.objectives?.length > 0 ? item.objectives : null;
@@ -367,7 +369,13 @@ function makeItem(
     try {
       createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
     } catch (e) {
-      console.error(`Error building quality rating for ${createdItem.name}`, item, itemDef, e);
+      errorLog(
+        'd1-stores',
+        `Error building quality rating for ${createdItem.name}`,
+        item,
+        itemDef,
+        e
+      );
     }
   }
 

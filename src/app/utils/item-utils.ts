@@ -18,7 +18,6 @@ import {
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import _ from 'lodash';
@@ -245,8 +244,8 @@ const d1YearSourceHashes = {
  */
 export function getItemYear(item: DimItem) {
   if (item.destinyVersion === 2) {
-    // TODO: D2SeasonInfo is only used for year?
-    return D2SeasonInfo[getSeason(item)].year;
+    const season = getSeason(item);
+    return season ? Math.floor(season / 4) + 1 : 0;
   } else if (isD1Item(item)) {
     if (!item.sourceHashes) {
       return 1;

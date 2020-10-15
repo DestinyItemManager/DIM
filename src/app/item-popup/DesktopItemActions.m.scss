@@ -11,7 +11,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px;
+  padding: 16px 12px;
+
+  @media (pointer: fine) {
+    padding: 12px;
+  }
 
   img,
   :global(.app-icon),
@@ -25,13 +29,6 @@
   }
   :global(.app-icon) {
     color: #eee;
-  }
-
-  .classIcon {
-    filter: invert(1);
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
   }
 }
 
@@ -69,9 +66,6 @@
     :global(.app-icon) {
       color: black;
     }
-    .classIcon {
-      filter: none;
-    }
   }
 }
 
@@ -83,8 +77,13 @@
 
 .move,
 .equip {
-  padding-bottom: 6px;
-  padding-top: 6px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+
+  @media (pointer: fine) {
+    padding-bottom: 6px;
+    padding-top: 6px;
+  }
 }
 
 .move {

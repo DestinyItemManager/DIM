@@ -1,3 +1,4 @@
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -27,16 +28,12 @@ import {
   editIcon,
   engramIcon,
   faRandom,
-  globeIcon,
-  hunterIcon,
   levellingIcon,
   powerActionIcon,
   powerIndicatorIcon,
   searchIcon,
   sendIcon,
-  titanIcon,
   undoIcon,
-  warlockIcon,
 } from '../shell/icons';
 import { querySelector } from '../shell/selectors';
 import {
@@ -59,13 +56,6 @@ import {
   totalPostmasterItems,
 } from './postmaster';
 import { loadoutsSelector, previousLoadoutSelector } from './selectors';
-
-const loadoutIcon = {
-  [DestinyClass.Unknown]: globeIcon,
-  [DestinyClass.Hunter]: hunterIcon,
-  [DestinyClass.Warlock]: warlockIcon,
-  [DestinyClass.Titan]: titanIcon,
-};
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -396,7 +386,7 @@ function LoadoutPopup({
         {loadouts.map((loadout) => (
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
-              <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
+              <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
               {loadout.name}
             </span>
             <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>

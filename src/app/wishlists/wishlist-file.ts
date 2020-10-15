@@ -1,4 +1,5 @@
 import { emptySet } from 'app/utils/empty';
+import { timer, warnLog } from 'app/utils/log';
 import { DimWishList, WishListAndInfo, WishListRoll } from './types';
 
 /**
@@ -21,6 +22,7 @@ const notesLabel = '//notes:';
  * a wish list text file.
  */
 export function toWishList(fileText: string): WishListAndInfo {
+  const stopTimer = timer('Parse wish list');
   try {
     const wishList: WishListAndInfo = {
       wishListRolls: [],
@@ -28,7 +30,6 @@ export function toWishList(fileText: string): WishListAndInfo {
       description: undefined,
     };
 
-    console.time('Parse wish list');
     let blockNotes: string | undefined = undefined;
     const seen = new Set<string>();
     let dups = 0;
@@ -65,11 +66,11 @@ export function toWishList(fileText: string): WishListAndInfo {
     }
 
     if (dups > 0) {
-      console.warn('Discarded', dups, 'duplicate rolls from wish list');
+      warnLog('wishlist', 'Discarded', dups, 'duplicate rolls from wish list');
     }
     return wishList;
   } finally {
-    console.timeEnd('Parse wish list');
+    stopTimer();
   }
 }
 

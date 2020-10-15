@@ -16,6 +16,7 @@ import { searchConfigSelector } from 'app/search/search-config';
 import { validateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { errorLog, infoLog, timer } from 'app/utils/log';
 import { clearWishLists } from 'app/wishlists/actions';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
@@ -390,7 +391,7 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
  * the update watermark.
  */
 function prepareUpdateQueue(state: DimApiState) {
-  console.time('prepareUpdateQueue');
+  const stopTimer = timer('prepareUpdateQueue');
   try {
     return produce(state, (draft) => {
       // If the user only wants to save data locally, then throw away the update queue.
@@ -441,7 +442,7 @@ function prepareUpdateQueue(state: DimApiState) {
       draft.updateQueue.push(...rest);
     });
   } finally {
-    console.timeEnd('prepareUpdateQueue');
+    stopTimer();
   }
 }
 
@@ -668,8 +669,9 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
       const result = results[i];
 
       if (!(result.status === 'Success' || result.status === 'NotFound')) {
-        console.error(
-          '[applyFinishedUpdatesToQueue] failed to update:',
+        errorLog(
+          'applyFinishedUpdatesToQueue',
+          'failed to update:',
           result.status,
           ':',
           result.message,
@@ -752,7 +754,7 @@ function setTag(
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
-    console.error('Cannot tag a non-instanced item. Use setItemHashTag instead');
+    errorLog('setTag', 'Cannot tag a non-instanced item. Use setItemHashTag instead');
     return;
   }
 
@@ -837,7 +839,7 @@ function setNote(
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
-    console.error('Cannot note a non-instanced item. Use setItemHashNote instead');
+    errorLog('setNote', 'Cannot note a non-instanced item. Use setItemHashNote instead');
     return;
   }
   const profileKey = makeProfileKeyFromAccount(account);
@@ -979,7 +981,7 @@ function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, q
     }
     query = canonicalizeQuery(ast);
   } catch (e) {
-    console.error('Query not parseable - not saving', query, e);
+    errorLog('searchUsed', 'Query not parseable - not saving', query, e);
     return;
   }
 
@@ -1034,12 +1036,12 @@ function saveSearch(
   try {
     const ast = parseQuery(query);
     if (!validateQuery(ast, searchConfigs)) {
-      console.error('Query not valid - not saving', query);
+      errorLog('saveSearch', 'Query not valid - not saving', query);
       return;
     }
     query = canonicalizeQuery(ast);
   } catch (e) {
-    console.error('Query not parseable - not saving', query, e);
+    errorLog('saveSearch', 'Query not parseable - not saving', query, e);
     return;
   }
 
@@ -1081,7 +1083,7 @@ function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion,
 
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
   // TODO: put things back the way they were
-  console.log('TODO: Reversing', draft, update);
+  infoLog('reverseEffects', 'TODO: Reversing', draft, update);
 }
 
 export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
@@ -1111,6 +1113,7 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
     clearSpace: dimLoadout.clearSpace || false,
     equipped,
     unequipped,
+    parameters: dimLoadout.parameters,
   };
 }
 

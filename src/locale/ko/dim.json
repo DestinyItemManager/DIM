@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "베타",
+    "ButtonOff": "소지품 모드",
+    "ButtonOn": "활성 모드",
+    "Farming": "최근 아이템",
+    "FarmingStart": "파밍 시작",
+    "Loadouts": "로드아웃",
+    "NoQuests": "추적 중인 퀘스트 없음",
+    "Pursuits": "목표"
+  },
   "Activities": {
     "Activities": "활동",
     "Hard": "어려움",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1일",
     "Days_compact": "{{count}}일",
+    "Days_compact_plural": "{{count}}일",
     "Days_plural": "{{count}}일"
   },
   "Csv": {
@@ -210,7 +221,7 @@
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "전투력 레벨에 따른 아이템 검색",
     "PowerLimit": "최대로 주입할 수 있는 전투력에 따른 아이템 표시",
-    "PowerfulReward": "강력한 보상을 주는 활동 표시",
+    "PowerfulReward": "강력한 보상을 주는 목표 표시",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성 아이템 표시",
     "RarityTier": "희귀도에 따른 아이템 표시",
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = 큐레이터가 추천한 특성",
-    "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
+    "BestRatedTip": "희망 아이템 목록에 있는 무기의 특성 조합과 일치하는 특성입니다.",
+    "BestRatedTip_plural": "희망 아이템 목록에 있는 무기의 특성 조합과 일치합니다.",
     "Clear": "희망 아이템 목록 비우기",
     "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
     "Header": "희망 아이템 목록",

@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventory Mode",
+    "ButtonOn": "Active Mode",
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "Loadouts": "Loadouts",
+    "NoQuests": "You're not tracking any quests",
+    "Pursuits": "Pursuits"
+  },
   "Activities": {
     "Activities": "Activités",
     "Hard": "Difficile",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1 Jour",
     "Days_compact": "{{count}}j",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} Jours"
   },
   "Csv": {
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = capacité suggérée",
-    "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
+    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
+    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
     "Clear": "Effacer la liste de souhaits",
     "ExternalSource": "Optionnellement, fournissez l'URL d'une liste de souhaits",
     "Header": "Liste de souhaits",

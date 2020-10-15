@@ -8,6 +8,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -57,8 +58,6 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
       await dispatch(moveItemsToVault(store, itemsToMove));
       showNotification({
         type: 'success',
-        // t('Loadouts.MakeRoomDone_male', { count })
-        // t('Loadouts.MakeRoomDone_female', { count })
         title: t('Loadouts.MakeRoom'),
         body: t('Loadouts.MakeRoomDone', {
           count: postmasterItems.length,
@@ -155,7 +154,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
           succeeded++;
         } catch (e) {
           // TODO: collect errors
-          console.error(`Error pulling ${item.name} from postmaster`, e);
+          errorLog('postmaster', `Error pulling ${item.name} from postmaster`, e);
           if (e.code === 'no-space') {
             showNoSpaceError(e);
           } else {

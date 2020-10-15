@@ -21,9 +21,6 @@
   height: 32px;
   border-radius: 4px;
   min-width: 350px;
-  .gradientBackground & {
-    background: rgba(0, 0, 0, 0.4);
-  }
   ::placeholder {
     color: #999;
   }
@@ -108,6 +105,11 @@
     }
   }
 }
+
+.gradientBackground .search-link .search-filter {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 .search-button {
   display: none;
   @include phone-portrait {

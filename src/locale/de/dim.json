@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Bitte benutze die Destiny 2-Gefährten-App um DIM das Modifizieren deiner Gegenstände zu erlauben.",
+    "ConfirmDescription": "Bitte benutze die Destiny 2-Gefährten-App, um DIM das Modifizieren deiner Gegenstände zu erlauben.",
     "ConfirmTitle": "Aktion bestätigen"
   },
   "Accounts": {
@@ -15,6 +15,16 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
+  },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventar-Modus",
+    "ButtonOn": "Aktiver Modus",
+    "Farming": "Neueste Gegenstände",
+    "FarmingStart": "Farming starten",
+    "Loadouts": "Ausrüstungen",
+    "NoQuests": "Du verfolgst keine Quests",
+    "Pursuits": "Verfolgte Ziele"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1 Tag",
     "Days_compact": "{{count}}t",
+    "Days_compact_plural": "{{count}}T",
     "Days_plural": "{{count}} Tage"
   },
   "Csv": {
@@ -455,7 +466,7 @@
     "LockEquipped": "Ausgerüstet",
     "LockItem": "Sperre Gegenstand",
     "LockPerk": "Wähle Perk",
-    "NewEmptyLoadout": "Erstelle leeres Ausrüstung",
+    "NewEmptyLoadout": "Erstelle leere Ausrüstung",
     "NoBuildsFoundExoticsAndMods": "Du hast einen exotischen Gegenstand und fünf saisonale Mods gesperrt.",
     "NoBuildsFoundModsAreTooExpensive": "Der Energiebedarf der ausgewählten Modi ist zu hoch.",
     "NoBuildsFoundSeasonalModNotSatisfied": "Dir fehlt ein Element, um einen der ausgewählten Saisonmods anzulegen.",
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
-    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
+    "BestRatedTip": "Dieser Perk passt genau zu einem Waffenroll auf deiner Wunschliste.",
+    "BestRatedTip_plural": "Diese Perks entsprechen genau einem Waffenroll auf deiner Wunschliste.",
     "Clear": "Wunschliste löschen",
     "ExternalSource": "Optional die URL für eine Wunschliste angeben",
     "Header": "Wunschliste",

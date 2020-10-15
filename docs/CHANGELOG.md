@@ -1,5 +1,9 @@
 ## Next
 
+* Added buttons to the settings page to restore the default wish list URL.
+
+## 6.34.0 <span className="changelog-date">(2020-10-11)</span>
+
 ## 6.33.0 <span className="changelog-date">(2020-10-04)</span>
 
 * The Organizer's buttons now show you how many items you have in each category. These counts update when you use a search too!

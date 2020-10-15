@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { initialSettingsState } from 'app/settings/initial-settings';
 import { ThunkResult } from 'app/store/types';
+import { errorLog, infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import _ from 'lodash';
 import { loadDimApiData } from './actions';
@@ -34,16 +35,16 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
     if (dimApiData.globalSettings.dimApiEnabled && dimApiData.apiPermissionGranted) {
       try {
-        console.log('[importLegacyData] Attempting to import legacy data into DIM API');
+        infoLog('importLegacyData', 'Attempting to import legacy data into DIM API');
         const result = await importData(data);
-        console.log('[importLegacyData] Successfully imported legacy data into DIM API', result);
+        infoLog('importLegacyData', 'Successfully imported legacy data into DIM API', result);
         showImportSuccessNotification(result, true);
 
         // Reload from the server
         return await dispatch(loadDimApiData(true));
       } catch (e) {
         if (!silent) {
-          console.error('[importLegacyData] Error importing legacy data into DIM API', e);
+          errorLog('importLegacyData', 'Error importing legacy data into DIM API', e);
           showImportFailedNotification(e);
         }
         return;
@@ -59,10 +60,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
       if (!loadouts.length && !tags.length) {
         if (!silent) {
-          console.error(
-            '[importLegacyData] Error importing legacy data into DIM API - no data',
-            data
-          );
+          errorLog('importLegacyData', 'Error importing legacy data into DIM API - no data', data);
           showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
         }
         return;

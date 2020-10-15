@@ -2,6 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { ThunkResult } from 'app/store/types';
+import { errorLog, infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { del, get, set } from 'idb-keyval';
 import { showNotification } from '../notifications/notifications';
@@ -56,7 +57,7 @@ function doGetManifest(): ThunkResult<object> {
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      console.error('Manifest loading error', { error: e }, e);
+      errorLog('manifest', 'Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
       throw new Error(statusText);
     } finally {
@@ -108,10 +109,10 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
 async function saveManifestToIndexedDB(typedArray: object, version: string) {
   try {
     await set(idbKey, typedArray);
-    console.log(`Sucessfully stored manifest file.`);
+    infoLog('manifest', `Sucessfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
   } catch (e) {
-    console.error('Error saving manifest file', e);
+    errorLog('manifest', 'Error saving manifest file', e);
     showNotification({
       title: t('Help.NoStorage'),
       body: t('Help.NoStorageMessage'),

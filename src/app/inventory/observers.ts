@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { RootState } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import { set } from 'idb-keyval';
 import _ from 'lodash';
@@ -19,7 +20,7 @@ export const saveItemInfosOnStateChange = _.once(() => {
         try {
           return await set(key, newItems);
         } catch (e) {
-          console.error("Couldn't save new items", e);
+          errorLog('new-items', "Couldn't save new items", e);
         }
       }
     }, 1000)

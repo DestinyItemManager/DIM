@@ -109,7 +109,7 @@ export function usePopper({
   };
 
   useLayoutEffect(() => {
-    // console.log('Effect', name, contents.current, reference.current);
+    // log('Effect', name, contents.current, reference.current);
     // Reposition the popup as it is shown or if its size changes
     if (!contents.current || !reference.current) {
       return destroy();

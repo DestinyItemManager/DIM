@@ -2,6 +2,7 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
   DestinyGameVersions,
@@ -24,30 +25,22 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
-  // t('Accounts.Xbox')
+  // t('Accounts.', {context: '', contextList: 'platforms'})
   [BungieMembershipType.TigerXbox]: 'Xbox',
-  // t('Accounts.PlayStation')
   [BungieMembershipType.TigerPsn]: 'PlayStation',
-  // t('Accounts.Blizzard')
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
-  // t('Accounts.Steam')
   [BungieMembershipType.TigerSteam]: 'Steam',
-  // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 export const PLATFORM_LABEL_TO_MEMBERSHIP_TYPE = {
   Xbox: BungieMembershipType.TigerXbox,
-  // t('Accounts.PlayStation')
   PlayStation: BungieMembershipType.TigerPsn,
-  // t('Accounts.Blizzard')
   Blizzard: BungieMembershipType.TigerBlizzard,
   Demon: BungieMembershipType.TigerDemon,
-  // t('Accounts.Steam')
   Steam: BungieMembershipType.TigerSteam,
-  // t('Accounts.Stadia')
   Stadia: BungieMembershipType.TigerStadia,
   'Bungie.net': BungieMembershipType.BungieNext,
 };
@@ -213,7 +206,7 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     ) {
       return null;
     }
-    console.error('Error getting D1 characters for', account, e);
+    errorLog('accounts', 'Error getting D1 characters for', account, e);
     reportException('findD1Characters', e);
 
     // Return the account as if it had succeeded so it shows up in the menu

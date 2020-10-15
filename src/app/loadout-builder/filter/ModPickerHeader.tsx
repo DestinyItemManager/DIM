@@ -22,7 +22,7 @@ function ModPickerHeader(props: Props) {
       <h1>{t('LB.ChooseAMod')}</h1>
       <div className="item-picker-search">
         <div className="search-filter" role="search">
-          <AppIcon icon={searchIcon} />
+          <AppIcon icon={searchIcon} className="search-bar-icon" />
           <input
             className="filter-input"
             autoComplete="off"
@@ -44,7 +44,6 @@ function ModPickerHeader(props: Props) {
             className={styles.tab}
             onClick={() => scrollToBucket(category.category)}
           >
-            {/* t('LB.Helmet') t('LB.Gauntlets') t('LB.Chest') t('LB.Legs') t('LB.ClassItem') t('LB.General') t('LB.Seasonal') */}
             {category.translatedName}
           </div>
         ))}

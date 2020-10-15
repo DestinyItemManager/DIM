@@ -1,3 +1,4 @@
+import { errorLog } from 'app/utils/log';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
@@ -36,7 +37,7 @@ function handleAuthReturn() {
         );
         return;
       }
-      console.error("Couldn't get access token", error);
+      errorLog('bungie auth', "Couldn't get access token", error);
       reportException('authReturn', error);
       setError(error.message || error.data?.error_description || 'Unknown'); // eslint-disable-line @typescript-eslint/naming-convention
     });

@@ -4,6 +4,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { ThunkResult } from 'app/store/types';
+import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
   DestinyCollectibleComponent,
@@ -172,7 +173,7 @@ function loadStoresData(
           return;
         }
         const buckets = bucketsSelector(getState())!;
-        console.time('Process inventory');
+        const stopTimer = timer('Process inventory');
 
         // TODO: components may be hidden (privacy)
 
@@ -181,7 +182,8 @@ function loadStoresData(
           !profileInfo.characterInventories.data ||
           !profileInfo.characters.data
         ) {
-          console.error(
+          errorLog(
+            'd2-stores',
             'Vault or character inventory was missing - bailing in order to avoid corruption'
           );
           throw new Error(t('BungieService.Difficulties'));
@@ -231,15 +233,15 @@ function loadStoresData(
         document
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
-        console.timeEnd('Process inventory');
+        stopTimer();
 
-        console.time('Inventory state update');
+        const stopStateTimer = timer('Inventory state update');
         dispatch(update({ stores, profileResponse: profileInfo, currencies }));
-        console.timeEnd('Inventory state update');
+        stopStateTimer();
 
         return stores;
       } catch (e) {
-        console.error('Error loading stores', e);
+        errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify

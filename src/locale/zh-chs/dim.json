@@ -16,6 +16,16 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
+  "ActiveMode": {
+    "Beta": "BETA",
+    "ButtonOff": "Inventory Mode",
+    "ButtonOn": "Active Mode",
+    "Farming": "Recent Items",
+    "FarmingStart": "Start Farming",
+    "Loadouts": "Loadouts",
+    "NoQuests": "You're not tracking any quests",
+    "Pursuits": "Pursuits"
+  },
   "Activities": {
     "Activities": "活动",
     "Hard": "困难",
@@ -100,6 +110,7 @@
   "Countdown": {
     "Days": "1天",
     "Days_compact": "{{count}}天",
+    "Days_compact_plural": "{{count}}d",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -936,8 +947,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " =社区推荐特性",
-    "BestRatedTip": "社区选择的特性",
+    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
+    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
     "Clear": "清除愿望清单",
     "ExternalSource": "可选：提供愿望清单的 URL",
     "Header": "愿望清单",

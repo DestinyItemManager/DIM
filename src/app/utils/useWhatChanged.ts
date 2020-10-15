@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { infoLog } from './log';
 
 /**
  * A debugging hook that will print out what changed since the last render!
@@ -11,12 +12,12 @@ export function useWhatChanged<T extends object>(name: string, params: T) {
   const previousState = useRef<T>();
 
   if (!previousState.current) {
-    console.log(`[useWhatChanged] ${name} first render`);
+    infoLog('useWhatChanged', `${name} first render`);
   } else {
     for (const [key, val] of Object.entries(params)) {
       const previousVal = previousState.current[key];
       if (val !== previousVal) {
-        console.log(`[useWhatChanged] ${name} ${key}`, previousVal, val);
+        infoLog('useWhatChanged', `${name} ${key}`, previousVal, val);
       }
     }
   }

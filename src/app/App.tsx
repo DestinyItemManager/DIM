@@ -28,6 +28,7 @@ import Header from './shell/Header';
 import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
+import { errorLog } from './utils/log';
 
 const WhatsNew = React.lazy(
   () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -93,7 +94,7 @@ function App({
         }
         await set('idb-test', true);
       } catch (e) {
-        console.error('Failed Storage Test', e);
+        errorLog('storage', 'Failed Storage Test', e);
         setStorageWorks(false);
       }
     })();

@@ -1,6 +1,8 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
@@ -23,6 +25,7 @@ interface Props {
   lockedArmor2Mods: LockedArmor2ModMap;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  params: LoadoutParameters;
 }
 
 /**
@@ -41,14 +44,18 @@ function GeneratedSet({
   lockedArmor2Mods,
   loadouts,
   lbDispatch,
+  params,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    editLoadout(loadout, { showClass: false });
+    loadout.parameters = params;
+    editLoadout(loadout, {
+      showClass: false,
+    });
   };
 
   if (set.armor.some((items) => !items.length)) {
-    console.error('No valid sets!');
+    errorLog('loadout optimizer', 'No valid sets!');
     return null;
   }
 

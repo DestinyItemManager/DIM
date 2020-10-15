@@ -1,3 +1,4 @@
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -6,13 +7,16 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
+import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import React, { useMemo, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -32,7 +36,7 @@ import { useProcess } from './hooks/useProcess';
 import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
-import { ItemsByBucket, statHashToType, statKeys, StatTypes } from './types';
+import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
@@ -53,6 +57,7 @@ interface StoreProps {
   }>;
   loadouts: Loadout[];
   filter: ItemFilter;
+  searchQuery: string;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -105,6 +110,7 @@ function mapStateToProps() {
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
+      searchQuery: querySelector(state),
     };
   };
 }
@@ -124,6 +130,7 @@ function LoadoutBuilder({
   loadouts,
   filter,
   preloadedLoadout,
+  searchQuery,
 }: Props) {
   const [
     {
@@ -147,6 +154,9 @@ function LoadoutBuilder({
 
   const characterItems: ItemsByBucket | undefined = selectedStore && items[selectedStore.classType];
 
+  const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
+  loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
+
   const filteredItems = useMemo(
     () =>
       filterItems(
@@ -168,6 +178,38 @@ function LoadoutBuilder({
     statOrder,
     statFilters,
     minimumPower
+  );
+
+  // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
+  // TODO: replace some of these individual params with this object
+  const params: LoadoutParameters = useMemo(
+    () => ({
+      statConstraints: _.compact(
+        _.sortBy(Object.entries(statFilters), ([statName]) =>
+          statOrder.indexOf(statName as StatTypes)
+        ).map(([statName, minMax]) => {
+          if (minMax.ignored) {
+            return undefined;
+          }
+          const stat: StatConstraint = {
+            statHash: statHashes[statName],
+          };
+          if (minMax.min > 0) {
+            stat.minTier = minMax.min;
+          }
+          if (minMax.max < 10) {
+            stat.maxTier = minMax.max;
+          }
+          return stat;
+        })
+      ),
+      mods: Object.values(lockedArmor2Mods)
+        .flat()
+        .map((m) => m.modDef.hash),
+      query: searchQuery,
+      assumeMasterworked: assumeMasterwork,
+    }),
+    [assumeMasterwork, lockedArmor2Mods, searchQuery, statFilters, statOrder]
   );
 
   const combos = result?.combos || 0;
@@ -266,6 +308,7 @@ function LoadoutBuilder({
             enabledStats={enabledStats}
             lockedArmor2Mods={lockedArmor2Mods}
             loadouts={loadouts}
+            params={params}
           />
         )}
         {modPicker.open &&

@@ -1,4 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import RestStoresBucket from 'app/active-mode/RestStoresBucket';
 import CurrentActivity from 'app/active-mode/Views/CurrentActivity';
 import FarmingView from 'app/active-mode/Views/FarmingView';
 import LoadoutView from 'app/active-mode/Views/LoadoutView';
@@ -8,15 +9,15 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   bucketsSelector,
   currentStoreSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { StoreBuckets } from 'app/inventory/StoreBuckets';
-import { getStore, getVault } from 'app/inventory/stores-helpers';
+import StoreBucket from 'app/inventory/StoreBucket';
+import { findItemsByBucket, getStore, getVault } from 'app/inventory/stores-helpers';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadAllVendors } from 'app/vendors/actions';
 import React, { useEffect, useState } from 'react';
@@ -98,14 +99,12 @@ function ActiveMode(
                 defaultCollapsed={true}
               >
                 {inventoryBucket.map((bucket) => (
-                  <StoreBuckets
+                  <ActiveModeStoreBuckets
                     key={bucket.hash}
                     bucket={bucket}
                     stores={stores}
-                    vault={vault}
                     currentStore={selectedStore}
                     isPhonePortrait={isPhonePortrait}
-                    altMode={true}
                   />
                 ))}
               </CollapsibleTitle>
@@ -118,3 +117,37 @@ function ActiveMode(
 }
 
 export default connect<StoreProps>(mapStateToProps)(ActiveMode);
+
+function ActiveModeStoreBuckets({
+  bucket,
+  stores,
+  currentStore,
+  isPhonePortrait,
+}: {
+  bucket: InventoryBucket;
+  stores: DimStore[];
+  currentStore: DimStore;
+  isPhonePortrait: boolean;
+}) {
+  // Don't show buckets with no items
+  if (
+    (!bucket.hasTransferDestination && bucket.type !== 'Class' && bucket.type !== 'Emblems') ||
+    ((!bucket.accountWide || bucket.type === 'SpecialOrders') &&
+      !stores.some((s) => findItemsByBucket(s, bucket.hash).length > 0))
+  ) {
+    return null;
+  }
+
+  return (
+    <div className={`store-row bucket-${bucket.hash}`}>
+      <div className={'store-cell'}>
+        <StoreBucket bucket={bucket} store={currentStore} />
+      </div>
+      {!isPhonePortrait && (
+        <div className={'store-cell'}>
+          <RestStoresBucket bucket={bucket} currentStore={currentStore} />
+        </div>
+      )}
+    </div>
+  );
+}

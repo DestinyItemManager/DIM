@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { errorLog } from 'app/utils/log';
 import { DestinyManifest, PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -52,10 +53,10 @@ export async function getStores(platform: DestinyAccount): Promise<any[]> {
     getDestinyInventories(platform, characters),
     getDestinyProgression(platform, characters)
       // Don't let failure of progression fail other requests.
-      .catch((e) => console.error('Failed to load character progression', e)),
+      .catch((e) => errorLog('bungie api', 'Failed to load character progression', e)),
     getDestinyAdvisors(platform, characters)
       // Don't let failure of advisors fail other requests.
-      .catch((e) => console.error('Failed to load advisors', e)),
+      .catch((e) => errorLog('bungie api', 'Failed to load advisors', e)),
   ]);
   return data[0];
 }

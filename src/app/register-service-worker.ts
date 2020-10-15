@@ -1,6 +1,7 @@
 import { BehaviorSubject, combineLatest, empty, from, of, timer } from 'rxjs';
 import { catchError, distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { reportException } from './utils/exceptions';
+import { errorLog, infoLog } from './utils/log';
 
 /**
  * A function that will attempt to update the service worker in place.
@@ -62,7 +63,7 @@ export default function registerServiceWorker() {
         // TODO: save off a handler that can call registration.update() to force update on refresh?
         registration.onupdatefound = () => {
           if ($featureFlags.debugSW) {
-            console.log('SW: A new Service Worker version has been found...');
+            infoLog('SW', 'A new Service Worker version has been found...');
           }
           const installingWorker = registration.installing!;
           installingWorker.onstatechange = () => {
@@ -72,7 +73,7 @@ export default function registerServiceWorker() {
                 // the fresh content will have been added to the cache.
                 // It's the perfect time to display a "New content is
                 // available; please refresh." message in your web app.
-                console.log('SW: New content is available; please refresh. (from onupdatefound)');
+                infoLog('SW', 'New content is available; please refresh. (from onupdatefound)');
                 // At this point, is it really cached??
 
                 serviceWorkerUpdated$.next(true);
@@ -92,39 +93,39 @@ export default function registerServiceWorker() {
                 // It's the perfect time to display a
                 // "Content is cached for offline use." message.
                 if ($featureFlags.debugSW) {
-                  console.log('SW: Content is cached for offline use.');
+                  infoLog('SW', 'Content is cached for offline use.');
                 }
               }
             } else {
               if ($featureFlags.debugSW) {
-                console.log('SW: New Service Worker state: ', installingWorker.state);
+                infoLog('SW', 'New Service Worker state: ', installingWorker.state);
               }
             }
           };
         };
 
         updateServiceWorker = () => {
-          console.log('SW: Checking for service worker update.');
+          infoLog('SW', 'Checking for service worker update.');
           return registration
             .update()
             .catch((err) => {
               if ($featureFlags.debugSW) {
-                console.error('SW: Unable to update service worker.', err);
+                errorLog('SW', 'Unable to update service worker.', err);
                 reportException('service-worker', err);
               }
             })
             .then(() => {
               if (registration.waiting) {
-                console.log('SW: New content is available; please refresh. (from update)');
+                infoLog('SW', 'New content is available; please refresh. (from update)');
                 serviceWorkerUpdated$.next(true);
               } else {
-                console.log('SW: Updated, but theres not a new worker waiting');
+                infoLog('SW', 'Updated, but theres not a new worker waiting');
               }
             });
         };
       })
       .catch((err) => {
-        console.error('SW: Unable to register service worker.', err);
+        errorLog('SW', 'Unable to register service worker.', err);
         reportException('service-worker', err);
       });
   });
@@ -167,7 +168,7 @@ export async function reloadDIM() {
     const registration = await navigator.serviceWorker.getRegistration();
 
     if (!registration) {
-      console.error('SW: No registration!');
+      errorLog('SW', 'No registration!');
       window.location.reload();
       return;
     }
@@ -175,14 +176,14 @@ export async function reloadDIM() {
     if (!registration.waiting) {
       // Just to ensure registration.waiting is available before
       // calling postMessage()
-      console.error('SW: registration.waiting is null!');
+      errorLog('SW', 'registration.waiting is null!');
 
       const installingWorker = registration.installing;
       if (installingWorker) {
-        console.log('SW: found an installing service worker');
+        infoLog('SW', 'found an installing service worker');
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
-            console.log('SW: installing service worker installed, skip waiting');
+            infoLog('SW', 'installing service worker installed, skip waiting');
             installingWorker.postMessage('skipWaiting');
           }
         };
@@ -192,7 +193,7 @@ export async function reloadDIM() {
       return;
     }
 
-    console.log('SW: posting skip waiting');
+    infoLog('SW', 'posting skip waiting');
     registration.waiting.postMessage('skipWaiting');
 
     // insurance!
@@ -200,7 +201,7 @@ export async function reloadDIM() {
       window.location.reload();
     }, 2000);
   } catch (e) {
-    console.error('SW: Error checking registration:', e);
+    errorLog('SW', 'Error checking registration:', e);
     window.location.reload();
   }
 }

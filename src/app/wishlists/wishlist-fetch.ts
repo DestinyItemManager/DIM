@@ -5,6 +5,7 @@ import { setSetting } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
 import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
 import { ThunkResult } from 'app/store/types';
+import { errorLog, infoLog } from 'app/utils/log';
 import { get } from 'idb-keyval';
 import _ from 'lodash';
 import { loadWishLists, touchWishLists } from './actions';
@@ -91,7 +92,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportFailed'),
       });
-      console.error('Unable to load wish list', e);
+      errorLog('wishlist', 'Unable to load wish list', e);
       return;
     }
 
@@ -108,7 +109,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     ) {
       dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
-      console.log('Refreshed wishlist, but it matched the one we already have');
+      infoLog('wishlist', 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());
     }
   };

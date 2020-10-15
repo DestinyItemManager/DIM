@@ -6,6 +6,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
@@ -102,7 +103,7 @@ function ItemPopupContainer({
         });
         // Log the item so it's easy to inspect item structure by clicking on an item
         if ($DIM_FLAVOR !== 'release') {
-          console.log(item);
+          infoLog('clicked item', item);
         }
       }
     })
