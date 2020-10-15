@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
-import { addIcon, AppIcon, closeIcon, compareIcon, faExpandAlt } from 'app/shell/icons';
+import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -139,7 +139,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           role="button"
           tabIndex={-1}
         >
-          <AppIcon icon={sidecarCollapsed ? faExpandAlt : closeIcon} />
+          <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
         </div>
         {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
           <ItemMoveAmount
