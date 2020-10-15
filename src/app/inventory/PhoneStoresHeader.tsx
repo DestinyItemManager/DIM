@@ -1,4 +1,5 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { infoLog } from 'app/utils/log';
 import { animate, motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import _ from 'lodash';
 import React, { useRef } from 'react';
@@ -27,6 +28,7 @@ export default function PhoneStoresHeader({
 
   // TODO: carousel
   // TODO: wrap StoreHeading in a div?
+  // TODO: optional external motion control
 
   const index = stores.indexOf(selectedStore);
 
@@ -40,6 +42,12 @@ export default function PhoneStoresHeader({
   const offset = useMotionValue(index);
   // Keep track of the starting point when we begin a gesture
   const startOffset = useRef<number>(0);
+
+  const onSetSelectedStoreId = (id: string) => {
+    const index = stores.findIndex((s) => s.id === id);
+    animate(offset, index);
+    setSelectedStoreId(id);
+  };
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
@@ -67,11 +75,18 @@ export default function PhoneStoresHeader({
     offset.set(newValue);
   };
 
-  const onPanEnd = (_e, _info: PanInfo) => {
+  const onPanEnd = (_e, info: PanInfo) => {
     // Animate to one of the settled whole-number indexes
-    // TODO: kill velocity?
-    const newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
-    // TODO: velocity+distance threshold to pop to the next item (distance as a proportion of segment)
+    let newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
+    const scale = trackRef.current!.clientWidth / numSegments;
+
+    const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
+    if (swipe > 0.4) {
+      const direction = -Math.sign(info.velocity.x);
+      infoLog('swipe', direction, swipe);
+      newIndex += direction;
+    }
+
     animate(offset, newIndex);
 
     if (index !== newIndex) {
@@ -103,7 +118,7 @@ export default function PhoneStoresHeader({
             <StoreHeading
               store={store}
               selectedStore={selectedStore}
-              onTapped={setSelectedStoreId}
+              onTapped={onSetSelectedStoreId}
               loadoutMenuRef={loadoutMenuRef}
             />
           </div>
