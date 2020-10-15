@@ -80,14 +80,16 @@ export default function PhoneStoresHeader({
     let newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
     const scale = trackRef.current!.clientWidth / numSegments;
 
-    const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
-    if (swipe > 0.4) {
-      const direction = -Math.sign(info.velocity.x);
-      infoLog('swipe', direction, swipe);
-      newIndex += direction;
+    if (index === newIndex) {
+      const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
+      infoLog('swipe', swipe);
+      if (swipe > 0.05) {
+        const direction = -Math.sign(info.velocity.x);
+        newIndex = _.clamp(newIndex + direction, 0, numSegments - 1);
+      }
     }
 
-    animate(offset, newIndex);
+    animate(offset, newIndex, { velocity: 0 });
 
     if (index !== newIndex) {
       onIndexChanged(newIndex);
