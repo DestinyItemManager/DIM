@@ -7,6 +7,7 @@ interface CssExports {
   'disabled': string;
   'entry': string;
   'equip': string;
+  'hideLabel': string;
   'interaction': string;
   'itemTagSelector': string;
   'move': string;

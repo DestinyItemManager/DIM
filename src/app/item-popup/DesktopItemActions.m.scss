@@ -7,6 +7,7 @@
   background-color: #161626;
 }
 
+.hideLabel,
 .collapsed svg {
   display: none;
 }
@@ -47,6 +48,19 @@
 
   :global(.app-icon) {
     margin-top: 1px;
+  }
+
+  .collapsed & {
+    padding: 0;
+    :global(.app-icon) {
+      margin-right: 8px;
+    }
+    button {
+      padding: 12px;
+      :global(.app-icon) {
+        margin-right: 0px;
+      }
+    }
   }
 }
 

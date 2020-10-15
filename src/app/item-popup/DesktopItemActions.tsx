@@ -158,7 +158,9 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             item={item}
             type={item.lockable ? 'lock' : 'track'}
           >
-            {!sidecarCollapsed && lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
+            </span>
           </LockButton>
         )}
         {stores.map((store) => (
@@ -171,7 +173,9 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 tabIndex={-1}
               >
                 <StoreIcons store={store} />
-                {!sidecarCollapsed && t('MovePopup.Vault')}
+                <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+                  {t('MovePopup.Vault')}
+                </span>
               </div>
             )}
             {!sidecarCollapsed && canShowStore(store, itemOwner, item) && (
@@ -205,31 +209,41 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
             <AppIcon icon={compareIcon} />
-            {!sidecarCollapsed && t('Compare.Button')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {t('Compare.Button')}
+            </span>
           </div>
         )}
         {canConsolidate && (
           <div className={styles.actionButton} onClick={onConsolidate} role="button" tabIndex={-1}>
             <img src={arrowsIn} height="32" width="32" />
-            {!sidecarCollapsed && t('MovePopup.Consolidate')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {t('MovePopup.Consolidate')}
+            </span>
           </div>
         )}
         {canDistribute && (
           <div className={styles.actionButton} onClick={onDistribute} role="button" tabIndex={-1}>
             <img src={arrowsOut} height="32" width="32" />
-            {!sidecarCollapsed && t('MovePopup.DistributeEvenly')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {t('MovePopup.DistributeEvenly')}
+            </span>
           </div>
         )}
         {itemCanBeInLoadout(item) && (
           <div className={styles.actionButton} onClick={addToLoadout} role="button" tabIndex={-1}>
             <AppIcon icon={addIcon} />
-            {!sidecarCollapsed && t('MovePopup.AddToLoadout')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {t('MovePopup.AddToLoadout')}
+            </span>
           </div>
         )}
         {item.infusionFuel && (
           <div className={styles.actionButton} onClick={infuse} role="button" tabIndex={-1}>
             <img src={d2Infuse} height="32" width="32" />
-            {!sidecarCollapsed && t('MovePopup.Infuse')}
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {t('MovePopup.Infuse')}
+            </span>
           </div>
         )}
       </div>
