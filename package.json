@@ -201,7 +201,6 @@
     "react-transition-group": "^4.0.0",
     "react-twitter-widgets": "^1.7.1",
     "react-use-gesture": "^7.0.4",
-    "react-view-pager": "^0.6.0",
     "react-virtualized": "^9.21.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
