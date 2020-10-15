@@ -6,6 +6,7 @@ interface CssExports {
   'capped': string;
   'energyCapacity': string;
   'fullstack': string;
+  'lightBackgroundElement': string;
   'masterwork': string;
   'primaryStat': string;
   'quality': string;

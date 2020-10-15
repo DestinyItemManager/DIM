@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
-import { queueAction } from './action-queue';
+import { queueAction } from '../utils/action-queue';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 

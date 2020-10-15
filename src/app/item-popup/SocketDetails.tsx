@@ -1,8 +1,8 @@
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';

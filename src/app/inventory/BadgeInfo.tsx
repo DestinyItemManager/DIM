@@ -1,5 +1,4 @@
 import { t } from 'app/i18next-t';
-import iconStyles from 'app/inventory/ElementIcon.m.scss';
 import { isD1Item } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/util';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
@@ -9,9 +8,9 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import ghostPerks from 'data/d2/ghost-perks.json';
 import _ from 'lodash';
 import React from 'react';
+import ElementIcon from '../dim-ui/ElementIcon';
 import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
-import ElementIcon from './ElementIcon';
 import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
 
@@ -104,7 +103,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
         */}
         {item.element &&
           !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-            <ElementIcon element={item.element} className={iconStyles.lightBackground} />
+            <ElementIcon element={item.element} className={styles.lightBackgroundElement} />
           )}
         <span>{badgeContent}</span>
       </div>

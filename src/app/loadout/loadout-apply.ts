@@ -1,6 +1,5 @@
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { queueAction } from 'app/inventory/action-queue';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -24,6 +23,7 @@ import {
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
+import { queueAction } from 'app/utils/action-queue';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import copy from 'fast-copy';
