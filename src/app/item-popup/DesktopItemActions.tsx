@@ -28,7 +28,7 @@ import LockButton from './LockButton';
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
-  const { sidecarCollapsed } = useSelector(settingsSelector);
+  const sidecarCollapsed = useSelector((state) => settingsSelector(state).sidecarCollapsed)
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
