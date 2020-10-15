@@ -25,6 +25,7 @@ import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDescription from './ItemDescription';
 import ItemExpiration from './ItemExpiration';
+import ItemSockets from './ItemSockets';
 import ItemSocketsList from './ItemSocketsList';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
@@ -123,7 +124,8 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
       )}
 
       {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
-      {item.sockets && <ItemSocketsList item={item} />}
+      {item.sockets &&
+        ($featureFlags.newPerks ? <ItemSocketsList item={item} /> : <ItemSockets item={item} />)}
 
       {item.perks && (
         <div className="item-details item-perks">
