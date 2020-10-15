@@ -7,13 +7,8 @@
   background-color: #161626;
 }
 
-.collapsed {
-  border-radius: 7px;
-  margin: 0 5px;
-
-  svg {
-    display: none;
-  }
+.collapsed svg {
+  display: none;
 }
 
 .entry {

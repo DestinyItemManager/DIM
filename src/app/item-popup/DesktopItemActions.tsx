@@ -28,9 +28,8 @@ import LockButton from './LockButton';
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
-  const settings = useSelector(settingsSelector);
+  const { sidecarCollapsed } = useSelector(settingsSelector);
   const [amount, setAmount] = useState(item.amount);
-  const [isCollapsed, setIsCollapsed] = useState(settings.sidecarPreference);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
@@ -70,8 +69,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   };
 
   const onToggleSidecar = () => {
-    setIsCollapsed(!isCollapsed);
-    dispatch(setSetting('sidecarPreference', !isCollapsed));
+    dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,7 +128,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   return (
     <>
       <div
-        className={clsx(styles.interaction, { [styles.collapsed]: isCollapsed })}
+        className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
         ref={containerRef}
       >
         <div
@@ -139,7 +137,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           role="button"
           tabIndex={-1}
         >
-          <AppIcon icon={isCollapsed ? faExpandAlt : closeIcon} />
+          <AppIcon icon={sidecarCollapsed ? faExpandAlt : closeIcon} />
         </div>
         {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
           <ItemMoveAmount
@@ -151,7 +149,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         )}
         {item.taggable && (
           <div className={styles.itemTagSelector}>
-            <ItemTagSelector item={item} hideButtonLabel={isCollapsed} />
+            <ItemTagSelector item={item} hideButtonLabel={sidecarCollapsed} />
           </div>
         )}
         {(item.lockable || item.trackable) && (
@@ -160,7 +158,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             item={item}
             type={item.lockable ? 'lock' : 'track'}
           >
-            {!isCollapsed && lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
+            {!sidecarCollapsed && lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
           </LockButton>
         )}
         {stores.map((store) => (
@@ -173,10 +171,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 tabIndex={-1}
               >
                 <StoreIcons store={store} />
-                {!isCollapsed && t('MovePopup.Vault')}
+                {!sidecarCollapsed && t('MovePopup.Vault')}
               </div>
             )}
-            {!isCollapsed && canShowStore(store, itemOwner, item) && (
+            {!sidecarCollapsed && canShowStore(store, itemOwner, item) && (
               <div
                 className={clsx(styles.actionButton, styles.move, {
                   [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
@@ -189,7 +187,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 {t('MovePopup.Store')}
               </div>
             )}
-            {!isCollapsed && itemCanBeEquippedBy(item, store) && (
+            {!sidecarCollapsed && itemCanBeEquippedBy(item, store) && (
               <div
                 className={clsx(styles.actionButton, styles.equip, {
                   [styles.disabled]: item.owner === store.id && item.equipped,
@@ -207,31 +205,31 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
             <AppIcon icon={compareIcon} />
-            {!isCollapsed && t('Compare.Button')}
+            {!sidecarCollapsed && t('Compare.Button')}
           </div>
         )}
         {canConsolidate && (
           <div className={styles.actionButton} onClick={onConsolidate} role="button" tabIndex={-1}>
             <img src={arrowsIn} height="32" width="32" />
-            {!isCollapsed && t('MovePopup.Consolidate')}
+            {!sidecarCollapsed && t('MovePopup.Consolidate')}
           </div>
         )}
         {canDistribute && (
           <div className={styles.actionButton} onClick={onDistribute} role="button" tabIndex={-1}>
             <img src={arrowsOut} height="32" width="32" />
-            {!isCollapsed && t('MovePopup.DistributeEvenly')}
+            {!sidecarCollapsed && t('MovePopup.DistributeEvenly')}
           </div>
         )}
         {itemCanBeInLoadout(item) && (
           <div className={styles.actionButton} onClick={addToLoadout} role="button" tabIndex={-1}>
             <AppIcon icon={addIcon} />
-            {!isCollapsed && t('MovePopup.AddToLoadout')}
+            {!sidecarCollapsed && t('MovePopup.AddToLoadout')}
           </div>
         )}
         {item.infusionFuel && (
           <div className={styles.actionButton} onClick={infuse} role="button" tabIndex={-1}>
             <img src={d2Infuse} height="32" width="32" />
-            {!isCollapsed && t('MovePopup.Infuse')}
+            {!sidecarCollapsed && t('MovePopup.Infuse')}
           </div>
         )}
       </div>
