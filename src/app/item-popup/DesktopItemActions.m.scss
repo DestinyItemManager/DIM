@@ -7,6 +7,15 @@
   background-color: #161626;
 }
 
+.collapsed {
+  border-radius: 7px;
+  margin: 0 5px;
+
+  svg {
+    display: none;
+  }
+}
+
 .entry {
   display: flex;
   flex-direction: row;
@@ -26,6 +35,10 @@
     width: 16px;
     font-size: 16px;
     text-align: center;
+
+    .collapsed & {
+      margin-right: 0;
+    }
   }
   :global(.app-icon) {
     color: #eee;
@@ -92,4 +105,27 @@
 
 .equip {
   margin-bottom: 6px;
+}
+
+.collapseButton {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  &:hover :global(.app-icon) {
+    color: $orange;
+  }
+
+  .collapsed & {
+    padding: 5px 0 15px;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  :global(.app-icon) {
+    margin: 5px 10px 0;
+    display: block;
+    width: 16px;
+    font-size: 16px;
+  }
 }

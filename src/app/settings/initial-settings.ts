@@ -7,6 +7,7 @@ export interface Settings extends DimApiSettings {
   readonly loMinPower: number;
   readonly loMinStatTotal: number;
   compareBaseStats: boolean;
+  sidecarPreference: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -17,4 +18,5 @@ export const initialSettingsState: Settings = {
   loMinStatTotal: 55,
   organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'ghost', 'perks', 'notes'],
   compareBaseStats: false,
+  sidecarPreference: false,
 };

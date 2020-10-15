@@ -33,6 +33,8 @@ const faCaretDown = 'fas fa-caret-down';
 const faPencilAlt = 'fas fa-pencil-alt';
 const faPlus = 'fas fa-plus';
 const faCaretRight = 'fas fa-caret-right';
+const faExpandAlt = 'fas fa-expand-alt';
+const faCompressAlt = 'fas fa-compress-alt';
 const faPlusCircle = 'fas fa-plus-circle';
 const faPlusSquare = 'fas fa-plus-square';
 const faQuestionCircle = 'far fa-question-circle';
@@ -130,6 +132,8 @@ export {
   faPlus as plusIcon,
   faPlusSquare,
   faCaretRight as expandIcon,
+  faExpandAlt,
+  faCompressAlt,
   faPlusCircle as addIcon,
   faQuestionCircle as helpIcon,
   faSave as saveIcon,

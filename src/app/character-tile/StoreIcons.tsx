@@ -6,7 +6,7 @@ import styles from './StoreIcons.m.scss';
 /**
  * Show both the store emblem and class icon for a given store.
  */
-export function StoreIcons({ store }: { store: DimStore }) {
+export function StoreIcons({ store, hideClassIcon }: { store: DimStore; hideClassIcon?: boolean }) {
   return (
     <>
       <img
@@ -21,7 +21,9 @@ export function StoreIcons({ store }: { store: DimStore }) {
             : 'black',
         }}
       />
-      {!store.isVault && <ClassIcon classType={store.classType} className={styles.classIcon} />}
+      {!hideClassIcon && !store.isVault && (
+        <ClassIcon classType={store.classType} className={styles.classIcon} />
+      )}
     </>
   );
 }
