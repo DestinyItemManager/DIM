@@ -33,12 +33,10 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (process.env.WEBPACK_DEV_SERVER) {
-    if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
-      console.log('Generating certificate');
-      execSync('mkcert create-ca --validity 825');
-      execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-    }
+  if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
   }
 
   env.name = Object.keys(env)[0];
@@ -72,19 +70,17 @@ module.exports = (env) => {
     },
 
     // Dev server
-    devServer: process.env.WEBPACK_DEV_SERVER
-      ? {
-          host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          stats: 'errors-only',
-          https: {
-            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
-          },
-          historyApiFallback: true,
-          hotOnly: true,
-          liveReload: false,
-        }
-      : {},
+    devServer: {
+      host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+      stats: 'errors-only',
+      https: {
+        key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+        cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+      },
+      historyApiFallback: true,
+      hotOnly: true,
+      liveReload: false,
+    },
 
     // Bail and fail hard on first error
     bail: !env.dev,
