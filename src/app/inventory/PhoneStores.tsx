@@ -1,10 +1,10 @@
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
+import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import Hammer from 'react-hammerjs';
-import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { storeBackgroundColor } from '../shell/filters';
 import { InventoryBuckets } from './inventory-buckets';
 import PhoneStoresHeader from './PhoneStoresHeader';
@@ -64,9 +64,8 @@ export default function PhoneStores({ stores, buckets }: Props) {
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <ScrollClassDiv
+      <HeaderShadowDiv
         className="store-row store-header"
-        scrollClass="sticky"
         style={storeBackgroundColor(selectedStore, 0, true, true)}
         onTouchStart={(e) => e.stopPropagation()}
       >
@@ -76,7 +75,7 @@ export default function PhoneStores({ stores, buckets }: Props) {
           loadoutMenuRef={detachedLoadoutMenu}
           setSelectedStoreId={setSelectedStoreId}
         />
-      </ScrollClassDiv>
+      </HeaderShadowDiv>
 
       <div className="detached" ref={detachedLoadoutMenu} />
 
