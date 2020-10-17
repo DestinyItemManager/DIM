@@ -24,7 +24,9 @@
     "FarmingStart": "Start Farming",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
-    "Pursuits": "Pursuits"
+    "Pursuits": "Pursuits",
+    "ChangeFilter": "Change Filter",
+    "NoSearches": "Create saved searches and filter them here."
   },
   "Activities": {
     "Activities": "Activities",

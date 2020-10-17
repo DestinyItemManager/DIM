@@ -993,6 +993,8 @@
     "Loadouts": "Loadouts",
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming"
+    "FarmingStop": "Stop Farming",
+    "ChangeFilter": "Change Filter",
+    "NoSearches": "Create saved searches and filter them here."
   }
 }
