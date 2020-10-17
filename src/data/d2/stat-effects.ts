@@ -2,7 +2,7 @@ export const statEffects = {
   mobility: {
     units: '%',
     values: {
-      '0': '0',
+      '0': '+0',
       '1': '+4',
       '2': '+8',
       '3': '+12',
@@ -35,7 +35,7 @@ export const statEffects = {
   recovery: {
     units: '%',
     values: {
-      '0': '0',
+      '0': '+0',
       '1': '+3',
       '2': '+6',
       '3': '+9',
@@ -68,7 +68,7 @@ export const statEffects = {
   resilience: {
     units: '%',
     values: {
-      '0': '0',
+      '0': '+0',
       '1': '+1',
       '2': '+2',
       '3': '+3',
