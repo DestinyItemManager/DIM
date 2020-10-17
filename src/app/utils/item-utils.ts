@@ -118,6 +118,11 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
   );
 }
 
+/** accepts a DimMasterwork or lack thereof, & always returns a string */
+export function getMasterworkStatNameArmor(mw: DimMasterwork | null) {
+  return mw?.stats?.[0].name;
+}
+
 export function getPossiblyIncorrectStats(item: DimItem): string[] {
   const incorrect: Set<string> = new Set();
   const stats = item.stats;
