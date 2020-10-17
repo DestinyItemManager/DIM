@@ -42,14 +42,14 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
+      <button type="button" className="dim-button" onClick={openLoadout}>
+        {t('LoadoutBuilder.CreateLoadout')}
+      </button>
       {canCompareLoadouts && (
         <button type="button" className="dim-button" onClick={onCompareSet}>
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
       )}
-      <button type="button" className="dim-button" onClick={openLoadout}>
-        {t('LoadoutBuilder.CreateLoadout')}
-      </button>
       <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>

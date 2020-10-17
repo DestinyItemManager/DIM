@@ -6,7 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { addIcon, AppIcon, faTimesCircle } from 'app/shell/icons';
+import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
@@ -190,6 +190,29 @@ function LockArmorAndPerks({
   return (
     <div>
       <div className={styles.area}>
+        {Boolean(flatLockedArmor2Mods.length) && (
+          <div className={styles.itemGrid}>
+            {flatLockedArmor2Mods.map((item) => (
+              <LockedArmor2ModIcon
+                key={item.key}
+                item={item}
+                defs={defs}
+                onModClicked={() => onArmor2ModClicked(item)}
+              />
+            ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => lbDispatch({ type: 'openModPicker' })}
+          >
+            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
+          </button>
+        </div>
+      </div>
+      <div className={styles.area}>
         {(Boolean(flatLockedMap.perk?.length) ||
           Boolean(flatLockedMap.mod?.length) ||
           Boolean(flatLockedMap.burn?.length)) && (
@@ -213,38 +236,12 @@ function LockArmorAndPerks({
           </button>
         </div>
       </div>
-      <div className={styles.area}>
-        {Boolean(flatLockedArmor2Mods.length) && (
-          <div className={styles.itemGrid}>
-            {flatLockedArmor2Mods.map((item) => (
-              <LockedArmor2ModIcon
-                key={item.key}
-                item={item}
-                defs={defs}
-                onModClicked={() => onArmor2ModClicked(item)}
-              />
-            ))}
-          </div>
-        )}
-        <div className={styles.buttons}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => lbDispatch({ type: 'openModPicker' })}
-          >
-            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
-          </button>
-        </div>
-      </div>
       <LoadoutBucketDropTarget
         className={styles.area}
         storeIds={storeIds}
         bucketTypes={bucketTypes}
         onItemLocked={addLockItem}
       >
-        {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
-          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
-        )}
         {Boolean(flatLockedMap.item?.length) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
@@ -258,10 +255,10 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button type="button" className="dim-button" onClick={chooseLockItem}>
-            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockItem')}
+            <AppIcon icon={pinIcon} /> {t('LoadoutBuilder.LockItem')}
           </button>
           <button type="button" className="dim-button" onClick={lockEquipped}>
-            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockEquipped')}
+            <AppIcon icon={pinIcon} /> {t('LoadoutBuilder.LockEquipped')}
           </button>
         </div>
       </LoadoutBucketDropTarget>
@@ -271,9 +268,6 @@ function LockArmorAndPerks({
         bucketTypes={bucketTypes}
         onItemLocked={addExcludeItem}
       >
-        {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
-          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
-        )}
         {Boolean(flatLockedMap.exclude?.length) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
