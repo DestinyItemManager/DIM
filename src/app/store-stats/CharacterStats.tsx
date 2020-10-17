@@ -4,6 +4,12 @@ import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { armorStats } from 'app/search/d2-known-values';
+import {
+  getClassAbilityCooldowns,
+  getStatEffects,
+  isClassAbilityStat,
+} from 'app/utils/stat-effect-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -12,6 +18,7 @@ import './CharacterStats.scss';
 interface Props {
   stats: DimStore['stats'];
   storeId?: string;
+  characterClass?: DestinyClass;
 }
 
 interface CharacterStatProps {
@@ -94,9 +101,23 @@ export function PowerFormula({ stats, storeId }: Props) {
   return <CharacterStat stats={statInfos} storeId={storeId} className="powerFormula" />;
 }
 
-export function LoadoutStats({ stats, storeId }: Props) {
-  const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
-    `${stat.name}: ${stat.value}\n${stat.description}`;
+export function LoadoutStats({ stats, storeId, characterClass }: Props) {
+  const statTooltip = (stat: DimCharacterStat): React.ReactNode => {
+    let cooldown = '';
+    const tier = Math.floor(stat.value / 10);
+    const statEffects = getStatEffects(stat.hash);
+    const classAbilityEffects = getClassAbilityCooldowns(characterClass);
+
+    if (statEffects) {
+      cooldown += `\nCooldown: ${statEffects.values[tier]}${statEffects.units}`;
+    }
+
+    if (classAbilityEffects && isClassAbilityStat(stat.hash, characterClass)) {
+      cooldown += `\nClass ability cooldown: ${classAbilityEffects.values[tier]}`;
+    }
+
+    return `${stat.name}: ${stat.value}${cooldown}\n${stat.description}`;
+  };
 
   const statInfos = armorStats
     .map((h) => stats[h])
