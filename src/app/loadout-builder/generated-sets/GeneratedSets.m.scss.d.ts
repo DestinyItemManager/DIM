@@ -8,7 +8,6 @@ interface CssExports {
   'numSets': string;
   'selectedPerkKey': string;
   'sets': string;
-  'warning': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -163,6 +163,13 @@ function CompareDrawer({
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();
 
+    if (
+      selectedLoadout &&
+      !confirm(t('LoadoutBuilder.ConfirmOverwrite', { name: selectedLoadout.name }))
+    ) {
+      return;
+    }
+
     const loadoutToSave = produce(selectedLoadout, (draftLoadout) => {
       if (draftLoadout) {
         const newItems: LoadoutItem[] = setItems.map(({ id, hash }) => ({
