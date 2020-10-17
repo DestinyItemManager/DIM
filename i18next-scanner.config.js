@@ -66,7 +66,7 @@ module.exports = {
         separator: '',
       },
       platforms: {
-        list: ['Blizzard', 'PlayStation', 'Steam', 'Stadia', 'Xbox'],
+        list: ['Blizzard', 'PlayStation', 'Stadia', 'Steam', 'Xbox'],
         fallback: false,
         separator: '',
       },
