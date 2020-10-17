@@ -798,9 +798,12 @@
     "SortName": "Name"
   },
   "Stats": {
+    "ClassAbilityCooldown": "Class Ability Cooldown: {{value}}",
+    "Cooldown": "Cooldown: {{value}}",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
+    "Effect": "Effect: {{value}}{{units}}",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",

@@ -109,11 +109,17 @@ export function LoadoutStats({ stats, storeId, characterClass }: Props) {
     const classAbilityEffects = getClassAbilityCooldowns(characterClass);
 
     if (statEffects) {
-      cooldown += `\nCooldown: ${statEffects.values[tier]}${statEffects.units}`;
+      cooldown += `\n${
+        /\d:\d\d/.test(statEffects.values[tier])
+          ? t('Stats.Cooldown', { value: statEffects.values[tier] })
+          : t('Stats.Effect', { value: statEffects.values[tier], units: statEffects.units })
+      }`;
     }
 
     if (classAbilityEffects && isClassAbilityStat(stat.hash, characterClass)) {
-      cooldown += `\nClass ability cooldown: ${classAbilityEffects.values[tier]}`;
+      cooldown += `\n${t('Stats.ClassAbilityCooldown', {
+        value: classAbilityEffects.values[tier],
+      })}`;
     }
 
     return `${stat.name}: ${stat.value}${cooldown}\n${stat.description}`;
