@@ -41,9 +41,10 @@ module.exports = (env) => {
     }
   }
 
+  env.name = Object.keys(env)[0];
   ['release', 'beta', 'dev'].forEach((e) => {
-    // set booleans based on env.name
-    env[e] = e == env.name;
+    // set booleans based on env
+    env[e] = Boolean(env[e]);
   });
 
   let version = packageJson.version.toString();
@@ -110,7 +111,6 @@ module.exports = (env) => {
       },
       minimizer: [
         new TerserPlugin({
-          cache: true,
           parallel: true,
           terserOptions: {
             ecma: 8,
@@ -119,7 +119,6 @@ module.exports = (env) => {
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true },
           },
-          sourceMap: true,
         }),
       ],
     },
