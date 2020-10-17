@@ -11,7 +11,6 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
@@ -62,11 +61,9 @@ module.exports = (env) => {
     },
 
     output: {
-      path: path.resolve('./dist'),
       publicPath: '/',
       filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
       chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      futureEmitAssets: true,
     },
 
     // Dev server
@@ -96,7 +93,7 @@ module.exports = (env) => {
 
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
-      namedChunks: true,
+      // chunkIds: 'named',
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
@@ -275,12 +272,16 @@ module.exports = (env) => {
         'destiny-icons': path.resolve('./destiny-icons/'),
         'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts'),
       },
+
+      fallback: {
+        fs: false,
+        net: false,
+        tls: false,
+      },
     },
 
     plugins: [
-      new CaseSensitivePathsPlugin(),
-
-      new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
+      new webpack.IgnorePlugin({ resourceRegExp: /caniuse-lite\/data\/regions/ }),
 
       new NotifyPlugin('DIM', !env.dev),
 
@@ -407,12 +408,6 @@ module.exports = (env) => {
         flattening: true,
       }),
     ],
-
-    node: {
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-    },
   };
 
   // Enable if you want to debug the size of the chunks
