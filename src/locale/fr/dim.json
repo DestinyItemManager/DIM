@@ -18,13 +18,13 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
-    "ButtonOn": "Active Mode",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "Loadouts": "Loadouts",
-    "NoQuests": "You're not tracking any quests",
-    "Pursuits": "Pursuits"
+    "ButtonOff": "Mode Inventaire",
+    "ButtonOn": "Mode Actif",
+    "Farming": "Objets récents",
+    "FarmingStart": "Commencer Farming",
+    "Loadouts": "Arsenaux",
+    "NoQuests": "Vous ne suivez aucune quête",
+    "Pursuits": "Poursuites"
   },
   "Activities": {
     "Activities": "Activités",
@@ -110,7 +110,7 @@
   "Countdown": {
     "Days": "1 Jour",
     "Days_compact": "{{count}}j",
-    "Days_compact_plural": "{{count}}d",
+    "Days_compact_plural": "{{count}}j",
     "Days_plural": "{{count}} Jours"
   },
   "Csv": {
@@ -219,7 +219,7 @@
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
     "Postmaster": "Objets actuellement au commis des postes.",
-    "PowerLevel": "Shows items based on their power level.",
+    "PowerLevel": "Affiche les objets selon leur niveau de puissance.",
     "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés.",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
@@ -250,7 +250,7 @@
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
     "Vendor": "Item is available from a specific vendor.",
-    "Weapon": "Shows items that are weapons.",
+    "Weapon": "Affiche les équipments portant une balise.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Wishlist": "Affiche les objets présents dans votre liste de souhaits.",
     "WishlistDupe": "Affiche les doublons quand au moins un des doublons est dans votre liste de souhaits.",
@@ -285,8 +285,8 @@
     "DeleteSearch": "Supprimer la recherche",
     "FilterHelp": "Rechercher objet/compétence, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
-    "FilterHelpMenuItem": "Filters Help...",
-    "FilterHelpRecords": "Search triumphs and collections",
+    "FilterHelpMenuItem": "Aide Filtres...",
+    "FilterHelpRecords": "Rechercher triomphes et collections",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
     "Filters": "Filtres",
@@ -294,7 +294,7 @@
     "Inventory": "Inventaire",
     "IosPwaPrompt": "Dans Safari Mobile, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
     "Menu": "Menu",
-    "Refresh": "Rafraîchir les données Destiny",
+    "Refresh": "Rafraîchir les données Destiny [R]",
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
     "SaveSearch": "Enregistrer la recherche",
@@ -478,11 +478,11 @@
     "OptimizerExplanation": "Sélectionnez des attributs, filtrez et réorganisez les statistiques, et verrouillez des objets pour réduire votre nombre d'arsenaux potentiels.",
     "OptimizerExplanationArmour2Mods": "Stat changes from Armor 2.0 Mods are excluded where possible, for more info please see {{link}}.",
     "OptimizerExplanationDesktop": "Maj+clique sur une compétence pour la sélectionner. Maj+clique sur un objet pour l'exclure. Glissez des objets sur la barre latérale pour les verrouiller ou les exclure.",
-    "OptimizerSet": "Optimizer Set",
+    "OptimizerSet": "Set Optimiseur",
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
     "ResetLocked": "Réinitialiser les objets verouillés",
-    "SaveAs": "Save as",
-    "SeasonNum": "Season {{season}}",
+    "SaveAs": "Enregistrer sous",
+    "SeasonNum": "Saison {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum des Statistiques Totales D'Armure",
@@ -508,7 +508,7 @@
     "AppliedError": "Aucun des objets de votre arsenal n'a pu être transféré.",
     "AppliedWarn": "Votre arsenal a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
-    "AssumeMaxWeapons": "Assuming max power level weapons",
+    "AssumeMaxWeapons": "Supposant les armes au niveau de puissance maximal",
     "Before": "Avant '{{name}}'",
     "ChooseItem": "Ajouter {{name}}",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
@@ -611,7 +611,7 @@
     "EquipWithName": "Équiper à {{character}}",
     "Expand": "Étendre les détails de l'objet",
     "Infuse": "Infuser",
-    "ItemDetailSheet": "Open item details",
+    "ItemDetailSheet": "Voir les détails de l'élément",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
       "Locked": "Verrouillé",
@@ -626,12 +626,12 @@
     "PowerCap": "",
     "PullItem": "Retirez depuis {{bucket}} vers {{store}}",
     "ReadLore": "Lire le lore de Ishtar Collective",
-    "ReadLoreLink": "Read lore",
+    "ReadLoreLink": "Lire le lore",
     "Rewards": "Récompenses:",
-    "SendToVault": "Send to Vault",
+    "SendToVault": "Envoyer au Coffre",
     "Split": "Couper",
-    "Store": "Store",
-    "StoreWithName": "Store on {{character}}",
+    "Store": "Dépôt",
+    "StoreWithName": "Déposer sur {{character}}",
     "Subtitle": {
       "Consumable": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
@@ -671,7 +671,7 @@
       "Icon": "Icône",
       "KillTracker": "Compteur de Frags",
       "Loadouts": "Arsenaux",
-      "Location": "Location",
+      "Location": "Emplacement",
       "MasterworkStat": "Statistiques de Pièce Maîtresse",
       "MasterworkTier": "Niveau de Pièce Maîtresse",
       "ModSlot": "Emplacement de Mod",
@@ -731,8 +731,8 @@
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
     "SecretTriumph": "Triomphe Secret",
-    "StatTrackers": "Stat Trackers",
-    "TrackedTriumphs": "Tracked Triumphs"
+    "StatTrackers": "Traqueurs de Statistiques",
+    "TrackedTriumphs": "Triomphes Suivis"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
@@ -742,7 +742,7 @@
     "Title": "Records"
   },
   "SearchHistory": {
-    "Date": "Last Used",
+    "Date": "Dernier Utilisé",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -797,7 +797,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
     "MaxGearPower": "Puissance maximale des équipements pouvant être équipés",
-    "MaxGearPowerAll": "Maximum Power of all gear",
+    "MaxGearPowerAll": "Puissance maximale de tous les équipements",
     "MaxTotalPower": "Puissance totale maximale",
     "Milliseconds": "ms",
     "NoBonus": "Pas de Bonus",
@@ -873,7 +873,7 @@
     "Junk": "Camelote",
     "Keep": "Garder",
     "LockAll": "Verouiller les objets",
-    "TagItem": "Ajouter une balise à l'objet",
+    "TagItem": "Balise",
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triumphs": {
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
     "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Effacer la liste de souhaits",
     "ExternalSource": "Optionnellement, fournissez l'URL d'une liste de souhaits",
     "Header": "Liste de souhaits",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Dernière mise à jour : {{lastUpdatedDate}} à {{lastUpdatedTime}}",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
   }
 }

@@ -294,7 +294,7 @@
     "Inventory": "Inventar",
     "IosPwaPrompt": "Klicke im mobilen Safari auf das Teilen-Symbol (mittlere Taste unten) und wähle \"Zu Home Screen hinzufügen\".",
     "Menu": "Menü",
-    "Refresh": "Aktualisiere Destiny Daten",
+    "Refresh": "Aktualisiere Destiny Daten [R]",
     "ReloadApp": "App neu laden",
     "ReportBug": "Fehler melden",
     "SaveSearch": "Suche speichern",
@@ -867,13 +867,13 @@
   },
   "Tags": {
     "Archive": "Archiv",
-    "ClearTag": "Markierungen löschen",
+    "ClearTag": "Markierung löschen",
     "Favorite": "Favorisieren",
     "Infuse": "Infundieren",
     "Junk": "Müll",
     "Keep": "Behalten",
     "LockAll": "Sperre Gegenstände",
-    "TagItem": "Gegenstand markieren",
+    "TagItem": "Markieren",
     "UnlockAll": "Entsperre Gegenstände"
   },
   "Triumphs": {
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "Dieser Perk passt genau zu einem Waffenroll auf deiner Wunschliste.",
     "BestRatedTip_plural": "Diese Perks entsprechen genau einem Waffenroll auf deiner Wunschliste.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy, zusammen mit einigen Mülllistenrolls.",
     "Clear": "Wunschliste löschen",
     "ExternalSource": "Optional die URL für eine Wunschliste angeben",
     "Header": "Wunschliste",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Bitte gib eine gültige URL für die externe Wunschlistenquelle ein. Die URL muss wie folgt beginnen:",
     "LastUpdated": "Zuletzt aktualisiert: {{lastUpdatedDate}} um {{lastUpdatedTime}}",
     "Num": "{{num, number}} Rolls in deiner Wunschliste",
+    "PreMadeFiles": "Eine vorgefertigte Wunschliste verwenden",
     "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",
+    "Voltron": "Voltron (Standard)",
+    "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   }
 }

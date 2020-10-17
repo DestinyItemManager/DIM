@@ -294,7 +294,7 @@
     "Inventory": "Inventário",
     "IosPwaPrompt": "No Safari para celular, clique no ícone compartilhar (botão do meio na parte inferior) e selecione \"Adicionar à Tela Inicial\".",
     "Menu": "Menu",
-    "Refresh": "Atualizar dados do Destiny",
+    "Refresh": "Atualizar dados do Destiny [R]",
     "ReloadApp": "Recarregar o App",
     "ReportBug": "Relatar Falhas",
     "SaveSearch": "Salvar pesquisa",
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "Este perk combina exatamente com um valor de arma em sua lista de desejos.",
     "BestRatedTip_plural": "Estes perks combinam exatamente com um valor de arma em sua lista de desejos.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy, juntamente com algumas listas de baixo valor.",
     "Clear": "Limpar Lista de Desejos",
     "ExternalSource": "Opcionalmente, forneça a URL para uma lista de desejos",
     "Header": "Lista de Desejos",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Por favor, insira uma URL válida como fonte de dados de lista de desejos externa. A URL deve começar como uma das seguintes:",
     "LastUpdated": "Última atualização: {{lastUpdatedDate}} às {{lastUpdatedTime}}",
     "Num": "{{num, number}} valores em sua lista de desejos",
+    "PreMadeFiles": "Usar uma lista de desejos predefinida",
     "UpdateExternalSource": "Atualizar fonte da Lista de Desejos",
+    "Voltron": "voltron (padrão)",
+    "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
   }
 }

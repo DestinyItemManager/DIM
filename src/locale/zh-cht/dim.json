@@ -294,7 +294,7 @@
     "Inventory": "背包",
     "IosPwaPrompt": "在使用移動端Safari流覽器時，請點擊螢幕底部中間的分享按鈕並選擇“添加到主螢幕”。",
     "Menu": "菜單",
-    "Refresh": "刷新命運資料",
+    "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "重新載入應用",
     "ReportBug": "報告錯誤",
     "SaveSearch": "Save Search",
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
     "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "清除愿望清单",
     "ExternalSource": "可選：提供願望清單的URL",
     "Header": "願望清單",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "在您的願望單中有{{num, number}} 個物品",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "更新願望清單來源",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "願望清單備註:{{notes}}"
   }
 }

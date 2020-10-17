@@ -17,14 +17,14 @@
     "Xbox": "XB1"
   },
   "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
-    "ButtonOn": "Active Mode",
-    "Farming": "Recent Items",
+    "Beta": "公测版",
+    "ButtonOff": "物品栏模式",
+    "ButtonOn": "主动模式",
+    "Farming": "最近项目",
     "FarmingStart": "Start Farming",
-    "Loadouts": "Loadouts",
-    "NoQuests": "You're not tracking any quests",
-    "Pursuits": "Pursuits"
+    "Loadouts": "配装",
+    "NoQuests": "您没有跟踪任何任务",
+    "Pursuits": "任务"
   },
   "Activities": {
     "Activities": "活动",
@@ -94,7 +94,7 @@
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
-    "Button": "Compare",
+    "Button": "对比",
     "ButtonHelp": "对比物品",
     "CompareBaseStats": "显示基础属性",
     "Error": {
@@ -110,7 +110,7 @@
   "Countdown": {
     "Days": "1天",
     "Days_compact": "{{count}}天",
-    "Days_compact_plural": "{{count}}d",
+    "Days_compact_plural": "{{count}}天",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -203,7 +203,7 @@
     "LockAllSuccess": "已经锁定 {{num}} 件道具",
     "Locked": "根据物品锁定状态显示.",
     "Masterwork": "按大师杰作属性或等级显示物品。",
-    "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
+    "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
     "MaxPower": "显示每个职业的最大光等物品",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
@@ -219,7 +219,7 @@
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "Postmaster": "目前在邮政官处的物品.",
-    "PowerLevel": "Shows items based on their power level.",
+    "PowerLevel": "根据能量等级显示物品.",
     "PowerLimit": "按照可融合到的最大能量等级显示物品。",
     "PowerfulReward": "显示提供强力奖励的追猎目标。",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
@@ -281,7 +281,7 @@
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
-    "CompareMatching": "Compare Items",
+    "CompareMatching": "对比物品",
     "DeleteSearch": "删除搜索",
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
@@ -294,12 +294,12 @@
     "Inventory": "背包",
     "IosPwaPrompt": "在使用移动端Safari浏览器时，请点击屏幕底部中间的分享按钮并选择“添加到主屏幕”。",
     "Menu": "菜单",
-    "Refresh": "刷新命运数据",
+    "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "重新载入应用",
     "ReportBug": "报告错误",
     "SaveSearch": "保存搜索",
     "Shop": "商店",
-    "TagAs": "Tag as '{{tag}}'",
+    "TagAs": "标记为{{tag}}",
     "UpgradeDIM": "更新DIM",
     "WhatsNew": "新增内容"
   },
@@ -602,7 +602,7 @@
     "Acquired": "此物品已经在收藏物中解锁",
     "AcquiredMod": "该模组已被应用于您物品栏中的一个物品。",
     "AddNote": "添加备注",
-    "AddToLoadout": "Loadout",
+    "AddToLoadout": "配装",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
     "Details": "弹出窗口",
@@ -614,9 +614,9 @@
     "ItemDetailSheet": "打开物品详细信息",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
-      "Locked": "Locked",
+      "Locked": "已锁定",
       "Unlock": "解锁{{itemType}}",
-      "Unlocked": "Unlocked"
+      "Unlocked": "已解锁"
     },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "备注：",
@@ -947,8 +947,10 @@
     }
   },
   "WishListRoll": {
-    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
-    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
+    "BestRatedTip": "这个特性与您愿望清单上的某个武器完全匹配。",
+    "BestRatedTip_plural": "这些特性与您愿望清单上的某个武器完全匹配。",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "清除愿望清单",
     "ExternalSource": "可选：提供愿望清单的 URL",
     "Header": "愿望清单",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "请为你的外部愿望清单来源输入一个有效的 URL。URL 的开头必须为以下之一：",
     "LastUpdated": "最后更新于 {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "在您的愿望单中有{{num, number}} 个物品",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "更新愿望清单来源",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "愿望清单备注:{{notes}}"
   }
 }
