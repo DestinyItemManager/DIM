@@ -40,7 +40,6 @@ interface ProvidedProps {
 interface StoreProps {
   buckets: InventoryBuckets;
   stores: DimStore[];
-  isPhonePortrait: boolean;
   language: string;
   defs: D2ManifestDefinitions;
 }
@@ -51,7 +50,6 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
     language: settingsSelector(state).language,
     defs: state.manifest.d2Manifest!,
   });
@@ -67,7 +65,6 @@ function LockArmorAndPerks({
   lockedArmor2Mods,
   buckets,
   stores,
-  isPhonePortrait,
   lbDispatch,
 }: Props) {
   /**
