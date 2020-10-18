@@ -69,7 +69,7 @@ export default function FilterBuilds({
             checked={assumeMasterwork}
             onChange={(e) => dispatch(setSetting('loAssumeMasterwork', e.target.checked))}
           />
-          <label htmlFor="alo-assume-masterwork">{t('LoadoutBuilder.AssumeMasterwork')}</label>
+          <label htmlFor="lo-assume-masterwork">{t('LoadoutBuilder.AssumeMasterwork')}</label>
         </div>
         <div className={styles.powerSelect}>
           <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
