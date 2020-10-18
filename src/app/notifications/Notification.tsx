@@ -1,17 +1,15 @@
 import clsx from 'clsx';
-import { motion, Transition } from 'framer-motion';
+import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { animated } from 'react-spring';
 import './Notification.scss';
 import { Notify } from './notifications';
 
-interface Props {
+interface Props extends MotionProps {
   notification: Notify;
-  style: React.CSSProperties;
   onClose(notification: Notify): void;
 }
 
-export default function Notification({ notification, style, onClose }: Props) {
+export default function Notification({ notification, onClose, ...animation }: Props) {
   const [mouseover, setMouseover] = useState(false);
   const [success, setSuccess] = useState<boolean | undefined>();
   const [error, setError] = useState<Error | undefined>();
@@ -83,14 +81,14 @@ export default function Notification({ notification, style, onClose }: Props) {
       };
 
   return (
-    <animated.div
+    <motion.div
       className="notification"
       role="alert"
       onClick={onClick}
-      style={style}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      onTouchStart={onMouseOver}
+      {...animation}
+      onHoverStart={onMouseOver}
+      onHoverEnd={onMouseOut}
+      onTapStart={onMouseOver}
     >
       <div
         className={clsx(
@@ -122,6 +120,6 @@ export default function Notification({ notification, style, onClose }: Props) {
             />
           )}
       </div>
-    </animated.div>
+    </motion.div>
   );
 }
