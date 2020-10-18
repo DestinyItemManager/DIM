@@ -4,12 +4,8 @@ import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
+import StatTooltip from 'app/store-stats/StatTooltip';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import {
-  getClassAbilityCooldowns,
-  getStatEffects,
-  isClassAbilityStat,
-} from 'app/utils/stat-effect-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -49,30 +45,6 @@ function SetStats({
   const incorrectStats = _.uniq(items.flatMap((item) => getPossiblyIncorrectStats(item)));
 
   const displayStats = { ...stats };
-
-  const statEffectTooltip = (stat: StatTypes): React.ReactNode => {
-    let cooldown = '';
-    const statHash = statHashes[stat];
-    const tier = statTier(displayStats[stat]);
-    const statEffects = getStatEffects(statHash);
-    const classAbilityEffects = getClassAbilityCooldowns(characterClass);
-
-    if (statEffects) {
-      cooldown += `${
-        /\d:\d\d/.test(statEffects.values[tier])
-          ? t('Stats.Cooldown', { value: statEffects.values[tier] })
-          : t('Stats.Effect', { value: statEffects.values[tier], units: statEffects.units })
-      }`;
-    }
-
-    if (classAbilityEffects && isClassAbilityStat(statHash, characterClass)) {
-      cooldown += `\n${t('Stats.ClassAbilityCooldown', {
-        value: classAbilityEffects.values[tier],
-      })}`;
-    }
-
-    return `${statsDefs[stat].displayProperties.name}: ${displayStats[stat]}\n${cooldown}\n${statsDefs[stat].displayProperties.description}`;
-  };
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -115,7 +87,21 @@ function SetStats({
       </div>
       <div className={styles.statSegmentContainer}>
         {statOrder.map((stat) => (
-          <PressTip key={stat} tooltip={statEffectTooltip(stat)} allowClickThrough={true}>
+          <PressTip
+            key={stat}
+            tooltip={
+              <StatTooltip
+                stat={{
+                  hash: statsDefs[stat].hash,
+                  name: statsDefs[stat].displayProperties.name,
+                  value: displayStats[stat],
+                  description: statsDefs[stat].displayProperties.description,
+                }}
+                characterClass={characterClass}
+              />
+            }
+            allowClickThrough={true}
+          >
             <Stat
               isActive={enabledStats.has(stat)}
               stat={statsDefs[stat]}

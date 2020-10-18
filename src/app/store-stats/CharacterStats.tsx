@@ -4,16 +4,12 @@ import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { armorStats } from 'app/search/d2-known-values';
-import {
-  getClassAbilityCooldowns,
-  getStatEffects,
-  isClassAbilityStat,
-} from 'app/utils/stat-effect-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import './CharacterStats.scss';
+import StatTooltip from './StatTooltip';
 
 interface Props {
   stats: DimStore['stats'];
@@ -102,32 +98,12 @@ export function PowerFormula({ stats, storeId }: Props) {
 }
 
 export function LoadoutStats({ stats, storeId, characterClass }: Props) {
-  const statTooltip = (stat: DimCharacterStat): React.ReactNode => {
-    let cooldown = '';
-    const tier = Math.floor(stat.value / 10);
-    const statEffects = getStatEffects(stat.hash);
-    const classAbilityEffects = getClassAbilityCooldowns(characterClass);
-
-    if (statEffects) {
-      cooldown += `\n${
-        /\d:\d\d/.test(statEffects.values[tier])
-          ? t('Stats.Cooldown', { value: statEffects.values[tier] })
-          : t('Stats.Effect', { value: statEffects.values[tier], units: statEffects.units })
-      }`;
-    }
-
-    if (classAbilityEffects && isClassAbilityStat(stat.hash, characterClass)) {
-      cooldown += `\n${t('Stats.ClassAbilityCooldown', {
-        value: classAbilityEffects.values[tier],
-      })}`;
-    }
-
-    return `${stat.name}: ${stat.value}${cooldown}\n${stat.description}`;
-  };
-
   const statInfos = armorStats
     .map((h) => stats[h])
-    .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
+    .map((stat) => ({
+      stat,
+      tooltip: <StatTooltip stat={stat} characterClass={characterClass} />,
+    }));
 
   return <CharacterStat stats={statInfos} storeId={storeId} />;
 }

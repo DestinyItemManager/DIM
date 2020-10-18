@@ -1,0 +1,25 @@
+.name {
+  font-weight: bold;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid white;
+}
+
+.description {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid white;
+}
+
+.values {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  margin-right: 8px;
+}
+
+.value {
+  font-weight: bold;
+}
