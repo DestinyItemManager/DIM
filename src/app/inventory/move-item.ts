@@ -111,7 +111,10 @@ export function moveItemTo(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     hideItemPopup();
-    if (item.notransfer && item.owner !== store.id) {
+    if (
+      (item.notransfer && item.owner !== store.id) ||
+      (item.location.inPostmaster && !item.canPullFromPostmaster)
+    ) {
       throw new Error(t('Help.CannotMove'));
     }
 
