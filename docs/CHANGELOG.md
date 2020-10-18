@@ -1,8 +1,25 @@
 ## Next
 
+* Added the "sidecar" for item popup actions on desktop. This lets us have more actions, and they're easier to understand. If you always use drag and drop, you can collapse the sidecar down into a smaller version.
+* On mobile, press and hold on an item to access a quick actions menu, then drag your finger to an option and release to execute it. Move items faster than ever before!
 * Added buttons to the settings page to restore the default wish list URL.
+* Tweaked the Loadout Optimizer to make it easier to understand, and more clearly highlight that stats can be dragged to reorder them.
+* In Loadout Optimizer, Compare Loadout can now compare with your currently equipped gear. Also, clicking "Save Loadout" will prompt you for whether you want to overwrite the loadout you're comparing with.
+* Fixed an issue where you couldn't directly edit the minimum power field in Loadout Optimizer.
+* D1 items can no longer incorrectly offer the ability to pull from postmaster.
+* Tuned the search autocomplete algorithm a bit to prefer shorter matches.
+* Fixed multi-stat masterworked exotics messing up the CSV export.
+* Darkened the keyboard shortcut help overlay (accessed via the ? key).
+* Removed tagging keyboard shortcut tips from places where they wouldn't work.
 
 ## 6.34.0 <span className="changelog-date">(2020-10-11)</span>
+
+* Replaced the tagging dropdown with a nicer one that shows the icon and keyboard shortcut hints.
+* Made the farming mode popup on mobile not overlap the category selector, and made it smaller.
+* Secretly started recording which mods you selected in Loadout Optimizer when you create a loadout, for future use.
+* In the Organizer, the selected perk for multi-option perks is now bold.
+* Updated the style and tooltip for wishlist perks to match the thumb icon shown on tiles.
+* Fix some display of masterworked exotics in the CSV export.
 
 ## 6.33.0 <span className="changelog-date">(2020-10-04)</span>
 
