@@ -51,9 +51,8 @@ export default function PhoneStoresHeader({
   const startOffset = useRef<number>(0);
 
   useEffect(() => {
-    const index = stores.indexOf(selectedStore);
     animate(offset, index, spring);
-  }, [selectedStore, offset, stores]);
+  }, [index, offset]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.

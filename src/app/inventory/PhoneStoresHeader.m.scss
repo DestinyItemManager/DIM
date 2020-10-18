@@ -7,7 +7,8 @@
 
 .track {
   display: block;
-  touch-action: pan-x;
+  // Don't let the browser handle touches, we'll do it ourselves
+  touch-action: none;
 
   > * {
     display: inline-block;
