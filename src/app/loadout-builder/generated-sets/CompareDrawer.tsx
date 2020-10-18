@@ -3,7 +3,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
-import { storesSelector } from 'app/inventory/selectors';
+import { currentStoreSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
@@ -90,6 +90,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
+  characterClass?: DestinyClass;
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -97,11 +98,13 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: storesSelector(state),
+    characterClass: currentStoreSelector(state)?.classType,
   });
 }
 
 function CompareDrawer({
   stores,
+  characterClass,
   loadouts,
   set,
   lockedArmor2Mods,
@@ -259,6 +262,7 @@ function CompareDrawer({
                 statOrder={statOrder}
                 enabledStats={enabledStats}
                 className={styles.fillRow}
+                characterClass={characterClass}
               />
               <div className={clsx(styles.fillRow, styles.set)}>
                 {loadoutItems.map((item) => (

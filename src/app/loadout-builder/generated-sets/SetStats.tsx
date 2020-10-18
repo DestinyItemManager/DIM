@@ -5,7 +5,12 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import {
+  getClassAbilityCooldowns,
+  getStatEffects,
+  isClassAbilityStat,
+} from 'app/utils/stat-effect-utils';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -21,6 +26,7 @@ interface Props {
   maxPower: number;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
+  characterClass?: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -32,6 +38,7 @@ function SetStats({
   maxPower,
   statOrder,
   enabledStats,
+  characterClass,
   className,
   existingLoadoutName,
 }: Props) {
@@ -42,6 +49,33 @@ function SetStats({
   const incorrectStats = _.uniq(items.flatMap((item) => getPossiblyIncorrectStats(item)));
 
   const displayStats = { ...stats };
+
+  const statEffectTooltip = (stat: StatTypes): React.ReactNode => {
+    let cooldown = '';
+    const statHash = statHashes[stat];
+    const tier = statTier(displayStats[stat]);
+    const statEffects = getStatEffects(statHash);
+    const classAbilityEffects = getClassAbilityCooldowns(characterClass);
+
+    if (statEffects) {
+      cooldown += `${
+        /\d:\d\d/.test(statEffects.values[tier])
+          ? t('Stats.Cooldown', { value: statEffects.values[tier] })
+          : t('Stats.Effect', { value: statEffects.values[tier], units: statEffects.units })
+      }`;
+    }
+
+    if (classAbilityEffects && isClassAbilityStat(statHash, characterClass)) {
+      if (cooldown) {
+        cooldown += '\n';
+      }
+      cooldown += `${t('Stats.ClassAbilityCooldown', {
+        value: classAbilityEffects.values[tier],
+      })}`;
+    }
+
+    return `${cooldown}`;
+  };
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -84,12 +118,13 @@ function SetStats({
       </div>
       <div className={styles.statSegmentContainer}>
         {statOrder.map((stat) => (
-          <Stat
-            key={stat}
-            isActive={enabledStats.has(stat)}
-            stat={statsDefs[stat]}
-            value={displayStats[stat]}
-          />
+          <PressTip key={stat} tooltip={statEffectTooltip(stat)} allowClickThrough={true}>
+            <Stat
+              isActive={enabledStats.has(stat)}
+              stat={statsDefs[stat]}
+              value={displayStats[stat]}
+            />
+          </PressTip>
         ))}
       </div>
     </div>
