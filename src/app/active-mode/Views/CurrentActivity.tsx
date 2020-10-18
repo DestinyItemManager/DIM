@@ -75,7 +75,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
         <div className={styles.currentLocation}>{activityName}</div>
         <div className={styles.activityItems}>
           <ActivityInformation defs={defs} store={store} activity={activity} />
-          <SuggestedGhosts activity={activity} />
+          <SuggestedGhosts store={store} activity={activity} />
           <VendorBounties
             account={account}
             store={store}
