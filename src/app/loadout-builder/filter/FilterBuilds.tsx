@@ -64,11 +64,12 @@ export default function FilterBuilds({
           title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
         >
           <input
+            id="lo-assume-masterwork"
             type="checkbox"
             checked={assumeMasterwork}
             onChange={(e) => dispatch(setSetting('loAssumeMasterwork', e.target.checked))}
           />
-          <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
+          <label htmlFor="alo-assume-masterwork">{t('LoadoutBuilder.AssumeMasterwork')}</label>
         </div>
         <div className={styles.powerSelect}>
           <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
@@ -110,8 +111,15 @@ function RangeSelector({
 }) {
   const [value, setValue] = useState(initialValue);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedOnChange = useCallback(_.debounce(onChange, 500), [onChange]);
-  const clampedValue = Math.max(min, Math.min(value, max));
+  const debouncedOnChange = useCallback(
+    _.debounce((value) => {
+      const clamped = Math.max(min, Math.min(value, max));
+      setValue(clamped);
+      onChange(clamped);
+    }, 500),
+    [onChange]
+  );
+
   const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       const val = parseInt(e.currentTarget.value, 10);
@@ -128,7 +136,7 @@ function RangeSelector({
         type="range"
         min={min}
         max={max}
-        value={clampedValue}
+        value={value}
         onChange={onChangeLive}
       />
       <input
@@ -136,7 +144,7 @@ function RangeSelector({
         type="number"
         min={min}
         max={max}
-        value={clampedValue}
+        value={value}
         onChange={onChangeLive}
       />
     </div>
