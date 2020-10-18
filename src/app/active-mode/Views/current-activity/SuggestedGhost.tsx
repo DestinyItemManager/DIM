@@ -52,7 +52,9 @@ export default function SuggestedGhosts({
 
   const ghostHashes = possibleGhosts.map(({ index }) => index);
 
-  const alreadyEquipped = store.items.some(({ index }) => ghostHashes.includes(index));
+  const alreadyEquipped = store.items.some(
+    ({ index, equipped }) => equipped && ghostHashes.includes(index)
+  );
   if (alreadyEquipped) {
     // Don't suggest ghosts if you already have the right one equipped
     return null;
