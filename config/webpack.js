@@ -384,7 +384,7 @@ module.exports = (env) => {
         // Rearrange buckets in categories
         '$featureFlags.newArrangement': JSON.stringify(true),
         // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(true),
+        '$featureFlags.gradientBackground': JSON.stringify(!env.release),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions
