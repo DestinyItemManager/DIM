@@ -70,7 +70,9 @@ function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, disp
       value={tag}
       onChange={onChange}
       hideSelected={true}
-      className={clsx(className, 'item-tag-selector', { [styles.minimized]: hideButtonLabel })}
+      className={clsx(className, styles.itemTagSelector, 'item-tag-selector', {
+        [styles.minimized]: hideButtonLabel,
+      })}
     />
   );
 }

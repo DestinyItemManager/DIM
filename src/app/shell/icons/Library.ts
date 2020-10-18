@@ -33,8 +33,8 @@ const faCaretDown = 'fas fa-caret-down';
 const faPencilAlt = 'fas fa-pencil-alt';
 const faPlus = 'fas fa-plus';
 const faCaretRight = 'fas fa-caret-right';
-const faExpandAlt = 'fas fa-expand-alt';
-const faCompressAlt = 'fas fa-compress-alt';
+const faAngleDoubleLeft = 'fas fa-angle-double-left';
+const faAngleDoubleRight = 'fas fa-angle-double-right';
 const faPlusCircle = 'fas fa-plus-circle';
 const faPlusSquare = 'fas fa-plus-square';
 const faQuestionCircle = 'far fa-question-circle';
@@ -133,8 +133,8 @@ export {
   faThumbtack as pinIcon,
   faPlusSquare,
   faCaretRight as expandIcon,
-  faExpandAlt as maximizeIcon,
-  faCompressAlt as minimizeIcon,
+  faAngleDoubleLeft as maximizeIcon,
+  faAngleDoubleRight as minimizeIcon,
   faPlusCircle as addIcon,
   faQuestionCircle as helpIcon,
   faSave as saveIcon,
