@@ -66,15 +66,12 @@ function SetStats({
     }
 
     if (classAbilityEffects && isClassAbilityStat(statHash, characterClass)) {
-      if (cooldown) {
-        cooldown += '\n';
-      }
-      cooldown += `${t('Stats.ClassAbilityCooldown', {
+      cooldown += `\n${t('Stats.ClassAbilityCooldown', {
         value: classAbilityEffects.values[tier],
       })}`;
     }
 
-    return `${cooldown}`;
+    return `${statsDefs[stat].displayProperties.name}: ${displayStats[stat]}\n${cooldown}\n${statsDefs[stat].displayProperties.description}`;
   };
 
   return (
