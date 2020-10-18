@@ -11,6 +11,7 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
+import { pullablePostmasterEquipment, pullEquipmentFromPostmaster } from 'app/loadout/postmaster';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
 import { infoLog } from 'app/utils/log';
@@ -85,6 +86,13 @@ export function startFarming(storeId: string): ThunkResult {
           dispatch(farmD1(farmingStore));
         } else {
           // In D2 we just make room
+          const itemsToBePulledFromPostmaster = pullablePostmasterEquipment(
+            farmingStore,
+            storesSelector(getState())
+          );
+          if (itemsToBePulledFromPostmaster.length > 0) {
+            dispatch(pullEquipmentFromPostmaster(farmingStore));
+          }
           dispatch(makeRoomForItems(farmingStore));
         }
       }

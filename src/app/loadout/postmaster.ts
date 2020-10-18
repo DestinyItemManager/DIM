@@ -88,6 +88,18 @@ export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
   );
 }
 
+// Only gets the equipment that can be pulled from postmaster, to be used in farming mode
+export function pullablePostmasterEquipment(store: DimStore, stores: DimStore[]) {
+  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter(
+    (i) =>
+      // Is equipment that can be pulled
+      i.equipment &&
+      i.canPullFromPostmaster &&
+      // Either has space, or is going to a bucket we can make room in
+      ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
+  );
+}
+
 // We should load this from the manifest but it's hard to get it in here
 export const POSTMASTER_SIZE = 21;
 
@@ -120,9 +132,23 @@ const showNoSpaceError = _.throttle(
 
 // D2 only
 export function pullFromPostmaster(store: DimStore): ThunkResult {
+  return pullItemsFromPostmaster(store, pullablePostmasterItems);
+}
+
+/*
+ * Function to be used for pulling equipment from postmaster while farming
+ */
+export function pullEquipmentFromPostmaster(store: DimStore): ThunkResult {
+  return pullItemsFromPostmaster(store, pullablePostmasterEquipment);
+}
+
+export function pullItemsFromPostmaster(
+  store: DimStore,
+  getItems: (store: DimStore, stores: DimStore[]) => DimItem[]
+): ThunkResult {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
-    const items = pullablePostmasterItems(store, stores);
+    const items = getItems(store, stores);
 
     // Only show one popup per message
     const errorNotification = _.memoize((message: string) => {
