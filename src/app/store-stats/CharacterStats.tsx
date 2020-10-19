@@ -4,14 +4,17 @@ import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { armorStats } from 'app/search/d2-known-values';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import './CharacterStats.scss';
+import StatTooltip from './StatTooltip';
 
 interface Props {
   stats: DimStore['stats'];
   storeId?: string;
+  characterClass?: DestinyClass;
 }
 
 interface CharacterStatProps {
@@ -94,13 +97,13 @@ export function PowerFormula({ stats, storeId }: Props) {
   return <CharacterStat stats={statInfos} storeId={storeId} className="powerFormula" />;
 }
 
-export function LoadoutStats({ stats, storeId }: Props) {
-  const statTooltip = (stat: DimCharacterStat): React.ReactNode =>
-    `${stat.name}: ${stat.value}\n${stat.description}`;
-
+export function LoadoutStats({ stats, storeId, characterClass }: Props) {
   const statInfos = armorStats
     .map((h) => stats[h])
-    .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
+    .map((stat) => ({
+      stat,
+      tooltip: <StatTooltip stat={stat} characterClass={characterClass} />,
+    }));
 
   return <CharacterStat stats={statInfos} storeId={storeId} />;
 }

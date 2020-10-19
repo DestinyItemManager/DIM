@@ -1,5 +1,8 @@
 ## Next
 
+* Added cooldown and effect values to stat tooltips.
+* Added stat tooltips to the loadout optimizer.
+
 ## 6.35.0 <span className="changelog-date">(2020-10-18)</span>
 
 * Added the "sidecar" for item popup actions on desktop. This lets us have more actions, and they're easier to understand. If you always use drag and drop, you can collapse the sidecar down into a smaller version.

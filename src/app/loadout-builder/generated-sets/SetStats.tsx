@@ -4,8 +4,9 @@ import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
+import StatTooltip from 'app/store-stats/StatTooltip';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
-import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -21,6 +22,7 @@ interface Props {
   maxPower: number;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
+  characterClass?: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -32,6 +34,7 @@ function SetStats({
   maxPower,
   statOrder,
   enabledStats,
+  characterClass,
   className,
   existingLoadoutName,
 }: Props) {
@@ -84,12 +87,27 @@ function SetStats({
       </div>
       <div className={styles.statSegmentContainer}>
         {statOrder.map((stat) => (
-          <Stat
+          <PressTip
             key={stat}
-            isActive={enabledStats.has(stat)}
-            stat={statsDefs[stat]}
-            value={displayStats[stat]}
-          />
+            tooltip={
+              <StatTooltip
+                stat={{
+                  hash: statsDefs[stat].hash,
+                  name: statsDefs[stat].displayProperties.name,
+                  value: displayStats[stat],
+                  description: statsDefs[stat].displayProperties.description,
+                }}
+                characterClass={characterClass}
+              />
+            }
+            allowClickThrough={true}
+          >
+            <Stat
+              isActive={enabledStats.has(stat)}
+              stat={statsDefs[stat]}
+              value={displayStats[stat]}
+            />
+          </PressTip>
         ))}
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function StoreStats({
       ) : (
         <div className="stat-bars destiny2">
           <PowerFormula stats={store.stats} storeId={store.id} />
-          <LoadoutStats stats={store.stats} storeId={store.id} />
+          <LoadoutStats stats={store.stats} storeId={store.id} characterClass={store.classType} />
         </div>
       )}
     </div>
