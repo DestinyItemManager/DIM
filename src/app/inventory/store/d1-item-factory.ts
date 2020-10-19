@@ -225,7 +225,7 @@ function makeItem(
   const element =
     (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
 
-  itemDef.sourceHashes = itemDef.sourceHashes || [];
+  itemDef.sourceHashes ||= [];
 
   const missingSource = missingSources[itemDef.hash] || [];
   if (missingSource.length) {

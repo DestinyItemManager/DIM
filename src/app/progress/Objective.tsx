@@ -153,20 +153,20 @@ function duration(d: number) {
   let ret = '';
   const days = d % (60 * 60 * 24);
   if (days > 0) {
-    d = d - days * 60 * 60 * 24;
+    d -= days * 60 * 60 * 24;
     ret += `${days}:`;
   }
   const hours = d % (60 * 60);
   if (days > 0 || hours > 0) {
-    d = d - hours * 60 * 60;
+    d -= hours * 60 * 60;
     ret += `${hours}:`;
   }
   const minutes = d % 60;
   if (days > 0 || hours > 0 || minutes > 0) {
-    d = d - minutes * 60;
+    d -= minutes * 60;
     ret += `${minutes}:`;
   }
-  const seconds = d;
-  ret += `${seconds}`;
+  // at this point, d is the remaining seconds
+  ret += `${d}`;
   return ret;
 }

@@ -11,7 +11,8 @@ export function createItemIndex(item: DimItem): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
-    _idTracker[index] = (_idTracker[index] || 0) + 1;
+    _idTracker[index] ||= 0;
+    _idTracker[index]++;
     index = `${index}-t${_idTracker[index]}`;
   }
 
