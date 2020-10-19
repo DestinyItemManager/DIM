@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'cover': string;
-  'searchOpen': string;
   'shadow': string;
 }
 export const cssExports: CssExports;
