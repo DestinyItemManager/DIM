@@ -1,0 +1,63 @@
+.energyMeter {
+  margin: 10px;
+}
+
+.icon {
+  margin: 0 2px 0 0;
+  vertical-align: middle;
+  height: 15px;
+  width: 15px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+
+  &.solar > .used {
+    border-color: #f0631e;
+    background: #f0631e;
+  }
+
+  &.solar > .unused {
+    border-color: #f0631e;
+  }
+
+  &.arc > .used {
+    border-color: #79bbe8;
+    background: #79bbe8;
+  }
+
+  &.arc > .unused {
+    border: 3px solid #79bbe8;
+  }
+
+  &.void > .used {
+    border-color: #8e749e;
+    background: #8e749e;
+  }
+
+  &.void > .unused {
+    border-color: #8e749e;
+  }
+}
+.increments {
+  display: block;
+  box-sizing: border-box;
+  height: 12px;
+  flex-grow: 1;
+  margin: 0 1px;
+  border: 3px solid white;
+
+  .unused {
+    background: transparent;
+  }
+
+  &.disabled {
+    height: 6px;
+    border: 3px solid #888;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
