@@ -3,10 +3,10 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
   AppIcon,
+  dragHandleIcon,
   enabledIcon,
   moveDownIcon,
   moveUpIcon,
-  reorderIcon,
   unselectedCheckIcon,
 } from '../shell/icons';
 import './SortOrderEditor.scss';
@@ -135,7 +135,7 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           {...provided.draggableProps}
         >
           <span {...provided.dragHandleProps}>
-            <AppIcon icon={reorderIcon} className="reorder-handle" />
+            <AppIcon icon={dragHandleIcon} className="reorder-handle" />
           </span>
           <span className="name" {...provided.dragHandleProps}>
             {item.displayName}

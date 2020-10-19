@@ -194,7 +194,7 @@ function mergeCategory(mergedCategory, otherCategory) {
   otherCategory.saleItems.forEach((saleItem) => {
     const existingSaleItem = mergedCategory.saleItems.find((i) => i.index === saleItem.index);
     if (existingSaleItem) {
-      existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
+      existingSaleItem.unlocked ||= saleItem.unlocked;
       if (saleItem.unlocked) {
         existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
       }

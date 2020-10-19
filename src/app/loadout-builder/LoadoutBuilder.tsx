@@ -261,7 +261,6 @@ function LoadoutBuilder({
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
-          vertical={!isPhonePortrait}
           isPhonePortrait={isPhonePortrait}
           onCharacterChanged={(storeId: string) => lbDispatch({ type: 'changeCharacter', storeId })}
         />

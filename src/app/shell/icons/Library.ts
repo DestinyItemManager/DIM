@@ -33,8 +33,8 @@ const faCaretDown = 'fas fa-caret-down';
 const faPencilAlt = 'fas fa-pencil-alt';
 const faPlus = 'fas fa-plus';
 const faCaretRight = 'fas fa-caret-right';
-const faExpandAlt = 'fas fa-expand-alt';
-const faCompressAlt = 'fas fa-compress-alt';
+const faAngleDoubleLeft = 'fas fa-angle-double-left';
+const faAngleDoubleRight = 'fas fa-angle-double-right';
 const faPlusCircle = 'fas fa-plus-circle';
 const faPlusSquare = 'fas fa-plus-square';
 const faQuestionCircle = 'far fa-question-circle';
@@ -79,11 +79,12 @@ const faFlag = 'far fa-flag';
 const faPenSquare = 'fas fa-pen-square';
 const faExclamationTriangle = 'fas fa-exclamation-triangle';
 const faTshirt = 'fas fa-tshirt';
-const faGripLinesVertical = 'fas fa-grip-lines-vertical';
 const faExternalLinkAlt = 'fas fa-external-link-alt';
 const faBookmarkSolid = 'fas fa-bookmark';
 const faBookmark = 'far fa-bookmark';
 const faBalanceScaleLeft = 'fas fa-balance-scale-left';
+const faGripVertical = 'fas fa-grip-vertical';
+const faThumbtack = 'fas fa-thumbtack';
 
 const faXbox = 'fab fa-xbox';
 const faPlaystation = 'fab fa-playstation';
@@ -107,7 +108,6 @@ export {
   faArrowRight as rightArrowIcon,
   faBan as banIcon,
   faBars as menuIcon,
-  faBars as reorderIcon,
   faBolt as boltIcon,
   faBalanceScaleLeft as compareIcon,
   faCheck,
@@ -130,10 +130,11 @@ export {
   faCaretDown as collapseIcon,
   faPencilAlt as editIcon,
   faPlus as plusIcon,
+  faThumbtack as pinIcon,
   faPlusSquare,
   faCaretRight as expandIcon,
-  faExpandAlt as maximizeIcon,
-  faCompressAlt as minimizeIcon,
+  faAngleDoubleLeft as maximizeIcon,
+  faAngleDoubleRight as minimizeIcon,
   faPlusCircle as addIcon,
   faQuestionCircle as helpIcon,
   faSave as saveIcon,
@@ -183,7 +184,7 @@ export {
   faPenSquare,
   faExclamationTriangle,
   faTshirt,
-  faGripLinesVertical,
+  faGripVertical as dragHandleIcon,
   faExternalLinkAlt,
   faXbox,
   faPlaystation,

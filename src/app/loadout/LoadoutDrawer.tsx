@@ -233,7 +233,7 @@ function addItem(
       }
     } else if (item.maxStackSize > 1) {
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-      dupe.amount = dupe.amount + increment;
+      dupe.amount += increment;
       // TODO: handle stack splits
     }
 
@@ -263,7 +263,8 @@ function removeItem(
     }
 
     const decrement = shift ? 5 : 1;
-    loadoutItem.amount = (loadoutItem.amount || 1) - decrement;
+    loadoutItem.amount ||= 1;
+    loadoutItem.amount -= decrement;
     if (loadoutItem.amount <= 0) {
       draftLoadout.items = draftLoadout.items.filter(
         (i) => !(i.hash === item.hash && i.id === item.id)

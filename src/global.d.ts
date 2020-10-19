@@ -42,6 +42,8 @@ declare const $featureFlags: {
   moveAmounts: boolean;
   /** Enable alt inv mode */
   altInventoryMode: boolean;
+  /** Enable search results */
+  searchResults: boolean;
 };
 
 declare namespace React {

@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
+import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -129,7 +129,7 @@ function DraggableItem({
           {...provided.draggableProps}
         >
           <span className={styles.grip} {...provided.dragHandleProps}>
-            <AppIcon icon={faGripLinesVertical} />
+            <AppIcon icon={dragHandleIcon} />
           </span>
           <label {...provided.dragHandleProps}>{name}</label>
           {children}

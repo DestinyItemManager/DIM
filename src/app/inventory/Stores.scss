@@ -238,17 +238,8 @@
       width: 100%;
       padding: 8px 0;
     }
-    > div {
-      max-width: calc(100% - 100px);
-      margin: 0 auto;
-      overflow: visible !important;
-      .frame {
-        overflow: visible !important;
-        touch-action: none;
-      }
-      .character {
-        margin: 0 5px;
-      }
+    .character {
+      margin: 0 5px;
     }
   }
   .gradientBackground & {

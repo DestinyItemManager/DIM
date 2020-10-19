@@ -21,6 +21,8 @@
   height: 32px;
   border-radius: 4px;
   min-width: 350px;
+  box-sizing: border-box;
+
   ::placeholder {
     color: #999;
   }
@@ -34,9 +36,6 @@
   @include phone-portrait {
     width: auto;
     height: 34px;
-    .gradientBackground & {
-      background: #000;
-    }
   }
 
   &:hover,
