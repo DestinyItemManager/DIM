@@ -31,18 +31,20 @@
     }
   }
 
-  &:hover,
-  &:active {
-    position: relative;
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      border: 1px solid white;
+  @media (hover: hover) {
+    &:hover,
+    &:active {
+      position: relative;
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border: 1px solid white;
+      }
     }
   }
 }

@@ -2,11 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'frame': string;
-  'select': string;
-  'tile': string;
   'track': string;
-  'unselected': string;
-  'vertical': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

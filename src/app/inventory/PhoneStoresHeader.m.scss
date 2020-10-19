@@ -1,0 +1,17 @@
+.frame {
+  max-width: calc(100% - 100px);
+  margin: 0 auto;
+  overflow: visible !important;
+  position: relative;
+}
+
+.track {
+  display: block;
+  // Don't let the browser handle touches, we'll do it ourselves
+  touch-action: none;
+
+  > * {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
