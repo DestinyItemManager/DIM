@@ -4,11 +4,13 @@ import {
 } from 'app/active-mode/Views/current-activity/util';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import StoreInventoryItem from 'app/inventory/StoreInventoryItem';
 import { DestinyActivityDefinition, DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 /** Find the ghost based on your current activity */
 export default function SuggestedGhosts({
@@ -18,6 +20,8 @@ export default function SuggestedGhosts({
   store: DimStore;
   activity: DestinyActivityDefinition;
 }) {
+  const allItems = useSelector(allItemsSelector);
+
   if (
     !activity.activityModeTypes.length ||
     activity.activityModeTypes.includes(DestinyActivityModeType.Social)
@@ -32,7 +36,7 @@ export default function SuggestedGhosts({
     DestinyActivityModeType.AllStrikes,
   ].some((modeType) => activity.activityModeTypes.includes(modeType));
 
-  const possibleGhosts: DimItem[] = store.items.filter((item) => {
+  const possibleGhosts: DimItem[] = allItems.filter((item) => {
     if (item.bucket.hash !== BucketHashes.Ghost) {
       return;
     }
@@ -45,6 +49,16 @@ export default function SuggestedGhosts({
       return ghostTypeToPlaceHash[planetName] === activity.placeHash;
     }
   });
+
+  const ghostHashes = possibleGhosts.map(({ index }) => index);
+
+  const alreadyEquipped = store.items.some(
+    ({ index, equipped }) => equipped && ghostHashes.includes(index)
+  );
+  if (alreadyEquipped) {
+    // Don't suggest ghosts if you already have the right one equipped
+    return null;
+  }
 
   return (
     <>
