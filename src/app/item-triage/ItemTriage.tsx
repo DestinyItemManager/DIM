@@ -270,7 +270,7 @@ function collectRelevantItemFactors(exampleItem: DimItem, allItems: DimItem[]) {
     .forEach((item: DimItem) => {
       factorCombos[exampleItem.bucket.sort as factorComboCategory].forEach((factorCombo) => {
         const combination = applyFactorCombo(item, factorCombo);
-        combinationCounts[combination] ??= 0 + 1;
+        combinationCounts[combination] ??= 0;
         combinationCounts[combination]++;
       });
     });
