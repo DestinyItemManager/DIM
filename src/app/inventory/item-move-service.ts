@@ -705,7 +705,7 @@ function canMoveToStore(
         spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
           if (i.type === this.originalItemType && storeReservations[s.id]) {
-            left = left - storeReservations[s.id];
+            left -= storeReservations[s.id];
           }
           return Math.max(0, left);
         },

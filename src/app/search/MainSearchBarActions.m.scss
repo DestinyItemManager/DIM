@@ -5,3 +5,13 @@
     display: none;
   }
 }
+
+.resultButton {
+  composes: dim-button from global;
+  margin: 0 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 3px 6px;
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
