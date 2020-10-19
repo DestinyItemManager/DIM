@@ -1,5 +1,7 @@
 ## Next
 
+## 6.35.0 <span className="changelog-date">(2020-10-18)</span>
+
 * Added the "sidecar" for item popup actions on desktop. This lets us have more actions, and they're easier to understand. If you always use drag and drop, you can collapse the sidecar down into a smaller version.
 * On mobile, press and hold on an item to access a quick actions menu, then drag your finger to an option and release to execute it. Move items faster than ever before!
 * Added buttons to the settings page to restore the default wish list URL.
