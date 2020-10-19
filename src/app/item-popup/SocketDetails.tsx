@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import '../inventory/StoreBucket.scss';
 import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
