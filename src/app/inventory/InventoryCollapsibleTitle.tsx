@@ -3,7 +3,8 @@ import { t } from 'app/i18next-t';
 import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import '../dim-ui/CollapsibleTitle.scss';
@@ -56,6 +57,12 @@ function InventoryCollapsibleTitle({
 }: Props) {
   const checkPostmaster = sectionId === 'Postmaster';
 
+  const initialMount = useRef(true);
+
+  useEffect(() => {
+    initialMount.current = false;
+  }, [initialMount]);
+
   return (
     <>
       <div
@@ -102,7 +109,25 @@ function InventoryCollapsibleTitle({
           );
         })}
       </div>
-      {!collapsed && children}
+
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.div
+            key="content"
+            initial={initialMount.current ? false : 'collapsed'}
+            animate="open"
+            exit="collapsed"
+            variants={{
+              open: { height: 'auto' },
+              collapsed: { height: 0 },
+            }}
+            transition={{ duration: 0.3 }}
+            className="collapse-content"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
