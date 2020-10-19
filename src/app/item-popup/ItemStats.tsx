@@ -10,11 +10,11 @@ export default function ItemStats({
   item,
   className,
 }: {
-  stats?: DimStat[];
+  stats?: DimStat[] | null;
   item?: DimItem;
   className?: string;
 }) {
-  stats = stats || item?.stats || undefined;
+  stats ||= item?.stats;
 
   if (!stats || !stats.length) {
     return null;

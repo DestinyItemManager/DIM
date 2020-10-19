@@ -87,8 +87,7 @@ export function DefItemIcon({
   borderless?: boolean;
 }) {
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
-  borderless =
-    borderless ||
+  borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
   const itemImageStyles = clsx(
