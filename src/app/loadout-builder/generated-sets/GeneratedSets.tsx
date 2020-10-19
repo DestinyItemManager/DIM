@@ -15,10 +15,6 @@ import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
-const statsWarning =
-  'https://destinyitemmanager.fandom.com/wiki/Loadout_Optimizer#A_Warning_on_Mods_and_Stats';
-const statsWarningLink = `<a href='${statsWarning}' target='_blank' rel='noopener noreferrer'>A Warning on Mods and Stats</a>`;
-
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -51,7 +47,6 @@ export default function GeneratedSets({
   sets,
   defs,
   statOrder,
-  isPhonePortrait,
   combos,
   combosWithoutCaps,
   enabledStats,
@@ -139,29 +134,15 @@ export default function GeneratedSets({
           {t('LoadoutBuilder.NewEmptyLoadout')}
         </button>
       </h2>
-      {combos !== combosWithoutCaps && (
-        <p className={styles.warning}>
-          {t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}
-        </p>
-      )}
+      <UserGuideLink topic="Loadout_Optimizer" />
       <p>
         {t('LoadoutBuilder.OptimizerExplanation')}{' '}
-        {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
-        {'\n'}
-        <span
-          dangerouslySetInnerHTML={{
-            __html: t('LoadoutBuilder.OptimizerExplanationArmour2Mods', {
-              link: statsWarningLink,
-            }),
-          }}
-        />{' '}
-        <UserGuideLink topic="Loadout_Optimizer" />
+        {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
       </p>
+      {combos !== combosWithoutCaps && (
+        <p>{t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}</p>
+      )}
       <p>{groupingDescription}</p>
-      <p>
-        <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
-        <span className={styles.selectedPerkKey}>{t('LoadoutBuilder.SelectedPerkKey')}</span>
-      </p>
       {measureSet ? (
         <GeneratedSet
           ref={setRowHeight}

@@ -4,6 +4,7 @@ import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
@@ -11,7 +12,6 @@ import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponA
 import { t } from 'app/i18next-t';
 import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';

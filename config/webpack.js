@@ -380,7 +380,7 @@ module.exports = (env) => {
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(!env.release),
+        '$featureFlags.mobileInspect': JSON.stringify(true),
         // Rearrange buckets in categories
         '$featureFlags.newArrangement': JSON.stringify(true),
         // New background design
@@ -388,7 +388,7 @@ module.exports = (env) => {
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions
-        '$featureFlags.newItemPopupActions': JSON.stringify(!env.release),
+        '$featureFlags.newItemPopupActions': JSON.stringify(true),
         // Enable move amounts
         '$featureFlags.moveAmounts': JSON.stringify(env.release),
         // Enable alternative inventory mode

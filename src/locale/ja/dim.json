@@ -17,14 +17,14 @@
     "Xbox": "XB1"
   },
   "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
-    "ButtonOn": "Active Mode",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "Loadouts": "Loadouts",
-    "NoQuests": "You're not tracking any quests",
-    "Pursuits": "Pursuits"
+    "Beta": "ベータ",
+    "ButtonOff": "所持品モード",
+    "ButtonOn": "アクティブモード",
+    "Farming": "最近のアイテム",
+    "FarmingStart": "ファーミングを開始する",
+    "Loadouts": "ロードアウト",
+    "NoQuests": "クエストを追跡していません",
+    "Pursuits": "追跡"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -110,7 +110,7 @@
   "Countdown": {
     "Days": "１日",
     "Days_compact": "{{count}}d",
-    "Days_compact_plural": "{{count}}d",
+    "Days_compact_plural": "{{count}} 日",
     "Days_plural": "{{count}} 日間"
   },
   "Csv": {
@@ -294,7 +294,7 @@
     "Inventory": "所持品",
     "IosPwaPrompt": "Mobile Safariで共有アイコン(下部の中央ボタン) をクリックし、「ホーム画面に追加」を選択します。",
     "Menu": "メニュー",
-    "Refresh": "デスティニーデータを更新",
+    "Refresh": "Destiny データ [R] を更新",
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
     "SaveSearch": "検索を保存",
@@ -947,8 +947,10 @@
     }
   },
   "WishListRoll": {
-    "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
-    "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
+    "BestRatedTip": "このパークは、正確に希望の武器ロールと一致しています。",
+    "BestRatedTip_plural": "これらのパークは、正確に希望の武器ロールと一致しています。",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "欲しい物リストをクリア",
     "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定します",
     "Header": "欲しい物リスト",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLは次から始まる必要があります:",
     "LastUpdated": "最終更新: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
   }
 }

@@ -54,7 +54,7 @@ export default function Sheet({
 
   const windowHeight = window.innerHeight;
   const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
-  const maxHeight = windowHeight - headerHeight - 16;
+  const maxHeight = windowHeight - headerHeight - 16 - 44;
 
   const sheetContents = useRef<HTMLDivElement | null>(null);
   const sheetContentsRefFn = useLockSheetContents(sheetContents);

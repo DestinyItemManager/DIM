@@ -1,10 +1,10 @@
 import { t } from 'app/i18next-t';
+import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
-import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
@@ -36,7 +36,7 @@ export default function DesktopStores(this: void, { stores, buckets }: Props) {
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+      <HeaderShadowDiv className="store-row store-header">
         {stores.map((store, index) => (
           <div
             className={clsx('store-cell', { vault: store.isVault })}
@@ -47,7 +47,7 @@ export default function DesktopStores(this: void, { stores, buckets }: Props) {
             <StoreStats store={store} />
           </div>
         ))}
-      </ScrollClassDiv>
+      </HeaderShadowDiv>
       <StoresInventory
         stores={stores}
         vault={vault}
@@ -96,13 +96,7 @@ function CollapsibleContainer({
 
   return (
     <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
-      {/*
-          t('Bucket.Inventory')
-          t('Bucket.Postmaster')
-          t('Bucket.General')
-          t('Bucket.Progress')
-          t('Bucket.Unknown')
-        */}
+      {/* t('Bucket.', { context: '', contextList: 'buckets' }) */}
       {inventoryBucket.map((bucket) => (
         <StoreBuckets
           key={bucket.hash}

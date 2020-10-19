@@ -1,5 +1,5 @@
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import ElementIcon from 'app/inventory/ElementIcon';
 import RecoilStat from 'app/item-popup/RecoilStat';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';

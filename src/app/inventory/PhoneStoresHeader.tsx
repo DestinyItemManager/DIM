@@ -1,12 +1,11 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { infoLog } from 'app/utils/log';
-import clsx from 'clsx';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useRef } from 'react';
-import CharacterTileButton from '../character-tile/CharacterTileButton';
-import { DimStore } from '../inventory/store-types';
-import styles from './CharacterSelect.m.scss';
+import StoreHeading from '../character-tile/StoreHeading';
+import styles from './PhoneStoresHeader.m.scss';
+import { DimStore } from './store-types';
 
 const spring: Spring = {
   type: 'spring',
@@ -18,79 +17,21 @@ const spring: Spring = {
 };
 
 /**
- * The swipable header for selecting from a list of characters.
- *
- * This is currently a copy/paste of PhoneStoresHeader once both are done, if they are still similar, recombine them.
+ * The swipable header for the mobile (phone portrait) Inventory view.
  */
-export default function CharacterSelect({
-  stores,
+export default function PhoneStoresHeader({
   selectedStore,
-  isPhonePortrait,
-  onCharacterChanged,
-}: {
-  stores: DimStore[];
-  selectedStore: DimStore;
-  isPhonePortrait?: boolean;
-  onCharacterChanged(storeId: string): void;
-}) {
-  stores = stores.filter((s) => !s.isVault);
-
-  if (!isPhonePortrait) {
-    return (
-      <ListCharacterSelect
-        stores={stores}
-        selectedStore={selectedStore}
-        onCharacterChanged={onCharacterChanged}
-      />
-    );
-  }
-
-  return (
-    <SwipableCharacterSelect
-      stores={stores}
-      selectedStore={selectedStore}
-      onCharacterChanged={onCharacterChanged}
-    />
-  );
-}
-
-function ListCharacterSelect({
   stores,
-  selectedStore,
-  onCharacterChanged,
+  setSelectedStoreId,
+  loadoutMenuRef,
 }: {
-  stores: DimStore[];
   selectedStore: DimStore;
-  vertical?: boolean;
-  onCharacterChanged(storeId: string): void;
-}) {
-  return (
-    <div className={styles.vertical}>
-      {stores.map((store) => (
-        <div
-          key={store.id}
-          className={clsx(styles.tile, {
-            [styles.unselected]: store.id !== selectedStore.id,
-          })}
-        >
-          <CharacterTileButton character={store} onClick={onCharacterChanged} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SwipableCharacterSelect({
-  stores,
-  selectedStore,
-  onCharacterChanged,
-}: {
   stores: DimStore[];
-  selectedStore: DimStore;
-  onCharacterChanged(storeId: string): void;
+  loadoutMenuRef: React.RefObject<HTMLElement>;
+  setSelectedStoreId(id: string): void;
 }) {
   const onIndexChanged = (index: number) => {
-    onCharacterChanged(stores[index].id);
+    setSelectedStoreId(stores[index].id);
     hideItemPopup();
   };
 
@@ -110,9 +51,8 @@ function SwipableCharacterSelect({
   const startOffset = useRef<number>(0);
 
   useEffect(() => {
-    const index = stores.indexOf(selectedStore);
     animate(offset, index, spring);
-  }, [selectedStore, offset, stores]);
+  }, [index, offset]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
@@ -178,12 +118,16 @@ function SwipableCharacterSelect({
       >
         {stores.map((store) => (
           <div
+            className="store-cell"
             key={store.id}
-            className={clsx(styles.tile, {
-              [styles.unselected]: store.id !== selectedStore.id,
-            })}
+            style={{ width: `${Math.floor(100 / stores.length)}%` }}
           >
-            <CharacterTileButton character={store} onClick={onCharacterChanged} />
+            <StoreHeading
+              store={store}
+              selectedStore={selectedStore}
+              onTapped={setSelectedStoreId}
+              loadoutMenuRef={loadoutMenuRef}
+            />
           </div>
         ))}
       </motion.div>

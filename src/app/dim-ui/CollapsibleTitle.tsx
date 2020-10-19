@@ -1,7 +1,8 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { toggleCollapsedSection } from '../settings/actions';
@@ -44,6 +45,12 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
 type Props = StoreProps & ProvidedProps & DispatchProps;
 
 function CollapsibleTitle({ title, collapsed, children, toggle, extra, className, style }: Props) {
+  const initialMount = useRef(true);
+
+  useEffect(() => {
+    initialMount.current = false;
+  }, [initialMount]);
+
   return (
     <>
       <div className={clsx('title', className, { collapsed })} style={style} onClick={toggle}>
@@ -53,7 +60,24 @@ function CollapsibleTitle({ title, collapsed, children, toggle, extra, className
         </span>
         {extra}
       </div>
-      {!collapsed && children}
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.div
+            key="content"
+            initial={initialMount.current ? false : 'collapsed'}
+            animate="open"
+            exit="collapsed"
+            variants={{
+              open: { height: 'auto' },
+              collapsed: { height: 0 },
+            }}
+            transition={{ duration: 0.3 }}
+            className="collapse-content"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

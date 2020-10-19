@@ -1,5 +1,5 @@
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { energyNamesByEnum } from 'app/search/d2-known-values';
 import React from 'react';

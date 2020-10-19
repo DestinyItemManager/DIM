@@ -1,7 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { getItemDamageShortName, getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

@@ -18,6 +18,7 @@ interface ProvidedProps {
   item: DimItem;
   className?: string;
   hideKeys?: boolean;
+  hideButtonLabel?: boolean;
 }
 
 interface StoreProps {
@@ -30,7 +31,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function ItemTagSelector({ item, className, tag, hideKeys, dispatch }: Props) {
+function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, dispatch }: Props) {
   const onChange = (tag?: TagValue) => {
     dispatch(
       itemIsInstanced(item)
@@ -69,7 +70,9 @@ function ItemTagSelector({ item, className, tag, hideKeys, dispatch }: Props) {
       value={tag}
       onChange={onChange}
       hideSelected={true}
-      className={clsx(className, 'item-tag-selector')}
+      className={clsx(className, styles.itemTagSelector, 'item-tag-selector', {
+        [styles.minimized]: hideButtonLabel,
+      })}
     />
   );
 }

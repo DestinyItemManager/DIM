@@ -34,18 +34,18 @@ Array [
     "helpText": undefined,
     "highlightRange": Array [
       12,
-      19,
+      18,
     ],
-    "query": "is:haspower is:blue",
+    "query": "is:haspower is:bow",
     "type": 3,
   },
   Object {
     "helpText": undefined,
     "highlightRange": Array [
       12,
-      18,
+      19,
     ],
-    "query": "is:haspower is:bow",
+    "query": "is:haspower is:blue",
     "type": 3,
   },
 ]
@@ -53,8 +53,8 @@ Array [
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 Array [
-  "is:blue",
   "is:bow",
+  "is:blue",
 ]
 `;
 

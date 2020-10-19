@@ -294,7 +294,7 @@
     "Inventory": "Inventario",
     "IosPwaPrompt": "Su Safari Mobile, clicca sull'icona \"condividi\" (il bottone centrale in basso) e seleziona \"Aggiungi a schermata Home\".",
     "Menu": "Menù",
-    "Refresh": "Aggiorna i dati di Destiny",
+    "Refresh": "Aggiorna i dati di Destiny [R]",
     "ReloadApp": "Ricarica App",
     "ReportBug": "Segnala un bug",
     "SaveSearch": "Salva Ricerca",
@@ -720,7 +720,7 @@
     "LegacyRecord": "Questo Trionfo non sarà più completabile dopo l'uscita di Oltre la Luce.",
     "LegacyTriumphs": "Trionfi Storici",
     "Milestones": "Pietre miliari & Sfide",
-    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure quanti ne vuoi su DIM.",
+    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "Progress": "Avanzamento",
     "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
@@ -873,7 +873,7 @@
     "Junk": "Smantella",
     "Keep": "Tieni",
     "LockAll": "Blocca Oggetti",
-    "TagItem": "Etichetta Oggetto",
+    "TagItem": "Etichetta",
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triumphs": {
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "Questo perk corrisponde esattamente ad un roll della tua Lista Desideri.",
     "BestRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua Lista Desideri.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy, insieme al alcuni roll da scartare.",
     "Clear": "Cancella Lista Desideri",
     "ExternalSource": "Oppure, inserisci un URL di una Lista Desideri",
     "Header": "Lista Desideri",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con uno dei seguenti:",
     "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
     "Num": "{{num, number}} roll nella tua Lista Desideri",
+    "PreMadeFiles": "Utilizza una Lista Desideri pre-compilata",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
   }
 }

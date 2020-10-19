@@ -1,3 +1,9 @@
+.itemTagSelector {
+  button {
+    min-width: 10em;
+  }
+}
+
 .item {
   flex: 1;
   display: flex;
@@ -5,6 +11,7 @@
   align-items: center;
   > *:nth-child(2) {
     flex: 1;
+    text-align: left;
   }
 }
 
@@ -26,6 +33,20 @@
 .keyHelp {
   opacity: 0.7;
   button & {
+    display: none;
+  }
+}
+
+.minimized {
+  button {
+    padding: 0;
+    background: none;
+    min-width: auto;
+  }
+  button .item > *:nth-child(2) {
+    display: none;
+  }
+  button > *:nth-child(2) {
     display: none;
   }
 }

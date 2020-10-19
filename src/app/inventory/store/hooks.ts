@@ -5,7 +5,7 @@ import { useSubscription } from 'app/utils/hooks';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { queueAction } from '../action-queue';
+import { queueAction } from '../../utils/action-queue';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
 

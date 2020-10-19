@@ -1,15 +1,13 @@
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
+import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import Hammer from 'react-hammerjs';
-import { Frame, Track, View, ViewPager } from 'react-view-pager';
-import StoreHeading from '../character-tile/StoreHeading';
-import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
-import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import { InventoryBuckets } from './inventory-buckets';
+import PhoneStoresHeader from './PhoneStoresHeader';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
 import { getCurrentStore, getStore, getVault } from './stores-helpers';
@@ -39,11 +37,6 @@ export default function PhoneStores({ stores, buckets }: Props) {
 
   const selectedStore = selectedStoreId ? getStore(stores, selectedStoreId)! : currentStore;
 
-  const onViewChange = (indices: number[]) => {
-    setSelectedStoreId(stores[indices[0]].id);
-    hideItemPopup();
-  };
-
   const handleSwipe: HammerListener = (e) => {
     const selectedStoreIndex = selectedStoreId
       ? stores.findIndex((s) => s.id === selectedStoreId)
@@ -71,34 +64,18 @@ export default function PhoneStores({ stores, buckets }: Props) {
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <ScrollClassDiv
+      <HeaderShadowDiv
         className="store-row store-header"
-        scrollClass="sticky"
         style={storeBackgroundColor(selectedStore, 0, true, true)}
         onTouchStart={(e) => e.stopPropagation()}
       >
-        <ViewPager>
-          <Frame className="frame" autoSize={false}>
-            <Track
-              currentView={selectedStore.id}
-              contain={false}
-              onViewChange={onViewChange}
-              className="track"
-            >
-              {stores.map((store) => (
-                <View className="store-cell" key={store.id}>
-                  <StoreHeading
-                    store={store}
-                    selectedStore={selectedStore}
-                    onTapped={setSelectedStoreId}
-                    loadoutMenuRef={detachedLoadoutMenu}
-                  />
-                </View>
-              ))}
-            </Track>
-          </Frame>
-        </ViewPager>
-      </ScrollClassDiv>
+        <PhoneStoresHeader
+          selectedStore={selectedStore}
+          stores={stores}
+          loadoutMenuRef={detachedLoadoutMenu}
+          setSelectedStoreId={setSelectedStoreId}
+        />
+      </HeaderShadowDiv>
 
       <div className="detached" ref={detachedLoadoutMenu} />
 
@@ -114,19 +91,37 @@ export default function PhoneStores({ stores, buckets }: Props) {
         </div>
       </Hammer>
 
-      <div className="category-options">
-        {Object.keys(buckets.byCategory)
-          .filter((category) => category !== 'Postmaster')
-          .map((category) => (
-            <div
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={clsx({ selected: category === selectedCategoryId })}
-            >
-              {t(`Bucket.${category}`)}
-            </div>
-          ))}
-      </div>
+      <CategoryStrip
+        category={selectedCategoryId}
+        buckets={buckets}
+        onCategorySelected={handleCategoryChange}
+      />
+    </div>
+  );
+}
+
+function CategoryStrip({
+  buckets,
+  category: selectedCategoryId,
+  onCategorySelected,
+}: {
+  buckets: InventoryBuckets;
+  category: string;
+  onCategorySelected(category: string): void;
+}) {
+  return (
+    <div className="category-options">
+      {Object.keys(buckets.byCategory)
+        .filter((category) => category !== 'Postmaster')
+        .map((category) => (
+          <div
+            key={category}
+            onClick={() => onCategorySelected(category)}
+            className={clsx({ selected: category === selectedCategoryId })}
+          >
+            {t(`Bucket.${category}`)}
+          </div>
+        ))}
     </div>
   );
 }

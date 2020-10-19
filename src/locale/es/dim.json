@@ -294,7 +294,7 @@
     "Inventory": "Inventario",
     "IosPwaPrompt": "En Safari Móvil, haga click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
     "Menu": "Menú",
-    "Refresh": "Actualizar datos de Destiny",
+    "Refresh": "Actualizar Datos de Destiny [R]",
     "ReloadApp": "Recargar App",
     "ReportBug": "Informar de un Error",
     "SaveSearch": "Guardar Búsqueda",
@@ -873,7 +873,7 @@
     "Junk": "Basura",
     "Keep": "Guardar",
     "LockAll": "Bloquear objetos",
-    "TagItem": "Etiqueta de objeto",
+    "TagItem": "Etiqueta",
     "UnlockAll": "Desbloquear objetos"
   },
   "Triumphs": {
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de deseos.",
     "BestRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma de tu lista de deseos.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
     "Clear": "Limpiar Lista de Deseos",
     "ExternalSource": "Opcionalmente, proporcione la URL para una lista de deseos",
     "Header": "Lista de Deseos",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Por favor, introduzca una URL válida para su lista de deseos externa. La URL debe empezar con algunos de lo siguientes:",
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
+    "PreMadeFiles": "Usar Una Lista de Deseos Prehecha",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
+    "Voltron": "voltron (por defecto)",
+    "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   }
 }

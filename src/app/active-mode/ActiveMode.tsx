@@ -74,7 +74,6 @@ function ActiveMode(
         {selectedStore && (
           <CharacterSelect
             stores={stores}
-            vertical={!isPhonePortrait}
             isPhonePortrait={isPhonePortrait}
             selectedStore={selectedStore}
             onCharacterChanged={setSelectedStoreId}

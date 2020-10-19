@@ -55,6 +55,11 @@ $header-height: 44px;
   top: $header-height;
   top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
+  .search-open & {
+    top: 2 * $header-height;
+    top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
+    top: calc(#{2 * $header-height} + env(safe-area-inset-top));
+  }
 }
 
 // The tallest a "full screen" sheet should be

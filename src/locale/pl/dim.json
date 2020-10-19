@@ -294,7 +294,7 @@
     "Inventory": "Ekwipunek",
     "IosPwaPrompt": "W Mobilnym Safari, kliknij ikonę udostępniania (środkowy przycisk u dołu) i wybierz \"Dodaj do Ekranu Domowego\".",
     "Menu": "Menu",
-    "Refresh": "Odśwież Dane Destiny",
+    "Refresh": "Odśwież Dane Destiny [R]",
     "ReloadApp": "Przeładuj aplikację",
     "ReportBug": "Zgłoś błąd",
     "SaveSearch": "Zapisz wyszukiwanie",
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "Ten atut dokładnie odpowiada rollu broni na twojej liście życzeń.",
     "BestRatedTip_plural": "Te atuty dokładnie odpowiadają rollu broni na twojej liście życzeń.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Wyczyść Listę Życzeń",
     "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
     "Header": "Lista Życzeń",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla zewnętrznego źródła listy życzeń. Adres URL musi zaczynać się od jednego z następujących:",
     "LastUpdated": "Ostatnia aktualizacja: {{lastUpdatedDate}} o {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
   }
 }

@@ -294,12 +294,12 @@
     "Inventory": "소지품",
     "IosPwaPrompt": "모바일 사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
     "Menu": "메뉴",
-    "Refresh": "데스티니 데이터 새로고침",
+    "Refresh": "데스티니 데이터 새로고침 [R]",
     "ReloadApp": "앱 새로고침",
     "ReportBug": "버그 제보",
     "SaveSearch": "검색 저장",
     "Shop": "상점",
-    "TagAs": "'{{tag}}'로 태그",
+    "TagAs": "'{{tag}}'(으)로 태그",
     "UpgradeDIM": "DIM 업데이트",
     "WhatsNew": "새로운 기능"
   },
@@ -949,6 +949,8 @@
   "WishListRoll": {
     "BestRatedTip": "희망 아이템 목록에 있는 무기의 특성 조합과 일치하는 특성입니다.",
     "BestRatedTip_plural": "희망 아이템 목록에 있는 무기의 특성 조합과 일치합니다.",
+    "ChoosyVoltron": "choosy_voltron",
+    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "희망 아이템 목록 비우기",
     "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
     "Header": "희망 아이템 목록",
@@ -961,7 +963,10 @@
     "InvalidExternalSource": "유효한 외부 희망 아이템 목록 URL을 입력하세요. URL은 다음 중 하나로 시작해야 합니다:",
     "LastUpdated": "마지막 업데이트: {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "{{num, number}}개의 희망 아이템 목록",
+    "PreMadeFiles": "Use A Pre-Made Wish List",
     "UpdateExternalSource": "희망 아이템 목록 업데이트",
+    "Voltron": "voltron (default)",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
   }
 }

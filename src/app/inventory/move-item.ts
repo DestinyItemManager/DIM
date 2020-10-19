@@ -10,8 +10,8 @@ import _ from 'lodash';
 import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
+import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
-import { queueAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
 import { moveItemTo as moveTo } from './item-move-service';
@@ -111,7 +111,10 @@ export function moveItemTo(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     hideItemPopup();
-    if (item.notransfer && item.owner !== store.id) {
+    if (
+      (item.notransfer && item.owner !== store.id) ||
+      (item.location.inPostmaster && !item.canPullFromPostmaster)
+    ) {
       throw new Error(t('Help.CannotMove'));
     }
 
