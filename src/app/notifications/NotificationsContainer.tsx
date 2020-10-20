@@ -1,11 +1,11 @@
 import { useSubscription } from 'app/utils/hooks';
+import { AnimatePresence, Spring } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
-import { config, useTransition } from 'react-spring';
 import Notification from './Notification';
 import { notifications$, Notify } from './notifications';
 import './NotificationsContainer.scss';
 
-const spring = { ...config.stiff, precision: 0.1, clamp: true };
+const spring: Spring = { type: 'spring', bounce: 0, duration: 0.3 };
 
 /** This is the root element that displays popup notifications. */
 export default function NotificationsContainer() {
@@ -24,18 +24,21 @@ export default function NotificationsContainer() {
   const onNotificationClosed = (notification: Notify) =>
     setNotifications((notifications) => notifications.filter((n) => n !== notification));
 
-  const transitions = useTransition(notifications, (n) => n.id, {
-    config: spring,
-    from: { opacity: 0, height: 0 },
-    enter: [{ height: 'auto' }, { opacity: 1 }],
-    leave: [{ opacity: 0 }, { height: 0 }],
-  });
-
   return (
     <div className="notifications-container">
-      {transitions.map(({ item, key, props }) => (
-        <Notification key={key} style={props} notification={item} onClose={onNotificationClosed} />
-      ))}
+      <AnimatePresence>
+        {notifications.map((item) => (
+          <Notification
+            key={item.id}
+            transition={spring}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ opacity: 0, height: 0 }}
+            notification={item}
+            onClose={onNotificationClosed}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 }

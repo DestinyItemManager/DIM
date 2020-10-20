@@ -1,16 +1,15 @@
 import clsx from 'clsx';
+import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { animated, config, useSpring } from 'react-spring';
 import './Notification.scss';
 import { Notify } from './notifications';
 
-interface Props {
+interface Props extends MotionProps {
   notification: Notify;
-  style: React.CSSProperties;
   onClose(notification: Notify): void;
 }
 
-export default function Notification({ notification, style, onClose }: Props) {
+export default function Notification({ notification, onClose, ...animation }: Props) {
   const [mouseover, setMouseover] = useState(false);
   const [success, setSuccess] = useState<boolean | undefined>();
   const [error, setError] = useState<Error | undefined>();
@@ -18,6 +17,10 @@ export default function Notification({ notification, style, onClose }: Props) {
   const timer = useRef(0);
 
   const setupTimer = useCallback(() => {
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+      timer.current = 0;
+    }
     if (!error && !success && notification.promise) {
       notification.promise.then(() => setSuccess(true)).catch(setError);
     } else if (notification.duration) {
@@ -62,21 +65,30 @@ export default function Notification({ notification, style, onClose }: Props) {
     setupTimer();
   };
 
-  const progressBarProps = useSpring({
-    from: { width: '0%' },
-    to: { width: mouseover || Boolean(!error && !success && notification.promise) ? '0%' : '100%' },
-    config: mouseover ? config.default : { ...config.default, duration: notification.duration },
-  });
+  const progressTarget =
+    mouseover || Boolean(!error && !success && notification.promise) ? '0%' : '100%';
+
+  const transition: Transition = mouseover
+    ? {
+        type: 'tween',
+        ease: 'easeOut',
+        duration: 0.3,
+      }
+    : {
+        type: 'tween',
+        ease: 'linear',
+        duration: notification.duration / 1000 - 0.3,
+      };
 
   return (
-    <animated.div
+    <motion.div
       className="notification"
       role="alert"
       onClick={onClick}
-      style={style}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      onTouchStart={onMouseOver}
+      {...animation}
+      onHoverStart={onMouseOver}
+      onHoverEnd={onMouseOut}
+      onTapStart={onMouseOver}
     >
       <div
         className={clsx(
@@ -100,9 +112,14 @@ export default function Notification({ notification, style, onClose }: Props) {
         </div>
         {(success || error || !notification.promise) &&
           typeof notification.duration === 'number' && (
-            <animated.div style={progressBarProps} className="notification-timer" />
+            <motion.div
+              transition={transition}
+              initial={{ width: '0%' }}
+              animate={{ width: progressTarget }}
+              className="notification-timer"
+            />
           )}
       </div>
-    </animated.div>
+    </motion.div>
   );
 }
