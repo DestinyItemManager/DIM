@@ -9,6 +9,7 @@ import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/
 import { getColor, percent } from 'app/shell/filters';
 import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { clamp } from 'app/utils/util';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -56,10 +57,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     }
   } else if (moddedStatValue && moddedStatValue < 0 && masterworkDisplayValue) {
     segments.push([
-      Math.max(
-        0,
-        Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
-      ),
+      clamp(masterworkDisplayValue, 0, stat.base + moddedStatValue + masterworkDisplayValue),
       styles.masterworkStatBar,
     ]);
   } else if (masterworkDisplayValue) {

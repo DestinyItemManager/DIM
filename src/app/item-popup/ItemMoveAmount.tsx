@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { clamp } from 'app/utils/util';
 import _ from 'lodash';
 import React from 'react';
 import { preventNaN } from '../utils/util';
@@ -142,7 +143,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
   private constrain = () => {
     const { amount, maximum, onAmountChanged } = this.props;
     const value = preventNaN(amount, maximum);
-    const constrained = Math.max(1, Math.min(value, maximum));
+    const constrained = clamp(value, 1, maximum);
 
     if (constrained !== amount) {
       onAmountChanged(constrained);

@@ -20,13 +20,13 @@
     "Beta": "BETA",
     "ButtonOff": "Inventory Mode",
     "ButtonOn": "Active Mode",
+    "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
-    "Pursuits": "Pursuits",
-    "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here."
+    "NoSearches": "Create saved searches and filter them here.",
+    "Pursuits": "Pursuits"
   },
   "Activities": {
     "Activities": "Activities",

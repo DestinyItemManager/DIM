@@ -1,3 +1,4 @@
+import { clamp } from 'app/utils/util';
 import clsx from 'clsx';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -17,7 +18,7 @@ export default function CharacterOrderEditor({
   const characters = useSelector(sortedStoresSelector);
 
   const moveItem = (oldIndex: number, newIndex: number) => {
-    newIndex = Math.min(characters.length, Math.max(newIndex, 0));
+    newIndex = clamp(newIndex, 0, characters.length);
     const order = reorder(
       characters.filter((c) => !c.isVault).map((c) => c.id),
       oldIndex,

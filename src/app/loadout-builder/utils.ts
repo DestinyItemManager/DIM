@@ -1,5 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { clamp } from 'app/utils/util';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -224,7 +225,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
 }
 
 export function statTier(stat: number) {
-  return Math.min(10, Math.max(0, Math.floor(stat / 10)));
+  return clamp(Math.floor(stat / 10), 0, 10);
 }
 
 /**

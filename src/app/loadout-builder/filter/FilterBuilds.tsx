@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
+import { clamp } from 'app/utils/util';
 import _ from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -113,7 +114,7 @@ function RangeSelector({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedOnChange = useCallback(
     _.debounce((value) => {
-      const clamped = Math.max(min, Math.min(value, max));
+      const clamped = clamp(value, min, max);
       setValue(clamped);
       onChange(clamped);
     }, 500),

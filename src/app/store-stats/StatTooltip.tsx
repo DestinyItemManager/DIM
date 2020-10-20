@@ -1,4 +1,5 @@
 import { t, tl } from 'app/i18next-t';
+import { statTier } from 'app/loadout-builder/utils';
 import { D2ArmorStatHashByName } from 'app/search/d2-known-values';
 import {
   getClassAbilityCooldowns,
@@ -56,7 +57,7 @@ function getAbilityTranslation(statHash: number) {
 function StatTooltip({ stat, characterClass }: Props) {
   const abilityTranslation = getAbilityTranslation(stat.hash);
   const classAbilityTranslation = getClassAbilityCooldownTranslation(characterClass);
-  const tier = Math.min(10, Math.max(0, Math.floor(stat.value / 10)));
+  const tier = statTier(stat.value);
   const statEffects = getStatEffects(stat.hash);
   const classAbilityEffects = getClassAbilityCooldowns(characterClass);
 
