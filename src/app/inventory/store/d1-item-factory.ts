@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
-import { clamp } from 'app/utils/util';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -506,7 +505,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
     const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-    const xp = clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
+    const xp = _.clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
     // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
     let dtrHash: string | null = null;

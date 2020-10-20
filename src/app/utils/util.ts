@@ -111,13 +111,3 @@ export function download(data: string, filename: string, type: string) {
   a.click();
   setTimeout(() => document.body.removeChild(a));
 }
-
-/**
- * Clamp `value` between `min` and `max`
- * @param value value to be clamped
- * @param min minimum allowed value
- * @param max maximum allowed value
- */
-export function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
-}

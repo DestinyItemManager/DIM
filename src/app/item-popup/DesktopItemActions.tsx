@@ -8,9 +8,9 @@ import { setSetting } from 'app/settings/actions';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { clamp } from 'app/utils/util';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
@@ -92,7 +92,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         const containerHeight = containerRef.current.clientHeight;
         const offset = arrowRect.top - parentRect.top + 2.5;
 
-        const top = clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
+        const top = _.clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
 
         containerRef.current.style.transform = `translateY(${Math.round(top)}px)`;
       }

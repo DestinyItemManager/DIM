@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { useSubscription } from 'app/utils/hooks';
-import { clamp } from 'app/utils/util';
+import _ from 'lodash';
 import React, { useState } from 'react';
 import Sheet from '../dim-ui/Sheet';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
@@ -49,7 +49,7 @@ export default function MoveAmountPopupContainer() {
   while (targetAmount > 0) {
     targetAmount -= item.maxStackSize;
   }
-  const stacksWorth = clamp(-targetAmount, 0, maximum);
+  const stacksWorth = _.clamp(-targetAmount, 0, maximum);
 
   return (
     <Sheet
