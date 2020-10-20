@@ -56,7 +56,7 @@ function getAbilityTranslation(statHash: number) {
 function StatTooltip({ stat, characterClass }: Props) {
   const abilityTranslation = getAbilityTranslation(stat.hash);
   const classAbilityTranslation = getClassAbilityCooldownTranslation(characterClass);
-  const tier = Math.floor(stat.value / 10);
+  const tier = Math.min(10, Math.max(0, Math.floor(stat.value / 10)));
   const statEffects = getStatEffects(stat.hash);
   const classAbilityEffects = getClassAbilityCooldowns(characterClass);
 
