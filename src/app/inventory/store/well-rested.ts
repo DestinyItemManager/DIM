@@ -4,6 +4,7 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
 /**
@@ -74,7 +75,7 @@ export function isWellRested(
  * How much XP was required to achieve the given level?
  */
 function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
-  const stepIndex = Math.min(Math.max(1, level), progressDef.steps.length - 1);
+  const stepIndex = _.clamp(level, 1, progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
 }
 

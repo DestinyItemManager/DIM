@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
@@ -88,7 +89,7 @@ export default class SortOrderEditor extends React.Component<Props> {
   }
 
   private moveItem(oldIndex, newIndex, fromDrag = false) {
-    newIndex = Math.min(this.props.order.length, Math.max(newIndex, 0));
+    newIndex = _.clamp(newIndex, 0, this.props.order.length);
     const order = reorder(this.props.order, oldIndex, newIndex);
     if (fromDrag) {
       order[newIndex] = {

@@ -113,7 +113,7 @@ function RangeSelector({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedOnChange = useCallback(
     _.debounce((value) => {
-      const clamped = Math.max(min, Math.min(value, max));
+      const clamped = _.clamp(value, min, max);
       setValue(clamped);
       onChange(clamped);
     }, 500),

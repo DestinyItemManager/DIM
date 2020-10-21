@@ -142,7 +142,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
   private constrain = () => {
     const { amount, maximum, onAmountChanged } = this.props;
     const value = preventNaN(amount, maximum);
-    const constrained = Math.max(1, Math.min(value, maximum));
+    const constrained = _.clamp(value, 1, maximum);
 
     if (constrained !== amount) {
       onAmountChanged(constrained);
