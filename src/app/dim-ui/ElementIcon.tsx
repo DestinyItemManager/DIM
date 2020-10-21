@@ -11,13 +11,7 @@ export default function ElementIcon({
   element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   className?: string;
 }) {
-  return (
-    (element && (
-      <BungieImage
-        className={clsx(className, styles.element)}
-        src={element.displayProperties.icon}
-      />
-    )) ??
-    null
-  );
+  return element ? (
+    <BungieImage className={clsx(className, styles.element)} src={element.displayProperties.icon} />
+  ) : null;
 }

@@ -44,6 +44,8 @@ declare const $featureFlags: {
   altInventoryMode: boolean;
   /** Enable search results */
   searchResults: boolean;
+  /** Advanced Write Actions (inserting mods) */
+  awa: boolean;
 };
 
 declare namespace React {

@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .energyMeter {
   margin: 10px;
 }
@@ -60,4 +62,41 @@
 
 .clickable {
   cursor: pointer;
+}
+
+.upgradePreview {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  padding: 4px 0;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @include horizontal-space-children(8px);
+
+  > :first-child {
+    flex: 1;
+  }
+}
+
+.upgradeButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  color: #fff;
+  font-size: 16px;
+}
+
+.cost {
+  font-size: 12px !important;
+}
+
+.elementSelect {
+  > button {
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    > span:nth-child(2) {
+      display: none;
+    }
+  }
 }
