@@ -117,7 +117,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
+    CompareService.addItemsToCompare([item]);
   };
 
   const addToLoadout = (e) => {
