@@ -1,4 +1,5 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { wrap } from 'app/utils/util';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
@@ -12,16 +13,6 @@ const spring: Spring = {
   mass: 1,
   restSpeed: 0.01,
   restDelta: 0.01,
-};
-
-const wrap = (index: number, length: number) => {
-  while (index < 0) {
-    index += length;
-  }
-  while (index >= length) {
-    index -= length;
-  }
-  return index;
 };
 
 /**
@@ -44,21 +35,18 @@ export default function PhoneStoresHeader({
     hideItemPopup();
   };
 
-  // TODO: carousel
   // TODO: wrap StoreHeading in a div?
   // TODO: optional external motion control
 
   const index = stores.indexOf(selectedStore);
   const lastIndex = useRef(index);
 
-  // stores = stores.map((_, i) => stores[wrap(i - index - 1, stores.length)]);
-
   const trackRef = useRef<HTMLDivElement>(null);
 
   // The track is divided into "segments", with one item per segment
   const numSegments = stores.length;
   // This is a floating-point, animated representation of the position within the segments, relative to the current store
-  const offset = useMotionValue(2);
+  const offset = useMotionValue(0);
   // Keep track of the starting point when we begin a gesture
   const startOffset = useRef<number>(0);
 
@@ -109,11 +97,6 @@ export default function PhoneStoresHeader({
     if (newIndex !== 0) {
       onIndexChanged(newIndex);
     } else {
-      /*
-    const velocity = offset.getVelocity();
-    offset.set(offset.get() - newIndex);
-    animate(offset, 0, { ...spring, velocity });
-    */
       animate(offset, 0, spring);
     }
   };
@@ -124,10 +107,8 @@ export default function PhoneStoresHeader({
     segments.push(stores[wrap(i, stores.length)]);
   }
 
-  // Transform the segment-relative offset back into pixels
-  const offsetPercent = useTransform(offset, (o) =>
-    trackRef.current ? (trackRef.current.clientWidth / segments.length) * -(o + 2) : 0
-  );
+  // Transform the segment-relative offset back into percents
+  const offsetPercent = useTransform(offset, (o) => (100 / segments.length) * -(o + 2) + '%');
 
   return (
     <div className={styles.frame}>
