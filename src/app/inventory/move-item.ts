@@ -112,7 +112,7 @@ export function moveItemTo(
   return async (dispatch, getState) => {
     hideItemPopup();
     if (
-      (item.notransfer && item.owner !== store.id) ||
+      (!item.location.inPostmaster && item.notransfer && item.owner !== store.id) ||
       (item.location.inPostmaster && !item.canPullFromPostmaster)
     ) {
       throw new Error(t('Help.CannotMove'));
