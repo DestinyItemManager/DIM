@@ -29,7 +29,21 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 function ItemTagHotkeys({ item, itemTag, dispatch }: Props) {
   let hotkeys: Hotkey[] = emptyArray<Hotkey>();
   if (item.taggable) {
-    hotkeys = [];
+    hotkeys = [
+      {
+        combo: 'shift+0',
+        description: t('Tags.ClearTag'),
+        callback: () =>
+          dispatch(
+            itemIsInstanced(item)
+              ? setItemTag({ itemId: item.id, tag: undefined })
+              : setItemHashTag({
+                  itemHash: item.hash,
+                  tag: undefined,
+                })
+          ),
+      },
+    ];
 
     itemTagList.forEach((tag) => {
       if (tag.hotkey) {

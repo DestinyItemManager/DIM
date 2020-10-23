@@ -14,7 +14,7 @@
   color: white;
   font-size: 1em;
   background-color: rgba(0, 0, 0, 0.9);
-  z-index: 100;
+  z-index: 2000;
   @supports (backdrop-filter: blur(5px)) {
     backdrop-filter: blur(5px);
   }

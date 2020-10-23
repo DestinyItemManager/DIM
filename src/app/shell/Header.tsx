@@ -13,6 +13,7 @@ import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendo
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
+import Mousetrap from 'mousetrap';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -260,6 +261,13 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
   ];
   useHotkeys(hotkeys);
 
+  const showKeyboardHelp = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    Mousetrap.trigger('?');
+    setDropdownOpen(false);
+  };
+
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
     !window.MSStream &&
@@ -298,6 +306,11 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
               <NavLink className="link menuItem" to="/settings">
                 {t('Settings.Settings')}
               </NavLink>
+              {!isPhonePortrait && (
+                <a className="link menuItem" onClick={showKeyboardHelp}>
+                  {t('Header.KeyboardShortcuts')}
+                </a>
+              )}
               <ExternalLink
                 className="link menuItem"
                 href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"

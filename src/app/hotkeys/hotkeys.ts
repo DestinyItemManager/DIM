@@ -124,11 +124,11 @@ function installHotkey(hotkey: Hotkey) {
     // if the callback is executed directly `hotkey.get('w').callback()`
     // there will be no event, so just execute the callback.
     if (event) {
-      const target = (event.target || event.srcElement!) as Element; // srcElement is IE only
-      const nodeName = target.nodeName.toUpperCase();
+      const target = (event.target || event.srcElement!) as Element | undefined; // srcElement is IE only
+      const nodeName = target?.nodeName.toUpperCase();
 
       // check if the input has a mousetrap class, and skip checking preventIn if so
-      if (target.classList.contains('mousetrap')) {
+      if (target?.classList.contains('mousetrap')) {
         shouldExecute = true;
       } else {
         // don't execute callback if the event was fired from inside an element listed in preventIn
