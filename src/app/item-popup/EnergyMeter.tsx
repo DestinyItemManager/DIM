@@ -91,6 +91,8 @@ export default function EnergyMeter({
     }
 
     const upgradeMods = energyUpgrade(
+      defs,
+      item,
       item.energy.energyType,
       item.energy.energyCapacity,
       previewEnergyType,
@@ -103,17 +105,14 @@ export default function EnergyMeter({
     const socket = tierSockets.sockets[0];
 
     try {
-      await dispatch(insertPlug(item, socket, upgradeMods[upgradeMods.length - 1]));
-
       for (const modHash of upgradeMods) {
-        await dispatch(insertPlug(item, tierSockets[0], modHash));
+        await dispatch(insertPlug(item, socket, modHash));
       }
+
+      // TODO: show confirmation, hide preview, update item
     } catch (e) {
       showNotification({ type: 'error', title: 'Error', body: e.message });
     }
-    // TODO: can I just insert the final mod?
-    /*
-     */
   };
 
   const energyTypes = Object.values(defs.EnergyType.getAll());
@@ -219,6 +218,8 @@ function EnergyUpgradePreview({
   }
 
   const energyModHashes = energyUpgrade(
+    defs,
+    item,
     item.energy.energyType,
     item.energy.energyCapacity,
     previewEnergyType,
