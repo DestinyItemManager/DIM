@@ -52,7 +52,7 @@ function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, disp
         ? {
             label: tl('Tags.ClearTag'),
             icon: clearIcon,
-            hotkey: itemTagSelectorList.find((t) => t.type === tag)!.hotkey!,
+            hotkey: 'shift+0',
             sortOrder: -1,
           }
         : t

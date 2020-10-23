@@ -46,7 +46,6 @@ export default function ItemPopupHeader({
 
   const light = item.primStat?.value.toString();
 
-  useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
   useHotkey('c', t('Compare.ButtonHelp'), openCompare);
 
   const finalSeason = getItemPowerCapFinalSeason(item);

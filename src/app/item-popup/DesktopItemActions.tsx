@@ -1,8 +1,9 @@
 import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
@@ -74,6 +75,16 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   const onToggleSidecar = () => {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
+
+  useHotkey('/', t('MovePopup.ToggleSidecar'), onToggleSidecar);
+  useHotkey('p', t('Hotkey.Pull'), () => {
+    const currentChar = getCurrentStore(stores)!;
+    onMoveItemTo(currentChar);
+  });
+  useHotkey('v', t('Hotkey.Vault'), () => {
+    const vault = getVault(stores)!;
+    onMoveItemTo(vault);
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -147,6 +158,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             className={styles.collapseButton}
             onClick={onToggleSidecar}
             role="button"
+            title={t('MovePopup.ToggleSidecar') + ' [/]'}
             tabIndex={-1}
           >
             <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
@@ -184,6 +196,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                   className={styles.actionButton}
                   onClick={() => onMoveItemTo(store)}
                   role="button"
+                  title={t('MovePopup.Vault') + ' [V]'}
                   tabIndex={-1}
                 >
                   <StoreIcons store={store} /> {t('MovePopup.Vault')}
@@ -195,6 +208,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                     [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
                   })}
                   onClick={() => onMoveItemTo(store)}
+                  title={t('MovePopup.Store') + ' [P]'}
                   role="button"
                   tabIndex={-1}
                 >
