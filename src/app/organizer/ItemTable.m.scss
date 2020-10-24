@@ -23,7 +23,6 @@ $content-cells: 5;
     :global(.gradientBackground) & {
       background-color: #27263a;
     }
-    border-bottom: 1px solid #3c3c3e;
   }
 }
 
@@ -167,6 +166,7 @@ $toolbarHeight: 41px - 16px + 8px;
   --icon-item-size: calc(var(--item-size) * 0.75);
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
+    height: var(--item-size);
   }
 }
 
@@ -199,9 +199,6 @@ $toolbarHeight: 41px - 16px + 8px;
 }
 .traits {
   visibility: visible;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
   .modPerks {
     flex: 0;
     min-width: 160px;
@@ -251,6 +248,14 @@ $toolbarHeight: 41px - 16px + 8px;
     margin-right: 4px;
     height: 16px;
     width: 16px;
+  }
+}
+
+.stat_2715839340 {
+  svg {
+    circle {
+      fill: black;
+    }
   }
 }
 

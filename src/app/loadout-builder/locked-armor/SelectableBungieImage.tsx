@@ -62,7 +62,11 @@ export function SelectableArmor2Mod({
         <SocketDetailsMod className={styles.iconContainer} itemDef={mod.modDef} defs={defs} />
         <div className={styles.perkInfo}>
           <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
-          <div className={styles.perkDescription}>{mod.modDef.displayProperties.description}</div>
+          {mod.modDef.perks.map((perk) => (
+            <div key={perk.perkHash}>
+              {defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
+            </div>
+          ))}
           {mod.modDef.investmentStats
             .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
             .map((stat) => (

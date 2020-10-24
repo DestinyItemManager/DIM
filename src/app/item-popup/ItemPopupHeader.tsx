@@ -35,7 +35,7 @@ export default function ItemPopupHeader({
   const hasLeftIcon = item.trackable || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
+    CompareService.addItemsToCompare([item]);
   };
 
   const hasDetails = Boolean(
@@ -46,7 +46,6 @@ export default function ItemPopupHeader({
 
   const light = item.primStat?.value.toString();
 
-  useHotkey('t', t('Hotkey.ToggleDetails'), onToggleExpanded);
   useHotkey('c', t('Compare.ButtonHelp'), openCompare);
 
   const finalSeason = getItemPowerCapFinalSeason(item);

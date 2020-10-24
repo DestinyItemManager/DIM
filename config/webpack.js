@@ -407,8 +407,6 @@ module.exports = (env) => {
         shorthands: true,
         flattening: true,
       }),
-
-      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/]),
     ],
 
     node: {

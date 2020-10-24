@@ -425,13 +425,7 @@ class Compare extends React.Component<Props, State> {
       sortBetterFirst: prevState.sortedHash === sortedHash ? !prevState.sortBetterFirst : true,
     }));
   };
-  private add = ({
-    additionalItems,
-    showSomeDupes,
-  }: {
-    additionalItems: DimItem[];
-    showSomeDupes: boolean;
-  }) => {
+  private add = ({ additionalItems }: { additionalItems: DimItem[] }) => {
     // use the first item and assume all others are of the same 'type'
     const exampleItem = additionalItems[0];
     if (!exampleItem.comparable) {
@@ -470,19 +464,7 @@ class Compare extends React.Component<Props, State> {
         ? this.findSimilarWeapons(additionalItems)
         : [];
 
-      // if this was spawned from an item, and not from a search,
-      // DIM tries to be helpful by including a starter comparison of dupes
-      if (additionalItems.length === 1 && showSomeDupes) {
-        const comparisonItems = comparisonSets[0]?.items ?? additionalItems;
-        this.setState({
-          comparisonSets,
-          comparisonItems,
-        });
-      }
-      // otherwise, compare only the items we were asked to compare
-      else {
-        this.setState({ comparisonSets, comparisonItems: [...additionalItems] });
-      }
+      this.setState({ comparisonSets, comparisonItems: [...additionalItems] });
     }
   };
 

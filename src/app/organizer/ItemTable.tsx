@@ -34,6 +34,7 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -333,6 +334,17 @@ function ItemTable({
     .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
 
+  const numColumns = filteredColumns.length + 1;
+
+  const rowStyle = [...Array(numColumns).keys()]
+    .map(
+      (_, n) =>
+        `[role="cell"]:nth-of-type(${numColumns * 2}n+${
+          n + 2
+        }){background-color:#1a1a1d !important;}`
+    )
+    .join('\n');
+
   /**
    * Toggle sorting of columns. If shift is held, adds this column to the sort.
    */
@@ -481,6 +493,7 @@ function ItemTable({
             forClass={classIfAny}
           />
         </div>
+        {ReactDOM.createPortal(<style>{rowStyle}</style>, document.head)}
       </div>
       <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
         <div>

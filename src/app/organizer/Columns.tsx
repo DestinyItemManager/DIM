@@ -124,7 +124,7 @@ export function getColumns(
           return undefined;
         }
         return {
-          id: `stat_${statHash}`,
+          id: `stat${statHash}`,
           header: statInfo.displayProperties.hasIcon ? (
             <span title={statInfo.displayProperties.name}>
               <BungieImage src={statInfo.displayProperties.icon} />

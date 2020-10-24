@@ -1,7 +1,6 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { infoLog } from 'app/utils/log';
+import { wrap } from 'app/utils/util';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
-import _ from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import styles from './PhoneStoresHeader.m.scss';
@@ -31,28 +30,39 @@ export default function PhoneStoresHeader({
   setSelectedStoreId(id: string): void;
 }) {
   const onIndexChanged = (index: number) => {
-    setSelectedStoreId(stores[index].id);
+    const originalIndex = stores.indexOf(selectedStore);
+    setSelectedStoreId(stores[wrap(originalIndex + index, stores.length)].id);
     hideItemPopup();
   };
 
-  // TODO: carousel
   // TODO: wrap StoreHeading in a div?
   // TODO: optional external motion control
 
   const index = stores.indexOf(selectedStore);
+  const lastIndex = useRef(index);
 
   const trackRef = useRef<HTMLDivElement>(null);
 
   // The track is divided into "segments", with one item per segment
   const numSegments = stores.length;
-  // This is a floating-point, animated representation of the position within the segments!
-  const offset = useMotionValue(index);
+  // This is a floating-point, animated representation of the position within the segments, relative to the current store
+  const offset = useMotionValue(0);
   // Keep track of the starting point when we begin a gesture
   const startOffset = useRef<number>(0);
 
   useEffect(() => {
-    animate(offset, index, spring);
-  }, [index, offset]);
+    let diff = index - lastIndex.current;
+    if (lastIndex.current === 0 && diff > 1) {
+      diff = -1;
+    } else if (lastIndex.current === numSegments - 1 && diff < -1) {
+      diff = 1;
+    }
+
+    const velocity = offset.getVelocity();
+    offset.set(offset.get() - diff);
+    animate(offset, 0, { ...spring, velocity });
+    lastIndex.current = index;
+  }, [index, offset, numSegments]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
@@ -66,45 +76,46 @@ export default function PhoneStoresHeader({
     }
     const trackWidth = trackRef.current.clientWidth;
     // The offset as a proportion of segments
-    let newValue = startOffset.current + -info.offset.x / (trackWidth / numSegments);
+    const newValue = startOffset.current + -info.offset.x / (trackWidth / numSegments);
 
-    // Apply elasticity outside the extents
-    const elasticity = 0.5;
-    const minExtent = 0;
-    const maxExtent = numSegments - 1;
-    if (newValue < minExtent) {
-      newValue = elasticity * newValue;
-    } else if (newValue > maxExtent) {
-      newValue = elasticity * (newValue - maxExtent) + maxExtent;
-    }
     offset.set(newValue);
   };
 
   const onPanEnd = (_e, info: PanInfo) => {
     // Animate to one of the settled whole-number indexes
-    let newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
+    let newIndex = Math.round(offset.get());
     const scale = trackRef.current!.clientWidth / numSegments;
 
-    if (index === newIndex) {
+    if (newIndex === 0) {
       const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
-      infoLog('swipe', swipe);
       if (swipe > 0.05) {
         const direction = -Math.sign(info.velocity.x);
-        newIndex = _.clamp(newIndex + direction, 0, numSegments - 1);
+        newIndex = newIndex + direction;
       }
     }
 
-    animate(offset, newIndex, spring);
-
-    if (index !== newIndex) {
+    if (newIndex !== 0) {
       onIndexChanged(newIndex);
+    } else {
+      animate(offset, 0, spring);
     }
   };
 
-  // Transform the segment-relative offset back into pixels
-  const offsetPercent = useTransform(offset, (o) =>
-    trackRef.current ? (trackRef.current.clientWidth / numSegments) * -o : 0
-  );
+  // Expand out from the selected index in each direction 2 items
+  const segments: DimStore[] = [];
+  for (let i = index - 2; i <= index + 2; i++) {
+    segments.push(stores[wrap(i, stores.length)]);
+  }
+
+  // Transform the segment-relative offset back into percents
+  const offsetPercent = useTransform(offset, (o) => (100 / segments.length) * -(o + 2) + '%');
+
+  const keys: { [key: string]: number } = {};
+  const makeKey = (key: string) => {
+    keys[key] ||= 0;
+    keys[key]++;
+    return `${key}:${keys[key]}`;
+  };
 
   return (
     <div className={styles.frame}>
@@ -114,13 +125,13 @@ export default function PhoneStoresHeader({
         onPanStart={onPanStart}
         onPan={onPan}
         onPanEnd={onPanEnd}
-        style={{ width: `${100 * stores.length}%`, x: offsetPercent }}
+        style={{ width: `${100 * segments.length}%`, x: offsetPercent }}
       >
-        {stores.map((store) => (
+        {segments.map((store) => (
           <div
             className="store-cell"
-            key={store.id}
-            style={{ width: `${Math.floor(100 / stores.length)}%` }}
+            key={makeKey(store.id)}
+            style={{ width: `${Math.floor(100 / segments.length)}%` }}
           >
             <StoreHeading
               store={store}

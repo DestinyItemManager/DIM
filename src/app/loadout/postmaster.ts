@@ -84,7 +84,7 @@ export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
       // Can be pulled
       i.canPullFromPostmaster &&
       // Either has space, or is going to a bucket we can make room in
-      ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
+      (i.bucket.vaultBucket || spaceLeftForItem(store, i, stores) > 0)
   );
 }
 

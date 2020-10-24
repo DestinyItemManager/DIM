@@ -111,3 +111,20 @@ export function download(data: string, filename: string, type: string) {
   a.click();
   setTimeout(() => document.body.removeChild(a));
 }
+
+/**
+ * Given an index into an array, which may exceed the bounds of the array in either direction,
+ * return a new index that "wraps around".
+ *
+ * Example:
+ * [0, 1][wrap(-1, 2)] === 1
+ */
+export const wrap = (index: number, length: number) => {
+  while (index < 0) {
+    index += length;
+  }
+  while (index >= length) {
+    index -= length;
+  }
+  return index;
+};

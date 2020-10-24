@@ -114,15 +114,43 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   // Define some hotkeys without implementation, so they show up in the help
   const hotkeys: Hotkey[] = [
     {
-      combo: 't',
-      description: t('Hotkey.ToggleDetails'),
+      combo: 'c',
+      description: t('Compare.ButtonHelp'),
       callback() {
-        // Empty - this gets redefined in dimMoveItemProperties
+        // Empty
       },
     },
     {
-      combo: 'c',
-      description: t('Compare.ButtonHelp'),
+      combo: 'l',
+      description: t('Hotkey.LockUnlock'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: '/',
+      description: t('MovePopup.ToggleSidecar'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: 'v',
+      description: t('Hotkey.Vault'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: 'p',
+      description: t('Hotkey.Pull'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: 'shift+0',
+      description: t('Tags.ClearTag'),
       callback() {
         // Empty
       },

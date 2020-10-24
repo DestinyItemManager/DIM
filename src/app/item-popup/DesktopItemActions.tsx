@@ -1,12 +1,14 @@
 import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore, getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
+import { characterSortImportanceSelector } from 'app/settings/character-sort';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
-import { ThunkDispatchProp } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -19,7 +21,7 @@ import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import { sortedStoresSelector } from '../inventory/selectors';
+import { storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
@@ -27,10 +29,12 @@ import ItemMoveAmount from './ItemMoveAmount';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
-const sidecarCollapsedSelector = (state) => settingsSelector(state).sidecarCollapsed;
+const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
+const importanceSortedStoresSelector = (state: RootState) =>
+  characterSortImportanceSelector(state)(storesSelector(state));
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
-  const stores = useSelector(sortedStoresSelector);
+  const stores = useSelector(importanceSortedStoresSelector);
   const vault = getVault(stores);
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
@@ -76,6 +80,16 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
 
+  useHotkey('/', t('MovePopup.ToggleSidecar'), onToggleSidecar);
+  useHotkey('p', t('Hotkey.Pull'), () => {
+    const currentChar = getCurrentStore(stores)!;
+    onMoveItemTo(currentChar);
+  });
+  useHotkey('v', t('Hotkey.Vault'), () => {
+    const vault = getVault(stores)!;
+    onMoveItemTo(vault);
+  });
+
   const containerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const reposition = () => {
@@ -118,7 +132,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
+    CompareService.addItemsToCompare([item]);
   };
 
   const addToLoadout = (e) => {
@@ -151,6 +165,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             className={styles.collapseButton}
             onClick={onToggleSidecar}
             role="button"
+            title={t('MovePopup.ToggleSidecar') + ' [/]'}
             tabIndex={-1}
           >
             <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
@@ -221,7 +236,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           </ActionButton>
         )}
         {!sidecarCollapsed && vault && canShowVault(vault, itemOwner, item) && (
-          <ActionButton onClick={() => onMoveItemTo(vault)}>
+          <ActionButton onClick={() => onMoveItemTo(vault)} title={t('MovePopup.Vault') + ' [V]'}>
             <StoreIcons store={vault} /> {t('MovePopup.Vault')}
           </ActionButton>
         )}
@@ -239,6 +254,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         {!sidecarCollapsed && (
           <MoveLocations
             label={t('MovePopup.Store')}
+            shortcutKey=" [P]"
             stores={stores}
             appicableStores={canStore}
             showLocation={(store) => canShowStore(store, itemOwner, item)}
@@ -253,9 +269,11 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
 function ActionButton({
   disabled,
+  title,
   children,
   onClick,
 }: {
+  title?: string;
   disabled?: boolean;
   children: React.ReactNode;
   onClick: (e: React.MouseEvent) => void;
@@ -264,6 +282,7 @@ function ActionButton({
     <div
       className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
       onClick={onClick}
+      title={title}
       role="button"
       tabIndex={-1}
     >
@@ -274,6 +293,7 @@ function ActionButton({
 
 function MoveLocations({
   label,
+  shortcutKey,
   stores,
   appicableStores,
   equip,
@@ -282,6 +302,7 @@ function MoveLocations({
   onMoveItemTo,
 }: {
   label: string;
+  shortcutKey?: string;
   stores: DimStore[];
   appicableStores: DimStore[];
   equip?: boolean;
@@ -316,6 +337,7 @@ function MoveLocations({
                   [styles.move]: !equip,
                   [styles.disabled]: isDisabled(store),
                 })}
+                title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
                 onClick={() => onMoveItemTo(store, equip)}
                 role="button"
                 tabIndex={-1}

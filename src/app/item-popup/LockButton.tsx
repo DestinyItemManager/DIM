@@ -1,3 +1,4 @@
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
 import { ThunkDispatchProp } from 'app/store/types';
@@ -40,6 +41,8 @@ export default function LockButton({ type, item, className, children }: Props) {
     }
   };
 
+  useHotkey('l', t('Hotkey.LockUnlock'), lockUnlock);
+
   const title = lockButtonTitle(item, type);
 
   const icon =
@@ -68,11 +71,13 @@ export default function LockButton({ type, item, className, children }: Props) {
 
 export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   const data = { itemType: item.typeName };
-  return type === 'lock'
-    ? !item.locked
-      ? t('MovePopup.LockUnlock.Lock', data)
-      : t('MovePopup.LockUnlock.Unlock', data)
-    : !item.tracked
-    ? t('MovePopup.TrackUntrack.Track', data)
-    : t('MovePopup.TrackUntrack.Untrack', data);
+  return (
+    (type === 'lock'
+      ? !item.locked
+        ? t('MovePopup.LockUnlock.Lock', data)
+        : t('MovePopup.LockUnlock.Unlock', data)
+      : !item.tracked
+      ? t('MovePopup.TrackUntrack.Track', data)
+      : t('MovePopup.TrackUntrack.Untrack', data)) + ' [L]'
+  );
 }
