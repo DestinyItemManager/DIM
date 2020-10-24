@@ -252,14 +252,21 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 }
 
 function ActionButton({
+  disabled,
   children,
   onClick,
 }: {
+  disabled?: boolean;
   children: React.ReactNode;
   onClick: (e: React.MouseEvent) => void;
 }) {
   return (
-    <div className={styles.actionButton} onClick={onClick} role="button" tabIndex={-1}>
+    <div
+      className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
+      onClick={onClick}
+      role="button"
+      tabIndex={-1}
+    >
       {children}
     </div>
   );
@@ -290,7 +297,7 @@ function MoveLocations({
   if (appicableStores.length === 1) {
     const [store] = appicableStores;
     return (
-      <ActionButton onClick={() => onMoveItemTo(store, equip)}>
+      <ActionButton onClick={() => onMoveItemTo(store, equip)} disabled={isDisabled(store)}>
         <StoreIcons store={store} /> {label}
       </ActionButton>
     );
