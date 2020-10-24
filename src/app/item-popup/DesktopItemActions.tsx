@@ -314,16 +314,6 @@ function MoveLocations({
     return null;
   }
 
-  // For items with just 1 equip or move destination, just show a normal action button
-  if (appicableStores.length === 1) {
-    const [store] = appicableStores;
-    return (
-      <ActionButton onClick={() => onMoveItemTo(store, equip)} disabled={isDisabled(store)}>
-        <StoreIcons store={store} /> {label}
-      </ActionButton>
-    );
-  }
-
   return (
     <div className={styles.moveLocations}>
       {label}
