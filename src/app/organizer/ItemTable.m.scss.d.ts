@@ -35,6 +35,7 @@ interface CssExports {
   'selection': string;
   'shiftHeld': string;
   'sorter': string;
+  'stat2715839340': string;
   'table': string;
   'tag': string;
   'toolbar': string;
