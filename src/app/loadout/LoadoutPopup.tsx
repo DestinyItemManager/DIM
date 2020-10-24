@@ -245,7 +245,9 @@ function LoadoutPopup({
             <AppIcon icon={addIcon} />
             <span>{t('Loadouts.Create')}</span>
           </span>
-          <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+          {!dimStore.isVault && (
+            <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+          )}
         </li>
 
         {query.length > 0 && (
@@ -330,6 +332,27 @@ function LoadoutPopup({
                   </span>
                 </li>
               )}
+            <li className="loadout-set">
+              <span onClick={applyRandomLoadout}>
+                <AppIcon icon={faRandom} />
+                <span>
+                  {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
+                </span>
+              </span>
+              {query.length === 0 && (
+                <span onClick={(e) => applyRandomLoadout(e, true)}>
+                  <span>{t('Loadouts.WeaponsOnly')}</span>
+                </span>
+              )}
+            </li>
+            {!hideFarming && (
+              <li className="loadout-set">
+                <span onClick={onStartFarming}>
+                  <AppIcon icon={engramIcon} />
+                  <span>{t('FarmingMode.FarmingMode')}</span>
+                </span>
+              </li>
+            )}
           </>
         )}
 
@@ -341,29 +364,6 @@ function LoadoutPopup({
             </span>
             <span onClick={(e) => applyGatherEngramsLoadout(e, { exotics: false })}>
               <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
-            </span>
-          </li>
-        )}
-
-        <li className="loadout-set">
-          <span onClick={applyRandomLoadout}>
-            <AppIcon icon={faRandom} />
-            <span>
-              {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
-            </span>
-          </span>
-          {query.length === 0 && (
-            <span onClick={(e) => applyRandomLoadout(e, true)}>
-              <span>{t('Loadouts.WeaponsOnly')}</span>
-            </span>
-          )}
-        </li>
-
-        {!dimStore.isVault && !hideFarming && (
-          <li className="loadout-set">
-            <span onClick={onStartFarming}>
-              <AppIcon icon={engramIcon} />
-              <span>{t('FarmingMode.FarmingMode')}</span>
             </span>
           </li>
         )}
