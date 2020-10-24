@@ -38,9 +38,6 @@ const WhatsNew = React.lazy(
 const SettingsPage = React.lazy(async () => ({
   default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage,
 }));
-const AuditLog = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).AuditLog,
-}));
 const SearchHistory = React.lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );
@@ -163,9 +160,6 @@ function App({
                 </Route>
                 <Route path="/login" exact>
                   <Login />
-                </Route>
-                <Route path="/settings/audit" exact>
-                  <AuditLog />
                 </Route>
                 <Route path="/settings" exact>
                   <SettingsPage />
