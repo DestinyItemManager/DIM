@@ -2,6 +2,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import StoreStats from 'app/store-stats/StoreStats';
+import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import Hammer from 'react-hammerjs';
@@ -42,10 +43,10 @@ export default function PhoneStores({ stores, buckets }: Props) {
       ? stores.findIndex((s) => s.id === selectedStoreId)
       : stores.findIndex((s) => s.current);
 
-    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
-      setSelectedStoreId(stores[selectedStoreIndex + 1].id);
-    } else if (e.direction === 4 && selectedStoreIndex > 0) {
-      setSelectedStoreId(stores[selectedStoreIndex - 1].id);
+    if (e.direction === 2) {
+      setSelectedStoreId(stores[wrap(selectedStoreIndex + 1, stores.length)].id);
+    } else if (e.direction === 4) {
+      setSelectedStoreId(stores[wrap(selectedStoreIndex - 1, stores.length)].id);
     }
   };
 
