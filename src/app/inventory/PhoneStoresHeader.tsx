@@ -110,6 +110,13 @@ export default function PhoneStoresHeader({
   // Transform the segment-relative offset back into percents
   const offsetPercent = useTransform(offset, (o) => (100 / segments.length) * -(o + 2) + '%');
 
+  const keys: { [key: string]: number } = {};
+  const makeKey = (key: string) => {
+    keys[key] ||= 0;
+    keys[key]++;
+    return `${key}:${keys[key]}`;
+  };
+
   return (
     <div className={styles.frame}>
       <motion.div
@@ -120,10 +127,10 @@ export default function PhoneStoresHeader({
         onPanEnd={onPanEnd}
         style={{ width: `${100 * segments.length}%`, x: offsetPercent }}
       >
-        {segments.map((store, index) => (
+        {segments.map((store) => (
           <div
             className="store-cell"
-            key={index}
+            key={makeKey(store.id)}
             style={{ width: `${Math.floor(100 / segments.length)}%` }}
           >
             <StoreHeading
