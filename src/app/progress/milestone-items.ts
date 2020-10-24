@@ -205,7 +205,6 @@ function makeFakePursuitItem(
     name: displayProperties.name,
     description: displayProperties.description,
     icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
-    secondaryIcon: '/img/misc/missing_icon_d2.png',
     notransfer: true,
     canPullFromPostmaster: false,
     id: '0', // zero for non-instanced is legacy hack

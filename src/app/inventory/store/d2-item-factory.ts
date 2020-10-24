@@ -305,8 +305,7 @@ export function makeItem(
       displayProperties.icon ||
       '/img/misc/missing_icon_d2.png',
     iconOverlay,
-    secondaryIcon:
-      overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
+    secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
