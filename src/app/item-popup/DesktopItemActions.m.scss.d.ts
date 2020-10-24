@@ -11,6 +11,8 @@ interface CssExports {
   'interaction': string;
   'itemTagSelector': string;
   'move': string;
+  'moveLocationIcons': string;
+  'moveLocations': string;
   'null': string;
 }
 export const cssExports: CssExports;

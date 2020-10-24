@@ -2,7 +2,7 @@ import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { amountOfItem, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
@@ -136,6 +136,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.equipment ||
     item.infusionFuel;
 
+  const canEquip = stores.some((store) => itemCanBeEquippedBy(item, store));
+  const canStore = stores.some((store) => canShowStore(store, itemOwner, item));
+  const vault = getVault(stores);
+
   return (
     <>
       <div
@@ -176,45 +180,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             </span>
           </LockButton>
         )}
-        {!sidecarCollapsed &&
-          stores.map((store) => (
-            <React.Fragment key={store.id}>
-              {store.isVault && canShowVault(store, itemOwner, item) && (
-                <div
-                  className={styles.actionButton}
-                  onClick={() => onMoveItemTo(store)}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Vault')}
-                </div>
-              )}
-              {canShowStore(store, itemOwner, item) && (
-                <div
-                  className={clsx(styles.actionButton, styles.move, {
-                    [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
-                  })}
-                  onClick={() => onMoveItemTo(store)}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Store')}
-                </div>
-              )}
-              {itemCanBeEquippedBy(item, store) && (
-                <div
-                  className={clsx(styles.actionButton, styles.equip, {
-                    [styles.disabled]: item.owner === store.id && item.equipped,
-                  })}
-                  onClick={() => onMoveItemTo(store, true)}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Equip')}
-                </div>
-              )}
-            </React.Fragment>
-          ))}
         {item.comparable && (
           <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
             <AppIcon icon={compareIcon} />
@@ -253,6 +218,62 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.Infuse')}
             </span>
+          </div>
+        )}
+        {!sidecarCollapsed && vault && canShowVault(vault, itemOwner, item) && (
+          <div
+            className={styles.actionButton}
+            onClick={() => onMoveItemTo(vault)}
+            role="button"
+            tabIndex={-1}
+          >
+            <StoreIcons store={vault} /> {t('MovePopup.Vault')}
+          </div>
+        )}
+        {!sidecarCollapsed && canEquip && (
+          <div className={styles.moveLocations}>
+            {t('MovePopup.Equip')}
+            <div className={styles.moveLocationIcons}>
+              {stores.map((store) => (
+                <React.Fragment key={store.id}>
+                  {itemCanBeEquippedBy(item, store) && (
+                    <div
+                      className={clsx(styles.equip, {
+                        [styles.disabled]: item.owner === store.id && item.equipped,
+                      })}
+                      onClick={() => onMoveItemTo(store, true)}
+                      role="button"
+                      tabIndex={-1}
+                    >
+                      <StoreIcons store={store} />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        )}
+        {!sidecarCollapsed && canStore && (
+          <div className={styles.moveLocations}>
+            {t('MovePopup.Store')}
+            <div className={styles.moveLocationIcons}>
+              {stores.map((store) => (
+                <React.Fragment key={store.id}>
+                  {canShowStore(store, itemOwner, item) && (
+                    <div
+                      className={clsx(styles.move, {
+                        [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
+                      })}
+                      onClick={() => onMoveItemTo(store)}
+                      role="button"
+                      tabIndex={-1}
+                    >
+                      <StoreIcons store={store} />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         )}
       </div>

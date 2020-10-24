@@ -97,25 +97,6 @@
   pointer-events: none;
 }
 
-.move,
-.equip {
-  padding-bottom: 10px;
-  padding-top: 10px;
-
-  @media (pointer: fine) {
-    padding-bottom: 6px;
-    padding-top: 6px;
-  }
-}
-
-.move {
-  margin-top: 6px;
-}
-
-.equip {
-  margin-bottom: 6px;
-}
-
 .collapseButton {
   display: flex;
   justify-content: flex-end;
@@ -140,5 +121,63 @@
 
   [data-popper-placement^='left'] & {
     transform: scaleX(-1);
+  }
+}
+
+.moveLocations {
+  flex-direction: column;
+  align-items: inherit;
+  justify-self: flex-end;
+  padding: 6px 12px;
+}
+
+.moveLocationIcons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.move,
+.equip {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 38px;
+  width: 38px;
+  margin: 6px 2px;
+
+  img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  :global(.app-icon) {
+    position: absolute;
+    opacity: 0.8;
+    height: 70%;
+    width: 70%;
+    top: 5px;
+    left: 5px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
+  }
+
+  &:hover {
+    filter: brightness(200%);
+    opacity: 0.8;
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border: 1px solid white;
+    }
   }
 }
