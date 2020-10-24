@@ -210,6 +210,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
     <div className={clsx(styles.value, optionalClasses)}>
       {stat.value}
       {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
+      {stat.statHash === StatHashes.RecoilDirection && <RecoilStat value={stat.value} />}
     </div>
   );
 }
