@@ -6,8 +6,9 @@ import { t } from 'app/i18next-t';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
+import { characterSortImportanceSelector } from 'app/settings/character-sort';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
-import { ThunkDispatchProp } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -20,7 +21,7 @@ import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import { sortedStoresSelector } from '../inventory/selectors';
+import { storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
@@ -28,10 +29,12 @@ import ItemMoveAmount from './ItemMoveAmount';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
-const sidecarCollapsedSelector = (state) => settingsSelector(state).sidecarCollapsed;
+const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
+const importanceSortedStoresSelector = (state: RootState) =>
+  characterSortImportanceSelector(state)(storesSelector(state));
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
-  const stores = useSelector(sortedStoresSelector);
+  const stores = useSelector(importanceSortedStoresSelector);
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
