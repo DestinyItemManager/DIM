@@ -4,7 +4,6 @@
 * Added cooldown and effect values to stat tooltips.
 * Added stat tooltips to the Loadout Optimizer.
 * Fixed descriptions for mod effects in the Loadout Optimizer's mod picker.
-* Launching the Compare tool on an item no longer automatically selects all dupes to compare. Click the button with the item's name to see those. This was done to make it easier to compare specific items, while still keeping the ability to quickly see dupes.
 * New keyboard shortcuts for pull item (P), vault item (V), lock/unlock item (L), expand/collapse sidecar (/), and clear tag (Shift+0). Remember, you must click an item before being able to use shortcuts.
 * Made the item popup a bit thinner.
 * Collapsing sections now animate open and closed.
