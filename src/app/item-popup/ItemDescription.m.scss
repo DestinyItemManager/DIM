@@ -14,6 +14,15 @@
   white-space: pre-wrap;
 }
 
+.descriptionBorder {
+  composes: description;
+  border-bottom: 1px solid #333;
+  margin: 5px 10px 5px;
+  white-space: pre-wrap;
+  padding: 5px;
+  background: #1a1a1a;
+}
+
 .officialDescription {
   composes: description;
   font-style: italic;

@@ -5,7 +5,7 @@ import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
-import { setCurrentAccount } from '../accounts/actions';
+import { setCurrentAccount, setNotesOpen } from '../accounts/actions';
 import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
@@ -39,6 +39,9 @@ export interface InventoryState {
 
   /** Are we currently dragging a stack? */
   readonly isDraggingStack: boolean;
+
+  /** Are the notes open for an item in the detail sheet? */
+  readonly notesOpen?: string;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -49,6 +52,7 @@ const initialState: InventoryState = {
   newItems: new Set(),
   newItemsLoaded: false,
   isDraggingStack: false,
+  notesOpen: undefined,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -115,6 +119,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 
     case getType(setCurrentAccount):
       return initialState;
+
+    case getType(setNotesOpen):
+      return {
+        ...state,
+        notesOpen: action.payload,
+      };
 
     default:
       return state;

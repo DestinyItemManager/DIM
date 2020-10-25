@@ -63,7 +63,7 @@ export default function NotesArea({
   );
 }
 
-function NotesEditor({
+export function NotesEditor({
   notes,
   item,
   setNotesOpen,

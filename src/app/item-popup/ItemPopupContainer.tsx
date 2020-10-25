@@ -1,3 +1,4 @@
+import { setNotesOpen } from 'app/accounts/actions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { useHotkey } from 'app/hotkeys/useHotkey';
@@ -8,7 +9,7 @@ import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import ClickOutside from '../dim-ui/ClickOutside';
@@ -46,6 +47,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 const mapDispatchToProps = {
   setSetting,
+  setNotesOpen,
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -72,6 +74,7 @@ function ItemPopupContainer({
   language,
   boundarySelector,
   setSetting,
+  setNotesOpen,
 }: Props) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const [currentItem, setCurrentItem] = useState<{
@@ -85,7 +88,14 @@ function ItemPopupContainer({
     }
   };
 
-  const onClose = () => setCurrentItem(undefined);
+  useEffect(() => {
+    setNotesOpen(undefined);
+  }, [setNotesOpen]);
+
+  const onClose = useCallback(() => {
+    setCurrentItem(undefined);
+    setNotesOpen(undefined);
+  }, [setNotesOpen]);
 
   const toggleItemDetails = () => {
     setSetting('itemDetails', !itemDetails);
@@ -112,7 +122,7 @@ function ItemPopupContainer({
   const { pathname } = useLocation();
   useEffect(() => {
     onClose();
-  }, [pathname]);
+  }, [pathname, onClose]);
 
   const popupRef = useRef<HTMLDivElement>(null);
   usePopper({

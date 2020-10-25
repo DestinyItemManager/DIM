@@ -604,6 +604,7 @@
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is currently applied to an item in your inventory.",
     "AddNote": "Add a note",
+    "EditNote": "Edit note",
     "AddToLoadout": "Loadout",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",

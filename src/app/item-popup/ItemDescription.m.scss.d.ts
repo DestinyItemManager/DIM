@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'description': string;
+  'descriptionBorder': string;
   'descriptionTools': string;
   'loreLink': string;
   'officialDescription': string;

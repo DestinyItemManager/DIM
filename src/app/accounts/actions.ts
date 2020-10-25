@@ -6,6 +6,7 @@ export const accountsLoaded = createAction('accounts/ACCOUNTS_LOADED')<DestinyAc
 export const setCurrentAccount = createAction('accounts/SET_CURRENT_ACCOUNT')<
   DestinyAccount | undefined
 >();
+export const setNotesOpen = createAction('accounts/SET_NOTES_OPEN')<string | undefined>();
 
 export const loadFromIDB = createAction('accounts/LOAD_FROM_IDB')<DestinyAccount[]>();
 

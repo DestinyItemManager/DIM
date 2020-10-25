@@ -1,13 +1,26 @@
+import { setNotesOpen } from 'app/accounts/actions';
 import { StoreIcons } from 'app/character-tile/StoreIcons';
 import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { sortedStoresSelector } from 'app/inventory/selectors';
+import { getNotes } from 'app/inventory/dim-item-info';
+import {
+  itemHashTagsSelector,
+  itemInfosSelector,
+  sortedStoresSelector,
+} from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
-import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
+import {
+  addIcon,
+  AppIcon,
+  compareIcon,
+  editIcon,
+  maximizeIcon,
+  minimizeIcon,
+} from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -36,6 +49,9 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
+  const savedNotes = useSelector<RootState, string>(
+    (state) => getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state)) ?? ''
+  );
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
@@ -132,6 +148,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     CompareService.addItemsToCompare([item]);
   };
 
+  const toggleNotes = () => {
+    dispatch(setNotesOpen(item.id));
+  };
+
   const addToLoadout = (e) => {
     hideItemPopup();
     addItemToLoadout(item, e);
@@ -191,6 +211,14 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
               {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
             </span>
           </LockButton>
+        )}
+        {item.taggable && (
+          <ActionButton onClick={() => toggleNotes()}>
+            <AppIcon icon={editIcon} />
+            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+              {savedNotes ? t('MovePopup.EditNote') : t('MovePopup.AddNote')}
+            </span>
+          </ActionButton>
         )}
         {item.comparable && (
           <ActionButton onClick={openCompare}>

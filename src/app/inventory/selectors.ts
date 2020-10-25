@@ -77,3 +77,5 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
 
 export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
+
+export const notesOpenSelector = (state: RootState) => state.inventory.notesOpen;
