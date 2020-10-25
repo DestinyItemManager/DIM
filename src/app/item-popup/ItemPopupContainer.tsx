@@ -9,7 +9,7 @@ import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import ClickOutside from '../dim-ui/ClickOutside';
@@ -87,15 +87,9 @@ function ItemPopupContainer({
       setTab(newTab);
     }
   };
+  setNotesOpen(undefined);
 
-  useEffect(() => {
-    setNotesOpen(undefined);
-  }, [setNotesOpen]);
-
-  const onClose = useCallback(() => {
-    setCurrentItem(undefined);
-    setNotesOpen(undefined);
-  }, [setNotesOpen]);
+  const onClose = () => setCurrentItem(undefined);
 
   const toggleItemDetails = () => {
     setSetting('itemDetails', !itemDetails);
@@ -122,7 +116,7 @@ function ItemPopupContainer({
   const { pathname } = useLocation();
   useEffect(() => {
     onClose();
-  }, [pathname, onClose]);
+  }, [pathname]);
 
   const popupRef = useRef<HTMLDivElement>(null);
   usePopper({
