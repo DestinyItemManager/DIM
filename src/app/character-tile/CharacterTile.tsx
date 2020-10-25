@@ -3,16 +3,12 @@ import type { DimStore } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
-import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';
 
 const CharacterEmblem = ({ store }: { store: DimStore }) => (
-  <div
-    className={clsx(styles.emblem, { [styles.vault]: store.isVault })}
-    style={{ backgroundImage: `url("${store.icon}")` }}
-  />
+  <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
 );
 
 /**
