@@ -35,6 +35,7 @@ const importanceSortedStoresSelector = (state: RootState) =>
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(importanceSortedStoresSelector);
+  const vault = getVault(stores);
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
@@ -150,6 +151,9 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.equipment ||
     item.infusionFuel;
 
+  const canEquip = stores.filter((store) => itemCanBeEquippedBy(item, store));
+  const canStore = stores.filter((store) => canShowStore(store, itemOwner, item));
+
   return (
     <>
       <div
@@ -191,93 +195,154 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             </span>
           </LockButton>
         )}
-        {!sidecarCollapsed &&
-          stores.map((store) => (
-            <React.Fragment key={store.id}>
-              {store.isVault && canShowVault(store, itemOwner, item) && (
-                <div
-                  className={styles.actionButton}
-                  onClick={() => onMoveItemTo(store)}
-                  role="button"
-                  title={t('MovePopup.Vault') + ' [V]'}
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Vault')}
-                </div>
-              )}
-              {canShowStore(store, itemOwner, item) && (
-                <div
-                  className={clsx(styles.actionButton, styles.move, {
-                    [styles.disabled]: !storeButtonEnabled(store, itemOwner, item),
-                  })}
-                  onClick={() => onMoveItemTo(store)}
-                  title={t('MovePopup.Store') + ' [P]'}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Store')}
-                </div>
-              )}
-              {itemCanBeEquippedBy(item, store) && (
-                <div
-                  className={clsx(styles.actionButton, styles.equip, {
-                    [styles.disabled]: item.owner === store.id && item.equipped,
-                  })}
-                  onClick={() => onMoveItemTo(store, true)}
-                  role="button"
-                  tabIndex={-1}
-                >
-                  <StoreIcons store={store} /> {t('MovePopup.Equip')}
-                </div>
-              )}
-            </React.Fragment>
-          ))}
         {item.comparable && (
-          <div className={styles.actionButton} onClick={openCompare} role="button" tabIndex={-1}>
+          <ActionButton onClick={openCompare}>
             <AppIcon icon={compareIcon} />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('Compare.Button')}
             </span>
-          </div>
+          </ActionButton>
         )}
         {canConsolidate && (
-          <div className={styles.actionButton} onClick={onConsolidate} role="button" tabIndex={-1}>
+          <ActionButton onClick={onConsolidate}>
             <img src={arrowsIn} height="32" width="32" />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.Consolidate')}
             </span>
-          </div>
+          </ActionButton>
         )}
         {canDistribute && (
-          <div className={styles.actionButton} onClick={onDistribute} role="button" tabIndex={-1}>
+          <ActionButton onClick={onDistribute}>
             <img src={arrowsOut} height="32" width="32" />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.DistributeEvenly')}
             </span>
-          </div>
+          </ActionButton>
         )}
         {itemCanBeInLoadout(item) && (
-          <div className={styles.actionButton} onClick={addToLoadout} role="button" tabIndex={-1}>
+          <ActionButton onClick={addToLoadout}>
             <AppIcon icon={addIcon} />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.AddToLoadout')}
             </span>
-          </div>
+          </ActionButton>
         )}
         {item.infusionFuel && (
-          <div className={styles.actionButton} onClick={infuse} role="button" tabIndex={-1}>
+          <ActionButton onClick={infuse}>
             <img src={d2Infuse} height="32" width="32" />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.Infuse')}
             </span>
-          </div>
+          </ActionButton>
+        )}
+        {!sidecarCollapsed && vault && canShowVault(vault, itemOwner, item) && (
+          <ActionButton onClick={() => onMoveItemTo(vault)} title={t('MovePopup.Vault') + ' [V]'}>
+            <StoreIcons store={vault} /> {t('MovePopup.Vault')}
+          </ActionButton>
+        )}
+        {!sidecarCollapsed && (
+          <MoveLocations
+            label={t('MovePopup.Equip')}
+            stores={stores}
+            appicableStores={canEquip}
+            equip={true}
+            showLocation={(store) => itemCanBeEquippedBy(item, store)}
+            isDisabled={(store) => item.owner === store.id && item.equipped}
+            onMoveItemTo={onMoveItemTo}
+          />
+        )}
+        {!sidecarCollapsed && (
+          <MoveLocations
+            label={t('MovePopup.Store')}
+            shortcutKey=" [P]"
+            stores={stores}
+            appicableStores={canStore}
+            showLocation={(store) => canShowStore(store, itemOwner, item)}
+            isDisabled={(store) => !storeButtonEnabled(store, itemOwner, item)}
+            onMoveItemTo={onMoveItemTo}
+          />
         )}
       </div>
     </>
   );
 }
 
-export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
+function ActionButton({
+  disabled,
+  title,
+  children,
+  onClick,
+}: {
+  title?: string;
+  disabled?: boolean;
+  children: React.ReactNode;
+  onClick: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <div
+      className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
+      onClick={onClick}
+      title={title}
+      role="button"
+      tabIndex={-1}
+    >
+      {children}
+    </div>
+  );
+}
+
+function MoveLocations({
+  label,
+  shortcutKey,
+  stores,
+  appicableStores,
+  equip,
+  isDisabled,
+  showLocation,
+  onMoveItemTo,
+}: {
+  label: string;
+  shortcutKey?: string;
+  stores: DimStore[];
+  appicableStores: DimStore[];
+  equip?: boolean;
+  isDisabled: (store: DimStore) => boolean;
+  showLocation: (store: DimStore) => boolean;
+  onMoveItemTo: (store: DimStore, equip?: boolean) => void;
+}) {
+  if (!appicableStores.length) {
+    return null;
+  }
+
+  return (
+    <div className={styles.moveLocations}>
+      {label}
+      <div className={styles.moveLocationIcons}>
+        {stores.map((store) => (
+          <React.Fragment key={store.id}>
+            {showLocation(store) && (
+              <div
+                className={clsx({
+                  [styles.equip]: equip,
+                  [styles.move]: !equip,
+                  [styles.disabled]: isDisabled(store),
+                })}
+                title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
+                onClick={() => onMoveItemTo(store, equip)}
+                role="button"
+                tabIndex={-1}
+              >
+                <StoreIcons store={store} useBackground={true} />
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   return type === 'lock'
     ? item.locked
       ? t('MovePopup.LockUnlock.Locked')

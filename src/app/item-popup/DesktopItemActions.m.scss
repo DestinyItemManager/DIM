@@ -91,31 +91,6 @@
   }
 }
 
-.disabled {
-  opacity: 0.3;
-  cursor: default;
-  pointer-events: none;
-}
-
-.move,
-.equip {
-  padding-bottom: 10px;
-  padding-top: 10px;
-
-  @media (pointer: fine) {
-    padding-bottom: 6px;
-    padding-top: 6px;
-  }
-}
-
-.move {
-  margin-top: 6px;
-}
-
-.equip {
-  margin-bottom: 6px;
-}
-
 .collapseButton {
   display: flex;
   justify-content: flex-end;
@@ -141,4 +116,67 @@
   [data-popper-placement^='left'] & {
     transform: scaleX(-1);
   }
+}
+
+.moveLocations {
+  flex-direction: column;
+  align-items: inherit;
+  justify-self: flex-end;
+  padding: 6px 12px 3px;
+}
+
+.moveLocationIcons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+.move,
+.equip {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: none;
+  }
+
+  :global(.app-icon) {
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    top: 7px;
+    left: 7px;
+    filter: drop-shadow(1px 1px 2px black);
+  }
+
+  &:hover {
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border: 1px solid white;
+    }
+  }
+}
+
+.disabled {
+  filter: contrast(0.5) brightness(0.5);
+  cursor: default;
+  pointer-events: none;
 }

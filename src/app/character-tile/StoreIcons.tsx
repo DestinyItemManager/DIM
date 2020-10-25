@@ -6,11 +6,11 @@ import styles from './StoreIcons.m.scss';
 /**
  * Show both the store emblem and class icon for a given store.
  */
-export function StoreIcons({ store }: { store: DimStore }) {
+export function StoreIcons({ store, useBackground }: { store: DimStore; useBackground?: boolean }) {
   return (
     <>
       <img
-        src={store.icon}
+        src={!useBackground ? store.icon : store.background}
         height="32"
         width="32"
         style={{
