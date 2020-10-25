@@ -3,10 +3,10 @@ import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { setSetting } from 'app/settings/actions';
-import { characterSortImportanceSelector } from 'app/settings/character-sort';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -21,7 +21,6 @@ import d2Infuse from '../../images/d2infuse.png';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import { storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
@@ -30,11 +29,9 @@ import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
 const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
-const importanceSortedStoresSelector = (state: RootState) =>
-  characterSortImportanceSelector(state)(storesSelector(state));
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
-  const stores = useSelector(importanceSortedStoresSelector);
+  const stores = useSelector(sortedStoresSelector);
   const vault = getVault(stores);
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
   const [amount, setAmount] = useState(item.amount);
