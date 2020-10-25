@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -20,7 +19,6 @@ import SearchResults from './SearchResults';
 interface StoreProps {
   searchQuery: string;
   allItems: DimItem[];
-  stores: DimStore[];
   buckets?: InventoryBuckets;
   searchFilter: ItemFilter;
   isPhonePortrait: boolean;
@@ -31,7 +29,6 @@ type Props = StoreProps & ThunkDispatchProp;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     searchQuery: querySelector(state),
-    stores: sortedStoresSelector(state),
     searchFilter: searchFilterSelector(state),
     allItems: allItemsSelector(state),
     buckets: bucketsSelector(state),

@@ -2,10 +2,11 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { sortedStoresSelector } from 'app/inventory/selectors';
+import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout/auto-loadouts';
 import { applyLoadout } from 'app/loadout/loadout-apply';
+import { characterSortImportanceSelector } from 'app/settings/character-sort';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React from 'react';
@@ -38,7 +39,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: sortedStoresSelector(state),
+    stores: characterSortImportanceSelector(state)(storesSelector(state)),
     isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
