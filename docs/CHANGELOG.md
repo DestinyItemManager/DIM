@@ -1,5 +1,6 @@
 ## Next
 
+* Rearranged equip/move buttons on sidecar to be horizontal icons instead of menu items.
 * Added cooldown and effect values to stat tooltips.
 * Added stat tooltips to the Loadout Optimizer.
 * Fixed descriptions for mod effects in the Loadout Optimizer's mod picker.
