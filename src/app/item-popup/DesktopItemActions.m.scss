@@ -91,12 +91,6 @@
   }
 }
 
-.disabled {
-  opacity: 0.3;
-  cursor: default;
-  pointer-events: none;
-}
-
 .collapseButton {
   display: flex;
   justify-content: flex-end;
@@ -177,4 +171,10 @@
       border: 1px solid white;
     }
   }
+}
+
+.disabled {
+  filter: contrast(0.6) brightness(0.6);
+  cursor: default;
+  pointer-events: none;
 }
