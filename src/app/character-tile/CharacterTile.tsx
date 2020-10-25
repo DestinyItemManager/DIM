@@ -1,3 +1,4 @@
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import type { DimStore } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
@@ -5,11 +6,11 @@ import VaultCapacity from 'app/store-stats/VaultCapacity';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import './CharacterTile.scss';
+import styles from './CharacterTile.m.scss';
 
 const CharacterEmblem = ({ store }: { store: DimStore }) => (
   <div
-    className={clsx('emblem', { vault: store.isVault })}
+    className={clsx(styles.emblem, { [styles.vault]: store.isVault })}
     style={{ backgroundImage: `url("${store.icon}")` }}
   />
 );
@@ -23,9 +24,9 @@ export default function CharacterTile({ store }: { store: DimStore }) {
   const isPhonePortrait = useSelector(isPhonePortraitSelector);
 
   return (
-    <div className="character-tile">
+    <div className={styles.characterTile}>
       <div
-        className="background"
+        className={styles.background}
         style={{
           backgroundImage: `url("${store.background}")`,
           backgroundColor: store.color
@@ -36,27 +37,32 @@ export default function CharacterTile({ store }: { store: DimStore }) {
         }}
       />
       <CharacterEmblem store={store} />
-      <div className="character-text">
-        <div className="top">
-          <div className="class">{store.className}</div>
+      <div className={styles.characterText}>
+        <div className={styles.top}>
+          <div className={styles.class}>{store.className}</div>
           {!store.isVault && (
             <>
-              <div className="powerLevel">
+              <div className={styles.powerLevel}>
                 <AppIcon icon={powerActionIcon} />
                 {store.powerLevel}
               </div>
-              {isPhonePortrait && <div className="maxTotalPower">/ {maxTotalPower}</div>}
+              {isPhonePortrait && <div className={styles.maxTotalPower}>/ {maxTotalPower}</div>}
             </>
           )}
         </div>
-        <div className="bottom">
+        <div className={styles.bottom}>
           {store.isVault ? (
             isPhonePortrait && <VaultCapacity />
           ) : (
             <>
+              <div>
+                {!store.isVault && (
+                  <ClassIcon classType={store.classType} className={styles.classIcon} />
+                )}
+              </div>
               <div className="race-gender">{store.race}</div>
               {store.destinyVersion === 1 && store.level < 40 && (
-                <div className="level">{store.level}</div>
+                <div className={styles.level}>{store.level}</div>
               )}
             </>
           )}
