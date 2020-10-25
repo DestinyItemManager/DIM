@@ -24,7 +24,7 @@
   flex-direction: column;
   margin: 0 6px;
 
-  .vault & {
+  :global(.vault) & {
     flex-direction: row;
     align-items: center;
     .top,
@@ -54,7 +54,7 @@
     visibility: hidden;
   }
 
-  &.vault {
+  :global(.vault) & {
     visibility: visible;
     height: 40px;
     width: 40px;
@@ -115,7 +115,7 @@
   filter: contrast(0.5);
 
   @include phone-portrait {
-    .vault & {
+    :global(.vault) & {
       display: grid;
       grid-template-columns: repeat(2, 16px minmax(-webkit-min-content, 1fr));
       grid-template-columns: repeat(2, 16px minmax(min-content, 1fr));

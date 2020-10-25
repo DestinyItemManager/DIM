@@ -14,7 +14,6 @@ interface CssExports {
   'powerLevel': string;
   'raceGender': string;
   'top': string;
-  'vault': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
