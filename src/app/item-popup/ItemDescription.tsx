@@ -9,7 +9,7 @@ import {
   itemInfosSelector,
   notesOpenSelector,
 } from 'app/inventory/selectors';
-import { NotesEditor } from 'app/item-popup/NotesArea';
+import NotesArea, { NotesEditor } from 'app/item-popup/NotesArea';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -26,6 +26,7 @@ interface StoreProps {
   notesOpen?: string;
   inventoryWishListRoll?: InventoryWishListRoll;
   savedNotes: string;
+  isPhonePortrait?: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -33,12 +34,19 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     notesOpen: notesOpenSelector(state),
     savedNotes: getNotes(props.item, itemInfosSelector(state), itemHashTagsSelector(state)) ?? '',
     inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id],
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function ItemDescription({ item, notesOpen, savedNotes, inventoryWishListRoll }: Props) {
+function ItemDescription({
+  item,
+  notesOpen,
+  savedNotes,
+  inventoryWishListRoll,
+  isPhonePortrait,
+}: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
   // suppressing some unnecessary information for weapons and armor,
   // to make room for all that other delicious info
@@ -81,8 +89,9 @@ function ItemDescription({ item, notesOpen, savedNotes, inventoryWishListRoll }:
           <span className={styles.wishListTextContent}>{inventoryWishListRoll.notes}</span>
         </ExpandableTextBlock>
       )}
-
-      {notesOpen !== item.id ? (
+      {isPhonePortrait ? (
+        <NotesArea item={item} className={styles.description} />
+      ) : notesOpen !== item.id ? (
         savedNotes && <div className={styles.descriptionBorder}>{savedNotes}</div>
       ) : (
         <div className={styles.description}>
