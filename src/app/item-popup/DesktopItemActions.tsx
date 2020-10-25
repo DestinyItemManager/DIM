@@ -332,7 +332,7 @@ function MoveLocations({
                 role="button"
                 tabIndex={-1}
               >
-                <StoreIcons store={store} />
+                <StoreIcons store={store} useBackground={true} />
               </div>
             )}
           </React.Fragment>

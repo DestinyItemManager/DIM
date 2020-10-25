@@ -141,13 +141,15 @@
   justify-content: center;
   height: 36px;
   width: 36px;
+  overflow: hidden;
 
   img {
     position: absolute;
-    height: 100%;
-    width: 100%;
     top: 0;
     left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: none;
   }
 
   :global(.app-icon) {
@@ -174,7 +176,7 @@
 }
 
 .disabled {
-  filter: contrast(0.6) brightness(0.6);
+  filter: contrast(0.5) brightness(0.5);
   cursor: default;
   pointer-events: none;
 }
