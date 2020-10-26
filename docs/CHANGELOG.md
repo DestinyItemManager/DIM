@@ -1,5 +1,7 @@
 ## Next
 
+## 6.36.0 <span className="changelog-date">(2020-10-25)</span>
+
 * Rearranged equip/move buttons on sidecar to be horizontal icons instead of menu items.
 * Added cooldown and effect values to stat tooltips.
 * Added stat tooltips to the Loadout Optimizer.
