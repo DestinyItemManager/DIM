@@ -13,7 +13,6 @@ interface CssExports {
   'move': string;
   'moveLocationIcons': string;
   'moveLocations': string;
-  'null': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
