@@ -114,7 +114,7 @@
   .socket-container & {
     position: absolute;
     top: -6px;
-    right: -6px;
+    right: -8px;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }
@@ -124,25 +124,30 @@
   display: inline-block;
 
   .item-socket-category-Consumable & {
-    border: 1px solid #999999;
+    border: 1px solid #888;
   }
 
   img {
     -webkit-touch-callout: none;
-    width: calc(0.64 * var(--item-size));
-    height: calc(0.64 * var(--item-size));
+    width: 32px;
+    height: 32px;
     display: block;
   }
 }
 
 .item-socket-category-Reusable .socket-container.notIntrinsic {
-  border: 1px solid #999999;
+  border: 1px solid #888;
   border-radius: 50%;
   background-color: #4887ba;
-  transform: scale(0.9);
+  padding: 1px;
+  margin-bottom: 6px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   img {
-    transform: scale(0.85);
+    width: 26px;
+    height: 26px;
   }
 
   &.notChosen {
