@@ -35,7 +35,7 @@ export default function ItemPopupHeader({
   const hasLeftIcon = item.trackable || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item]);
+    CompareService.addItemsToCompare([item], true);
   };
 
   const hasDetails = Boolean(
