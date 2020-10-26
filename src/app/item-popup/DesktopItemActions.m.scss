@@ -16,11 +16,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 4px 8px;
+  padding: 6px 8px;
 
   > img,
-  > :global(.app-icon),
-  > .null {
+  > :global(.app-icon) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,7 +40,7 @@
 
 .itemTagSelector {
   composes: entry;
-  padding: 4px 8px;
+  padding: 6px 8px;
 
   :global(.app-icon) {
     margin-top: 1px;
@@ -50,32 +49,19 @@
 
   .collapsed & {
     padding: 0;
-    :global(.app-icon) {
-      margin-right: 8px;
-      font-size: 16px;
-      height: 24px;
-      width: 24px;
-    }
     button {
-      padding: 12px;
-      :global(.app-icon) {
-        margin-right: 0px;
+      border-radius: 0;
+      padding: 6px 8px;
+      > div > :global(.app-icon) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        margin: 0;
+        height: 24px;
+        width: 24px;
       }
     }
-  }
-}
-
-.null {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  &::before {
-    content: '';
-    display: block;
-    height: 6px;
-    width: 6px;
-    border-radius: 3px;
-    background-color: white;
   }
 }
 
@@ -123,7 +109,7 @@
   flex-direction: column;
   align-items: inherit;
   justify-self: flex-end;
-  padding: 4px 8px 0 8px;
+  padding: 6px 8px 0 8px;
   &:last-child {
     padding-bottom: 8px;
   }
