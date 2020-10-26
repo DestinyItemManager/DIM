@@ -77,7 +77,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
 
-  useHotkey('/', t('MovePopup.ToggleSidecar'), onToggleSidecar);
+  useHotkey('k', t('MovePopup.ToggleSidecar'), onToggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
     const currentChar = getCurrentStore(stores)!;
     onMoveItemTo(currentChar);
@@ -162,7 +162,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             className={styles.collapseButton}
             onClick={onToggleSidecar}
             role="button"
-            title={t('MovePopup.ToggleSidecar') + ' [/]'}
+            title={t('MovePopup.ToggleSidecar') + ' [K]'}
             tabIndex={-1}
           >
             <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />

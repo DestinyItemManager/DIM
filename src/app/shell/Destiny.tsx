@@ -128,7 +128,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       },
     },
     {
-      combo: '/',
+      combo: 'k',
       description: t('MovePopup.ToggleSidecar'),
       callback() {
         // Empty
