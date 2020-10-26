@@ -1,6 +1,7 @@
 import { LockedItemType } from 'app/loadout-builder/types';
 import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useState } from 'react';
@@ -113,21 +114,24 @@ function ItemSockets({
             </div>
           )}
           <div className="item-sockets">
-            {category.sockets.map((socketInfo) => (
-              <Socket
-                key={socketInfo.socketIndex}
-                defs={defs}
-                item={item}
-                isPhonePortrait={isPhonePortrait}
-                socket={socketInfo}
-                wishListsEnabled={wishListsEnabled}
-                inventoryWishListRoll={inventoryWishListRoll}
-                classesByHash={classesByHash}
-                onClick={handleSocketClick}
-                onShiftClick={onShiftClick}
-                adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-              />
-            ))}
+            {category.sockets.map(
+              (socketInfo) =>
+                !isKillTrackerSocket(socketInfo) && (
+                  <Socket
+                    key={socketInfo.socketIndex}
+                    defs={defs}
+                    item={item}
+                    isPhonePortrait={isPhonePortrait}
+                    socket={socketInfo}
+                    wishListsEnabled={wishListsEnabled}
+                    inventoryWishListRoll={inventoryWishListRoll}
+                    classesByHash={classesByHash}
+                    onClick={handleSocketClick}
+                    onShiftClick={onShiftClick}
+                    adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+                  />
+                )
+            )}
           </div>
         </div>
       ))}
