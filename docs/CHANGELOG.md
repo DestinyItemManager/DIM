@@ -2,6 +2,7 @@
 
 * Some more tweaks to the sidecar layout.
 * Put back automatically showing dupes when launching compare.
+* The item popup now closes when you start dragging an item.
 
 ## 6.36.0 <span className="changelog-date">(2020-10-25)</span>
 
