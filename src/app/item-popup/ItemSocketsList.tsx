@@ -70,7 +70,6 @@ function ItemSockets({
     return null;
   }
 
-  // TODO: remove kill tracker perks
   // Separate out sockets. This gives us better display for things we know, but isn't as flexible to changes in how D2 works.
   const archetype = getWeaponArchetypeSocket(item);
   const cosmetics = item.sockets?.categories.find(
@@ -87,8 +86,16 @@ function ItemSockets({
   const mods = item.sockets.allSockets.filter((s) => !s.isPerk && s !== archetype);
 
   // TODO: bring back clicking perks to see stats
+  // TODO: click perk to see others
+  // TODO: details?
+  // TODO: tooltips
   // TODO: AWA buttons
   // TODO: grid for armor?
+
+  const [selectedPerk, setSelectedPerk] = useState<{ socket: DimSocket; perk: DimPlug }>();
+  const onPerkSelected = (socket: DimSocket, perk: DimPlug) => {
+    setSelectedPerk({ socket, perk });
+  };
 
   return (
     <div className={styles.sockets}>
@@ -134,6 +141,8 @@ function ItemSockets({
                 defs={defs}
                 socket={socketInfo}
                 inventoryWishListRoll={inventoryWishListRoll}
+                selectedPerk={selectedPerk}
+                onPerkSelected={onPerkSelected}
               />
             </div>
           )
@@ -158,10 +167,14 @@ function PerkSocket({
   defs,
   socket,
   inventoryWishListRoll,
+  selectedPerk,
+  onPerkSelected,
 }: {
   defs: D2ManifestDefinitions;
   socket: DimSocket;
   inventoryWishListRoll?: InventoryWishListRoll;
+  selectedPerk?: { socket: DimSocket; perk: DimPlug };
+  onPerkSelected(socketInfo: DimSocket, plug: DimPlug);
 }) {
   return (
     <div className={styles.socket}>
@@ -172,6 +185,8 @@ function PerkSocket({
           socketInfo={socket}
           defs={defs}
           inventoryWishListRoll={inventoryWishListRoll}
+          selected={selectedPerk?.socket === socket && selectedPerk?.perk === plug}
+          onPerkSelected={onPerkSelected}
         />
       ))}
     </div>
@@ -183,15 +198,26 @@ function PerkPlug({
   plug,
   socketInfo,
   inventoryWishListRoll,
+  selected,
+  onPerkSelected,
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
   socketInfo: DimSocket;
   inventoryWishListRoll?: InventoryWishListRoll;
+  /* True, false, or undefined for "no selection" */
+  // TODO: maybe use an enum
+  selected?: boolean;
+  onPerkSelected(socketInfo: DimSocket, plug: DimPlug);
 }) {
   if (!plug.plugDef.plug) {
     return null;
   }
+
+  const perkSelected = (e) => {
+    console.log('Click??', e);
+    onPerkSelected(socketInfo, plug);
+  };
 
   return (
     <div
@@ -200,6 +226,7 @@ function PerkPlug({
         [styles.plugged]: plug === socketInfo.plugged,
         [styles.disabled]: !plug.enabled,
       })}
+      onClick={perkSelected}
     >
       <div className={styles.perkIcon}>
         <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
@@ -212,7 +239,10 @@ function PerkPlug({
         )}
       </div>
       {socketInfo.isPerk && plug === socketInfo.plugged && (
-        <span className={styles.plugLabel}>{plug.plugDef.displayProperties.name}</span>
+        <div className={styles.plugLabel}>{plug.plugDef.displayProperties.name}</div>
+      )}
+      {selected && (
+        <div className={styles.plugLabel}>{plug.plugDef.displayProperties.description}</div>
       )}
     </div>
   );

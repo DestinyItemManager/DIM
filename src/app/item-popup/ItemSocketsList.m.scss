@@ -29,10 +29,10 @@
 .archetypeMod {
   flex: 1;
   img {
-    width: calc(2px + 0.5 * var(--item-size));
-    height: calc(2px + 0.5 * var(--item-size));
-    margin-right: 0.5em;
-    transform: scale(1.3);
+    width: 28px;
+    height: 28px;
+    margin-right: 1em;
+    transform: scale(1.25);
   }
 }
 
@@ -48,12 +48,17 @@
   &:hover {
     outline: 1px solid $orange;
   }
+
+  :global(.item-img) {
+    height: 28px;
+    width: 28px;
+  }
 }
 
 .plug {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  margin-right: 0.5em;
+  margin-right: 1em;
   &:last-child {
     margin-right: 0;
   }
@@ -61,12 +66,13 @@
 
 .perkIcon {
   position: relative;
-  width: calc(0.4 * var(--item-size));
-  height: calc(0.4 * var(--item-size));
+  width: 24px;
+  height: 24px;
   display: block;
   border: 1px solid white;
   border-radius: 50%;
-  padding: calc(0.05 * var(--item-size));
+  padding: 1px;
+  flex-shrink: 0;
 
   > img {
     height: 100%;
@@ -79,7 +85,7 @@
   :global(.thumbs-up) {
     position: absolute;
     top: -6px;
-    right: -6px;
+    right: -8px;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }
@@ -93,5 +99,5 @@
 }
 
 .plugLabel {
-  margin-left: 0.5em;
+  margin-left: 1em;
 }

@@ -125,7 +125,11 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
       {item.sockets &&
-        ($featureFlags.newPerks ? <ItemSocketsList item={item} /> : <ItemSockets item={item} />)}
+        ($featureFlags.newPerks && item.bucket.inWeapons ? (
+          <ItemSocketsList item={item} />
+        ) : (
+          <ItemSockets item={item} />
+        ))}
 
       {item.perks && (
         <div className="item-details item-perks">
