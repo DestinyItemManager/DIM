@@ -4,7 +4,7 @@
 * Added cooldown and effect values to stat tooltips.
 * Added stat tooltips to the Loadout Optimizer.
 * Fixed descriptions for mod effects in the Loadout Optimizer's mod picker.
-* New keyboard shortcuts for pull item (P), vault item (V), lock/unlock item (L), expand/collapse sidecar (/), and clear tag (Shift+0). Remember, you must click an item before being able to use shortcuts.
+* New keyboard shortcuts for pull item (P), vault item (V), lock/unlock item (L), expand/collapse sidecar (K), and clear tag (Shift+0). Remember, you must click an item before being able to use shortcuts.
 * Made the item popup a bit thinner.
 * Collapsing sections now animate open and closed.
 * When your character sort is set to "most recent (reverse)", your characters are still in recency order in the item actions sidecar.
