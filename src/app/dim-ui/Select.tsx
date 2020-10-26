@@ -20,6 +20,8 @@ interface Props<T> {
   disabled?: boolean;
   value?: T;
   options: Option<T>[];
+  /** Optional override for the button content */
+  children?: ReactNode;
   onChange(value?: T): void;
 }
 
@@ -38,6 +40,7 @@ export default function Select<T>({
   onChange,
   value,
   hideSelected,
+  children,
 }: Props<T>) {
   const {
     isOpen,
@@ -69,15 +72,21 @@ export default function Select<T>({
 
   return (
     <div className={className}>
-      <button
-        type="button"
-        {...getToggleButtonProps({ ref: buttonRef })}
-        className={styles.button}
-        disabled={disabled}
-      >
-        {selectedItem.content}{' '}
-        <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
-      </button>
+      {children ? (
+        <button type="button" {...getToggleButtonProps({ ref: buttonRef })} disabled={disabled}>
+          {children}
+        </button>
+      ) : (
+        <button
+          type="button"
+          {...getToggleButtonProps({ ref: buttonRef })}
+          className={styles.button}
+          disabled={disabled}
+        >
+          {selectedItem.content}{' '}
+          <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+        </button>
+      )}
       <div
         {...getMenuProps({ ref: menuRef })}
         className={clsx(styles.menu, { [styles.open]: isOpen })}

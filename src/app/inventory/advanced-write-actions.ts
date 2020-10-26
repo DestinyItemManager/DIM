@@ -1,4 +1,6 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import { ThunkResult } from 'app/store/types';
 import {
   AwaAuthorizationResult,
   AwaType,
@@ -19,29 +21,27 @@ let awaCache: {
 
 // TODO: we need an interface for presenting non-reusable plugs like mods and shaders
 // TODO: owner can't be "vault" I bet
-export async function insertPlug(
-  account: DestinyAccount,
-  item: DimItem,
-  socket: DimSocket,
-  plugItemHash: number
-) {
-  const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
+export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
+  return async (_dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
+    const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
 
-  // TODO: if the plug costs resources to insert, add a confirmation
+    // TODO: if the plug costs resources to insert, add a confirmation
 
-  return insertSocketPlug(authenticatedHttpClient, {
-    actionToken,
-    itemInstanceId: item.id,
-    plug: {
-      socketIndex: socket.socketIndex,
-      socketArrayType: DestinySocketArrayType.Default,
-      plugItemHash,
-    },
-    characterId: item.owner,
-    membershipType: account.originalPlatformType,
-  });
+    await insertSocketPlug(authenticatedHttpClient, {
+      actionToken,
+      itemInstanceId: item.id,
+      plug: {
+        socketIndex: socket.socketIndex,
+        socketArrayType: DestinySocketArrayType.Default,
+        plugItemHash,
+      },
+      characterId: item.owner,
+      membershipType: account.originalPlatformType,
+    });
 
-  // TODO: need to update the item after modifying, and signal that it has changed (Redux?)
+    // TODO: need to update the item after modifying, and signal that it has changed (Redux?)
+  };
 }
 
 /**

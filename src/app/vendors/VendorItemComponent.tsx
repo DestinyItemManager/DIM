@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
-import { DestinyCollectibleState, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
+import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -13,6 +13,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
 import { AppIcon, faCheck } from '../shell/icons';
+import Cost from './Cost';
 import { VendorItem } from './vendor-item';
 import styles from './VendorItem.m.scss';
 
@@ -61,7 +62,7 @@ export default function VendorItemComponent({
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
           {item.costs.map((cost) => (
-            <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
+            <Cost key={cost.itemHash} defs={defs} cost={cost} className={styles.cost} />
           ))}
         </div>
       )}
@@ -105,27 +106,6 @@ export function VendorItemDisplay({
         )}
       </ItemPopupTrigger>
       {children}
-    </div>
-  );
-}
-
-function VendorItemCost({
-  cost,
-  defs,
-}: {
-  defs: D2ManifestDefinitions;
-  cost: DestinyItemQuantity;
-}) {
-  const currencyItem = defs.InventoryItem.get(cost.itemHash);
-  return (
-    <div className={styles.cost}>
-      {cost.quantity}
-      <span className={styles.currency}>
-        <BungieImage
-          src={currencyItem.displayProperties.icon}
-          title={currencyItem.displayProperties.name}
-        />
-      </span>
     </div>
   );
 }
