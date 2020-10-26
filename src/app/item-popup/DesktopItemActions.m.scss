@@ -16,19 +16,17 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 16px 12px;
+  padding: 8px;
 
-  @media (pointer: fine) {
-    padding: 12px;
-  }
-
-  img,
-  :global(.app-icon),
-  .null {
-    display: block;
+  > img,
+  > :global(.app-icon),
+  > .null {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 8px;
-    height: 16px;
-    width: 16px;
+    height: 24px;
+    width: 24px;
     font-size: 16px;
     text-align: center;
 
@@ -43,17 +41,20 @@
 
 .itemTagSelector {
   composes: entry;
-  padding-top: 12px;
-  padding-bottom: 6px;
+  padding: 8px;
 
   :global(.app-icon) {
     margin-top: 1px;
+    margin-right: 8px;
   }
 
   .collapsed & {
     padding: 0;
     :global(.app-icon) {
       margin-right: 8px;
+      font-size: 16px;
+      height: 24px;
+      width: 24px;
     }
     button {
       padding: 12px;
@@ -122,14 +123,17 @@
   flex-direction: column;
   align-items: inherit;
   justify-self: flex-end;
-  padding: 6px 12px 3px;
+  padding: 4px 8px 0 8px;
+  &:last-child {
+    padding-bottom: 8px;
+  }
 }
 
 .moveLocationIcons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 6px 0;
+  margin: 4px 0 0 0;
 }
 
 .move,
