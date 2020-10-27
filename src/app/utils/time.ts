@@ -24,16 +24,11 @@ export function durationFromMs(ms: number) {
  * negative durations return 0
  */
 export function timerDurationFromMs(milliseconds: number) {
-  const duration = durationFromMs(milliseconds);
-  const ms = duration.pop();
-  while (duration[0] === 0) {
+  const duration = durationFromMs(milliseconds).slice(0, -1);
+  while (duration[0] === 0 && duration.length > 3) {
     duration.shift();
   }
-  return (
-    duration.map((u, i) => `${u}`.padStart(i === 0 ? 0 : 2, '0')).join(':') +
-    '.' +
-    `${ms}`.padStart(3, '0')
-  );
+  return duration.map((u, i) => `${u}`.padStart(i === 0 ? 0 : 2, '0')).join(':');
 }
 
 export function i15dDurationFromSeconds(_seconds: number, compact = false) {
