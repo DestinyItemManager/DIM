@@ -1,6 +1,7 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
@@ -132,7 +133,7 @@ export function ObjectiveValue({
     case DestinyUnlockValueUIStyle.RawFloat:
       return <>{(progress / 100).toLocaleString()}</>;
     case DestinyUnlockValueUIStyle.TimeDuration:
-      return <>{duration(progress)}</>;
+      return <>{timerDurationFromMs(progress)}</>;
     case DestinyUnlockValueUIStyle.Checkbox:
       return <></>;
   }
@@ -147,26 +148,4 @@ export function ObjectiveValue({
       {completionValue.toLocaleString()}
     </>
   );
-}
-
-function duration(d: number) {
-  let ret = '';
-  const days = d % (60 * 60 * 24);
-  if (days > 0) {
-    d -= days * 60 * 60 * 24;
-    ret += `${days}:`;
-  }
-  const hours = d % (60 * 60);
-  if (days > 0 || hours > 0) {
-    d -= hours * 60 * 60;
-    ret += `${hours}:`;
-  }
-  const minutes = d % 60;
-  if (days > 0 || hours > 0 || minutes > 0) {
-    d -= minutes * 60;
-    ret += `${minutes}:`;
-  }
-  // at this point, d is the remaining seconds
-  ret += `${d}`;
-  return ret;
 }
