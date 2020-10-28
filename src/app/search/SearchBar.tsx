@@ -354,7 +354,7 @@ function SearchBar(
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
-      enterkeyhint="search"
+      enterKeyHint="search"
       {...getComboboxProps()}
     >
       <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
