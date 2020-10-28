@@ -30,15 +30,6 @@ export default function updateCSSVariables() {
         setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
       }
     }
-
-    if ($featureFlags.colorA11y && currentState.colorA11y !== nextState.colorA11y) {
-      const color = nextState.colorA11y;
-      if (color && color !== '-') {
-        setCSSVariable('--color-filter', `url(#${color.toLowerCase()})`);
-      } else {
-        document.querySelector('html')!.style.removeProperty('--color-filter');
-      }
-    }
   });
 
   // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
