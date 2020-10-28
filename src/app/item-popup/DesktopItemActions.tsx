@@ -360,7 +360,7 @@ function PullButtons({
   vault?: DimStore<DimItem>;
 }) {
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
-  const moveAllLabel = showAmounts ? `All` : undefined;
+  const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
 
   return (
     <div className={styles.moveLocations}>
