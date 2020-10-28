@@ -11,7 +11,7 @@ export enum D2SeasonEnum {
   DAWN,
   WORTHY,
   ARRIVAL,
-  REDACTED_12, // TODO: Update on verification
+  HUNT,
 
   __LENGTH__, // This always needs to be last
 }
@@ -175,16 +175,16 @@ export const D2SeasonInfo = {
   },
   12: {
     DLCName: 'Beyond Light',
-    seasonName: 'Season of [the Redacted-12]', // TODO: Update on verification
-    seasonTag: 'redacted-12', // TODO: Update on verification
+    seasonName: 'Season of the Hunt',
+    seasonTag: 'hunt',
     season: 12,
     year: 4,
     maxLevel: 50,
     maxPower: 1260, // TODO: Update on verification
-    softCap: 1050, // TODO: Update on verification
+    softCap: 1250, // TODO: Update on verification
     releaseDate: '2020-11-10',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 12,
   },
 } as Record<
   number,
