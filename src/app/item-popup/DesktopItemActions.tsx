@@ -1,4 +1,4 @@
-import { StoreIcons } from 'app/character-tile/StoreIcons';
+import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
@@ -31,6 +31,8 @@ import LockButton from './LockButton';
 type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
 
 const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
+
+const sharedButtonProps = { role: 'button', tabIndex: -1 };
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
@@ -151,6 +153,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.equipment ||
     item.infusionFuel;
 
+  const collapsednessStyle = clsx({ [styles.hideLabel]: sidecarCollapsed });
+
   const canEquip = stores.filter((store) => itemCanBeEquippedBy(item, store));
   const canStore = stores.filter((store) => canShowStore(store, itemOwner, item));
 
@@ -164,9 +168,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           <div
             className={styles.collapseButton}
             onClick={toggleSidecar}
-            role="button"
             title={t('MovePopup.ToggleSidecar') + ' [K]'}
-            tabIndex={-1}
+            {...sharedButtonProps}
           >
             <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
           </div>
@@ -190,7 +193,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             item={item}
             type={item.lockable ? 'lock' : 'track'}
           >
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
+            <span className={collapsednessStyle}>
               {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
             </span>
           </LockButton>
@@ -198,41 +201,31 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         {item.comparable && (
           <ActionButton onClick={openCompare}>
             <AppIcon icon={compareIcon} />
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
-              {t('Compare.Button')}
-            </span>
+            <span className={collapsednessStyle}>{t('Compare.Button')}</span>
           </ActionButton>
         )}
         {canConsolidate && (
           <ActionButton onClick={dispatchConsolidate}>
             <img src={arrowsIn} height="32" width="32" />
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
-              {t('MovePopup.Consolidate')}
-            </span>
+            <span className={collapsednessStyle}>{t('MovePopup.Consolidate')}</span>
           </ActionButton>
         )}
         {canDistribute && (
           <ActionButton onClick={dispatchDistribute}>
             <img src={arrowsOut} height="32" width="32" />
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
-              {t('MovePopup.DistributeEvenly')}
-            </span>
+            <span className={collapsednessStyle}>{t('MovePopup.DistributeEvenly')}</span>
           </ActionButton>
         )}
         {itemCanBeInLoadout(item) && (
           <ActionButton onClick={addToLoadout}>
             <AppIcon icon={addIcon} />
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
-              {t('MovePopup.AddToLoadout')}
-            </span>
+            <span className={collapsednessStyle}>{t('MovePopup.AddToLoadout')}</span>
           </ActionButton>
         )}
         {item.infusionFuel && (
           <ActionButton onClick={infuse}>
             <img src={d2Infuse} height="32" width="32" />
-            <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
-              {t('MovePopup.Infuse')}
-            </span>
+            <span className={collapsednessStyle}>{t('MovePopup.Infuse')}</span>
           </ActionButton>
         )}
 
@@ -243,7 +236,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 onClick={() => submitMoveTo(vault)}
                 title={t('MovePopup.Vault') + ' [V]'}
               >
-                <StoreIcons store={vault} /> {t('MovePopup.Vault')}
+                <StoreIcon store={vault} /> {t('MovePopup.Vault')}
               </ActionButton>
             )}
             {item.location.inPostmaster ? ( //&& item.canPullFromPostmaster
@@ -251,6 +244,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 itemOwner={itemOwner}
                 submitMoveTo={submitMoveTo}
                 stackSize={item.amount}
+                vault={vault}
               />
             ) : (
               <>
@@ -259,8 +253,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                   stores={stores}
                   applicableStores={canEquip}
                   equip={true}
-                  showLocation={(store) => itemCanBeEquippedBy(item, store)}
-                  isDisabled={(store) => item.owner === store.id && item.equipped}
+                  isDisplayedCheck={(store) => itemCanBeEquippedBy(item, store)}
+                  isDisabledCheck={(store) => item.owner === store.id && item.equipped}
                   submitMoveTo={submitMoveTo}
                 />
                 <MoveLocations
@@ -268,8 +262,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                   shortcutKey=" [P]"
                   stores={stores}
                   applicableStores={canStore}
-                  showLocation={(store) => canShowStore(store, itemOwner, item)}
-                  isDisabled={(store) => !storeButtonEnabled(store, itemOwner, item)}
+                  isDisplayedCheck={(store) => canShowStore(store, itemOwner, item)}
+                  isDisabledCheck={(store) => !storeButtonEnabled(store, itemOwner, item)}
                   submitMoveTo={submitMoveTo}
                 />
               </>
@@ -297,8 +291,7 @@ function ActionButton({
       className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
       onClick={onClick}
       title={title}
-      role="button"
-      tabIndex={-1}
+      {...sharedButtonProps}
     >
       {children}
     </div>
@@ -311,8 +304,8 @@ function MoveLocations({
   stores,
   applicableStores,
   equip,
-  isDisabled,
-  showLocation,
+  isDisabledCheck,
+  isDisplayedCheck,
   submitMoveTo,
 }: {
   label: string;
@@ -320,8 +313,10 @@ function MoveLocations({
   stores: DimStore[];
   applicableStores: DimStore[];
   equip?: boolean;
-  isDisabled: (store: DimStore) => boolean;
-  showLocation: (store: DimStore) => boolean;
+  /** is run on each store to decide clickability */
+  isDisabledCheck: (store: DimStore) => boolean;
+  /** is run on each store to decide visibility */
+  isDisplayedCheck: (store: DimStore) => boolean;
   submitMoveTo: MoveSubmit;
 }) {
   if (!applicableStores.length) {
@@ -334,19 +329,18 @@ function MoveLocations({
       <div className={styles.moveLocationIcons}>
         {stores.map((store) => (
           <React.Fragment key={store.id}>
-            {showLocation(store) && (
+            {isDisplayedCheck(store) && (
               <div
                 className={clsx({
                   [styles.equip]: equip,
                   [styles.move]: !equip,
-                  [styles.disabled]: isDisabled(store),
+                  [styles.disabled]: isDisabledCheck(store),
                 })}
                 title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
                 onClick={() => submitMoveTo(store, equip)}
-                role="button"
-                tabIndex={-1}
+                {...sharedButtonProps}
               >
-                <StoreIcons store={store} useBackground={true} />
+                <StoreIcon store={store} useBackground={true} />
               </div>
             )}
           </React.Fragment>
@@ -360,43 +354,47 @@ function PullButtons({
   itemOwner,
   submitMoveTo,
   stackSize,
+  vault,
 }: {
   itemOwner: DimStore<DimItem>;
   submitMoveTo: MoveSubmit;
   stackSize: number;
+  vault?: DimStore<DimItem>;
 }) {
   return (
     <div className={styles.moveLocations}>
-      {'Pull from Postmaster'}
+      {t('MovePopup.PullPostmaster')}
       <div className={styles.moveLocationIcons}>
         <div
-          className={clsx({
-            [styles.move]: true,
-            // [styles.equip]: equip,
-            // [styles.move]: !equip,
-            // [styles.disabled]: isDisabled(store),
+          className={clsx(styles.move, {
+            [styles.disabled]: false,
           })}
-          title={`1`}
-          onClick={() => submitMoveTo(itemOwner)}
-          role="button"
-          tabIndex={-1}
+          onClick={() => submitMoveTo(itemOwner, false, 1)}
+          {...sharedButtonProps}
         >
-          <StoreIcons store={itemOwner} useBackground={true} label="1" />
+          <StoreIcon store={itemOwner} useBackground={true} label="1" />
         </div>
         <div
-          className={clsx({
-            [styles.move]: true,
-            // [styles.equip]: equip,
-            // [styles.move]: !equip,
-            // [styles.disabled]: isDisabled(store),
+          className={clsx(styles.move, {
+            [styles.disabled]: false,
           })}
-          title={`all`}
           onClick={() => submitMoveTo(itemOwner, false, stackSize)}
-          role="button"
-          tabIndex={-1}
+          {...sharedButtonProps}
         >
-          <StoreIcons store={itemOwner} useBackground={true} label="All" />
+          <StoreIcon store={itemOwner} useBackground={true} label={`${stackSize}`} />
         </div>
+
+        {vault && (
+          <div
+            className={clsx(styles.move, {
+              [styles.disabled]: false,
+            })}
+            onClick={() => submitMoveTo(vault, false, stackSize)}
+            {...sharedButtonProps}
+          >
+            <StoreIcon store={vault} label={`${stackSize}`} />
+          </div>
+        )}
       </div>
     </div>
   );
