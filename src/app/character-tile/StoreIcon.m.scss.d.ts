@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'classIcon': string;
+  'dimmedBg': string;
   'label': string;
 }
 export const cssExports: CssExports;

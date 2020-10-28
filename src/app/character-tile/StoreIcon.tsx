@@ -1,5 +1,6 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { DimStore } from 'app/inventory/store-types';
+import clsx from 'clsx';
 import React from 'react';
 import styles from './StoreIcon.m.scss';
 
@@ -21,17 +22,16 @@ export function StoreIcon({
   label?: string;
   useBackground?: boolean;
 }) {
+  const bgColor =
+    store.color &&
+    `rgb(${[store.color.red, store.color.green, store.color.blue].map(Math.round).join()})`;
+
   return (
     <>
       <img
         src={!useBackground ? store.icon : store.background}
-        style={{
-          backgroundColor: store.color
-            ? `rgb(${[store.color.red, store.color.green, store.color.blue]
-                .map(Math.round)
-                .join()})`
-            : 'black',
-        }}
+        className={clsx({ [styles.dimmedBg]: store.isVault && label })}
+        style={{ backgroundColor: bgColor ?? 'black' }}
       />
       {label ? (
         <span className={styles.label}>{label}</span>
