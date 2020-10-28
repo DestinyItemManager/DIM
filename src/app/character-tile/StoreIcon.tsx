@@ -1,19 +1,23 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { DimStore } from 'app/inventory/store-types';
 import React from 'react';
-import styles from './StoreIcons.m.scss';
+import styles from './StoreIcon.m.scss';
 
 /**
  * Show both the store emblem and class icon for a given store.
+ *
+ * Providing a label overrides the class icon.
+ *
+ * @param useBackground uses a portion of the emblem's banner,
+ * which is a little more neutral, instead of the square
+ * version of the emblem
  */
-export function StoreIcons({
+export function StoreIcon({
   store,
-  showClass = true,
   label,
   useBackground,
 }: {
   store: DimStore;
-  showClass?: boolean;
   label?: string;
   useBackground?: boolean;
 }) {
@@ -21,21 +25,18 @@ export function StoreIcons({
     <>
       <img
         src={!useBackground ? store.icon : store.background}
-        height="32"
-        width="32"
         style={{
           backgroundColor: store.color
-            ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
-                store.color.blue
-              )}`
+            ? `rgb(${[store.color.red, store.color.green, store.color.blue]
+                .map(Math.round)
+                .join()})`
             : 'black',
         }}
       />
       {label ? (
         <span className={styles.label}>{label}</span>
       ) : (
-        !store.isVault &&
-        showClass && <ClassIcon classType={store.classType} className={styles.classIcon} />
+        !store.isVault && <ClassIcon classType={store.classType} className={styles.classIcon} />
       )}
     </>
   );
