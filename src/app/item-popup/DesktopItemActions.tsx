@@ -28,12 +28,15 @@ import ItemMoveAmount from './ItemMoveAmount';
 import ItemTagSelector from './ItemTagSelector';
 import LockButton from './LockButton';
 
+type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
+
 const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
   const vault = getVault(stores);
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
+  // barring a user selection, default to moving the whole stack of this item
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
@@ -47,8 +50,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     [itemOwner, item]
   );
 
-  const onMoveItemTo = (store: DimStore, equip = false) => {
-    dispatch(moveItemTo(item, store, equip, amount));
+  const submitMoveTo = (store: DimStore, equip = false, moveAmount = amount) => {
+    dispatch(moveItemTo(item, store, equip, moveAmount));
     hideItemPopup();
   };
 
@@ -61,30 +64,30 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     hideItemPopup();
   };
 
-  const onConsolidate = () => {
+  const dispatchConsolidate = () => {
     if (itemOwner) {
       dispatch(consolidate(item, itemOwner));
       hideItemPopup();
     }
   };
 
-  const onDistribute = () => {
+  const dispatchDistribute = () => {
     dispatch(distribute(item));
     hideItemPopup();
   };
 
-  const onToggleSidecar = () => {
+  const toggleSidecar = () => {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
 
-  useHotkey('k', t('MovePopup.ToggleSidecar'), onToggleSidecar);
+  useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
     const currentChar = getCurrentStore(stores)!;
-    onMoveItemTo(currentChar);
+    submitMoveTo(currentChar);
   });
   useHotkey('v', t('Hotkey.Vault'), () => {
     const vault = getVault(stores)!;
-    onMoveItemTo(vault);
+    submitMoveTo(vault);
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -160,7 +163,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         {showCollapse && (
           <div
             className={styles.collapseButton}
-            onClick={onToggleSidecar}
+            onClick={toggleSidecar}
             role="button"
             title={t('MovePopup.ToggleSidecar') + ' [K]'}
             tabIndex={-1}
@@ -201,7 +204,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           </ActionButton>
         )}
         {canConsolidate && (
-          <ActionButton onClick={onConsolidate}>
+          <ActionButton onClick={dispatchConsolidate}>
             <img src={arrowsIn} height="32" width="32" />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.Consolidate')}
@@ -209,7 +212,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           </ActionButton>
         )}
         {canDistribute && (
-          <ActionButton onClick={onDistribute}>
+          <ActionButton onClick={dispatchDistribute}>
             <img src={arrowsOut} height="32" width="32" />
             <span className={clsx({ [styles.hideLabel]: sidecarCollapsed })}>
               {t('MovePopup.DistributeEvenly')}
@@ -232,32 +235,46 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
             </span>
           </ActionButton>
         )}
-        {!sidecarCollapsed && vault && canShowVault(vault, itemOwner, item) && (
-          <ActionButton onClick={() => onMoveItemTo(vault)} title={t('MovePopup.Vault') + ' [V]'}>
-            <StoreIcons store={vault} /> {t('MovePopup.Vault')}
-          </ActionButton>
-        )}
+
         {!sidecarCollapsed && (
-          <MoveLocations
-            label={t('MovePopup.Equip')}
-            stores={stores}
-            appicableStores={canEquip}
-            equip={true}
-            showLocation={(store) => itemCanBeEquippedBy(item, store)}
-            isDisabled={(store) => item.owner === store.id && item.equipped}
-            onMoveItemTo={onMoveItemTo}
-          />
-        )}
-        {!sidecarCollapsed && (
-          <MoveLocations
-            label={t('MovePopup.Store')}
-            shortcutKey=" [P]"
-            stores={stores}
-            appicableStores={canStore}
-            showLocation={(store) => canShowStore(store, itemOwner, item)}
-            isDisabled={(store) => !storeButtonEnabled(store, itemOwner, item)}
-            onMoveItemTo={onMoveItemTo}
-          />
+          <>
+            {vault && canShowVault(vault, itemOwner, item) && (
+              <ActionButton
+                onClick={() => submitMoveTo(vault)}
+                title={t('MovePopup.Vault') + ' [V]'}
+              >
+                <StoreIcons store={vault} /> {t('MovePopup.Vault')}
+              </ActionButton>
+            )}
+            {item.location.inPostmaster ? ( //&& item.canPullFromPostmaster
+              <PullButtons
+                itemOwner={itemOwner}
+                submitMoveTo={submitMoveTo}
+                stackSize={item.amount}
+              />
+            ) : (
+              <>
+                <MoveLocations
+                  label={t('MovePopup.Equip')}
+                  stores={stores}
+                  applicableStores={canEquip}
+                  equip={true}
+                  showLocation={(store) => itemCanBeEquippedBy(item, store)}
+                  isDisabled={(store) => item.owner === store.id && item.equipped}
+                  submitMoveTo={submitMoveTo}
+                />
+                <MoveLocations
+                  label={t('MovePopup.Store')}
+                  shortcutKey=" [P]"
+                  stores={stores}
+                  applicableStores={canStore}
+                  showLocation={(store) => canShowStore(store, itemOwner, item)}
+                  isDisabled={(store) => !storeButtonEnabled(store, itemOwner, item)}
+                  submitMoveTo={submitMoveTo}
+                />
+              </>
+            )}
+          </>
         )}
       </div>
     </>
@@ -292,22 +309,22 @@ function MoveLocations({
   label,
   shortcutKey,
   stores,
-  appicableStores,
+  applicableStores,
   equip,
   isDisabled,
   showLocation,
-  onMoveItemTo,
+  submitMoveTo,
 }: {
   label: string;
   shortcutKey?: string;
   stores: DimStore[];
-  appicableStores: DimStore[];
+  applicableStores: DimStore[];
   equip?: boolean;
   isDisabled: (store: DimStore) => boolean;
   showLocation: (store: DimStore) => boolean;
-  onMoveItemTo: (store: DimStore, equip?: boolean) => void;
+  submitMoveTo: MoveSubmit;
 }) {
-  if (!appicableStores.length) {
+  if (!applicableStores.length) {
     return null;
   }
 
@@ -325,7 +342,7 @@ function MoveLocations({
                   [styles.disabled]: isDisabled(store),
                 })}
                 title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
-                onClick={() => onMoveItemTo(store, equip)}
+                onClick={() => submitMoveTo(store, equip)}
                 role="button"
                 tabIndex={-1}
               >
@@ -334,6 +351,52 @@ function MoveLocations({
             )}
           </React.Fragment>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function PullButtons({
+  itemOwner,
+  submitMoveTo,
+  stackSize,
+}: {
+  itemOwner: DimStore<DimItem>;
+  submitMoveTo: MoveSubmit;
+  stackSize: number;
+}) {
+  return (
+    <div className={styles.moveLocations}>
+      {'Pull from Postmaster'}
+      <div className={styles.moveLocationIcons}>
+        <div
+          className={clsx({
+            [styles.move]: true,
+            // [styles.equip]: equip,
+            // [styles.move]: !equip,
+            // [styles.disabled]: isDisabled(store),
+          })}
+          title={`1`}
+          onClick={() => submitMoveTo(itemOwner)}
+          role="button"
+          tabIndex={-1}
+        >
+          <StoreIcons store={itemOwner} useBackground={true} label="1" />
+        </div>
+        <div
+          className={clsx({
+            [styles.move]: true,
+            // [styles.equip]: equip,
+            // [styles.move]: !equip,
+            // [styles.disabled]: isDisabled(store),
+          })}
+          title={`all`}
+          onClick={() => submitMoveTo(itemOwner, false, stackSize)}
+          role="button"
+          tabIndex={-1}
+        >
+          <StoreIcons store={itemOwner} useBackground={true} label="All" />
+        </div>
       </div>
     </div>
   );
