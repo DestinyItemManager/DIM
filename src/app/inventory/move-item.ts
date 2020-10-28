@@ -5,7 +5,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';

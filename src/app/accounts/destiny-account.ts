@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
+  BungieMembershipType,
   DestinyGameVersions,
   DestinyLinkedProfilesResponse,
   DestinyProfileUserInfoCard,

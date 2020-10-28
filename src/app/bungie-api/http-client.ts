@@ -1,5 +1,5 @@
 import { delay } from 'app/utils/util';
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
 /**

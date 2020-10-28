@@ -7536,9 +7536,9 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-webpack-plugin@cshawaus/lodash-webpack-plugin#webpack-5-support:
+lodash-webpack-plugin@DestinyItemManager/lodash-webpack-plugin#master:
   version "0.11.5"
-  resolved "https://codeload.github.com/cshawaus/lodash-webpack-plugin/tar.gz/ecfc18e5090c342c193f6a8780fcbbf07cb00579"
+  resolved "https://codeload.github.com/DestinyItemManager/lodash-webpack-plugin/tar.gz/86cda99515bcdddf66551cae08b7235717f223e3"
   dependencies:
     lodash "^4.17.4"
 
@@ -12469,13 +12469,6 @@ workbox-window@^5.1.1, workbox-window@^5.1.4:
   integrity sha512-vXQtgTeMCUq/4pBWMfQX8Ee7N2wVC4Q7XYFqLnfbXJ2hqew/cU1uMTD2KqGEgEpE4/30luxIxgE+LkIa8glBYw==
   dependencies:
     workbox-core "^5.1.4"
-
-worker-plugin@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/worker-plugin/-/worker-plugin-5.0.0.tgz#113b5fe1f4a5d6a957cecd29915bedafd70bb537"
-  integrity sha512-AXMUstURCxDD6yGam2r4E34aJg6kW85IiaeX72hi+I1cxyaMUtrvVY6sbfpGKAj5e7f68Acl62BjQF5aOOx2IQ==
-  dependencies:
-    loader-utils "^1.1.0"
 
 wrap-ansi@^5.1.0:
   version "5.1.0"
