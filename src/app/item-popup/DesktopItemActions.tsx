@@ -153,85 +153,84 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.equipment ||
     item.infusionFuel;
 
-  const collapsednessStyle = clsx({ [styles.hideLabel]: sidecarCollapsed });
-
   const canEquip = stores.filter((store) => itemCanBeEquippedBy(item, store));
   const canStore = stores.filter((store) => canShowStore(store, itemOwner, item));
 
   return (
-    <>
-      <div
-        className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
-        ref={containerRef}
-      >
-        {showCollapse && (
-          <div
-            className={styles.collapseButton}
-            onClick={toggleSidecar}
-            title={t('MovePopup.ToggleSidecar') + ' [K]'}
-            {...sharedButtonProps}
-          >
-            <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
-          </div>
-        )}
-        {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
-          <ItemMoveAmount
-            amount={amount}
-            maximum={maximum}
-            maxStackSize={item.maxStackSize}
-            onAmountChanged={onAmountChanged}
-          />
-        )}
-        {item.taggable && (
-          <div className={styles.itemTagSelector}>
-            <ItemTagSelector item={item} hideButtonLabel={sidecarCollapsed} />
-          </div>
-        )}
-        {(item.lockable || item.trackable) && (
-          <LockButton
-            className={styles.actionButton}
-            item={item}
-            type={item.lockable ? 'lock' : 'track'}
-          >
-            <span className={collapsednessStyle}>
-              {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
-            </span>
-          </LockButton>
-        )}
-        {item.comparable && (
-          <ActionButton onClick={openCompare}>
-            <AppIcon icon={compareIcon} />
-            <span className={collapsednessStyle}>{t('Compare.Button')}</span>
-          </ActionButton>
-        )}
-        {canConsolidate && (
-          <ActionButton onClick={dispatchConsolidate}>
-            <img src={arrowsIn} height="32" width="32" />
-            <span className={collapsednessStyle}>{t('MovePopup.Consolidate')}</span>
-          </ActionButton>
-        )}
-        {canDistribute && (
-          <ActionButton onClick={dispatchDistribute}>
-            <img src={arrowsOut} height="32" width="32" />
-            <span className={collapsednessStyle}>{t('MovePopup.DistributeEvenly')}</span>
-          </ActionButton>
-        )}
-        {itemCanBeInLoadout(item) && (
-          <ActionButton onClick={addToLoadout}>
-            <AppIcon icon={addIcon} />
-            <span className={collapsednessStyle}>{t('MovePopup.AddToLoadout')}</span>
-          </ActionButton>
-        )}
-        {item.infusionFuel && (
-          <ActionButton onClick={infuse}>
-            <img src={d2Infuse} height="32" width="32" />
-            <span className={collapsednessStyle}>{t('MovePopup.Infuse')}</span>
-          </ActionButton>
-        )}
+    <div
+      className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
+      ref={containerRef}
+    >
+      {showCollapse && (
+        <div
+          className={styles.collapseButton}
+          onClick={toggleSidecar}
+          title={t('MovePopup.ToggleSidecar') + ' [K]'}
+          {...sharedButtonProps}
+        >
+          <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
+        </div>
+      )}
+      {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
+        <ItemMoveAmount
+          amount={amount}
+          maximum={maximum}
+          maxStackSize={item.maxStackSize}
+          onAmountChanged={onAmountChanged}
+        />
+      )}
+      {item.taggable && (
+        <div className={styles.itemTagSelector}>
+          <ItemTagSelector item={item} hideButtonLabel={sidecarCollapsed} />
+        </div>
+      )}
+      {(item.lockable || item.trackable) && (
+        <LockButton
+          className={styles.actionButton}
+          item={item}
+          type={item.lockable ? 'lock' : 'track'}
+        >
+          <span className={styles.hideWhenCollapsed}>
+            {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
+          </span>
+        </LockButton>
+      )}
+      {item.comparable && (
+        <ActionButton onClick={openCompare}>
+          <AppIcon icon={compareIcon} />
+          <span className={styles.hideWhenCollapsed}>{t('Compare.Button')}</span>
+        </ActionButton>
+      )}
+      {canConsolidate && (
+        <ActionButton onClick={dispatchConsolidate}>
+          <img src={arrowsIn} />
+          <span className={styles.hideWhenCollapsed}>{t('MovePopup.Consolidate')}</span>
+        </ActionButton>
+      )}
+      {canDistribute && (
+        <ActionButton onClick={dispatchDistribute}>
+          <img src={arrowsOut} />
+          <span className={styles.hideWhenCollapsed}>{t('MovePopup.DistributeEvenly')}</span>
+        </ActionButton>
+      )}
+      {itemCanBeInLoadout(item) && (
+        <ActionButton onClick={addToLoadout}>
+          <AppIcon icon={addIcon} />
+          <span className={styles.hideWhenCollapsed}>{t('MovePopup.AddToLoadout')}</span>
+        </ActionButton>
+      )}
+      {item.infusionFuel && (
+        <ActionButton onClick={infuse}>
+          <img src={d2Infuse} />
+          <span className={styles.hideWhenCollapsed}>{t('MovePopup.Infuse')}</span>
+        </ActionButton>
+      )}
 
-        {!sidecarCollapsed && (
-          <>
-            {vault && canShowVault(vault, itemOwner, item) && (
+      {!sidecarCollapsed && (
+        <>
+          {vault && // there must be a vault
+            !item.location.inPostmaster && // PM items have an alternate vault button
+            canTransferToVault(itemOwner, item) && (
               <ActionButton
                 onClick={() => submitMoveTo(vault)}
                 title={t('MovePopup.Vault') + ' [V]'}
@@ -239,39 +238,38 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 <StoreIcon store={vault} /> {t('MovePopup.Vault')}
               </ActionButton>
             )}
-            {item.location.inPostmaster ? ( //&& item.canPullFromPostmaster
-              <PullButtons
-                itemOwner={itemOwner}
+          {item.location.type === 'LostItems' && item.canPullFromPostmaster ? (
+            <PullButtons
+              item={item}
+              itemOwner={itemOwner}
+              submitMoveTo={submitMoveTo}
+              vault={vault}
+            />
+          ) : (
+            <>
+              <MoveLocations
+                label={t('MovePopup.Equip')}
+                stores={stores}
+                applicableStores={canEquip}
+                equip={true}
+                isDisplayedCheck={(store) => itemCanBeEquippedBy(item, store)}
+                isDisabledCheck={(store) => item.owner === store.id && item.equipped}
                 submitMoveTo={submitMoveTo}
-                stackSize={item.amount}
-                vault={vault}
               />
-            ) : (
-              <>
-                <MoveLocations
-                  label={t('MovePopup.Equip')}
-                  stores={stores}
-                  applicableStores={canEquip}
-                  equip={true}
-                  isDisplayedCheck={(store) => itemCanBeEquippedBy(item, store)}
-                  isDisabledCheck={(store) => item.owner === store.id && item.equipped}
-                  submitMoveTo={submitMoveTo}
-                />
-                <MoveLocations
-                  label={t('MovePopup.Store')}
-                  shortcutKey=" [P]"
-                  stores={stores}
-                  applicableStores={canStore}
-                  isDisplayedCheck={(store) => canShowStore(store, itemOwner, item)}
-                  isDisabledCheck={(store) => !storeButtonEnabled(store, itemOwner, item)}
-                  submitMoveTo={submitMoveTo}
-                />
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </>
+              <MoveLocations
+                label={t('MovePopup.Store')}
+                shortcutKey=" [P]"
+                stores={stores}
+                applicableStores={canStore}
+                isDisplayedCheck={(store) => canShowStore(store, itemOwner, item)}
+                isDisabledCheck={(store) => !storeButtonEnabled(store, itemOwner, item)}
+                submitMoveTo={submitMoveTo}
+              />
+            </>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
@@ -313,9 +311,9 @@ function MoveLocations({
   stores: DimStore[];
   applicableStores: DimStore[];
   equip?: boolean;
-  /** is run on each store to decide clickability */
+  /** is run on each store to decide whether its button is clickable */
   isDisabledCheck: (store: DimStore) => boolean;
-  /** is run on each store to decide visibility */
+  /** is run on each store to decide whether its button appears */
   isDisplayedCheck: (store: DimStore) => boolean;
   submitMoveTo: MoveSubmit;
 }) {
@@ -351,48 +349,47 @@ function MoveLocations({
 }
 
 function PullButtons({
+  item,
   itemOwner,
   submitMoveTo,
-  stackSize,
   vault,
 }: {
+  item: DimItem;
   itemOwner: DimStore<DimItem>;
   submitMoveTo: MoveSubmit;
-  stackSize: number;
   vault?: DimStore<DimItem>;
 }) {
+  const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
+  const moveAllLabel = showAmounts ? `All` : undefined;
+
   return (
     <div className={styles.moveLocations}>
       {t('MovePopup.PullPostmaster')}
       <div className={styles.moveLocationIcons}>
-        <div
-          className={clsx(styles.move, {
-            [styles.disabled]: false,
-          })}
-          onClick={() => submitMoveTo(itemOwner, false, 1)}
-          {...sharedButtonProps}
-        >
-          <StoreIcon store={itemOwner} useBackground={true} label="1" />
-        </div>
-        <div
-          className={clsx(styles.move, {
-            [styles.disabled]: false,
-          })}
-          onClick={() => submitMoveTo(itemOwner, false, stackSize)}
-          {...sharedButtonProps}
-        >
-          <StoreIcon store={itemOwner} useBackground={true} label={`${stackSize}`} />
-        </div>
-
-        {vault && (
+        {showAmounts && (
           <div
-            className={clsx(styles.move, {
-              [styles.disabled]: false,
-            })}
-            onClick={() => submitMoveTo(vault, false, stackSize)}
+            className={styles.move}
+            onClick={() => submitMoveTo(itemOwner, false, 1)}
             {...sharedButtonProps}
           >
-            <StoreIcon store={vault} label={`${stackSize}`} />
+            <StoreIcon store={itemOwner} useBackground={true} label="1" />
+          </div>
+        )}
+        <div
+          className={styles.move}
+          onClick={() => submitMoveTo(itemOwner, false, item.amount)}
+          {...sharedButtonProps}
+        >
+          <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
+        </div>
+
+        {canTransferToVault(itemOwner, item) && (
+          <div
+            className={styles.move}
+            onClick={() => submitMoveTo(vault!, false, item.amount)}
+            {...sharedButtonProps}
+          >
+            <StoreIcon store={vault!} label={moveAllLabel} />
           </div>
         )}
       </div>
@@ -410,29 +407,19 @@ function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
     : t('MovePopup.TrackUntrack.Untracked');
 }
 
-function canShowVault(buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean {
-  const store = itemOwnerStore;
-
-  // If my store is the vault, don't show a vault button.
-  // Can't vault a vaulted item.
-  if (!store || store.isVault) {
+function canTransferToVault(itemOwnerStore: DimStore, item: DimItem): boolean {
+  if (
+    // item isn't in a store????
+    !itemOwnerStore ||
+    // Can't vault a vaulted item.
+    itemOwnerStore.isVault ||
+    // Can't move this item away from the current itemStore
+    item.notransfer ||
+    // moot point because it can't be claimed from the postmaster
+    (item.location.inPostmaster && !item.canPullFromPostmaster)
+  ) {
     return false;
   }
-
-  // If my buttonStore is not the vault, then show a vault button.
-  if (!buttonStore.isVault) {
-    return false;
-  }
-
-  // Can't move this item away from the current itemStore.
-  if (item.notransfer) {
-    return false;
-  }
-
-  if (item.location.inPostmaster && !item.canPullFromPostmaster) {
-    return false;
-  }
-
   return true;
 }
 
