@@ -35,26 +35,6 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
-  "AuditLog": {
-    "Account": "Account",
-    "Action": "Action",
-    "Application": "Application",
-    "Date": "Date",
-    "DeleteAll": "Deleted all saved data",
-    "DeleteLoadout": "Deleted loadout {{name}}",
-    "Description": "This log tracks all the changes you have stored in DIM Sync - including changes to settings, tags, and loadouts. After a while this log gets cleaned up.",
-    "Details": "Details",
-    "Import": "Imported {{loadouts}} loadouts and {{tags}} tagged items",
-    "Loadout": "Changed loadout {{name}}",
-    "RemoveNotes": "Removed notes from item ID {{id}}",
-    "RemoveTag": "Removed tag from item ID {{id}}",
-    "SetNotes": "Set notes to \"{{notes}}\" for item ID {{id}}",
-    "SetTag": "Set tag to {{tag}} for item ID {{id}}",
-    "Setting": "Set {{key}} to {{value}}",
-    "TagCleanup": "Cleaned up {{count}} tag for dismantled items",
-    "TagCleanupUnknown": "Cleaned up some tags for dismantled items",
-    "TagCleanup_plural": "Cleaned up {{count}} tags for dismantled items"
-  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -442,7 +422,6 @@
   },
   "Loading": {
     "Accounts": "Loading Destiny accounts...",
-    "AuditLog": "Loading DIM Sync history...",
     "Code": "Loading DIM code...",
     "FilterHelp": "Loading search help...",
     "Profile": "Loading Destiny profile...",
@@ -627,6 +606,7 @@
     "OwnedMod": "This mod is in your modifications inventory.",
     "PowerCap": "",
     "PullItem": "Pull from {{bucket}} to {{store}}",
+    "PullPostmaster": "Pull from Postmaster",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
@@ -833,8 +813,6 @@
       "Title": "Enable DIM Sync?",
       "Yes": "Enable Sync"
     },
-    "AuditLog": "DIM Sync Change History",
-    "AuditLogLabel": "View past data changes",
     "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",

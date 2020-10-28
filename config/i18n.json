@@ -628,6 +628,7 @@
     "Owned": "This item is in your inventory.",
     "OwnedMod": "This mod is in your modifications inventory.",
     "PullItem": "Pull from {{bucket}} to {{store}}",
+    "PullPostmaster": "Pull from Postmaster",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
