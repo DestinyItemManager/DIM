@@ -33,7 +33,7 @@ import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { Settings } from './initial-settings';
 import { itemSortOrder } from './item-sort';
-import Select, { listToOptions, mapToOptions } from './Select';
+import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
@@ -115,20 +115,6 @@ const languageOptions = mapToOptions({
   'zh-cht': '繁體中文', // Chinese (Traditional)
   'zh-chs': '简体中文', // Chinese (Simplified)
 });
-
-const colorA11yOptions = $featureFlags.colorA11y
-  ? listToOptions([
-      '-',
-      'Protanopia',
-      'Protanomaly',
-      'Deuteranopia',
-      'Deuteranomaly',
-      'Tritanopia',
-      'Tritanomaly',
-      'Achromatopsia',
-      'Achromatomaly',
-    ])
-  : [];
 
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
@@ -289,14 +275,6 @@ function SettingsPage({
                 </div>
               )}
             </div>
-
-            <Select
-              label={t('Settings.ColorA11y')}
-              name="colorA11y"
-              value={settings.colorA11y}
-              options={colorA11yOptions}
-              onChange={onChange}
-            />
           </section>
 
           <section id="items">

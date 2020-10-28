@@ -1,5 +1,4 @@
 import { CompareService } from 'app/compare/compare.service';
-import { settingsSelector } from 'app/dim-api/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
@@ -57,11 +56,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
 
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
-      // The colorblind filters interact badly with this
-      const color = settingsSelector(store.getState()).colorA11y;
-      if (!color || color === '-') {
-        document.body.classList.add('drag-perf-show');
-      }
+      document.body.classList.add('drag-perf-show');
     });
 
     isDragging = true;

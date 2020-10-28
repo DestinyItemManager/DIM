@@ -50,7 +50,6 @@ body {
   padding-right: env(safe-area-inset-right);
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
-  filter: var(--color-filter);
   .gradientBackground & {
     background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
     background-position: center top;
