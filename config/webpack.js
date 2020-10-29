@@ -93,7 +93,7 @@ module.exports = (env) => {
 
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
-      // chunkIds: 'named',
+      chunkIds: 'named',
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {

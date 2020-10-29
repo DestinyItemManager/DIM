@@ -7536,7 +7536,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-webpack-plugin@DestinyItemManager/lodash-webpack-plugin#master:
+lodash-webpack-plugin@DestinyItemManager/lodash-webpack-plugin:
   version "0.11.5"
   resolved "https://codeload.github.com/DestinyItemManager/lodash-webpack-plugin/tar.gz/86cda99515bcdddf66551cae08b7235717f223e3"
   dependencies:
