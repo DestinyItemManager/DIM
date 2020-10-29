@@ -44,6 +44,8 @@ declare const $featureFlags: {
   altInventoryMode: boolean;
   /** Enable search results */
   searchResults: boolean;
+  /** Alternate perks display on item popup */
+  newPerks: boolean;
   /** Advanced Write Actions (inserting mods) */
   awa: boolean;
 };
