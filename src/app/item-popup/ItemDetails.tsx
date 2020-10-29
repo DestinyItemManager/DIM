@@ -181,18 +181,20 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           )}
         </div>
       ) : (
-        <div className="item-details">
-          {extraInfo.owned && (
-            <div>
-              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
-            </div>
-          )}
-          {extraInfo.acquired && (
-            <div>
-              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
-            </div>
-          )}
-        </div>
+        (extraInfo.owned || extraInfo.acquired) && (
+          <div className="item-details">
+            {extraInfo.owned && (
+              <div>
+                <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
+              </div>
+            )}
+            {extraInfo.acquired && (
+              <div>
+                <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
+              </div>
+            )}
+          </div>
+        )
       )}
     </div>
   );
