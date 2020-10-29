@@ -20,7 +20,8 @@ interface ProvidedProps {
 type Props = ProvidedProps;
 
 export default function ItemSockets(props: Props) {
-  if (props.item.bucket.inWeapons) {
+  const item = props.item;
+  if (item.destinyVersion === 2 && item.bucket.inWeapons) {
     return <ItemSocketsWeapons {...props} />;
   }
 

@@ -83,7 +83,10 @@ function ItemSocketsWeapons({
       c.sockets.length &&
       c.sockets[0].isPerk
   );
-  const mods = item.sockets.allSockets.filter((s) => !s.isPerk && s !== archetype);
+  // Iterate in reverse category order so cosmetic mods are at the front
+  const mods = [...item.sockets.categories]
+    .reverse()
+    .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetype));
 
   return (
     <div className={clsx('item-details', 'sockets')}>
