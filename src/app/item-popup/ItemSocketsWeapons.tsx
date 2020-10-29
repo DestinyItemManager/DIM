@@ -5,7 +5,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -91,7 +91,13 @@ function ItemSocketsWeapons({
     .reverse()
     .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetype));
 
-  const keyStats = item.stats && _.take(item.stats, 2).filter((s) => !statsMs.includes(s.statHash));
+  const keyStats =
+    item.stats &&
+    !item.itemCategoryHashes.includes(ItemCategoryHashes.Sword) &&
+    !item.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles) &&
+    _.take(item.stats, 2).filter(
+      (s) => !statsMs.includes(s.statHash) && s.statHash !== StatHashes.BlastRadius
+    );
 
   // Some stat labels are long. This lets us replace them with i18n
   const statLabels = {
@@ -118,16 +124,18 @@ function ItemSocketsWeapons({
             />
             <div>
               <div>{archetype.plugged.plugDef.displayProperties.name}</div>
-              <div className={styles.stats}>
-                {keyStats
-                  ?.map(
-                    (s) =>
-                      `${s.value} ${(
-                        statLabels[s.statHash] || s.displayProperties.name
-                      ).toLowerCase()}`
-                  )
-                  ?.join(' / ')}
-              </div>
+              {keyStats && keyStats.length > 0 && (
+                <div className={styles.stats}>
+                  {keyStats
+                    ?.map(
+                      (s) =>
+                        `${s.value} ${(
+                          statLabels[s.statHash] || s.displayProperties.name
+                        ).toLowerCase()}`
+                    )
+                    ?.join(' / ')}
+                </div>
+              )}
             </div>
           </div>
         )}
