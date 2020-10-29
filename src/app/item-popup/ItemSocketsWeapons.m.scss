@@ -21,6 +21,11 @@
   background-color: #333;
   margin: 0 -10px 10px -10px;
   width: 100%;
+
+  :global(.socket-container) img {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 .archetypeMod {
@@ -39,4 +44,8 @@
     padding-right: 6px;
     margin-right: 6px;
   }
+}
+
+.stats {
+  color: #aaa;
 }

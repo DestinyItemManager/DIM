@@ -1,9 +1,12 @@
+import { t } from 'app/i18next-t';
+import { statsMs } from 'app/inventory/store/stats';
 import { LockedItemType } from 'app/loadout-builder/types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -88,6 +91,13 @@ function ItemSocketsWeapons({
     .reverse()
     .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetype));
 
+  const keyStats = item.stats && _.take(item.stats, 2).filter((s) => !statsMs.includes(s.statHash));
+
+  // Some stat labels are long. This lets us replace them with i18n
+  const statLabels = {
+    [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
+  };
+
   return (
     <div className={clsx('item-details', 'sockets')}>
       <div className={clsx(styles.row, styles.archetype)}>
@@ -106,7 +116,19 @@ function ItemSocketsWeapons({
               onShiftClick={onShiftClick}
               adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
             />
-            {archetype.plugged.plugDef.displayProperties.name}
+            <div>
+              <div>{archetype.plugged.plugDef.displayProperties.name}</div>
+              <div className={styles.stats}>
+                {keyStats
+                  ?.map(
+                    (s) =>
+                      `${s.value} ${(
+                        statLabels[s.statHash] || s.displayProperties.name
+                      ).toLowerCase()}`
+                  )
+                  ?.join(' / ')}
+              </div>
+            </div>
           </div>
         )}
         <div className="item-socket-category-Consumable socket-container">

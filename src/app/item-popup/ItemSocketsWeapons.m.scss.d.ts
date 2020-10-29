@@ -5,6 +5,7 @@ interface CssExports {
   'archetypeMod': string;
   'perks': string;
   'row': string;
+  'stats': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
