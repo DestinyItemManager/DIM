@@ -7,8 +7,7 @@
   background-color: #161626;
 }
 
-.hideLabel,
-.collapsed svg {
+.collapsed .hideWhenCollapsed {
   display: none;
 }
 
@@ -118,7 +117,7 @@
 .moveLocationIcons {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   margin: 4px 0 0 0;
 }
 
@@ -129,8 +128,12 @@
   display: flex;
   align-content: center;
   justify-content: center;
+  align-items: center;
   height: 36px;
   width: 36px;
+  &:nth-child(n + 2) {
+    margin-left: 8px;
+  }
 
   img {
     position: absolute;

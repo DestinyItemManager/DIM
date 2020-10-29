@@ -7,7 +7,7 @@ interface CssExports {
   'disabled': string;
   'entry': string;
   'equip': string;
-  'hideLabel': string;
+  'hideWhenCollapsed': string;
   'interaction': string;
   'itemTagSelector': string;
   'move': string;
