@@ -1,0 +1,42 @@
+@import '../variables.scss';
+
+.row {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 6px 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.archetype {
+  background-color: #333;
+  margin: 0 -10px 10px -10px;
+  width: 100%;
+}
+
+.archetypeMod {
+  flex: 1;
+  img {
+    width: 28px;
+    height: 28px;
+    transform: scale(1.25);
+    margin-right: 6px;
+    margin-left: 1px;
+  }
+}
+
+.perks {
+  :global(.item-socket) {
+    padding-right: 6px;
+    margin-right: 6px;
+  }
+}
