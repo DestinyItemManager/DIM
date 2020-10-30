@@ -115,21 +115,23 @@ function ItemSocketsWeapons({
     >
       <div className={clsx(styles.row, styles.archetype)}>
         {archetype?.plugged && (
-          <div className={styles.archetypeMod}>
-            <Socket
-              key={archetype.socketIndex}
-              defs={defs}
-              item={item}
-              isPhonePortrait={isPhonePortrait}
-              socket={archetype}
-              wishListsEnabled={wishListsEnabled}
-              inventoryWishListRoll={inventoryWishListRoll}
-              classesByHash={classesByHash}
-              onClick={handleSocketClick}
-              onShiftClick={onShiftClick}
-              adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
-            />
-            <div>
+          <>
+            <div className={styles.archetypeMod}>
+              <Socket
+                key={archetype.socketIndex}
+                defs={defs}
+                item={item}
+                isPhonePortrait={isPhonePortrait}
+                socket={archetype}
+                wishListsEnabled={wishListsEnabled}
+                inventoryWishListRoll={inventoryWishListRoll}
+                classesByHash={classesByHash}
+                onClick={handleSocketClick}
+                onShiftClick={onShiftClick}
+                adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
+              />
+            </div>
+            <div className={styles.archetypeInfo}>
               <div>{archetype.plugged.plugDef.displayProperties.name}</div>
               {!minimal && keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
@@ -144,7 +146,7 @@ function ItemSocketsWeapons({
                 </div>
               )}
             </div>
-          </div>
+          </>
         )}
         {!minimal && mods.length > 0 && (
           <div className="item-socket-category-Consumable socket-container">

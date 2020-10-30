@@ -14,12 +14,6 @@
   &:last-child {
     border-bottom: none;
   }
-
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
 }
 
 .archetype {
@@ -36,10 +30,14 @@
     width: 26px;
     height: 26px;
   }
+
+  :global(.item-socket-category-Consumable) img {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .archetypeMod {
-  flex: 1;
   img {
     width: 26px;
     height: 26px;
@@ -52,6 +50,19 @@
       height: 16px !important;
       transform: scale(1.4);
     }
+  }
+}
+
+.archetypeInfo {
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  width: 0%;
+  margin-right: 8px;
+  > * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

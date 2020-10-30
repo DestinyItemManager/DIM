@@ -110,7 +110,7 @@
   border-radius: 50%;
   color: #0b486b;
   padding: 3px;
-  font-size: calc(var(--item-size) / 5) !important;
+  font-size: 8px !important;
   .socket-container & {
     position: absolute;
     top: -6px;
@@ -149,6 +149,14 @@
   img {
     width: 26px;
     height: 26px;
+  }
+
+  @include phone-portrait {
+    padding: 2px;
+    img {
+      width: 32px;
+      height: 32px;
+    }
   }
 
   &.notChosen {
