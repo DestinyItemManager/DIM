@@ -1,7 +1,10 @@
 import { LockedItemType } from 'app/loadout-builder/types';
-import { CHALICE_OF_OPULENCE, synthesizerHashes } from 'app/search/d2-known-values';
+import {
+  CHALICE_OF_OPULENCE,
+  killTrackerSocketTypeHash,
+  synthesizerHashes,
+} from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useState } from 'react';
@@ -116,7 +119,7 @@ function ItemSocketsGeneral({
           <div className="item-sockets">
             {category.sockets.map(
               (socketInfo) =>
-                !isKillTrackerSocket(socketInfo) && (
+                socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket
                     key={socketInfo.socketIndex}
                     defs={defs}

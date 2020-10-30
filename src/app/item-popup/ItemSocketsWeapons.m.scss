@@ -1,5 +1,10 @@
 @import '../variables.scss';
 
+.weaponSockets {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
 .row {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
@@ -19,8 +24,13 @@
 
 .archetype {
   background-color: #333;
-  margin: 0 -10px 10px -10px;
+  margin: 0 -10px 12px -10px;
   width: 100%;
+  border-bottom: none;
+
+  .minimal & {
+    background-color: transparent;
+  }
 
   :global(.socket-container) img {
     width: 26px;
@@ -36,6 +46,12 @@
     transform: scale(1.4);
     margin-right: 6px;
     margin-left: 2px;
+
+    .minimal & {
+      width: 16px !important;
+      height: 16px !important;
+      transform: scale(1.4);
+    }
   }
 }
 

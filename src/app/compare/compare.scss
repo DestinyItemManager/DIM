@@ -124,10 +124,14 @@
     display: none;
   }
 
+  .sockets > * {
+    margin-bottom: 8px;
+  }
+
   .socket-container {
     img {
-      width: calc(0.5 * var(--item-size));
-      height: calc(0.5 * var(--item-size));
+      width: 26px;
+      height: 26px;
     }
   }
 

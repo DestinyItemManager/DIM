@@ -202,6 +202,7 @@ const getKillTrackerSocket = (item: DimItem): DimSocket | undefined => {
   }
 };
 
+/** Is this both a kill tracker socket, and the kill tracker is enabled? */
 export function isKillTrackerSocket(socket: DimSocket) {
   return (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash;
 }
