@@ -123,6 +123,11 @@ span:focus {
   margin: 0 auto;
 }
 
+// Use this to make images not tappable (Android Chrome will show a download menu)
+.no-pointer-events {
+  pointer-events: none;
+}
+
 .currency img {
   vertical-align: text-bottom;
   height: 16px;
