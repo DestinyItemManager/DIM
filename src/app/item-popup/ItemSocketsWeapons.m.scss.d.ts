@@ -3,9 +3,11 @@
 interface CssExports {
   'archetype': string;
   'archetypeMod': string;
+  'minimal': string;
   'perks': string;
   'row': string;
   'stats': string;
+  'weaponSockets': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -82,6 +82,7 @@ export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefin
   73837075: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[905869860] "Kill Tracker"
   90275515: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2240097604] "Kill Tracker"
   2579044636: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2302094943] "Kill Tracker"
+  2285418970: undefined, //
 };
 export const killTrackerSocketTypeHash = 1282012138;
 

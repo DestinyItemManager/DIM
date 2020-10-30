@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { LockedItemType } from 'app/loadout-builder/types';
+import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -22,6 +22,8 @@ import SocketDetails from './SocketDetails';
 
 interface ProvidedProps {
   item: DimItem;
+  /** minimal style used for loadout generator and compare */
+  minimal?: boolean;
   updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
   /** Extra CSS classes to apply to perks based on their hash */
@@ -50,6 +52,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 function ItemSocketsWeapons({
   defs,
   item,
+  minimal,
   wishListsEnabled,
   inventoryWishListRoll,
   classesByHash,
@@ -105,7 +108,11 @@ function ItemSocketsWeapons({
   };
 
   return (
-    <div className={clsx('item-details', 'sockets')}>
+    <div
+      className={clsx('item-details', 'sockets', styles.weaponSockets, {
+        [styles.minimal]: minimal,
+      })}
+    >
       <div className={clsx(styles.row, styles.archetype)}>
         {archetype?.plugged && (
           <div className={styles.archetypeMod}>
@@ -124,7 +131,7 @@ function ItemSocketsWeapons({
             />
             <div>
               <div>{archetype.plugged.plugDef.displayProperties.name}</div>
-              {keyStats && keyStats.length > 0 && (
+              {!minimal && keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
                   {keyStats
                     ?.map(
@@ -139,23 +146,25 @@ function ItemSocketsWeapons({
             </div>
           </div>
         )}
-        <div className="item-socket-category-Consumable socket-container">
-          {mods.map((socketInfo) => (
-            <Socket
-              key={socketInfo.socketIndex}
-              defs={defs}
-              item={item}
-              isPhonePortrait={isPhonePortrait}
-              socket={socketInfo}
-              wishListsEnabled={wishListsEnabled}
-              inventoryWishListRoll={inventoryWishListRoll}
-              classesByHash={classesByHash}
-              onClick={handleSocketClick}
-              onShiftClick={onShiftClick}
-              adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-            />
-          ))}
-        </div>
+        {!minimal && mods.length > 0 && (
+          <div className="item-socket-category-Consumable socket-container">
+            {mods.map((socketInfo) => (
+              <Socket
+                key={socketInfo.socketIndex}
+                defs={defs}
+                item={item}
+                isPhonePortrait={isPhonePortrait}
+                socket={socketInfo}
+                wishListsEnabled={wishListsEnabled}
+                inventoryWishListRoll={inventoryWishListRoll}
+                classesByHash={classesByHash}
+                onClick={handleSocketClick}
+                onShiftClick={onShiftClick}
+                adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+              />
+            ))}
+          </div>
+        )}
       </div>
       {perks && (
         <div
@@ -168,7 +177,7 @@ function ItemSocketsWeapons({
           <div className="item-sockets">
             {perks.sockets.map(
               (socketInfo) =>
-                !isKillTrackerSocket(socketInfo) && (
+                socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket
                     key={socketInfo.socketIndex}
                     defs={defs}
@@ -185,6 +194,25 @@ function ItemSocketsWeapons({
                 )
             )}
           </div>
+        </div>
+      )}
+      {minimal && mods.length > 0 && (
+        <div className="item-socket-category-Consumable socket-container">
+          {mods.map((socketInfo) => (
+            <Socket
+              key={socketInfo.socketIndex}
+              defs={defs}
+              item={item}
+              isPhonePortrait={isPhonePortrait}
+              socket={socketInfo}
+              wishListsEnabled={wishListsEnabled}
+              inventoryWishListRoll={inventoryWishListRoll}
+              classesByHash={classesByHash}
+              onClick={handleSocketClick}
+              onShiftClick={onShiftClick}
+              adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+            />
+          ))}
         </div>
       )}
       {socketInMenu &&

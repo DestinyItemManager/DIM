@@ -121,7 +121,8 @@
 
 .socket-container {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
 
   .item-socket-category-Consumable & {
     border: 1px solid #888;
