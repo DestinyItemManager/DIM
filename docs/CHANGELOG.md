@@ -1,6 +1,7 @@
 ## Next
 
 * Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
+* Added `hunt` as valid season synonym.
 
 ## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
 
