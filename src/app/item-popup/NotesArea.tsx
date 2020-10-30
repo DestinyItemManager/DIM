@@ -7,7 +7,7 @@ import { AppIcon, editIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './NotesArea.m.scss';
 
@@ -99,18 +99,19 @@ function NotesEditor({
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
     // ESC - revert notes to initial value and then close (&save) them
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       textArea.current!.value = notes ?? '';
       setNotesOpen(false);
     }
     // ENTER - prevent creation of a newline then close (&save) notes
-    if (e.keyCode === 13 && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       setNotesOpen(false);
     }
   };
 
-  useEffect(() => saveNotes, [saveNotes]);
+  // https://reactjs.org/blog/2020/08/10/react-v17-rc.html#effect-cleanup-timing
+  useLayoutEffect(() => saveNotes, [saveNotes]);
 
   const onClick = (e: React.MouseEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
