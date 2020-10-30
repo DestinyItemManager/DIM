@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
+  'archetypeInfo': string;
   'archetypeMod': string;
   'minimal': string;
   'perks': string;
