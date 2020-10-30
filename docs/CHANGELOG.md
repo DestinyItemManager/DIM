@@ -2,6 +2,12 @@
 
 * Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
 * Added `hunt` as valid season synonym.
+* Clicking on the energy track or element for armor can now let you preview how much it'd cost in total to upgrade energy or change element.
+* Redesigned weapon perks/mods to more clearly call out archetype and key stats.
+* Improved the buttons that show in the item popup for items in postmaster. For stacked items you can now take just one, or all of the item.
+* Some items that DIM couldn't pull from postmaster before, can be pulled now.
+* Fixed the display of stat trackers for raid speed runs.
+* Hide the "kill tracker" perk column on masterworked weapons.
 
 ## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
 
