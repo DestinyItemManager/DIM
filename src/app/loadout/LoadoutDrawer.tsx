@@ -539,6 +539,7 @@ function LoadoutDrawer({
               <LoadoutDrawerContents
                 loadout={loadout}
                 items={items}
+                defs={defs}
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}

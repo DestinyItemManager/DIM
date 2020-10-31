@@ -1,3 +1,5 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -12,6 +14,7 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
+import SavedMods from './SavedMods';
 
 const loadoutTypes = [
   'Class',
@@ -65,6 +68,7 @@ export default function LoadoutDrawerContents(
   {
     loadout,
     buckets,
+    defs,
     items,
     stores,
     itemSortOrder,
@@ -74,6 +78,7 @@ export default function LoadoutDrawerContents(
   }: {
     loadout: Loadout;
     buckets: InventoryBuckets;
+    defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
     items: DimItem[];
     itemSortOrder: string[];
@@ -132,6 +137,7 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
+      {$featureFlags.loadoutMods && <SavedMods defs={defs} modHashes={loadout.parameters?.mods} />}
     </>
   );
 }

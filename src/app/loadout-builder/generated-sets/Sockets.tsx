@@ -40,7 +40,7 @@ interface Props {
   ): void;
 }
 
-function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
+function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
   if (!item.sockets) {
     return null;
   }
@@ -98,4 +98,4 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
   );
 }
 
-export default GeneratedSetSockets;
+export default Sockets;

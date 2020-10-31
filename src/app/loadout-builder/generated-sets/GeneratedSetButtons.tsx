@@ -7,7 +7,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
-import { ArmorSet } from '../types';
+import { ArmorSet, LockedArmor2ModMap } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
@@ -17,12 +17,14 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  lockedArmor2Mods,
   canCompareLoadouts,
   onLoadoutSet,
   onCompareSet,
 }: {
   store: DimStore;
   set: ArmorSet;
+  lockedArmor2Mods: LockedArmor2ModMap;
   canCompareLoadouts: boolean;
   onLoadoutSet(loadout: Loadout): void;
   onCompareSet(): void;
@@ -31,12 +33,12 @@ export default function GeneratedSetButtons({
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set));
+    onLoadoutSet(createLoadout(store.classType, set, lockedArmor2Mods));
   };
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout = createLoadout(store.classType, set);
+    const loadout = createLoadout(store.classType, set, lockedArmor2Mods);
     return dispatch(applyLoadout(store, loadout, true));
   };
 
@@ -60,13 +62,18 @@ export default function GeneratedSetButtons({
 /**
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
-function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
+function createLoadout(
+  classType: DestinyClass,
+  set: ArmorSet,
+  lockedArmor2Mods: LockedArmor2ModMap
+): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
   const loadout = newLoadout(
     t('Loadouts.Generated', data),
-    set.armor.map((items) => convertToLoadoutItem(items[0], true))
+    set.armor.map((items) => convertToLoadoutItem(items[0], true)),
+    Object.values(lockedArmor2Mods).flatMap((mods) => mods.flatMap((mod) => mod.modDef.hash))
   );
   loadout.classType = classType;
   return loadout;
