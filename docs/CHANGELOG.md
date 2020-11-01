@@ -8,6 +8,7 @@
 * Some items that DIM couldn't pull from postmaster before, can be pulled now.
 * Fixed the display of stat trackers for raid speed runs.
 * Hide the "kill tracker" perk column on masterworked weapons.
+* Fixed the tagging dropdown not being attached on desktop Safari.
 
 ## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
 
