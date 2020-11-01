@@ -22,7 +22,7 @@ const gearSlotOrder = [
 /**
  * Creates a new loadout, with all of the items equipped.
  */
-export function newLoadout(name: string, items: LoadoutItem[], mods?: number[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
   return {
     id: uuidv4(),
     classType: DestinyClass.Unknown,
@@ -30,7 +30,6 @@ export function newLoadout(name: string, items: LoadoutItem[], mods?: number[]):
     destinyVersion: 2,
     name,
     items,
-    parameters: $featureFlags.loadoutMods && mods ? { mods } : undefined,
   };
 }
 

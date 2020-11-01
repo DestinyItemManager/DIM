@@ -102,7 +102,6 @@ function GeneratedSet({
         ))}
         <GeneratedSetButtons
           set={set}
-          lockedArmor2Mods={lockedArmor2Mods}
           store={selectedStore!}
           canCompareLoadouts={canCompareLoadouts}
           onLoadoutSet={setCreateLoadout}
