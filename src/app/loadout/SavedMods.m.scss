@@ -2,6 +2,26 @@
   margin-bottom: 8px;
 }
 
+.title {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.categories {
+  display: flex;
+  flex-direction: row;
+}
+
+.category {
+  display: block;
+  margin-right: 16px;
+}
+
+.categoryName {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
 .mods {
   display: flex;
   flex-direction: row;
