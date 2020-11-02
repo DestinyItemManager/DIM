@@ -1,5 +1,7 @@
 ## Next
 
+## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
+
 * Fixed not being able to scroll on mobile.
 * Fixed filter help not always showing up.
 
