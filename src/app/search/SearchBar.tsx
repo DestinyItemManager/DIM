@@ -420,7 +420,6 @@ function SearchBar(
               </>
             }
             sheetClassName="filterHelp"
-            freezeInitialHeight={true}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />
