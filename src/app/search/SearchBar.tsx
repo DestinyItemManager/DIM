@@ -1,4 +1,5 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import KeyHelp from 'app/dim-ui/KeyHelp';
@@ -44,7 +45,7 @@ import { searchConfigSelector } from './search-config';
 import './search-filter.scss';
 import styles from './SearchBar.m.scss';
 
-const searchItemIcons: { [key in SearchItemType]: string } = {
+const searchItemIcons: { [key in SearchItemType]: IconDefinition } = {
   [SearchItemType.Recent]: faClock,
   [SearchItemType.Saved]: starIcon,
   [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon

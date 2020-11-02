@@ -3,7 +3,7 @@ import { AppIcon } from 'app/shell/icons';
 import React from 'react';
 import { itemTagList, TagValue } from './dim-item-info';
 
-const tagIcons: { [tag: string]: string | IconDefinition | undefined } = {};
+const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTagList.forEach((tag) => {
   if (tag.type) {
     tagIcons[tag.type] = tag.icon;

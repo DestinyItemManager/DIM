@@ -9,91 +9,106 @@ import {
   stadiaIcon,
 } from './custom';
 
-const faArchive = 'fas fa-archive';
-const faArrowCircleUp = 'fas fa-arrow-circle-up';
-const faArrowRight = 'fas fa-arrow-right';
-const faBan = 'fas fa-ban';
-const faBars = 'fas fa-bars';
-const faBolt = 'fas fa-bolt';
-const faCheck = 'fas fa-check';
-const faCheckCircle = 'fas fa-check-circle';
-const faCheckCircleRegular = 'far fa-check-circle';
-const faChevronCircleUp = 'fas fa-chevron-circle-up';
-const faChevronCircleDown = 'fas fa-chevron-circle-down';
-const faCircleRegular = 'far fa-circle';
-const faCog = 'fas fa-cog';
-const faCopy = 'fas fa-copy';
-const faDownload = 'fas fa-file-export';
-const faEnvelope = 'fas fa-envelope';
-const faEraser = 'fas fa-eraser';
-const faLevelUpAlt = 'fas fa-level-up-alt';
-const faLock = 'fas fa-lock';
-const faUnlock = 'fas fa-unlock';
-const faCaretDown = 'fas fa-caret-down';
-const faPencilAlt = 'fas fa-pencil-alt';
-const faPlus = 'fas fa-plus';
-const faCaretRight = 'fas fa-caret-right';
-const faAngleDoubleLeft = 'fas fa-angle-double-left';
-const faAngleDoubleRight = 'fas fa-angle-double-right';
-const faPlusCircle = 'fas fa-plus-circle';
-const faPlusSquare = 'fas fa-plus-square';
-const faQuestionCircle = 'far fa-question-circle';
-const faRestore = 'fas fa-trash-restore';
-const faSave = 'fas fa-save';
-const faSearch = 'fas fa-search';
-const faSignInAlt = 'fas fa-sign-in-alt';
-const faSignOutAlt = 'fas fa-sign-out-alt';
-const faChevronDown = 'fas fa-chevron-down';
-const faChevronUp = 'fas fa-chevron-up';
-const faStar = 'fas fa-star';
-const faStarHalfAlt = 'fas fa-star-half-alt';
-const faStarOutline = 'far fa-star';
-const faSync = 'fas fa-sync';
-const faTable = 'fas fa-table';
-const faTag = 'fas fa-tag';
-const faThumbsUp = 'fas fa-thumbs-up';
-const faThumbsUpRegular = 'far fa-thumbs-up';
-const faThumbsDown = 'fas fa-thumbs-down';
-const faThumbsDownRegular = 'far fa-thumbs-down';
-const faTimes = 'fas fa-times';
-const faTimesCircle = 'fas fa-times-circle';
-const faTrashAlt = 'far fa-trash-alt';
-const faTwitter = 'fab fa-twitter';
-const faUndo = 'fas fa-undo';
-const faUpload = 'fas fa-file-import';
-const faHeart = 'fas fa-heart';
-const faGlobe = 'fas fa-globe';
-const faStickyNote = 'fas fa-sticky-note';
-const faMinusSquare = 'fas fa-minus-square';
-const faRandom = 'fas fa-random';
-const faEquals = 'fas fa-equals';
-const faEllipsisV = 'fas fa-ellipsis-v';
-const faArrowCircleDown = 'fas fa-arrow-circle-down';
-const faExclamationCircle = 'fas fa-exclamation-circle';
-const faMinus = 'fas fa-minus';
-const faCaretUp = 'fas fa-caret-up';
-const faClock = 'far fa-clock';
-const faCircle = 'far fa-circle';
-const faClone = 'far fa-clone';
-const faFlag = 'far fa-flag';
-const faPenSquare = 'fas fa-pen-square';
-const faExclamationTriangle = 'fas fa-exclamation-triangle';
-const faTshirt = 'fas fa-tshirt';
-const faExternalLinkAlt = 'fas fa-external-link-alt';
-const faBookmarkSolid = 'fas fa-bookmark';
-const faBookmark = 'far fa-bookmark';
-const faBalanceScaleLeft = 'fas fa-balance-scale-left';
-const faGripVertical = 'fas fa-grip-vertical';
-const faThumbtack = 'fas fa-thumbtack';
-
-const faXbox = 'fab fa-xbox';
-const faPlaystation = 'fab fa-playstation';
-const faSteam = 'fab fa-steam';
-const faYoutube = 'fab fa-youtube';
-const faDiscord = 'fab fa-discord';
-const faGithub = 'fab fa-github';
-const faReddit = 'fab fa-reddit';
-
+export { faDiscord } from '@fortawesome/free-brands-svg-icons/faDiscord';
+export { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+export { faPlaystation } from '@fortawesome/free-brands-svg-icons/faPlaystation';
+export { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
+export { faSteam } from '@fortawesome/free-brands-svg-icons/faSteam';
+export { faTwitter as twitterIcon } from '@fortawesome/free-brands-svg-icons/faTwitter';
+export { faXbox } from '@fortawesome/free-brands-svg-icons/faXbox';
+export { faYoutube } from '@fortawesome/free-brands-svg-icons/faYoutube';
+export { faBookmark as unTrackedIcon } from '@fortawesome/free-regular-svg-icons/faBookmark';
+export {
+  faCheckCircle as completedIcon,
+  faCheckCircle,
+  faCheckCircle as unselectedCheckIcon,
+} from '@fortawesome/free-regular-svg-icons/faCheckCircle';
+export { faClock } from '@fortawesome/free-regular-svg-icons/faClock';
+export { faClone } from '@fortawesome/free-regular-svg-icons/faClone';
+export { faFlag } from '@fortawesome/free-regular-svg-icons/faFlag';
+export { faQuestionCircle as helpIcon } from '@fortawesome/free-regular-svg-icons/faQuestionCircle';
+export { faStar as starOutlineIcon } from '@fortawesome/free-regular-svg-icons/faStar';
+export { faThumbsDown as faThumbsDownRegular } from '@fortawesome/free-regular-svg-icons/faThumbsDown';
+export { faThumbsUp as faThumbsUpRegular } from '@fortawesome/free-regular-svg-icons/faThumbsUp';
+export { faTrashAlt as deleteIcon } from '@fortawesome/free-regular-svg-icons/faTrashAlt';
+export { faAngleDoubleLeft as maximizeIcon } from '@fortawesome/free-solid-svg-icons/faAngleDoubleLeft';
+export { faAngleDoubleRight as minimizeIcon } from '@fortawesome/free-solid-svg-icons/faAngleDoubleRight';
+export { faArchive as archiveIcon } from '@fortawesome/free-solid-svg-icons/faArchive';
+export { faArrowCircleDown } from '@fortawesome/free-solid-svg-icons/faArrowCircleDown';
+export { faArrowCircleUp as updateIcon } from '@fortawesome/free-solid-svg-icons/faArrowCircleUp';
+export {
+  faArrowRight as moveIcon,
+  faArrowRight as rightArrowIcon,
+} from '@fortawesome/free-solid-svg-icons/faArrowRight';
+export { faBalanceScaleLeft as compareIcon } from '@fortawesome/free-solid-svg-icons/faBalanceScaleLeft';
+export { faBan as banIcon } from '@fortawesome/free-solid-svg-icons/faBan';
+export { faBars as menuIcon } from '@fortawesome/free-solid-svg-icons/faBars';
+export { faBolt as boltIcon } from '@fortawesome/free-solid-svg-icons/faBolt';
+export { faBookmark as trackedIcon } from '@fortawesome/free-solid-svg-icons/faBookmark';
+export {
+  faCaretDown as collapseIcon,
+  faCaretDown,
+} from '@fortawesome/free-solid-svg-icons/faCaretDown';
+export { faCaretRight as expandIcon } from '@fortawesome/free-solid-svg-icons/faCaretRight';
+export { faCaretUp } from '@fortawesome/free-solid-svg-icons/faCaretUp';
+export { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+export {
+  faCheckCircle as enabledIcon,
+  faCheckCircle as redeemedIcon,
+} from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+export { faChevronCircleDown as openDropdownIcon } from '@fortawesome/free-solid-svg-icons/faChevronCircleDown';
+export { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons/faChevronCircleUp';
+export { faChevronDown as moveDownIcon } from '@fortawesome/free-solid-svg-icons/faChevronDown';
+export { faChevronUp as moveUpIcon } from '@fortawesome/free-solid-svg-icons/faChevronUp';
+export { faCog as settingsIcon } from '@fortawesome/free-solid-svg-icons/faCog';
+export { faCopy as copyIcon } from '@fortawesome/free-solid-svg-icons/faCopy';
+export { faEllipsisV as kebabIcon } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
+export { faEnvelope as sendIcon } from '@fortawesome/free-solid-svg-icons/faEnvelope';
+export { faEquals } from '@fortawesome/free-solid-svg-icons/faEquals';
+export { faEraser as clearIcon } from '@fortawesome/free-solid-svg-icons/faEraser';
+export { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
+export { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+export { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt';
+export { faFileExport as downloadIcon } from '@fortawesome/free-solid-svg-icons/faFileExport';
+export {
+  faFileImport as revisionsIcon,
+  faFileImport as uploadIcon,
+} from '@fortawesome/free-solid-svg-icons/faFileImport';
+export { faGlobe as globeIcon } from '@fortawesome/free-solid-svg-icons/faGlobe';
+export { faGripVertical as dragHandleIcon } from '@fortawesome/free-solid-svg-icons/faGripVertical';
+export { faHeart as heartIcon } from '@fortawesome/free-solid-svg-icons/faHeart';
+export { faLevelUpAlt as levellingIcon } from '@fortawesome/free-solid-svg-icons/faLevelUpAlt';
+export { faLock as lockIcon } from '@fortawesome/free-solid-svg-icons/faLock';
+export { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
+export { faMinusSquare } from '@fortawesome/free-solid-svg-icons/faMinusSquare';
+export { faPencilAlt as editIcon } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
+export { faPenSquare } from '@fortawesome/free-solid-svg-icons/faPenSquare';
+export { faPlus as plusIcon } from '@fortawesome/free-solid-svg-icons/faPlus';
+export { faPlusCircle as addIcon } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
+export { faPlusSquare } from '@fortawesome/free-solid-svg-icons/faPlusSquare';
+export { faRandom } from '@fortawesome/free-solid-svg-icons/faRandom';
+export { faSave as saveIcon } from '@fortawesome/free-solid-svg-icons/faSave';
+export { faSearch as searchIcon } from '@fortawesome/free-solid-svg-icons/faSearch';
+export { faSignInAlt as signInIcon } from '@fortawesome/free-solid-svg-icons/faSignInAlt';
+export { faSignOutAlt as signOutIcon } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+export { faStar as starIcon } from '@fortawesome/free-solid-svg-icons/faStar';
+export { faStarHalfAlt as halfStarIcon } from '@fortawesome/free-solid-svg-icons/faStarHalfAlt';
+export { faStickyNote as stickyNoteIcon } from '@fortawesome/free-solid-svg-icons/faStickyNote';
+export { faSync as refreshIcon } from '@fortawesome/free-solid-svg-icons/faSync';
+export { faTable as spreadsheetIcon } from '@fortawesome/free-solid-svg-icons/faTable';
+export { faTag as tagIcon } from '@fortawesome/free-solid-svg-icons/faTag';
+export { faThumbsDown as thumbsDownIcon } from '@fortawesome/free-solid-svg-icons/faThumbsDown';
+export { faThumbsUp as thumbsUpIcon } from '@fortawesome/free-solid-svg-icons/faThumbsUp';
+export { faThumbtack as pinIcon } from '@fortawesome/free-solid-svg-icons/faThumbtack';
+export { faTimes as closeIcon } from '@fortawesome/free-solid-svg-icons/faTimes';
+export {
+  faTimesCircle as disabledIcon,
+  faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons/faTimesCircle';
+export { faTrashRestore as restoreIcon } from '@fortawesome/free-solid-svg-icons/faTrashRestore';
+export { faTshirt } from '@fortawesome/free-solid-svg-icons/faTshirt';
+export { faUndo as undoIcon } from '@fortawesome/free-solid-svg-icons/faUndo';
+export { faUnlock as unlockedIcon } from '@fortawesome/free-solid-svg-icons/faUnlock';
 export {
   battleNetIcon,
   stadiaIcon,
@@ -103,94 +118,4 @@ export {
   dimHunterIcon as hunterIcon,
   dimTitanIcon as titanIcon,
   dimWarlockIcon as warlockIcon,
-  faArchive as archiveIcon,
-  faArrowCircleUp as updateIcon,
-  faArrowRight as rightArrowIcon,
-  faBan as banIcon,
-  faBars as menuIcon,
-  faBolt as boltIcon,
-  faBalanceScaleLeft as compareIcon,
-  faCheck,
-  faCheckCircle as enabledIcon,
-  faCheckCircle as redeemedIcon,
-  faCheckCircleRegular as completedIcon,
-  faCheckCircleRegular as unselectedCheckIcon,
-  faChevronCircleDown as openDropdownIcon,
-  faChevronCircleUp,
-  faCircleRegular as uncompletedIcon,
-  faCog as settingsIcon,
-  faCopy as copyIcon,
-  faDownload as downloadIcon,
-  faEllipsisV as kebabIcon,
-  faEnvelope as sendIcon,
-  faEraser as clearIcon,
-  faLevelUpAlt as levellingIcon,
-  faLock as lockIcon,
-  faUnlock as unlockedIcon,
-  faCaretDown as collapseIcon,
-  faPencilAlt as editIcon,
-  faPlus as plusIcon,
-  faThumbtack as pinIcon,
-  faPlusSquare,
-  faCaretRight as expandIcon,
-  faAngleDoubleLeft as maximizeIcon,
-  faAngleDoubleRight as minimizeIcon,
-  faPlusCircle as addIcon,
-  faQuestionCircle as helpIcon,
-  faSave as saveIcon,
-  faSearch as searchIcon,
-  faSignInAlt as signInIcon,
-  faSignOutAlt as signOutIcon,
-  faChevronDown as moveDownIcon,
-  faChevronUp as moveUpIcon,
-  faRestore as restoreIcon,
-  faStar as starIcon,
-  faStarHalfAlt as halfStarIcon,
-  faStarOutline as starOutlineIcon,
-  faSync as refreshIcon,
-  faTable as spreadsheetIcon,
-  faTag as tagIcon,
-  faThumbsUp as thumbsUpIcon,
-  faThumbsUpRegular,
-  faThumbsDown as thumbsDownIcon,
-  faThumbsDownRegular,
-  faTimes as closeIcon,
-  faTimesCircle as disabledIcon,
-  faTimesCircle,
-  faTrashAlt as deleteIcon,
-  faTwitter as twitterIcon,
-  faUndo as undoIcon,
-  faUpload as revisionsIcon,
-  faUpload as uploadIcon,
-  faHeart as heartIcon,
-  faGlobe as globeIcon,
-  faStickyNote as stickyNoteIcon,
-  faArrowRight as moveIcon,
-  faBookmark as unTrackedIcon,
-  faBookmarkSolid as trackedIcon,
-  faMinusSquare,
-  faRandom,
-  faEquals,
-  faArrowCircleDown,
-  faExclamationCircle,
-  faCheckCircle,
-  faCaretDown,
-  faCaretUp,
-  faMinus,
-  faClock,
-  faCircle,
-  faClone,
-  faFlag,
-  faPenSquare,
-  faExclamationTriangle,
-  faTshirt,
-  faGripVertical as dragHandleIcon,
-  faExternalLinkAlt,
-  faXbox,
-  faPlaystation,
-  faSteam,
-  faYoutube,
-  faDiscord,
-  faGithub,
-  faReddit,
 };
