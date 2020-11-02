@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed not being able to scroll on mobile.
+* Fixed filter help not always showing up.
+
 ## 6.37.0 <span className="changelog-date">(2020-11-01)</span>
 
 * Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
