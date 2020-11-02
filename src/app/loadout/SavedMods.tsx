@@ -8,8 +8,9 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './SavedMods.m.scss';
 
 interface Props {
@@ -17,55 +18,74 @@ interface Props {
   modHashes?: number[];
 }
 
-const modOrder = [
+const modCategoryOrder = [
   armor2PlugCategoryHashesByName.general,
   armor2PlugCategoryHashesByName.helmet,
   armor2PlugCategoryHashesByName.gauntlets,
   armor2PlugCategoryHashesByName.chest,
   armor2PlugCategoryHashesByName.leg,
   armor2PlugCategoryHashesByName.classitem,
-  'other',
+  'combat',
 ] as const;
 
-const modTranslations = {
+const modCategoryTranslations = {
   [armor2PlugCategoryHashesByName.general]: tl('LB.General'),
   [armor2PlugCategoryHashesByName.helmet]: tl('LB.Helmet'),
   [armor2PlugCategoryHashesByName.gauntlets]: tl('LB.Gauntlets'),
   [armor2PlugCategoryHashesByName.chest]: tl('LB.Chest'),
   [armor2PlugCategoryHashesByName.leg]: tl('LB.Legs'),
   [armor2PlugCategoryHashesByName.classitem]: tl('LB.ClassItem'),
-  other: 'Combat',
+  combat: tl('LB.Combat'),
 };
 
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((def) => def.plug.energyCost?.energyType),
+  compareBy((def) => def.plug.energyCost?.energyCost),
+  compareBy((def) => def.displayProperties.name)
+);
+
+/**
+ * Component for managing mods associated to a loadout.
+ */
 function SavedMods({ defs, modHashes }: Props) {
-  if (!modHashes || !defs.isDestiny2()) {
+  const groupedMods = useMemo(() => {
+    const mods: PluggableInventoryItemDefinition[] = [];
+
+    if (!modHashes?.length) {
+      return {};
+    }
+
+    for (const hash of modHashes) {
+      const def = defs.InventoryItem.get(hash);
+      if (isPluggableItem(def)) {
+        mods.push(def);
+      }
+    }
+
+    mods.sort(sortMods);
+
+    return _.groupBy(mods, (mod) => {
+      if (armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
+        return mod.plug.plugCategoryHash;
+      } else {
+        // TODO This is a placeholder for now until we know how to differentiate
+        // between the new mod categories in beyond light
+        return 'combat';
+      }
+    });
+  }, [modHashes, defs]);
+
+  if (!defs.isDestiny2()) {
     return null;
   }
 
-  const mods: PluggableInventoryItemDefinition[] = [];
-
-  for (const hash of modHashes) {
-    const def = defs.InventoryItem.get(hash);
-    if (isPluggableItem(def)) {
-      mods.push(def);
-    }
-  }
-
-  const groupedMods = _.groupBy(mods, (mod) => {
-    if (armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-      return mod.plug.plugCategoryHash;
-    } else {
-      return 'other';
-    }
-  });
-
   return (
     <div className={styles.container}>
-      <div className={styles.title}>{'Mods'}</div>
+      <div className={styles.title}>{t('Loadouts.Mods')}</div>
       <div className={styles.categories}>
-        {modOrder.map((key) => (
+        {modCategoryOrder.map((key) => (
           <div key={key} className={styles.category}>
-            <div className={styles.categoryName}>{t(modTranslations[key])}</div>
+            <div className={styles.categoryName}>{t(modCategoryTranslations[key])}</div>
             <div className={styles.mods}>
               {groupedMods[key].map((def, index) => (
                 <Mod key={index} defs={defs} plugDef={def} />
