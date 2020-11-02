@@ -1,7 +1,7 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
@@ -246,7 +246,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     [blockEvents, sheetContents]
   );
 
-  useEffect(
+  useLayoutEffect(
     () => () => {
       if (sheetContents.current) {
         setTimeout(() => {
