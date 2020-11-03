@@ -1,5 +1,7 @@
 ## Next
 
+## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
+
 * Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
 
 ## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
