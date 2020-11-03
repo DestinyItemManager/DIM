@@ -1,5 +1,7 @@
 ## Next
 
+* Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
+
 ## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
 
 * Fixed not being able to scroll on mobile.
