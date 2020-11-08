@@ -1,5 +1,7 @@
 ## Next
 
+* New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
+
 ## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
 
 * Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
