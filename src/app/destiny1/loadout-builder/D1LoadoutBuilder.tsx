@@ -20,7 +20,6 @@ import { InventoryBuckets } from '../../inventory/inventory-buckets';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
 import { bucketsSelector, storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
-import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { getColor } from '../../shell/filters';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -243,7 +242,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
           </div>
         </PageWithMenu.Menu>
         <PageWithMenu.Contents className="loadout-builder">
-          <LoadoutDrawer />
           <CollapsibleTitle
             defaultCollapsed={true}
             sectionId="lb1-classitems"
