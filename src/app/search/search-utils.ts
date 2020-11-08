@@ -38,8 +38,12 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
  * if you want to generate some keywords without a full valid filter
  */
 export function generateSuggestionsForFilter(
-  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format'>
+  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>
 ) {
+  if (filterDefinition.deprecated) {
+    return [];
+  }
+
   const { suggestions, keywords } = filterDefinition;
   const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
