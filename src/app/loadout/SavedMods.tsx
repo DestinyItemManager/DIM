@@ -11,6 +11,7 @@ import {
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
+import { AddButton } from './Buttons';
 import styles from './SavedMods.m.scss';
 
 interface Props {
@@ -90,6 +91,11 @@ function SavedMods({ defs, modHashes }: Props) {
               {groupedMods[key].map((def, index) => (
                 <Mod key={index} defs={defs} plugDef={def} />
               ))}
+              <AddButton
+                onClick={() => {
+                  key;
+                }}
+              />
             </div>
           </div>
         ))}

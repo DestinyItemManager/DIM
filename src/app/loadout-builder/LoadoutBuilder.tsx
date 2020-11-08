@@ -36,7 +36,14 @@ import { useProcess } from './hooks/useProcess';
 import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
-import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
+import {
+  ItemsByBucket,
+  LockedArmor2ModMap,
+  statHashes,
+  statHashToType,
+  statKeys,
+  StatTypes,
+} from './types';
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
@@ -316,7 +323,12 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
-              lbDispatch={lbDispatch}
+              onAccept={(newLockedArmor2Mods: LockedArmor2ModMap) =>
+                lbDispatch({
+                  type: 'lockedArmor2ModsChanged',
+                  lockedArmor2Mods: newLockedArmor2Mods,
+                })
+              }
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,
             document.body

@@ -18,12 +18,11 @@ import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/u
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
   isModPickerCategory,
   LockedArmor2Mod,
@@ -51,7 +50,7 @@ interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
   initialQuery?: string;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  onAccept(newLockedArmor2Mods: LockedArmor2ModMap): void;
   onClose(): void;
 }
 
@@ -167,7 +166,7 @@ function ModPicker({
   isPhonePortrait,
   lockedArmor2Mods,
   initialQuery,
-  lbDispatch,
+  onAccept,
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
@@ -214,10 +213,7 @@ function ModPicker({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    lbDispatch({
-      type: 'lockedArmor2ModsChanged',
-      lockedArmor2Mods: lockedArmor2ModsInternal,
-    });
+    onAccept(lockedArmor2ModsInternal);
     onClose();
   };
 
