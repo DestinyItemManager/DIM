@@ -27,20 +27,20 @@
   }
 
   :global(.socket-container) img {
-    width: 26px;
-    height: 26px;
+    width: calc(26 / 50 * var(--item-size));
+    height: calc(26 / 50 * var(--item-size));
   }
 
   :global(.item-socket-category-Consumable) img {
-    width: 32px;
-    height: 32px;
+    width: calc(32 / 50 * var(--item-size));
+    height: calc(32 / 50 * var(--item-size));
   }
 }
 
 .archetypeMod {
   img {
-    width: 26px;
-    height: 26px;
+    width: calc(26 / 50 * var(--item-size));
+    height: calc(26 / 50 * var(--item-size));
     transform: scale(1.4);
     margin-right: 6px;
     margin-left: 2px;
