@@ -54,7 +54,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
             isPhonePortrait && <VaultCapacity />
           ) : (
             <>
-              <div className="race-gender">{store.genderRace}</div>
+              <div className="race-gender">{store.race}</div>
               {store.destinyVersion === 1 && store.level < 40 && (
                 <div className="level">{store.level}</div>
               )}
