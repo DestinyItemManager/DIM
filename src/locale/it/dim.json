@@ -35,26 +35,6 @@
     "Normal": "Normale",
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
-  "AuditLog": {
-    "Account": "Account",
-    "Action": "Azione",
-    "Application": "Applicazione",
-    "Date": "Data",
-    "DeleteAll": "Eliminati tutti i dati salvati",
-    "DeleteLoadout": "Eliminato loadout {{name}}",
-    "Description": "Questo registro tiene traccia di tutti i cambiamenti che hai fatto su DIM Sync - compresi cambiamenti alle impostazioni, etichette e loadout. Ogni tanto questo registro viene ripulito.",
-    "Details": "Dettagli",
-    "Import": "Importati {{loadouts}} loadouts e {{tags}} oggetti con etichette",
-    "Loadout": "Cambiato loadout {{name}}",
-    "RemoveNotes": "Rimosse note dall'oggeto ID {{id}}",
-    "RemoveTag": "Rimossa etichetta dall'oggetto ID {{id}}",
-    "SetNotes": "Impostate note su \"{{notes}}\" per oggetto ID {{id}}",
-    "SetTag": "Impostata etichetta su {{tag}} per oggetto ID {{id}}",
-    "Setting": "Impostato {{key}} a {{value}}",
-    "TagCleanup": "Ripulita {{count}} etichetta per oggetti smantellati",
-    "TagCleanupUnknown": "Ripulite alcune etichette per oggetti smantellati",
-    "TagCleanup_plural": "Ripulite {{count}} etichette per oggetti smantellati"
-  },
   "Bucket": {
     "Armor": "Armatura",
     "General": "Generale",
@@ -442,7 +422,6 @@
   },
   "Loading": {
     "Accounts": "Caricamento accounts di Destiny...",
-    "AuditLog": "Caricamento cronologia di DIM Sync...",
     "Code": "Caricamento codice di DIM...",
     "FilterHelp": "Caricamento consigli per filtri ricerca...",
     "Profile": "Caricamento del profilo di Destiny...",
@@ -605,6 +584,7 @@
     "AcquiredMod": "Questa Modifica è attualmente applicata ad un oggetto nel tuo inventario.",
     "AddNote": "Aggiungi una nota",
     "AddToLoadout": "Loadout",
+    "All": "Tutto",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "Details": "Popup",
@@ -627,6 +607,7 @@
     "OwnedMod": "Questa Modifica è nel tuo inventario delle Modifiche.",
     "PowerCap": "",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
+    "PullPostmaster": "Prendi dall'Amministratore",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReadLoreLink": "Leggi storia",
     "Rewards": "Ricompense:",
@@ -710,7 +691,7 @@
     "Stats": {
       "Aim": "Mira Assistita",
       "Inventory": "Inventario",
-      "RPM": "Proiettili al minuto",
+      "RPM": "p.a.m.",
       "Recoil": "Direzione Rinculo",
       "Reload": "Velocità Ricarica"
     },
@@ -757,7 +738,6 @@
     "CharacterOrderFixed": "Età del personaggio (malfunzionante su PC)",
     "CharacterOrderRecent": "Personaggio più recente",
     "CharacterOrderReversed": "Personaggio più recente (ordine inverso)",
-    "ColorA11y": "Impostazioni per daltonici",
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
     "CsvImport": "Importa etichette/note da CSV",
@@ -833,8 +813,6 @@
       "Title": "Attivare DIM Sync?",
       "Yes": "Attiva Sync"
     },
-    "AuditLog": "Cronologia modifiche di DIM Sync",
-    "AuditLogLabel": "Visualizza le modifiche passate dei dati",
     "AutoBackup": "Abbiamo salvato i tuoi dati in un file, nella tua cartella di download, chiamato dim-data.json, in caso servissero.",
     "BackUpFirst": "Devi prima effettuare un backup dei tuoi dati. Non si sa mai.",
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",

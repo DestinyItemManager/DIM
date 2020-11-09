@@ -1,5 +1,24 @@
 ## Next
 
+## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
+
+* New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
+* Perk and mod images are once again affected by the item size setting.
+* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
+  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
+  * `is:sunset` won't show anything until Beyond Light launches!
+
+## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
+
+* Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
+
+## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
+
+* Fixed not being able to scroll on mobile.
+* Fixed filter help not always showing up.
+
+## 6.37.0 <span className="changelog-date">(2020-11-01)</span>
+
 * Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
 * Added `hunt` as valid season synonym.
 * Clicking on the energy track or element for armor can now let you preview how much it'd cost in total to upgrade energy or change element.
@@ -8,6 +27,7 @@
 * Some items that DIM couldn't pull from postmaster before, can be pulled now.
 * Fixed the display of stat trackers for raid speed runs.
 * Hide the "kill tracker" perk column on masterworked weapons.
+* Fixed the tagging dropdown not being attached on desktop Safari.
 
 ## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
 

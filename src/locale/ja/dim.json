@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "アイテムの変更を行うために、Destiny2コンパニオンアプリを使用しDIMを承認してください。",
+    "ConfirmDescription": "あなたの項目を変更するのには DIM を承認するのに運命 2 コンパニオン アプリケーションを使用してください。",
     "ConfirmTitle": "操作を確認"
   },
   "Accounts": {
@@ -34,26 +34,6 @@
     "Nightfall": "ナイトフォールストライク",
     "Normal": "ノーマル",
     "WeeklyHeroic": "週間英雄ストライク"
-  },
-  "AuditLog": {
-    "Account": "アカウント",
-    "Action": "アクション",
-    "Application": "アプリケーション",
-    "Date": "データ",
-    "DeleteAll": "すべてのセーブデータを削除",
-    "DeleteLoadout": "ロードアウト {{name}} の削除",
-    "Description": "このログは、設定、タグ、ロードアウトへの変更など、DIM Sync に保存したすべての変更を追跡します。しばらくすると、このログはクリーンアップされます。",
-    "Details": "詳細",
-    "Import": "インポートされた {{loadouts}} ロードアウトと {{tags}} タグ付きアイテム",
-    "Loadout": "ロードアウト {{name}} を変更",
-    "RemoveNotes": "アイテムID {{id}} のメモを削除しました。",
-    "RemoveTag": "アイテムID {{id}} のタグを削除しました。",
-    "SetNotes": "アイテムID {{id}} のメモを {{notes}} に設定する",
-    "SetTag": "アイテムID {{id}} にタグ {{tag}} をに設定する",
-    "Setting": "{{key}} を {{value}} にセットします。",
-    "TagCleanup": "分解したアイテムに関連する {{count}} 個のタグを片付けました",
-    "TagCleanupUnknown": "分解したアイテムに関連する、いくつかのタグを片付けました",
-    "TagCleanup_plural": "分解したアイテムに関連する {{count}} 個のタグを片付けました"
   },
   "Bucket": {
     "Armor": "防具",
@@ -442,7 +422,6 @@
   },
   "Loading": {
     "Accounts": "Destinyのアカウント情報をロードしています...",
-    "AuditLog": "DIM Sync履歴データをロードしています...",
     "Code": "DIMのデータをロードしています...",
     "FilterHelp": "検索ヘルプをロードしています...",
     "Profile": "Destinyのプロファイルをロードしています...",
@@ -605,6 +584,7 @@
     "AcquiredMod": "現在、このmodはインベントリ内のアイテムに適用されています。",
     "AddNote": "メモを追加",
     "AddToLoadout": "ロードアウト",
+    "All": "全て",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
     "Details": "ポップアップ",
@@ -627,6 +607,7 @@
     "OwnedMod": "このmodは修正インベントリにあります。",
     "PowerCap": "",
     "PullItem": "{{bucket}} から{{store}} に引き出します",
+    "PullPostmaster": "ポストマスターから取得",
     "ReadLore": "イシュタルコレクティブで伝承を読む",
     "ReadLoreLink": "伝承を読む",
     "Rewards": "報酬:",
@@ -757,7 +738,6 @@
     "CharacterOrderFixed": "キャラのプレイ年数(PC環境では動作不安定です)",
     "CharacterOrderRecent": "最近使ったキャラ",
     "CharacterOrderReversed": "最近使ったキャラ(逆順)",
-    "ColorA11y": "色覚設定",
     "ColumnSize": "{{num}} 個",
     "ColumnSizeAuto": "オート",
     "CsvImport": "CSVからタグ/メモをインポートする",
@@ -833,8 +813,6 @@
       "Title": "DIM Sync を有効にしますか？",
       "Yes": "同期を有効にする"
     },
-    "AuditLog": "DIM Sync 変更履歴",
-    "AuditLogLabel": "過去のデータの変更点を見る",
     "AutoBackup": "念のため、ダウンロードフォルダにあるdim-data.jsonというファイルにデータをバックアップしました。",
     "BackUpFirst": "すべてを削除する前に、まずデータをバックアップしなければなりません。",
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",

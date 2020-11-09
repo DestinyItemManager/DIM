@@ -19,7 +19,7 @@
   z-index: 9;
 
   :global(.gradientBackground) & {
-    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background: $gradient;
     background-position: center top;
     background-repeat: no-repeat;
     background-size: 100% 100vh;
