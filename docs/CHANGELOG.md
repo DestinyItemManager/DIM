@@ -4,6 +4,9 @@
 
 * New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
 * Perk and mod images are once again affected by the item size setting.
+* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
+  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
+  * `is:sunset` won't show anything until Beyond Light launches!
 
 ## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
 
