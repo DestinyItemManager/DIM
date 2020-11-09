@@ -2,7 +2,6 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -59,18 +58,16 @@ const sortDupes = (
   return dupes;
 };
 
-const computeDupesByIdFn = (stores: DimStore[], makeDupeIdFn: (item: DimItem) => string) => {
+const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) => string) => {
   // Holds a map from item hash to count of occurrances of that hash
   const duplicates: { [dupeID: string]: DimItem[] } = {};
 
-  for (const store of stores) {
-    for (const i of store.items) {
-      const dupeID = makeDupeIdFn(i);
-      if (!duplicates[dupeID]) {
-        duplicates[dupeID] = [];
-      }
-      duplicates[dupeID].push(i);
+  for (const i of allItems) {
+    const dupeID = makeDupeIdFn(i);
+    if (!duplicates[dupeID]) {
+      duplicates[dupeID] = [];
     }
+    duplicates[dupeID].push(i);
   }
 
   return duplicates;
@@ -79,20 +76,20 @@ const computeDupesByIdFn = (stores: DimStore[], makeDupeIdFn: (item: DimItem) =>
 /**
  * A memoized function to find a map of duplicate items using the makeDupeID function.
  */
-export const computeDupes = (stores: DimStore[]) => computeDupesByIdFn(stores, makeDupeID);
+export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
 /**
  * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
  */
-export const computeSeasonalDupes = (stores: DimStore[]) =>
-  computeDupesByIdFn(stores, makeSeasonalDupeID);
+export const computeSeasonalDupes = (allItems: DimItem[]) =>
+  computeDupesByIdFn(allItems, makeSeasonalDupeID);
 
 const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupe',
     description: tl('Filter.Dupe'),
-    filter: ({ stores }) => {
-      const duplicates = computeDupes(stores);
+    filter: ({ allItems }) => {
+      const duplicates = computeDupes(allItems);
       return (item) => {
         const dupeId = makeDupeID(item);
         return checkIfIsDupe(duplicates, dupeId, item);
@@ -103,8 +100,8 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'seasonaldupe',
     description: tl('Filter.SeasonalDupe'),
     destinyVersion: 2,
-    filter: ({ stores }) => {
-      const duplicates = computeSeasonalDupes(stores);
+    filter: ({ allItems }) => {
+      const duplicates = computeSeasonalDupes(allItems);
       return (item) => {
         const dupeId = makeSeasonalDupeID(item);
         return checkIfIsDupe(duplicates, dupeId, item);
@@ -114,8 +111,8 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupelower',
     description: tl('Filter.DupeLower'),
-    filter: ({ stores, itemInfos, itemHashTags }) => {
-      const duplicates = sortDupes(computeDupes(stores), itemInfos, itemHashTags);
+    filter: ({ allItems, itemInfos, itemHashTags }) => {
+      const duplicates = sortDupes(computeDupes(allItems), itemInfos, itemHashTags);
       return (item) => {
         if (
           !(
@@ -142,9 +139,9 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'count',
     description: tl('Filter.DupeCount'),
     format: 'range',
-    filter: ({ stores, filterValue }) => {
+    filter: ({ allItems, filterValue }) => {
       const compare = rangeStringToComparator(filterValue);
-      const duplicates = computeDupes(stores);
+      const duplicates = computeDupes(allItems);
       return (item) => {
         const dupeId = makeDupeID(item);
         return compare(duplicates[dupeId]?.length ?? 0);

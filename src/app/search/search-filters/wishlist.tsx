@@ -20,8 +20,8 @@ const wishlistFilters: FilterDefinition[] = [
   {
     keywords: 'wishlistdupe',
     description: tl('Filter.WishlistDupe'),
-    filter: ({ inventoryWishListRolls, stores }) => {
-      const duplicates = computeDupes(stores);
+    filter: ({ inventoryWishListRolls, allItems }) => {
+      const duplicates = computeDupes(allItems);
       return (item) => {
         const dupeId = makeDupeID(item);
         if (!checkIfIsDupe(duplicates, dupeId, item)) {
