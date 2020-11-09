@@ -17,6 +17,7 @@ import styles from './SavedMods.m.scss';
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   modHashes?: number[];
+  onOpenModPicker(): void;
 }
 
 const modCategoryOrder = [
@@ -48,7 +49,7 @@ const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 /**
  * Component for managing mods associated to a loadout.
  */
-function SavedMods({ defs, modHashes }: Props) {
+function SavedMods({ defs, modHashes, onOpenModPicker }: Props) {
   const groupedMods = useMemo(() => {
     const mods: PluggableInventoryItemDefinition[] = [];
 
@@ -88,14 +89,10 @@ function SavedMods({ defs, modHashes }: Props) {
           <div key={key} className={styles.category}>
             <div className={styles.categoryName}>{t(modCategoryTranslations[key])}</div>
             <div className={styles.mods}>
-              {groupedMods[key].map((def, index) => (
+              {groupedMods[key]?.map((def, index) => (
                 <Mod key={index} defs={defs} plugDef={def} />
               ))}
-              <AddButton
-                onClick={() => {
-                  key;
-                }}
-              />
+              <AddButton onClick={onOpenModPicker} />
             </div>
           </div>
         ))}

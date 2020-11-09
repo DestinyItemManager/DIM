@@ -75,6 +75,7 @@ export default function LoadoutDrawerContents(
     equip,
     remove,
     add,
+    onOpenModPicker,
   }: {
     loadout: Loadout;
     buckets: InventoryBuckets;
@@ -85,6 +86,7 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent): void;
+    onOpenModPicker(): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -137,7 +139,13 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      {$featureFlags.loadoutMods && <SavedMods defs={defs} modHashes={loadout.parameters?.mods} />}
+      {$featureFlags.loadoutMods && (
+        <SavedMods
+          defs={defs}
+          modHashes={loadout.parameters?.mods}
+          onOpenModPicker={onOpenModPicker}
+        />
+      )}
     </>
   );
 }

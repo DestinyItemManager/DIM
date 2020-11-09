@@ -1,5 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import ModPicker from 'app/loadout-builder/filter/ModPicker';
+import { LockedArmor2ModMap } from 'app/loadout-builder/types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -8,6 +10,7 @@ import copy from 'fast-copy';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useReducer } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
@@ -32,6 +35,7 @@ import { getItemsFromLoadoutItems, newLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
+import { getLockedModMapFromModHashes } from './mod-utils';
 import { loadoutsSelector } from './selectors';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
@@ -89,6 +93,7 @@ interface State {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
+  modPickerOpen: boolean;
 }
 
 type Action =
@@ -108,7 +113,8 @@ type Action =
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
-  | { type: 'equipItem'; item: DimItem; items: DimItem[] };
+  | { type: 'equipItem'; item: DimItem; items: DimItem[] }
+  | { type: 'openModPicker'; modPickerOpen: boolean };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -120,6 +126,7 @@ function stateReducer(state: State, action: Action): State {
         showClass: true,
         isNew: false,
         loadout: undefined,
+        modPickerOpen: false,
       };
 
     case 'editLoadout': {
@@ -175,6 +182,11 @@ function stateReducer(state: State, action: Action): State {
             loadout: equipItem(loadout, item, items),
           }
         : state;
+    }
+
+    case 'openModPicker': {
+      const { modPickerOpen } = action;
+      return { ...state, modPickerOpen };
     }
   }
 }
@@ -363,9 +375,10 @@ function LoadoutDrawer({
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
+  const [{ loadout, showClass, isNew, modPickerOpen }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
+    modPickerOpen: false,
   });
 
   // Sync this global variable with our actual state. TODO: move to redux
@@ -476,6 +489,17 @@ function LoadoutDrawer({
     }
   };
 
+  const onUpdateMods = (newLockedArmor2Mods: LockedArmor2ModMap) => {
+    const newLoadout = { ...loadout };
+    newLoadout.parameters = {
+      ...newLoadout.parameters,
+      mods: Object.values(newLockedArmor2Mods)
+        .flat()
+        .map((mod) => mod.modDef.hash),
+    };
+    stateDispatch({ type: 'update', loadout: newLoadout });
+  };
+
   const bucketTypes = Object.keys(buckets.byType);
 
   // Find a loadout with the same name that could overlap with this one
@@ -514,44 +538,60 @@ function LoadoutDrawer({
   );
 
   return (
-    <Sheet onClose={close} header={header}>
-      <div id="loadout-drawer" className="loadout-create">
-        <div className="loadout-content">
-          <LoadoutDrawerDropTarget
-            bucketTypes={bucketTypes}
-            storeIds={stores.map((s) => s.id)}
-            onDroppedItem={onAddItem}
-          >
-            {warnitems.length > 0 && (
-              <div className="loadout-contents">
-                <p>{t('Loadouts.VendorsCannotEquip')}</p>
-                <div className="loadout-warn-items">
-                  {warnitems.map((item) => (
-                    <div key={item.id} className="loadout-item">
-                      <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
-                      <div className="close" onClick={() => onRemoveItem(item)} />
-                    </div>
-                  ))}
+    <>
+      <Sheet onClose={close} header={header}>
+        <div id="loadout-drawer" className="loadout-create">
+          <div className="loadout-content">
+            <LoadoutDrawerDropTarget
+              bucketTypes={bucketTypes}
+              storeIds={stores.map((s) => s.id)}
+              onDroppedItem={onAddItem}
+            >
+              {warnitems.length > 0 && (
+                <div className="loadout-contents">
+                  <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                  <div className="loadout-warn-items">
+                    {warnitems.map((item) => (
+                      <div key={item.id} className="loadout-item">
+                        <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                        <div className="close" onClick={() => onRemoveItem(item)} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )}
+              <div className="loadout-contents">
+                <LoadoutDrawerContents
+                  loadout={loadout}
+                  items={items}
+                  defs={defs}
+                  buckets={buckets}
+                  stores={stores}
+                  itemSortOrder={itemSortOrder}
+                  equip={onEquipItem}
+                  remove={onRemoveItem}
+                  add={onAddItem}
+                  onOpenModPicker={() =>
+                    stateDispatch({ type: 'openModPicker', modPickerOpen: true })
+                  }
+                />
               </div>
-            )}
-            <div className="loadout-contents">
-              <LoadoutDrawerContents
-                loadout={loadout}
-                items={items}
-                defs={defs}
-                buckets={buckets}
-                stores={stores}
-                itemSortOrder={itemSortOrder}
-                equip={onEquipItem}
-                remove={onRemoveItem}
-                add={onAddItem}
-              />
-            </div>
-          </LoadoutDrawerDropTarget>
+            </LoadoutDrawerDropTarget>
+          </div>
         </div>
-      </div>
-    </Sheet>
+      </Sheet>
+      {modPickerOpen &&
+        defs.isDestiny2() &&
+        ReactDOM.createPortal(
+          <ModPicker
+            classType={loadout.classType}
+            lockedArmor2Mods={getLockedModMapFromModHashes(defs, loadout.parameters?.mods)}
+            onAccept={onUpdateMods}
+            onClose={() => stateDispatch({ type: 'openModPicker', modPickerOpen: false })}
+          />,
+          document.body
+        )}
+    </>
   );
 }
 
