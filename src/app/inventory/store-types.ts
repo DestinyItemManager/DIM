@@ -31,6 +31,8 @@ export interface DimStore<Item = DimItem> {
   className: string;
   /** Localized gender. */
   gender: string;
+  /** Localized race. */
+  race: string;
   /** Localized gender and race together. */
   genderRace: string;
   /** String gender name: 'male' | 'female' | '', used exclusively for i18n when translating to gendered languages */
