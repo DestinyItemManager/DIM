@@ -3,8 +3,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
-import { currentStoreSelector, storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -89,25 +88,25 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  stores: DimStore[];
   characterClass?: DestinyClass;
+  allItems: DimItem[];
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     characterClass: currentStoreSelector(state)?.classType,
   });
 }
 
 function CompareDrawer({
-  stores,
   characterClass,
   loadouts,
   set,
   lockedArmor2Mods,
+  allItems,
   defs,
   classType,
   statOrder,
@@ -127,12 +126,12 @@ function CompareDrawer({
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
-    const [items] = getItemsFromLoadoutItems(equippedItems, defs, stores);
+    const [items] = getItemsFromLoadoutItems(equippedItems, defs, allItems);
     return _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
-  }, [selectedLoadout, defs, stores]);
+  }, [selectedLoadout, defs, allItems]);
   if (!set) {
     return null;
   }

@@ -194,20 +194,18 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
 export function getItemsFromLoadoutItems(
   loadoutItems: LoadoutItem[] | undefined,
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  stores: DimStore[]
+  allItems: DimItem[]
 ): [DimItem[], DimItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
   const findItem = (loadoutItem: LoadoutItem) => {
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-          return item;
-        } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
-          return item;
-        }
+    for (const item of allItems) {
+      if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
+        return item;
+      } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+        return item;
       }
     }
     return undefined;
