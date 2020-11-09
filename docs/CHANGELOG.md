@@ -1,5 +1,7 @@
 ## Next
 
+## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
+
 * New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
 * Perk and mod images are once again affected by the item size setting.
 
