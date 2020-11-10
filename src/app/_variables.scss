@@ -91,21 +91,15 @@ $header-height: 44px;
 
 // Apply spacing between children
 @mixin vertical-space-children($space) {
-  > * {
-    margin-bottom: $space;
-    &:last-child {
-      margin-bottom: 0;
-    }
+  > *:nth-last-child(n + 2) {
+    margin-top: $space;
   }
 }
 
 // Apply spacing between children
 @mixin horizontal-space-children($space) {
-  > * {
+  > *:nth-last-child(n + 2) {
     margin-right: $space;
-    &:last-child {
-      margin-right: 0;
-    }
   }
 }
 
