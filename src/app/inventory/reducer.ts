@@ -1,17 +1,26 @@
 import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { warnLog } from 'app/utils/log';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import produce, { Draft } from 'immer';
+import {
+  DestinyItemChangeResponse,
+  DestinyItemComponent,
+  DestinyProfileResponse,
+  ItemLocation,
+} from 'bungie-api-ts/destiny2';
+import produce, { Draft, original } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
 import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
+import { mergeCollectibles } from './d2-stores';
+import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';
+import { makeItem, makeItemSingle } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
-import { findItemsByBucket, getStore } from './stores-helpers';
+import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -70,6 +79,11 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.itemLockStateChanged): {
       const { item, state: lockState, type } = action.payload;
       return produce(state, (draft) => itemLockStateChanged(draft, item, lockState, type));
+    }
+
+    case getType(actions.awaItemChanged): {
+      const { changes, defs, buckets } = action.payload;
+      return produce(state, (draft) => awaItemChanged(draft, changes, defs, buckets));
     }
 
     case getType(actions.error):
@@ -415,6 +429,166 @@ function itemLockStateChanged(
     item.locked = state;
   } else if (type === 'track') {
     item.tracked = state;
+  }
+}
+
+/**
+ * Handle the changes that come from messing with perks/sockets via AWA. The item
+ * itself is recreated, while various currencies and tokens get consumed or created.
+ */
+function awaItemChanged(
+  draft: Draft<InventoryState>,
+  changes: DestinyItemChangeResponse,
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets
+) {
+  const { stores, profileResponse } = original(draft)!;
+
+  const mergedCollectibles = profileResponse
+    ? mergeCollectibles(profileResponse.profileCollectibles, profileResponse.characterCollectibles)
+    : {};
+
+  const item = makeItemSingle(defs, buckets, changes.item, stores, mergedCollectibles);
+
+  // Replace item
+  if (!item) {
+    warnLog('awaChange', 'No item produced from change');
+    return;
+  }
+  const owner = getStore(draft.stores, item.owner);
+  if (!owner) {
+    return;
+  }
+
+  const sourceIndex = owner.items.findIndex((i) => i.index === item.index);
+  if (sourceIndex >= 0) {
+    owner.items[sourceIndex] = item;
+  } else {
+    addItem(owner, item);
+  }
+
+  const getSource = (component: DestinyItemComponent) => {
+    let realOwner = owner;
+    if (component.location === ItemLocation.Vault) {
+      // I don't think this can happen
+      realOwner = getVault(draft.stores)! as Draft<DimStore>;
+    } else {
+      const itemDef = defs.InventoryItem.get(component.itemHash);
+      if (itemDef.inventory && buckets.byHash[itemDef.inventory.bucketTypeHash].accountWide) {
+        realOwner = getCurrentStore(draft.stores)!;
+      }
+    }
+    return realOwner;
+  };
+
+  // Remove items
+  // TODO: Question - does the API just completely remove a stack and add a new stack, or does it just
+  // say it deleted a stack representing the difference?
+  for (const removedItemComponent of changes.removedInventoryItems) {
+    // Currencies (glimmer, shards) are easy!
+    if (draft.currencies[removedItemComponent.itemHash]) {
+      draft.currencies[removedItemComponent.itemHash].quantity -= Math.max(
+        0,
+        draft.currencies[removedItemComponent.itemHash].quantity - removedItemComponent.quantity
+      );
+    } else if (removedItemComponent.itemInstanceId) {
+      for (const store of draft.stores) {
+        const removedItemIndex = store.items.findIndex(
+          (i) => i.id === removedItemComponent.itemInstanceId
+        );
+        if (removedItemIndex >= 0) {
+          store.items.splice(removedItemIndex, 1);
+          break;
+        }
+      }
+    } else {
+      // uninstanced (stacked, likely) item.
+      const source = getSource(removedItemComponent);
+      const sourceItems = _.sortBy(
+        source.items.filter((i) => i.hash === removedItemComponent.itemHash),
+        (i) => i.amount
+      );
+
+      // TODO: refactor!
+      let removeAmount = removedItemComponent.quantity;
+      // Remove inventory from the source
+      while (removeAmount > 0) {
+        const sourceItem = sourceItems.shift();
+        if (!sourceItem) {
+          warnLog('move', 'Source item missing', item);
+          return;
+        }
+
+        const amountToRemove = Math.min(removeAmount, sourceItem.amount);
+        sourceItem.amount -= amountToRemove;
+        if (sourceItem.amount <= 0) {
+          // Completely remove the source item
+          removeItem(source, sourceItem);
+        }
+
+        removeAmount -= amountToRemove;
+      }
+    }
+  }
+
+  // Add items
+  for (const addedItemComponent of changes.addedInventoryItems) {
+    // Currencies (glimmer, shards) are easy!
+    if (draft.currencies[addedItemComponent.itemHash]) {
+      const max =
+        defs.InventoryItem.get(addedItemComponent.itemHash).inventory?.maxStackSize ||
+        Number.MAX_SAFE_INTEGER;
+      draft.currencies[addedItemComponent.itemHash].quantity = Math.min(
+        max,
+        draft.currencies[addedItemComponent.itemHash].quantity + addedItemComponent.quantity
+      );
+    } else if (addedItemComponent.itemInstanceId) {
+      const addedOwner = getSource(addedItemComponent);
+      const addedItem = makeItem(
+        defs,
+        buckets,
+        undefined,
+        addedItemComponent,
+        addedOwner,
+        mergedCollectibles
+      );
+      if (addedItem) {
+        addItem(addedOwner, addedItem);
+      }
+    } else {
+      // Uninstanced (probably stacked) item
+      const target = getSource(addedItemComponent);
+      const targetItems = _.sortBy(
+        target.items.filter((i) => i.hash === addedItemComponent.itemHash),
+        (i) => i.amount
+      );
+      let addAmount = addedItemComponent.quantity;
+      const addedItem = makeItem(
+        defs,
+        buckets,
+        undefined,
+        addedItemComponent,
+        target,
+        mergedCollectibles
+      );
+      if (!addedItem) {
+        continue;
+      }
+      // TODO: refactor out "increment/decrement item amounts"?
+      while (addAmount > 0) {
+        let targetItem = targetItems.shift();
+
+        if (!targetItem) {
+          targetItem = addedItem;
+          targetItem.amount = 0; // We'll increment amount below
+          addItem(target, targetItem);
+        }
+
+        const amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
+        targetItem.amount += amountToAdd;
+        addAmount -= amountToAdd;
+      }
+    }
   }
 }
 
