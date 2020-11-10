@@ -38,7 +38,9 @@ export default function PickerSectionMods({
   const isNotGeneralOrSeasonal =
     category !== ModPickerCategories.general && category !== ModPickerCategories.seasonal;
   const allLockedAreAnyEnergy = locked?.every(
-    (locked) => locked.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any
+    (locked) =>
+      !locked.modDef.plug.energyCost ||
+      locked.modDef.plug.energyCost.energyType === DestinyEnergyType.Any
   );
 
   const isModUnSelectable = (item: LockedArmor2Mod) => {
@@ -54,7 +56,8 @@ export default function PickerSectionMods({
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
       if (
-        item.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+        !item.modDef.plug.energyCost ||
+        item.modDef.plug.energyCost.energyType === DestinyEnergyType.Any ||
         allLockedAreAnyEnergy
       ) {
         return false;
@@ -63,7 +66,7 @@ export default function PickerSectionMods({
       if (
         locked?.some(
           (lockedMod) =>
-            lockedMod.modDef.plug.energyCost!.energyType !== item.modDef.plug.energyCost!.energyType
+            lockedMod.modDef.plug.energyCost?.energyType !== item.modDef.plug.energyCost?.energyType
         )
       ) {
         return true;
