@@ -239,7 +239,7 @@ export const VENDORS = {
 };
 
 /** used to snag the icon for display */
-export const WELL_RESTED_PERK = 2352765282;
+export const WELL_RESTED_PERK = 2319209868;
 
 /** an "All" trait we want to filter out of trait lists */
 export const ALL_TRAIT = 1434215347;
