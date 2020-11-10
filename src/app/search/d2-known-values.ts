@@ -259,6 +259,7 @@ export const damageNamesByEnum: Record<DamageType, string | null> = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid',
+  [DamageType.Stasis]: 'stasis',
 };
 
 export const breakerTypes = {
