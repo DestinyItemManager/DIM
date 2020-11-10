@@ -7,6 +7,7 @@
   * `is:sunset` won't show anything until Beyond Light launches!
 * Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
 * Vendorengrams.xyz integration has been removed, because of the vendor changes in Beyond Light.
+* Legacy Triumphs have been removed.
 
 ## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
 

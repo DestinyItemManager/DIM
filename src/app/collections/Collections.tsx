@@ -26,7 +26,6 @@ import {
 } from '../inventory/selectors';
 import Catalysts from './Catalysts';
 import './collections.scss';
-import LegacyTriumphs from './LegacyTriumphs';
 import PresentationNodeRoot from './PresentationNodeRoot';
 
 interface ProvidedProps {
@@ -169,21 +168,6 @@ function Collections({
             <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId="catalysts">
               <ErrorBoundary name="Catalysts">
                 <Catalysts defs={defs} profileResponse={profileResponse} />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-        {recordsRootHash && (
-          <section id="legacyTriumphs">
-            <CollapsibleTitle title={t('Progress.LegacyTriumphs')} sectionId="legacyTriumphs">
-              <ErrorBoundary name="Legacy Triumphs">
-                <LegacyTriumphs
-                  presentationNodeHash={recordsRootHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  searchQuery={searchQuery}
-                  completedRecordsHidden={completedRecordsHidden}
-                />
               </ErrorBoundary>
             </CollapsibleTitle>
           </section>
