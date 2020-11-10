@@ -22,6 +22,7 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.ChestArmor]: 17,
   [DestinyItemSubType.LegArmor]: 17,
   [DestinyItemSubType.ClassArmor]: 17,
+  [DestinyItemSubType.DummyRepeatableBounty]: 17,
   // END useless types
   [DestinyItemSubType.AutoRifle]: 5,
   [DestinyItemSubType.Shotgun]: 11,
