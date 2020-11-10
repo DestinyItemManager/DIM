@@ -76,7 +76,7 @@ interface ProcessStat {
 
 export interface ProcessMod {
   hash: number;
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
     /** The energy cost of the mod. */
     val: number;
