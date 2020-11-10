@@ -5,6 +5,7 @@
 * Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
   * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
   * `is:sunset` won't show anything until Beyond Light launches!
+* Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
 
 ## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
 
