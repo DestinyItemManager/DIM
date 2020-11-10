@@ -124,14 +124,7 @@ function PresentationNode({
 
   const title = (
     <span className="node-name">
-      {nodeDef.displayProperties.icon && (
-        <BungieImage
-          src={
-            nodeDef.displayProperties.iconSequences?.[0]?.frames?.[1] ??
-            nodeDef.displayProperties.icon
-          }
-        />
-      )}{' '}
+      {nodeDef.displayProperties.icon && <BungieImage src={nodeDef.displayProperties.icon} />}{' '}
       {overrideName || nodeDef.displayProperties.name}
     </span>
   );
