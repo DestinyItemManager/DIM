@@ -1,4 +1,3 @@
-import { getActivePlatform } from 'app/accounts/get-active-platform';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
@@ -10,6 +9,7 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -39,6 +39,8 @@ export default function SocketDetailsSelectedPlug({
   item: DimItem;
   currentPlug: DimPlug | null;
 }) {
+  const dispatch = useThunkDispatch();
+
   const selectedPlugPerk =
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
@@ -88,10 +90,8 @@ export default function SocketDetailsSelectedPlug({
   );
 
   const onInsertPlug = async () => {
-    const response = await insertPlug(getActivePlatform()!, item, socket, plug.hash);
-    if (response.item) {
-      // Update the item!
-    }
+    await dispatch(insertPlug(item, socket, plug.hash));
+    // Handle errors?
 
     // close the menu?
   };
@@ -117,7 +117,7 @@ export default function SocketDetailsSelectedPlug({
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} defs={defs} />
-        {!$featureFlags.advancedWriteActions && costs}
+        {!$featureFlags.awa && costs}
       </div>
       <div className={styles.modDescription}>
         <h3>
@@ -141,7 +141,7 @@ export default function SocketDetailsSelectedPlug({
         ))}
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
-      {$featureFlags.advancedWriteActions && (
+      {$featureFlags.awa && (
         <button type="button" onClick={onInsertPlug}>
           Insert Mod
           {costs}

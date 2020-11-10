@@ -5,7 +5,7 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -352,7 +352,7 @@ function isInfusable(target: DimItem, source: DimItem) {
 }
 
 async function transferItems(
-  dispatch: ThunkDispatchProp['dispatch'],
+  dispatch: DimThunkDispatch,
   currentStore: DimStore,
   onClose: () => void,
   source: DimItem,
