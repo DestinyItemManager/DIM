@@ -115,7 +115,8 @@ function Progress({
     return null;
   }
 
-  const raidTitle = defs.PresentationNode.get(RAID_NODE).displayProperties.name;
+  const raidNode = defs.PresentationNode.get(RAID_NODE);
+  const raidTitle = raidNode?.displayProperties.name;
 
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
   const solsticeArmor = solsticeOfHeroesArmor(stores, selectedStore);
@@ -127,7 +128,7 @@ function Progress({
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
-    { id: 'raids', title: raidTitle },
+    ...(raidNode ? [{ id: 'raids', title: raidTitle }] : []),
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
   ];
   const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
@@ -189,15 +190,17 @@ function Progress({
                 <Pursuits store={selectedStore} defs={defs} />
               </ErrorBoundary>
 
-              <section id="raids">
-                <CollapsibleTitle title={raidTitle} sectionId="raids">
-                  <div className="progress-row">
-                    <ErrorBoundary name="Raids">
-                      <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
-                    </ErrorBoundary>
-                  </div>
-                </CollapsibleTitle>
-              </section>
+              {raidNode && (
+                <section id="raids">
+                  <CollapsibleTitle title={raidTitle} sectionId="raids">
+                    <div className="progress-row">
+                      <ErrorBoundary name="Raids">
+                        <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+                      </ErrorBoundary>
+                    </div>
+                  </CollapsibleTitle>
+                </section>
+              )}
 
               <section id="trackedTriumphs">
                 <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
