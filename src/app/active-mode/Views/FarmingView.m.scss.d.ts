@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'applySearch': string;
+  'collapseTitle': string;
+  'matchedItems': string;
   'message': string;
   'noSearches': string;
   'options': string;

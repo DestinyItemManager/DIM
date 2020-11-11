@@ -1,4 +1,5 @@
 import styles from 'app/active-mode/Views/PursuitsView.m.scss';
+import { toRecord } from 'app/collections/presentation-nodes';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -13,6 +14,7 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -65,12 +67,18 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
 
   const trackingQuests = pursuits.some((item) => item.tracked);
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
-  const trackingRecords = Boolean(trackedTriumphs.length > 0 || trackedRecordHash > 0);
+
+  const recordHashes = trackedRecordHash
+    ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
+    : trackedTriumphs;
+  const hasValidRecords =
+    _.compact(recordHashes.map((h) => toRecord(defs!, profileResponse!, h))).length !== 0;
 
   return (
     <CollapsibleTitle
       title={t('ActiveMode.Pursuits')}
       sectionId={'active-pursuits'}
+      className={styles.collapseTitle}
       defaultCollapsed={true}
     >
       <div className={styles.activePursuits}>
@@ -78,7 +86,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
         ))}
         <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-          {trackingRecords && (
+          {hasValidRecords && (
             <TrackedTriumphs
               trackedTriumphs={trackedTriumphs}
               trackedRecordHash={trackedRecordHash}
@@ -87,7 +95,7 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
               hideRecordIcon={true}
             />
           )}
-          {!trackingRecords && (
+          {!hasValidRecords && (
             <div className={styles.noQuests}>
               <div className={styles.message}>{t('Progress.NoTrackedTriumph')}</div>
             </div>

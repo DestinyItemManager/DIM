@@ -50,6 +50,7 @@ export default function FarmingView({ store }: Props) {
     <CollapsibleTitle
       title={t('ActiveMode.Farming')}
       sectionId={'active-filter'}
+      className={styles.collapseTitle}
       defaultCollapsed={true}
     >
       <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
@@ -62,7 +63,7 @@ export default function FarmingView({ store }: Props) {
           <AppIcon icon={searchIcon} />
         </div>
       </div>
-      <div className="sub-bucket">
+      <div className={styles.matchedItems}>
         {options.length ? (
           items.map((item) => (
             <ConnectedInventoryItem

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'activePursuits': string;
+  'collapseTitle': string;
   'message': string;
   'noQuests': string;
 }
