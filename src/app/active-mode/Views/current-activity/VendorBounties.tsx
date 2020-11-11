@@ -81,8 +81,9 @@ function VendorBounties({
       vendorsResponse?.sales.data?.[vendorHash]?.saleItems,
       {}
     );
-    const vendorBounties = d2Vendor?.items.filter(({ item }: VendorItem) =>
-      item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
+    const vendorBounties = d2Vendor?.items.filter(
+      ({ item, canPurchase, canBeSold }: VendorItem) =>
+        canPurchase && canBeSold && item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
     );
 
     if (vendorBounties) {
