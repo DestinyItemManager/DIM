@@ -24,6 +24,8 @@ export default function Catalysts({
   }
 
   const records = catalystsNode.childPresentationNodes
+    .flatMap((c) => c.childPresentationNodes!)
+    .flatMap((c) => c.childPresentationNodes!)
     .flatMap((c) => c.records!)
     // filter out catalysts which aren't acquired at all, or have been completed
     .filter(
