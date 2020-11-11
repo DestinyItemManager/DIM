@@ -8,6 +8,10 @@
 * Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
 * Vendorengrams.xyz integration has been removed, because of the vendor changes in Beyond Light.
 * Legacy Triumphs have been removed.
+* Fixed the Progress page not loading.
+* Fixed Catalysts not showing on the Records page.
+* Fix errors when selecting mods in Loadout Optimizer.
+* Removed the opaque background from item season icons.g
 
 ## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
 
