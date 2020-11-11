@@ -1,4 +1,3 @@
-import ClassIcon from 'app/dim-ui/ClassIcon';
 import type { DimStore } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
@@ -51,11 +50,6 @@ export default function CharacterTile({ store }: { store: DimStore }) {
             isPhonePortrait && <VaultCapacity />
           ) : (
             <>
-              <div>
-                {!store.isVault && (
-                  <ClassIcon classType={store.classType} className={styles.classIcon} />
-                )}
-              </div>
               <div className="race-gender">{store.race}</div>
               {store.destinyVersion === 1 && store.level < 40 && (
                 <div className={styles.level}>{store.level}</div>
