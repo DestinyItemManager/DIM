@@ -11,7 +11,7 @@
 * Fixed the Progress page not loading.
 * Fixed Catalysts not showing on the Records page.
 * Fix errors when selecting mods in Loadout Optimizer.
-* Removed the opaque background from item season icons.g
+* Removed the opaque background from item season icons.
 
 ## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
 
