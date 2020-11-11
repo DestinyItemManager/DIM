@@ -17,10 +17,6 @@
     display: block;
   }
 
-  :global(.title) {
-    margin-bottom: 10px;
-  }
-
   :global(.title.collapsed) {
     margin-bottom: 0;
   }

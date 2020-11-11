@@ -1,5 +1,9 @@
 @import '../../variables.scss';
 
+.collapseTitle {
+  margin-bottom: 5px;
+}
+
 .loadoutView {
   :global(.loadout-popup-content) {
     background-color: transparent;

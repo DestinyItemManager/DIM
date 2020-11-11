@@ -69,6 +69,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
             {gameType || placeName}
           </>
         }
+        className={styles.collapseTitle}
         sectionId={'active-activity'}
         defaultCollapsed={true}
       >

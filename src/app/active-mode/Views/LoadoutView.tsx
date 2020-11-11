@@ -10,6 +10,7 @@ export default function LoadoutView({ store }: { store: DimStore }) {
     <CollapsibleTitle
       title={t('ActiveMode.Loadouts')}
       sectionId={'active-loadouts'}
+      className={styles.collapseTitle}
       defaultCollapsed={true}
     >
       <div className={styles.loadoutView}>
