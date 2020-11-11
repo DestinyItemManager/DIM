@@ -1,5 +1,7 @@
 ## Next
 
+## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
+
 * Removed character gender from tiles and notifications.
 * Don't show empty archetype bar for items in collections.
 * Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
