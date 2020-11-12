@@ -22,6 +22,9 @@ export default function SuggestedGhosts({
 }) {
   const allItems = useSelector(allItemsSelector);
 
+  // Ignore suggested ghost for now...
+  return null;
+
   if (
     !activity.activityModeTypes.length ||
     activity.activityModeTypes.includes(DestinyActivityModeType.Social)
