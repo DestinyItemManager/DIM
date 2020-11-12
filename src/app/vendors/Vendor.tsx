@@ -59,7 +59,13 @@ export default function Vendor({
         title={
           <>
             <span className={styles.vendorIconWrapper}>
-              <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
+              <BungieImage
+                src={
+                  vendor.def.displayProperties.icon ||
+                  vendor.def.displayProperties.smallTransparentIcon
+                }
+                className={styles.icon}
+              />
               {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
                 <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
                   <img
