@@ -42,7 +42,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   allItems: DimItem[];
-  currentStore: DimStore;
+  currentStore?: DimStore;
   lastInfusionDirection: InfuseDirection;
   isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
@@ -167,11 +167,13 @@ function InfusionFinder({
   const switchDirection = () => stateDispatch({ type: 'swapDirection' });
   const show = query !== undefined;
 
+  const destinyVersion = currentStore?.destinyVersion;
+
   useEffect(() => {
-    if (show) {
-      ga('send', 'pageview', `/profileMembershipId/d${currentStore.destinyVersion}/infuse`);
+    if (show && destinyVersion) {
+      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/infuse`);
     }
-  }, [currentStore.destinyVersion, show]);
+  }, [destinyVersion, show]);
 
   // Listen for items coming in via showInfuse#
   useSubscription(() =>
@@ -193,7 +195,7 @@ function InfusionFinder({
     }
   }, [direction, lastInfusionDirection, dispatch]);
 
-  if (!query) {
+  if (!query || !currentStore) {
     return null;
   }
 
