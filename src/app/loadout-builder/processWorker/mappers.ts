@@ -41,7 +41,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
     return {
       ...processMod,
-      season: undefined,
+      season: 0,
       tag: metadata?.slotTag,
     };
   }
@@ -127,7 +127,7 @@ export function mapDimItemToProcessItem(
             val: costInitial,
           }
         : null,
-    season: undefined,
+    season: 0,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
   };
 }

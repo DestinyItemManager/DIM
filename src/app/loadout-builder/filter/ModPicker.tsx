@@ -136,7 +136,7 @@ function mapStateToProps() {
               undefined;
 
             if (category) {
-              transformedMods.push({ modDef: def, category, season: undefined });
+              transformedMods.push({ modDef: def, category, season: 0 });
             }
           }
         }

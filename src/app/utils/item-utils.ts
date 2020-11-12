@@ -38,7 +38,10 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // process its data here and export it to thing that needs it
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
-const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
+const modMetadataByPlugCategoryHash = objectifyArray(
+  modSocketMetadata,
+  'compatiblePlugCategoryHashes'
+);
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
