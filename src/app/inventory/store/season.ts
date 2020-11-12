@@ -9,9 +9,10 @@ export function getSeason(item: DimItem): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
-
-  if (item.iconOverlay || item.hiddenOverlay) {
-    return Number(D2SeasonFromOverlay[item?.iconOverlay ?? item.hiddenOverlay!]);
+  // iconOverlay has precedence for season
+  const overlay = item.iconOverlay || item.hiddenOverlay;
+  if (overlay) {
+    return Number(D2SeasonFromOverlay[overlay]);
   }
 
   return D2CalculatedSeason;
@@ -19,7 +20,9 @@ export function getSeason(item: DimItem): number {
 
 /** The Destiny event (D2) that a specific item belongs to. */
 export function getEvent(item: DimItem) {
-  if (item.hiddenOverlay || item.iconOverlay) {
-    return Number(D2EventFromOverlay[item?.hiddenOverlay ?? item.iconOverlay!]);
+  // hiddenOverlay has precedence for event
+  const overlay = item.hiddenOverlay || item.iconOverlay;
+  if (overlay) {
+    return Number(D2EventFromOverlay[overlay]);
   }
 }
