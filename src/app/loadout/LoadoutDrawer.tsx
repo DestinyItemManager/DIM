@@ -474,6 +474,7 @@ function LoadoutDrawer({
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dispatch(deleteLoadout(loadout.id));
     }
+    close();
   };
 
   const bucketTypes = Object.keys(buckets.byType);
