@@ -45,7 +45,7 @@ import {
   getItemPowerCapFinalSeason,
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadatas,
   isD1Item,
 } from 'app/utils/item-utils';
 import { isUsedModSocket } from 'app/utils/socket-utils';
@@ -354,7 +354,10 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getSpecialtySocketMetadata(item)?.slotTag,
+        value: (item) =>
+          getSpecialtySocketMetadatas(item)
+            ?.map((m) => m.slotTag)
+            .join(','),
         cell: (value, item) =>
           value && (
             <SpecialtyModSlotIcon
@@ -364,8 +367,8 @@ export function getColumns(
             />
           ),
         filter: (_, item) => {
-          const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
-          return `modslot:${modSocketTypeHash?.slotTag || 'none'}`;
+          const modSlotMetadata = getSpecialtySocketMetadatas(item);
+          return `modslot:${modSlotMetadata?.[0].slotTag || 'none'}`;
         },
       },
     destinyVersion === 1 && {

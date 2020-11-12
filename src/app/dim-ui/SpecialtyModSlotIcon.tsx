@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -27,28 +27,35 @@ function mapStateToProps() {
 }
 
 type Props = ProvidedProps & StoreProps;
-
 function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
-  const { emptyModSocketHash } = getSpecialtySocketMetadata(item) ?? {};
-  if (!emptyModSocketHash) {
+  const modMetadatas = getSpecialtySocketMetadatas(item);
+
+  if (!modMetadatas) {
     return null;
   }
-  const emptySlotItem = defs.InventoryItem.get(emptyModSocketHash);
   return (
-    <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
-      <div
-        className={clsx(className, styles.specialtyModIcon, {
-          [styles.lowRes]: lowRes,
-        })}
-        style={bungieBackgroundStyleAdvanced(
-          emptySlotItem.displayProperties.icon,
-          'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
-          2
-        )}
-      />
-    </PressTip>
+    <>
+      {modMetadatas.map((m) => {
+        const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
+        return (
+          <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
+            <div
+              className={clsx(className, styles.specialtyModIcon, {
+                [styles.lowRes]: lowRes,
+              })}
+              style={bungieBackgroundStyleAdvanced(
+                emptySlotItem.displayProperties.icon,
+                'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
+                2
+              )}
+            />
+          </PressTip>
+        );
+      })}
+    </>
   );
 }
+
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);
 
 const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|chest|legs|class_item)/i;

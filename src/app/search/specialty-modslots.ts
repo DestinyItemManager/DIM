@@ -76,6 +76,14 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHash: 706611068,
   },
   {
+    slotTag: 'deepstonecrypt',
+    compatibleModTags: ['deepstonecrypt'],
+    socketTypeHashes: [1269555732],
+    compatiblePlugCategoryHashes: [1486918022],
+    emptyModSocketHashes: [4055462131],
+    emptyModSocketHash: 4055462131,
+  },
+  {
     slotTag: 'combatstyle',
     compatibleModTags: ['chargedwithlight', 'warmindcell'],
     socketTypeHashes: [2955889001],
@@ -85,7 +93,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
   },
   {
     slotTag: 'reveriedawn',
-    compatibleModTags: legacyCompatibleTags,
+    compatibleModTags: [...legacyCompatibleTags, 'reveriedawn'],
     socketTypeHashes: [1540673283],
     compatiblePlugCategoryHashes: [
       ...legacyCompatiblePlugCategoryHashes,
@@ -97,3 +105,14 @@ const modSocketMetadata: ModSocketMetadata[] = [
 ];
 
 export default modSocketMetadata;
+
+export const modTypeTagByPlugCategoryHash = {
+  2149155760: 'reveriedawn',
+  13646368: 'lastwish',
+  1081029832: 'nightmare',
+  1486918022: 'gardenofsalvation',
+  208760563: 'chargedwithlight',
+  426869514: 'warmindcell',
+  443647229: 'chargedwithlight',
+  1703496685: 'deepstonecrypt',
+};

@@ -13,7 +13,7 @@ import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponA
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { RootState } from 'app/store/types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
@@ -83,11 +83,14 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: getSpecialtySocketMetadata,
+    runIf: getSpecialtySocketMetadatas,
     render: (item) => (
       <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
     ),
-    value: (item) => getSpecialtySocketMetadata(item)?.slotTag ?? '',
+    value: (item) =>
+      getSpecialtySocketMetadatas(item)
+        ?.map((m) => m.slotTag)
+        .join() ?? '',
   },
   armorSlot: {
     id: 'armorSlot',

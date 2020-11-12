@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
-  getSpecialtySocketMetadata,
   getSpecialtySocketMetadataByPlugCategoryHash,
+  getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import {
   ArmorSet,
@@ -41,8 +41,8 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
     return {
       ...processMod,
-      season: metadata?.season,
-      tag: metadata?.tag,
+      season: undefined,
+      tag: metadata?.slotTag,
     };
   }
 
@@ -107,7 +107,7 @@ export function mapDimItemToProcessItem(
     }
   }
 
-  const modMetadata = getSpecialtySocketMetadata(dimItem);
+  const modMetadatas = getSpecialtySocketMetadatas(dimItem);
   const costInitial =
     dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0);
   return {
@@ -127,8 +127,8 @@ export function mapDimItemToProcessItem(
             val: costInitial,
           }
         : null,
-    season: modMetadata?.season,
-    compatibleModSeasons: modMetadata?.compatibleTags,
+    season: undefined,
+    compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
   };
 }
 
