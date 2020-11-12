@@ -17,9 +17,9 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
+import modSocketMetadata, { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
-import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
@@ -37,18 +37,18 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // data/d2/specialty-modslot-metadata.json
 // process its data here and export it to thing that needs it
 
-const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHash');
-
+const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
-export const modSlotTags = modSocketMetadata.map((m) => m.tag);
+export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
+export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
-export const specialtySocketTypeHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.socketTypeHash
+export const specialtySocketTypeHashes = modSocketMetadata.flatMap(
+  (modMetadata) => modMetadata.socketTypeHashes
 );
 
 export const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(

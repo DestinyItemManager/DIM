@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { getSpecialtySocketMetadata, modSlotTags } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, modSlotTags, modTypeTags } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import {
@@ -129,7 +129,7 @@ const socketFilters: FilterDefinition[] = [
       const modSocketTypeHash = getSpecialtySocketMetadata(item);
       return (
         (filterValue === 'none' && !modSocketTypeHash) ||
-        (modSocketTypeHash && (filterValue === 'any' || modSocketTypeHash.tag === filterValue))
+        (modSocketTypeHash && (filterValue === 'any' || modSocketTypeHash.slotTag === filterValue))
       );
     },
   },
@@ -137,14 +137,14 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
     format: 'query',
-    suggestions: modSlotTags.concat(['any', 'none']),
+    suggestions: modTypeTags.concat(['any', 'none']),
     destinyVersion: 2,
     filter: ({ filterValue }) => (item: DimItem) => {
       const modSocketTypeHash = getSpecialtySocketMetadata(item);
       return (
         (filterValue === 'none' && !modSocketTypeHash) ||
         (modSocketTypeHash &&
-          (filterValue === 'any' || modSocketTypeHash.compatibleTags.includes(filterValue)))
+          (filterValue === 'any' || modSocketTypeHash.compatibleModTags.includes(filterValue)))
       );
     },
   },

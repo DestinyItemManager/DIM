@@ -77,7 +77,7 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
         (metadata && ModPickerCategories.seasonal) ||
         undefined;
 
-      modsAndPerks.push({ plugDef: toSave, category, season: metadata?.season });
+      modsAndPerks.push({ plugDef: toSave, category, season: undefined });
     }
   }
 

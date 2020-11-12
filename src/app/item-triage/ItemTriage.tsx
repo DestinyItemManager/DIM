@@ -87,7 +87,7 @@ const itemFactors: Record<string, Factor> = {
     render: (item) => (
       <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
     ),
-    value: (item) => getSpecialtySocketMetadata(item)?.tag ?? '',
+    value: (item) => getSpecialtySocketMetadata(item)?.slotTag ?? '',
   },
   armorSlot: {
     id: 'armorSlot',

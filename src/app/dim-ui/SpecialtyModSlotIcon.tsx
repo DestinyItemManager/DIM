@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
-import { getSpecialtySocketMetadata, modMetadataByTag } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -15,46 +15,38 @@ interface ProvidedProps {
   lowRes?: boolean;
   showAllSupportedSeasons?: boolean;
 }
+
 interface StoreProps {
   defs: D2ManifestDefinitions;
 }
+
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest!,
   });
 }
+
 type Props = ProvidedProps & StoreProps;
 
-function SpecialtyModSlotIcon({ item, className, lowRes, defs, showAllSupportedSeasons }: Props) {
-  const { emptyModSocketHash, compatibleTags } = getSpecialtySocketMetadata(item) ?? {};
-  if (!emptyModSocketHash || !compatibleTags) {
+function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
+  const { emptyModSocketHash } = getSpecialtySocketMetadata(item) ?? {};
+  if (!emptyModSocketHash) {
     return null;
   }
-  const emptySlotHashes = showAllSupportedSeasons
-    ? compatibleTags.map((tag) => modMetadataByTag[tag]!.emptyModSocketHash)
-    : [emptyModSocketHash];
-  const emptySlotItems = emptySlotHashes.map((hash) => defs.InventoryItem.get(hash));
+  const emptySlotItem = defs.InventoryItem.get(emptyModSocketHash);
   return (
-    <>
-      {emptySlotItems.map((emptySlotItem) => {
-        const isMainSlotType = emptySlotItem.hash === emptyModSocketHash;
-        return (
-          <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
-            <div
-              className={clsx(className, styles.specialtyModIcon, {
-                [styles.lowRes]: lowRes,
-                [styles.secondarySeason]: !isMainSlotType,
-              })}
-              style={bungieBackgroundStyleAdvanced(
-                emptySlotItem.displayProperties.icon,
-                'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
-                isMainSlotType ? 2 : 1
-              )}
-            />
-          </PressTip>
-        );
-      })}
-    </>
+    <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
+      <div
+        className={clsx(className, styles.specialtyModIcon, {
+          [styles.lowRes]: lowRes,
+        })}
+        style={bungieBackgroundStyleAdvanced(
+          emptySlotItem.displayProperties.icon,
+          'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
+          2
+        )}
+      />
+    </PressTip>
   );
 }
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);

@@ -47,7 +47,6 @@ import {
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
   isD1Item,
-  modMetadataByTag,
 } from 'app/utils/item-utils';
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -355,7 +354,7 @@ export function getColumns(
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getSpecialtySocketMetadata(item)?.tag,
+        value: (item) => getSpecialtySocketMetadata(item)?.slotTag,
         cell: (value, item) =>
           value && (
             <SpecialtyModSlotIcon
@@ -364,12 +363,9 @@ export function getColumns(
               showAllSupportedSeasons={true}
             />
           ),
-        sort: compareBy((tag) =>
-          typeof tag === 'string' ? modMetadataByTag[tag]?.season ?? 99 : 99
-        ),
         filter: (_, item) => {
           const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
-          return `modslot:${modSocketTypeHash?.tag || 'none'}`;
+          return `modslot:${modSocketTypeHash?.slotTag || 'none'}`;
         },
       },
     destinyVersion === 1 && {

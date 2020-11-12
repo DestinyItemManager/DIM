@@ -380,7 +380,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
 
       if (item.sockets) {
-        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
+        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.slotTag ?? '';
       }
     }
 

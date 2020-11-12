@@ -1,5 +1,4 @@
 import { DimItem } from 'app/inventory/item-types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
@@ -215,7 +214,7 @@ function groupItems(
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
     if (lockedArmor2ModMap.seasonal.length) {
-      groupId += `${getSpecialtySocketMetadata(item)?.season}`;
+      groupId += `${undefined}`;
     }
 
     if (
