@@ -1,8 +1,7 @@
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import D2Events from 'data/d2/events.json';
 import D2SeasonToSource from 'data/d2/season-to-source.json';
 import D2Seasons from 'data/d2/seasons.json';
+import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
 import { DimItem } from '../item-types';
 
@@ -26,6 +25,10 @@ export function getSeason(item: DimItem): number {
     return Number(D2SeasonFromOverlay[item.iconOverlay]);
   }
 
+  if (item.hiddenOverlay) {
+    return Number(D2SeasonFromOverlay[item.hiddenOverlay]);
+  }
+
   if (item.source && SourceToD2Season[item.source]) {
     return SourceToD2Season[item.source];
   }
@@ -35,5 +38,10 @@ export function getSeason(item: DimItem): number {
 
 /** The Destiny event (D2) that a specific item belongs to. */
 export function getEvent(item: DimItem) {
-  return item.source ? D2SourcesToEvent[item.source] || D2Events[item.hash] : D2Events[item.hash];
+  if (item.hiddenOverlay) {
+    return Number(D2EventFromOverlay[item.hiddenOverlay]);
+  }
+  if (item.iconOverlay) {
+    return Number(D2EventFromOverlay[item.iconOverlay]);
+  }
 }
