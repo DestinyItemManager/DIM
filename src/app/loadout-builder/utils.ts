@@ -313,7 +313,10 @@ export function getLockedModStats(
  * has an elemental (non-Any) energy requirement
  */
 export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
-  return mods.some((mod) => mod.modDef.plug.energyCost!.energyType !== DestinyEnergyType.Any);
+  return mods.some(
+    (mod) =>
+      !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
+  );
 }
 
 export const armor2ModPlugCategoriesTitles = {

@@ -22,8 +22,9 @@ import {
  */
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.energy &&
-  (mod.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
-    mod.modDef.plug.energyCost!.energyType === item.energy?.energyType);
+  (!mod.modDef.plug.energyCost ||
+    mod.modDef.plug.energyCost.energyType === DestinyEnergyType.Any ||
+    mod.modDef.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
  * If the energies match, this will assign the mods to the item in assignments.

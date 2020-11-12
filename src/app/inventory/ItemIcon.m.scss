@@ -89,31 +89,6 @@ $commonBg: #366f42;
     width: calc(var(--item-size) - #{2 * $item-border-width});
     position: absolute;
   }
-  &::before {
-    content: '';
-    position: absolute;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    transform: rotate(44.3deg);
-    left: calc((var(--item-size) - #{2 * $item-border-width}) * -0.5);
-    top: calc((var(--item-size) - #{2 * $item-border-width}) * -0.665);
-    background: #444;
-  }
-  &.legendary::before {
-    background: $legendaryBg;
-  }
-  &.exotic::before {
-    background: $exoticBg;
-  }
-  &.basic::before {
-    background: $basicBg;
-  }
-  &.rare::before {
-    background: $rareBg;
-  }
-  &.common::before {
-    background: $commonBg;
-  }
 }
 
 .energyCostOverlay {

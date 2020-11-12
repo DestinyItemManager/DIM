@@ -1,5 +1,25 @@
 ## Next
 
+## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
+
+* Removed character gender from tiles and notifications.
+* Don't show empty archetype bar for items in collections.
+* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
+  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
+  * `is:sunset` won't show anything until Beyond Light launches!
+* Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
+* Vendorengrams.xyz integration has been removed, because of the vendor changes in Beyond Light.
+* Legacy Triumphs have been removed.
+* Fixed the Progress page not loading.
+* Fixed Catalysts not showing on the Records page.
+* Fix errors when selecting mods in Loadout Optimizer.
+* Removed the opaque background from item season icons.
+
+## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
+
+* New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
+* Perk and mod images are once again affected by the item size setting.
+
 ## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
 
 * Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.

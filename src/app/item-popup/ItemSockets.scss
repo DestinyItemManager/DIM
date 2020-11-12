@@ -130,8 +130,8 @@
 
   img {
     -webkit-touch-callout: none;
-    width: 32px;
-    height: 32px;
+    width: calc(32 / 50 * var(--item-size));
+    height: calc(32 / 50 * var(--item-size));
     display: block;
   }
 }
@@ -140,15 +140,16 @@
   border: 1px solid #888;
   border-radius: 50%;
   background-color: #4887ba;
-  padding: 1px;
+  padding: calc(2 / 50 * var(--item-size));
   margin-bottom: 6px;
   &:last-child {
     margin-bottom: 0;
   }
 
   img {
-    width: 26px;
-    height: 26px;
+    border: none;
+    width: calc(24 / 50 * var(--item-size));
+    height: calc(24 / 50 * var(--item-size));
   }
 
   @include phone-portrait {

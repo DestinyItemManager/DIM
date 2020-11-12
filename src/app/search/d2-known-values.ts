@@ -199,7 +199,7 @@ export const armorBuckets = {
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const CATALYSTS_ROOT_NODE = 1111248994;
+export const CATALYSTS_ROOT_NODE = 511607103;
 export const RAID_NODE = 2975760062;
 
 //
@@ -239,7 +239,7 @@ export const VENDORS = {
 };
 
 /** used to snag the icon for display */
-export const WELL_RESTED_PERK = 2352765282;
+export const WELL_RESTED_PERK = 2319209868;
 
 /** an "All" trait we want to filter out of trait lists */
 export const ALL_TRAIT = 1434215347;
@@ -259,6 +259,7 @@ export const damageNamesByEnum: Record<DamageType, string | null> = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid',
+  [DamageType.Stasis]: 'stasis',
 };
 
 export const breakerTypes = {

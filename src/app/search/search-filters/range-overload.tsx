@@ -2,9 +2,10 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
-import { FilterDefinition } from '../filter-types';
+import { FilterDefinition, FilterDeprecation } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
 import { generateSuggestionsForFilter } from '../search-utils';
 import { rangeStringToComparator } from './range-numeric';
@@ -14,6 +15,18 @@ const mathCheck = /^[\d<>=]/;
 
 // prioritize newer seasons. nobody is looking for "redwar" at this point
 const seasonTagNames = Object.keys(seasonTags).reverse();
+
+const seasonTagToNumber = {
+  ...seasonTags,
+  current: D2CalculatedSeason,
+  next: D2CalculatedSeason + 1,
+};
+
+// things can't sunset in season 11 and earlier
+const sunsetSeasonTagNames = Object.entries(seasonTags)
+  .filter(([_, num]) => num > 11)
+  .map(([tag]) => tag)
+  .reverse();
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word
 
@@ -83,6 +96,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.SunsetAfter'),
     format: 'rangeoverload',
     destinyVersion: 2,
+    deprecated: FilterDeprecation.Deprecated,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
       filterValue = replaceSeasonTagWithNumber(filterValue);
@@ -90,6 +104,22 @@ const overloadedRangeFilters: FilterDefinition[] = [
       return (item: DimItem) => {
         const itemFinalSeason = getItemPowerCapFinalSeason(item);
         return compareTo(itemFinalSeason ?? 0);
+      };
+    },
+  },
+  {
+    keywords: 'sunsetsin',
+    description: tl('Filter.Sunsets'),
+    format: 'rangeoverload',
+    destinyVersion: 2,
+    suggestions: sunsetSeasonTagNames,
+    filter: ({ filterValue }) => {
+      filterValue = replaceSeasonTagWithNumber(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item: DimItem) => {
+        // things without a final season will turn into 0 and eval false 2 lines down
+        const sunsetSeason = (getItemPowerCapFinalSeason(item) ?? -1) + 1;
+        return Boolean(sunsetSeason) && compareTo(sunsetSeason);
       };
     },
   },
@@ -105,5 +135,5 @@ export default overloadedRangeFilters;
  * use only on simple filter values where there's not other letters
  */
 function replaceSeasonTagWithNumber(s: string) {
-  return s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
+  return s.replace(/[a-z]+$/i, (tag) => seasonTagToNumber[tag]);
 }

@@ -8,7 +8,7 @@ import React, { useMemo } from 'react';
 import { connect, MapStateToProps, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
-import { storesSelector } from '../inventory/selectors';
+import { allItemsSelector } from '../inventory/selectors';
 import { searchFiltersConfigSelector } from '../search/search-filter';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
@@ -25,14 +25,13 @@ interface StoreProps {
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
   const filteredItemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     (_: RootState, ownProps: ProvidedProps) => (item) =>
       item.bucket.type === ownProps.bucket.type &&
       item.owner !== ownProps.currentStore.id &&
       (!item.bucket.inArmor ||
         (item.bucket.inArmor && ownProps.currentStore.classType === item.classType)),
-    (stores, filterItems) =>
-      stores.flatMap((s) => (filterItems ? s.items.filter(filterItems) : s.items))
+    (allItems, filterItems) => (filterItems ? allItems.filter(filterItems) : allItems)
   );
 
   return (state, ownProps) => ({

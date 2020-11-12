@@ -384,10 +384,10 @@ function LoadoutDrawer({
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, stores), [
+  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, allItems), [
     defs,
     loadoutItems,
-    stores,
+    allItems,
   ]);
 
   const onAddItem = (item: DimItem, e?: MouseEvent) =>
@@ -474,6 +474,7 @@ function LoadoutDrawer({
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dispatch(deleteLoadout(loadout.id));
     }
+    close();
   };
 
   const bucketTypes = Object.keys(buckets.byType);

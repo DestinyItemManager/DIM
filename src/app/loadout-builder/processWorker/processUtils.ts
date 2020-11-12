@@ -3,7 +3,7 @@ import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
 import { ProcessMod } from './types';
 
 interface SortParam {
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
     val: number;
   } | null;
@@ -63,7 +63,7 @@ function stringifyModPermutation(perm: (ProcessMod | null)[]) {
   let permString = '';
   for (const modOrNull of perm) {
     if (modOrNull) {
-      permString += `(${modOrNull.energy.type},${modOrNull.energy.val},${modOrNull.tag || ''})`;
+      permString += `(${modOrNull.energy?.type},${modOrNull.energy?.val},${modOrNull.tag || ''})`;
     }
     permString += ',';
   }

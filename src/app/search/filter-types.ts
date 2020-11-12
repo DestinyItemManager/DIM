@@ -73,6 +73,9 @@ export type FilterDefinition = {
   /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
   destinyVersion?: 1 | 2;
 
+  /** methods for retiring a filter */
+  deprecated?: FilterDeprecation;
+
   /**
    * A function that is given context about the query and the world around it
    * (FilterContext) and should generate a simple filter function that is given
@@ -99,3 +102,9 @@ export type FilterDefinition = {
   // TODO: add manifest to SuggestionsContext and we can generate archetype/perk/etc suggestions
   suggestionsGenerator?: () => string[];
 };
+
+export const enum FilterDeprecation {
+  NotDeprecated,
+  Deprecated,
+  Disabled,
+}

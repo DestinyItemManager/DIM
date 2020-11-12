@@ -372,7 +372,7 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(true),
+        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup
@@ -382,7 +382,7 @@ module.exports = (env) => {
         // Rearrange buckets in categories
         '$featureFlags.newArrangement': JSON.stringify(true),
         // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(!env.release),
+        '$featureFlags.gradientBackground': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions

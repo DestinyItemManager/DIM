@@ -30,9 +30,9 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod = {
     hash: mod.modDef.hash,
-    energy: {
-      type: mod.modDef.plug.energyCost!.energyType,
-      val: mod.modDef.plug.energyCost!.energyCost,
+    energy: mod.modDef.plug.energyCost && {
+      type: mod.modDef.plug.energyCost.energyType,
+      val: mod.modDef.plug.energyCost.energyCost,
     },
     investmentStats: mod.modDef.investmentStats,
   };
@@ -109,7 +109,7 @@ export function mapDimItemToProcessItem(
 
   const modMetadata = getSpecialtySocketMetadata(dimItem);
   const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost!.energyCost);
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0);
   return {
     bucketHash: bucket.hash,
     id,
