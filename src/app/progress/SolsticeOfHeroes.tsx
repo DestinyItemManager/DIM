@@ -54,18 +54,16 @@ export default function SolsticeOfHeroes({
   );
 }
 
-export function solsticeOfHeroesArmor(stores: DimStore[], selectedStore: DimStore) {
+export function solsticeOfHeroesArmor(allItems: DimItem[], selectedStore: DimStore) {
   return _.sortBy(
-    stores.flatMap((store) =>
-      store.items.filter(
-        (item) =>
-          item.bucket.inArmor &&
-          item.objectives &&
-          item.objectives.length > 0 &&
-          item.classType === selectedStore.classType &&
-          getEvent(item) === D2EventEnum.SOLSTICE_OF_HEROES &&
-          getSeason(item) === 11
-      )
+    allItems.filter(
+      (item) =>
+        item.bucket.inArmor &&
+        item.objectives &&
+        item.objectives.length > 0 &&
+        item.classType === selectedStore.classType &&
+        getEvent(item) === D2EventEnum.SOLSTICE_OF_HEROES &&
+        getSeason(item) === 11
     ),
     (i) => D2Categories.Armor.indexOf(i.type)
   );

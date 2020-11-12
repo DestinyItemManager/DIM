@@ -3,7 +3,9 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import {
+  allItemsSelector,
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
@@ -47,6 +49,7 @@ interface StoreProps {
   searchQuery?: string;
   trackedTriumphs: number[];
   searchFilter?: ItemFilter;
+  allItems: DimItem[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -61,6 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
     searchQuery: querySelector(state),
     searchFilter: searchFilterSelector(state),
     trackedTriumphs: trackedTriumphsSelector(state),
+    allItems: allItemsSelector(state),
   };
 }
 
@@ -73,6 +77,7 @@ function Progress({
   profileInfo,
   searchQuery,
   trackedTriumphs,
+  allItems,
 }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
@@ -82,16 +87,9 @@ function Progress({
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  // TODO: track triumphs?
-  // TODO: close / pinnacle triumphs?
   // TODO: make milestones and pursuits look similar?
   // TODO: search/filter by activity
   // TODO: dropdowns for searches (reward, activity)
-
-  // Non-item info:
-  // * expiration
-  // * flavor text
-  // * rewards
 
   const handleSwipe: HammerListener = (e) => {
     const characters = stores.filter((s) => !s.isVault);
@@ -119,7 +117,7 @@ function Progress({
   const raidTitle = raidNode?.displayProperties.name;
 
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
-  const solsticeArmor = solsticeOfHeroesArmor(stores, selectedStore);
+  const solsticeArmor = solsticeOfHeroesArmor(allItems, selectedStore);
 
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },

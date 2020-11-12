@@ -52,8 +52,8 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
-    filter: ({ filterValue, stores }) => {
-      const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
+    filter: ({ filterValue, allItems }) => {
+      const highestStatsPerSlot = gatherHighestStatsPerSlot(allItems);
       return (item: DimItem) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
     },
   },
@@ -63,8 +63,8 @@ const statFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
-    filter: ({ filterValue, stores }) => {
-      const highestStatsPerSlot = gatherHighestStatsPerSlot(stores);
+    filter: ({ filterValue, allItems }) => {
+      const highestStatsPerSlot = gatherHighestStatsPerSlot(allItems);
       return (item: DimItem) =>
         checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
     },
@@ -138,32 +138,30 @@ function checkIfHasMaxStatValue(
   return matchingStats && Boolean(matchingStats.length);
 }
 
-function gatherHighestStatsPerSlot(stores: DimStore[]) {
+function gatherHighestStatsPerSlot(allItems: DimItem[]) {
   const maxStatValues: {
     [key: string]: { [key: string]: { value: number; base: number } };
   } | null = {};
-  for (const store of stores) {
-    for (const i of store.items) {
-      if (!i.bucket.inArmor || !i.stats) {
-        continue;
-      }
-      const itemSlot = `${i.classType}${i.type}`;
-      if (!(itemSlot in maxStatValues)) {
-        maxStatValues[itemSlot] = {};
-      }
-      if (i.stats) {
-        for (const stat of i.stats) {
-          if (armorStatHashes.includes(stat.statHash)) {
-            maxStatValues[itemSlot][stat.statHash] =
-              // just assign if this is the first
-              !(stat.statHash in maxStatValues[itemSlot])
-                ? { value: stat.value, base: stat.base }
-                : // else we are looking for the biggest stat
-                  {
-                    value: Math.max(maxStatValues[itemSlot][stat.statHash].value, stat.value),
-                    base: Math.max(maxStatValues[itemSlot][stat.statHash].base, stat.base),
-                  };
-          }
+  for (const i of allItems) {
+    if (!i.bucket.inArmor || !i.stats) {
+      continue;
+    }
+    const itemSlot = `${i.classType}${i.type}`;
+    if (!(itemSlot in maxStatValues)) {
+      maxStatValues[itemSlot] = {};
+    }
+    if (i.stats) {
+      for (const stat of i.stats) {
+        if (armorStatHashes.includes(stat.statHash)) {
+          maxStatValues[itemSlot][stat.statHash] =
+            // just assign if this is the first
+            !(stat.statHash in maxStatValues[itemSlot])
+              ? { value: stat.value, base: stat.base }
+              : // else we are looking for the biggest stat
+                {
+                  value: Math.max(maxStatValues[itemSlot][stat.statHash].value, stat.value),
+                  base: Math.max(maxStatValues[itemSlot][stat.statHash].base, stat.base),
+                };
         }
       }
     }
