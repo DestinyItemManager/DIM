@@ -6,7 +6,7 @@ import { ThunkResult } from 'app/store/types';
 import {
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadatas,
   isD1Item,
 } from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
@@ -380,7 +380,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
 
       if (item.sockets) {
-        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
+        row['Seasonal Mod'] = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? '';
       }
     }
 
