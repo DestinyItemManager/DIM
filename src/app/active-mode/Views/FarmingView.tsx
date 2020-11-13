@@ -37,7 +37,7 @@ export default function FarmingView({ store }: Props) {
   const filters = useSelector(searchFiltersConfigSelector);
   const hasClassified = useSelector(hasClassifiedSelector);
   const savedSearches = useSelector(recentSearchesSelector).filter(({ saved }) => saved);
-  const [query, setQuery] = useState<string>(savedSearches?.[0].query);
+  const [query, setQuery] = useState<string>(savedSearches?.[0]?.query);
   const options: Option[] = savedSearches.map(({ query }) => ({
     key: query,
     content: query,
@@ -75,13 +75,15 @@ export default function FarmingView({ store }: Props) {
           hideIcon={true}
         />
       </div>
-      <div className={styles.options}>
-        <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
-        <ItemActionsDropdown filteredItems={items} searchActive={Boolean(query.length)} />
-        <div className={styles.applySearch} onClick={() => dispatch(setSearchQuery(query))}>
-          <AppIcon icon={searchIcon} />
+      {options.length > 0 && (
+        <div className={styles.options}>
+          <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
+          <ItemActionsDropdown filteredItems={items} searchActive={Boolean(query.length)} />
+          <div className={styles.applySearch} onClick={() => dispatch(setSearchQuery(query))}>
+            <AppIcon icon={searchIcon} />
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.matchedItems}>
         {options.length ? (
           items.map((item) => (
