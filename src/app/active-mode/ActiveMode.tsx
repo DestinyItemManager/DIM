@@ -20,6 +20,7 @@ import StoreBucket from 'app/inventory/StoreBucket';
 import { findItemsByBucket, getStore, getVault } from 'app/inventory/stores-helpers';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { loadAllVendors } from 'app/vendors/actions';
+import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import '../inventory/Stores.scss';
@@ -102,7 +103,7 @@ function ActiveMode(
                     key={bucket.hash}
                     bucket={bucket}
                     stores={stores}
-                    currentStore={selectedStore}
+                    currentStore={category === 'Inventory' ? currentStore : selectedStore}
                     isPhonePortrait={isPhonePortrait}
                   />
                 ))}
@@ -138,7 +139,11 @@ function ActiveModeStoreBuckets({
   }
 
   return (
-    <div className={`store-row bucket-${bucket.hash}`}>
+    <div
+      className={clsx(`store-row bucket-${bucket.hash}`, {
+        [styles.inventoryCategory]: bucket.sort === 'Inventory',
+      })}
+    >
       <div className={'store-cell'}>
         <StoreBucket bucket={bucket} store={currentStore} />
       </div>

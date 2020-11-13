@@ -69,27 +69,6 @@
   }
 }
 
-.light {
-  float: right;
-
-  .app-icon {
-    font-size: 10px;
-    vertical-align: -0.125em;
-    margin-right: 2px !important;
-  }
-
-  .yellowInlineSvg {
-    height: 16px;
-    width: 16px;
-    filter: invert(83%) sepia(64%) saturate(452%) hue-rotate(348deg) brightness(100%) contrast(93%);
-    vertical-align: text-bottom;
-  }
-
-  &::before {
-    display: none;
-  }
-}
-
 .badge {
   border-radius: 50%;
   border-radius: 10px;

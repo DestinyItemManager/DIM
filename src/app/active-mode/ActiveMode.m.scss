@@ -70,6 +70,10 @@
     }
   }
 
+  .inventoryCategory {
+    grid-template-columns: 1.75fr 1fr;
+  }
+
   :global(.store-row.title) {
     background-color: transparent;
 

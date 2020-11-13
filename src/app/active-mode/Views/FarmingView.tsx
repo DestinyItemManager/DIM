@@ -8,23 +8,34 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
+import MaxlightButton from 'app/loadout/MaxlightButton';
 import { searchFiltersConfigSelector } from 'app/search/search-filter';
 import { setSearchQuery } from 'app/shell/actions';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import styles from './FarmingView.m.scss';
 
 type Props = {
   store: DimStore;
 };
 
+const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
+  allItems.some(
+    (i) =>
+      i.classified &&
+      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+  )
+);
+
 export default function FarmingView({ store }: Props) {
   const [isFarming, setIsFarming] = useState(false);
 
   const allItems = useSelector(allItemsSelector);
   const filters = useSelector(searchFiltersConfigSelector);
+  const hasClassified = useSelector(hasClassifiedSelector);
   const savedSearches = useSelector(recentSearchesSelector).filter(({ saved }) => saved);
   const [query, setQuery] = useState<string>(savedSearches?.[0].query);
   const options: Option[] = savedSearches.map(({ query }) => ({
@@ -55,6 +66,14 @@ export default function FarmingView({ store }: Props) {
     >
       <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
         {!isFarming ? t('ActiveMode.FarmingStart') : t('ActiveMode.FarmingStart')}
+      </div>
+      <div className="dim-button bucket-button">
+        <MaxlightButton
+          allItems={allItems}
+          dimStore={store}
+          hasClassified={hasClassified}
+          hideIcon={true}
+        />
       </div>
       <div className={styles.options}>
         <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
