@@ -183,6 +183,7 @@ function App({
                 <Route
                   path={[
                     '/inventory',
+                    '/active',
                     '/progress',
                     '/records',
                     '/optimizer',

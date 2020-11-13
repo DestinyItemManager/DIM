@@ -4,6 +4,7 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
 import Compare from 'app/compare/Compare';
+import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
@@ -71,6 +72,7 @@ interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
   profileError?: DimError;
+  activeMode?: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -82,6 +84,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
         account.destinyVersion === props.destinyVersion
     ),
     profileError: state.inventory.profileError,
+    activeMode: settingsSelector(state).activeMode,
   };
 }
 
@@ -90,7 +93,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
+function Destiny({ accountsLoaded, account, dispatch, profileError, activeMode }: Props) {
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -213,7 +216,10 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
-            <Inventory account={account} />
+            {activeMode ? <Redirect to={`/active`} /> : <Inventory account={account} />}
+          </Route>
+          <Route path={`${path}/active`} exact>
+            {!activeMode ? <Redirect to={`/inventory`} /> : <Inventory account={account} />}
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/progress`} exact>
