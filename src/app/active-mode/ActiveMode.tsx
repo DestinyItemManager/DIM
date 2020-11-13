@@ -56,6 +56,10 @@ function ActiveMode(
   const [selectedStore, setSelectedStore] = useState<DimStore>(currentStore);
 
   useEffect(() => {
+    ga('send', 'pageview', `/profileMembershipId/d${account.destinyVersion}/active`);
+  }, [account]);
+
+  useEffect(() => {
     dispatch(loadAllVendors(account, selectedStoreId));
   }, [account, selectedStoreId, dispatch]);
 

@@ -216,10 +216,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError, activeMode }
       <div id="content">
         <Switch>
           <Route path={`${path}/inventory`} exact>
-            {activeMode ? <Redirect to={`/active`} /> : <Inventory account={account} />}
-          </Route>
-          <Route path={`${path}/active`} exact>
-            {!activeMode ? <Redirect to={`/inventory`} /> : <Inventory account={account} />}
+            <Inventory account={account} />
           </Route>
           {account.destinyVersion === 2 && (
             <Route path={`${path}/progress`} exact>
