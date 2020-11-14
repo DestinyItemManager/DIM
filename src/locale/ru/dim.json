@@ -18,10 +18,10 @@
   },
   "ActiveMode": {
     "Beta": "БЕТА",
-    "ButtonOff": "Режим Инвентаря",
-    "ButtonOn": "Активный Режим",
-    "ChangeFilter": "Change Filter",
-    "Farming": "Свежий Лут",
+    "ButtonOff": "Инвентари",
+    "ButtonOn": "Активный Персонаж",
+    "ChangeFilter": "Фильтры",
+    "Farming": "Предметы",
     "FarmingStart": "Режим Фарма",
     "Loadouts": "Наборы",
     "NoQuests": "Задания не отслеживаются",
@@ -625,7 +625,7 @@
       "Track": "Отслеживать {{itemType}}",
       "Tracked": "Отслеживаем",
       "Untrack": "Не отслеживать {{itemType}}",
-      "Untracked": "Untracked"
+      "Untracked": "Отслеживание"
     },
     "TriageTab": "Triage",
     "Vault": "Хранилище"
