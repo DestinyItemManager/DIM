@@ -8,18 +8,13 @@
   z-index: 100;
   padding: 0;
 
-  input {
-    display: none;
-  }
-
-  label {
-    padding: 4px 10px;
-    display: flex;
-  }
+  padding: 4px 10px;
+  display: flex;
 
   @include phone-portrait {
     top: 110px;
     right: 7px;
+    display: none;
   }
 }
 
@@ -28,6 +23,7 @@
   top: 52px;
 
   @include phone-portrait {
+    display: none;
     top: inherit;
     right: 7px;
     position: fixed;

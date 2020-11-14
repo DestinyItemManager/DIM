@@ -1,5 +1,6 @@
 import ActiveMode from 'app/active-mode/ActiveMode';
 import InventoryToggle from 'app/active-mode/InventoryModeToggle';
+import { settingsSelector } from 'app/dim-api/selectors';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
@@ -8,7 +9,7 @@ import Stores from 'app/inventory/Stores';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import GearPower from '../gear-power/GearPower';
@@ -24,6 +25,7 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   isPhonePortrait: boolean;
+  activeMode: boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -32,6 +34,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     storesLoaded: storesLoadedSelector(state),
     isPhonePortrait: isPhonePortraitSelector(state),
+    activeMode: settingsSelector(state).activeMode,
   };
 }
 
@@ -47,10 +50,8 @@ const components = [
 ];
 */
 
-function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
+function Inventory({ storesLoaded, account, activeMode, isPhonePortrait }: Props) {
   useLoadStores(account, storesLoaded);
-
-  const [altMode, setAltMode] = useState(false);
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -58,8 +59,8 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
 
   return (
     <ErrorBoundary name="Inventory">
-      {$featureFlags.altInventoryMode && <InventoryToggle mode={altMode} onClick={setAltMode} />}
-      {altMode ? <ActiveMode account={account} /> : <Stores />}
+      {$featureFlags.altInventoryMode && <InventoryToggle mode={activeMode} />}
+      {activeMode ? <ActiveMode account={account} /> : <Stores />}
       {$featureFlags.moveAmounts && <StackableDragHelp />}
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
