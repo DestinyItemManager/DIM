@@ -774,6 +774,7 @@
     "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
+    "SortBySeason": "Season (D2)",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
   },

@@ -195,6 +195,7 @@ function SettingsPage({
     classType: t('Settings.SortByClassType'),
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
+    season: t('Settings.SortBySeason'),
     // archetype: 'Archetype'
   };
 
