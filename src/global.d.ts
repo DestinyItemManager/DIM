@@ -32,8 +32,6 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** Move subclass out of weapons */
-  newArrangement: boolean;
   /** New background */
   gradientBackground: boolean;
   /** Move the item popup actions */
