@@ -341,7 +341,7 @@ function ItemTable({
       (_, n) =>
         `[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
-        }){background-color:#1a1a1d !important;}`
+        }){background-color:#1d1c2b !important;}`
     )
     .join('\n');
 

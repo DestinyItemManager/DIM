@@ -379,8 +379,6 @@ module.exports = (env) => {
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(true),
-        // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Move the item popup actions

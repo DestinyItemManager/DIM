@@ -6,12 +6,8 @@
   gap: 4px 2px;
   align-items: center;
   font-size: 11px;
-  color: #aaa;
   margin-top: 9px;
-
-  :global(.gradientBackground) & {
-    color: #ccc;
-  }
+  color: #ccc;
 
   img,
   .bucketTag {

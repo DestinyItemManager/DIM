@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
-import { storeBackgroundColor } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
@@ -95,7 +94,6 @@ function InventoryCollapsibleTitle({
                 postmasterFull: showPostmasterFull,
                 postmaster: checkPostmaster,
               })}
-              style={storeBackgroundColor(store, index)}
             >
               {index === 0 ? (
                 <span className="collapse-handle" onClick={toggle}>

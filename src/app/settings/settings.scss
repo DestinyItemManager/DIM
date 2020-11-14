@@ -33,10 +33,7 @@
   .setting {
     padding: 8px;
     margin: 0 0 4px 0;
-    background-color: #222;
-    .gradientBackground & {
-      background-color: rgba(0, 0, 0, 0.4);
-    }
+    background-color: rgba(0, 0, 0, 0.4);
     > .setting {
       padding: 0;
       margin: 0;
@@ -110,17 +107,14 @@
 
   .wish-list-text {
     width: 100%;
-    background: #313233;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-bottom: 10px;
     color: #999;
     border-radius: 4px;
     height: 30px;
     border: none;
     ::placeholder {
       color: #999;
-    }
-    .gradientBackground & {
-      background-color: rgba(0, 0, 0, 0.4);
-      margin-bottom: 10px;
     }
   }
 

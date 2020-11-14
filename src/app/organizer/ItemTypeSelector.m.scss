@@ -1,16 +1,13 @@
 @import '../variables';
 
 .selector {
-  background-color: #222;
+  background-color: rgba(0, 0, 0, 0);
   padding: 8px;
   margin-top: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   @include vertical-space-children(8px);
-  :global(.gradientBackground) & {
-    background-color: rgba(0, 0, 0, 0);
-  }
 }
 
 .level {
