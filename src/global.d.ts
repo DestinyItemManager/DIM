@@ -32,8 +32,6 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** Move the item popup actions */
-  newItemPopupActions: boolean;
   /** Enable move amounts */
   moveAmounts: boolean;
   /** Enable alt inv mode */

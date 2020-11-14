@@ -65,14 +65,7 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-function ItemPopupContainer({
-  isPhonePortrait,
-  itemDetails,
-  stores,
-  language,
-  boundarySelector,
-  setSetting,
-}: Props) {
+function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelector }: Props) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const [currentItem, setCurrentItem] = useState<{
     item: DimItem;
@@ -86,10 +79,6 @@ function ItemPopupContainer({
   };
 
   const onClose = () => setCurrentItem(undefined);
-
-  const toggleItemDetails = () => {
-    setSetting('itemDetails', !itemDetails);
-  };
 
   useSubscription(() =>
     showItemPopup$.subscribe(({ item, element, extraInfo }) => {
@@ -137,10 +126,7 @@ function ItemPopupContainer({
       item={item}
       key={`header${item.index}`}
       language={language}
-      expanded={isPhonePortrait || itemDetails || $featureFlags.newItemPopupActions}
-      showToggle={!isPhonePortrait}
       isPhonePortrait={isPhonePortrait}
-      onToggleExpanded={toggleItemDetails}
     />
   );
 
@@ -150,9 +136,7 @@ function ItemPopupContainer({
       key={`body${item.index}`}
       extraInfo={currentItem.extraInfo}
       tab={tab}
-      expanded={isPhonePortrait || itemDetails || $featureFlags.newItemPopupActions}
       onTabChanged={onTabChanged}
-      onToggleExpanded={toggleItemDetails}
     />
   );
 
@@ -184,25 +168,15 @@ function ItemPopupContainer({
     >
       <ClickOutside onClickOutside={onClose}>
         <ItemTagHotkeys item={item} />
-        {$featureFlags.newItemPopupActions ? (
-          <div className={styles.desktopPopup}>
-            <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-              {header}
-              {body}
-            </div>
-            <div className={clsx(styles.desktopActions)}>
-              <DesktopItemActions key={item.index} item={item} />
-            </div>
-          </div>
-        ) : (
+        <div className={styles.desktopPopup}>
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
             {header}
             {body}
-            <div className="item-details">
-              <ItemActions key={item.index} item={item} />
-            </div>
           </div>
-        )}
+          <div className={clsx(styles.desktopActions)}>
+            <DesktopItemActions key={item.index} item={item} />
+          </div>
+        </div>
       </ClickOutside>
       <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
     </div>
