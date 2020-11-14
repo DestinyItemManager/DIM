@@ -253,6 +253,8 @@ export function makeItem(
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+    itemDef.iconWatermark ||
+    itemDef.iconWatermarkShelved ||
     undefined;
 
   const collectible =
