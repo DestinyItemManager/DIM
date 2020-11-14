@@ -315,7 +315,6 @@ function SettingsPage({
                   type="button"
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
-                  title={t('Hotkey.ClearNewItemsTitle')}
                 >
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
