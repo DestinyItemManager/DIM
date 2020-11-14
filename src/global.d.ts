@@ -48,6 +48,8 @@ declare const $featureFlags: {
   newPerks: boolean;
   /** Advanced Write Actions (inserting mods) */
   awa: boolean;
+  /** Incorporate mods directly into loadouts */
+  loadoutMods: boolean;
 };
 
 declare namespace React {
