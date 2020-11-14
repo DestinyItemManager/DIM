@@ -14,7 +14,6 @@
   @include phone-portrait {
     top: 110px;
     right: 7px;
-    display: none;
   }
 }
 
@@ -23,7 +22,6 @@
   top: 52px;
 
   @include phone-portrait {
-    display: none;
     top: inherit;
     right: 7px;
     position: fixed;
