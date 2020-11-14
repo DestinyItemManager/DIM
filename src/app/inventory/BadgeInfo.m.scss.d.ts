@@ -8,7 +8,6 @@ interface CssExports {
   'fullstack': string;
   'lightBackgroundElement': string;
   'masterwork': string;
-  'primaryStat': string;
   'quality': string;
   'solar': string;
   'void': string;

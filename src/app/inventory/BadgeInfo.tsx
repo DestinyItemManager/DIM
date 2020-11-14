@@ -95,7 +95,6 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
           <RatingIcon uiWishListRoll={uiWishListRoll} />
         </div>
       )}
-      <div className={styles.primaryStat}>
         {/*
         // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
         item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
@@ -106,7 +105,6 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
             <ElementIcon element={item.element} className={styles.lightBackgroundElement} />
           )}
         <span>{badgeContent}</span>
-      </div>
     </div>
   );
 }
