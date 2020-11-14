@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -7,7 +8,12 @@ import { DimStore } from '../inventory/store-types';
 import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 import styles from './ItemMoveLocation.m.scss';
 
-const canShowVault = (buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean => {
+const canShowVault = (
+  buttonStore: DimStore,
+  itemOwnerStore: DimStore,
+  item: DimItem,
+  stores: DimStore[]
+): boolean => {
   const store = itemOwnerStore;
 
   // If my store is the vault, don't show a vault button.
@@ -26,14 +32,19 @@ const canShowVault = (buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
     return false;
   }
 
-  if (item.location.inPostmaster && !item.canPullFromPostmaster) {
-    return false;
+  if (item.location.type === 'LostItems') {
+    return canBePulledFromPostmaster(item, buttonStore, stores);
   }
 
   return true;
 };
 
-const canShowStore = (buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean => {
+const canShowStore = (
+  buttonStore: DimStore,
+  itemOwnerStore: DimStore,
+  item: DimItem,
+  stores: DimStore[]
+): boolean => {
   const store = itemOwnerStore;
 
   // Can't store into a vault
@@ -51,9 +62,11 @@ const canShowStore = (buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
   }
 
   // Can pull items from the postmaster.
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-    return item.canPullFromPostmaster;
-  } else if (item.notransfer) {
+  if (item.location.type === 'LostItems') {
+    return canBePulledFromPostmaster(item, buttonStore, stores);
+  }
+
+  if (item.notransfer) {
     // Can store an equiped item in same itemStore
     if (item.equipped && store.id === buttonStore.id) {
       return true;
@@ -75,6 +88,7 @@ interface Props {
   itemOwnerStore: DimStore;
   store: DimStore;
   vertical: boolean;
+  stores: DimStore[];
   moveItemTo(store: DimStore, equip?: boolean): void;
 }
 
@@ -88,13 +102,14 @@ export default function ItemMoveLocation({
   store,
   vertical,
   moveItemTo,
+  stores,
 }: Props) {
   const moveItem = () => moveItemTo(store);
   const equipItem = () => moveItemTo(store, true);
 
   return (
     <ItemActionButtonGroup key={store.id} vertical={vertical}>
-      {canShowVault(store, itemOwnerStore, item) && (
+      {canShowVault(store, itemOwnerStore, item, stores) && (
         <ItemActionButton
           className={styles.moveVault}
           title={t('MovePopup.SendToVault')}
@@ -110,7 +125,7 @@ export default function ItemMoveLocation({
           label={t('MovePopup.Equip')}
         />
       )}
-      {canShowStore(store, itemOwnerStore, item) && (
+      {canShowStore(store, itemOwnerStore, item, stores) && (
         <ItemActionButton
           title={t('MovePopup.StoreWithName', { character: store.name })}
           onClick={moveItem}
