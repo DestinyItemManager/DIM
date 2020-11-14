@@ -136,7 +136,10 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
   season: reverseComparator(
-    compareBy((item: DimItem) => (item.destinyVersion === 2 ? getSeason(item) : 0))
+    chainComparator(
+      compareBy((item: DimItem) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
+      compareBy((item: DimItem) => item.iconOverlay ?? '')
+    )
   ),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, itemInfosSelector(store.getState()));
