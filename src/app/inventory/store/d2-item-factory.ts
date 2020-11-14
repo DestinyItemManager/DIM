@@ -249,6 +249,8 @@ export function makeItem(
     powerCap = null;
   }
 
+  const hiddenOverlay = itemDef.iconWatermark;
+
   // null out falsy values like a blank string for a url
   const iconOverlay =
     (item.versionNumber !== undefined &&
@@ -304,6 +306,7 @@ export function makeItem(
       overrideStyleItem?.displayProperties.icon ||
       displayProperties.icon ||
       '/img/misc/missing_icon_d2.png',
+    hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
     notransfer: Boolean(

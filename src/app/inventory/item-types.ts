@@ -66,6 +66,8 @@ export interface DimItem {
   description: string;
   /** Icon path for the item. */
   icon: string;
+  /** Hidden Icon overlay path for the item. Currently used to assess event data and seasons for some items when no overlay is shown */
+  hiddenOverlay?: string;
   /** Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items */
   iconOverlay?: string;
   /** Some items have a secondary icon, namely Emblems. */
