@@ -41,11 +41,6 @@
   composes: entry;
   padding: 6px 8px;
 
-  :global(.app-icon) {
-    margin-top: 1px;
-    margin-right: 8px;
-  }
-
   .collapsed & {
     padding: 0;
     button {

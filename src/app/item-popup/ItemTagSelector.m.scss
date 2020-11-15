@@ -1,6 +1,12 @@
 .itemTagSelector {
   button {
     min-width: 10em;
+    width: 100%;
+  }
+
+  :global(.app-icon) {
+    margin-top: 1px;
+    margin-right: 8px;
   }
 }
 
