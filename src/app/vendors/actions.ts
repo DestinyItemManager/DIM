@@ -1,5 +1,7 @@
+import { XurLocation } from '@d2api/d2api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
@@ -14,6 +16,8 @@ export const loadedError = createAction('vendors/LOADED_ERROR')<{
   characterId: string;
   error: Error;
 }>();
+
+export const loadedXur = createAction('vendors/LOADED_XUR')<XurLocation | undefined>();
 
 export function loadAllVendors(
   account: DestinyAccount,
@@ -34,6 +38,8 @@ export function loadAllVendors(
       dispatch(getAllVendorDrops());
     }
 
+    dispatch(loadXurLocation());
+
     try {
       const vendorsResponse = await getVendorsApi(account, characterId);
       dispatch(loadedAll({ vendorsResponse, characterId }));
@@ -41,4 +47,31 @@ export function loadAllVendors(
       dispatch(loadedError({ characterId, error }));
     }
   };
+}
+
+function loadXurLocation(): ThunkResult {
+  return async (dispatch) => {
+    try {
+      const xurLocation = await xurLocationFetch();
+      dispatch(loadedXur(xurLocation || undefined));
+    } catch (e) {
+      errorLog('xur', e);
+    }
+  };
+}
+
+async function xurLocationFetch(): Promise<XurLocation> {
+  const request = new Request('https://paracausal.science/xur/current.json', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  const response = await Promise.resolve(fetch(request));
+  if (response.ok) {
+    return response.json();
+  }
+
+  throw new Error("Unable to load Xur's location: " + response.status);
 }

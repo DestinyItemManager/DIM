@@ -236,6 +236,7 @@ export const VENDORS = {
   /** rahool. we override how his vendor FakeItems are displayed */
   RAHOOL: 2255782930,
   VAULT: 1037843411,
+  XUR: 2190858386,
 };
 
 /** used to snag the icon for display */
