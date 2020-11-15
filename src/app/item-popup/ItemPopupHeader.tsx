@@ -9,7 +9,7 @@ import React from 'react';
 import { CompareService } from '../compare/compare.service';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, compareIcon, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
+import { AppIcon, compareIcon } from '../shell/icons';
 import { ammoTypeClass } from './ammo-type';
 import { hideItemPopup } from './item-popup';
 import './ItemPopupHeader.scss';
@@ -19,30 +19,18 @@ import LockButton from './LockButton';
 
 export default function ItemPopupHeader({
   item,
-  expanded,
-  showToggle,
   language,
   isPhonePortrait,
-  onToggleExpanded,
 }: {
   item: DimItem;
-  expanded: boolean;
-  showToggle: boolean;
   language: string;
   isPhonePortrait: boolean;
-  onToggleExpanded(): void;
 }) {
   const hasLeftIcon = item.trackable || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
   };
-
-  const hasDetails = Boolean(
-    item.stats?.length || item.talentGrid || item.objectives || item.secondaryIcon
-  );
-  const showDescription = Boolean(item.description?.length);
-  const showDetailsByDefault = !item.equipment && item.notransfer;
 
   const light = item.primStat?.value.toString();
 
@@ -72,19 +60,11 @@ export default function ItemPopupHeader({
             {item.name}
           </ExternalLink>
         </div>
-        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.comparable && (
+        {isPhonePortrait && item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={compareIcon} />
           </a>
         )}
-        {!$featureFlags.newItemPopupActions &&
-          showToggle &&
-          !showDetailsByDefault &&
-          (showDescription || hasDetails) && (
-            <div className="info" onClick={onToggleExpanded}>
-              <AppIcon icon={expanded ? faChevronCircleUp : openDropdownIcon} />
-            </div>
-          )}
       </div>
 
       <div className="item-subtitle">
@@ -107,9 +87,7 @@ export default function ItemPopupHeader({
         <div className="item-type-info">
           <ItemSubHeader item={item} />
         </div>
-        {(isPhonePortrait || !$featureFlags.newItemPopupActions) && item.taggable && (
-          <ItemTagSelector item={item} />
-        )}
+        {isPhonePortrait && item.taggable && <ItemTagSelector item={item} />}
       </div>
       {powerCapString && (
         <div className="item-subtitle">

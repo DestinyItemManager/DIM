@@ -10,7 +10,6 @@ import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -343,12 +342,6 @@ export function getColumns(
       },
       filter: (value) => `event:${value}`,
     },
-    destinyVersion === 2 &&
-      isGhost && {
-        id: 'ghost',
-        header: t('Organizer.Columns.Ghost'),
-        value: (item) => ghostBadgeContent(item).join(''),
-      },
     destinyVersion === 2 &&
       isArmor && {
         id: 'modslot',

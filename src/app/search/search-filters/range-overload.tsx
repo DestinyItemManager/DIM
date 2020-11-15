@@ -13,17 +13,17 @@ import { rangeStringToComparator } from './range-numeric';
 /** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
-// prioritize newer seasons. nobody is looking for "redwar" at this point
-const seasonTagNames = Object.keys(seasonTags).reverse();
-
 const seasonTagToNumber = {
   ...seasonTags,
-  current: D2CalculatedSeason,
   next: D2CalculatedSeason + 1,
+  current: D2CalculatedSeason,
 };
 
+// prioritize newer seasons. nobody is looking for "redwar" at this point
+const seasonTagNames = Object.keys(seasonTagToNumber).reverse();
+
 // things can't sunset in season 11 and earlier
-const sunsetSeasonTagNames = Object.entries(seasonTags)
+const sunsetSeasonTagNames = Object.entries(seasonTagToNumber)
   .filter(([_, num]) => num > 11)
   .map(([tag]) => tag)
   .reverse();

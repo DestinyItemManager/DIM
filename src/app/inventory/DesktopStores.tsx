@@ -5,7 +5,6 @@ import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
-import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import { DimStore } from './store-types';
@@ -37,12 +36,8 @@ export default function DesktopStores(this: void, { stores, buckets }: Props) {
       aria-label={t('Header.Inventory')}
     >
       <HeaderShadowDiv className="store-row store-header">
-        {stores.map((store, index) => (
-          <div
-            className={clsx('store-cell', { vault: store.isVault })}
-            key={store.id}
-            style={storeBackgroundColor(store, index)}
-          >
+        {stores.map((store) => (
+          <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
             <StoreHeading store={store} />
             <StoreStats store={store} />
           </div>

@@ -73,27 +73,10 @@
 
   &.vault {
     min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
-    background: rgba(0, 0, 0, 0.12);
-    .gradientBackground & {
-      background: transparent;
-    }
-    .phone-portrait & {
-      background: transparent;
-    }
   }
 
   &.account-wide {
     grid-column: 1 / span var(--num-characters);
-  }
-
-  &:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.2);
-    .phone-portrait & {
-      background-color: transparent;
-    }
-    .gradientBackground & {
-      background-color: transparent;
-    }
   }
 
   > div {
@@ -205,13 +188,14 @@
   left: 0;
   width: 100%;
   z-index: 10;
-  background-color: #313233;
+  background: $gradient;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
+
   .store-cell {
-    padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
     flex-direction: column;
-    .gradientBackground & {
-      padding-top: 16px;
-    }
     &:focus {
       outline: none;
     }
@@ -239,12 +223,6 @@
     .character {
       margin: 0 5px;
     }
-  }
-  .gradientBackground & {
-    background: $gradient;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-size: 100% 100vh;
   }
 }
 

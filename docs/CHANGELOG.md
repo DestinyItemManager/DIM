@@ -1,5 +1,23 @@
 ## Next
 
+* Search autocomplete suggests the `current` and `next` keywords for seasons.
+* Reworked mod handling to account for new legacy and combat mod slots. New searches include `holdsmod:chargedwithlight`, `holdsmod:warmindcell`, etc., and `modslot:legacy` and `modslot:combatstyle`.
+* Armor tiles now display the energy capacity of the armor.
+* Masterwork levels in the mod details menu once again show which level masterwork they are.
+* Added a new sort order for items, sort by Seasonal icon.
+* Darkened the item actions sidecar to improve contrast with the background.
+* Fixed a visual glitch where the tagging menu looked bad.
+* Fixed logic for determining what can be pulled from postmaster to exclude stacked items like Upgrade Modules when you cannot actually pull any more of them.
+* Removed the counter of how many items were selected in Organizer. This fixes a visual glitch that cut off the icons when items were selected.
+* Fixed the vendor icon for Variks.
+* Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
+* Deleting a loadout from the loadout drawer now closes the loadout drawer.
+
+### Beta Only
+
+* Preview of "Active Mode", an in-progress new view that focuses down to a single character plus your vault, and has easy access to pursuits, farming, max light, and more.
+* If you create a loadout through Loadout Optimizer, when you edit that loadout normally, you will see which mods you had locked.
+
 ## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
 
 * Removed character gender from tiles and notifications.
