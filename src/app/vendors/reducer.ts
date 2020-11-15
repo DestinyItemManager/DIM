@@ -1,3 +1,4 @@
+import { XurLocation } from '@d2api/d2api-types';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
@@ -15,6 +16,8 @@ export interface VendorsState {
       error?: Error;
     };
   };
+
+  xurLocation?: XurLocation;
 }
 
 export type VendorsAction = ActionType<typeof actions>;
@@ -54,6 +57,13 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
             error,
           },
         },
+      };
+    }
+
+    case getType(actions.loadedXur): {
+      return {
+        ...state,
+        xurLocation: action.payload,
       };
     }
 
