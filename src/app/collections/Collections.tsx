@@ -5,13 +5,16 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
@@ -24,7 +27,6 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
-import Catalysts from './Catalysts';
 import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
 
@@ -43,6 +45,7 @@ interface StoreProps {
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   searchFilter?: ItemFilter;
+  destiny2CoreSettings?: Destiny2CoreSettings;
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -62,6 +65,7 @@ function mapStateToProps() {
       trackedTriumphs: trackedTriumphsSelector(state),
       completedRecordsHidden: settings.completedRecordsHidden,
       redactedRecordsRevealed: settings.redactedRecordsRevealed,
+      destiny2CoreSettings: destiny2CoreSettingsSelector(state),
     };
   };
 }
@@ -81,6 +85,7 @@ function Collections({
   trackedTriumphs,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  destiny2CoreSettings,
   dispatch,
 }: Props) {
   useLoadStores(account, Boolean(profileResponse));
@@ -94,6 +99,7 @@ function Collections({
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
+  // Some root nodes come from the profile
   const badgesRootNodeHash =
     profileResponse?.profileCollectibles?.data?.collectionBadgesRootNodeHash;
   const metricsRootNodeHash = profileResponse?.metrics?.data?.metricsRootNodeHash;
@@ -102,24 +108,44 @@ function Collections({
   const recordsRootHash = profileResponse?.profileRecords?.data?.recordCategoriesRootNodeHash;
   const sealsRootHash = profileResponse?.profileRecords?.data?.recordSealsRootNodeHash;
 
-  const badgesTitle =
-    badgesRootNodeHash && defs.PresentationNode.get(badgesRootNodeHash).displayProperties.name;
-  const triumphTitle =
-    recordsRootHash && defs.PresentationNode.get(recordsRootHash).displayProperties.name;
-  const sealsTitle =
-    sealsRootHash && defs.PresentationNode.get(sealsRootHash).displayProperties.name;
-
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
+
+  const profileHashes = _.compact([
+    recordsRootHash,
+    sealsRootHash,
+    collectionsRootHash,
+    badgesRootNodeHash,
+    metricsRootNodeHash,
+  ]);
+
+  // Some nodes have bad titles, we manually fix them
+  const overrideTitles: { [nodeHash: number]: string } = {};
+  if (collectionsRootHash) {
+    overrideTitles[collectionsRootHash] = t('Vendors.Collections');
+  }
+  if (metricsRootNodeHash) {
+    overrideTitles[metricsRootNodeHash] = t('Progress.StatTrackers');
+  }
+
+  // We discover the rest of the root nodes from the Bungie.net core settings
+  const otherHashes = destiny2CoreSettings
+    ? Object.keys(destiny2CoreSettings)
+        .filter((k) => k.includes('RootNode'))
+        .map((k) => destiny2CoreSettings[k])
+        .filter((n) => !profileHashes.includes(n))
+    : [];
+
+  // We put the hashes we know about from profile first
+  const nodeHashes = [...profileHashes, ...otherHashes];
 
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    { id: 'catalysts', title: t('Vendors.Catalysts') },
-    { id: 'legacyTriumphs', title: t('Progress.LegacyTriumphs') },
-    { id: 'triumphs', title: triumphTitle },
-    { id: 'seals', title: sealsTitle },
-    { id: 'collections', title: t('Vendors.Collections') },
-    { id: 'badges', title: badgesTitle },
-    { id: 'metrics', title: t('Progress.StatTrackers') },
+    ...nodeHashes
+      .map((h) => defs.PresentationNode.get(h))
+      .map((nodeDef) => ({
+        id: `p_${nodeDef.hash}`,
+        title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
+      })),
   ];
 
   const onToggleCompletedRecordsHidden = (checked: boolean) =>
@@ -163,106 +189,32 @@ function Collections({
             </ErrorBoundary>
           </CollapsibleTitle>
         </section>
-        {!searchQuery && (
-          <section id="catalysts">
-            <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId="catalysts">
-              <ErrorBoundary name="Catalysts">
-                <Catalysts defs={defs} profileResponse={profileResponse} />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-        {recordsRootHash && (
-          <section id="triumphs">
-            <CollapsibleTitle title={triumphTitle} sectionId="triumphs">
-              <ErrorBoundary name="Triumphs">
-                <PresentationNodeRoot
-                  presentationNodeHash={recordsRootHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  isTriumphs={true}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                  completedRecordsHidden={completedRecordsHidden}
-                />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-
-        {sealsRootHash && (
-          <section id="seals">
-            <CollapsibleTitle title={sealsTitle} sectionId="seals">
-              <ErrorBoundary name="Seals">
-                <PresentationNodeRoot
-                  presentationNodeHash={sealsRootHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                  completedRecordsHidden={completedRecordsHidden}
-                />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-        {collectionsRootHash && (
-          <section id="collections">
-            <CollapsibleTitle title={t('Vendors.Collections')} sectionId="collections">
-              <ErrorBoundary name={t('Vendors.Collections')}>
-                <PresentationNodeRoot
-                  presentationNodeHash={collectionsRootHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  buckets={buckets}
-                  ownedItemHashes={ownedItemHashes}
-                  openedPresentationHash={presentationNodeHash}
-                  showPlugSets={true}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                  overrideName={t('Vendors.Collections')}
-                />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-        {badgesRootNodeHash && (
-          <section id="badges">
-            <CollapsibleTitle title={badgesTitle} sectionId="badges">
-              <ErrorBoundary name="Badges">
-                <PresentationNodeRoot
-                  presentationNodeHash={badgesRootNodeHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  buckets={buckets}
-                  ownedItemHashes={ownedItemHashes}
-                  openedPresentationHash={presentationNodeHash}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
-        {metricsRootNodeHash && (
-          <section id="metrics">
-            <CollapsibleTitle title={t('Progress.StatTrackers')} sectionId="metrics">
-              <ErrorBoundary name={t('Progress.StatTrackers')}>
-                <PresentationNodeRoot
-                  presentationNodeHash={metricsRootNodeHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  buckets={buckets}
-                  ownedItemHashes={ownedItemHashes}
-                  openedPresentationHash={presentationNodeHash}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                  overrideName={t('Progress.StatTrackers')}
-                />
-              </ErrorBoundary>
-            </CollapsibleTitle>
-          </section>
-        )}
+        {nodeHashes
+          .map((h) => defs.PresentationNode.get(h))
+          .map((nodeDef) => (
+            <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
+              <CollapsibleTitle
+                title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
+                sectionId={`p_${nodeDef.hash}`}
+              >
+                <ErrorBoundary name={nodeDef.displayProperties.name}>
+                  <PresentationNodeRoot
+                    presentationNodeHash={nodeDef.hash}
+                    defs={defs}
+                    profileResponse={profileResponse}
+                    buckets={buckets}
+                    ownedItemHashes={ownedItemHashes}
+                    openedPresentationHash={presentationNodeHash}
+                    searchQuery={searchQuery}
+                    searchFilter={searchFilter}
+                    overrideName={overrideTitles[nodeDef.hash]}
+                    isTriumphs={nodeDef.hash === recordsRootHash}
+                    showPlugSets={nodeDef.hash === collectionsRootHash}
+                  />
+                </ErrorBoundary>
+              </CollapsibleTitle>
+            </section>
+          ))}
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
