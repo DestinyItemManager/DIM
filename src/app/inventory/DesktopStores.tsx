@@ -36,7 +36,7 @@ export default function DesktopStores(this: void, { stores, buckets }: Props) {
       aria-label={t('Header.Inventory')}
     >
       <HeaderShadowDiv className="store-row store-header">
-        {stores.map((store, index) => (
+        {stores.map((store) => (
           <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
             <StoreHeading store={store} />
             <StoreStats store={store} />
