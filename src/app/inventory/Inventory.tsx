@@ -59,8 +59,8 @@ function Inventory({ storesLoaded, account, activeMode, isPhonePortrait }: Props
 
   return (
     <ErrorBoundary name="Inventory">
-      {$featureFlags.altInventoryMode && <InventoryToggle mode={activeMode} />}
-      {activeMode ? <ActiveMode account={account} /> : <Stores />}
+      {$featureFlags.altInventoryMode && !isPhonePortrait && <InventoryToggle mode={activeMode} />}
+      {activeMode && !isPhonePortrait ? <ActiveMode account={account} /> : <Stores />}
       {$featureFlags.moveAmounts && <StackableDragHelp />}
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
