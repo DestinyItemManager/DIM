@@ -79,12 +79,19 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
-  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter(
-    (i) =>
-      // Can be pulled
-      i.canPullFromPostmaster &&
-      // Either has space, or is going to a bucket we can make room in
-      (i.bucket.vaultBucket || spaceLeftForItem(store, i, stores) > 0)
+  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter((i) =>
+    canBePulledFromPostmaster(i, store, stores)
+  );
+}
+
+/**
+ * Can the given item be pulled from postmaster into a store?
+ */
+export function canBePulledFromPostmaster(i: DimItem, store: DimStore, stores: DimStore[]) {
+  return (
+    i.canPullFromPostmaster && // Can be pulled
+    // Either has space, or is going to a bucket we can make room in
+    ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
   );
 }
 

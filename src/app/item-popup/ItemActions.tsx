@@ -92,6 +92,7 @@ export default function ItemActions({
             itemOwnerStore={store}
             vertical={Boolean(mobileInspect)}
             moveItemTo={onMoveItemTo}
+            stores={stores}
           />
         ))}
 

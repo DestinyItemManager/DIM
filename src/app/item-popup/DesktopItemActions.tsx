@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { setSetting } from 'app/settings/actions';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -238,13 +239,15 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 <StoreIcon store={vault} /> {t('MovePopup.Vault')}
               </ActionButton>
             )}
-          {item.location.type === 'LostItems' && item.canPullFromPostmaster ? (
-            <PullButtons
-              item={item}
-              itemOwner={itemOwner}
-              submitMoveTo={submitMoveTo}
-              vault={vault}
-            />
+          {item.location.type === 'LostItems' ? (
+            canBePulledFromPostmaster(item, itemOwner, stores) && (
+              <PullButtons
+                item={item}
+                itemOwner={itemOwner}
+                submitMoveTo={submitMoveTo}
+                vault={vault}
+              />
+            )
           ) : (
             <>
               <MoveLocations
