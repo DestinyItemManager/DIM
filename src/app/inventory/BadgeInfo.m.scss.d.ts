@@ -5,10 +5,10 @@ interface CssExports {
   'badge': string;
   'capped': string;
   'energyCapacity': string;
+  'energyCapacityIcon': string;
   'fullstack': string;
   'lightBackgroundElement': string;
   'masterwork': string;
-  'primaryStat': string;
   'quality': string;
   'solar': string;
   'void': string;

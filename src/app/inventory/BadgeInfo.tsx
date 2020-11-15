@@ -1,6 +1,6 @@
 import { isD1Item } from 'app/utils/item-utils';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
-import { DamageType } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -9,6 +9,13 @@ import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
 import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
+
+const energyTypeStyles: Record<DestinyEnergyType, string> = {
+  [DestinyEnergyType.Arc]: styles.arc,
+  [DestinyEnergyType.Thermal]: styles.solar,
+  [DestinyEnergyType.Void]: styles.void,
+  [DestinyEnergyType.Any]: '',
+};
 
 interface Props {
   item: DimItem;
@@ -72,18 +79,18 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
           <RatingIcon uiWishListRoll={uiWishListRoll} />
         </div>
       )}
-      <div className={styles.primaryStat}>
-        {/*
-        // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
-        item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
-        {item.energy.energyCapacity}</span>)
-        */}
-        {item.element &&
-          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-            <ElementIcon element={item.element} className={styles.lightBackgroundElement} />
-          )}
-        <span>{badgeContent}</span>
-      </div>
+      {item.energy ? (
+        <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+          {item.energy.energyCapacity}
+          <ElementIcon element={item.element} className={styles.energyCapacityIcon} />
+        </span>
+      ) : (
+        item.element &&
+        !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+          <ElementIcon element={item.element} className={styles.lightBackgroundElement} />
+        )
+      )}
+      <span>{badgeContent}</span>
     </div>
   );
 }
