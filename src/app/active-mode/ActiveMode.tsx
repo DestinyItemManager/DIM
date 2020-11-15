@@ -149,7 +149,7 @@ function ActiveModeStoreBuckets({
       })}
     >
       <div className={'store-cell'}>
-        <StoreBucket bucket={bucket} store={currentStore} />
+        <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
       </div>
       {!isPhonePortrait && (
         <div className={'store-cell'}>
