@@ -19,7 +19,6 @@
 ### Beta Only
 
 * Preview of "Active Mode", an in-progress new view that focuses down to a single character plus your vault, and has easy access to pursuits, farming, max light, and more.
-* If you create a loadout through Loadout Optimizer, when you edit that loadout normally, you will see which mods you had locked.
 
 ## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
 
