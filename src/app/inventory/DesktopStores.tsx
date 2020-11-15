@@ -1,9 +1,11 @@
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import { setSetting } from 'app/settings/actions';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import StoreHeading from '../character-tile/StoreHeading';
 import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
@@ -16,28 +18,37 @@ import './Stores.scss';
 interface Props {
   stores: DimStore[];
   buckets: InventoryBuckets;
+  singleCharacter: boolean;
 }
 /**
  * Display inventory and character headers for all characters and the vault.
  *
  * This is the desktop view only.
  */
-export default function DesktopStores(this: void, { stores, buckets }: Props) {
+export default function DesktopStores({ stores, buckets, singleCharacter }: Props) {
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
+  const dispatch = useDispatch();
 
   if (!stores.length || !buckets) {
     return null;
   }
 
+  let headerStores = stores;
+  if (singleCharacter) {
+    headerStores = [currentStore, vault];
+  }
+
   return (
     <div
-      className={`inventory-content destiny${currentStore.destinyVersion}`}
+      className={clsx('inventory-content', `destiny${currentStore.destinyVersion}`, {
+        singleCharacter,
+      })}
       role="main"
       aria-label={t('Header.Inventory')}
     >
       <HeaderShadowDiv className="store-row store-header">
-        {stores.map((store, index) => (
+        {headerStores.map((store, index) => (
           <div
             className={clsx('store-cell', { vault: store.isVault })}
             key={store.id}
@@ -47,12 +58,21 @@ export default function DesktopStores(this: void, { stores, buckets }: Props) {
             <StoreStats store={store} />
           </div>
         ))}
+        {stores.length > 2 && (
+          <button
+            type="button"
+            onClick={() => dispatch(setSetting('singleCharacter', !singleCharacter))}
+          >
+            Toggle Single Character
+          </button>
+        )}
       </HeaderShadowDiv>
       <StoresInventory
-        stores={stores}
+        stores={headerStores}
         vault={vault}
         currentStore={currentStore}
         buckets={buckets}
+        singleCharacter={singleCharacter}
       />
     </div>
   );
@@ -77,6 +97,7 @@ interface InventoryContainerProps {
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimStore;
+  singleCharacter: boolean;
 }
 
 function CollapsibleContainer({
@@ -86,6 +107,7 @@ function CollapsibleContainer({
   currentStore,
   inventoryBucket,
   vault,
+  singleCharacter,
 }: {
   category: string;
   inventoryBucket: InventoryBucket[];
@@ -104,6 +126,7 @@ function CollapsibleContainer({
           stores={stores}
           vault={vault}
           currentStore={currentStore}
+          singleCharacter={singleCharacter}
         />
       ))}
     </InventoryCollapsibleTitle>

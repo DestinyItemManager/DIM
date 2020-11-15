@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -12,13 +13,16 @@ interface StoreProps {
   stores: DimStore[];
   isPhonePortrait: boolean;
   buckets: InventoryBuckets;
+  singleCharacter: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
+  const stores = sortedStoresSelector(state);
   return {
-    stores: sortedStoresSelector(state),
+    stores,
     buckets: bucketsSelector(state)!,
     isPhonePortrait: state.shell.isPhonePortrait,
+    singleCharacter: stores.length > 2 && settingsSelector(state).singleCharacter,
   };
 }
 
@@ -27,7 +31,7 @@ type Props = StoreProps;
 /**
  * Display inventory and character headers for all characters and the vault.
  */
-function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
+function Stores({ stores, buckets, isPhonePortrait, singleCharacter }: Props) {
   useEffect(() => {
     setTimeout(() => {
       /* Set a CSS variable so we can style things based on the height of the header */
@@ -45,9 +49,9 @@ function Stores(this: void, { stores, buckets, isPhonePortrait }: Props) {
   }
 
   return isPhonePortrait ? (
-    <PhoneStores stores={stores} buckets={buckets} />
+    <PhoneStores stores={stores} buckets={buckets} singleCharacter={singleCharacter} />
   ) : (
-    <DesktopStores stores={stores} buckets={buckets} />
+    <DesktopStores stores={stores} buckets={buckets} singleCharacter={singleCharacter} />
   );
 }
 

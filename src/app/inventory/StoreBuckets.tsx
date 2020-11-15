@@ -17,6 +17,7 @@ export function StoreBuckets({
   currentStore,
   labels,
   isPhonePortrait,
+  singleCharacter,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
@@ -24,6 +25,7 @@ export function StoreBuckets({
   currentStore: DimStore;
   isPhonePortrait?: boolean;
   labels?: boolean;
+  singleCharacter: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -42,12 +44,12 @@ export function StoreBuckets({
       <>
         {(allStoresView || stores[0] !== vault) && (
           <div className="store-cell account-wide">
-            <StoreBucket bucket={bucket} store={currentStore} />
+            <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
           <div className="store-cell vault">
-            <StoreBucket bucket={bucket} store={vault} />
+            <StoreBucket bucket={bucket} store={vault} singleCharacter={false} />
           </div>
         )}
       </>
@@ -65,7 +67,9 @@ export function StoreBuckets({
         })}
         style={storeBackgroundColor(store, index, false, isPhonePortrait)}
       >
-        {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
+        {(!store.isVault || bucket.vaultBucket) && (
+          <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
+        )}
         {bucket.type === 'LostItems' &&
           store.destinyVersion === 2 &&
           findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
@@ -74,7 +78,9 @@ export function StoreBuckets({
   }
 
   return (
-    <div className={`store-row bucket-${bucket.hash}`}>
+    <div
+      className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
+    >
       {labels && <BucketLabel bucket={bucket} />}
       {content}
     </div>
