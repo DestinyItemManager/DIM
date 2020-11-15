@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: row;
   cursor: pointer;
+  height: 100%;
+  box-sizing: border-box;
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
@@ -38,28 +40,6 @@
   opacity: 0.5;
 }
 
-.perkThumb {
-  img {
-    background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
-    background-repeat: no-repeat;
-    background-position: bottom right;
-  }
-}
-
-.goodPerk {
-  composes: perkThumb;
-  img {
-    background-image: url('../../../images/good.png');
-  }
-}
-
-.badPerk {
-  composes: perkThumb;
-  img {
-    background-image: url('../../../images/bad.png');
-  }
-}
-
 .lockedPerk {
   border-color: orange;
 }
@@ -83,4 +63,9 @@
 
 .iconContainer {
   height: fit-content;
+}
+
+.requirement {
+  margin-top: 8px;
+  font-style: italic;
 }

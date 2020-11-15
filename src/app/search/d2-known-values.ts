@@ -210,8 +210,6 @@ export const ENCOUNTERS_COMPLETED_OBJECTIVE = 3133307686;
 
 export const ARMSMASTER_ACTIVITY_MODIFIER = 3704166961;
 
-export const TRACTION_PERK = 1818103563;
-
 // unfortunately the API's raid .order attribute is odd
 export const raidOrder = [
   3660836525, // levi
