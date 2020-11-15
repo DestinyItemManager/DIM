@@ -4,6 +4,7 @@ export const enum Destinations {
   Orbit = 82913930,
   DreamingCity = 2877881518,
   EDZ = 3747705955,
+  Euopra = 1729879943,
   IO = 4251857532,
   Mars = 2426873752,
   Mercury = 1259908504,
@@ -29,30 +30,12 @@ export const enum Vendors {
   Saint14 = 765357505,
   Shaxx = 3603221665,
   Sloane = 1062861569,
+  ShawHan = 1816541247,
   Spider = 863940356,
   TheDrifter = 248695599,
+  Variks = 2531198101,
   Zavala = 69482069,
 }
-
-// keys are based on data/d2/ghost-perks.json
-export const ghostTypeToPlaceHash = {
-  dreaming: Destinations.DreamingCity,
-  edz: Destinations.EDZ,
-  io: Destinations.IO,
-  mars: Destinations.Mars,
-  mercury: Destinations.Mercury,
-  moon: Destinations.Moon,
-  nessus: Destinations.Nessus,
-  tangled: Destinations.TangledShore,
-  titan: Destinations.Titan,
-};
-
-export const ghostTypeToActivityHash = {
-  crucible: DestinyActivityModeType.AllPvP,
-  gambit: DestinyActivityModeType.Gambit,
-  leviathan: DestinyActivityModeType.Raid,
-  strikes: DestinyActivityModeType.AllStrikes,
-};
 
 export const vendorsByActivityModeType = {
   [DestinyActivityModeType.Social]: [
@@ -71,7 +54,8 @@ export const vendorsByActivityModeType = {
 
 export const vendorsByDestinationHash = {
   [Destinations.DreamingCity]: [Vendors.Petra],
-  [Destinations.EDZ]: [Vendors.DevrimKay],
+  [Destinations.EDZ]: [Vendors.DevrimKay, Vendors.ShawHan],
+  [Destinations.Euopra]: [Vendors.Variks],
   [Destinations.IO]: [Vendors.AsherMir],
   [Destinations.Mars]: [Vendors.AnaBray],
   [Destinations.Mercury]: [Vendors.BrotherVance],
