@@ -1,5 +1,7 @@
 ## Next
 
+* Xur's location is now shown on his entry in the Vendors page.
+* The Raids section is back in Progress, and Garden of Salvation shows up in Milestones.
 * Search autocomplete suggests the `current` and `next` keywords for seasons.
 * Reworked mod handling to account for new legacy and combat mod slots. New searches include `holdsmod:chargedwithlight`, `holdsmod:warmindcell`, etc., and `modslot:legacy` and `modslot:combatstyle`.
 * Armor tiles now display the energy capacity of the armor.
@@ -12,6 +14,7 @@
 * Fixed the vendor icon for Variks.
 * Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
 * Deleting a loadout from the loadout drawer now closes the loadout drawer.
+* When Bungie.net is not returning live perk information, we won't show the default perks anymore.
 
 ### Beta Only
 
