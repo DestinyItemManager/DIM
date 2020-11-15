@@ -1,5 +1,6 @@
 import { XurLocation } from '@d2api/d2api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { VENDORS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
@@ -38,11 +39,19 @@ export function loadAllVendors(
       dispatch(getAllVendorDrops());
     }
 
-    dispatch(loadXurLocation());
-
     try {
       const vendorsResponse = await getVendorsApi(account, characterId);
       dispatch(loadedAll({ vendorsResponse, characterId }));
+
+      // If xur is a vendor, load their location
+      if (
+        vendorsResponse.vendors.data &&
+        Object.values(vendorsResponse.vendors.data).some((v) => v.vendorHash === VENDORS.XUR)
+      ) {
+        dispatch(loadXurLocation());
+      } else if (getState().vendors.xurLocation) {
+        dispatch(loadedXur(undefined)); // clear out xur
+      }
     } catch (error) {
       dispatch(loadedError({ characterId, error }));
     }
