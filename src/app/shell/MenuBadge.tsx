@@ -1,3 +1,4 @@
+import { GlobalAlertLevelsToToastLevels } from 'app/whats-new/BungieAlerts';
 import React from 'react';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import '../whats-new/WhatsNewLink.scss';
@@ -19,7 +20,13 @@ export default class MenuBadge extends WhatsNewLink {
     }
 
     if (alerts.length) {
-      return <span className={`badge-new bungie-alert-${alerts[0].type}`} />;
+      return (
+        <span
+          className={`badge-new bungie-alert-${
+            GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]
+          }`}
+        />
+      );
     }
 
     if (showChangelog) {

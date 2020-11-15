@@ -1,33 +1,13 @@
-import { bungieApiQuery } from './bungie-api-utils';
+import {
+  getGlobalAlerts as getGlobalAlertsApi,
+  GlobalAlert,
+} from 'bungie-api-ts/core';
 import { unauthenticatedHttpClient } from './bungie-service-helper';
-
-export interface GlobalAlert {
-  key: string;
-  type: string;
-  body: string;
-  timestamp: string;
-}
-
-// http://destinydevs.github.io/BungieNetPlatform/docs/Enums
-const GlobalAlertLevelsToToastLevels = [
-  'info', // Unknown
-  'info', // Blue
-  'warn', // Yellow
-  'error', // Red
-];
 
 /**
  * Get global alerts (like maintenance warnings) from Bungie.
  */
 export async function getGlobalAlerts(): Promise<GlobalAlert[]> {
-  const response = await unauthenticatedHttpClient(bungieApiQuery(`/Platform/GlobalAlerts/`));
-  if (response?.Response) {
-    return response.Response.map((alert) => ({
-      key: alert.AlertKey,
-      type: GlobalAlertLevelsToToastLevels[alert.AlertLevel],
-      body: alert.AlertHtml,
-      timestamp: alert.AlertTimestamp,
-    }));
-  }
-  return [];
+  const response = await getGlobalAlertsApi(unauthenticatedHttpClient, {});
+  return response.Response;
 }
