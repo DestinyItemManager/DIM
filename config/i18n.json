@@ -767,6 +767,7 @@
     "SetSort": "Sort items by:",
     "Settings": "Settings",
     "ShowNewItems": "Indicate new items with a red dot",
+    "ExpandSingleCharacter": "Show all characters",
     "SingleCharacter": "Only show current character",
     "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "Item size",

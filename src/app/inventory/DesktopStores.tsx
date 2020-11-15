@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import { setSetting } from 'app/settings/actions';
+import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
@@ -9,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import StoreHeading from '../character-tile/StoreHeading';
 import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
+import styles from './DesktopStores.m.scss';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
@@ -39,6 +41,8 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
     headerStores = [currentStore, vault];
   }
 
+  const toggleSingleCharacter = () => dispatch(setSetting('singleCharacter', !singleCharacter));
+
   return (
     <div
       className={clsx('inventory-content', `destiny${currentStore.destinyVersion}`, {
@@ -61,9 +65,15 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
         {stores.length > 2 && (
           <button
             type="button"
-            onClick={() => dispatch(setSetting('singleCharacter', !singleCharacter))}
+            className={styles.singleCharacterButton}
+            onClick={toggleSingleCharacter}
+            title={
+              singleCharacter
+                ? t('Settings.ExpandSingleCharacter')
+                : t('Settings.SingleCharacter') + ': ' + t('Settings.SingleCharacterExplanation')
+            }
           >
-            Toggle Single Character
+            <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
           </button>
         )}
       </HeaderShadowDiv>
