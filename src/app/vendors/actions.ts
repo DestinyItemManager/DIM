@@ -1,4 +1,4 @@
-import { XurLocation } from '@d2api/d2api-types';
+import { XurLocation, XurLocationResponse } from '@d2api/d2api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
@@ -69,7 +69,7 @@ function loadXurLocation(): ThunkResult {
   };
 }
 
-async function xurLocationFetch(): Promise<XurLocation> {
+async function xurLocationFetch(): Promise<XurLocationResponse> {
   const request = new Request('https://paracausal.science/xur/current.json', {
     method: 'GET',
     headers: {
