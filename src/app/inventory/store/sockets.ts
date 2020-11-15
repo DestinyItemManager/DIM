@@ -41,8 +41,6 @@ export function buildSockets(
   itemDef: DestinyInventoryItemDefinition
 ) {
   let sockets: DimSockets | null = null;
-  let missingSockets = false;
-
   const socketData =
     (item.itemInstanceId && itemComponents?.sockets?.data?.[item.itemInstanceId]?.sockets) ||
     undefined;
@@ -69,12 +67,12 @@ export function buildSockets(
   if (!sockets && itemDef.sockets) {
     // If this really *should* have live sockets, but didn't...
     if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
-      missingSockets = true;
+      return { sockets: null, missingSockets: true };
     }
     sockets = buildDefinedSockets(defs, itemDef);
   }
 
-  return { sockets, missingSockets };
+  return { sockets, missingSockets: false };
 }
 
 /**
