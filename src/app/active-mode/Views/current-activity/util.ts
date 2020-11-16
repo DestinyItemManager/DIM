@@ -3,8 +3,8 @@ import { DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 export const enum Destinations {
   Orbit = 82913930,
   DreamingCity = 2877881518,
-  EDZ = 3747705955,
-  Euopra = 1729879943,
+  Earth = 3747705955,
+  Europa = 1729879943,
   IO = 4251857532,
   Mars = 2426873752,
   Mercury = 1259908504,
@@ -54,8 +54,8 @@ export const vendorsByActivityModeType = {
 
 export const vendorsByDestinationHash = {
   [Destinations.DreamingCity]: [Vendors.Petra],
-  [Destinations.EDZ]: [Vendors.DevrimKay, Vendors.ShawHan],
-  [Destinations.Euopra]: [Vendors.Variks],
+  [Destinations.Earth]: [Vendors.DevrimKay, Vendors.ShawHan],
+  [Destinations.Europa]: [Vendors.Variks],
   [Destinations.IO]: [Vendors.AsherMir],
   [Destinations.Mars]: [Vendors.AnaBray],
   [Destinations.Mercury]: [Vendors.BrotherVance],
