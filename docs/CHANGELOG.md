@@ -1,5 +1,7 @@
 ## Next
 
+## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
+
 * Xur's location is now shown on his entry in the Vendors page.
 * The Raids section is back in Progress, and Garden of Salvation shows up in Milestones.
 * Search autocomplete suggests the `current` and `next` keywords for seasons.
