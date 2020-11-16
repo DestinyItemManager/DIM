@@ -17,6 +17,7 @@
 * Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
 * Deleting a loadout from the loadout drawer now closes the loadout drawer.
 * When Bungie.net is not returning live perk information, we won't show the default perks anymore.
+* Farming mode will no longer immediately kick out items you manually move onto your character.
 
 ### Beta Only
 
