@@ -21,6 +21,8 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
+  const seenRecords = new Set<number>();
+
   return (
     <>
       {node.collectibles && node.collectibles.length > 0 && (
@@ -36,15 +38,21 @@ export default function PresentationNodeLeaf({
       )}
       {node.records && node.records.length > 0 && (
         <div className="records">
-          {node.records.map((record) => (
-            <Record
-              key={record.recordDef.hash}
-              record={record}
-              defs={defs}
-              completedRecordsHidden={completedRecordsHidden}
-              redactedRecordsRevealed={redactedRecordsRevealed}
-            />
-          ))}
+          {node.records.map((record) => {
+            if (seenRecords.has(record.recordDef.hash)) {
+              return null;
+            }
+            seenRecords.add(record.recordDef.hash);
+            return (
+              <Record
+                key={record.recordDef.hash}
+                record={record}
+                defs={defs}
+                completedRecordsHidden={completedRecordsHidden}
+                redactedRecordsRevealed={redactedRecordsRevealed}
+              />
+            );
+          })}
         </div>
       )}
       {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} defs={defs} />}

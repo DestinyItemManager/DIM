@@ -2,6 +2,7 @@ import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
+import { loadCoreSettings } from 'app/manifest/actions';
 import store from 'app/store/store';
 import { infoLog } from 'app/utils/log';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/observers';
@@ -35,6 +36,7 @@ if ($featureFlags.vendorEngrams) {
 updateCSSVariables();
 
 store.dispatch(loadDimApiData());
+store.dispatch(loadCoreSettings());
 
 saveItemInfosOnStateChange();
 
