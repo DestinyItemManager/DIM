@@ -1,5 +1,9 @@
 ## Next
 
+* Farming mode will no longer immediately kick out items you manually move onto your character.
+* The Records page now includes all the Triumps and Collections info that are in the game.
+* Mods in the Loadout Optimizer can be searched by their description.
+
 ## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
 
 * Xur's location is now shown on his entry in the Vendors page.
@@ -17,7 +21,6 @@
 * Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
 * Deleting a loadout from the loadout drawer now closes the loadout drawer.
 * When Bungie.net is not returning live perk information, we won't show the default perks anymore.
-* Farming mode will no longer immediately kick out items you manually move onto your character.
 
 ### Beta Only
 
