@@ -3,6 +3,8 @@
 * Farming mode will no longer immediately kick out items you manually move onto your character.
 * The Records page now includes all the Triumps and Collections info that are in the game.
 * Mods in the Loadout Optimizer can be searched by their description.
+* Fixed Active Mode showing up in release version if you'd enabled it in Beta.
+* Fixed a crash when viewing Stasis subclasses.
 
 ## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
 
