@@ -1,5 +1,7 @@
 ## Next
 
+## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
+
 * Farming mode will no longer immediately kick out items you manually move onto your character.
 * The Records page now includes all the Triumps and Collections info that are in the game.
 * Mods in the Loadout Optimizer can be searched by their description.
