@@ -1,7 +1,7 @@
 .guide {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px 4px;
   margin: 8px 0;
 }
 

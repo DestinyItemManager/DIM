@@ -63,8 +63,8 @@ export default function Pursuits({
           pursuits[group] && (
             <section id={group} key={group}>
               <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={'pursuits-' + group}>
-                {$featureFlags.bountyGuide && group === 'Bounties' && (
-                  <BountyGuide store={store} defs={defs} />
+                {$featureFlags.bountyGuide && (
+                  <BountyGuide store={store} defs={defs} bounties={pursuits[group]} />
                 )}
                 <div className="progress-for-character">
                   {pursuits[group].sort(sortPursuits).map((item) => (

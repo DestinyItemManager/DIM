@@ -4,18 +4,38 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
-import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
+import grenade from 'destiny-icons/weapons/grenade.svg';
+import headshot from 'destiny-icons/weapons/headshot.svg';
+import melee from 'destiny-icons/weapons/melee.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './BountyGuide.m.scss';
+
+enum KillType {
+  Melee,
+  Super,
+  Grenade,
+  Finisher,
+  Precision,
+  ClassAbilities,
+}
+const killTypeIcons: { [key in KillType]: string | undefined } = {
+  [KillType.Melee]: melee,
+  [KillType.Super]: undefined,
+  [KillType.Grenade]: grenade,
+  [KillType.Finisher]: undefined,
+  [KillType.Precision]: headshot,
+  [KillType.ClassAbilities]: undefined,
+} as const;
+
+type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
 
 /**
  * This provides a little visual guide to what bounties you have - specifically, what weapons/activities/locations are required for your bounties.
@@ -24,28 +44,14 @@ import styles from './BountyGuide.m.scss';
  */
 export default function BountyGuide({
   store,
+  bounties,
   defs,
 }: {
   store: DimStore;
+  bounties: DimItem[];
   defs: D2ManifestDefinitions;
 }) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
-
-  // We only care about bounties - longer-term quests are filtered out.
-  const bounties = findItemsByBucket(store, BucketHashes.Quests).filter((item) => {
-    const itemDef = defs.InventoryItem.get(item.hash);
-    if (
-      item.itemCategoryHashes.includes(ItemCategoryHashes.QuestStep) ||
-      itemDef?.objectives?.questlineItemHash
-    ) {
-      return false;
-    }
-    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
-      return false;
-    }
-
-    return true;
-  });
 
   const pullItemCategory = async (itemCategory: number) => {
     try {
@@ -62,13 +68,12 @@ export default function BountyGuide({
     } catch (e) {}
   };
 
-  type DefType = 'ActivityMode' | 'Place' | 'DamageType' | 'ItemCategory';
-
   const mapped: { [type in DefType]: { [key: number]: DimItem[] } } = {
     ActivityMode: {},
-    Place: {},
+    Destination: {},
     DamageType: {},
     ItemCategory: {},
+    KillType: {},
   };
   for (const i of bounties) {
     const info = pursuitsInfo[i.hash];
@@ -94,7 +99,7 @@ export default function BountyGuide({
 
   flattened.sort(
     chainComparator(
-      compareBy((f) => f.type),
+      // compareBy((f) => f.type),
       reverseComparator(compareBy((f) => f.bounties.length))
     )
   );
@@ -121,13 +126,16 @@ export default function BountyGuide({
                     {defs.ActivityMode[value].displayProperties.name}
                   </>
                 );
-              case 'Place':
+              case 'Destination':
                 return (
                   <>
-                    {defs.Place.get(value).displayProperties.hasIcon && (
-                      <BungieImage height="16" src={defs.Place.get(value).displayProperties.icon} />
+                    {defs.Destination.get(value).displayProperties.hasIcon && (
+                      <BungieImage
+                        height="16"
+                        src={defs.Destination.get(value).displayProperties.icon}
+                      />
                     )}
-                    {defs.Place.get(value)?.displayProperties.name}
+                    {defs.Destination.get(value)?.displayProperties.name}
                   </>
                 );
               case 'DamageType':
@@ -153,6 +161,19 @@ export default function BountyGuide({
                       />
                     )}
                     {defs.ItemCategory.get(value)?.displayProperties.name}
+                  </>
+                );
+              case 'KillType':
+                return (
+                  <>
+                    {killTypeIcons[value] && (
+                      <img
+                        className={styles.itemCategoryIcon}
+                        height="16"
+                        src={killTypeIcons[value]}
+                      />
+                    )}
+                    {KillType[value]}
                   </>
                 );
             }
