@@ -41,7 +41,6 @@ let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator<LockedArmor2Mod>(
-  compareBy((l) => (l.season ? -l.season : 0)),
   compareBy((l) => l.modDef.plug.energyCost?.energyType),
   compareBy((l) => l.modDef.plug.energyCost?.energyCost),
   compareBy((l) => l.modDef.displayProperties.name)
@@ -136,7 +135,7 @@ function mapStateToProps() {
               undefined;
 
             if (category) {
-              transformedMods.push({ modDef: def, category, season: undefined });
+              transformedMods.push({ modDef: def, category });
             }
           }
         }
@@ -242,7 +241,7 @@ function ModPicker({
           (mod) =>
             regexp.test(mod.modDef.displayProperties.name) ||
             regexp.test(mod.modDef.displayProperties.description) ||
-            (mod.season && regexp.test(mod.season.toString())) ||
+            regexp.test(mod.modDef.itemTypeDisplayName) ||
             regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
             mod.modDef.perks.some((perk) => {
               const perkDef = defs.SandboxPerk.get(perk.perkHash);

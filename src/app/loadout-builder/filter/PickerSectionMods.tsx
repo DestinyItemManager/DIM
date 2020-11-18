@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { t } from 'app/i18next-t';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -77,7 +76,7 @@ export default function PickerSectionMods({
   };
 
   const modGroups = splitBySeason
-    ? _.groupBy(mods, (mod) => t('LoadoutBuilder.SeasonNum', { season: mod.season }))
+    ? _.groupBy(mods, (mod) => mod.modDef.itemTypeDisplayName)
     : { nogroup: mods };
 
   return (

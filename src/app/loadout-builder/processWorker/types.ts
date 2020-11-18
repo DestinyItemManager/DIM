@@ -39,7 +39,6 @@ export interface ProcessItem {
   basePower: number;
   stats: { [statHash: number]: number };
   baseStats: { [statHash: number]: number };
-  season?: number;
   compatibleModSeasons?: string[];
 }
 
@@ -82,8 +81,6 @@ export interface ProcessMod {
     val: number;
   };
   investmentStats: ProcessStat[];
-  /** This should only be available in seasonal mods */
-  season?: number;
   /** This should only be available in seasonal mods */
   tag?: string;
 }

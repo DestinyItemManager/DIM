@@ -7,7 +7,6 @@ interface SortParam {
     type: DestinyEnergyType;
     val: number;
   } | null;
-  season?: number;
 }
 
 export interface ProcessItemSubset extends SortParam {
@@ -17,43 +16,18 @@ export interface ProcessItemSubset extends SortParam {
 
 /**
  * This sorts process mods and items in the same manner as we try for greedy results.
- *
- * The first block with both seasons present is for seasonal mods and items.
- * The second block is for general mods.
- * After that is the cases for safety but they shouldn't happen.
- *
- * Some of this could be pulled into a common function but I have left it verbose for
- * performance.
  */
 export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
-  if (a.season && b.season) {
-    if (a.season === b.season) {
-      if (a.energy && b.energy) {
-        if (a.energy.type === b.energy.type) {
-          return b.energy.val - a.energy.val;
-        } else {
-          return b.energy.type - a.energy.type;
-        }
-      }
+  if (a.energy && b.energy) {
+    if (a.energy.type === b.energy.type) {
+      return b.energy.val - a.energy.val;
     } else {
-      return b.season - a.season;
+      return b.energy.type - a.energy.type;
     }
-  } else if (!a.season && !b.season) {
-    if (a.energy && b.energy) {
-      if (a.energy.type === b.energy.type) {
-        return b.energy.val - a.energy.val;
-      } else {
-        return b.energy.type - a.energy.type;
-      }
-    } else if (!a.energy) {
-      return 1;
-    }
-
-    return -1;
-    // I don't think the following cases will every happen but I have included them just incase.
-  } else if (a.season === undefined) {
+  } else if (!a.energy) {
     return 1;
   }
+
   return -1;
 }
 
