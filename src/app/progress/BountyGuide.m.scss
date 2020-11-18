@@ -2,13 +2,13 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0;
+  margin: 8px 0;
 }
 
 .pill {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  background: black;
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 2px 8px;
   color: white;
@@ -20,4 +20,16 @@
 
 .itemCategoryIcon {
   filter: invert(1);
+}
+
+.count {
+  opacity: 0.5;
+  margin-left: 0.3em;
+}
+
+.clickable {
+  cursor: pointer;
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
