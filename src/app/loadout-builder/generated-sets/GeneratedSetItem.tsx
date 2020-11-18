@@ -89,13 +89,12 @@ export default function GeneratedSetItem({
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
-    category?: ModPickerCategory,
-    season?: number
+    category?: ModPickerCategory
   ) => {
     if (category) {
       const initialQuery =
-        category === ModPickerCategories.seasonal
-          ? season?.toString()
+        category === ModPickerCategories.other
+          ? plugDef.itemTypeDisplayName
           : t(armor2ModPlugCategoriesTitles[category]);
       lbDispatch({ type: 'openModPicker', initialQuery });
     } else {

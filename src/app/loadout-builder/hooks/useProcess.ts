@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
@@ -213,12 +214,14 @@ function groupItems(
 
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
-    if (lockedArmor2ModMap.seasonal.length) {
-      groupId += `${undefined}`;
+    if (lockedArmor2ModMap.other.length) {
+      groupId += `${getSpecialtySocketMetadatas(item)
+        ?.map((metadata) => metadata.slotTag)
+        .join(',')}`;
     }
 
     if (
-      someModHasEnergyRequirement(lockedArmor2ModMap.seasonal) ||
+      someModHasEnergyRequirement(lockedArmor2ModMap.other) ||
       someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
     ) {
       groupId += `${item.energy?.energyType}`;

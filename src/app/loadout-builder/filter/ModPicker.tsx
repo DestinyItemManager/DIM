@@ -131,7 +131,7 @@ function mapStateToProps() {
             );
             const category =
               (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
-              (metadata && ModPickerCategories.seasonal) ||
+              (metadata && ModPickerCategories.other) ||
               undefined;
 
             if (category) {
@@ -264,7 +264,7 @@ function ModPicker({
       [ModPickerCategories.chest]: [],
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.seasonal]: [],
+      [ModPickerCategories.other]: [],
     };
 
     for (const mod of queryFilteredMods) {
@@ -275,7 +275,7 @@ function ModPicker({
   }, [queryFilteredMods]);
 
   const isGeneralOrSeasonal = (category: ModPickerCategory) =>
-    category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
+    category === ModPickerCategories.general || category === ModPickerCategories.other;
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
@@ -314,7 +314,7 @@ function ModPicker({
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
-          splitBySeason={category === ModPickerCategories.seasonal}
+          splitBySeason={category === ModPickerCategories.other}
           maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
           energyMustMatch={!isGeneralOrSeasonal(category)}
           onModSelected={onModSelected}

@@ -37,7 +37,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     investmentStats: mod.modDef.investmentStats,
   };
 
-  if (mod.category === 'seasonal') {
+  if (mod.category === 'other') {
     const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
     return {
       ...processMod,

@@ -56,7 +56,8 @@ export type LockedMap = Readonly<{
 
 export const ModPickerCategories = {
   ...armor2PlugCategoryHashesByName,
-  seasonal: 'seasonal',
+  /** This encompases any other mod that doesn't fall in the other categories, raid, combat, legacy, ect. */
+  other: 'other',
 } as const;
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
@@ -71,7 +72,7 @@ export function isModPickerCategory(value: unknown): value is ModPickerCategory 
     value === ModPickerCategories.chest ||
     value === ModPickerCategories.leg ||
     value === ModPickerCategories.classitem ||
-    value === ModPickerCategories.seasonal
+    value === ModPickerCategories.other
   );
 }
 

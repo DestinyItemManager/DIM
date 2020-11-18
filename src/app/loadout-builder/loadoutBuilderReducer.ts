@@ -76,7 +76,7 @@ const lbStateInit = ({
       [ModPickerCategories.chest]: [],
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.seasonal]: [],
+      [ModPickerCategories.other]: [],
     },
     minimumPower: 750,
     selectedStoreId: selectedStoreId,

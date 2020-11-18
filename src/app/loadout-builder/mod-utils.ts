@@ -89,14 +89,11 @@ export function assignModsToArmorSet(
     }
   }
 
-  if (
-    lockedArmor2Mods.seasonal.length ||
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length
-  ) {
+  if (lockedArmor2Mods.other || lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
     assignAllGenrealAndSeasonalMods(
       processItems,
       lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-      lockedArmor2Mods.seasonal,
+      lockedArmor2Mods.other,
       assignments
     );
   }

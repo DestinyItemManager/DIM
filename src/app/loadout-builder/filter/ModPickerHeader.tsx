@@ -4,7 +4,7 @@ import React, { ChangeEvent } from 'react';
 import styles from './ModPickerHeader.m.scss';
 
 interface Props {
-  categoryOrder?: { category: number | 'seasonal'; translatedName: string }[];
+  categoryOrder?: { category: number | 'other'; translatedName: string }[];
   isPhonePortrait: boolean;
   query: string;
   onSearchChange(event: ChangeEvent<HTMLInputElement>): void;

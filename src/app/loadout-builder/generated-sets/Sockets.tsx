@@ -74,7 +74,7 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
       const metadata = getSpecialtySocketMetadataByPlugCategoryHash(toSave.plug.plugCategoryHash);
       const category =
         (isModPickerCategory(toSave.plug.plugCategoryHash) && toSave.plug.plugCategoryHash) ||
-        (metadata && ModPickerCategories.seasonal) ||
+        (metadata && ModPickerCategories.other) ||
         undefined;
 
       modsAndPerks.push({ plugDef: toSave, category, season: undefined });

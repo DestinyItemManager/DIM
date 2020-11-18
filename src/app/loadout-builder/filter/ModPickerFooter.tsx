@@ -8,7 +8,7 @@ import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  categoryOrder: { category: number | 'seasonal'; translatedName: string }[];
+  categoryOrder: { category: number | 'other'; translatedName: string }[];
   isPhonePortrait: boolean;
   lockedArmor2Mods: LockedArmor2ModMap;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;

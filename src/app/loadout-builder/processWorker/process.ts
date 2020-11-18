@@ -180,7 +180,7 @@ export function process(
   const generalModsPermutations = generateModPermutations(
     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
   );
-  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
+  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.other);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -260,7 +260,7 @@ export function process(
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
                 //seasonal only
-                (lockedArmor2ModMap.seasonal.length ||
+                (lockedArmor2ModMap.other.length ||
                   lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
                 !canTakeGeneralAndSeasonalMods(
                   generalModsPermutations,
