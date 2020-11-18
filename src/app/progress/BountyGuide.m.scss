@@ -1,0 +1,23 @@
+.guide {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.pill {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  background: black;
+  border-radius: 10px;
+  padding: 2px 8px;
+  color: white;
+
+  img {
+    margin-right: 4px;
+  }
+}
+
+.itemCategoryIcon {
+  filter: invert(1);
+}

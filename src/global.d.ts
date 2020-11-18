@@ -44,6 +44,8 @@ declare const $featureFlags: {
   awa: boolean;
   /** Incorporate mods directly into loadouts */
   loadoutMods: boolean;
+  /** Show bounty guide */
+  bountyGuide: boolean;
 };
 
 declare namespace React {
