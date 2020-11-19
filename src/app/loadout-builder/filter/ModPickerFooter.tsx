@@ -2,13 +2,13 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedArmor2Mod, LockedArmor2ModMap } from '../types';
+import { LockedArmor2Mod, LockedArmor2ModMap, ModPickerCategory } from '../types';
 import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  categoryOrder: { category: number | 'other'; translatedName: string }[];
+  categoryOrder: { category: ModPickerCategory; translatedName: string }[];
   isPhonePortrait: boolean;
   lockedArmor2Mods: LockedArmor2ModMap;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;

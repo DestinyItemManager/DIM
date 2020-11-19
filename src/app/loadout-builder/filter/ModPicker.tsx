@@ -30,6 +30,7 @@ import {
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
+  raidPlugs,
 } from '../types';
 import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
@@ -126,12 +127,11 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const metadata = getSpecialtySocketMetadataByPlugCategoryHash(
-              def.plug.plugCategoryHash
-            );
             const category =
               (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
-              (metadata && ModPickerCategories.other) ||
+              (raidPlugs.includes(def.plug.plugCategoryHash) && ModPickerCategories.raid) ||
+              (getSpecialtySocketMetadataByPlugCategoryHash(def.plug.plugCategoryHash) &&
+                ModPickerCategories.other) ||
               undefined;
 
             if (category) {
@@ -265,6 +265,7 @@ function ModPicker({
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
       [ModPickerCategories.other]: [],
+      [ModPickerCategories.raid]: [],
     };
 
     for (const mod of queryFilteredMods) {
@@ -314,7 +315,9 @@ function ModPicker({
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
-          splitBySeason={category === ModPickerCategories.other}
+          splitByItemTypeDisplayName={
+            category === ModPickerCategories.other || category === ModPickerCategories.raid
+          }
           maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
           energyMustMatch={!isGeneralOrSeasonal(category)}
           onModSelected={onModSelected}

@@ -327,4 +327,5 @@ export const armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.leg]: tl('LB.Legs'),
   [ModPickerCategories.classitem]: tl('LB.ClassItem'),
   [ModPickerCategories.other]: tl('LB.Other'),
+  [ModPickerCategories.raid]: tl('LB.Raid'),
 };

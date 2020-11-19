@@ -123,6 +123,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 export function canTakeGeneralAndSeasonalMods(
   generalModPermutations: (ProcessMod | null)[][],
   seasonalModPermutations: (ProcessMod | null)[][],
+  raidModPermutations: (ProcessMod | null)[][],
   items: ProcessItemSubset[],
   assignments?: Record<string, number[]>
 ) {
@@ -168,9 +169,11 @@ export function canTakeGeneralAndSeasonalMods(
         break;
       }
     }
+
     if (!seasonalsFit) {
       continue;
     }
+
     for (const generalP of generalModPermutations) {
       let generalsFit = true;
       for (let i = 0; i < sortedItems.length; i++) {
@@ -188,21 +191,48 @@ export function canTakeGeneralAndSeasonalMods(
           break;
         }
       }
-      if (generalsFit) {
-        if (assignments) {
-          for (let i = 0; i < sortedItems.length; i++) {
-            const generalMod = generalP[i];
-            const seasonalMod = seasonalP[i];
-            if (generalMod) {
-              assignments[sortedItems[i].id].push(generalMod.hash);
+
+      for (const raidP of raidModPermutations) {
+        let raidsFit = true;
+        for (let i = 0; i < sortedItems.length; i++) {
+          const item = sortedItems[i];
+          const raidTag = raidP[i]?.tag;
+          const generalEnergy = generalP[i]?.energy || defaultModEnergy;
+          const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+          const raidEnergy = raidP[i]?.energy || defaultModEnergy;
+          raidsFit &&= Boolean(
+            item.energy &&
+              item.energy.val + generalEnergy.val + seasonalEnergy.val + raidEnergy.val <=
+                MAX_ARMOR_ENERGY_CAPACITY &&
+              (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any) &&
+              (!raidP[i] || (raidTag && item.compatibleModSeasons?.includes(raidTag)))
+          );
+
+          if (!raidsFit) {
+            break;
+          }
+
+          if (raidsFit && generalsFit && seasonalsFit) {
+            if (assignments) {
+              for (let i = 0; i < sortedItems.length; i++) {
+                const generalMod = generalP[i];
+                const seasonalMod = seasonalP[i];
+                const raidMod = raidP[i];
+                if (generalMod) {
+                  assignments[sortedItems[i].id].push(generalMod.hash);
+                }
+                if (seasonalMod) {
+                  assignments[sortedItems[i].id].push(seasonalMod.hash);
+                }
+                if (raidMod) {
+                  assignments[sortedItems[i].id].push(raidMod.hash);
+                }
+              }
             }
-            if (seasonalMod) {
-              assignments[sortedItems[i].id].push(seasonalMod.hash);
-            }
+
+            return true;
           }
         }
-
-        return true;
       }
     }
   }

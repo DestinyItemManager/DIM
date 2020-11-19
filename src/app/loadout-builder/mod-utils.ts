@@ -46,22 +46,26 @@ function assignModsForSlot(
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
-function assignAllGenrealAndSeasonalMods(
+function assignAllMods(
   setToMatch: ProcessItem[],
   generalMods: LockedArmor2Mod[],
   seasonalMods: readonly LockedArmor2Mod[],
+  raidMods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
   const seasonalProcessMods = seasonalMods.map(mapArmor2ModToProcessMod);
+  const raidProcessMods = raidMods.map(mapArmor2ModToProcessMod);
 
   const generalModPermutations = generateModPermutations(generalProcessMods);
   const seasonalModPermutations = generateModPermutations(seasonalProcessMods);
+  const raidModPermutations = generateModPermutations(raidProcessMods);
 
   canTakeGeneralAndSeasonalMods(
     generalModPermutations,
     seasonalModPermutations,
+    raidModPermutations,
     setToMatch,
     assignments
   );
@@ -90,10 +94,11 @@ export function assignModsToArmorSet(
   }
 
   if (lockedArmor2Mods.other || lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
-    assignAllGenrealAndSeasonalMods(
+    assignAllMods(
       processItems,
       lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
       lockedArmor2Mods.other,
+      lockedArmor2Mods.raid,
       assignments
     );
   }

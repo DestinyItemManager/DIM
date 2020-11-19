@@ -15,7 +15,7 @@ export default function PickerSectionMods({
   category,
   maximumSelectable,
   energyMustMatch,
-  splitBySeason,
+  splitByItemTypeDisplayName,
   onModSelected,
   onModRemoved,
 }: {
@@ -26,7 +26,7 @@ export default function PickerSectionMods({
   category: ModPickerCategory;
   maximumSelectable: number;
   energyMustMatch?: boolean;
-  splitBySeason: boolean;
+  splitByItemTypeDisplayName: boolean;
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
@@ -75,7 +75,7 @@ export default function PickerSectionMods({
     return false;
   };
 
-  const modGroups = splitBySeason
+  const modGroups = splitByItemTypeDisplayName
     ? _.groupBy(mods, (mod) => mod.modDef.itemTypeDisplayName)
     : { nogroup: mods };
 

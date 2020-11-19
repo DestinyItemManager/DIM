@@ -77,6 +77,7 @@ const lbStateInit = ({
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
       [ModPickerCategories.other]: [],
+      [ModPickerCategories.raid]: [],
     },
     minimumPower: 750,
     selectedStoreId: selectedStoreId,

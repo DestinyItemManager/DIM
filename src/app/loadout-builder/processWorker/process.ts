@@ -182,6 +182,8 @@ export function process(
   );
   const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.other);
 
+  const raidModPermutations = generateModPermutations(lockedArmor2ModMap.raid);
+
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       for (const chest of chests) {
@@ -265,6 +267,7 @@ export function process(
                 !canTakeGeneralAndSeasonalMods(
                   generalModsPermutations,
                   seasonalModPermutations,
+                  raidModPermutations,
                   armor
                 )
               ) {
