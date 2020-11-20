@@ -1,10 +1,9 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
 import styles from './LockButton.m.scss';
@@ -18,7 +17,7 @@ interface Props {
 
 export default function LockButton({ type, item, className, children }: Props) {
   const [locking, setLocking] = useState(false);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   const lockUnlock = async () => {
     if (locking) {

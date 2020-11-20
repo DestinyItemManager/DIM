@@ -6,7 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import Cost from 'app/vendors/Cost';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -14,7 +14,6 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './EnergyMeter.m.scss';
 
@@ -42,7 +41,7 @@ export default function EnergyMeter({
   const [hoverEnergyCapacity, setHoverEnergyCapacity] = useState(0);
   const [previewCapacity, setPreviewCapacity] = useState<number>(energyCapacity);
   const [previewEnergyType, setPreviewEnergyType] = useState<DestinyEnergyType>(energyType);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   if (!item.energy) {
     return null;

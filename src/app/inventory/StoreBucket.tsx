@@ -3,7 +3,8 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -12,7 +13,7 @@ import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import { addIcon, AppIcon } from '../shell/icons';
@@ -109,7 +110,7 @@ function StoreBucket({
   characterOrder,
   isPhonePortrait,
 }: Props) {
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   const pickEquipItem = useCallback(() => {
     dispatch(pullItem(storeId, bucket));

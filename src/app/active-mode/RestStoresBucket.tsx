@@ -2,10 +2,11 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import StoreBucketDropTarget from 'app/inventory/StoreBucketDropTarget';
 import StoreInventoryItem from 'app/inventory/StoreInventoryItem';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useMemo } from 'react';
-import { connect, MapStateToProps, useDispatch } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
@@ -45,7 +46,7 @@ type Props = ProvidedProps & StoreProps;
 
 /** a `StoreBucket` for items not on the currently selected store */
 function RestStoresBucket({ restItems, bucket, itemSortOrder }: Props) {
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
   const items = useMemo(() => sortItems(restItems, itemSortOrder), [restItems, itemSortOrder]);
 
   if (!bucket.hasTransferDestination) {
