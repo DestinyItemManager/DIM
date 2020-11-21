@@ -12,6 +12,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
+import { combatPlugCategoryHashes } from 'app/search/specialty-modslots';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
@@ -51,6 +52,7 @@ interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
   initialQuery?: string;
+  filterLegacy?: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -166,6 +168,7 @@ function ModPicker({
   isPhonePortrait,
   lockedArmor2Mods,
   initialQuery,
+  filterLegacy,
   lbDispatch,
   onClose,
 }: Props) {
@@ -239,22 +242,27 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.modDef.displayProperties.name) ||
-            regexp.test(mod.modDef.displayProperties.description) ||
-            regexp.test(mod.modDef.itemTypeDisplayName) ||
-            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
-            mod.modDef.perks.some((perk) => {
-              const perkDef = defs.SandboxPerk.get(perk.perkHash);
-              return (
-                perkDef &&
-                (regexp.test(perkDef.displayProperties.name) ||
-                  regexp.test(perkDef.displayProperties.description) ||
-                  regexp.test(perk.requirementDisplayString))
-              );
-            })
+            // TODO I am not thrilled about this filter legacy thing but it will stop
+            // legacy mods being shown when you click on a combat mod socket. Lets aim to
+            // get proper search in here at some point.
+            (!filterLegacy ||
+              combatPlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
+            (regexp.test(mod.modDef.displayProperties.name) ||
+              regexp.test(mod.modDef.displayProperties.description) ||
+              regexp.test(mod.modDef.itemTypeDisplayName) ||
+              regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
+              mod.modDef.perks.some((perk) => {
+                const perkDef = defs.SandboxPerk.get(perk.perkHash);
+                return (
+                  perkDef &&
+                  (regexp.test(perkDef.displayProperties.name) ||
+                    regexp.test(perkDef.displayProperties.description) ||
+                    regexp.test(perk.requirementDisplayString))
+                );
+              }))
         )
       : mods;
-  }, [language, query, mods, defs.SandboxPerk]);
+  }, [language, query, mods, defs.SandboxPerk, filterLegacy]);
 
   const modsByCategory = useMemo(() => {
     const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {

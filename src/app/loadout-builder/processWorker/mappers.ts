@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
-import {
-  getSpecialtySocketMetadataByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
-} from '../../utils/item-utils';
+import { modTypeTagByPlugCategoryHash } from '../../search/specialty-modslots';
+import { getSpecialtySocketMetadatas } from '../../utils/item-utils';
 import {
   ArmorSet,
   LockedArmor2Mod,
@@ -37,11 +35,10 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     investmentStats: mod.modDef.investmentStats,
   };
 
-  if (mod.category === 'other') {
-    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
+  if (mod.category === 'other' || mod.category === 'raid') {
     return {
       ...processMod,
-      tag: metadata?.slotTag,
+      tag: modTypeTagByPlugCategoryHash[mod.modDef.plug.plugCategoryHash],
     };
   }
 
@@ -127,6 +124,7 @@ export function mapDimItemToProcessItem(
           }
         : null,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
+    hasLegacyModSocket: Boolean(modMetadatas?.some((m) => m.slotTag === 'legacy')),
   };
 }
 

@@ -32,6 +32,9 @@ const legacyCompatiblePlugCategoryHashes = [
   65589297, // fallen/forge
 ];
 
+/** The plugs that will fit in combat sockets */
+export const combatPlugCategoryHashes = [208760563, 393461403, 426869514, 443647229, 991069377];
+
 const legacySocketTypeHashes = [
   3873071636, // forge
   1936582325, // dawn
@@ -87,7 +90,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'combatstyle',
     compatibleModTags: ['chargedwithlight', 'warmindcell'],
     socketTypeHashes: [2955889001],
-    compatiblePlugCategoryHashes: [208760563, 393461403, 426869514, 443647229, 991069377],
+    compatiblePlugCategoryHashes: combatPlugCategoryHashes,
     emptyModSocketHashes: [2493100093],
     emptyModSocketHash: 2493100093,
   },

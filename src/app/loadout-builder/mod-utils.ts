@@ -3,10 +3,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
-import {
-  canTakeGeneralAndSeasonalMods,
-  generateModPermutations,
-} from './processWorker/processUtils';
+import { canTakeAllMods, generateModPermutations } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
   bucketsToCategories,
@@ -62,7 +59,7 @@ function assignAllMods(
   const seasonalModPermutations = generateModPermutations(seasonalProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
-  canTakeGeneralAndSeasonalMods(
+  canTakeAllMods(
     generalModPermutations,
     seasonalModPermutations,
     raidModPermutations,

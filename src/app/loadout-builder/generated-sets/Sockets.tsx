@@ -33,11 +33,7 @@ interface Props {
   item: DimItem;
   lockedMods?: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
-  onSocketClick?(
-    plugDef: PluggableInventoryItemDefinition,
-    category?: ModPickerCategory,
-    season?: number
-  ): void;
+  onSocketClick?(plugDef: PluggableInventoryItemDefinition, category?: ModPickerCategory): void;
 }
 
 function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
@@ -77,20 +73,20 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
         (metadata && ModPickerCategories.other) ||
         undefined;
 
-      modsAndPerks.push({ plugDef: toSave, category, season: undefined });
+      modsAndPerks.push({ plugDef: toSave, category });
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map(({ plugDef, category, season }, index) => (
+        {modsAndPerks.map(({ plugDef, category }, index) => (
           <Mod
             key={index}
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category, season) : undefined}
+            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category) : undefined}
           />
         ))}
       </div>

@@ -4,7 +4,7 @@ import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2
 import { infoLog } from '../../utils/log';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import { canTakeGeneralAndSeasonalMods, generateModPermutations } from './processUtils';
+import { canTakeAllMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
@@ -263,8 +263,9 @@ export function process(
               if (
                 //seasonal only
                 (lockedArmor2ModMap.other.length ||
+                  lockedArmor2ModMap.raid.length ||
                   lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
-                !canTakeGeneralAndSeasonalMods(
+                !canTakeAllMods(
                   generalModsPermutations,
                   seasonalModPermutations,
                   raidModPermutations,
