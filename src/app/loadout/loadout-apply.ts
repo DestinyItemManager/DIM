@@ -269,6 +269,10 @@ function applyLoadoutItems(
 
     try {
       if (item) {
+        // We mark this *first*, because otherwise things observing state (like farming) may not see this
+        // in time.
+        updateManualMoveTimestamp(item);
+
         if (item.maxStackSize > 1) {
           // handle consumables!
           const amountAlreadyHave = amountOfItem(store, pseudoItem);
@@ -312,11 +316,8 @@ function applyLoadoutItems(
           // Pass in the list of items that shouldn't be moved away
           await dispatch(moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds));
         }
-      }
 
-      if (item) {
         scope.successfulItems.push(item);
-        updateManualMoveTimestamp(item);
       }
     } catch (e) {
       const level = e.level || 'error';

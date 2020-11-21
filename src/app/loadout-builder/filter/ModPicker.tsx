@@ -243,10 +243,19 @@ function ModPicker({
             regexp.test(mod.modDef.displayProperties.name) ||
             regexp.test(mod.modDef.displayProperties.description) ||
             (mod.season && regexp.test(mod.season.toString())) ||
-            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
+            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
+            mod.modDef.perks.some((perk) => {
+              const perkDef = defs.SandboxPerk.get(perk.perkHash);
+              return (
+                perkDef &&
+                (regexp.test(perkDef.displayProperties.name) ||
+                  regexp.test(perkDef.displayProperties.description) ||
+                  regexp.test(perk.requirementDisplayString))
+              );
+            })
         )
       : mods;
-  }, [language, query, mods]);
+  }, [language, query, mods, defs.SandboxPerk]);
 
   const modsByCategory = useMemo(() => {
     const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {

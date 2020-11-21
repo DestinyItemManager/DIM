@@ -164,6 +164,10 @@ export function moveItemTo(
         );
       }
 
+      // We mark this *first*, because otherwise things observing state (like farming) may not see this
+      // in time.
+      updateManualMoveTimestamp(item);
+
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(dispatch(moveTo(item, store, equip, moveAmount)))
       );
@@ -176,8 +180,6 @@ export function moveItemTo(
         // Refresh light levels and such
         dispatch(updateCharacters());
       }
-
-      updateManualMoveTimestamp(item);
     } catch (e) {
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting

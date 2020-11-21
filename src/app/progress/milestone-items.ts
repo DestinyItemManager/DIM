@@ -50,6 +50,15 @@ export function milestoneToItems(
           milestoneRewardDef
         )
       );
+  } else {
+    const item = makeMilestonePursuitItem(
+      buckets,
+      milestone,
+      milestoneDef,
+      milestoneDef.displayProperties,
+      []
+    );
+    return item ? [item] : [];
   }
 
   return [];
@@ -158,7 +167,7 @@ function weeklyClanMilestoneToItems(
 ): DimItem {
   const reward = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
-  const displayProperties = {
+  const displayProperties: DestinyDisplayPropertiesDefinition = {
     ...milestoneDef.displayProperties,
     ...reward.displayProperties,
   };

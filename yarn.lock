@@ -985,6 +985,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@d2api/d2api-types@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@d2api/d2api-types/-/d2api-types-1.0.2.tgz#ea90395bfdcd8cb233361573ba1f554b8d398e5d"
+  integrity sha512-DR/vjANiI4UYf6Cy8hz+Xb0s5hE6c2I6OXsjx5DRBSJSETDevGxQk2LZjSt5b/yJcfvoaBoJowN3oEP4tlmXnw==
+
 "@destinyitemmanager/dim-api-types@^1.0.0":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.7.1.tgz#5d5cecaa042b48f3d59e81a8812229b467cf3d66"
@@ -2964,10 +2969,10 @@ builtin-modules@^3.1.0:
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.1.0.tgz#aad97c15131eb76b65b50ef208e7584cd76a7484"
   integrity sha512-k0KL0aWZuBt2lrxrcASWDfwOLMnodeQjodT/1SxEQAXsHANgo6ZC/VEaSEHCXt7aSTZ4/4H5LKa+tBXmW7Vtvw==
 
-bungie-api-ts@^4.2.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.4.0.tgz#6426ebef2cee98cf41e375c4ab47d73252d7010e"
-  integrity sha512-skHA1QnNaogWfkFU2cyjI7rktTCDCaBRx2boaqUBYypFoqksTamLs6CXutvXTPAz8dvAOv1cB1f47z7bJmoV7Q==
+bungie-api-ts@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.5.0.tgz#ee13ae74a250a54096985bd61fb90ff363ec2dce"
+  integrity sha512-n7q7yFr6Vt+jmquwNhK5khf56hny3AaOzJTv4RYQ8REl1jjBv3MBOQXOCVnU2VsshqZI6RQT8ZRA4A10/K5HHA==
 
 bytes@3.0.0:
   version "3.0.0"

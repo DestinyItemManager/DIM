@@ -13,22 +13,26 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
+import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
+import { bucketsSelector } from './selectors';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
 };
 
-// TODO: we need an interface for presenting non-reusable plugs like mods and shaders
 // TODO: owner can't be "vault" I bet
 export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
     const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
 
-    // TODO: if the plug costs resources to insert, add a confirmation
+    // TODO: Catch errors and show a notification?
 
-    await insertSocketPlug(authenticatedHttpClient, {
+    // TODO: if the plug costs resources to insert, add a confirmation. This'd
+    // be a great place for a dialog component?
+
+    const response = await insertSocketPlug(authenticatedHttpClient, {
       actionToken,
       itemInstanceId: item.id,
       plug: {
@@ -40,7 +44,14 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       membershipType: account.originalPlatformType,
     });
 
-    // TODO: need to update the item after modifying, and signal that it has changed (Redux?)
+    // Update items that changed
+    dispatch(
+      awaItemChanged({
+        changes: response.Response,
+        defs: getState().manifest.d2Manifest!,
+        buckets: bucketsSelector(getState())!,
+      })
+    );
   };
 }
 
@@ -59,6 +70,7 @@ export async function getAwaToken(
 ): Promise<string> {
   if (!awaCache) {
     // load from cache first time
+    // TODO: maybe put this in Redux!
     awaCache = (await get('awa-tokens')) || {};
   }
 
@@ -72,6 +84,7 @@ export async function getAwaToken(
         body: t('AWA.ConfirmDescription'),
       });
 
+      // TODO: Do we need to cache a token per item?
       info = awaCache[action] = {
         ...(await requestAdvancedWriteActionToken(account, action, item)),
         used: 0,
@@ -86,6 +99,8 @@ export async function getAwaToken(
       */
     } catch (e) {
       throw new Error('Unable to get a token: ' + e.message);
+
+      // TODO: handle userSelection, responseReason (TimedOut, Replaced)
     }
 
     if (!info || !tokenValid(info)) {

@@ -105,15 +105,16 @@ export default function PresentationNodeRoot({
       {buckets &&
         showPlugSets &&
         plugSetCollections.map((plugSetCollection) => (
-          <PlugSet
-            key={plugSetCollection.hash}
-            defs={defs}
-            buckets={buckets}
-            plugSetCollection={plugSetCollection}
-            items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}
-            path={fullNodePath}
-            onNodePathSelected={setNodePath}
-          />
+          <div key={plugSetCollection.hash} className="presentation-node">
+            <PlugSet
+              defs={defs}
+              buckets={buckets}
+              plugSetCollection={plugSetCollection}
+              items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}
+              path={fullNodePath}
+              onNodePathSelected={setNodePath}
+            />
+          </div>
         ))}
     </div>
   );

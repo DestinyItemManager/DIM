@@ -21,6 +21,7 @@ type Props = ProvidedProps;
 
 export default function ItemSockets(props: Props) {
   const item = props.item;
+
   if (item.destinyVersion === 2 && item.bucket.inWeapons) {
     return <ItemSocketsWeapons {...props} />;
   }

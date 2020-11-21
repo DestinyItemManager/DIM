@@ -253,6 +253,7 @@ function SocketDetails({
       plug={selectedPlug}
       defs={defs}
       item={item}
+      socket={socket}
       currentPlug={socket.plugged}
     />
   );
