@@ -1,5 +1,7 @@
 ## Next
 
+* Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
+
 ## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
 
 * Farming mode will no longer immediately kick out items you manually move onto your character.
