@@ -38,10 +38,6 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // process its data here and export it to thing that needs it
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
-const modMetadataByPlugCategoryHash = objectifyArray(
-  modSocketMetadata,
-  'compatiblePlugCategoryHashes'
-);
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
@@ -76,15 +72,6 @@ export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] 
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
     .filter(Boolean);
-
-/**
- * returns ModMetadata if the plugCategoryHash (from a mod definition's .plug) is known
- *
- * if you use this you can only trust the returned season, tag, and emptyModSocketHash
- */
-export const getSpecialtySocketMetadataByPlugCategoryHash = (
-  plugCategoryHash: number
-): ModSocketMetadata | undefined => modMetadataByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes

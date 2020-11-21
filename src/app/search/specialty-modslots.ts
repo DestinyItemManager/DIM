@@ -21,7 +21,7 @@ const legacyCompatibleTags = [
   'lastwish',
 ];
 
-const legacyCompatiblePlugCategoryHashes = [
+export const legacyCompatiblePlugCategoryHashes = [
   1081029832, // nightmare
   13646368, // taken/lw
   1486918022, // garden
@@ -33,7 +33,13 @@ const legacyCompatiblePlugCategoryHashes = [
 ];
 
 /** The plugs that will fit in combat sockets */
-export const combatPlugCategoryHashes = [208760563, 393461403, 426869514, 443647229, 991069377];
+export const combatCompatiblePlugCategoryHashes = [
+  208760563,
+  393461403,
+  426869514,
+  443647229,
+  991069377,
+];
 
 const legacySocketTypeHashes = [
   3873071636, // forge
@@ -90,7 +96,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'combatstyle',
     compatibleModTags: ['chargedwithlight', 'warmindcell'],
     socketTypeHashes: [2955889001],
-    compatiblePlugCategoryHashes: combatPlugCategoryHashes,
+    compatiblePlugCategoryHashes: combatCompatiblePlugCategoryHashes,
     emptyModSocketHashes: [2493100093],
     emptyModSocketHash: 2493100093,
   },

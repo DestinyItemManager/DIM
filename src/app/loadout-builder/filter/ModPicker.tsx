@@ -12,10 +12,13 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { combatPlugCategoryHashes } from 'app/search/specialty-modslots';
+import {
+  combatCompatiblePlugCategoryHashes,
+  modTypeTagByPlugCategoryHash,
+} from 'app/search/specialty-modslots';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import _ from 'lodash';
@@ -132,7 +135,7 @@ function mapStateToProps() {
             const category =
               (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
               (raidPlugs.includes(def.plug.plugCategoryHash) && ModPickerCategories.raid) ||
-              (getSpecialtySocketMetadataByPlugCategoryHash(def.plug.plugCategoryHash) &&
+              (modTypeTagByPlugCategoryHash[def.plug.plugCategoryHash] &&
                 ModPickerCategories.other) ||
               undefined;
 
@@ -246,7 +249,7 @@ function ModPicker({
             // legacy mods being shown when you click on a combat mod socket. Lets aim to
             // get proper search in here at some point.
             (!filterLegacy ||
-              combatPlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
+              combatCompatiblePlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
             (regexp.test(mod.modDef.displayProperties.name) ||
               regexp.test(mod.modDef.displayProperties.description) ||
               regexp.test(mod.modDef.itemTypeDisplayName) ||

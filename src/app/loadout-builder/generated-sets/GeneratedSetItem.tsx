@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
-import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import React, { Dispatch, useMemo } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
@@ -89,11 +89,12 @@ export default function GeneratedSetItem({
     if (category) {
       // TODO this will currently show legacy mods if you click a combat
       const initialQuery = t(armor2ModPlugCategoriesTitles[category]);
-      const metadata = getSpecialtySocketMetadataByPlugCategoryHash(plugDef.plug.plugCategoryHash);
       lbDispatch({
         type: 'openModPicker',
         initialQuery,
-        filterLegacy: category === 'other' && metadata?.slotTag === 'combatstyle',
+        filterLegacy:
+          category === 'other' &&
+          combatCompatiblePlugCategoryHashes.includes(plugDef.plug.plugCategoryHash),
       });
     } else {
       lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
