@@ -47,11 +47,8 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
 
 /**
  * This sums up the total stat contributions across mods passed in. These are then applied
- * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
+ * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
- *
- * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
- * just for the seasonal mods.
  */
 export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
   const totals: { [stat in StatTypes]: number } = {

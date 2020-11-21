@@ -82,7 +82,7 @@ function insertIntoSetTracker(
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
- * @param modStatTotals Stats that are applied to final stat totals, think general and seasonal mod stats
+ * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
@@ -180,7 +180,7 @@ export function process(
   const generalModsPermutations = generateModPermutations(
     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
   );
-  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.other);
+  const otherModPermutations = generateModPermutations(lockedArmor2ModMap.other);
 
   const raidModPermutations = generateModPermutations(lockedArmor2ModMap.raid);
 
@@ -261,13 +261,12 @@ export function process(
 
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                //seasonal only
                 (lockedArmor2ModMap.other.length ||
                   lockedArmor2ModMap.raid.length ||
                   lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
                 !canTakeAllMods(
                   generalModsPermutations,
-                  seasonalModPermutations,
+                  otherModPermutations,
                   raidModPermutations,
                   armor
                 )

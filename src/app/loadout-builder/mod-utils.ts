@@ -39,29 +39,29 @@ function assignModsForSlot(
 }
 
 /**
- * Checks to see if the passed in general and seasonal mods can be assigned to the armour set.
+ * Checks to see if the passed in general and other mods can be assigned to the armour set.
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
 function assignAllMods(
   setToMatch: ProcessItem[],
   generalMods: LockedArmor2Mod[],
-  seasonalMods: readonly LockedArmor2Mod[],
+  otherMods: readonly LockedArmor2Mod[],
   raidMods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
-  const seasonalProcessMods = seasonalMods.map(mapArmor2ModToProcessMod);
+  const otherProcessMods = otherMods.map(mapArmor2ModToProcessMod);
   const raidProcessMods = raidMods.map(mapArmor2ModToProcessMod);
 
   const generalModPermutations = generateModPermutations(generalProcessMods);
-  const seasonalModPermutations = generateModPermutations(seasonalProcessMods);
+  const otherModPermutations = generateModPermutations(otherProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
   canTakeAllMods(
     generalModPermutations,
-    seasonalModPermutations,
+    otherModPermutations,
     raidModPermutations,
     setToMatch,
     assignments

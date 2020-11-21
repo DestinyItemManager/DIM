@@ -113,16 +113,16 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 }
 
 /**
- * This figures out if all general and seasonal mods can be assigned to an armour set.
+ * This figures out if all general, other and raid mods can be assigned to an armour set.
  *
- * The params generalModPermutations and seasonalModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of seasonal or general mods.
+ * The params generalModPermutations, otherModPermutations, raidModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or raid mods.
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */
 export function canTakeAllMods(
   generalModPermutations: (ProcessMod | null)[][],
-  seasonalModPermutations: (ProcessMod | null)[][],
+  otherModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
   items: ProcessItem[],
   assignments?: Record<string, number[]>
@@ -132,7 +132,7 @@ export function canTakeAllMods(
 
   const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
-    seasonalModPermutations[0]
+    otherModPermutations[0]
   );
   const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
@@ -151,26 +151,25 @@ export function canTakeAllMods(
 
   const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
-  for (const seasonalP of seasonalModPermutations) {
-    let seasonalsFit = true;
+  for (const otherP of otherModPermutations) {
+    let othersFit = true;
     for (let i = 0; i < sortedItems.length; i++) {
       const item = sortedItems[i];
-      const seasonTag = seasonalP[i]?.tag;
-      const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
-      seasonalsFit &&= Boolean(
+      const tag = otherP[i]?.tag;
+      const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+      othersFit &&= Boolean(
         item.energy &&
-          item.energy.val + (seasonalEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
-          (item.energy.type === seasonalEnergy.type ||
-            seasonalEnergy.type === DestinyEnergyType.Any) &&
-          (!seasonalP[i] || (seasonTag && item.compatibleModSeasons?.includes(seasonTag)))
+          item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
+          (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any) &&
+          (!otherP[i] || (tag && item.compatibleModSeasons?.includes(tag)))
       );
 
-      if (!seasonalsFit) {
+      if (!othersFit) {
         break;
       }
     }
 
-    if (!seasonalsFit) {
+    if (!othersFit) {
       continue;
     }
 
@@ -179,10 +178,10 @@ export function canTakeAllMods(
       for (let i = 0; i < sortedItems.length; i++) {
         const item = sortedItems[i];
         const generalEnergy = generalP[i]?.energy || defaultModEnergy;
-        const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+        const otherEnergy = otherP[i]?.energy || defaultModEnergy;
         generalsFit &&= Boolean(
           item.energy &&
-            item.energy.val + generalEnergy.val + seasonalEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+            item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any)
         );
@@ -198,15 +197,15 @@ export function canTakeAllMods(
           const item = sortedItems[i];
           const raidTag = raidP[i]?.tag;
           const generalEnergy = generalP[i]?.energy || defaultModEnergy;
-          const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+          const otherEnergy = otherP[i]?.energy || defaultModEnergy;
           const raidEnergy = raidP[i]?.energy || defaultModEnergy;
           raidsFit &&= Boolean(
             item.energy &&
-              item.energy.val + generalEnergy.val + seasonalEnergy.val + raidEnergy.val <=
+              item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
                 MAX_ARMOR_ENERGY_CAPACITY &&
               (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any) &&
               (!raidP[i] ||
-                ((!item.hasLegacyModSocket || !seasonalP[i]) &&
+                ((!item.hasLegacyModSocket || !otherP[i]) &&
                   raidTag &&
                   item.compatibleModSeasons?.includes(raidTag)))
           );
@@ -216,17 +215,17 @@ export function canTakeAllMods(
           break;
         }
 
-        if (raidsFit && generalsFit && seasonalsFit) {
+        if (raidsFit && generalsFit && othersFit) {
           if (assignments) {
             for (let i = 0; i < sortedItems.length; i++) {
               const generalMod = generalP[i];
-              const seasonalMod = seasonalP[i];
+              const otherMod = otherP[i];
               const raidMod = raidP[i];
               if (generalMod) {
                 assignments[sortedItems[i].id].push(generalMod.hash);
               }
-              if (seasonalMod) {
-                assignments[sortedItems[i].id].push(seasonalMod.hash);
+              if (otherMod) {
+                assignments[sortedItems[i].id].push(otherMod.hash);
               }
               if (raidMod) {
                 assignments[sortedItems[i].id].push(raidMod.hash);

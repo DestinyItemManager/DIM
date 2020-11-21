@@ -189,10 +189,10 @@ function createWorker() {
 }
 
 /**
- * This groups items for process depending on whether any general or seasonal mods are locked as follows
- * - If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energyType).
+ * This groups items for process depending on whether any general, other or raid mods are locked as follows
+ * - If there are general, other or raid mods locked it groups items by (stats, masterworked, modSlot, energyType).
  * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
- * - If no general or seasonal mods are locked it groups by (stats, masterworked).
+ * - If no general, other or raid mods are locked it groups by (stats, masterworked).
  *
  * Note that assumedMasterwork effects this.
  */

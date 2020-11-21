@@ -50,7 +50,7 @@ export interface LockedExclude {
 
 export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
 
-/** A map from bucketHash or seasonal to the list of locked and excluded perks, items, and burns. */
+/** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;

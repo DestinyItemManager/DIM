@@ -82,7 +82,7 @@ export interface ProcessMod {
     val: number;
   };
   investmentStats: ProcessStat[];
-  /** This should only be available in seasonal mods */
+  /** This should only be available in legacy, combat and raid mods */
   tag?: string;
 }
 

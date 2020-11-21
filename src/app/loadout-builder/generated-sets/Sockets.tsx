@@ -26,7 +26,6 @@ const undesireablePlugs = [
 interface PlugAndCategory {
   plugDef: PluggableInventoryItemDefinition;
   category?: ModPickerCategory;
-  season?: number;
 }
 
 interface Props {
