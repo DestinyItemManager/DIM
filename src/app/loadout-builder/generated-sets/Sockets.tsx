@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -71,10 +71,10 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      const metadata = getSpecialtySocketMetadataByPlugCategoryHash(toSave.plug.plugCategoryHash);
+      const modTypeTag = getModTypeTagByPlugCategoryHash(toSave.plug.plugCategoryHash);
       const category =
         (isModPickerCategory(toSave.plug.plugCategoryHash) && toSave.plug.plugCategoryHash) ||
-        (metadata && ModPickerCategories.seasonal) ||
+        (modTypeTag && ModPickerCategories.seasonal) ||
         undefined;
 
       modsAndPerks.push({ plugDef: toSave, category, season: undefined });

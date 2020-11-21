@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
-  getSpecialtySocketMetadataByPlugCategoryHash,
+  getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import {
@@ -38,11 +38,11 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   };
 
   if (mod.category === 'seasonal') {
-    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
+    const modTypeTag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
     return {
       ...processMod,
       season: undefined,
-      tag: metadata?.slotTag,
+      tag: modTypeTag,
     };
   }
 

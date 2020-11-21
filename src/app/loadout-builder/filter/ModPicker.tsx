@@ -14,7 +14,7 @@ import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
+import { getModTypeTagByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import _ from 'lodash';
@@ -127,12 +127,10 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const metadata = getSpecialtySocketMetadataByPlugCategoryHash(
-              def.plug.plugCategoryHash
-            );
+            const modTypeTag = getModTypeTagByPlugCategoryHash(def.plug.plugCategoryHash);
             const category =
               (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
-              (metadata && ModPickerCategories.seasonal) ||
+              (modTypeTag && ModPickerCategories.seasonal) ||
               undefined;
 
             if (category) {
