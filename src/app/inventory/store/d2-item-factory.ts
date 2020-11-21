@@ -611,8 +611,6 @@ function buildPursuitInfo(
         itemDef.inventory!.suppressExpirationWhenObjectivesComplete
       ),
       expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
-      places: [],
-      activityTypes: [],
       modifierHashes: [],
     };
   }
@@ -620,8 +618,6 @@ function buildPursuitInfo(
   if (rewards.length) {
     createdItem.pursuit = {
       suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
       modifierHashes: [],
       ...createdItem.pursuit,
       rewards,

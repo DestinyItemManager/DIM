@@ -105,14 +105,37 @@ function availableQuestToItem(
     objectives
   );
 
-  if (questRewards) {
+  if (questRewards?.length) {
     dimItem.pursuit = {
       expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
       suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
       modifierHashes: availableQuest?.activity?.modifierHashes || [],
       rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 })),
+    };
+  } else if (questDef.questItemHash) {
+    const questItem = defs.InventoryItem.get(questDef.questItemHash);
+    if (questItem.value.itemValue.length) {
+      dimItem.pursuit = {
+        expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+        suppressExpirationWhenObjectivesComplete: false,
+        modifierHashes: availableQuest?.activity?.modifierHashes || [],
+        rewards: questItem.value.itemValue
+          .filter((v) => v.itemHash !== 0)
+          .map((v) => ({ itemHash: v.itemHash, quantity: v.quantity || 1 })),
+      };
+    }
+  } else if (milestone.rewards) {
+    const rewards = milestone.rewards.flatMap((reward) =>
+      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
+        (entry) => entry.items
+      )
+    );
+
+    dimItem.pursuit = {
+      expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+      suppressExpirationWhenObjectivesComplete: false,
+      modifierHashes: milestone.activities[0].modifierHashes || [],
+      rewards,
     };
   }
 
@@ -147,8 +170,6 @@ function activityMilestoneToItem(
     dimItem.pursuit = {
       expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
       suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
       modifierHashes: milestone.activities[0].modifierHashes || [],
       rewards,
     };
@@ -182,8 +203,6 @@ function weeklyClanMilestoneToItems(
   dimItem.pursuit = {
     suppressExpirationWhenObjectivesComplete: false,
     expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-    places: [],
-    activityTypes: [],
     modifierHashes: [],
     rewards: reward.items,
   };
@@ -289,6 +308,21 @@ function makeMilestonePursuitItem(
         return 0;
       }
     });
+  }
+
+  if (milestone.rewards) {
+    const rewards = milestone.rewards.flatMap((reward) =>
+      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
+        (entry) => entry.items
+      )
+    );
+
+    dimItem.pursuit = {
+      expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+      suppressExpirationWhenObjectivesComplete: false,
+      modifierHashes: milestone.activities[0].modifierHashes || [],
+      rewards,
+    };
   }
 
   return dimItem;
