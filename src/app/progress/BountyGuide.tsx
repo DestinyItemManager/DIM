@@ -76,12 +76,14 @@ export default function BountyGuide({
     KillType: {},
   };
   for (const i of bounties) {
-    const info = pursuitsInfo[i.hash];
-    if (info) {
-      for (const key in info) {
-        for (const value of info[key]) {
-          mapped[key][value] ||= [];
-          mapped[key][value].push(i);
+    if (!i.complete) {
+      const info = pursuitsInfo[i.hash];
+      if (info) {
+        for (const key in info) {
+          for (const value of info[key]) {
+            mapped[key][value] ||= [];
+            mapped[key][value].push(i);
+          }
         }
       }
     }
@@ -96,6 +98,10 @@ export default function BountyGuide({
       bounties,
     }))
   );
+
+  if (flattened.length === 0) {
+    return null;
+  }
 
   flattened.sort(
     chainComparator(
