@@ -1,6 +1,7 @@
 ## Next
 
 * Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
+* Stop showing extra +3 stats on masterwork weapons. The fix for this means that Adept weapons may not show that bonus when they are released.
 
 ## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
 

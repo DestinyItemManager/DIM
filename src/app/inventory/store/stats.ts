@@ -317,7 +317,13 @@ function enhanceStatsWithPlugs(
       for (const perkStat of socket.plugged.plugDef.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = statsByHash[statHash];
-        const value = perkStat.value || 0;
+        // TODO: we should check the final computed stat against the result including and not including
+        // conditinally active stats, and only include them if it lines up. There's not a way to figure
+        // out if the conditions are met otherwise.
+        if (perkStat.isConditionallyActive) {
+          continue;
+        }
+        const value = perkStat.value;
         if (itemStat) {
           itemStat.investmentValue += value;
         } else if (shouldShowStat(itemDef, statHash, statDisplays)) {
@@ -375,7 +381,13 @@ function buildPlugStats(
   } = {};
 
   for (const perkStat of plug.plugDef.investmentStats) {
-    let value = perkStat.value || 0;
+    // TODO: we should check the final computed stat against the result including and not including
+    // conditinally active stats, and only include them if it lines up. There's not a way to figure
+    // out if the conditions are met otherwise.
+    if (perkStat.isConditionallyActive) {
+      continue;
+    }
+    let value = perkStat.value;
     const itemStat = statsByHash[perkStat.statTypeHash];
     const statDisplay = statDisplays[perkStat.statTypeHash];
     if (itemStat && statDisplay) {
