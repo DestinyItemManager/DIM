@@ -32,7 +32,11 @@ function dragType(props: ExternalProps): string {
   if ($featureFlags.mobileInspect && props.isPhonePortrait) {
     return mobileDragType;
   }
-  return item.notransfer ? `${item.owner}-${item.bucket.type}` : item.bucket.type!;
+  return item.location.inPostmaster
+    ? 'postmaster'
+    : item.notransfer
+    ? `${item.owner}-${item.bucket.type}`
+    : item.bucket.type!;
 }
 
 export interface DragObject {

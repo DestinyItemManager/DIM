@@ -12,10 +12,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import {
-  combatCompatiblePlugCategoryHashes,
-  modTypeTagByPlugCategoryHash,
-} from 'app/search/specialty-modslots';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -29,14 +26,16 @@ import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
-  isModPickerCategory,
   LockedArmor2Mod,
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
-  raidPlugs,
 } from '../types';
-import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
+import {
+  armor2ModPlugCategoriesTitles,
+  getModPickerCategoryFromPlugCategoryHash,
+  isLoadoutBuilderItem,
+} from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
@@ -132,12 +131,7 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const category =
-              (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
-              (raidPlugs.includes(def.plug.plugCategoryHash) && ModPickerCategories.raid) ||
-              (modTypeTagByPlugCategoryHash[def.plug.plugCategoryHash] &&
-                ModPickerCategories.other) ||
-              undefined;
+            const category = getModPickerCategoryFromPlugCategoryHash(def.plug.plugCategoryHash);
 
             if (category) {
               transformedMods.push({ modDef: def, category });

@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
-import { modTypeTagByPlugCategoryHash } from '../../search/specialty-modslots';
-import { getSpecialtySocketMetadatas } from '../../utils/item-utils';
+import {
+  getModTypeTagByPlugCategoryHash,
+  getSpecialtySocketMetadatas,
+} from '../../utils/item-utils';
 import {
   ArmorSet,
   LockedArmor2Mod,
@@ -26,7 +28,7 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 }
 
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
-  const processMod = {
+  const processMod: ProcessMod = {
     hash: mod.modDef.hash,
     energy: mod.modDef.plug.energyCost && {
       type: mod.modDef.plug.energyCost.energyType,
@@ -36,10 +38,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   };
 
   if (mod.category === 'other' || mod.category === 'raid') {
-    return {
-      ...processMod,
-      tag: modTypeTagByPlugCategoryHash[mod.modDef.plug.plugCategoryHash],
-    };
+    processMod.tag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
   }
 
   return processMod;

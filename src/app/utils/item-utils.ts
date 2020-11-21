@@ -17,7 +17,10 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import modSocketMetadata, { ModSocketMetadata } from 'app/search/specialty-modslots';
+import modSocketMetadata, {
+  ModSocketMetadata,
+  modTypeTagByPlugCategoryHash,
+} from 'app/search/specialty-modslots';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import _ from 'lodash';
@@ -72,6 +75,12 @@ export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] 
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
     .filter(Boolean);
+
+/**
+ * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
+ */
+export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
+  modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes

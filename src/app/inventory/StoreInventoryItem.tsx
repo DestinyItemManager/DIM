@@ -1,8 +1,7 @@
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { CompareService } from '../compare/compare.service';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
@@ -19,7 +18,7 @@ interface Props {
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
 export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   const doubleClicked = (e: React.MouseEvent) => {
     if (!loadoutDialogOpen && !CompareService.dialogOpen) {
