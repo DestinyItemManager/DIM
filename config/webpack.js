@@ -24,7 +24,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:fullhash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[md5:hash:6].[ext]';
 
 const packageJson = require('../package.json');
 
@@ -62,8 +62,8 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
+      filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
     },
 
     // Dev server
@@ -182,9 +182,7 @@ module.exports = (env) => {
               options: {
                 modules: {
                   localIdentName:
-                    env.dev || env.beta
-                      ? '[name]_[local]-[fullhash:base64:5]'
-                      : '[fullhash:base64:5]',
+                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 sourceMap: true,
@@ -288,8 +286,8 @@ module.exports = (env) => {
       new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: env.dev ? '[name]-[fullhash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: env.dev ? '[name]-[fullhash].css' : '[id]-[contenthash:6].css',
+        filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css',
       }),
 
       new HtmlWebpackPlugin({
