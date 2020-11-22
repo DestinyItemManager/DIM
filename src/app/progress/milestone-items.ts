@@ -73,6 +73,9 @@ function availableQuestToItem(
   characterClass: DestinyClass
 ): DimItem {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
+  const questItem = defs.InventoryItem.get(questDef.questItemHash);
+  const challengeItemHash = questItem.setData?.itemList[0].itemHash;
+  const challengeItem = challengeItemHash ? defs.InventoryItem.get(challengeItemHash) : undefined;
   const displayProperties: DestinyDisplayPropertiesDefinition =
     questDef.displayProperties || milestoneDef.displayProperties;
 
@@ -104,6 +107,8 @@ function availableQuestToItem(
     displayProperties,
     objectives
   );
+
+  dimItem.secondaryIcon = challengeItem?.secondaryIcon;
 
   dimItem.pursuit = {
     expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
@@ -223,7 +228,7 @@ function makeFakePursuitItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: 'Milestone',
     itemCategoryHashes: [], // see defs.ItemCategory
-    tier: 'Common',
+    tier: 'Rare',
     isExotic: false,
     isVendorItem: false,
     name: displayProperties.name,

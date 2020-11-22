@@ -46,6 +46,7 @@ export default function ItemPopupHeader({
     <div
       className={clsx('item-header', `is-${item.tier}`, {
         masterwork: item.masterwork,
+        pursuit: item.pursuit,
       })}
     >
       <div className="item-title-container">
