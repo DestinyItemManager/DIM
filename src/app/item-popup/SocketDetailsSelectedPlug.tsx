@@ -69,14 +69,20 @@ export default function SocketDetailsSelectedPlug({
 
       const currentModValue = currentPlug?.stats?.[stat.statTypeHash] || 0;
 
-      const updatedInvestmentValue = itemStat.investmentValue + stat.value - currentModValue;
-      let itemStatValue = updatedInvestmentValue;
+      // TODO: we should check the final computed stat against the result including and not including
+      // conditinally active stats, and only include them if it lines up. There's not a way to figure
+      // out if the conditions are met otherwise.
+      if (stat.isConditionallyActive) {
+        return null;
+      }
       let modValue = stat.value;
+      const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
+      let itemStatValue = updatedInvestmentValue;
 
       if (statDisplay) {
         itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
         modValue =
-          itemStatValue - interpolateStatValue(updatedInvestmentValue - stat.value, statDisplay);
+          itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
       }
 
       return {

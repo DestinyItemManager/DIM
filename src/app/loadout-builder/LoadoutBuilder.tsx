@@ -315,6 +315,7 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
+              filterLegacy={modPicker.filterLegacy}
               lbDispatch={lbDispatch}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,

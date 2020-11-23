@@ -1,6 +1,13 @@
 ## Next
 
+* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a weapon type to pull a weapon matching that type.
+
+## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
+
+* Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.
 * Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
+* Stop showing extra +3 stats on masterwork weapons. The fix for this means that Adept weapons may not show that bonus when they are released.
+* Progress page now shows more Milestones/Challenges, shows rewards for all of them, includes vendor pictures where available, and gives a hint as to what power pinnacle/powerful engrams can drop at.
 
 ## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
 

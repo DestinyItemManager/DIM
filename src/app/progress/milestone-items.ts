@@ -32,7 +32,7 @@ export function milestoneToItems(
       availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
     );
   } else if (milestone.activities?.length) {
-    const item = activityMilestoneToItem(buckets, milestoneDef, milestone);
+    const item = activityMilestoneToItem(buckets, milestoneDef, milestone, defs);
     return item ? [item] : [];
   } else if (milestone.rewards) {
     // Weekly Clan Milestones
@@ -73,6 +73,9 @@ function availableQuestToItem(
   characterClass: DestinyClass
 ): DimItem {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
+  const questItem = defs.InventoryItem.get(questDef.questItemHash);
+  const challengeItemHash = questItem.setData?.itemList[0].itemHash;
+  const challengeItem = challengeItemHash ? defs.InventoryItem.get(challengeItemHash) : undefined;
   const displayProperties: DestinyDisplayPropertiesDefinition =
     questDef.displayProperties || milestoneDef.displayProperties;
 
@@ -105,15 +108,32 @@ function availableQuestToItem(
     objectives
   );
 
-  if (questRewards) {
-    dimItem.pursuit = {
-      expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-      suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
-      modifierHashes: availableQuest?.activity?.modifierHashes || [],
-      rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 })),
-    };
+  dimItem.secondaryIcon = challengeItem?.secondaryIcon;
+
+  dimItem.pursuit = {
+    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+    suppressExpirationWhenObjectivesComplete: false,
+    modifierHashes: availableQuest?.activity?.modifierHashes || [],
+    rewards: [],
+  };
+
+  if (questRewards?.length) {
+    dimItem.pursuit.rewards = questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 }));
+  } else if (questDef.questItemHash) {
+    const questItem = defs.InventoryItem.get(questDef.questItemHash);
+    if (questItem?.value?.itemValue.length) {
+      dimItem.pursuit.rewards = questItem.value.itemValue
+        .filter((v) => v.itemHash !== 0)
+        .map((v) => ({ itemHash: v.itemHash, quantity: v.quantity || 1 }));
+    }
+  } else if (milestone.rewards) {
+    const rewards = milestone.rewards.flatMap((reward) =>
+      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
+        (entry) => entry.items
+      )
+    );
+
+    dimItem.pursuit.rewards = rewards;
   }
 
   return dimItem;
@@ -122,7 +142,8 @@ function availableQuestToItem(
 function activityMilestoneToItem(
   buckets: InventoryBuckets,
   milestoneDef: DestinyMilestoneDefinition,
-  milestone: DestinyMilestone
+  milestone: DestinyMilestone,
+  defs: D2ManifestDefinitions
 ): DimItem | null {
   const objectives = milestone.activities[0].challenges.map((a) => a.objective);
   if (objectives.every((objective) => objective.complete)) {
@@ -137,6 +158,12 @@ function activityMilestoneToItem(
     objectives
   );
 
+  dimItem.pursuit = {
+    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+    suppressExpirationWhenObjectivesComplete: false,
+    modifierHashes: milestone.activities[0].modifierHashes || [],
+    rewards: [],
+  };
   if (milestone.rewards) {
     const rewards = milestone.rewards.flatMap((reward) =>
       Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
@@ -144,14 +171,12 @@ function activityMilestoneToItem(
       )
     );
 
-    dimItem.pursuit = {
-      expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-      suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
-      modifierHashes: milestone.activities[0].modifierHashes || [],
-      rewards,
-    };
+    dimItem.pursuit.rewards = rewards;
+  } else {
+    const activity = defs.Activity.get(milestone.activities[0].activityHash);
+    if (activity) {
+      dimItem.pursuit.rewards = activity.challenges.flatMap((c) => c.dummyRewards);
+    }
   }
 
   return dimItem;
@@ -182,8 +207,6 @@ function weeklyClanMilestoneToItems(
   dimItem.pursuit = {
     suppressExpirationWhenObjectivesComplete: false,
     expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-    places: [],
-    activityTypes: [],
     modifierHashes: [],
     rewards: reward.items,
   };
@@ -208,7 +231,7 @@ function makeFakePursuitItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: 'Milestone',
     itemCategoryHashes: [], // see defs.ItemCategory
-    tier: 'Common',
+    tier: 'Rare',
     isExotic: false,
     isVendorItem: false,
     name: displayProperties.name,
@@ -289,6 +312,23 @@ function makeMilestonePursuitItem(
         return 0;
       }
     });
+  }
+
+  dimItem.pursuit = {
+    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+    suppressExpirationWhenObjectivesComplete: false,
+    modifierHashes: milestone.activities?.[0]?.modifierHashes || [],
+    rewards: [],
+  };
+
+  if (milestone.rewards) {
+    const rewards = milestone.rewards.flatMap((reward) =>
+      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
+        (entry) => entry.items
+      )
+    );
+
+    dimItem.pursuit.rewards = rewards;
   }
 
   return dimItem;

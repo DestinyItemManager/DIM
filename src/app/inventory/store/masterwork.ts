@@ -68,6 +68,9 @@ function buildMasterworkInfo(
   const stats: DimMasterwork['stats'] = [];
 
   for (const stat of investmentStats) {
+    if (stat.isConditionallyActive) {
+      continue;
+    }
     if (!createdItem.element && createdItem.bucket?.sort === 'Armor') {
       createdItem.element =
         Object.values(defs.DamageType).find(

@@ -4,7 +4,7 @@ import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2
 import { infoLog } from '../../utils/log';
 import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
-import { canTakeGeneralAndSeasonalMods, generateModPermutations } from './processUtils';
+import { canTakeAllMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
@@ -82,7 +82,7 @@ function insertIntoSetTracker(
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
- * @param modStatTotals Stats that are applied to final stat totals, think general and seasonal mod stats
+ * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
@@ -180,7 +180,9 @@ export function process(
   const generalModsPermutations = generateModPermutations(
     lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
   );
-  const seasonalModPermutations = generateModPermutations(lockedArmor2ModMap.seasonal);
+  const otherModPermutations = generateModPermutations(lockedArmor2ModMap.other);
+
+  const raidModPermutations = generateModPermutations(lockedArmor2ModMap.raid);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -259,12 +261,13 @@ export function process(
 
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                //seasonal only
-                (lockedArmor2ModMap.seasonal.length ||
+                (lockedArmor2ModMap.other.length ||
+                  lockedArmor2ModMap.raid.length ||
                   lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
-                !canTakeGeneralAndSeasonalMods(
+                !canTakeAllMods(
                   generalModsPermutations,
-                  seasonalModPermutations,
+                  otherModPermutations,
+                  raidModPermutations,
                   armor
                 )
               ) {

@@ -389,6 +389,8 @@ module.exports = (env) => {
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Incorporate mods directly into loadouts
         '$featureFlags.loadoutMods': JSON.stringify(env.dev),
+        // Show bounty guide
+        '$featureFlags.bountyGuide': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({
