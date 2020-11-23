@@ -16,6 +16,10 @@
   justify-content: flex-end;
   line-height: calc(#{$badge-height});
   overflow: hidden;
+
+  span {
+    max-width: 100%;
+  }
 }
 
 .wishlistRoll {
