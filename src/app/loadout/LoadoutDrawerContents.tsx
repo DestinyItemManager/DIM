@@ -76,6 +76,7 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
+    removeModByIndex,
   }: {
     loadout: Loadout;
     buckets: InventoryBuckets;
@@ -87,6 +88,7 @@ export default function LoadoutDrawerContents(
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent): void;
     onOpenModPicker(): void;
+    removeModByIndex(index: number): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -123,6 +125,9 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
+          <a onClick={onOpenModPicker} className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {'Mods'}
+          </a>
         </div>
       )}
       <div className="loadout-added-items">
@@ -144,6 +149,7 @@ export default function LoadoutDrawerContents(
           defs={defs}
           modHashes={loadout.parameters?.mods}
           onOpenModPicker={onOpenModPicker}
+          removeModByIndex={removeModByIndex}
         />
       )}
     </>

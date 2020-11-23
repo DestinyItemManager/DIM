@@ -501,6 +501,17 @@ function LoadoutDrawer({
     stateDispatch({ type: 'update', loadout: newLoadout });
   };
 
+  const removeModByIndex = (index: number) => {
+    const newLoadout = { ...loadout };
+    const newMods = Array.from(loadout.parameters?.mods || []);
+    newMods.splice(index, 1);
+    newLoadout.parameters = {
+      ...newLoadout.parameters,
+      mods: newMods,
+    };
+    stateDispatch({ type: 'update', loadout: newLoadout });
+  };
+
   const bucketTypes = Object.keys(buckets.byType);
 
   // Find a loadout with the same name that could overlap with this one
@@ -575,6 +586,7 @@ function LoadoutDrawer({
                   onOpenModPicker={() =>
                     stateDispatch({ type: 'openModPicker', modPickerOpen: true })
                   }
+                  removeModByIndex={removeModByIndex}
                 />
               </div>
             </LoadoutDrawerDropTarget>
