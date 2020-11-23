@@ -19,7 +19,7 @@ import { addIcon, AppIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { pullItem } from './move-item';
-import { sortedStoresSelector, storesSelector } from './selectors';
+import { currentStoreSelector, sortedStoresSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
@@ -79,6 +79,10 @@ function mapStateToProps() {
           items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
         }
       }
+      const currentStore = currentStoreSelector(state)!;
+      items = items.filter(
+        (i) => i.classType === DestinyClass.Unknown || i.classType === currentStore.classType
+      );
     }
 
     return {
@@ -118,6 +122,7 @@ function StoreBucket({
   storeClassList,
   characterOrder,
   isPhonePortrait,
+  singleCharacter,
 }: Props) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
@@ -126,7 +131,7 @@ function StoreBucket({
   }, [bucket, dispatch, storeId]);
 
   // The vault divides armor by class
-  if (isVault && bucket.inArmor) {
+  if (isVault && bucket.inArmor && !singleCharacter) {
     const itemsByClass = _.groupBy(items, (item) => item.classType);
     const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
       const classTypeNum = parseInt(classType, 10);
