@@ -408,10 +408,6 @@ export interface DimPursuit {
   rewards: DestinyItemQuantity[];
   suppressExpirationWhenObjectivesComplete: boolean;
   expiredInActivityMessage?: string;
-  /** place hash of places relevant to this quest */
-  places: number[];
-  /** place hash of places relevant to this quest */
-  activityTypes: number[];
   /** Modifiers active in this quest */
   modifierHashes: number[];
 }
