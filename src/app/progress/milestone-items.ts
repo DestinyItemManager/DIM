@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -21,7 +22,7 @@ export function milestoneToItems(
   milestone: DestinyMilestone,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  characterClass: DestinyClass
+  store: DimStore
 ): DimItem[] {
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
@@ -29,10 +30,10 @@ export function milestoneToItems(
 
   if (milestone.availableQuests) {
     return milestone.availableQuests.map((availableQuest) =>
-      availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
+      availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, store)
     );
   } else if (milestone.activities?.length) {
-    const item = activityMilestoneToItem(buckets, milestoneDef, milestone, defs);
+    const item = activityMilestoneToItem(buckets, milestoneDef, milestone, defs, store);
     return item ? [item] : [];
   } else if (milestone.rewards) {
     // Weekly Clan Milestones
@@ -47,7 +48,8 @@ export function milestoneToItems(
           rewardEntry,
           milestoneDef,
           milestone,
-          milestoneRewardDef
+          milestoneRewardDef,
+          store
         )
       );
   } else {
@@ -56,7 +58,8 @@ export function milestoneToItems(
       milestone,
       milestoneDef,
       milestoneDef.displayProperties,
-      []
+      [],
+      store
     );
     return item ? [item] : [];
   }
@@ -70,7 +73,7 @@ function availableQuestToItem(
   milestone: DestinyMilestone,
   milestoneDef: DestinyMilestoneDefinition,
   availableQuest: DestinyMilestoneQuest,
-  characterClass: DestinyClass
+  store: DimStore
 ): DimItem {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const questItem = defs.InventoryItem.get(questDef.questItemHash);
@@ -90,7 +93,7 @@ function availableQuestToItem(
           .filter(
             (i) =>
               i &&
-              (i.classType === characterClass || i.classType === DestinyClass.Unknown) &&
+              (i.classType === store.classType || i.classType === DestinyClass.Unknown) &&
               // And quest steps, they're not interesting
               !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep)
           ),
@@ -105,7 +108,8 @@ function availableQuestToItem(
     milestone,
     milestoneDef,
     displayProperties,
-    objectives
+    objectives,
+    store
   );
 
   dimItem.secondaryIcon = challengeItem?.secondaryIcon;
@@ -143,7 +147,8 @@ function activityMilestoneToItem(
   buckets: InventoryBuckets,
   milestoneDef: DestinyMilestoneDefinition,
   milestone: DestinyMilestone,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
+  store: DimStore
 ): DimItem | null {
   const objectives = milestone.activities[0].challenges.map((a) => a.objective);
   if (objectives.every((objective) => objective.complete)) {
@@ -155,7 +160,8 @@ function activityMilestoneToItem(
     milestone,
     milestoneDef,
     milestoneDef.displayProperties,
-    objectives
+    objectives,
+    store
   );
 
   dimItem.pursuit = {
@@ -188,7 +194,8 @@ function weeklyClanMilestoneToItems(
   rewardEntry: DestinyMilestoneRewardEntry,
   milestoneDef: DestinyMilestoneDefinition,
   milestone: DestinyMilestone,
-  milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition
+  milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition,
+  store: DimStore
 ): DimItem {
   const reward = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
@@ -201,7 +208,8 @@ function weeklyClanMilestoneToItems(
     buckets,
     displayProperties,
     rewardEntry.rewardEntryHash,
-    milestoneDef.displayProperties.name
+    milestoneDef.displayProperties.name,
+    store
   );
 
   dimItem.pursuit = {
@@ -218,7 +226,8 @@ function makeFakePursuitItem(
   buckets: InventoryBuckets,
   displayProperties: DestinyDisplayPropertiesDefinition,
   hash: number,
-  typeName: string
+  typeName: string,
+  store: DimStore
 ) {
   const dimItem: DimItem = {
     // figure out what year this item is probably from
@@ -277,7 +286,7 @@ function makeFakePursuitItem(
     perks: null,
     masterworkInfo: null,
     infusionQuality: null,
-    owner: 'unknown',
+    owner: store.id,
     uniqueStack: false,
     trackable: false,
     energy: null,
@@ -292,13 +301,15 @@ function makeMilestonePursuitItem(
   milestone: DestinyMilestone,
   milestoneDef: DestinyMilestoneDefinition,
   displayProperties: DestinyDisplayPropertiesDefinition,
-  objectives: DestinyObjectiveProgress[]
+  objectives: DestinyObjectiveProgress[],
+  store: DimStore
 ) {
   const dimItem = makeFakePursuitItem(
     buckets,
     displayProperties,
     milestone.milestoneHash,
-    milestoneTypeName(milestoneDef.milestoneType)
+    milestoneTypeName(milestoneDef.milestoneType),
+    store
   );
 
   if (objectives) {

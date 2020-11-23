@@ -37,7 +37,7 @@ export default function Milestones({
   const milestoneItems = _.uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
     (m) => m.milestoneHash
-  ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store.classType));
+  ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
   return (
     <div className="progress-for-character">
