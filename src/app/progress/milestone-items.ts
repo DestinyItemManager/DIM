@@ -32,7 +32,7 @@ export function milestoneToItems(
       availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
     );
   } else if (milestone.activities?.length) {
-    const item = activityMilestoneToItem(buckets, milestoneDef, milestone);
+    const item = activityMilestoneToItem(buckets, milestoneDef, milestone, defs);
     return item ? [item] : [];
   } else if (milestone.rewards) {
     // Weekly Clan Milestones
@@ -142,7 +142,8 @@ function availableQuestToItem(
 function activityMilestoneToItem(
   buckets: InventoryBuckets,
   milestoneDef: DestinyMilestoneDefinition,
-  milestone: DestinyMilestone
+  milestone: DestinyMilestone,
+  defs: D2ManifestDefinitions
 ): DimItem | null {
   const objectives = milestone.activities[0].challenges.map((a) => a.objective);
   if (objectives.every((objective) => objective.complete)) {
@@ -172,8 +173,10 @@ function activityMilestoneToItem(
 
     dimItem.pursuit.rewards = rewards;
   } else {
-    // Everything else gives a pinnacle
-    dimItem.pursuit.rewards = [{ itemHash: 73143230, quantity: 1 }];
+    const activity = defs.Activity.get(milestone.activities[0].activityHash);
+    if (activity) {
+      dimItem.pursuit.rewards = activity.challenges.flatMap((c) => c.dummyRewards);
+    }
   }
 
   return dimItem;
