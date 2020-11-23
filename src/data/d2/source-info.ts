@@ -14,7 +14,6 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone.
       1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone.
       1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone.
-      1893377622, // Source: Adventure "No Safe Distance" in the European Dead Zone.
       2040548068, // Source: Adventure "Release" on Nessus.
       2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone.
       2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus.
@@ -110,6 +109,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
@@ -169,7 +169,6 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone.
       1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone.
       1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone.
-      1893377622, // Source: Adventure "No Safe Distance" in the European Dead Zone.
       2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone.
       3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone.
       4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone.
@@ -442,6 +441,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3668669364, // Dreaming Spectrum
     ],
     sourceHashes: [
+      1405897559, // Source: "Deep Stone Crypt" raid.
       1483048674, // Source: Complete the "Scourge of the Past" raid.
       1491707941, // Source: "Garden of Salvation" raid.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
@@ -476,7 +476,6 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1593696611, // Source: Season Pass Reward
       1838401392, // Source: Earned as a Season Pass reward.
       2379344669, // Source: Season Pass.
-      2917345346, // Source: Earned as a Season Pass reward.
     ],
   },
   shaxx: {
@@ -498,6 +497,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
@@ -539,6 +539,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1564061133, // Source: Complete this reward's associated Vanguard quest.
+      1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ],
@@ -659,6 +660,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1564061133, // Source: Complete this reward's associated Vanguard quest.
+      1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ],

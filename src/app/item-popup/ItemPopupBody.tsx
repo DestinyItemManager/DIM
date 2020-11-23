@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
-import { AppIcon, openDropdownIcon } from '../shell/icons';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
 import './ItemPopupBody.scss';
@@ -20,25 +19,18 @@ export default function ItemPopupBody({
   failureStrings,
   extraInfo,
   tab,
-  expanded,
   onTabChanged,
-  onToggleExpanded,
 }: {
   item: DimItem;
   failureStrings?: string[];
   extraInfo?: ItemPopupExtraInfo;
   tab: ItemPopupTab;
-  expanded: boolean;
   onTabChanged(tab: ItemPopupTab): void;
-  onToggleExpanded(): void;
 }) {
   failureStrings = Array.from(failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
-
-  const showDetailsByDefault = !item.equipment && item.notransfer;
-  const itemDetails = showDetailsByDefault || expanded;
 
   const tabs = [
     {
@@ -82,33 +74,25 @@ export default function ItemPopupBody({
           )
       )}
       <div className="move-popup-details">
-        {itemDetails ? (
-          tabs.length > 1 ? (
-            <>
-              <div className="move-popup-tabs">
-                {tabs.map((ta) => (
-                  <span
-                    key={ta.tab}
-                    className={clsx('move-popup-tab', {
-                      selected: tab === ta.tab,
-                    })}
-                    onClick={() => onTabChanged(ta.tab)}
-                  >
-                    {ta.title}
-                  </span>
-                ))}
-              </div>
-              <div>{tabs.find((t) => t.tab === tab)?.component}</div>
-            </>
-          ) : (
-            tabs[0].component
-          )
+        {tabs.length > 1 ? (
+          <>
+            <div className="move-popup-tabs">
+              {tabs.map((ta) => (
+                <span
+                  key={ta.tab}
+                  className={clsx('move-popup-tab', {
+                    selected: tab === ta.tab,
+                  })}
+                  onClick={() => onTabChanged(ta.tab)}
+                >
+                  {ta.title}
+                </span>
+              ))}
+            </div>
+            <div>{tabs.find((t) => t.tab === tab)?.component}</div>
+          </>
         ) : (
-          <div className="item-popup-collapsed item-details">
-            <button type="button" className="dim-button" onClick={onToggleExpanded}>
-              <AppIcon icon={openDropdownIcon} /> {t('MovePopup.Expand')}
-            </button>
-          </div>
+          tabs[0].component
         )}
       </div>
     </div>

@@ -34,8 +34,8 @@ type Props = ProvidedProps & StoreProps;
 /** Find unclaimed vendor bounties based on your current activity */
 function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
   if (
-    !activity?.activityModeTypes.length ||
-    activity?.activityModeTypes.includes(DestinyActivityModeType.Social)
+    !activity?.activityModeTypes?.length ||
+    activity?.activityModeTypes?.includes(DestinyActivityModeType.Social)
   ) {
     return null;
   }

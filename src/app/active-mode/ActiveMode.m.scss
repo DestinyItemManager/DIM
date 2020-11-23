@@ -17,10 +17,6 @@
     display: block;
   }
 
-  :global(.title) {
-    margin-bottom: 10px;
-  }
-
   :global(.title.collapsed) {
     margin-bottom: 0;
   }
@@ -72,6 +68,10 @@
         opacity: 1;
       }
     }
+  }
+
+  .inventoryCategory {
+    grid-template-columns: 1.75fr 1fr;
   }
 
   :global(.store-row.title) {

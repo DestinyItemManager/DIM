@@ -1,12 +1,61 @@
 ## Next
 
+## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
+
+* Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.
+* Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
+* Stop showing extra +3 stats on masterwork weapons. The fix for this means that Adept weapons may not show that bonus when they are released.
+* Progress page now shows more Milestones/Challenges, shows rewards for all of them, includes vendor pictures where available, and gives a hint as to what power pinnacle/powerful engrams can drop at.
+
+## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
+
+* Farming mode will no longer immediately kick out items you manually move onto your character.
+* The Records page now includes all the Triumps and Collections info that are in the game.
+* Mods in the Loadout Optimizer can be searched by their description.
+* Fixed Active Mode showing up in release version if you'd enabled it in Beta.
+* Fixed a crash when viewing Stasis subclasses.
+
+## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
+
+* Xur's location is now shown on his entry in the Vendors page.
+* The Raids section is back in Progress, and Garden of Salvation shows up in Milestones.
+* Search autocomplete suggests the `current` and `next` keywords for seasons.
+* Reworked mod handling to account for new legacy and combat mod slots. New searches include `holdsmod:chargedwithlight`, `holdsmod:warmindcell`, etc., and `modslot:legacy` and `modslot:combatstyle`.
+* Armor tiles now display the energy capacity of the armor.
+* Masterwork levels in the mod details menu once again show which level masterwork they are.
+* Added a new sort order for items, sort by Seasonal icon.
+* Darkened the item actions sidecar to improve contrast with the background.
+* Fixed a visual glitch where the tagging menu looked bad.
+* Fixed logic for determining what can be pulled from postmaster to exclude stacked items like Upgrade Modules when you cannot actually pull any more of them.
+* Removed the counter of how many items were selected in Organizer. This fixes a visual glitch that cut off the icons when items were selected.
+* Fixed the vendor icon for Variks.
+* Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
+* Deleting a loadout from the loadout drawer now closes the loadout drawer.
+* When Bungie.net is not returning live perk information, we won't show the default perks anymore.
+
+### Beta Only
+
+* Preview of "Active Mode", an in-progress new view that focuses down to a single character plus your vault, and has easy access to pursuits, farming, max light, and more.
+
+## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
+
+* Removed character gender from tiles and notifications.
+* Don't show empty archetype bar for items in collections.
+* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
+  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
+  * `is:sunset` won't show anything until Beyond Light launches!
+* Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
+* Vendorengrams.xyz integration has been removed, because of the vendor changes in Beyond Light.
+* Legacy Triumphs have been removed.
+* Fixed the Progress page not loading.
+* Fixed Catalysts not showing on the Records page.
+* Fix errors when selecting mods in Loadout Optimizer.
+* Removed the opaque background from item season icons.
+
 ## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
 
 * New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
 * Perk and mod images are once again affected by the item size setting.
-* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
-  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
-  * `is:sunset` won't show anything until Beyond Light launches!
 
 ## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
 

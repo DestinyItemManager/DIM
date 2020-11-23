@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
 import {
-  getSpecialtySocketMetadata,
-  getSpecialtySocketMetadataByPlugCategoryHash,
+  getModTypeTagByPlugCategoryHash,
+  getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import {
   ArmorSet,
@@ -28,22 +28,17 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 }
 
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
-  const processMod = {
+  const processMod: ProcessMod = {
     hash: mod.modDef.hash,
-    energy: {
-      type: mod.modDef.plug.energyCost!.energyType,
-      val: mod.modDef.plug.energyCost!.energyCost,
+    energy: mod.modDef.plug.energyCost && {
+      type: mod.modDef.plug.energyCost.energyType,
+      val: mod.modDef.plug.energyCost.energyCost,
     },
     investmentStats: mod.modDef.investmentStats,
   };
 
-  if (mod.category === 'seasonal') {
-    const metadata = getSpecialtySocketMetadataByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
-    return {
-      ...processMod,
-      season: metadata?.season,
-      tag: metadata?.tag,
-    };
+  if (mod.category === 'other' || mod.category === 'raid') {
+    processMod.tag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
   }
 
   return processMod;
@@ -51,11 +46,8 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
 
 /**
  * This sums up the total stat contributions across mods passed in. These are then applied
- * to the loadouts after all the items base values have been summed. This mimics how seasonal mods
+ * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
- *
- * For the Mod Picker this can be used for seasonal and general mods. For mods in perk picker this is
- * just for the seasonal mods.
  */
 export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
   const totals: { [stat in StatTypes]: number } = {
@@ -107,9 +99,9 @@ export function mapDimItemToProcessItem(
     }
   }
 
-  const modMetadata = getSpecialtySocketMetadata(dimItem);
+  const modMetadatas = getSpecialtySocketMetadatas(dimItem);
   const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost!.energyCost);
+    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0);
   return {
     bucketHash: bucket.hash,
     id,
@@ -127,8 +119,8 @@ export function mapDimItemToProcessItem(
             val: costInitial,
           }
         : null,
-    season: modMetadata?.season,
-    compatibleModSeasons: modMetadata?.compatibleTags,
+    compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
+    hasLegacyModSocket: Boolean(modMetadatas?.some((m) => m.slotTag === 'legacy')),
   };
 }
 

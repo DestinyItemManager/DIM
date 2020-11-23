@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { t } from 'app/i18next-t';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -16,7 +15,7 @@ export default function PickerSectionMods({
   category,
   maximumSelectable,
   energyMustMatch,
-  splitBySeason,
+  splitByItemTypeDisplayName,
   onModSelected,
   onModRemoved,
 }: {
@@ -27,7 +26,7 @@ export default function PickerSectionMods({
   category: ModPickerCategory;
   maximumSelectable: number;
   energyMustMatch?: boolean;
-  splitBySeason: boolean;
+  splitByItemTypeDisplayName: boolean;
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
@@ -35,10 +34,12 @@ export default function PickerSectionMods({
     return null;
   }
   const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
-  const isNotGeneralOrSeasonal =
-    category !== ModPickerCategories.general && category !== ModPickerCategories.seasonal;
+  const isNotGeneralOrOther =
+    category !== ModPickerCategories.general && category !== ModPickerCategories.other;
   const allLockedAreAnyEnergy = locked?.every(
-    (locked) => locked.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any
+    (locked) =>
+      !locked.modDef.plug.energyCost ||
+      locked.modDef.plug.energyCost.energyType === DestinyEnergyType.Any
   );
 
   const isModUnSelectable = (item: LockedArmor2Mod) => {
@@ -46,7 +47,7 @@ export default function PickerSectionMods({
     if (
       locked &&
       (locked.length >= maximumSelectable ||
-        (isNotGeneralOrSeasonal && lockedModCost + itemEnergyCost > MAX_ARMOR_ENERGY_CAPACITY))
+        (isNotGeneralOrOther && lockedModCost + itemEnergyCost > MAX_ARMOR_ENERGY_CAPACITY))
     ) {
       return true;
     }
@@ -54,7 +55,8 @@ export default function PickerSectionMods({
     if (energyMustMatch) {
       // cases where item is any energy or all mods are any energy
       if (
-        item.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
+        !item.modDef.plug.energyCost ||
+        item.modDef.plug.energyCost.energyType === DestinyEnergyType.Any ||
         allLockedAreAnyEnergy
       ) {
         return false;
@@ -63,7 +65,7 @@ export default function PickerSectionMods({
       if (
         locked?.some(
           (lockedMod) =>
-            lockedMod.modDef.plug.energyCost!.energyType !== item.modDef.plug.energyCost!.energyType
+            lockedMod.modDef.plug.energyCost?.energyType !== item.modDef.plug.energyCost?.energyType
         )
       ) {
         return true;
@@ -73,8 +75,8 @@ export default function PickerSectionMods({
     return false;
   };
 
-  const modGroups = splitBySeason
-    ? _.groupBy(mods, (mod) => t('LoadoutBuilder.SeasonNum', { season: mod.season }))
+  const modGroups = splitByItemTypeDisplayName
+    ? _.groupBy(mods, (mod) => mod.modDef.itemTypeDisplayName)
     : { nogroup: mods };
 
   return (

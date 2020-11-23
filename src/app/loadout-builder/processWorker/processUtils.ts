@@ -1,13 +1,12 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
-import { ProcessMod } from './types';
+import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
     val: number;
   } | null;
-  season?: number;
 }
 
 export interface ProcessItemSubset extends SortParam {
@@ -17,43 +16,18 @@ export interface ProcessItemSubset extends SortParam {
 
 /**
  * This sorts process mods and items in the same manner as we try for greedy results.
- *
- * The first block with both seasons present is for seasonal mods and items.
- * The second block is for general mods.
- * After that is the cases for safety but they shouldn't happen.
- *
- * Some of this could be pulled into a common function but I have left it verbose for
- * performance.
  */
 export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
-  if (a.season && b.season) {
-    if (a.season === b.season) {
-      if (a.energy && b.energy) {
-        if (a.energy.type === b.energy.type) {
-          return b.energy.val - a.energy.val;
-        } else {
-          return b.energy.type - a.energy.type;
-        }
-      }
+  if (a.energy && b.energy) {
+    if (a.energy.type === b.energy.type) {
+      return b.energy.val - a.energy.val;
     } else {
-      return b.season - a.season;
+      return b.energy.type - a.energy.type;
     }
-  } else if (!a.season && !b.season) {
-    if (a.energy && b.energy) {
-      if (a.energy.type === b.energy.type) {
-        return b.energy.val - a.energy.val;
-      } else {
-        return b.energy.type - a.energy.type;
-      }
-    } else if (!a.energy) {
-      return 1;
-    }
-
-    return -1;
-    // I don't think the following cases will every happen but I have included them just incase.
-  } else if (a.season === undefined) {
+  } else if (!a.energy) {
     return 1;
   }
+
   return -1;
 }
 
@@ -63,7 +37,7 @@ function stringifyModPermutation(perm: (ProcessMod | null)[]) {
   let permString = '';
   for (const modOrNull of perm) {
     if (modOrNull) {
-      permString += `(${modOrNull.energy.type},${modOrNull.energy.val},${modOrNull.tag || ''})`;
+      permString += `(${modOrNull.energy?.type},${modOrNull.energy?.val},${modOrNull.tag || ''})`;
     }
     permString += ',';
   }
@@ -139,17 +113,18 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 }
 
 /**
- * This figures out if all general and seasonal mods can be assigned to an armour set.
+ * This figures out if all general, other and raid mods can be assigned to an armour set.
  *
- * The params generalModPermutations and seasonalModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of seasonal or general mods.
+ * The params generalModPermutations, otherModPermutations, raidModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or raid mods.
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */
-export function canTakeGeneralAndSeasonalMods(
+export function canTakeAllMods(
   generalModPermutations: (ProcessMod | null)[][],
-  seasonalModPermutations: (ProcessMod | null)[][],
-  items: ProcessItemSubset[],
+  otherModPermutations: (ProcessMod | null)[][],
+  raidModPermutations: (ProcessMod | null)[][],
+  items: ProcessItem[],
   assignments?: Record<string, number[]>
 ) {
   // Sort the items like the mods are to try and get a greedy result
@@ -157,7 +132,7 @@ export function canTakeGeneralAndSeasonalMods(
 
   const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
-    seasonalModPermutations[0]
+    otherModPermutations[0]
   );
   const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
@@ -176,36 +151,37 @@ export function canTakeGeneralAndSeasonalMods(
 
   const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
-  for (const seasonalP of seasonalModPermutations) {
-    let seasonalsFit = true;
+  for (const otherP of otherModPermutations) {
+    let othersFit = true;
     for (let i = 0; i < sortedItems.length; i++) {
       const item = sortedItems[i];
-      const seasonTag = seasonalP[i]?.tag;
-      const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
-      seasonalsFit &&= Boolean(
+      const tag = otherP[i]?.tag;
+      const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+      othersFit &&= Boolean(
         item.energy &&
-          item.energy.val + (seasonalEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
-          (item.energy.type === seasonalEnergy.type ||
-            seasonalEnergy.type === DestinyEnergyType.Any) &&
-          (!seasonalP[i] || (seasonTag && item.compatibleModSeasons?.includes(seasonTag)))
+          item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
+          (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any) &&
+          (!otherP[i] || (tag && item.compatibleModSeasons?.includes(tag)))
       );
 
-      if (!seasonalsFit) {
+      if (!othersFit) {
         break;
       }
     }
-    if (!seasonalsFit) {
+
+    if (!othersFit) {
       continue;
     }
+
     for (const generalP of generalModPermutations) {
       let generalsFit = true;
       for (let i = 0; i < sortedItems.length; i++) {
         const item = sortedItems[i];
         const generalEnergy = generalP[i]?.energy || defaultModEnergy;
-        const seasonalEnergy = seasonalP[i]?.energy || defaultModEnergy;
+        const otherEnergy = otherP[i]?.energy || defaultModEnergy;
         generalsFit &&= Boolean(
           item.energy &&
-            item.energy.val + generalEnergy.val + seasonalEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+            item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any)
         );
@@ -214,21 +190,51 @@ export function canTakeGeneralAndSeasonalMods(
           break;
         }
       }
-      if (generalsFit) {
-        if (assignments) {
-          for (let i = 0; i < sortedItems.length; i++) {
-            const generalMod = generalP[i];
-            const seasonalMod = seasonalP[i];
-            if (generalMod) {
-              assignments[sortedItems[i].id].push(generalMod.hash);
-            }
-            if (seasonalMod) {
-              assignments[sortedItems[i].id].push(seasonalMod.hash);
-            }
-          }
+
+      for (const raidP of raidModPermutations) {
+        let raidsFit = true;
+        for (let i = 0; i < sortedItems.length; i++) {
+          const item = sortedItems[i];
+          const raidTag = raidP[i]?.tag;
+          const generalEnergy = generalP[i]?.energy || defaultModEnergy;
+          const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+          const raidEnergy = raidP[i]?.energy || defaultModEnergy;
+          raidsFit &&= Boolean(
+            item.energy &&
+              item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
+                MAX_ARMOR_ENERGY_CAPACITY &&
+              (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any) &&
+              (!raidP[i] ||
+                ((!item.hasLegacyModSocket || !otherP[i]) &&
+                  raidTag &&
+                  item.compatibleModSeasons?.includes(raidTag)))
+          );
         }
 
-        return true;
+        if (!raidsFit) {
+          break;
+        }
+
+        if (raidsFit && generalsFit && othersFit) {
+          if (assignments) {
+            for (let i = 0; i < sortedItems.length; i++) {
+              const generalMod = generalP[i];
+              const otherMod = otherP[i];
+              const raidMod = raidP[i];
+              if (generalMod) {
+                assignments[sortedItems[i].id].push(generalMod.hash);
+              }
+              if (otherMod) {
+                assignments[sortedItems[i].id].push(otherMod.hash);
+              }
+              if (raidMod) {
+                assignments[sortedItems[i].id].push(raidMod.hash);
+              }
+            }
+          }
+
+          return true;
+        }
       }
     }
   }

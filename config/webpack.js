@@ -372,25 +372,19 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(true),
+        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(true),
-        // Rearrange buckets in categories
-        '$featureFlags.newArrangement': JSON.stringify(true),
-        // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
-        // Move the item popup actions
-        '$featureFlags.newItemPopupActions': JSON.stringify(true),
         // Enable move amounts
         '$featureFlags.moveAmounts': JSON.stringify(env.release),
         // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(env.dev),
+        '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results
         '$featureFlags.searchResults': JSON.stringify(!env.release),
         // Alternate perks display on item popup

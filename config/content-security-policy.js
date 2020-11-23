@@ -38,12 +38,14 @@ module.exports = function csp(env) {
       //'https://reviews-api.destinytracker.net',
       //'https://api.tracker.gg',
       // VendorEngrams
-      'https://api.vendorengrams.xyz',
+      //'https://api.vendorengrams.xyz',
       // Wishlists
       'https://raw.githubusercontent.com',
       'https://gist.githubusercontent.com',
       // DIM Sync
       'https://api.destinyitemmanager.com',
+      // Xur location
+      'paracausal.science',
     ],
     imgSrc: [
       SELF,

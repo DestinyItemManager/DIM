@@ -66,6 +66,8 @@ export interface DimItem {
   description: string;
   /** Icon path for the item. */
   icon: string;
+  /** Hidden Icon overlay path for the item. Currently used to assess event data and seasons for some items when no overlay is shown */
+  hiddenOverlay?: string;
   /** Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items */
   iconOverlay?: string;
   /** Some items have a secondary icon, namely Emblems. */
@@ -137,7 +139,7 @@ export interface DimItem {
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
 
-  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh.
+  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh. This info is always reset to server truth on a refresh.
 
   /** The ID of the store that currently contains this item. */
   owner: string;
@@ -406,10 +408,6 @@ export interface DimPursuit {
   rewards: DestinyItemQuantity[];
   suppressExpirationWhenObjectivesComplete: boolean;
   expiredInActivityMessage?: string;
-  /** place hash of places relevant to this quest */
-  places: number[];
-  /** place hash of places relevant to this quest */
-  activityTypes: number[];
   /** Modifiers active in this quest */
   modifierHashes: number[];
 }

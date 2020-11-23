@@ -3,10 +3,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
-import {
-  canTakeGeneralAndSeasonalMods,
-  generateModPermutations,
-} from './processWorker/processUtils';
+import { canTakeAllMods, generateModPermutations } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
   bucketsToCategories,
@@ -22,8 +19,9 @@ import {
  */
 export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
   item.energy &&
-  (mod.modDef.plug.energyCost!.energyType === DestinyEnergyType.Any ||
-    mod.modDef.plug.energyCost!.energyType === item.energy?.energyType);
+  (!mod.modDef.plug.energyCost ||
+    mod.modDef.plug.energyCost.energyType === DestinyEnergyType.Any ||
+    mod.modDef.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
  * If the energies match, this will assign the mods to the item in assignments.
@@ -41,26 +39,30 @@ function assignModsForSlot(
 }
 
 /**
- * Checks to see if the passed in general and seasonal mods can be assigned to the armour set.
+ * Checks to see if the passed in general and other mods can be assigned to the armour set.
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
-function assignAllGenrealAndSeasonalMods(
+function assignAllMods(
   setToMatch: ProcessItem[],
   generalMods: LockedArmor2Mod[],
-  seasonalMods: readonly LockedArmor2Mod[],
+  otherMods: readonly LockedArmor2Mod[],
+  raidMods: LockedArmor2Mod[],
   assignments: Record<string, number[]>
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
-  const seasonalProcessMods = seasonalMods.map(mapArmor2ModToProcessMod);
+  const otherProcessMods = otherMods.map(mapArmor2ModToProcessMod);
+  const raidProcessMods = raidMods.map(mapArmor2ModToProcessMod);
 
   const generalModPermutations = generateModPermutations(generalProcessMods);
-  const seasonalModPermutations = generateModPermutations(seasonalProcessMods);
+  const otherModPermutations = generateModPermutations(otherProcessMods);
+  const raidModPermutations = generateModPermutations(raidProcessMods);
 
-  canTakeGeneralAndSeasonalMods(
+  canTakeAllMods(
     generalModPermutations,
-    seasonalModPermutations,
+    otherModPermutations,
+    raidModPermutations,
     setToMatch,
     assignments
   );
@@ -88,14 +90,12 @@ export function assignModsToArmorSet(
     }
   }
 
-  if (
-    lockedArmor2Mods.seasonal.length ||
-    lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length
-  ) {
-    assignAllGenrealAndSeasonalMods(
+  if (lockedArmor2Mods.other || lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
+    assignAllMods(
       processItems,
       lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-      lockedArmor2Mods.seasonal,
+      lockedArmor2Mods.other,
+      lockedArmor2Mods.raid,
       assignments
     );
   }

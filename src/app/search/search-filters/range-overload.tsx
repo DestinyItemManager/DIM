@@ -2,6 +2,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition, FilterDeprecation } from '../filter-types';
@@ -12,11 +13,17 @@ import { rangeStringToComparator } from './range-numeric';
 /** matches a filterValue that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
+const seasonTagToNumber = {
+  ...seasonTags,
+  next: D2CalculatedSeason + 1,
+  current: D2CalculatedSeason,
+};
+
 // prioritize newer seasons. nobody is looking for "redwar" at this point
-const seasonTagNames = Object.keys(seasonTags).reverse();
+const seasonTagNames = Object.keys(seasonTagToNumber).reverse();
 
 // things can't sunset in season 11 and earlier
-const sunsetSeasonTagNames = Object.entries(seasonTags)
+const sunsetSeasonTagNames = Object.entries(seasonTagToNumber)
   .filter(([_, num]) => num > 11)
   .map(([tag]) => tag)
   .reverse();
@@ -128,5 +135,5 @@ export default overloadedRangeFilters;
  * use only on simple filter values where there's not other letters
  */
 function replaceSeasonTagWithNumber(s: string) {
-  return s.replace(/[a-z]+$/i, (tag) => seasonTags[tag]);
+  return s.replace(/[a-z]+$/i, (tag) => seasonTagToNumber[tag]);
 }

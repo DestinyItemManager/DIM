@@ -77,7 +77,7 @@ function SavedMods({ defs, modHashes, onOpenModPicker }: Props) {
     });
   }, [modHashes, defs]);
 
-  if (!defs.isDestiny2()) {
+  if (!defs.isDestiny2() || !groupedMods.length) {
     return null;
   }
 
@@ -85,17 +85,20 @@ function SavedMods({ defs, modHashes, onOpenModPicker }: Props) {
     <div className={styles.container}>
       <div className={styles.title}>{t('Loadouts.Mods')}</div>
       <div className={styles.categories}>
-        {modCategoryOrder.map((key) => (
-          <div key={key} className={styles.category}>
-            <div className={styles.categoryName}>{t(modCategoryTranslations[key])}</div>
-            <div className={styles.mods}>
-              {groupedMods[key]?.map((def, index) => (
-                <Mod key={index} defs={defs} plugDef={def} />
-              ))}
-              <AddButton onClick={onOpenModPicker} />
-            </div>
-          </div>
-        ))}
+        {modCategoryOrder.map(
+          (key) =>
+            groupedMods[key] && (
+              <div key={key} className={styles.category}>
+                <div className={styles.categoryName}>{t(modCategoryTranslations[key])}</div>
+                <div className={styles.mods}>
+                  {groupedMods[key].map((def, index) => (
+                    <Mod key={index} defs={defs} plugDef={def} />
+                  ))}
+                  <AddButton onClick={onOpenModPicker} />
+                </div>
+              </div>
+            )
+        )}
       </div>
     </div>
   );

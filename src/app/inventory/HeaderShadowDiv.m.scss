@@ -18,10 +18,8 @@
   left: 0;
   z-index: 9;
 
-  :global(.gradientBackground) & {
-    background: $gradient;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-size: 100% 100vh;
-  }
+  background: $gradient;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
 }

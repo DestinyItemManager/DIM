@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import Compare from 'app/compare/Compare';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
@@ -10,7 +9,6 @@ import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -138,8 +136,6 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
           onSelection={onSelection}
         />
         <ItemTable categories={selection} />
-        <LoadoutDrawer />
-        <Compare />
       </ErrorBoundary>
     </div>
   );

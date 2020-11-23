@@ -4,8 +4,12 @@ import {
   isModPickerCategory,
   LockedArmor2ModMap,
   ModPickerCategories,
+  raidPlugs,
 } from 'app/loadout-builder/types';
-import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import {
+  combatCompatiblePlugCategoryHashes,
+  legacyCompatiblePlugCategoryHashes,
+} from 'app/search/specialty-modslots';
 
 export function getLockedModMapFromModHashes(defs: D2ManifestDefinitions, modHashes?: number[]) {
   const groups: LockedArmor2ModMap = {
@@ -15,7 +19,8 @@ export function getLockedModMapFromModHashes(defs: D2ManifestDefinitions, modHas
     [ModPickerCategories.chest]: [],
     [ModPickerCategories.leg]: [],
     [ModPickerCategories.classitem]: [],
-    [ModPickerCategories.seasonal]: [],
+    [ModPickerCategories.other]: [],
+    [ModPickerCategories.raid]: [],
   };
 
   for (const hash of modHashes || []) {
@@ -23,10 +28,14 @@ export function getLockedModMapFromModHashes(defs: D2ManifestDefinitions, modHas
 
     if (isPluggableItem(modDef)) {
       const { plugCategoryHash } = modDef.plug;
-      const metadata = getSpecialtySocketMetadataByPlugCategoryHash(plugCategoryHash);
 
-      if (metadata) {
-        groups.seasonal.push({ modDef, category: 'seasonal', season: metadata.season });
+      if (raidPlugs.includes(plugCategoryHash)) {
+        groups.raid.push({ modDef, category: 'raid' });
+      } else if (
+        combatCompatiblePlugCategoryHashes.includes(plugCategoryHash) ||
+        legacyCompatiblePlugCategoryHashes.includes(plugCategoryHash)
+      ) {
+        groups.other.push({ modDef, category: 'other' });
       } else if (isModPickerCategory(plugCategoryHash)) {
         groups[plugCategoryHash].push({ modDef, category: plugCategoryHash });
       }

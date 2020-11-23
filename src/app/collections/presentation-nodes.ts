@@ -20,7 +20,6 @@ import {
   DestinyRecordState,
   DestinyScope,
 } from 'bungie-api-ts/destiny2';
-import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import _ from 'lodash';
 
 export interface DimPresentationNodeLeaf {
@@ -137,55 +136,6 @@ export function toPresentationNodeTree(
       childPresentationNodes: children,
     };
   }
-}
-
-const legacyTriumphHashesSet = new Set(legacyTriumphHashes);
-export function filterToLegacyTriumphs(
-  node: DimPresentationNode | null
-): DimPresentationNode | null {
-  if (!node) {
-    return null;
-  }
-  if (node.records) {
-    const records = node.records.filter((r) => legacyTriumphHashesSet.has(r.recordDef.hash));
-    if (records.length) {
-      const visible = records.length;
-      const acquired = count(records, (r) =>
-        Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
-      );
-      return {
-        nodeDef: node.nodeDef,
-        records,
-        visible,
-        acquired,
-      };
-    }
-  }
-
-  if (node.childPresentationNodes) {
-    // call for all children, then add 'em up
-    const children: DimPresentationNode[] = [];
-    let acquired = 0;
-    let visible = 0;
-    for (const child of node.childPresentationNodes) {
-      const subnode = filterToLegacyTriumphs(child);
-      if (subnode) {
-        acquired += subnode.acquired;
-        visible += subnode.visible;
-        children.push(subnode);
-      }
-    }
-    return children.length > 0
-      ? {
-          nodeDef: node.nodeDef,
-          visible,
-          acquired,
-          childPresentationNodes: children,
-        }
-      : null;
-  }
-
-  return null;
 }
 
 // TODO: how to flatten this down to individual category trees

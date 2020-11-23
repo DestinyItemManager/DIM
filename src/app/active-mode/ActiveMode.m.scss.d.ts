@@ -6,6 +6,7 @@ interface CssExports {
   'activitySplit': string;
   'bucketLabel': string;
   'collapsed': string;
+  'inventoryCategory': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

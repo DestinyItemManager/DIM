@@ -17,9 +17,12 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
+import modSocketMetadata, {
+  ModSocketMetadata,
+  modTypeTagByPlugCategoryHash,
+} from 'app/search/specialty-modslots';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
-import modSocketMetadata, { ModSocketMetadata } from 'data/d2/specialty-modslot-metadata';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
@@ -37,18 +40,17 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // data/d2/specialty-modslot-metadata.json
 // process its data here and export it to thing that needs it
 
-const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHash');
-
-const modMetadataByPlugCategoryHash = objectifyArray(modSocketMetadata, 'plugCategoryHashes');
+const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
-export const modSlotTags = modSocketMetadata.map((m) => m.tag);
+export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
+export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
-export const specialtySocketTypeHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.socketTypeHash
+export const specialtySocketTypeHashes = modSocketMetadata.flatMap(
+  (modMetadata) => modMetadata.socketTypeHashes
 );
 
 export const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
@@ -60,42 +62,46 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 );
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySocket = (item: DimItem): DimSocket | undefined => {
+export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
   if (item.bucket.inArmor) {
-    return item.sockets?.allSockets.find((socket) =>
+    return item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
   }
 };
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadata = (item: DimItem): ModSocketMetadata | undefined =>
-  modMetadataBySocketTypeHash[
-    getSpecialtySocket(item)?.socketDefinition.socketTypeHash || -99999999
-  ];
+export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] | undefined =>
+  getSpecialtySockets(item)
+    ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
+    .filter(Boolean);
 
 /**
- * returns ModMetadata if the plugCategoryHash (from a mod definition's .plug) is known
- *
- * if you use this you can only trust the returned season, tag, and emptyModSocketHash
+ * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
-export const getSpecialtySocketMetadataByPlugCategoryHash = (
-  plugCategoryHash: number
-): ModSocketMetadata | undefined => modMetadataByPlugCategoryHash[plugCategoryHash];
+export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
+  modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes
  *
  * `''` if not found, so you can let it stay blank or `||` it
  */
-export const getItemSpecialtyModSlotDisplayName = (
+export const getItemSpecialtyModSlotDisplayNames = (
   item: DimItem,
   defs: D2ManifestDefinitions
-): string => {
-  const emptyModSocketHash = getSpecialtySocketMetadata(item)?.emptyModSocketHash;
-  return (
-    (emptyModSocketHash && defs.InventoryItem.get(emptyModSocketHash).itemTypeDisplayName) || ''
-  );
+): string[] | undefined => {
+  const displayNames = getSpecialtySocketMetadatas(item)
+    ?.map((m) => {
+      const { emptyModSocketHash } = m;
+      return (
+        (emptyModSocketHash && defs.InventoryItem.get(emptyModSocketHash).itemTypeDisplayName) || ''
+      );
+    })
+    .filter(Boolean);
+  if (displayNames?.length) {
+    return displayNames;
+  }
 };
 
 /** feed a **mod** definition into this */

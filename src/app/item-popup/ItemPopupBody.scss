@@ -41,9 +41,9 @@
   box-sizing: border-box;
 
   &.warning {
-    background-color: $red !important;
+    background: scale-color($red, $lightness: -90%);
+    border-top: 4px solid $red;
     padding: 8px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
     a {
       color: white;
       font-size: 12px;

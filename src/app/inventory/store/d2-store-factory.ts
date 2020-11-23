@@ -24,6 +24,7 @@ export function makeCharacter(
   mostRecentLastPlayed: Date
 ): DimStore {
   const race = defs.Race[character.raceHash];
+  const raceLocalizedName = race.displayProperties.name;
   const gender = defs.Gender[character.genderHash];
   const classy = defs.Class[character.classHash];
   const genderRace = race.genderedRaceNamesByGenderHash[gender.hash];
@@ -36,7 +37,7 @@ export function makeCharacter(
     id: character.characterId,
     icon: bungieNetPath(character.emblemPath),
     name: t('ItemService.StoreName', {
-      genderRace,
+      genderRace: raceLocalizedName,
       className,
     }),
     current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
@@ -50,6 +51,7 @@ export function makeCharacter(
     classType: classy.classType,
     className,
     gender: genderLocalizedName,
+    race: raceLocalizedName,
     genderRace,
     genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
@@ -77,6 +79,7 @@ export function makeVault(): DimStore {
     percentToNextLevel: 0,
     powerLevel: 0,
     gender: '',
+    race: '',
     genderRace: '',
     stats: [],
   };

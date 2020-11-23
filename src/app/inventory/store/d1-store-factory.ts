@@ -35,17 +35,20 @@ export function makeCharacter(
   const race = defs.Race[character.characterBase.raceHash];
   let genderRace = '';
   let className = '';
+  let raceName = '';
   let gender: DimStore['gender'] = '';
   let genderName: DimStore['genderName'] = '';
   if (character.characterBase.genderType === 0) {
     gender = 'male';
     genderName = 'male';
     genderRace = race.raceNameMale;
+    raceName = race.raceNameMale;
     className = defs.Class[character.characterBase.classHash].classNameMale;
   } else {
     gender = 'female';
     genderName = 'female';
     genderRace = race.raceNameFemale;
+    raceName = race.raceNameFemale;
     className = defs.Class[character.characterBase.classHash].classNameFemale;
   }
 
@@ -81,6 +84,7 @@ export function makeCharacter(
     classType: character.characterBase.classType,
     className,
     gender,
+    race: raceName,
     genderRace,
     genderName,
     percentToNextLevel: character.percentToNextLevel / 100,
@@ -142,6 +146,7 @@ export function makeVault(
     percentToNextLevel: 0,
     powerLevel: 0,
     gender: '',
+    race: '',
     genderRace: '',
     stats: [],
   };

@@ -1,12 +1,15 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
+  DimSocket,
   DimStat,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,15 +28,19 @@ const costStatHashes = [
 
 export default function SocketDetailsSelectedPlug({
   plug,
+  socket,
   defs,
   item,
   currentPlug,
 }: {
   plug: PluggableInventoryItemDefinition;
+  socket: DimSocket;
   defs: D2ManifestDefinitions;
   item: DimItem;
   currentPlug: DimPlug | null;
 }) {
+  const dispatch = useThunkDispatch();
+
   const selectedPlugPerk =
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
@@ -62,14 +69,20 @@ export default function SocketDetailsSelectedPlug({
 
       const currentModValue = currentPlug?.stats?.[stat.statTypeHash] || 0;
 
-      const updatedInvestmentValue = itemStat.investmentValue + stat.value - currentModValue;
-      let itemStatValue = updatedInvestmentValue;
+      // TODO: we should check the final computed stat against the result including and not including
+      // conditinally active stats, and only include them if it lines up. There's not a way to figure
+      // out if the conditions are met otherwise.
+      if (stat.isConditionallyActive) {
+        return null;
+      }
       let modValue = stat.value;
+      const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
+      let itemStatValue = updatedInvestmentValue;
 
       if (statDisplay) {
         itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
         modValue =
-          itemStatValue - interpolateStatValue(updatedInvestmentValue - stat.value, statDisplay);
+          itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
       }
 
       return {
@@ -82,26 +95,35 @@ export default function SocketDetailsSelectedPlug({
     })
   );
 
+  const onInsertPlug = async () => {
+    await dispatch(insertPlug(item, socket, plug.hash));
+    // Handle errors?
+
+    // close the menu?
+  };
+
+  const costs = materialRequirementSet?.materials.map((material) => {
+    const materialDef = defs.InventoryItem.get(material.itemHash);
+    return (
+      materialDef &&
+      material.count > 0 &&
+      !material.omitFromRequirements && (
+        <div className={styles.material} key={material.itemHash}>
+          {material.count.toLocaleString()}
+          <BungieImage
+            src={materialDef.displayProperties.icon}
+            title={materialDef.displayProperties.name}
+          />
+        </div>
+      )
+    );
+  });
+
   return (
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} defs={defs} />
-        {materialRequirementSet?.materials.map((material) => {
-          const materialDef = defs.InventoryItem.get(material.itemHash);
-          return (
-            materialDef &&
-            material.count > 0 &&
-            !material.omitFromRequirements && (
-              <div className={styles.material} key={material.itemHash}>
-                {material.count.toLocaleString()}
-                <BungieImage
-                  src={materialDef.displayProperties.icon}
-                  title={materialDef.displayProperties.name}
-                />
-              </div>
-            )
-          );
-        })}
+        {!$featureFlags.awa && costs}
       </div>
       <div className={styles.modDescription}>
         <h3>
@@ -125,6 +147,12 @@ export default function SocketDetailsSelectedPlug({
         ))}
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      {$featureFlags.awa && (
+        <button type="button" onClick={onInsertPlug}>
+          Insert Mod
+          {costs}
+        </button>
+      )}
     </div>
   );
 }

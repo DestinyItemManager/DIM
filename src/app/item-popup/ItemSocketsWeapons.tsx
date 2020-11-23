@@ -113,61 +113,63 @@ function ItemSocketsWeapons({
         [styles.minimal]: minimal,
       })}
     >
-      <div className={clsx(styles.row, styles.archetype)}>
-        {archetype?.plugged && (
-          <>
-            <div className={styles.archetypeMod}>
-              <Socket
-                key={archetype.socketIndex}
-                defs={defs}
-                item={item}
-                isPhonePortrait={isPhonePortrait}
-                socket={archetype}
-                wishListsEnabled={wishListsEnabled}
-                inventoryWishListRoll={inventoryWishListRoll}
-                classesByHash={classesByHash}
-                onClick={handleSocketClick}
-                onShiftClick={onShiftClick}
-                adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
-              />
+      {(archetype || (!minimal && mods.length > 0)) && (
+        <div className={clsx(styles.row, styles.archetype)}>
+          {archetype?.plugged && (
+            <>
+              <div className={styles.archetypeMod}>
+                <Socket
+                  key={archetype.socketIndex}
+                  defs={defs}
+                  item={item}
+                  isPhonePortrait={isPhonePortrait}
+                  socket={archetype}
+                  wishListsEnabled={wishListsEnabled}
+                  inventoryWishListRoll={inventoryWishListRoll}
+                  classesByHash={classesByHash}
+                  onClick={handleSocketClick}
+                  onShiftClick={onShiftClick}
+                  adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
+                />
+              </div>
+              <div className={styles.archetypeInfo}>
+                <div>{archetype.plugged.plugDef.displayProperties.name}</div>
+                {!minimal && keyStats && keyStats.length > 0 && (
+                  <div className={styles.stats}>
+                    {keyStats
+                      ?.map(
+                        (s) =>
+                          `${s.value} ${(
+                            statLabels[s.statHash] || s.displayProperties.name
+                          ).toLowerCase()}`
+                      )
+                      ?.join(' / ')}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+          {!minimal && mods.length > 0 && (
+            <div className="item-socket-category-Consumable socket-container">
+              {mods.map((socketInfo) => (
+                <Socket
+                  key={socketInfo.socketIndex}
+                  defs={defs}
+                  item={item}
+                  isPhonePortrait={isPhonePortrait}
+                  socket={socketInfo}
+                  wishListsEnabled={wishListsEnabled}
+                  inventoryWishListRoll={inventoryWishListRoll}
+                  classesByHash={classesByHash}
+                  onClick={handleSocketClick}
+                  onShiftClick={onShiftClick}
+                  adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+                />
+              ))}
             </div>
-            <div className={styles.archetypeInfo}>
-              <div>{archetype.plugged.plugDef.displayProperties.name}</div>
-              {!minimal && keyStats && keyStats.length > 0 && (
-                <div className={styles.stats}>
-                  {keyStats
-                    ?.map(
-                      (s) =>
-                        `${s.value} ${(
-                          statLabels[s.statHash] || s.displayProperties.name
-                        ).toLowerCase()}`
-                    )
-                    ?.join(' / ')}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-        {!minimal && mods.length > 0 && (
-          <div className="item-socket-category-Consumable socket-container">
-            {mods.map((socketInfo) => (
-              <Socket
-                key={socketInfo.socketIndex}
-                defs={defs}
-                item={item}
-                isPhonePortrait={isPhonePortrait}
-                socket={socketInfo}
-                wishListsEnabled={wishListsEnabled}
-                inventoryWishListRoll={inventoryWishListRoll}
-                classesByHash={classesByHash}
-                onClick={handleSocketClick}
-                onShiftClick={onShiftClick}
-                adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
       {perks && (
         <div
           className={clsx(

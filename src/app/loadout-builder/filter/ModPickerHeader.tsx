@@ -1,10 +1,11 @@
 import { t } from 'app/i18next-t';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import React, { ChangeEvent } from 'react';
+import { ModPickerCategory } from '../types';
 import styles from './ModPickerHeader.m.scss';
 
 interface Props {
-  categoryOrder?: { category: number | 'seasonal'; translatedName: string }[];
+  categoryOrder?: { category: ModPickerCategory; translatedName: string }[];
   isPhonePortrait: boolean;
   query: string;
   onSearchChange(event: ChangeEvent<HTMLInputElement>): void;

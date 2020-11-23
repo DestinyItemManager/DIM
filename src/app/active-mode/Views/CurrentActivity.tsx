@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ActivityInformation from 'app/active-mode/Views/current-activity/ActivityInformation';
-import SuggestedGhosts from 'app/active-mode/Views/current-activity/SuggestedGhost';
 import { Destinations } from 'app/active-mode/Views/current-activity/util';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
@@ -75,7 +74,6 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
         <div className={styles.currentLocation}>{activityName}</div>
         <div className={styles.activityItems}>
           <ActivityInformation defs={defs} store={store} activity={activity} />
-          <SuggestedGhosts store={store} activity={activity} />
           <VendorBounties
             account={account}
             store={store}
