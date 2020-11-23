@@ -4,6 +4,7 @@ import {
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
@@ -49,14 +50,24 @@ export interface LockedExclude {
 
 export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
 
-/** A map from bucketHash or seasonal to the list of locked and excluded perks, items, and burns. */
+/** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
+export const raidPlugs = [
+  PlugCategoryHashes.EnhancementsSeasonOutlaw,
+  PlugCategoryHashes.EnhancementsRaidGarden,
+  PlugCategoryHashes.EnhancementsRaidDescent,
+] as const;
+
+export const raidSockets = [1444083081, 1764679361, 1269555732] as const;
+
 export const ModPickerCategories = {
   ...armor2PlugCategoryHashesByName,
-  seasonal: 'seasonal',
+  /** This encompases combat and legacy mods as they "share" a socket position on armour */
+  other: 'other',
+  raid: 'raid',
 } as const;
 export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
 
@@ -71,7 +82,8 @@ export function isModPickerCategory(value: unknown): value is ModPickerCategory 
     value === ModPickerCategories.chest ||
     value === ModPickerCategories.leg ||
     value === ModPickerCategories.classitem ||
-    value === ModPickerCategories.seasonal
+    value === ModPickerCategories.other ||
+    value === ModPickerCategories.raid
   );
 }
 
@@ -80,7 +92,6 @@ export interface LockedArmor2Mod {
   key?: number;
   modDef: PluggableInventoryItemDefinition;
   category: ModPickerCategory;
-  season?: number;
 }
 
 export type LockedArmor2ModMap = {

@@ -22,6 +22,7 @@ export interface LoadoutBuilderState {
   modPicker: {
     open: boolean;
     initialQuery?: string;
+    filterLegacy?: boolean;
   };
   perkPicker: {
     open: boolean;
@@ -76,7 +77,8 @@ const lbStateInit = ({
       [ModPickerCategories.chest]: [],
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.seasonal]: [],
+      [ModPickerCategories.other]: [],
+      [ModPickerCategories.raid]: [],
     },
     minimumPower: 750,
     selectedStoreId: selectedStoreId,
@@ -97,7 +99,7 @@ export type LoadoutBuilderAction =
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
-  | { type: 'openModPicker'; initialQuery?: string }
+  | { type: 'openModPicker'; initialQuery?: string; filterLegacy?: boolean }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
   | { type: 'closePerkPicker' }
@@ -158,7 +160,11 @@ function lbStateReducer(
     case 'openModPicker':
       return {
         ...state,
-        modPicker: { open: true, initialQuery: action.initialQuery },
+        modPicker: {
+          open: true,
+          initialQuery: action.initialQuery,
+          filterLegacy: action.filterLegacy,
+        },
       };
     case 'closeModPicker':
       return { ...state, modPicker: { open: false } };

@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
@@ -188,10 +189,10 @@ function createWorker() {
 }
 
 /**
- * This groups items for process depending on whether any general or seasonal mods are locked as follows
- * - If there are general or seasonal mods locked it groups items by (stats, masterworked, modSlot, energyType).
+ * This groups items for process depending on whether any general, other or raid mods are locked as follows
+ * - If there are general, other or raid mods locked it groups items by (stats, masterworked, modSlot, energyType).
  * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
- * - If no general or seasonal mods are locked it groups by (stats, masterworked).
+ * - If no general, other or raid mods are locked it groups by (stats, masterworked).
  *
  * Note that assumedMasterwork effects this.
  */
@@ -213,12 +214,14 @@ function groupItems(
 
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
-    if (lockedArmor2ModMap.seasonal.length) {
-      groupId += `${undefined}`;
+    if (lockedArmor2ModMap.other.length) {
+      groupId += `${getSpecialtySocketMetadatas(item)
+        ?.map((metadata) => metadata.slotTag)
+        .join(',')}`;
     }
 
     if (
-      someModHasEnergyRequirement(lockedArmor2ModMap.seasonal) ||
+      someModHasEnergyRequirement(lockedArmor2ModMap.other) ||
       someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
     ) {
       groupId += `${item.energy?.energyType}`;
