@@ -1,5 +1,7 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
@@ -140,6 +142,10 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
       compareBy((item: DimItem) => item.iconOverlay ?? '')
     )
   ),
+  sunset: compareBy((item) => {
+    const sunsetSeason = getItemPowerCapFinalSeason(item);
+    return sunsetSeason !== undefined && D2CalculatedSeason >= sunsetSeason + 1;
+  }),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';

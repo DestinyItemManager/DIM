@@ -196,6 +196,7 @@ function SettingsPage({
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),
+    sunset: t('Settings.SortBySunset'),
     // archetype: 'Archetype'
   };
 
