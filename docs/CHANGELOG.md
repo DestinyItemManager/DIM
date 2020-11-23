@@ -1,5 +1,7 @@
 ## Next
 
+* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a weapon type to pull a weapon matching that type.
+
 ## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
 
 * Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.

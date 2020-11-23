@@ -76,7 +76,10 @@ export default function BountyGuide({
     KillType: {},
   };
   for (const i of bounties) {
-    if (!i.complete) {
+    const expired = i.pursuit?.expirationDate
+      ? i.pursuit.expirationDate.getTime() < Date.now()
+      : false;
+    if (!i.complete && !expired) {
       const info = pursuitsInfo[i.hash];
       if (info) {
         for (const key in info) {
