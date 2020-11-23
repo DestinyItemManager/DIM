@@ -80,9 +80,9 @@ function availableQuestToItem(
     questDef.displayProperties || milestoneDef.displayProperties;
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
-  const questRewards = _.take(
-    questDef.questRewards
-      ? questDef.questRewards.items
+  const questRewards = questDef.questRewards
+    ? _.take(
+        questDef.questRewards.items
           // 75% of "rewards" are the invalid hash 0
           .filter((r) => r.itemHash)
           .map((r) => defs.InventoryItem.get(r.itemHash))
@@ -93,10 +93,10 @@ function availableQuestToItem(
               (i.classType === characterClass || i.classType === DestinyClass.Unknown) &&
               // And quest steps, they're not interesting
               !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep)
-          )
-      : [],
-    1
-  );
+          ),
+        1
+      )
+    : [];
 
   const objectives = availableQuest.status.stepObjectives;
 
