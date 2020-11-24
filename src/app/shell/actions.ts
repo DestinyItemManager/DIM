@@ -15,9 +15,9 @@ export const setSearchQuery = createAction(
 /**
  * Toggle in or out a specific search query component from the existing search.
  */
-export const toggleSearchQueryComponent = createAction('shell/TOGGLE_SEARCH_QUERY_COMPONENT')<
-  string
->();
+export const toggleSearchQueryComponent = createAction(
+  'shell/TOGGLE_SEARCH_QUERY_COMPONENT'
+)<string>();
 
 /**
  * Signifies that there is a page-wide loading state, with a message.

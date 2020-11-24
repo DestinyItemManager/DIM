@@ -41,7 +41,7 @@ export function defaultLanguage(): string {
   return DIM_LANGS.find((lang) => browserLang.startsWith(lang)) || 'en';
 }
 
-export function initi18n(): Promise<never> {
+export function initi18n(): Promise<unknown> {
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
     i18next.use(XHR);
@@ -96,7 +96,7 @@ export function initi18n(): Promise<never> {
         if (error) {
           reject(error);
         } else {
-          resolve();
+          resolve(undefined);
         }
       }
     );
