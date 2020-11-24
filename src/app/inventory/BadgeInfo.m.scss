@@ -18,9 +18,10 @@
   overflow: hidden;
 
   /* this width keeps the span aligned right (short text appears on right side of polaroid)
-     but if the text is too long, it will overflow(hidden) off the right side instead of left */
+     but if the text is too long, it will overflow(hidden) off the right side instead of left. */
   span {
     max-width: 100%;
+    max-height: 100%;
   }
 }
 
