@@ -778,6 +778,7 @@
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",
+    "SortBySunset": "Has Been Sunset (D2)",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
   },
