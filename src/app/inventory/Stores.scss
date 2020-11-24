@@ -41,6 +41,16 @@
     // Vault takes the rest
     1fr;
   box-sizing: border-box;
+  .singleCharacter & {
+    grid-template-columns:
+      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
+      // Vault takes the rest
+      1fr;
+  }
+
+  .singleCharacter &.account-wide {
+    grid-template-columns: 1fr 1fr;
+  }
 
   @include phone-portrait {
     // Full-width, single column
@@ -77,6 +87,9 @@
 
   &.account-wide {
     grid-column: 1 / span var(--num-characters);
+    .singleCharacter & {
+      grid-column: auto;
+    }
   }
 
   > div {
@@ -188,6 +201,9 @@
   left: 0;
   width: 100%;
   z-index: 10;
+  grid-template-columns:
+    repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
+    calc(6px + var(--character-column-width) + var(--column-padding)) 1fr !important;
   background: $gradient;
   background-position: center top;
   background-repeat: no-repeat;

@@ -16,6 +16,7 @@ import './Stores.scss';
 interface Props {
   stores: DimStore[];
   buckets: InventoryBuckets;
+  singleCharacter: boolean;
 }
 
 /**
@@ -23,7 +24,7 @@ interface Props {
  *
  * This is the phone (portrait) view only.
  */
-export default function PhoneStores({ stores, buckets }: Props) {
+export default function PhoneStores({ stores, buckets, singleCharacter }: Props) {
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
 
@@ -35,6 +36,11 @@ export default function PhoneStores({ stores, buckets }: Props) {
     return null;
   }
 
+  let headerStores = stores;
+  if (singleCharacter) {
+    headerStores = [currentStore, vault];
+  }
+
   const selectedStore = selectedStoreId ? getStore(stores, selectedStoreId)! : currentStore;
 
   const handleSwipe: HammerListener = (e) => {
@@ -43,9 +49,9 @@ export default function PhoneStores({ stores, buckets }: Props) {
       : stores.findIndex((s) => s.current);
 
     if (e.direction === 2) {
-      setSelectedStoreId(stores[wrap(selectedStoreIndex + 1, stores.length)].id);
+      setSelectedStoreId(headerStores[wrap(selectedStoreIndex + 1, stores.length)].id);
     } else if (e.direction === 4) {
-      setSelectedStoreId(stores[wrap(selectedStoreIndex - 1, stores.length)].id);
+      setSelectedStoreId(headerStores[wrap(selectedStoreIndex - 1, stores.length)].id);
     }
   };
 
@@ -67,7 +73,7 @@ export default function PhoneStores({ stores, buckets }: Props) {
       <HeaderShadowDiv className="store-row store-header" onTouchStart={(e) => e.stopPropagation()}>
         <PhoneStoresHeader
           selectedStore={selectedStore}
-          stores={stores}
+          stores={headerStores}
           loadoutMenuRef={detachedLoadoutMenu}
           setSelectedStoreId={setSelectedStoreId}
         />
@@ -83,6 +89,7 @@ export default function PhoneStores({ stores, buckets }: Props) {
             vault={vault}
             currentStore={currentStore}
             buckets={buckets}
+            singleCharacter={singleCharacter}
           />
         </div>
       </Hammer>
@@ -128,12 +135,14 @@ function StoresInventory({
   stores,
   currentStore,
   vault,
+  singleCharacter,
 }: {
   selectedCategoryId: string;
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimStore;
+  singleCharacter: boolean;
 }) {
   const showPostmaster =
     (currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory') ||
@@ -153,6 +162,7 @@ function StoresInventory({
             vault={vault}
             currentStore={currentStore}
             labels={true}
+            singleCharacter={singleCharacter}
           />
         ))}
       {buckets.byCategory[selectedCategoryId].map((bucket) => (
@@ -163,6 +173,7 @@ function StoresInventory({
           vault={vault}
           currentStore={currentStore}
           labels={true}
+          singleCharacter={singleCharacter}
         />
       ))}
     </>

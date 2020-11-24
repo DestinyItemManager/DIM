@@ -351,53 +351,64 @@ function SettingsPage({
           <section id="inventory">
             <h2>{t('Settings.Inventory')}</h2>
             <div className="setting">
-              <label>{t('Settings.CharacterOrder')}</label>
-              <div className="radioOptions">
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecent'}
-                    value="mostRecent"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderRecent')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecentReverse'}
-                    value="mostRecentReverse"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderReversed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'fixed'}
-                    value="fixed"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderFixed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'custom'}
-                    value="custom"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.SortCustom')}</span>
-                </label>
-                {settings.characterOrder === 'custom' && (
-                  <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
-                )}
-              </div>
+              <Checkbox
+                label={t('Settings.SingleCharacter')}
+                name="singleCharacter"
+                value={settings.singleCharacter}
+                onChange={onChange}
+              />
+              <div className="fineprint">{t('Settings.SingleCharacterExplanation')}</div>
             </div>
+            {!settings.singleCharacter && (
+              <div className="setting">
+                <label>{t('Settings.CharacterOrder')}</label>
+                <div className="radioOptions">
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecent'}
+                      value="mostRecent"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderRecent')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecentReverse'}
+                      value="mostRecentReverse"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderReversed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'fixed'}
+                      value="fixed"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderFixed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'custom'}
+                      value="custom"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.SortCustom')}</span>
+                  </label>
+                  {settings.characterOrder === 'custom' && (
+                    <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
+                  )}
+                </div>
+              </div>
+            )}
 
             {supportsCssVar &&
               (isPhonePortrait ? (

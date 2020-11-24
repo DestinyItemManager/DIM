@@ -1,11 +1,15 @@
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import { setSetting } from 'app/settings/actions';
+import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
+import styles from './DesktopStores.m.scss';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
@@ -15,39 +19,65 @@ import './Stores.scss';
 interface Props {
   stores: DimStore[];
   buckets: InventoryBuckets;
+  singleCharacter: boolean;
 }
 /**
  * Display inventory and character headers for all characters and the vault.
  *
  * This is the desktop view only.
  */
-export default function DesktopStores(this: void, { stores, buckets }: Props) {
+export default function DesktopStores({ stores, buckets, singleCharacter }: Props) {
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
+  const dispatch = useDispatch();
 
   if (!stores.length || !buckets) {
     return null;
   }
 
+  let headerStores = stores;
+  if (singleCharacter) {
+    headerStores = [currentStore, vault];
+  }
+
+  const toggleSingleCharacter = () => dispatch(setSetting('singleCharacter', !singleCharacter));
+
   return (
     <div
-      className={`inventory-content destiny${currentStore.destinyVersion}`}
+      className={clsx('inventory-content', `destiny${currentStore.destinyVersion}`, {
+        singleCharacter,
+      })}
       role="main"
       aria-label={t('Header.Inventory')}
     >
       <HeaderShadowDiv className="store-row store-header">
-        {stores.map((store) => (
+        {headerStores.map((store) => (
           <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
             <StoreHeading store={store} />
             <StoreStats store={store} />
           </div>
         ))}
+        {stores.length > 2 && (
+          <button
+            type="button"
+            className={styles.singleCharacterButton}
+            onClick={toggleSingleCharacter}
+            title={
+              singleCharacter
+                ? t('Settings.ExpandSingleCharacter')
+                : t('Settings.SingleCharacter') + ': ' + t('Settings.SingleCharacterExplanation')
+            }
+          >
+            <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
+          </button>
+        )}
       </HeaderShadowDiv>
       <StoresInventory
-        stores={stores}
+        stores={headerStores}
         vault={vault}
         currentStore={currentStore}
         buckets={buckets}
+        singleCharacter={singleCharacter}
       />
     </div>
   );
@@ -72,6 +102,7 @@ interface InventoryContainerProps {
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimStore;
+  singleCharacter: boolean;
 }
 
 function CollapsibleContainer({
@@ -81,6 +112,7 @@ function CollapsibleContainer({
   currentStore,
   inventoryBucket,
   vault,
+  singleCharacter,
 }: {
   category: string;
   inventoryBucket: InventoryBucket[];
@@ -99,6 +131,7 @@ function CollapsibleContainer({
           stores={stores}
           vault={vault}
           currentStore={currentStore}
+          singleCharacter={singleCharacter}
         />
       ))}
     </InventoryCollapsibleTitle>
