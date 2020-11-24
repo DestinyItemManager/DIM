@@ -3,6 +3,8 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
+import { getStore } from 'app/inventory/stores-helpers';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
@@ -13,7 +15,7 @@ import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
@@ -59,6 +61,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
     : handCannonIcon;
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
+  const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
@@ -158,7 +161,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+            <Reward key={reward.itemHash} reward={reward} defs={defs} store={ownerStore} />
           ))}
         </div>
       )}

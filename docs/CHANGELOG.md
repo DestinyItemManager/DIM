@@ -6,6 +6,7 @@
 ### Beta Only
 
 * A new "Single character mode" can be enabled through settings, or the « icon on desktop. This focuses down to a single character, and merges your other characters' inventories into the vault (they're really still on the other characters, we're just displaying them different). This is intended for people who are focused on one character, and always shows the last played character when collapsed.
+* Pinnacle/powerful rewards show a more accurate bonus, taking into account your current max power.
 
 ## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
 
