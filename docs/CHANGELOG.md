@@ -2,6 +2,10 @@
 
 * Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a weapon type to pull a weapon matching that type.
 
+### Beta Only
+
+* A new "Single character mode" can be enabled through settings, or the « icon on desktop. This focuses down to a single character, and merges your other characters' inventories into the vault (they're really still on the other characters, we're just displaying them different). This is intended for people who are focused on one character, and always shows the last played character when collapsed.
+
 ## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
 
 * Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.
