@@ -590,6 +590,7 @@ export const enum PlugCategoryHashes {
   V500NewGrenadeLauncher0Masterwork = 4002498006,
   V500NewGrenadeLauncher0Skins = 1144349164,
   V500NewRocketLauncher0Masterwork = 163781180,
+  V500NewRocketLauncher0Skins = 635831614,
   V500NewShotgun0Masterwork = 3621127437,
   V500NewShotgun0Skins = 4188773649,
   V500NewSniperRifle0Masterwork = 326456325,
