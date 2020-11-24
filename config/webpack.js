@@ -24,7 +24,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:hash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[md5:contenthash:6].[ext]';
 
 const packageJson = require('../package.json');
 
@@ -59,11 +59,14 @@ module.exports = (env) => {
       authReturn: './src/authReturn.ts',
     },
 
+    // https://github.com/webpack/webpack-dev-server/issues/2758
+    target: env.dev ? 'web' : 'browserslist',
+
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
     },
 
     // Dev server
@@ -75,6 +78,7 @@ module.exports = (env) => {
         cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
       },
       historyApiFallback: true,
+      hot: true,
       hotOnly: true,
       liveReload: false,
     },
@@ -182,7 +186,9 @@ module.exports = (env) => {
               options: {
                 modules: {
                   localIdentName:
-                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
+                    env.dev || env.beta
+                      ? '[name]_[local]-[contenthash:base64:5]'
+                      : '[contenthash:base64:5]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 sourceMap: true,
@@ -286,8 +292,8 @@ module.exports = (env) => {
       new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css',
+        filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
       }),
 
       new HtmlWebpackPlugin({
