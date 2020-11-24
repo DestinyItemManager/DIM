@@ -173,10 +173,7 @@ function useWorkerAndCleanup(
 }
 
 function createWorker() {
-  const instance = new Worker('../processWorker/ProcessWorker', {
-    name: 'ProcessWorker',
-    type: 'module',
-  });
+  const instance = new Worker(new URL('../processWorker/ProcessWorker', import.meta.url));
 
   const worker = wrap<import('../processWorker/ProcessWorker').ProcessWorker>(instance);
 
