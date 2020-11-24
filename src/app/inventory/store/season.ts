@@ -1,4 +1,5 @@
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import D2SeasonBackup from 'data/d2/seasons_backup.json';
 import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
 import { DimItem } from '../item-types';
@@ -12,7 +13,7 @@ export function getSeason(item: DimItem): number {
   // iconOverlay has precedence for season
   const overlay = item.iconOverlay || item.hiddenOverlay;
   if (overlay) {
-    return Number(D2SeasonFromOverlay[overlay]);
+    return Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash];
   }
 
   return D2CalculatedSeason;
