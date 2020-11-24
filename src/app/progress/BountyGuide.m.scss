@@ -1,8 +1,12 @@
+@import '../variables.scss';
+
 .guide {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  gap: 4px 4px;
   margin: 8px 0;
+  @include phone-portrait {
+    margin: 8px 6px;
+  }
 }
 
 .pill {
@@ -12,6 +16,7 @@
   border-radius: 10px;
   padding: 2px 8px;
   color: white;
+  margin: 0 4px 4px 0;
 
   img {
     margin-right: 4px;
